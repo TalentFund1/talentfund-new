@@ -75,17 +75,17 @@ const EmployeeProfile = () => {
         </Card>
 
         <Tabs defaultValue="experience" className="w-full">
-          <TabsList>
+          <TabsList className="bg-white">
             <TabsTrigger value="experience">Experience</TabsTrigger>
             <TabsTrigger value="benchmark">Role Benchmark</TabsTrigger>
           </TabsList>
 
           <TabsContent value="experience" className="space-y-6">
-            <Card className="p-6">
+            <Card className="p-6 bg-white">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <span>Search Skills</span>
-                  <Button variant="outline" size="sm">Clear</Button>
+                  <Button variant="outline" size="sm" className="bg-white">Clear</Button>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -144,7 +144,7 @@ const EmployeeProfile = () => {
           </TabsContent>
 
           <TabsContent value="benchmark">
-            <Card className="p-6">
+            <Card className="p-6 bg-white">
               <p>Role Benchmark content here</p>
             </Card>
           </TabsContent>
