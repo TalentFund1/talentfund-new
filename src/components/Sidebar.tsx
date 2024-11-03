@@ -17,7 +17,7 @@ export const Sidebar = () => {
   return (
     <div className="fixed top-0 left-0 h-screen w-64 border-r border-border bg-[#F7F9FF] flex flex-col">
       <div className="p-6 border-b border-border">
-        <img src="/TalentFund.png" alt="TalentFund" className="h-8" />
+        <h1 className="text-2xl font-bold text-foreground">TalentFund</h1>
       </div>
       <nav className="flex-1 px-3 py-4 flex flex-col justify-between">
         <div className="space-y-1">
