@@ -7,6 +7,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { SkillsTable } from "@/components/SkillsTable";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 
 const EmployeeProfile = () => {
   const navigate = useNavigate();
@@ -102,10 +103,11 @@ const EmployeeProfile = () => {
           <TabsContent value="experience" className="space-y-6">
             <Card className="p-6 bg-white">
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <span>Search Skills</span>
-                  <Button variant="outline" size="sm" className="bg-white">Clear</Button>
-                </div>
+                <Input
+                  type="text"
+                  placeholder="Search Skills..."
+                  className="max-w-full bg-white rounded-full border-input"
+                />
 
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="outline" className="gap-2">
