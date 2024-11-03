@@ -28,7 +28,7 @@ const EmployeeProfile = () => {
         </div>
       </div>
 
-      <Card className="p-6 bg-white">
+      <Card className="p-6 bg-white w-full max-w-[800px] mx-auto">
         <div className="flex items-start justify-between">
           <div className="flex gap-6">
             <Avatar className="h-24 w-24">
@@ -82,7 +82,7 @@ const EmployeeProfile = () => {
         </div>
       </Card>
 
-      <Tabs defaultValue="experience" className="w-full space-y-4">
+      <Tabs defaultValue="experience" className="w-full max-w-[800px] mx-auto space-y-4">
         <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
           <TabsTrigger 
             value="experience" 
@@ -99,14 +99,14 @@ const EmployeeProfile = () => {
         </TabsList>
 
         <TabsContent value="experience" className="space-y-4">
-          <Card className="p-6 bg-white">
+          <Card className="p-6 bg-white w-full">
             <SkillsSummary />
           </Card>
           <SkillsTable />
         </TabsContent>
 
         <TabsContent value="benchmark">
-          <Card className="p-6 bg-white">
+          <Card className="p-6 bg-white w-full">
             <p>Role Benchmark content here</p>
           </Card>
         </TabsContent>
