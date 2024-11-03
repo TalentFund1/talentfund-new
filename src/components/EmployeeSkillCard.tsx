@@ -21,7 +21,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
           <img src={avatar} alt={name} className="object-cover" />
         </Avatar>
         <div>
-          <h3 className="font-semibold text-primary">{name}</h3>
+          <h3 className="font-semibold text-card-foreground">{name}</h3> {/* Updated color */}
           <p className="text-sm text-secondary-foreground">{role}</p>
         </div>
       </div>
