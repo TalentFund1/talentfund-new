@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SkillSection } from "./SkillSection";
 import { SkillsHeader } from "./SkillsHeader";
+import { Separator } from "@/components/ui/separator";
 
 export const SkillsSummary = () => {
   return (
@@ -29,6 +30,7 @@ export const SkillsSummary = () => {
               See More 12
             </Button>
           </div>
+          <Separator className="my-6" />
         </SkillSection>
 
         <SkillSection title="Common Skills" count={14}>
