@@ -25,7 +25,10 @@ const SkillsProfile = () => {
 
         <Card className="p-6">
           <div className="space-y-4">
-            <Input type="search" placeholder="Search..." className="max-w-sm" />
+            <label htmlFor="search" className="block text-sm font-medium text-foreground">
+              Skills
+            </label>
+            <Input id="search" type="search" placeholder="Search..." className="max-w-sm" />
             
             <div className="flex flex-wrap gap-4">
               <Select>
