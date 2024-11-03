@@ -33,13 +33,17 @@ export const SkillsSummary = () => {
 
         <SkillSection title="Common Skills" count={14}>
           <div className="flex flex-wrap gap-3">
-            {["UI/UX Design Principles", "Communication", "Microsoft Excel"].map((skill) => (
+            {[
+              { name: "UI/UX Design Principles", color: "bg-primary-accent" },
+              { name: "Communication", color: "bg-primary-icon" },
+              { name: "Microsoft Excel", color: "bg-primary-icon" }
+            ].map((skill) => (
               <Badge 
-                key={skill} 
+                key={skill.name} 
                 variant="outline" 
-                className="rounded-lg px-4 py-2 border-2 bg-white"
+                className="rounded-lg px-4 py-2 border-2 flex items-center gap-2 bg-white"
               >
-                {skill}
+                {skill.name} <div className={`h-2 w-2 rounded-full ${skill.color}`} />
               </Badge>
             ))}
           </div>
