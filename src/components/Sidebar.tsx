@@ -19,7 +19,7 @@ export const Sidebar = () => {
 
   return (
     <div 
-      className={`fixed top-0 left-0 h-screen border-r border-border bg-[#F7F9FF] flex flex-col transition-all duration-300 backdrop-blur-none ${
+      className={`fixed top-0 left-0 h-screen border-r border-border bg-[#F7F9FF] flex flex-col transition-all duration-300 ${
         isCollapsed ? "w-16" : "w-56"
       }`}
     >
