@@ -1,14 +1,49 @@
 import { Card } from "@/components/ui/card";
-import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const data = [
-  { name: "Python", x: 100, y: 200, z: 80, category: "Software Development", color: "#FFD699" },
-  { name: "Software Development", x: 200, y: 200, z: 120, category: "Software Development", color: "#FFD699" },
-  { name: "Artificial Intelligence", x: 300, y: 200, z: 90, category: "AI", color: "#FF9999" },
-  { name: "Machine Learning", x: 400, y: 200, z: 100, category: "AI", color: "#FF9999" },
-  { name: "Language Processing", x: 500, y: 200, z: 70, category: "AI", color: "#FF9999" },
-  { name: "Design", x: 600, y: 200, z: 110, category: "Design", color: "#99D6B9" },
-  { name: "Marketing", x: 700, y: 200, z: 85, category: "Marketing", color: "#99D6B9" },
+  {
+    category: "Software Development",
+    subcategory: "Programming Languages",
+    skill: "Python",
+    proficiency: 85,
+    color: "#FFD699"
+  },
+  {
+    category: "Software Development",
+    subcategory: "Web Development",
+    skill: "React",
+    proficiency: 78,
+    color: "#FFD699"
+  },
+  {
+    category: "AI & Machine Learning",
+    subcategory: "Deep Learning",
+    skill: "Neural Networks",
+    proficiency: 92,
+    color: "#FF9999"
+  },
+  {
+    category: "AI & Machine Learning",
+    subcategory: "NLP",
+    skill: "Text Processing",
+    proficiency: 75,
+    color: "#FF9999"
+  },
+  {
+    category: "Design & UX",
+    subcategory: "UI Design",
+    skill: "Figma",
+    proficiency: 88,
+    color: "#99D6B9"
+  },
+  {
+    category: "Design & UX",
+    subcategory: "User Research",
+    skill: "Usability Testing",
+    proficiency: 82,
+    color: "#99D6B9"
+  }
 ];
 
 export const SkillsOverview = () => {
@@ -25,41 +60,33 @@ export const SkillsOverview = () => {
       </div>
       <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-            <XAxis type="number" dataKey="x" hide domain={[0, 800]} />
-            <YAxis type="number" dataKey="y" hide domain={[0, 400]} />
-            <ZAxis type="number" dataKey="z" range={[50, 200]} />
+          <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
+            <XAxis dataKey="skill" />
+            <YAxis />
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
                     <div className="bg-white p-2 border border-border rounded shadow-sm">
-                      <p className="font-medium">{data.name}</p>
+                      <p className="font-medium">{data.skill}</p>
                       <p className="text-sm text-secondary-foreground">{data.category}</p>
+                      <p className="text-sm text-secondary-foreground">{data.subcategory}</p>
+                      <p className="text-sm font-medium">Proficiency: {data.proficiency}%</p>
                     </div>
                   );
                 }
                 return null;
               }}
             />
-            <Scatter
-              data={data}
+            <Bar
+              dataKey="proficiency"
               fill="#8073ec"
-              shape={(props) => {
-                const { cx, cy, payload, r } = props;
-                return (
-                  <circle
-                    cx={cx}
-                    cy={cy}
-                    r={r}
-                    fill={payload.color}
-                    fillOpacity={0.6}
-                  />
-                );
-              }}
+              radius={[4, 4, 0, 0]}
+              barSize={40}
             />
-          </ScatterChart>
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </Card>
