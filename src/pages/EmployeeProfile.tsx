@@ -100,6 +100,7 @@ const EmployeeProfile = () => {
         </TabsList>
 
         <TabsContent value="experience" className="space-y-4">
+
           <Card className="p-6 bg-white">
             <div className="space-y-4">
               <Input
@@ -117,19 +118,25 @@ const EmployeeProfile = () => {
               <Separator className="my-4" />
 
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
+                  <Badge variant="outline" className="bg-background text-primary rounded-full">66</Badge>
+                </div>
                 
                 <div className="space-y-6">
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm text-muted-foreground">Specialized Skills 66</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Specialized Skills</span>
+                        <Badge className="bg-primary-accent/10 text-primary-accent rounded-full">66</Badge>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {["React", "JavaScript", "Git", "GraphQL", "HTML and CSS3"].map((skill) => (
                         <Badge 
                           key={skill} 
                           variant="outline" 
-                          className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
+                          className="rounded-full px-4 py-2 border border-border/50 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
                         >
                           {skill} <div className="h-2 w-2 rounded-full bg-primary-accent" />
                         </Badge>
@@ -137,7 +144,7 @@ const EmployeeProfile = () => {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="rounded-lg px-3 py-1.5 border-2 bg-background hover:bg-background/80"
+                        className="rounded-full px-4 py-2 border border-border/50 bg-background/50 hover:bg-background text-primary-accent"
                       >
                         See More 12
                       </Button>
@@ -146,14 +153,17 @@ const EmployeeProfile = () => {
 
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm text-muted-foreground">Common Skills 14</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Common Skills</span>
+                        <Badge className="bg-primary-accent/10 text-primary-accent rounded-full">14</Badge>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-3">
                       {["UI/UX Design Principles", "Communication", "Microsoft Excel"].map((skill) => (
                         <Badge 
                           key={skill} 
                           variant="outline" 
-                          className="rounded-lg px-4 py-2 border-2 bg-white"
+                          className="rounded-full px-4 py-2 border border-border/50 bg-white hover:bg-background/80 transition-colors"
                         >
                           {skill}
                         </Badge>
@@ -163,12 +173,15 @@ const EmployeeProfile = () => {
 
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm text-muted-foreground">Certifications 1</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Certifications</span>
+                        <Badge className="bg-primary-accent/10 text-primary-accent rounded-full">1</Badge>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-3">
                       <Badge 
                         variant="outline" 
-                        className="rounded-lg px-4 py-2 border-2 bg-white"
+                        className="rounded-full px-4 py-2 border border-border/50 bg-white hover:bg-background/80 transition-colors"
                       >
                         Cybersecurity License
                       </Badge>
@@ -193,3 +206,4 @@ const EmployeeProfile = () => {
 };
 
 export default EmployeeProfile;
+
