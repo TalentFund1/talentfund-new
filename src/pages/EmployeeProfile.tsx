@@ -89,7 +89,7 @@ const EmployeeProfile = () => {
             value="experience" 
             className="border-b-2 border-transparent px-0 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
           >
-            Skills Summary
+            Experience
           </TabsTrigger>
           <TabsTrigger 
             value="benchmark"
@@ -101,10 +101,7 @@ const EmployeeProfile = () => {
 
         <TabsContent value="experience" className="space-y-6">
           <Card className="p-6 bg-white">
-            <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold text-foreground">Skills Summary</h2>
-            </div>
-            <div className="p-6 space-y-4">
+            <div className="space-y-4">
               <Input
                 type="text"
                 placeholder="Search Skills..."
@@ -120,6 +117,8 @@ const EmployeeProfile = () => {
               <Separator />
 
               <div className="space-y-4">
+                <h3 className="font-semibold">Experience</h3>
+                
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-2">
