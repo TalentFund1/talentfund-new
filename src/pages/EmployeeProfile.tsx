@@ -22,7 +22,7 @@ const EmployeeProfile = () => {
           </div>
         </div>
 
-        <Card className="p-6">
+        <Card className="p-6 bg-white">
           <div className="flex items-start justify-between">
             <div className="flex gap-6">
               <Avatar className="h-24 w-24">
@@ -41,7 +41,7 @@ const EmployeeProfile = () => {
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline">Export</Button>
+              <Button variant="outline" className="bg-white">Export</Button>
               <Button>Edit</Button>
             </div>
           </div>
