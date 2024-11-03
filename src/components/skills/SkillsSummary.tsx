@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SkillSection } from "./SkillSection";
 import { SkillsHeader } from "./SkillsHeader";
+import { CircleDot } from "lucide-react";
 
 export const SkillsSummary = () => {
   return (
@@ -18,7 +19,7 @@ export const SkillsSummary = () => {
                 variant="outline" 
                 className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
               >
-                {skill} <div className="h-2 w-2 rounded-full bg-primary-accent" />
+                {skill} <CircleDot className="h-5 w-5 text-primary-accent" />
               </Badge>
             ))}
             <Button 
@@ -34,16 +35,16 @@ export const SkillsSummary = () => {
         <SkillSection title="Common Skills" count={14}>
           <div className="flex flex-wrap gap-3">
             {[
-              { name: "UI/UX Design Principles", color: "bg-primary-accent" },
-              { name: "Communication", color: "bg-primary-icon" },
-              { name: "Microsoft Excel", color: "bg-primary-icon" }
+              { name: "UI/UX Design Principles", color: "text-primary-accent" },
+              { name: "Communication", color: "text-primary-icon" },
+              { name: "Microsoft Excel", color: "text-primary-icon" }
             ].map((skill) => (
               <Badge 
                 key={skill.name} 
                 variant="outline" 
                 className="rounded-lg px-4 py-2 border-2 flex items-center gap-2 bg-white"
               >
-                {skill.name} <div className={`h-2 w-2 rounded-full ${skill.color}`} />
+                {skill.name} <CircleDot className={`h-5 w-5 ${skill.color}`} />
               </Badge>
             ))}
           </div>
