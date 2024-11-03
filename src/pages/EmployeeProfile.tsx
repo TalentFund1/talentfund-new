@@ -6,13 +6,20 @@ import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { SkillsTable } from "@/components/SkillsTable";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeProfile = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex-1 p-6 ml-16 transition-all duration-300">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex justify-between items-center">
-          <Button variant="outline" className="flex items-center gap-2 bg-white border-border hover:bg-background">
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2 bg-white border-border hover:bg-background"
+            onClick={() => navigate('/employees')}
+          >
             <ChevronLeft className="h-4 w-4" /> Back
           </Button>
           <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
