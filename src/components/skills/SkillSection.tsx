@@ -6,7 +6,7 @@ interface SkillSectionProps {
 
 export const SkillSection = ({ title, count, children }: SkillSectionProps) => {
   return (
-    <div className="rounded-2xl border-2 border-border bg-white p-6 w-full">
+    <div className="rounded-2xl border border-border bg-white p-6 w-full">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">{title}</span>
