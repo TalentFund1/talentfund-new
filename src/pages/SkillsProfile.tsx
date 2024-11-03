@@ -71,22 +71,22 @@ const SkillsProfile = () => {
           <StatCard
             title="Total number of Profiles"
             value="56"
-            icon={<Users className="h-6 w-6" />}
+            icon={<Users className="h-6 w-6 text-primary-icon" />}
           />
           <StatCard
             title="Open Roles"
             value="5"
-            icon={<Briefcase className="h-6 w-6" />}
+            icon={<Briefcase className="h-6 w-6 text-primary-icon" />}
           />
           <StatCard
             title="Share of Female Employees"
             value="50%"
-            icon={<Heart className="h-6 w-6" />}
+            icon={<Heart className="h-6 w-6 text-primary-icon" />}
           />
           <StatCard
             title="Average Tenure (Years)"
             value="1.09"
-            icon={<Clock className="h-6 w-6" />}
+            icon={<Clock className="h-6 w-6 text-primary-icon" />}
           />
         </div>
 
