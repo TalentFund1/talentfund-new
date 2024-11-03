@@ -11,10 +11,7 @@ import {
 export const EmployeeFilters = () => {
   return (
     <div className="space-y-4">
-      <label htmlFor="search" className="block text-sm font-medium text-foreground">
-        Search
-      </label>
-      <Input id="search" type="search" placeholder="Search..." className="max-w-sm bg-white" />
+      <Input id="search" type="search" placeholder="Search Skills..." className="max-w-sm bg-white" />
       
       <div className="flex flex-wrap gap-4">
         <Select>
