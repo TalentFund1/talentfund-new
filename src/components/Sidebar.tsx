@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export const Sidebar = () => {
   const primaryMenuItems = [
-    { name: "Skills Intelligence Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, path: "/" },
+    { name: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, path: "/" },
     { name: "Skill Profiles", icon: <BookOpen className="w-5 h-5" />, path: "/skills" },
     { name: "Employees", icon: <Users className="w-5 h-5" />, path: "/employees" },
     { name: "Market Data", icon: <LineChart className="w-5 h-5" />, path: "/market" },
