@@ -30,25 +30,13 @@ const SkillsProfile = () => {
 
           <Card className="p-6">
             <div className="space-y-4">
-              <label htmlFor="search" className="block text-sm font-medium text-foreground">
-                Skills
-              </label>
-              <Input id="search" type="search" placeholder="Search..." className="max-w-sm bg-white" />
+              {/* Removed the "Skills" label */}
+              <Input id="search" type="search" placeholder="Search Skills..." className="max-w-sm bg-white" />
               
               <div className="flex flex-wrap gap-4">
                 <Select>
                   <SelectTrigger className="w-[180px] bg-white">
                     <SelectValue placeholder="Job Title" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    <SelectItem value="engineer">Engineer</SelectItem>
-                    <SelectItem value="manager">Manager</SelectItem>
-                  </SelectContent>
-                </Select>
-                
-                <Select>
-                  <SelectTrigger className="w-[180px] bg-white">
-                    <SelectValue placeholder="Level" />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
                     <SelectItem value="junior">Junior</SelectItem>
@@ -95,7 +83,6 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
-
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
