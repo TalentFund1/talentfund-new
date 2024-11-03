@@ -35,7 +35,7 @@ const SkillsProfile = () => {
                 <SelectTrigger className="w-[180px] bg-white">
                   <SelectValue placeholder="Job Title" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="engineer">Engineer</SelectItem>
                   <SelectItem value="manager">Manager</SelectItem>
                 </SelectContent>
@@ -45,7 +45,7 @@ const SkillsProfile = () => {
                 <SelectTrigger className="w-[180px] bg-white">
                   <SelectValue placeholder="Level" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="junior">Junior</SelectItem>
                   <SelectItem value="senior">Senior</SelectItem>
                 </SelectContent>
@@ -55,7 +55,7 @@ const SkillsProfile = () => {
                 <SelectTrigger className="w-[180px] bg-white">
                   <SelectValue placeholder="Function" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="engineering">Engineering</SelectItem>
                   <SelectItem value="design">Design</SelectItem>
                 </SelectContent>
