@@ -20,7 +20,7 @@ const SkillsProfile = () => {
           <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
           <div className="space-x-2">
             <Button variant="outline">Export Data</Button>
-            <Button>Add Profile</Button>
+            <Button className="text-primary-accent">Add Profile</Button>
           </div>
         </div>
 
