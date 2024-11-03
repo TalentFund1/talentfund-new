@@ -66,11 +66,11 @@ const skills = [
 const SkillLevelIcon = ({ level }: { level: string }) => {
   switch (level) {
     case "advanced":
-      return <CircleDot className="h-2 w-2 text-primary-accent mx-auto" />;
+      return <CircleDot className="h-5 w-5 text-primary-accent mx-auto" />;
     case "intermediate":
-      return <CircleDot className="h-2 w-2 text-primary-icon mx-auto" />;
+      return <CircleDot className="h-5 w-5 text-primary-icon mx-auto" />;
     case "beginner":
-      return <CircleDot className="h-2 w-2 text-[#008000] mx-auto" />;
+      return <CircleDot className="h-5 w-5 text-[#008000] mx-auto" />;
     default:
       return null;
   }
