@@ -66,9 +66,9 @@ export const SkillsTable = () => {
           <TableRow>
             <TableHead>Skill Title</TableHead>
             <TableHead>Subcategory</TableHead>
-            <TableHead>Beginner</TableHead>
-            <TableHead>Intermediate</TableHead>
-            <TableHead>Advanced</TableHead>
+            <TableHead className="text-center">Beginner</TableHead>
+            <TableHead className="text-center">Intermediate</TableHead>
+            <TableHead className="text-center">Advanced</TableHead>
             <TableHead>Projected Growth</TableHead>
           </TableRow>
         </TableHeader>
@@ -77,19 +77,19 @@ export const SkillsTable = () => {
             <TableRow key={skill.title}>
               <TableCell>{skill.title}</TableCell>
               <TableCell>{skill.subcategory}</TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 {skill.level === "beginner" && (
-                  <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#008000" }} />
+                  <div className="h-4 w-4 rounded-full bg-[#008000] mx-auto" />
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 {skill.level === "intermediate" && (
-                  <div className="h-2 w-2 rounded-full bg-primary-icon" />
+                  <div className="h-4 w-4 rounded-full bg-primary-icon mx-auto" />
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 {skill.level === "advanced" && (
-                  <div className="h-2 w-2 rounded-full bg-primary-accent" />
+                  <div className="h-4 w-4 rounded-full bg-primary-accent mx-auto" />
                 )}
               </TableCell>
               <TableCell>
