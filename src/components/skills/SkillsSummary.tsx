@@ -18,7 +18,7 @@ export const SkillsSummary = () => {
                 variant="outline" 
                 className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
               >
-                {skill} <div className="h-5 w-5 rounded-full bg-primary-accent" />
+                {skill} <div className="h-2 w-2 rounded-full bg-primary-accent" />
               </Badge>
             ))}
             <Button 
