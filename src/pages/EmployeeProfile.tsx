@@ -77,9 +77,19 @@ const EmployeeProfile = () => {
         </Card>
 
         <Tabs defaultValue="experience" className="w-full">
-          <TabsList className="bg-white">
-            <TabsTrigger value="experience">Experience</TabsTrigger>
-            <TabsTrigger value="benchmark">Role Benchmark</TabsTrigger>
+          <TabsList className="w-full flex h-12 items-center justify-start space-x-8 border-b bg-transparent p-0">
+            <TabsTrigger 
+              value="experience" 
+              className="border-b-2 border-transparent px-0 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
+            >
+              Experience
+            </TabsTrigger>
+            <TabsTrigger 
+              value="benchmark"
+              className="border-b-2 border-transparent px-0 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
+            >
+              Role Benchmark
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="experience" className="space-y-6">
