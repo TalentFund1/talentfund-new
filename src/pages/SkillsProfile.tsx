@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
 import { Table } from "@/components/ui/table";
+import { Users, Briefcase, Heart, Clock } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -70,18 +71,22 @@ const SkillsProfile = () => {
           <StatCard
             title="Total number of Profiles"
             value="56"
+            icon={<Users className="h-6 w-6" />}
           />
           <StatCard
             title="Open Roles"
             value="5"
+            icon={<Briefcase className="h-6 w-6" />}
           />
           <StatCard
             title="Share of Female Employees"
             value="50%"
+            icon={<Heart className="h-6 w-6" />}
           />
           <StatCard
             title="Average Tenure (Years)"
             value="1.09"
+            icon={<Clock className="h-6 w-6" />}
           />
         </div>
 
@@ -144,7 +149,7 @@ const SkillsProfile = () => {
               <SelectTrigger className="w-[100px]">
                 <SelectValue placeholder="10 rows" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="10">10 rows</SelectItem>
                 <SelectItem value="20">20 rows</SelectItem>
                 <SelectItem value="50">50 rows</SelectItem>
