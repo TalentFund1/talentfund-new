@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import { SkillGrowthSheet } from "./skills/SkillGrowthSheet";
+import { Card } from "./ui/card";
 
 const skills = [
   {
@@ -95,87 +96,96 @@ export const SkillsTable = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg border">
-      <div className="p-6 border-b">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
-          <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="Filter skills" />
-            </SelectTrigger>
-            <SelectContent className="bg-white">
-              <SelectItem value="all">All Skills</SelectItem>
-              <SelectItem value="specialized">Specialized Skills</SelectItem>
-              <SelectItem value="common">Common Skills</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+    <div className="space-y-4 w-full max-w-[800px] mx-auto">
+      <h3 className="text-xl font-semibold text-foreground">Skills Matrix</h3>
       
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Skill Title</TableHead>
-            <TableHead>Subcategory</TableHead>
-            <TableHead className="text-center">Beginner</TableHead>
-            <TableHead className="text-center">Intermediate</TableHead>
-            <TableHead className="text-center">Advanced</TableHead>
-            <TableHead>Projected Growth</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredSkills.map((skill) => (
-            <TableRow key={skill.title}>
-              <TableCell>{skill.title}</TableCell>
-              <TableCell>{skill.subcategory}</TableCell>
-              <TableCell className="text-center">
-                {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
-              </TableCell>
-              <TableCell className="text-center">
-                {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
-              </TableCell>
-              <TableCell className="text-center">
-                {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
-              </TableCell>
-              <TableCell>
-                <span 
-                  className={`px-2 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
-                    skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-                  }`}
-                  onClick={() => handleGrowthClick(skill)}
-                >
-                  ↗ {skill.growth}
-                </span>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      
-      <div className="flex justify-between items-center p-4 border-t">
-        <Select defaultValue="10">
-          <SelectTrigger className="w-[100px]">
-            <SelectValue placeholder="Rows" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="10">10 rows</SelectItem>
-            <SelectItem value="20">20 rows</SelectItem>
-            <SelectItem value="50">50 rows</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">1-4 of 4</span>
-          <div className="flex gap-1">
-            <Button variant="outline" size="icon" className="w-8 h-8">
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="w-8 h-8">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+      <Card className="rounded-2xl border border-border">
+        <div className="p-6 border-b">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-medium">Skills Matrix</h2>
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                {filteredSkills.length}
+              </span>
+            </div>
+            <Select value={selectedFilter} onValueChange={setSelectedFilter}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="Filter skills" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Skills</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
-      </div>
+        
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Skill Title</TableHead>
+              <TableHead>Subcategory</TableHead>
+              <TableHead className="text-center">Beginner</TableHead>
+              <TableHead className="text-center">Intermediate</TableHead>
+              <TableHead className="text-center">Advanced</TableHead>
+              <TableHead>Projected Growth</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredSkills.map((skill) => (
+              <TableRow key={skill.title}>
+                <TableCell>{skill.title}</TableCell>
+                <TableCell>{skill.subcategory}</TableCell>
+                <TableCell className="text-center">
+                  {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
+                </TableCell>
+                <TableCell className="text-center">
+                  {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
+                </TableCell>
+                <TableCell className="text-center">
+                  {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
+                </TableCell>
+                <TableCell>
+                  <span 
+                    className={`px-2 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
+                      skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
+                    }`}
+                    onClick={() => handleGrowthClick(skill)}
+                  >
+                    ↗ {skill.growth}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        
+        <div className="flex justify-between items-center p-4 border-t">
+          <Select defaultValue="10">
+            <SelectTrigger className="w-[100px] bg-white">
+              <SelectValue placeholder="Rows" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10 rows</SelectItem>
+              <SelectItem value="20">20 rows</SelectItem>
+              <SelectItem value="50">50 rows</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">1-4 of 4</span>
+            <div className="flex gap-1">
+              <Button variant="outline" size="icon" className="w-8 h-8">
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" size="icon" className="w-8 h-8">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Card>
 
       {selectedSkill && (
         <SkillGrowthSheet 
