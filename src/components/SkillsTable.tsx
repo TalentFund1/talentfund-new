@@ -92,10 +92,10 @@ export const SkillsTable = () => {
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
           <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] bg-white">
               <SelectValue placeholder="Filter skills" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               <SelectItem value="all">All Skills</SelectItem>
               <SelectItem value="specialized">Specialized Skills</SelectItem>
               <SelectItem value="common">Common Skills</SelectItem>
@@ -103,6 +103,7 @@ export const SkillsTable = () => {
           </Select>
         </div>
       </div>
+      
       <Table>
         <TableHeader>
           <TableRow>
