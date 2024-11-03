@@ -17,7 +17,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
               title="Total Employees"
-              value="1,234"
+              value="124"
               description="+12% from last month"
               icon={<Users className="h-6 w-6 text-primary-icon" />}
             />
