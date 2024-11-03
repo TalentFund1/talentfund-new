@@ -9,49 +9,57 @@ import {
 import { ChevronLeft, ChevronRight, CircleDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 
 const skills = [
   {
     title: "Amazon Web Services",
     subcategory: "Web Services",
     level: "advanced",
-    growth: "12%"
+    growth: "12%",
+    type: "specialized"
   },
   {
     title: "Artificial Intelligence",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "advanced",
-    growth: "19%"
+    growth: "19%",
+    type: "specialized"
   },
   {
     title: "Conversational AI",
     subcategory: "Natural Language Processing (NLP)",
     level: "advanced",
-    growth: "12%"
+    growth: "12%",
+    type: "specialized"
   },
   {
     title: "Deep Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "intermediate",
-    growth: "19%"
+    growth: "19%",
+    type: "specialized"
   },
   {
     title: "Machine Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "intermediate",
-    growth: "10%"
+    growth: "10%",
+    type: "specialized"
   },
   {
     title: "Docker (Software)",
     subcategory: "Software Development Tools",
     level: "intermediate",
-    growth: "0%"
+    growth: "0%",
+    type: "common"
   },
   {
     title: "MLflow",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "beginner",
-    growth: "11%"
+    growth: "11%",
+    type: "common"
   }
 ];
 
@@ -69,10 +77,31 @@ const SkillLevelIcon = ({ level }: { level: string }) => {
 };
 
 export const SkillsTable = () => {
+  const [selectedFilter, setSelectedFilter] = useState<string>("all");
+
+  const filteredSkills = skills.filter(skill => {
+    if (selectedFilter === "all") return true;
+    if (selectedFilter === "specialized") return skill.type === "specialized";
+    if (selectedFilter === "common") return skill.type === "common";
+    return true;
+  });
+
   return (
     <div className="bg-white rounded-lg border">
       <div className="p-6 border-b">
-        <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+          <Select value={selectedFilter} onValueChange={setSelectedFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter skills" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Skills</SelectItem>
+              <SelectItem value="specialized">Specialized Skills</SelectItem>
+              <SelectItem value="common">Common Skills</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <Table>
         <TableHeader>
@@ -86,7 +115,7 @@ export const SkillsTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {skills.map((skill) => (
+          {filteredSkills.map((skill) => (
             <TableRow key={skill.title}>
               <TableCell>{skill.title}</TableCell>
               <TableCell>{skill.subcategory}</TableCell>
