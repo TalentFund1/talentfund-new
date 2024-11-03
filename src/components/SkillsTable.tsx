@@ -76,7 +76,7 @@ export const SkillsTable = () => {
               <TableCell>{skill.subcategory}</TableCell>
               <TableCell>
                 {skill.level === "beginner" && (
-                  <div className="h-2 w-2 rounded-full bg-primary-accent" />
+                  <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#008000" }} />
                 )}
               </TableCell>
               <TableCell>
