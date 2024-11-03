@@ -33,6 +33,7 @@ export const Sidebar = () => {
           ))}
         </div>
         <div className="space-y-1">
+          <div className="h-px bg-border mx-4 mb-2"></div>
           {secondaryMenuItems.map((item) => (
             <Link
               key={item.name}
