@@ -21,11 +21,13 @@ export const SkillsSummary = () => {
                 {skill} <div className="h-2 w-2 rounded-full bg-primary-accent" />
               </Badge>
             ))}
-            <span 
-              className="inline-flex items-center rounded-lg px-3 py-1.5 text-sm font-medium text-primary-accent bg-primary-accent/10 hover:bg-primary-accent/20 transition-colors cursor-pointer"
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="rounded-lg px-3 py-1.5 border-2 bg-background hover:bg-background/80"
             >
               See More 12
-            </span>
+            </Button>
           </div>
         </SkillSection>
 
