@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight, CircleDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
+import { SkillGrowthSheet } from "./skills/SkillGrowthSheet";
 
 const skills = [
   {
@@ -78,6 +79,8 @@ const SkillLevelIcon = ({ level }: { level: string }) => {
 
 export const SkillsTable = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("all");
+  const [selectedSkill, setSelectedSkill] = useState<{ title: string; growth: string } | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const filteredSkills = skills.filter(skill => {
     if (selectedFilter === "all") return true;
@@ -85,6 +88,11 @@ export const SkillsTable = () => {
     if (selectedFilter === "common") return skill.type === "common";
     return true;
   });
+
+  const handleGrowthClick = (skill: { title: string; growth: string }) => {
+    setSelectedSkill(skill);
+    setSheetOpen(true);
+  };
 
   return (
     <div className="bg-white rounded-lg border">
@@ -130,9 +138,12 @@ export const SkillsTable = () => {
                 {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
               </TableCell>
               <TableCell>
-                <span className={`px-2 py-1 rounded-full text-sm ${
-                  skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-                }`}>
+                <span 
+                  className={`px-2 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
+                    skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
+                  }`}
+                  onClick={() => handleGrowthClick(skill)}
+                >
                   ↗ {skill.growth}
                 </span>
               </TableCell>
@@ -165,6 +176,14 @@ export const SkillsTable = () => {
           </div>
         </div>
       </div>
+
+      {selectedSkill && (
+        <SkillGrowthSheet 
+          open={sheetOpen} 
+          onOpenChange={setSheetOpen}
+          skill={selectedSkill}
+        />
+      )}
     </div>
   );
 };
