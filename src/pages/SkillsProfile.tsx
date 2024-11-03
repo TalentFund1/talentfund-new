@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
-import { Users, Briefcase, Scale, Clock, ChevronDown, ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
+import { Users, Briefcase, Heart, Clock, ChevronDown, ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -84,7 +84,7 @@ const SkillsProfile = () => {
             <StatCard
               title="Share of Female Employees"
               value="50%"
-              icon={<Scale className="h-6 w-6 text-primary-icon" />}
+              icon={<Heart className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Average Tenure (Years)"
