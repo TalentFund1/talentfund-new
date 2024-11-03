@@ -1,9 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
 import { Table } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const SkillsProfile = () => {
   return (
@@ -23,21 +29,33 @@ const SkillsProfile = () => {
             
             <div className="flex flex-wrap gap-4">
               <Select>
-                <option value="">Job Title</option>
-                <option value="engineer">Engineer</option>
-                <option value="manager">Manager</option>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Job Title" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="engineer">Engineer</SelectItem>
+                  <SelectItem value="manager">Manager</SelectItem>
+                </SelectContent>
               </Select>
               
               <Select>
-                <option value="">Level</option>
-                <option value="junior">Junior</option>
-                <option value="senior">Senior</option>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="junior">Junior</SelectItem>
+                  <SelectItem value="senior">Senior</SelectItem>
+                </SelectContent>
               </Select>
               
               <Select>
-                <option value="">Function</option>
-                <option value="engineering">Engineering</option>
-                <option value="design">Design</option>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Function" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="engineering">Engineering</SelectItem>
+                  <SelectItem value="design">Design</SelectItem>
+                </SelectContent>
               </Select>
 
               <Button variant="outline">Clear All</Button>
@@ -119,10 +137,15 @@ const SkillsProfile = () => {
             </tbody>
           </Table>
           <div className="flex justify-between items-center mt-4">
-            <Select className="w-24">
-              <option value="10">Rows 10</option>
-              <option value="20">Rows 20</option>
-              <option value="50">Rows 50</option>
+            <Select>
+              <SelectTrigger className="w-[100px]">
+                <SelectValue placeholder="10 rows" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10 rows</SelectItem>
+                <SelectItem value="20">20 rows</SelectItem>
+                <SelectItem value="50">50 rows</SelectItem>
+              </SelectContent>
             </Select>
             <div>1-4 of 4</div>
           </div>
