@@ -24,9 +24,9 @@ export const SkillsSummary = () => {
             <Button 
               variant="outline" 
               size="sm" 
-              className="rounded-lg px-3 py-1.5 border-2 bg-background hover:bg-background/80"
+              className="rounded-lg px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
             >
-              See More 12
+              See More <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">12</span>
             </Button>
           </div>
         </SkillSection>
