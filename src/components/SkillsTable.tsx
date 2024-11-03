@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Circle, CircleDot, CircleDotDashed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -55,6 +55,19 @@ const skills = [
   }
 ];
 
+const SkillLevelIcon = ({ level }: { level: string }) => {
+  switch (level) {
+    case "advanced":
+      return <CircleDot className="h-5 w-5 text-primary-accent mx-auto" />;
+    case "intermediate":
+      return <CircleDotDashed className="h-5 w-5 text-primary-icon mx-auto" />;
+    case "beginner":
+      return <Circle className="h-5 w-5 text-[#008000] mx-auto" />;
+    default:
+      return null;
+  }
+};
+
 export const SkillsTable = () => {
   return (
     <div className="bg-white rounded-lg border">
@@ -78,19 +91,13 @@ export const SkillsTable = () => {
               <TableCell>{skill.title}</TableCell>
               <TableCell>{skill.subcategory}</TableCell>
               <TableCell className="text-center">
-                {skill.level === "beginner" && (
-                  <div className="h-4 w-4 rounded-full bg-[#008000] mx-auto" />
-                )}
+                {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
               </TableCell>
               <TableCell className="text-center">
-                {skill.level === "intermediate" && (
-                  <div className="h-4 w-4 rounded-full bg-primary-icon mx-auto" />
-                )}
+                {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
               </TableCell>
               <TableCell className="text-center">
-                {skill.level === "advanced" && (
-                  <div className="h-4 w-4 rounded-full bg-primary-accent mx-auto" />
-                )}
+                {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
               </TableCell>
               <TableCell>
                 <span className={`px-2 py-1 rounded-full text-sm ${
