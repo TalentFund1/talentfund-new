@@ -1,5 +1,6 @@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -84,7 +85,9 @@ export const EmployeeTable = () => {
                 alt={employee.name}
                 className="w-8 h-8 rounded-full object-cover"
               />
-              {employee.name}
+              <Link to="/employee-profile" className="text-primary hover:underline">
+                {employee.name}
+              </Link>
             </TableCell>
             <TableCell>{employee.role}</TableCell>
             <TableCell>{employee.department}</TableCell>
