@@ -12,7 +12,7 @@ export const Sidebar = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 h-screen w-64 border-r border-border bg-white flex flex-col">
+    <div className="fixed top-0 left-0 h-screen w-64 border-r border-border bg-[#F7F9FF] flex flex-col">
       <div className="p-6 border-b border-border">
         <img src="/TalentFund.png" alt="TalentFund" className="h-8" />
       </div>
