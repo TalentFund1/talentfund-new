@@ -12,13 +12,13 @@ const EmployeeProfile = () => {
     <div className="flex-1 p-6 ml-16 transition-all duration-300">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex justify-between items-center">
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="flex items-center gap-2 bg-white border-border hover:bg-background">
             <ChevronLeft className="h-4 w-4" /> Back
           </Button>
-          <div className="flex items-center gap-2">
-            <ChevronLeft className="h-4 w-4" />
-            <span>2/7</span>
-            <ChevronRight className="h-4 w-4" />
+          <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
+            <ChevronLeft className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
+            <span className="text-sm text-foreground">2/7</span>
+            <ChevronRight className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
           </div>
         </div>
 
