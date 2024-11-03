@@ -33,6 +33,10 @@ export default {
           DEFAULT: "#F7F9FF",
           foreground: "#1F2144",
         },
+        popover: {
+          DEFAULT: "white",
+          foreground: "#1F2144",
+        },
       },
       keyframes: {
         "fade-in": {
