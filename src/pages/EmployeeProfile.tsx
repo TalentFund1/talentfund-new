@@ -89,7 +89,7 @@ const EmployeeProfile = () => {
             value="experience" 
             className="border-b-2 border-transparent px-0 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
           >
-            Experience
+            Skills Summary
           </TabsTrigger>
           <TabsTrigger 
             value="benchmark"
@@ -117,7 +117,7 @@ const EmployeeProfile = () => {
               <Separator />
 
               <div className="space-y-4">
-                <h3 className="font-semibold">Experience</h3>
+                <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
                 
                 <div className="space-y-4">
                   <div>
