@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 
 const SkillsProfile = () => {
@@ -138,7 +139,8 @@ const SkillsProfile = () => {
                 </TableRow>
               </TableBody>
             </Table>
-            <div className="flex justify-between items-center mt-4">
+            <Separator className="my-4" />
+            <div className="flex justify-between items-center">
               <Select>
                 <SelectTrigger className="w-[100px]">
                   <SelectValue placeholder="10 rows" />
