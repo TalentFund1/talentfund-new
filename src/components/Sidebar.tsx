@@ -16,11 +16,11 @@ export const Sidebar = () => {
   ];
 
   return (
-    <div className="h-screen w-64 border-r border-border bg-[#F7F9FF] flex flex-col">
+    <div className="fixed top-0 left-0 h-screen w-64 border-r border-border bg-[#F7F9FF] flex flex-col">
       <div className="p-4">
         <img src="/logo.svg" alt="Logo" className="h-8" />
       </div>
-      <nav className="flex-1 space-y-1 px-3">
+      <nav className="flex-1 space-y-1 px-3 overflow-y-auto">
         {menuItems.map((item) => (
           <Link
             key={item.name}
