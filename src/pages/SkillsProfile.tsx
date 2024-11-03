@@ -1,9 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { StatCard } from "@/components/StatCard";
-import { Table } from "@/components/ui/table";
-import { Users, Briefcase, Heart, Clock } from "lucide-react";
+import { Sidebar } from "@/components/Sidebar";
+import { ChevronDown, ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -11,153 +10,128 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const SkillsProfile = () => {
   return (
-    <div className="flex-1 p-6 ml-16 transition-all duration-300">
-      <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
-          <div className="space-x-2">
-            <Button variant="outline">Export Data</Button>
-            <Button className="text-[#ececf3]">Add Profile</Button>
-          </div>
-        </div>
-
-        <Card className="p-6">
-          <div className="space-y-4">
-            <label htmlFor="search" className="block text-sm font-medium text-foreground">
-              Skills
-            </label>
-            <Input id="search" type="search" placeholder="Search..." className="max-w-sm bg-white" />
-            
-            <div className="flex flex-wrap gap-4">
-              <Select>
-                <SelectTrigger className="w-[180px] bg-white">
-                  <SelectValue placeholder="Job Title" />
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
+      <div className="flex-1 p-6 ml-16">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl font-bold">Roles</h1>
+            <div className="flex items-center gap-2">
+              <Select defaultValue="0">
+                <SelectTrigger className="w-[150px] bg-gray-100">
+                  <SelectValue placeholder="0 Selected" />
                 </SelectTrigger>
-                <SelectContent className="bg-white">
-                  <SelectItem value="engineer">Engineer</SelectItem>
-                  <SelectItem value="manager">Manager</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Select>
-                <SelectTrigger className="w-[180px] bg-white">
-                  <SelectValue placeholder="Level" />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  <SelectItem value="junior">Junior</SelectItem>
-                  <SelectItem value="senior">Senior</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Select>
-                <SelectTrigger className="w-[180px] bg-white">
-                  <SelectValue placeholder="Function" />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  <SelectItem value="engineering">Engineering</SelectItem>
-                  <SelectItem value="design">Design</SelectItem>
+                <SelectContent>
+                  <SelectItem value="0">0 Selected</SelectItem>
                 </SelectContent>
               </Select>
 
-              <Button variant="outline">Clear All</Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    Export Data <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>Export Role Data</DropdownMenuItem>
+                  <DropdownMenuItem>Export Tags/Aliases</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Button className="bg-[#4F46E5]">Add Role</Button>
             </div>
           </div>
-        </Card>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            title="Total number of Profiles"
-            value="56"
-            icon={<Users className="h-6 w-6 text-primary-icon" />}
-          />
-          <StatCard
-            title="Open Roles"
-            value="5"
-            icon={<Briefcase className="h-6 w-6 text-primary-icon" />}
-          />
-          <StatCard
-            title="Share of Female Employees"
-            value="50%"
-            icon={<Heart className="h-6 w-6 text-primary-icon" />}
-          />
-          <StatCard
-            title="Average Tenure (Years)"
-            value="1.09"
-            icon={<Clock className="h-6 w-6 text-primary-icon" />}
-          />
-        </div>
-
-        <Card className="p-6">
-          <Table>
-            <thead>
-              <tr>
-                <th className="w-12">
-                  <input type="checkbox" />
-                </th>
-                <th>Role Name</th>
-                <th>Function</th>
-                <th>Skill Count</th>
-                <th>People with the Job</th>
-                <th>People that match the Job</th>
-                <th>Last Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td>AI Engineer</td>
-                <td>Engineering</td>
-                <td>16</td>
-                <td>2</td>
-                <td>0</td>
-                <td>10/20/24</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td>Backend Engineer</td>
-                <td>Engineering</td>
-                <td>12</td>
-                <td>3</td>
-                <td>4</td>
-                <td>10/20/24</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td>Frontend Engineer</td>
-                <td>Engineering</td>
-                <td>17</td>
-                <td>0</td>
-                <td>5</td>
-                <td>10/20/24</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td>Engineering Manager</td>
-                <td>Engineering</td>
-                <td>11</td>
-                <td>2</td>
-                <td>5</td>
-                <td>10/20/24</td>
-              </tr>
-            </tbody>
-          </Table>
-          <div className="flex justify-between items-center mt-4">
-            <Select>
-              <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="10 rows" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                <SelectItem value="10">10 rows</SelectItem>
-                <SelectItem value="20">20 rows</SelectItem>
-                <SelectItem value="50">50 rows</SelectItem>
-              </SelectContent>
-            </Select>
-            <div>1-4 of 4</div>
+          <div className="mb-6">
+            <Input type="search" placeholder="Search Roles" className="max-w-full bg-white" />
           </div>
-        </Card>
+
+          <Card className="w-full">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="w-12 p-4">
+                    <input type="checkbox" className="rounded border-gray-300" />
+                  </th>
+                  <th className="text-left p-4 font-medium">
+                    <div className="flex items-center gap-2">
+                      Role Name
+                      <ChevronDown className="h-4 w-4" />
+                    </div>
+                  </th>
+                  <th className="text-left p-4 font-medium">Mapped Title</th>
+                  <th className="text-left p-4 font-medium">Status</th>
+                  <th className="text-left p-4 font-medium">
+                    <div className="flex items-center gap-1">
+                      Confidence Score
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <HelpCircle className="h-4 w-4" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Confidence score indicates match accuracy</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  </th>
+                  <th className="text-left p-4 font-medium">Job Family</th>
+                  <th className="text-left p-4 font-medium">Last Updated</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b hover:bg-gray-50">
+                  <td className="p-4">
+                    <input type="checkbox" className="rounded border-gray-300" />
+                  </td>
+                  <td className="p-4 text-blue-600">AI Engineer</td>
+                  <td className="p-4">Artificial Intelligence Engineer</td>
+                  <td className="p-4">
+                    <span className="px-2 py-1 rounded text-amber-800 bg-amber-100">Needs Approval</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="px-2 py-1 rounded text-green-800 bg-green-100">High</span>
+                  </td>
+                  <td className="p-4">n/a</td>
+                  <td className="p-4">10/20/24</td>
+                </tr>
+                {/* ... Additional rows would follow the same pattern */}
+              </tbody>
+            </table>
+            <div className="flex justify-between items-center p-4 border-t">
+              <Select defaultValue="10">
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue placeholder="10 rows" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10 rows</SelectItem>
+                  <SelectItem value="20">20 rows</SelectItem>
+                  <SelectItem value="50">50 rows</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">1-5 of 5</span>
+                <div className="flex gap-1">
+                  <Button variant="outline" size="icon">
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="icon">
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );
