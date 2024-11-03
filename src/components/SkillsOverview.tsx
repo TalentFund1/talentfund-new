@@ -48,7 +48,7 @@ const data = [
 
 export const SkillsOverview = () => {
   return (
-    <Card className="p-6 animate-fade-in border-border border">
+    <Card className="p-6 animate-fade-in border-border border bg-white">
       <h2 className="text-xl font-semibold text-foreground mb-2">Skills Distribution</h2>
       <p className="text-sm text-secondary-foreground mb-6">
         Here you can find an overview of skills in your organization, categorized into three levels. Check the Employee tab to explore further.
