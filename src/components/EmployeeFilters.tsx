@@ -51,14 +51,16 @@ const softSkills = [
 
 export const EmployeeFilters = () => {
   const [open, setOpen] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState("");
 
   return (
     <div className="space-y-4">
       <div className="relative max-w-sm">
         <Input
-          type="search"
+          type="text"
           placeholder="Search Skills..."
           className="bg-white"
+          value={selectedSkill}
           onClick={() => setOpen(true)}
           readOnly
         />
@@ -69,20 +71,26 @@ export const EmployeeFilters = () => {
               <CommandEmpty>No skills found.</CommandEmpty>
               <CommandGroup heading="Technical Skills">
                 {technicalSkills.map((skill) => (
-                  <CommandItem key={skill} onSelect={() => {
-                    console.log(`Selected: ${skill}`);
-                    setOpen(false);
-                  }}>
+                  <CommandItem
+                    key={skill}
+                    onSelect={() => {
+                      setSelectedSkill(skill);
+                      setOpen(false);
+                    }}
+                  >
                     {skill}
                   </CommandItem>
                 ))}
               </CommandGroup>
               <CommandGroup heading="Soft Skills">
                 {softSkills.map((skill) => (
-                  <CommandItem key={skill} onSelect={() => {
-                    console.log(`Selected: ${skill}`);
-                    setOpen(false);
-                  }}>
+                  <CommandItem
+                    key={skill}
+                    onSelect={() => {
+                      setSelectedSkill(skill);
+                      setOpen(false);
+                    }}
+                  >
                     {skill}
                   </CommandItem>
                 ))}
