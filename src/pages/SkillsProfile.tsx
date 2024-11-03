@@ -19,8 +19,8 @@ const SkillsProfile = () => {
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
           <div className="space-x-2">
-            <Button variant="outline" className="text-primary">Export Data</Button>
-            <Button className="text-primary">Add Profile</Button>
+            <Button variant="outline">Export Data</Button>
+            <Button>Add Profile</Button>
           </div>
         </div>
 
@@ -62,7 +62,7 @@ const SkillsProfile = () => {
                 </SelectContent>
               </Select>
 
-              <Button variant="outline" className="text-primary">Clear All</Button>
+              <Button variant="outline">Clear All</Button>
             </div>
           </div>
         </Card>
