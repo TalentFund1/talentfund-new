@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronLeft, ChevronRight, Circle, CircleDot, CircleDotDashed } from "lucide-react";
+import { ChevronLeft, ChevronRight, CircleDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -60,9 +60,9 @@ const SkillLevelIcon = ({ level }: { level: string }) => {
     case "advanced":
       return <CircleDot className="h-5 w-5 text-primary-accent mx-auto" />;
     case "intermediate":
-      return <CircleDotDashed className="h-5 w-5 text-primary-icon mx-auto" />;
+      return <CircleDot className="h-5 w-5 text-primary-icon mx-auto" />;
     case "beginner":
-      return <Circle className="h-5 w-5 text-[#008000] mx-auto" />;
+      return <CircleDot className="h-5 w-5 text-[#008000] mx-auto" />;
     default:
       return null;
   }
