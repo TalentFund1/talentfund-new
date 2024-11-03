@@ -13,8 +13,8 @@ const EmployeeProfile = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex-1 p-6 ml-16 transition-all duration-300">
-      <div className="flex justify-between items-center">
+    <div className="flex-1 space-y-8 p-8 ml-16 transition-all duration-300">
+      <div className="flex justify-between items-center mb-6">
         <Button 
           variant="outline" 
           className="flex items-center gap-2 bg-white border-border hover:bg-background"
@@ -22,21 +22,21 @@ const EmployeeProfile = () => {
         >
           <ChevronLeft className="h-4 w-4" /> Back
         </Button>
-        <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
+        <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-4 py-2">
           <ChevronLeft className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
           <span className="text-sm text-foreground">2/7</span>
           <ChevronRight className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
         </div>
       </div>
 
-      <Card className="p-6 bg-white">
+      <Card className="p-8 bg-white">
         <div className="flex items-start justify-between">
-          <div className="flex gap-6">
+          <div className="flex gap-8">
             <Avatar className="h-24 w-24">
               <img src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=96&h=96" alt="Kate Smith" />
             </Avatar>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold">Kate Smith</h1>
                 <span className="text-sm text-muted-foreground">Employee ID: 123</span>
               </div>
@@ -47,13 +47,13 @@ const EmployeeProfile = () => {
               </div>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Button variant="outline" className="bg-white">Export</Button>
             <Button>Edit</Button>
           </div>
         </div>
 
-        <Separator className="my-6" />
+        <Separator className="my-8" />
 
         <div className="grid grid-cols-4 gap-8">
           <div>
@@ -83,48 +83,48 @@ const EmployeeProfile = () => {
         </div>
       </Card>
 
-      <Tabs defaultValue="experience" className="w-full">
+      <Tabs defaultValue="experience" className="w-full space-y-6">
         <TabsList className="w-full flex h-12 items-center justify-start space-x-8 border-b bg-transparent p-0">
           <TabsTrigger 
             value="experience" 
-            className="border-b-2 border-transparent px-0 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
+            className="border-b-2 border-transparent px-4 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
           >
             Skills Summary
           </TabsTrigger>
           <TabsTrigger 
             value="benchmark"
-            className="border-b-2 border-transparent px-0 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
+            className="border-b-2 border-transparent px-4 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
           >
             Role Benchmark
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="experience" className="space-y-6">
-          <Card className="p-6 bg-white">
-            <div className="space-y-4">
+          <Card className="p-8 bg-white">
+            <div className="space-y-6">
               <Input
                 type="text"
                 placeholder="Search Skills..."
                 className="max-w-full bg-white rounded-full border-input"
               />
 
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3">
                 <Badge variant="outline" className="rounded-lg px-4 py-2 border-2 flex items-center gap-2">
                   Python <span className="text-xs">×</span>
                 </Badge>
               </div>
 
-              <Separator />
+              <Separator className="my-6" />
 
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
                 
-                <div className="space-y-4">
+                <div className="space-y-8">
                   <div>
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-4">
                       <span className="text-sm text-muted-foreground">Specialized Skills 66</span>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-3">
                       {["React", "JavaScript", "Git", "GraphQL", "HTML and CSS3"].map((skill) => (
                         <Badge 
                           key={skill} 
@@ -145,10 +145,10 @@ const EmployeeProfile = () => {
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-4">
                       <span className="text-sm text-muted-foreground">Common Skills 14</span>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-3">
                       {["UI/UX Design Principles", "Communication", "Microsoft Excel"].map((skill) => (
                         <Badge 
                           key={skill} 
@@ -162,10 +162,10 @@ const EmployeeProfile = () => {
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-4">
                       <span className="text-sm text-muted-foreground">Certifications 1</span>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-3">
                       <Badge 
                         variant="outline" 
                         className="rounded-lg px-4 py-2 border-2 bg-white"
@@ -183,7 +183,7 @@ const EmployeeProfile = () => {
         </TabsContent>
 
         <TabsContent value="benchmark">
-          <Card className="p-6 bg-white">
+          <Card className="p-8 bg-white">
             <p>Role Benchmark content here</p>
           </Card>
         </TabsContent>
