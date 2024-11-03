@@ -11,15 +11,15 @@ const data = [
 
 export const SkillsOverview = () => {
   return (
-    <Card className="p-6 animate-fade-in">
-      <h2 className="text-xl font-semibold text-primary mb-6">Skills Distribution</h2>
+    <Card className="p-6 animate-fade-in border-border border">
+      <h2 className="text-xl font-semibold text-foreground mb-6">Skills Distribution</h2>
       <div className="h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <XAxis dataKey="skill" />
-            <YAxis />
+            <XAxis dataKey="skill" stroke="#1F2144" />
+            <YAxis stroke="#1F2144" />
             <Tooltip />
-            <Bar dataKey="value" fill="#2C74B3" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="value" fill="#8073ec" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

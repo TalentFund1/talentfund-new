@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -30,12 +30,12 @@
 
   body {
     font-family: 'Inter', sans-serif;
-    @apply bg-secondary text-foreground antialiased;
+    @apply bg-background text-foreground antialiased;
   }
 }
 
 .stat-card {
-  @apply bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow;
+  @apply bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow border-border border;
 }
 
 .skill-progress {

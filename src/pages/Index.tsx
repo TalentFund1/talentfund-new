@@ -17,34 +17,34 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-secondary p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-primary">Skills Intelligence Dashboard</h1>
+        <h1 className="text-3xl font-bold text-foreground">Skills Intelligence Dashboard</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             title="Total Employees"
             value="1,234"
             description="+12% from last month"
-            icon={<Users className="h-6 w-6" />}
+            icon={<Users className="h-6 w-6 text-primary-icon" />}
           />
           <StatCard
             title="Skills Coverage"
             value="87%"
             description="Above industry average"
-            icon={<Target className="h-6 w-6" />}
+            icon={<Target className="h-6 w-6 text-primary-icon" />}
           />
           <StatCard
             title="Growth Rate"
             value="+15%"
             description="Year over year"
-            icon={<TrendingUp className="h-6 w-6" />}
+            icon={<TrendingUp className="h-6 w-6 text-primary-icon" />}
           />
           <StatCard
             title="Skill Score"
             value="4.8/5"
             description="Team performance"
-            icon={<Award className="h-6 w-6" />}
+            icon={<Award className="h-6 w-6 text-primary-icon" />}
           />
         </div>
 
