@@ -95,6 +95,7 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
+
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
@@ -106,14 +107,10 @@ const SkillsProfile = () => {
                       Role Name <ChevronDown className="h-4 w-4" />
                     </div>
                   </TableHead>
-                  <TableHead>Mapped Title</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>
-                    <div className="flex items-center gap-1">
-                      Confidence Score <HelpCircle className="h-4 w-4" />
-                    </div>
-                  </TableHead>
-                  <TableHead>Job Family</TableHead>
+                  <TableHead>Function</TableHead>
+                  <TableHead>Skill Count</TableHead>
+                  <TableHead>People with the Job</TableHead>
+                  <TableHead>People that match the Job</TableHead>
                   <TableHead>Last Updated</TableHead>
                 </TableRow>
               </TableHeader>
@@ -122,19 +119,44 @@ const SkillsProfile = () => {
                   <TableCell>
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell className="text-blue-500">AI Engineer</TableCell>
-                  <TableCell>Artificial Intelligence Engineer</TableCell>
+                  <TableCell className="text-blue-500 hover:underline cursor-pointer">AI Engineer</TableCell>
+                  <TableCell>Engineering</TableCell>
+                  <TableCell>16</TableCell>
+                  <TableCell>2</TableCell>
+                  <TableCell>0</TableCell>
+                  <TableCell>10/20/24</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell>
-                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">
-                      Needs Approval
-                    </span>
+                    <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
+                  <TableCell className="text-blue-500 hover:underline cursor-pointer">Backend Engineer</TableCell>
+                  <TableCell>Engineering</TableCell>
+                  <TableCell>12</TableCell>
+                  <TableCell>3</TableCell>
+                  <TableCell>4</TableCell>
+                  <TableCell>10/20/24</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell>
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                      High
-                    </span>
+                    <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell>n/a</TableCell>
+                  <TableCell className="text-blue-500 hover:underline cursor-pointer">Frontend Engineer</TableCell>
+                  <TableCell>Engineering</TableCell>
+                  <TableCell>17</TableCell>
+                  <TableCell>0</TableCell>
+                  <TableCell>5</TableCell>
+                  <TableCell>10/20/24</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>
+                    <input type="checkbox" className="rounded border-gray-300" />
+                  </TableCell>
+                  <TableCell className="text-blue-500 hover:underline cursor-pointer">Engineering Manager</TableCell>
+                  <TableCell>Engineering</TableCell>
+                  <TableCell>11</TableCell>
+                  <TableCell>2</TableCell>
+                  <TableCell>5</TableCell>
                   <TableCell>10/20/24</TableCell>
                 </TableRow>
               </TableBody>
