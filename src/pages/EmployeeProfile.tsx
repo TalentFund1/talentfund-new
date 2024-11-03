@@ -119,8 +119,8 @@ const EmployeeProfile = () => {
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
                 
-                <div className="space-y-6">
-                  <div className="rounded-2xl border-2 border-border bg-white p-6">
+                <div className="space-y-6 max-w-[800px]">
+                  <div className="rounded-2xl border-2 border-border bg-white p-6 w-full">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">Specialized Skills</span>
@@ -147,7 +147,7 @@ const EmployeeProfile = () => {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border-2 border-border bg-white p-6">
+                  <div className="rounded-2xl border-2 border-border bg-white p-6 w-full">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">Common Skills</span>
@@ -167,7 +167,7 @@ const EmployeeProfile = () => {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border-2 border-border bg-white p-6">
+                  <div className="rounded-2xl border-2 border-border bg-white p-6 w-full">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">Certifications</span>
@@ -202,4 +202,3 @@ const EmployeeProfile = () => {
 };
 
 export default EmployeeProfile;
-
