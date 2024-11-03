@@ -2,12 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SkillSection } from "./SkillSection";
 import { SkillsHeader } from "./SkillsHeader";
+import { Separator } from "@/components/ui/separator";
 
 export const SkillsSummary = () => {
   return (
     <div className="space-y-4 w-full max-w-[800px] mx-auto">
-      <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       <SkillsHeader />
+      
+      <Separator className="my-6" />
+      <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
       <div className="space-y-6">
         <SkillSection title="Specialized Skills" count={66}>
