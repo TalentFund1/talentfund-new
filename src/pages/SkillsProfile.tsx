@@ -23,48 +23,46 @@ const SkillsProfile = () => {
           </div>
         </div>
 
-        <Card className="p-6">
-          <div className="space-y-4">
-            <label htmlFor="search" className="block text-sm font-medium text-foreground">
-              Skills
-            </label>
-            <Input id="search" type="search" placeholder="Search..." className="max-w-sm" />
+        <div className="space-y-4">
+          <label htmlFor="search" className="block text-sm font-medium text-foreground">
+            Skills
+          </label>
+          <Input id="search" type="search" placeholder="Search..." className="max-w-sm" />
+          
+          <div className="flex flex-wrap gap-4">
+            <Select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Job Title" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="engineer">Engineer</SelectItem>
+                <SelectItem value="manager">Manager</SelectItem>
+              </SelectContent>
+            </Select>
             
-            <div className="flex flex-wrap gap-4">
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Job Title" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="engineer">Engineer</SelectItem>
-                  <SelectItem value="manager">Manager</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="junior">Junior</SelectItem>
-                  <SelectItem value="senior">Senior</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Function" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="engineering">Engineering</SelectItem>
-                  <SelectItem value="design">Design</SelectItem>
-                </SelectContent>
-              </Select>
+            <Select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="junior">Junior</SelectItem>
+                <SelectItem value="senior">Senior</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Function" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="engineering">Engineering</SelectItem>
+                <SelectItem value="design">Design</SelectItem>
+              </SelectContent>
+            </Select>
 
-              <Button variant="outline">Clear All</Button>
-            </div>
+            <Button variant="outline">Clear All</Button>
           </div>
-        </Card>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
