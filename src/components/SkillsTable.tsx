@@ -81,7 +81,7 @@ export const SkillsTable = () => {
               </TableCell>
               <TableCell>
                 {skill.level === "intermediate" && (
-                  <div className="h-2 w-2 rounded-full bg-primary-accent" />
+                  <div className="h-2 w-2 rounded-full bg-primary-icon" />
                 )}
               </TableCell>
               <TableCell>
