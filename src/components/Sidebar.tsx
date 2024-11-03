@@ -21,7 +21,7 @@ export const Sidebar = () => {
           <Link
             key={item.name}
             to={item.path}
-            className="flex items-center px-4 py-2.5 text-sm font-medium text-foreground hover:bg-background rounded-md transition-colors"
+            className="flex items-center px-4 py-2.5 text-sm font-medium text-foreground hover:bg-gray-200 rounded-md transition-colors"
           >
             {item.icon}
             <span className="ml-3">{item.name}</span>
