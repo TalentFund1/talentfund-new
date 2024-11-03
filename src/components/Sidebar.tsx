@@ -1,19 +1,17 @@
-import { LayoutDashboard, Users, Scale, Users2, Banknote, PenSquare, Gift, Settings, MessageSquare, PanelLeftClose } from "lucide-react";
+import { LayoutDashboard, Users, LineChart, BookOpen, Store, Settings, PanelLeftClose } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Sidebar = () => {
   const menuItems = [
     { name: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, path: "/" },
-    { name: "Market Data", icon: <Scale className="w-5 h-5" />, path: "/market" },
-    { name: "Team", icon: <Users2 className="w-5 h-5" />, path: "/team" },
-    { name: "Market Pricing", icon: <Banknote className="w-5 h-5" />, path: "/pricing" },
-    { name: "Compensation Planning", icon: <PenSquare className="w-5 h-5" />, path: "/compensation" },
-    { name: "Total Rewards", icon: <Gift className="w-5 h-5" />, path: "/rewards" },
-    { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/settings" },
+    { name: "Skill Profiles", icon: <BookOpen className="w-5 h-5" />, path: "/skills" },
+    { name: "Employees", icon: <Users className="w-5 h-5" />, path: "/employees" },
+    { name: "Market Data", icon: <LineChart className="w-5 h-5" />, path: "/market" },
   ];
 
   const bottomMenuItems = [
-    { name: "Chat with us", icon: <MessageSquare className="w-5 h-5" />, path: "/chat" },
+    { name: "Talent Marketplace", icon: <Store className="w-5 h-5" />, path: "/marketplace" },
+    { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/settings" },
     { name: "Collapse Menu", icon: <PanelLeftClose className="w-5 h-5" />, path: "#" },
   ];
 
