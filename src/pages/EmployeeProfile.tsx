@@ -120,9 +120,12 @@ const EmployeeProfile = () => {
                 <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
                 
                 <div className="space-y-6">
-                  <div>
+                  <div className="rounded-2xl border-2 border-border bg-white p-6">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm text-muted-foreground">Specialized Skills 66</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Specialized Skills</span>
+                        <span className="bg-background rounded-full px-2 py-0.5 text-xs font-medium text-foreground">66</span>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {["React", "JavaScript", "Git", "GraphQL", "HTML and CSS3"].map((skill) => (
@@ -144,9 +147,12 @@ const EmployeeProfile = () => {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="rounded-2xl border-2 border-border bg-white p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm text-muted-foreground">Common Skills 14</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Common Skills</span>
+                        <span className="bg-background rounded-full px-2 py-0.5 text-xs font-medium text-foreground">14</span>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-3">
                       {["UI/UX Design Principles", "Communication", "Microsoft Excel"].map((skill) => (
@@ -161,9 +167,12 @@ const EmployeeProfile = () => {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="rounded-2xl border-2 border-border bg-white p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm text-muted-foreground">Certifications 1</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Certifications</span>
+                        <span className="bg-background rounded-full px-2 py-0.5 text-xs font-medium text-foreground">1</span>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-3">
                       <Badge 
@@ -193,3 +202,4 @@ const EmployeeProfile = () => {
 };
 
 export default EmployeeProfile;
+
