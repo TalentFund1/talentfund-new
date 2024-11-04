@@ -12,7 +12,7 @@ const requiredSkills = [
   { name: "IPA Integrations", level: "intermediate" },
 ];
 
-const softSkills = [
+const preferredSkills = [
   { name: "UI/UX Design Principles", level: "intermediate" },
   { name: "Communication", level: "intermediate" },
   { name: "Angular", level: "beginner" },
@@ -74,14 +74,14 @@ export const RoleBenchmark = () => {
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Soft Skills</span>
+                <span className="text-sm font-medium">Preferred Skills</span>
                 <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {softSkills.length}
+                  {preferredSkills.length}
                 </span>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              {softSkills.map((skill) => (
+              {preferredSkills.map((skill) => (
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
