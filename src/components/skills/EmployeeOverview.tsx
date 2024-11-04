@@ -1,5 +1,6 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -28,41 +29,52 @@ export const EmployeeOverview = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {employees.map((section) => (
-        <Card key={section.section} className="p-6 space-y-4">
-          <h3 className="text-base font-medium">{section.section}</h3>
-          <div className="space-y-4">
-            {section.people.map((person) => (
-              <div 
-                key={person.name} 
-                className="flex items-center gap-3 hover:bg-secondary/50 rounded-lg transition-colors cursor-pointer"
-              >
-                <Avatar className="h-10 w-10">
-                  <img 
-                    src={`https://images.unsplash.com/${person.image}?auto=format&fit=crop&w=96&h=96`}
-                    alt={person.name}
-                    className="object-cover"
-                  />
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm">{person.name}</p>
-                  <p className="text-sm text-muted-foreground">{person.role}</p>
+    <Card className="p-6 space-y-6 animate-fade-in">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-primary">Employees</h2>
+        <span className="text-sm text-muted-foreground">5 total</span>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-t pt-6">
+        {employees.map((section) => (
+          <div key={section.section} className="space-y-4">
+            <h3 className="font-medium text-sm text-muted-foreground">{section.section}</h3>
+            <div className="space-y-3">
+              {section.people.map((person) => (
+                <div 
+                  key={person.name} 
+                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer group"
+                >
+                  <Avatar className="h-10 w-10 border-2 border-border">
+                    <img 
+                      src={`https://images.unsplash.com/${person.image}?auto=format&fit=crop&w=96&h=96`}
+                      alt={person.name}
+                      className="object-cover"
+                    />
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-primary truncate group-hover:text-primary-accent transition-colors">
+                      {person.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground truncate">
+                      {person.role}
+                    </p>
+                  </div>
+                  <span className="text-sm px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-medium">
+                    {person.match}
+                  </span>
                 </div>
-                <span className="text-sm px-2.5 py-1 bg-green-100 text-green-800 rounded-full">
-                  {person.match}
-                </span>
-              </div>
-            ))}
-            <a 
-              href="#" 
-              className="block text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+              ))}
+            </div>
+            <Button 
+              variant="link" 
+              className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors p-0 h-auto font-medium"
             >
               View all
-            </a>
+            </Button>
           </div>
-        </Card>
-      ))}
-    </div>
+        ))}
+      </div>
+    </Card>
   );
 };
