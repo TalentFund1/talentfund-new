@@ -1,7 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { BenchmarkAnalysis } from "./BenchmarkAnalysis";
 import { SkillsTable } from "@/components/SkillsTable";
 
@@ -31,6 +30,7 @@ const missingSkills = [
 export const RoleBenchmark = () => {
   return (
     <div className="space-y-6">
+      {/* First Section: Role Benchmark */}
       <div className="space-y-4">
         <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
         
@@ -47,7 +47,7 @@ export const RoleBenchmark = () => {
           </Select>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -91,38 +91,40 @@ export const RoleBenchmark = () => {
               ))}
             </div>
           </div>
-
-          <Separator className="my-6" />
-
-          <BenchmarkAnalysis />
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {missingSkills.length}
-                </span>
-              </div>
-              <Button variant="outline" size="sm" className="text-xs">
-                See Skill Profile
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {missingSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
-                >
-                  {skill.name} <div className="h-2 w-2 rounded-full bg-[#008000]" />
-                </Badge>
-              ))}
-            </div>
-          </div>
-
-          <SkillsTable />
         </div>
+      </div>
+
+      {/* Second Section: Benchmark Analysis */}
+      <div className="mt-8 bg-white rounded-2xl border border-border p-6">
+        <BenchmarkAnalysis />
+      </div>
+
+      {/* Third Section: Skills Matrix */}
+      <div className="mt-8 bg-white rounded-2xl border border-border p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
+            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+              {missingSkills.length}
+            </span>
+          </div>
+          <Button variant="outline" size="sm" className="text-xs">
+            See Skill Profile
+          </Button>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-8">
+          {missingSkills.map((skill) => (
+            <Badge 
+              key={skill.name} 
+              variant="outline" 
+              className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
+            >
+              {skill.name} <div className="h-2 w-2 rounded-full bg-[#008000]" />
+            </Badge>
+          ))}
+        </div>
+
+        <SkillsTable />
       </div>
     </div>
   );
