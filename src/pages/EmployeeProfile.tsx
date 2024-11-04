@@ -29,54 +29,60 @@ const EmployeeProfile = () => {
         </div>
       </div>
 
-      <Card className="p-6 bg-white">
-        <div className="flex items-start justify-between">
-          <div className="flex gap-6">
-            <Avatar className="h-24 w-24">
-              <img src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=96&h=96" alt="Kate Smith" />
+      <Card className="p-8 bg-white">
+        <div className="flex items-start justify-between mb-8">
+          <div className="flex gap-8">
+            <Avatar className="h-28 w-28 rounded-full border-4 border-border">
+              <img 
+                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=96&h=96" 
+                alt="Kate Smith"
+                className="object-cover"
+              />
             </Avatar>
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold">Kate Smith</h1>
-                <span className="text-sm text-muted-foreground">Employee ID: 123</span>
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-foreground">Kate Smith</h1>
+                  <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: 123</span>
+                </div>
+                <h2 className="text-lg font-medium text-foreground/90">Senior Frontend Engineer: P4</h2>
               </div>
-              <h2 className="text-lg">Senior Frontend Engineer: P4</h2>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="h-4 w-4" />
                 <span>Toronto, ON</span>
               </div>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Button variant="outline" className="bg-white">Export</Button>
             <Button>Edit</Button>
           </div>
         </div>
 
-        <Separator className="my-6" />
+        <Separator className="my-8" />
 
-        <div className="grid grid-cols-4 gap-6">
-          <div>
+        <div className="grid grid-cols-4 gap-8">
+          <div className="space-y-1.5">
             <span className="text-sm text-muted-foreground">Department</span>
             <p className="font-medium">Engineering</p>
           </div>
-          <div>
+          <div className="space-y-1.5">
             <span className="text-sm text-muted-foreground">Office</span>
             <p className="font-medium">Toronto</p>
           </div>
-          <div>
+          <div className="space-y-1.5">
             <span className="text-sm text-muted-foreground">Category</span>
             <p className="font-medium">Full-time</p>
           </div>
-          <div>
+          <div className="space-y-1.5">
             <span className="text-sm text-muted-foreground">Start Date</span>
             <p className="font-medium">2024-01-01</p>
           </div>
-          <div>
+          <div className="space-y-1.5">
             <span className="text-sm text-muted-foreground">Term Date</span>
             <p className="font-medium">-</p>
           </div>
-          <div>
+          <div className="space-y-1.5">
             <span className="text-sm text-muted-foreground">Tenure (Years)</span>
             <p className="font-medium">1.9</p>
           </div>
