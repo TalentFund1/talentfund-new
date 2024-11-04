@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { BenchmarkAnalysis } from "./BenchmarkAnalysis";
+import { SkillsTable } from "@/components/SkillsTable";
 
 const requiredSkills = [
   { name: "React", level: "advanced" },
@@ -119,6 +120,8 @@ export const RoleBenchmark = () => {
               ))}
             </div>
           </div>
+
+          <SkillsTable />
         </div>
       </div>
     </div>

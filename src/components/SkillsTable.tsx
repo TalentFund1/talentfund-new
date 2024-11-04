@@ -1,16 +1,14 @@
 import {
   Table,
   TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from "@/components/ui/table";
-import { ChevronLeft, ChevronRight, CircleDot } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useMemo } from "react";
 import { SkillGrowthSheet } from "./skills/SkillGrowthSheet";
+import { SkillTableHeader } from "./skills/SkillTableHeader";
+import { SkillTableRow } from "./skills/SkillTableRow";
 
 const skills = [
   {
@@ -64,19 +62,6 @@ const skills = [
   }
 ];
 
-const SkillLevelIcon = ({ level }: { level: string }) => {
-  switch (level) {
-    case "advanced":
-      return <CircleDot className="h-5 w-5 text-primary-accent mx-auto" />;
-    case "intermediate":
-      return <CircleDot className="h-5 w-5 text-primary-icon mx-auto" />;
-    case "beginner":
-      return <CircleDot className="h-5 w-5 text-[#008000] mx-auto" />;
-    default:
-      return null;
-  }
-};
-
 export const SkillsTable = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("all");
   const [selectedSkill, setSelectedSkill] = useState<{ title: string; growth: string } | null>(null);
@@ -111,7 +96,7 @@ export const SkillsTable = () => {
 
   const handleRowsPerPageChange = (value: string) => {
     setRowsPerPage(Number(value));
-    setCurrentPage(1); // Reset to first page when changing rows per page
+    setCurrentPage(1);
   };
 
   return (
@@ -135,41 +120,14 @@ export const SkillsTable = () => {
         
         <div className="px-4">
           <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead>Skill Title</TableHead>
-                <TableHead>Subcategory</TableHead>
-                <TableHead className="text-center">Beginner</TableHead>
-                <TableHead className="text-center">Intermediate</TableHead>
-                <TableHead className="text-center">Advanced</TableHead>
-                <TableHead>Projected Growth</TableHead>
-              </TableRow>
-            </TableHeader>
+            <SkillTableHeader />
             <TableBody>
               {paginatedSkills.map((skill) => (
-                <TableRow key={skill.title}>
-                  <TableCell className="font-medium">{skill.title}</TableCell>
-                  <TableCell>{skill.subcategory}</TableCell>
-                  <TableCell className="text-center">
-                    {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
-                  </TableCell>
-                  <TableCell>
-                    <span 
-                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
-                        skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-                      }`}
-                      onClick={() => handleGrowthClick(skill)}
-                    >
-                      ↗ {skill.growth}
-                    </span>
-                  </TableCell>
-                </TableRow>
+                <SkillTableRow 
+                  key={skill.title} 
+                  skill={skill} 
+                  onGrowthClick={handleGrowthClick}
+                />
               ))}
             </TableBody>
           </Table>
