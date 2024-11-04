@@ -46,8 +46,6 @@ export const RoleBenchmark = () => {
           </Select>
         </div>
 
-        <Separator className="my-6" />
-
         <div className="space-y-6">
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
             <div className="flex items-center justify-between mb-4">
@@ -95,17 +93,14 @@ export const RoleBenchmark = () => {
 
           <Separator className="my-6" />
 
-          <h3 className="text-xl font-semibold text-foreground">Benchmark Analysis</h3>
+          <div className="flex items-center gap-2 mb-4">
+            <h3 className="text-xl font-semibold text-foreground">Benchmark Analysis</h3>
+            <span className="bg-green-100 text-green-800 rounded-full px-2 py-0.5 text-xs font-medium">
+              89%
+            </span>
+          </div>
 
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="bg-green-100 text-green-800 rounded-full px-2 py-0.5 text-xs font-medium">
-                  89%
-                </span>
-              </div>
-            </div>
-            
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
