@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -25,10 +24,10 @@ export const TablePagination = () => {
         <span className="text-sm text-gray-600">1-4 of 4</span>
         <div className="flex gap-1">
           <Button variant="outline" size="icon" className="w-8 h-8">
-            <ChevronLeft className="h-4 w-4" />
+            ←
           </Button>
           <Button variant="outline" size="icon" className="w-8 h-8">
-            <ChevronRight className="h-4 w-4" />
+            →
           </Button>
         </div>
       </div>

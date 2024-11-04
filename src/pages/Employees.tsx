@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
-import { Users, UserPlus, Equal, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { EmployeeFilters } from "@/components/EmployeeFilters";
@@ -30,22 +29,18 @@ const Employees = () => {
             <StatCard
               title="Total Number of Employees"
               value="112"
-              icon={<Users className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Added in Past 1 year"
               value="24"
-              icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Share of Female Employees"
               value="38%"
-              icon={<Equal className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Average Tenure (Years)"
               value="1.9"
-              icon={<Clock className="h-6 w-6 text-primary-icon" />}
             />
           </div>
 

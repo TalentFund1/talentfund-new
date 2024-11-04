@@ -5,7 +5,6 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { TrendingUp } from "lucide-react";
 
 interface SkillGrowthSheetProps {
   open: boolean;
@@ -24,7 +23,7 @@ export const SkillGrowthSheet = ({ open, onOpenChange, skill }: SkillGrowthSheet
       <SheetContent>
         <SheetHeader className="space-y-6">
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-primary-accent" />
+            <span className="text-primary-accent">↗</span>
             <SheetTitle>Skill Growth Details</SheetTitle>
           </div>
           
