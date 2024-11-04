@@ -2,6 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
 
 const requiredSkills = [
   { name: "React", level: "advanced" },
@@ -18,10 +19,21 @@ const preferredSkills = [
 ];
 
 export const RoleBenchmark = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
+          <Button 
+            variant="outline" 
+            className="bg-white"
+            onClick={() => navigate('/skills')}
+          >
+            See Skill Profile
+          </Button>
+        </div>
         
         <div className="w-full max-w-[800px]">
           <Select defaultValue="senior-frontend">
@@ -35,6 +47,8 @@ export const RoleBenchmark = () => {
             </SelectContent>
           </Select>
         </div>
+
+        <Separator className="my-6" />
 
         <div className="space-y-6">
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
