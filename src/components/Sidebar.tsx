@@ -12,29 +12,25 @@ export const Sidebar = () => {
       name: "Dashboard", 
       icon: <LayoutDashboard className="w-5 h-5" />, 
       path: "/",
-      growth: "+12.37%",
-      description: "Dashboard analytics show increased usage trends over the past month."
+      growth: "+12.37%"
     },
     { 
       name: "Skill Profiles", 
       icon: <BookOpen className="w-5 h-5" />, 
       path: "/skills",
-      growth: "+8.5%",
-      description: "Skill profile completions have improved significantly."
+      growth: "+8.5%"
     },
     { 
       name: "Employees", 
       icon: <Users className="w-5 h-5" />, 
       path: "/employees",
-      growth: "+15.2%",
-      description: "Employee engagement metrics show positive growth."
+      growth: "+15.2%"
     },
     { 
       name: "Market Data", 
       icon: <LineChart className="w-5 h-5" />, 
       path: "/market",
-      growth: "+5.8%",
-      description: "Market data accuracy has increased this quarter."
+      growth: "+5.8%"
     },
   ];
 
@@ -62,11 +58,11 @@ export const Sidebar = () => {
 
   return (
     <div 
-      className={`fixed top-0 left-0 h-screen border-r border-border bg-[#F7F9FF] flex flex-col transition-all duration-300 ${
+      className={`fixed top-0 left-0 h-screen border-r border-border bg-white flex flex-col transition-all duration-300 ${
         isCollapsed ? "w-16" : "w-72"
       }`}
     >
-      <div className="p-4 border-b border-border flex items-center justify-between">
+      <div className="p-4 border-b border-border flex items-center justify-between bg-white">
         {!isCollapsed && <h1 className="text-xl font-bold text-foreground">TalentFund</h1>}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -80,31 +76,26 @@ export const Sidebar = () => {
         </button>
       </div>
 
-      <nav className="flex-1 px-2 py-4 flex flex-col justify-between">
+      <nav className="flex-1 px-2 py-4 flex flex-col justify-between bg-white">
         <div className="space-y-1">
           {primaryMenuItems.map((item) => (
             <Link
               key={item.name}
               to={item.path}
-              className={`block rounded-md transition-colors ${
+              className={`flex items-center justify-between rounded-md transition-colors hover:bg-gray-100 ${
                 isCollapsed ? "p-2" : "p-3"
               }`}
             >
-              <div className={`flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
-                <div className="flex items-center gap-3">
-                  {item.icon}
-                  {!isCollapsed && (
-                    <span className="font-medium text-foreground">{item.name}</span>
-                  )}
-                </div>
+              <div className="flex items-center gap-3">
+                {item.icon}
                 {!isCollapsed && (
-                  <Badge variant="outline" className="bg-green-100 text-green-800 border-0">
-                    {item.growth}
-                  </Badge>
+                  <span className="font-medium text-foreground">{item.name}</span>
                 )}
               </div>
               {!isCollapsed && (
-                <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
+                <Badge variant="outline" className="bg-green-100 text-green-800 border-0">
+                  {item.growth}
+                </Badge>
               )}
             </Link>
           ))}
@@ -116,7 +107,7 @@ export const Sidebar = () => {
             <Link
               key={item.name}
               to={item.path}
-              className={`block rounded-md transition-colors ${
+              className={`block rounded-md transition-colors hover:bg-gray-100 ${
                 isCollapsed ? "p-2" : "p-3"
               }`}
             >
