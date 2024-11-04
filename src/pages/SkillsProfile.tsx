@@ -86,19 +86,19 @@ const SkillsProfile = () => {
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-12">
+                  <TableHead className="w-[5%]">
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="w-[25%]">
                     <div className="flex items-center gap-1">
                       Role Name <ChevronDown className="h-4 w-4" />
                     </div>
                   </TableHead>
-                  <TableHead>Function</TableHead>
-                  <TableHead>Skill Count</TableHead>
-                  <TableHead>People with the Job</TableHead>
-                  <TableHead>People that match the Job</TableHead>
-                  <TableHead>Last Updated</TableHead>
+                  <TableHead className="w-[15%]">Function</TableHead>
+                  <TableHead className="w-[10%] text-center">Skill Count</TableHead>
+                  <TableHead className="w-[15%] text-center">People with the Job</TableHead>
+                  <TableHead className="w-[20%] text-center">People that match the Job</TableHead>
+                  <TableHead className="w-[10%] text-right">Last Updated</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -108,10 +108,10 @@ const SkillsProfile = () => {
                   </TableCell>
                   <TableCell className="text-blue-500 hover:underline cursor-pointer">AI Engineer</TableCell>
                   <TableCell>Engineering</TableCell>
-                  <TableCell>16</TableCell>
-                  <TableCell>2</TableCell>
-                  <TableCell>0</TableCell>
-                  <TableCell>10/20/24</TableCell>
+                  <TableCell className="text-center">16</TableCell>
+                  <TableCell className="text-center">2</TableCell>
+                  <TableCell className="text-center">0</TableCell>
+                  <TableCell className="text-right">10/20/24</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
@@ -119,10 +119,10 @@ const SkillsProfile = () => {
                   </TableCell>
                   <TableCell className="text-blue-500 hover:underline cursor-pointer">Backend Engineer</TableCell>
                   <TableCell>Engineering</TableCell>
-                  <TableCell>12</TableCell>
-                  <TableCell>3</TableCell>
-                  <TableCell>4</TableCell>
-                  <TableCell>10/20/24</TableCell>
+                  <TableCell className="text-center">12</TableCell>
+                  <TableCell className="text-center">3</TableCell>
+                  <TableCell className="text-center">4</TableCell>
+                  <TableCell className="text-right">10/20/24</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
@@ -130,10 +130,10 @@ const SkillsProfile = () => {
                   </TableCell>
                   <TableCell className="text-blue-500 hover:underline cursor-pointer">Frontend Engineer</TableCell>
                   <TableCell>Engineering</TableCell>
-                  <TableCell>17</TableCell>
-                  <TableCell>0</TableCell>
-                  <TableCell>5</TableCell>
-                  <TableCell>10/20/24</TableCell>
+                  <TableCell className="text-center">17</TableCell>
+                  <TableCell className="text-center">0</TableCell>
+                  <TableCell className="text-center">5</TableCell>
+                  <TableCell className="text-right">10/20/24</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
@@ -141,10 +141,10 @@ const SkillsProfile = () => {
                   </TableCell>
                   <TableCell className="text-blue-500 hover:underline cursor-pointer">Engineering Manager</TableCell>
                   <TableCell>Engineering</TableCell>
-                  <TableCell>11</TableCell>
-                  <TableCell>2</TableCell>
-                  <TableCell>5</TableCell>
-                  <TableCell>10/20/24</TableCell>
+                  <TableCell className="text-center">11</TableCell>
+                  <TableCell className="text-center">2</TableCell>
+                  <TableCell className="text-center">5</TableCell>
+                  <TableCell className="text-right">10/20/24</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
