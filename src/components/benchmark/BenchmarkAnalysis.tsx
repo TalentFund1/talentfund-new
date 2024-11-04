@@ -1,6 +1,5 @@
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 interface Skill {
   name: string;
@@ -29,26 +28,38 @@ export const BenchmarkAnalysis = () => {
       </div>
 
       <div className="space-y-6">
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Experience Match</span>
-            <span className="text-sm text-muted-foreground">8 out of 12</span>
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Experience Match</span>
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                8 out of 12
+              </span>
+            </div>
           </div>
           <Progress value={66} className="h-2" />
         </div>
 
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Skill Match</span>
-            <span className="text-sm text-muted-foreground">2 out of 6</span>
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Skill Match</span>
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                2 out of 6
+              </span>
+            </div>
           </div>
           <Progress value={33} className="h-2" />
         </div>
 
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
-            <span className="text-sm text-muted-foreground">6</span>
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                6
+              </span>
+            </div>
           </div>
           
           <div className="flex flex-wrap gap-2">
@@ -56,7 +67,7 @@ export const BenchmarkAnalysis = () => {
               <Badge 
                 key={skill.name}
                 variant="outline" 
-                className={`rounded-full px-3 py-1 border flex items-center gap-2 ${
+                className={`rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white ${
                   skill.status === "missing" ? "border-destructive/50" : "border-border"
                 }`}
               >
@@ -68,10 +79,6 @@ export const BenchmarkAnalysis = () => {
             ))}
           </div>
         </div>
-
-        <Button variant="outline" className="w-full">
-          See Skill Profile
-        </Button>
       </div>
     </div>
   );
