@@ -101,8 +101,8 @@ export const SkillsTable = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-2xl border border-border shadow-sm">
-        <div className="px-6 py-4 border-b border-border">
+      <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+        <div className="px-6 py-5 border-b border-border bg-background/40">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
             <Select value={selectedFilter} onValueChange={setSelectedFilter}>
@@ -118,7 +118,7 @@ export const SkillsTable = () => {
           </div>
         </div>
         
-        <div className="px-4">
+        <div>
           <Table>
             <SkillTableHeader />
             <TableBody>
@@ -133,7 +133,7 @@ export const SkillsTable = () => {
           </Table>
         </div>
         
-        <div className="flex justify-between items-center px-6 py-4 border-t border-border">
+        <div className="flex justify-between items-center px-6 py-4 border-t border-border bg-background/40">
           <Select value={String(rowsPerPage)} onValueChange={handleRowsPerPageChange}>
             <SelectTrigger className="w-[100px]">
               <SelectValue placeholder="10 rows" />

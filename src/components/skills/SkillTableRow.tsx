@@ -17,31 +17,33 @@ export const SkillTableRow = ({ skill, onGrowthClick }: SkillTableRowProps) => {
   };
 
   return (
-    <TableRow>
-      <TableCell className="font-medium w-[200px] bg-[#F7F9FF]/50 border-x border-border">
-        {skill.title}
-      </TableCell>
-      <TableCell className="w-[250px]" title={skill.subcategory}>
+    <TableRow className="hover:bg-muted/30 transition-colors">
+      <TableCell className="font-medium">{skill.title}</TableCell>
+      <TableCell className="text-muted-foreground" title={skill.subcategory}>
         {truncateText(skill.subcategory)}
       </TableCell>
-      <TableCell className="text-center bg-[#F7F9FF]/50 border-x border-border">
+      <TableCell className="text-center">
         {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
       </TableCell>
-      <TableCell className="text-center bg-[#F7F9FF]/50 border-x border-border">
+      <TableCell className="text-center">
         {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
       </TableCell>
-      <TableCell className="text-center bg-[#F7F9FF]/50 border-x border-border">
+      <TableCell className="text-center">
         {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
       </TableCell>
-      <TableCell className="text-center w-[150px]">
-        <span 
-          className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
-            skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-          }`}
-          onClick={() => onGrowthClick(skill)}
-        >
-          ↗ {skill.growth}
-        </span>
+      <TableCell>
+        <div className="flex justify-center">
+          <span 
+            className={`px-2.5 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors ${
+              skill.growth === "0%" 
+                ? 'bg-gray-100 text-gray-800 hover:bg-gray-200' 
+                : 'bg-green-100 text-green-800 hover:bg-green-200'
+            }`}
+            onClick={() => onGrowthClick(skill)}
+          >
+            ↗ {skill.growth}
+          </span>
+        </div>
       </TableCell>
     </TableRow>
   );
