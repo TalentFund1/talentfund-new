@@ -45,7 +45,7 @@ export const SkillProfileHeader = () => {
         </div>
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
-            <span className="text-sm text-muted-foreground">Salary Range</span>
+            <span className="text-sm text-muted-foreground">Advertised Salary</span>
             <p className="font-medium">$130-170K</p>
           </div>
         </div>
