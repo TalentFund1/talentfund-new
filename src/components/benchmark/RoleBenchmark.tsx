@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { BenchmarkAnalysis } from "./BenchmarkAnalysis";
 import { SkillsTable } from "@/components/SkillsTable";
+import { SkillSection } from "@/components/skills/SkillSection";
 
 const requiredSkills = [
   { name: "React", level: "advanced" },
@@ -48,15 +49,7 @@ export const RoleBenchmark = () => {
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Required Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {requiredSkills.length}
-                </span>
-              </div>
-            </div>
+          <SkillSection title="Required Skills" count={requiredSkills.length}>
             <div className="flex flex-wrap gap-2">
               {requiredSkills.map((skill) => (
                 <Badge 
@@ -68,17 +61,9 @@ export const RoleBenchmark = () => {
                 </Badge>
               ))}
             </div>
-          </div>
+          </SkillSection>
 
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Preferred Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {preferredSkills.length}
-                </span>
-              </div>
-            </div>
+          <SkillSection title="Preferred Skills" count={preferredSkills.length}>
             <div className="flex flex-wrap gap-2">
               {preferredSkills.map((skill) => (
                 <Badge 
@@ -90,38 +75,35 @@ export const RoleBenchmark = () => {
                 </Badge>
               ))}
             </div>
-          </div>
+          </SkillSection>
 
           <Separator className="my-6" />
 
           <BenchmarkAnalysis />
 
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <SkillSection title="Missing Skills / Seniority or Certification" count={missingSkills.length}>
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {missingSkills.length}
-                </span>
+              <div className="flex flex-wrap gap-2">
+                {missingSkills.map((skill) => (
+                  <Badge 
+                    key={skill.name} 
+                    variant="outline" 
+                    className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
+                  >
+                    {skill.name} <div className="h-2 w-2 rounded-full bg-[#008000]" />
+                  </Badge>
+                ))}
               </div>
               <Button variant="outline" size="sm" className="text-xs">
                 See Skill Profile
               </Button>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {missingSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
-                >
-                  {skill.name} <div className="h-2 w-2 rounded-full bg-[#008000]" />
-                </Badge>
-              ))}
-            </div>
-          </div>
+          </SkillSection>
 
-          <SkillsTable />
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-foreground">Skills Matrix</h3>
+            <SkillsTable />
+          </div>
         </div>
       </div>
     </div>
