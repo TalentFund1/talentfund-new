@@ -28,29 +28,25 @@ export const BenchmarkAnalysis = () => {
       </div>
 
       <div className="space-y-6">
-        <div className="rounded-2xl border border-border bg-white p-6 w-full space-y-6">
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Experience Match</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  8 out of 12
-                </span>
-              </div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-foreground">Experience Match</span>
+              <span className="text-sm text-foreground">8 out of 12</span>
             </div>
-            <Progress value={66} className="h-2" />
+            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '66%' }} />
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Skill Match</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  2 out of 6
-                </span>
-              </div>
+          <div className="space-y-4 mt-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-foreground">Skill Match</span>
+              <span className="text-sm text-foreground">2 out of 6</span>
             </div>
-            <Progress value={33} className="h-2" />
+            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '33%' }} />
+            </div>
           </div>
         </div>
 
