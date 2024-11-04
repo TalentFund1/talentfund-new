@@ -59,13 +59,13 @@ export const BenchmarkAnalysis = () => {
           
           <div className="flex flex-wrap gap-2">
             {skills.map((skill, index) => (
-              <div 
+              <Badge 
                 key={`${skill.name}-${index}`}
-                className="px-4 py-2 rounded-full bg-white border border-[#E4E7EC] text-[#344054] flex items-center gap-2"
+                variant="outline" 
+                className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
               >
-                {skill.name}
-                <div className="h-2 w-2 rounded-full bg-primary-icon" />
-              </div>
+                {skill.name} <div className="h-2 w-2 rounded-full bg-primary-icon" />
+              </Badge>
             ))}
           </div>
         </div>
