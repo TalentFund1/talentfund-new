@@ -2,6 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const requiredSkills = [
   { name: "React", level: "advanced" },
@@ -45,10 +46,17 @@ export const RoleBenchmark = () => {
           </Select>
         </div>
 
-        <div className="space-y-6 bg-white rounded-lg border p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium">Required Skills</h4>
+        <Separator className="my-6" />
+
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">Required Skills</span>
+                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                  {requiredSkills.length}
+                </span>
+              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               {requiredSkills.map((skill) => (
@@ -63,9 +71,14 @@ export const RoleBenchmark = () => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium">Soft Skills</h4>
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">Soft Skills</span>
+                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                  {softSkills.length}
+                </span>
+              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               {softSkills.map((skill) => (
