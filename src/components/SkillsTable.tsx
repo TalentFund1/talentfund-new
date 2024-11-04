@@ -118,7 +118,7 @@ export const SkillsTable = () => {
           </div>
         </div>
         
-        <div>
+        <div className="relative">
           <Table>
             <SkillTableHeader />
             <TableBody>
