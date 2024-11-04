@@ -1,20 +1,18 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 const requiredSkills = [
-  { name: "React", level: "advanced" },
-  { name: "JavaScript", level: "advanced" },
-  { name: "GraphQL", level: "intermediate" },
-  { name: "HTML and CSS3", level: "advanced" },
-  { name: "IPA Integrations", level: "intermediate" },
+  { name: "React", level: "present" },
+  { name: "JavaScript", level: "present" },
+  { name: "GraphQL", level: "missing" },
+  { name: "HTML and CSS3", level: "present" },
+  { name: "Angular", level: "missing" },
+  { name: "IPA Integrations", level: "missing" },
 ];
 
 const preferredSkills = [
-  { name: "UI/UX Design Principles", level: "intermediate" },
-  { name: "Communication", level: "intermediate" },
-  { name: "Angular", level: "beginner" },
+  { name: "UI/UX Design Principles", level: "present" },
+  { name: "Communication", level: "present" },
+  { name: "Angular", level: "present" },
 ];
 
 export const RoleBenchmark = () => {
@@ -40,7 +38,7 @@ export const RoleBenchmark = () => {
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Required Skills</span>
+                <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
                 <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
                   {requiredSkills.length}
                 </span>
@@ -48,13 +46,15 @@ export const RoleBenchmark = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               {requiredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
+                <div 
+                  key={skill.name}
+                  className="px-3 py-1.5 rounded-lg text-sm border border-[#E4E7EC] bg-white text-[#344054] flex items-center gap-2"
                 >
-                  {skill.name} <div className="h-2 w-2 rounded-full bg-primary-accent" />
-                </Badge>
+                  {skill.name}
+                  {skill.level === "present" && (
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#1F2144]" />
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -70,13 +70,13 @@ export const RoleBenchmark = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               {preferredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
+                <div 
+                  key={skill.name}
+                  className="px-3 py-1.5 rounded-lg text-sm border border-[#E4E7EC] bg-white text-[#344054] flex items-center gap-2"
                 >
-                  {skill.name} <div className="h-2 w-2 rounded-full bg-primary-icon" />
-                </Badge>
+                  {skill.name}
+                  <div className="h-1.5 w-1.5 rounded-full bg-[#1F2144]" />
+                </div>
               ))}
             </div>
           </div>
