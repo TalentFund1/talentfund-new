@@ -5,7 +5,7 @@ import { SkillsHeader } from "./SkillsHeader";
 
 export const SkillsSummary = () => {
   return (
-    <div className="space-y-4 w-full max-w-[800px] mx-auto">
+    <div className="space-y-4 w-full">
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       <SkillsHeader />
       

@@ -4,11 +4,11 @@ import { Separator } from "@/components/ui/separator";
 
 export const SkillsHeader = () => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full">
       <Input
         type="text"
         placeholder="Search Skills..."
-        className="max-w-full bg-white rounded-full border-input"
+        className="w-full bg-white rounded-full border-input"
       />
       <div className="flex flex-wrap gap-2">
         <Badge variant="outline" className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2">
