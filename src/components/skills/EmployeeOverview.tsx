@@ -42,7 +42,7 @@ export const EmployeeOverview = () => {
               <h3 className="font-medium text-sm text-muted-foreground">{section.section}</h3>
               <Button 
                 variant="link" 
-                className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors p-0 h-auto font-medium"
+                className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors p-0 h-auto font-medium mr-[88px]"
               >
                 View all
               </Button>
