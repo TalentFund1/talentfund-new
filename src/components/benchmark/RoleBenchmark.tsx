@@ -57,7 +57,6 @@ export const RoleBenchmark = () => {
                 </Badge>
               ))}
             </div>
-            <Separator className="my-4" /> {/* Added Separator here */}
           </div>
 
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
@@ -80,7 +79,6 @@ export const RoleBenchmark = () => {
                 </Badge>
               ))}
             </div>
-            {/* Removed Separator here */}
           </div>
 
           <Separator className="my-6" />
