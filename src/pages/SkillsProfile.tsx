@@ -88,16 +88,16 @@ const SkillsProfile = () => {
                   <TableHead className="w-[5%]">
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableHead>
-                  <TableHead className="w-[22%]">
+                  <TableHead className="w-[30%]">
                     <div className="flex items-center gap-1">
                       Role Name <ChevronDown className="h-4 w-4" />
                     </div>
                   </TableHead>
-                  <TableHead className="w-[18%]">Function</TableHead>
-                  <TableHead className="w-[12%] text-center">Skill Count</TableHead>
-                  <TableHead className="w-[15%] text-center">Employees</TableHead>
-                  <TableHead className="w-[18%] text-center">Profile Matches</TableHead>
-                  <TableHead className="w-[15%] text-right whitespace-nowrap">Last Updated</TableHead>
+                  <TableHead className="w-[25%]">Function</TableHead>
+                  <TableHead className="w-[10%] text-center">Skill Count</TableHead>
+                  <TableHead className="w-[10%] text-center">Employees</TableHead>
+                  <TableHead className="w-[10%] text-center">Profile Matches</TableHead>
+                  <TableHead className="w-[10%] text-right">Last Updated</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -107,10 +107,10 @@ const SkillsProfile = () => {
                   </TableCell>
                   <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">AI Engineer</TableCell>
                   <TableCell>Engineering</TableCell>
-                  <TableCell className="text-center">16</TableCell>
-                  <TableCell className="text-center">2</TableCell>
-                  <TableCell className="text-center">0</TableCell>
-                  <TableCell className="text-right">10/20/24</TableCell>
+                  <TableCell className="text-center font-medium">16</TableCell>
+                  <TableCell className="text-center font-medium">2</TableCell>
+                  <TableCell className="text-center font-medium">0</TableCell>
+                  <TableCell className="text-right text-muted-foreground">10/20/24</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
@@ -118,10 +118,10 @@ const SkillsProfile = () => {
                   </TableCell>
                   <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">Backend Engineer</TableCell>
                   <TableCell>Engineering</TableCell>
-                  <TableCell className="text-center">12</TableCell>
-                  <TableCell className="text-center">3</TableCell>
-                  <TableCell className="text-center">4</TableCell>
-                  <TableCell className="text-right">10/20/24</TableCell>
+                  <TableCell className="text-center font-medium">12</TableCell>
+                  <TableCell className="text-center font-medium">3</TableCell>
+                  <TableCell className="text-center font-medium">4</TableCell>
+                  <TableCell className="text-right text-muted-foreground">10/20/24</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
@@ -129,10 +129,10 @@ const SkillsProfile = () => {
                   </TableCell>
                   <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">Frontend Engineer</TableCell>
                   <TableCell>Engineering</TableCell>
-                  <TableCell className="text-center">17</TableCell>
-                  <TableCell className="text-center">0</TableCell>
-                  <TableCell className="text-center">5</TableCell>
-                  <TableCell className="text-right">10/20/24</TableCell>
+                  <TableCell className="text-center font-medium">17</TableCell>
+                  <TableCell className="text-center font-medium">0</TableCell>
+                  <TableCell className="text-center font-medium">5</TableCell>
+                  <TableCell className="text-right text-muted-foreground">10/20/24</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
@@ -140,10 +140,10 @@ const SkillsProfile = () => {
                   </TableCell>
                   <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">Engineering Manager</TableCell>
                   <TableCell>Engineering</TableCell>
-                  <TableCell className="text-center">11</TableCell>
-                  <TableCell className="text-center">2</TableCell>
-                  <TableCell className="text-center">5</TableCell>
-                  <TableCell className="text-right">10/20/24</TableCell>
+                  <TableCell className="text-center font-medium">11</TableCell>
+                  <TableCell className="text-center font-medium">2</TableCell>
+                  <TableCell className="text-center font-medium">5</TableCell>
+                  <TableCell className="text-right text-muted-foreground">10/20/24</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
