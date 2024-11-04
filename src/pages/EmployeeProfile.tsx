@@ -89,31 +89,31 @@ const EmployeeProfile = () => {
         </div>
       </Card>
 
-      <Tabs defaultValue="experience" className="w-full space-y-4">
+      <Tabs defaultValue="experience" className="w-full space-y-6">
         <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
           <TabsTrigger 
             value="experience" 
-            className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
+            className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
           >
             Skills Summary
           </TabsTrigger>
           <TabsTrigger 
             value="benchmark"
-            className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
+            className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
           >
             Role Benchmark
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="experience" className="space-y-4">
-          <Card className="p-6 bg-white">
+        <TabsContent value="experience" className="space-y-6">
+          <Card className="p-8 bg-white">
             <SkillsSummary />
           </Card>
           <SkillsTable />
         </TabsContent>
 
         <TabsContent value="benchmark">
-          <Card className="p-6 bg-white">
+          <Card className="p-8 bg-white">
             <RoleBenchmark />
           </Card>
         </TabsContent>
