@@ -1,17 +1,16 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 
 export const SkillProfileMatrix = () => {
   const skills = [
-    { title: "Amazon Web Services", subcategory: "Web Services", growth: "23%", salary: "$160,256" },
-    { title: "Software Development", subcategory: "Artificial Intelligence and Machine Learning", growth: "23%", salary: "$164,608" },
-    { title: "Python", subcategory: "Natural Language Processing (NLP)", growth: "24%", salary: "$153,344" },
-    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine Learning", growth: "26%", salary: "$161,536" },
+    { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$160,256" },
+    { title: "Software Development", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "23%", salary: "$164,608" },
+    { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$153,344" },
+    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine Learning", level: "intermediate", growth: "26%", salary: "$161,536" }
   ];
 
   return (
-    <Card className="p-6 space-y-6 animate-fade-in">
+    <Card className="p-6 space-y-6 animate-fade-in bg-white">
       <div className="rounded-lg border border-border overflow-hidden">
         <table className="w-full">
           <thead>
@@ -28,7 +27,7 @@ export const SkillProfileMatrix = () => {
               <tr key={skill.title} className="border-t border-border hover:bg-muted/50 transition-colors">
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-2">
-                    <Checkbox />
+                    <Switch />
                     <span className="text-sm">{skill.title}</span>
                   </div>
                 </td>
