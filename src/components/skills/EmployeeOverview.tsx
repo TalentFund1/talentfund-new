@@ -66,13 +66,18 @@ export const EmployeeOverview = () => {
                 </div>
               ))}
             </div>
-            <Button 
-              variant="link" 
-              className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors p-0 h-auto font-medium"
-            >
-              View all
-            </Button>
           </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {employees.map((section) => (
+          <Button 
+            key={section.section}
+            variant="link" 
+            className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors p-0 h-auto font-medium"
+          >
+            View all
+          </Button>
         ))}
       </div>
     </Card>
