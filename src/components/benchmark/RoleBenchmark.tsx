@@ -93,12 +93,16 @@ export const RoleBenchmark = () => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium">Benchmark Analysis</h4>
-              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
-                89%
-              </span>
+          <Separator className="my-6" />
+
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">Benchmark Analysis</span>
+                <span className="bg-green-100 text-green-800 rounded-full px-2 py-0.5 text-xs font-medium">
+                  89%
+                </span>
+              </div>
             </div>
             
             <div className="space-y-4">
@@ -120,9 +124,14 @@ export const RoleBenchmark = () => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium">Missing Skills / Seniority or Certification</h4>
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
+                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                  {missingSkills.length}
+                </span>
+              </div>
               <Button variant="outline" size="sm" className="text-xs">
                 See Skill Profile
               </Button>
