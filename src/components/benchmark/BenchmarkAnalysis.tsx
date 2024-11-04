@@ -7,12 +7,11 @@ interface Skill {
 }
 
 const skills: Skill[] = [
-  { name: "React", status: "present" },
-  { name: "JavaScript", status: "present" },
-  { name: "GraphQL", status: "missing" },
-  { name: "HTML and CSS3", status: "present" },
+  { name: "UI/UX Design Principles", status: "missing" },
+  { name: "Communication", status: "missing" },
   { name: "Angular", status: "missing" },
-  { name: "IPA Integrations", status: "missing" }
+  { name: "Communication", status: "missing" },
+  { name: "Angular", status: "missing" }
 ];
 
 export const BenchmarkAnalysis = () => {
@@ -51,29 +50,21 @@ export const BenchmarkAnalysis = () => {
         </div>
 
         <div className="rounded-2xl border border-border bg-white p-6 w-full">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
-              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                6
-              </span>
-            </div>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
+            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+              6
+            </span>
           </div>
           
           <div className="flex flex-wrap gap-2">
-            {skills.map((skill) => (
+            {skills.map((skill, index) => (
               <div 
-                key={skill.name}
-                className={`px-3 py-1.5 rounded-lg text-sm border flex items-center gap-2 ${
-                  skill.status === "missing" 
-                    ? "border-[#E4E7EC] bg-white text-[#344054]" 
-                    : "border-[#E4E7EC] bg-white text-[#344054]"
-                }`}
+                key={`${skill.name}-${index}`}
+                className="px-4 py-2 rounded-full bg-white border border-[#E4E7EC] text-[#344054] flex items-center gap-2"
               >
                 {skill.name}
-                {skill.status === "present" && (
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#1F2144]" />
-                )}
+                <div className="h-2 w-2 rounded-full bg-primary-icon" />
               </div>
             ))}
           </div>
