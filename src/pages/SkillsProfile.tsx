@@ -30,7 +30,6 @@ const SkillsProfile = () => {
 
           <Card className="p-6">
             <div className="space-y-4">
-              {/* Removed the "Skills" label */}
               <Input id="search" type="search" placeholder="Search Skills..." className="max-w-sm bg-white" />
               
               <div className="flex flex-wrap gap-4">
@@ -106,7 +105,7 @@ const SkillsProfile = () => {
                   <TableCell>
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell className="text-blue-500 hover:underline cursor-pointer">AI Engineer</TableCell>
+                  <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">AI Engineer</TableCell>
                   <TableCell>Engineering</TableCell>
                   <TableCell className="text-center">16</TableCell>
                   <TableCell className="text-center">2</TableCell>
@@ -117,7 +116,7 @@ const SkillsProfile = () => {
                   <TableCell>
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell className="text-blue-500 hover:underline cursor-pointer">Backend Engineer</TableCell>
+                  <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">Backend Engineer</TableCell>
                   <TableCell>Engineering</TableCell>
                   <TableCell className="text-center">12</TableCell>
                   <TableCell className="text-center">3</TableCell>
@@ -128,7 +127,7 @@ const SkillsProfile = () => {
                   <TableCell>
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell className="text-blue-500 hover:underline cursor-pointer">Frontend Engineer</TableCell>
+                  <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">Frontend Engineer</TableCell>
                   <TableCell>Engineering</TableCell>
                   <TableCell className="text-center">17</TableCell>
                   <TableCell className="text-center">0</TableCell>
@@ -139,7 +138,7 @@ const SkillsProfile = () => {
                   <TableCell>
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell className="text-blue-500 hover:underline cursor-pointer">Engineering Manager</TableCell>
+                  <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">Engineering Manager</TableCell>
                   <TableCell>Engineering</TableCell>
                   <TableCell className="text-center">11</TableCell>
                   <TableCell className="text-center">2</TableCell>
