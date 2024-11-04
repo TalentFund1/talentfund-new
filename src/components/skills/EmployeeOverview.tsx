@@ -38,7 +38,15 @@ export const EmployeeOverview = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-t pt-6">
         {employees.map((section) => (
           <div key={section.section} className="space-y-4">
-            <h3 className="font-medium text-sm text-muted-foreground">{section.section}</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-medium text-sm text-muted-foreground">{section.section}</h3>
+              <Button 
+                variant="link" 
+                className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors p-0 h-auto font-medium"
+              >
+                View all
+              </Button>
+            </div>
             <div className="space-y-3">
               {section.people.map((person) => (
                 <div 
@@ -67,17 +75,6 @@ export const EmployeeOverview = () => {
               ))}
             </div>
           </div>
-        ))}
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {employees.map((section) => (
-          <Button 
-            key={section.section}
-            variant="link" 
-            className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors p-0 h-auto font-medium"
-          >
-            View all
-          </Button>
         ))}
       </div>
     </Card>
