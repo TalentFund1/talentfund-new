@@ -51,7 +51,7 @@ export const BenchmarkAnalysis = () => {
 
         <div className="rounded-2xl border border-border bg-white p-6 w-full">
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
+            <span className="text-sm font-medium">Missing Skills / Seniority or Certifications</span>
             <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
               6
             </span>
