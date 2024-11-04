@@ -39,12 +39,10 @@ export const EmployeeOverview = () => {
         {employees.map((section) => (
           <div key={section.section} className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-sm text-muted-foreground">{section.section}</h3>
-              </div>
+              <h3 className="font-medium text-sm text-muted-foreground">{section.section}</h3>
               <Button 
                 variant="link" 
-                className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors p-0 h-auto font-medium mr-[72px]"
+                className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors p-0 h-auto font-medium"
               >
                 View all
               </Button>
