@@ -7,26 +7,11 @@ interface SkillLevelIconProps {
 export const SkillLevelIcon = ({ level }: SkillLevelIconProps) => {
   switch (level) {
     case "advanced":
-      return (
-        <div className="flex flex-col items-center gap-1">
-          <CircleDot className="h-5 w-5 text-primary-accent" />
-          <span className="text-xs text-muted-foreground">Advanced</span>
-        </div>
-      );
+      return <CircleDot className="h-5 w-5 text-primary-accent mx-auto" />;
     case "intermediate":
-      return (
-        <div className="flex flex-col items-center gap-1">
-          <CircleDot className="h-5 w-5 text-primary-icon" />
-          <span className="text-xs text-muted-foreground">Intermediate</span>
-        </div>
-      );
+      return <CircleDot className="h-5 w-5 text-primary-icon mx-auto" />;
     case "beginner":
-      return (
-        <div className="flex flex-col items-center gap-1">
-          <CircleDot className="h-5 w-5 text-[#008000]" />
-          <span className="text-xs text-muted-foreground">Beginner</span>
-        </div>
-      );
+      return <CircleDot className="h-5 w-5 text-[#008000] mx-auto" />;
     default:
       return null;
   }

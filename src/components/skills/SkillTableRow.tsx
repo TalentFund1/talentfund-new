@@ -22,13 +22,13 @@ export const SkillTableRow = ({ skill, onGrowthClick }: SkillTableRowProps) => {
       <TableCell className="text-muted-foreground" title={skill.subcategory}>
         {truncateText(skill.subcategory)}
       </TableCell>
-      <TableCell className="text-center py-4">
+      <TableCell className="text-center">
         {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
       </TableCell>
-      <TableCell className="text-center py-4">
+      <TableCell className="text-center">
         {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
       </TableCell>
-      <TableCell className="text-center py-4">
+      <TableCell className="text-center">
         {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
       </TableCell>
       <TableCell>
