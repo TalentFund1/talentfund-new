@@ -62,18 +62,19 @@ export const BenchmarkAnalysis = () => {
           
           <div className="flex flex-wrap gap-2">
             {skills.map((skill) => (
-              <Badge 
+              <div 
                 key={skill.name}
-                variant="outline" 
-                className={`rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white ${
-                  skill.status === "missing" ? "border-destructive/50" : "border-border"
+                className={`px-3 py-1.5 rounded-lg text-sm border flex items-center gap-2 ${
+                  skill.status === "missing" 
+                    ? "border-[#E4E7EC] bg-white text-[#344054]" 
+                    : "border-[#E4E7EC] bg-white text-[#344054]"
                 }`}
               >
                 {skill.name}
-                <div className={`h-2 w-2 rounded-full ${
-                  skill.status === "missing" ? "bg-destructive" : "bg-primary"
-                }`} />
-              </Badge>
+                {skill.status === "present" && (
+                  <div className="h-1.5 w-1.5 rounded-full bg-[#1F2144]" />
+                )}
+              </div>
             ))}
           </div>
         </div>
