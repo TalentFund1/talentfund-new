@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, LineChart, BookOpen, Store, Settings } from "lucide-react";
+import { LayoutDashboard, Users, LineChart, BookOpen, Store, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -19,15 +19,26 @@ export const Sidebar = () => {
 
   return (
     <div 
-      className={`fixed top-0 left-0 h-screen border-r border-border bg-white flex flex-col transition-all duration-300 ${
+      className={`fixed top-0 left-0 h-screen border-r border-border bg-popover shadow-sm flex flex-col transition-all duration-300 ${
         isCollapsed ? "w-16" : "w-72"
       }`}
     >
-      <div className="p-4 border-b border-border flex items-center justify-between bg-white">
+      <div className="p-4 border-b border-border flex items-center justify-between bg-popover">
         {!isCollapsed && <h1 className="text-xl font-bold text-foreground">TalentFund</h1>}
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="w-5 h-5" />
+          ) : (
+            <ChevronLeft className="w-5 h-5" />
+          )}
+        </button>
       </div>
 
-      <nav className="flex-1 px-2 py-4 flex flex-col justify-between bg-white">
+      <nav className="flex-1 px-2 py-4 flex flex-col justify-between bg-popover">
         <div className="space-y-1">
           {primaryMenuItems.map((item) => (
             <Link
