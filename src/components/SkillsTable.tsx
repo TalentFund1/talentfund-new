@@ -96,7 +96,7 @@ export const SkillsTable = () => {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-4 bg-white rounded-lg border">
+      <div className="bg-white rounded-lg border shadow-sm">
         <div className="p-6 border-b">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
