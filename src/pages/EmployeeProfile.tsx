@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
-import { SkillsTable } from "@/components/SkillsTable";
 import { useNavigate } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
@@ -103,7 +102,7 @@ const EmployeeProfile = () => {
           <Card className="p-6 bg-white">
             <SkillsSummary />
           </Card>
-          <SkillsTable />
+          {/* SkillsTable has been removed */}
         </TabsContent>
 
         <TabsContent value="benchmark">
