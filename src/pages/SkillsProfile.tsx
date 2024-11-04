@@ -88,15 +88,15 @@ const SkillsProfile = () => {
                   <TableHead className="w-[5%]">
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableHead>
-                  <TableHead className="w-[22%]">
+                  <TableHead className="w-[25%]">
                     <div className="flex items-center gap-1">
                       Role Name <ChevronDown className="h-4 w-4" />
                     </div>
                   </TableHead>
-                  <TableHead className="w-[18%]">Function</TableHead>
-                  <TableHead className="w-[12%] text-center">Skill Count</TableHead>
-                  <TableHead className="w-[15%] text-center">Employees</TableHead>
-                  <TableHead className="w-[18%] text-center">Profile Matches</TableHead>
+                  <TableHead className="w-[25%]">Function</TableHead>
+                  <TableHead className="w-[10%] text-center">Skill Count</TableHead>
+                  <TableHead className="w-[10%] text-center">Employees</TableHead>
+                  <TableHead className="w-[10%] text-center">Matchesss</TableHead>
                   <TableHead className="w-[15%] text-right whitespace-nowrap">Last Updated</TableHead>
                 </TableRow>
               </TableHeader>
