@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Building2, DollarSign } from "lucide-react";
 import { useState } from "react";
-import { Separator } from "@/components/ui/separator"; // Importing Separator
+import { Separator } from "@/components/ui/separator";
 
 export const SkillProfileHeader = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -24,7 +24,7 @@ export const SkillProfileHeader = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid grid-cols-4 gap-8">
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Function</span>
@@ -39,13 +39,19 @@ export const SkillProfileHeader = () => {
         </div>
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
+            <span className="text-sm text-muted-foreground">Occupation</span>
+            <p className="font-medium">Software Developer</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Salary Range</span>
             <p className="font-medium">$130-170K</p>
           </div>
         </div>
       </div>
 
-      <Separator /> {/* Moved Separator above job description */}
+      <Separator />
 
       <div className="space-y-1">
         <span className="text-sm text-muted-foreground">Job Description</span>
