@@ -95,8 +95,8 @@ export const SkillsTable = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg border">
-      <div className="p-6 border-b">
+    <div className="bg-white rounded-lg border border-border">
+      <div className="p-6 border-b border-border">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
           <Select value={selectedFilter} onValueChange={setSelectedFilter}>
@@ -112,47 +112,49 @@ export const SkillsTable = () => {
         </div>
       </div>
       
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Skill Title</TableHead>
-            <TableHead>Subcategory</TableHead>
-            <TableHead className="text-center">Beginner</TableHead>
-            <TableHead className="text-center">Intermediate</TableHead>
-            <TableHead className="text-center">Advanced</TableHead>
-            <TableHead>Projected Growth</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredSkills.map((skill) => (
-            <TableRow key={skill.title}>
-              <TableCell>{skill.title}</TableCell>
-              <TableCell>{skill.subcategory}</TableCell>
-              <TableCell className="text-center">
-                {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
-              </TableCell>
-              <TableCell className="text-center">
-                {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
-              </TableCell>
-              <TableCell className="text-center">
-                {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
-              </TableCell>
-              <TableCell>
-                <span 
-                  className={`px-2 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
-                    skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-                  }`}
-                  onClick={() => handleGrowthClick(skill)}
-                >
-                  ↗ {skill.growth}
-                </span>
-              </TableCell>
+      <div className="border-b border-border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Skill Title</TableHead>
+              <TableHead>Subcategory</TableHead>
+              <TableHead className="text-center">Beginner</TableHead>
+              <TableHead className="text-center">Intermediate</TableHead>
+              <TableHead className="text-center">Advanced</TableHead>
+              <TableHead>Projected Growth</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredSkills.map((skill) => (
+              <TableRow key={skill.title}>
+                <TableCell>{skill.title}</TableCell>
+                <TableCell>{skill.subcategory}</TableCell>
+                <TableCell className="text-center">
+                  {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
+                </TableCell>
+                <TableCell className="text-center">
+                  {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
+                </TableCell>
+                <TableCell className="text-center">
+                  {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
+                </TableCell>
+                <TableCell>
+                  <span 
+                    className={`px-2 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
+                      skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
+                    }`}
+                    onClick={() => handleGrowthClick(skill)}
+                  >
+                    ↗ {skill.growth}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       
-      <div className="flex justify-between items-center p-4 border-t">
+      <div className="flex justify-between items-center p-4 border-t border-border">
         <Select defaultValue="10">
           <SelectTrigger className="w-[100px]">
             <SelectValue placeholder="Rows" />
