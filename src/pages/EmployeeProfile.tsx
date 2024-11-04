@@ -92,6 +92,12 @@ const EmployeeProfile = () => {
             Skills Summary
           </TabsTrigger>
           <TabsTrigger 
+            value="matrix"
+            className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
+          >
+            Skills Matrix
+          </TabsTrigger>
+          <TabsTrigger 
             value="benchmark"
             className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-[#8073ec] data-[state=active]:text-primary font-medium"
           >
@@ -103,6 +109,9 @@ const EmployeeProfile = () => {
           <Card className="p-6 bg-white">
             <SkillsSummary />
           </Card>
+        </TabsContent>
+
+        <TabsContent value="matrix" className="space-y-4">
           <SkillsTable />
         </TabsContent>
 
