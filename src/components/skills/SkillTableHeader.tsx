@@ -7,11 +7,11 @@ import {
 export const SkillTableHeader = () => (
   <TableHeader>
     <TableRow className="hover:bg-transparent">
-      <TableHead>Skill Title</TableHead>
-      <TableHead>Subcategory</TableHead>
-      <TableHead className="text-center">Beginner</TableHead>
-      <TableHead className="text-center">Intermediate</TableHead>
-      <TableHead className="text-center">Advanced</TableHead>
+      <TableHead className="w-[200px]">Skill Title</TableHead>
+      <TableHead className="w-[250px]">Subcategory</TableHead>
+      <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Beginner</TableHead>
+      <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Intermediate</TableHead>
+      <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Advanced</TableHead>
       <TableHead>Projected Growth</TableHead>
     </TableRow>
   </TableHeader>
