@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { MapPin, Building2, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { SkillsTableSection } from "./SkillsTableSection";
