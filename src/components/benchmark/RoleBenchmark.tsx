@@ -2,6 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { BenchmarkAnalysis } from "./BenchmarkAnalysis";
 
 const requiredSkills = [
   { name: "React", level: "advanced" },
@@ -89,6 +90,10 @@ export const RoleBenchmark = () => {
               ))}
             </div>
           </div>
+
+          <Separator className="my-6" />
+
+          <BenchmarkAnalysis />
 
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
             <div className="flex items-center justify-between mb-4">
