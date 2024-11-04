@@ -33,7 +33,7 @@ const Employees = () => {
               icon={<Users className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
-              title="Employee Added in Past 1 Year"
+              title="Added in Past 1 year"
               value="24"
               icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
             />
