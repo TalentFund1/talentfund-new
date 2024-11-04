@@ -15,7 +15,7 @@ export const SkillProfileHeader = () => {
             <h1 className="text-2xl font-semibold text-foreground">AI Engineer</h1>
             <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: 123</span>
           </div>
-          <h2 className="text-lg text-foreground/80">Artificial Engineer</h2>
+          {/* Removed the "Artificial Engineer" heading */}
         </div>
 
         <div className="flex gap-2">
