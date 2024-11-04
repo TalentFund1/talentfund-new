@@ -18,7 +18,7 @@ export const SkillTableRow = ({ skill, onGrowthClick }: SkillTableRowProps) => {
 
   return (
     <TableRow>
-      <TableCell className="font-medium w-[200px] bg-[#F7F9FF]/50 border-x border-border">
+      <TableCell className="font-medium w-[200px] bg-[#F7F9FF]">
         {skill.title}
       </TableCell>
       <TableCell className="w-[250px]" title={skill.subcategory}>
