@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SkillProfileHeader } from "@/components/skills/SkillProfileHeader";
 import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
+import { EmployeeOverview } from "@/components/skills/EmployeeOverview";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ const SkillProfileDetail = () => {
       <Card className="p-8 bg-white">
         <SkillProfileHeader />
       </Card>
+
+      <EmployeeOverview />
 
       <Tabs defaultValue="skills" className="w-full space-y-6">
         <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
