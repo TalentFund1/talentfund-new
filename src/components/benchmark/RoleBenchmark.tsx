@@ -2,7 +2,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { SkillsTable } from "@/components/SkillsTable";
 
 const requiredSkills = [
   { name: "React", level: "advanced" },
@@ -128,8 +127,6 @@ export const RoleBenchmark = () => {
             </div>
           </div>
         </div>
-
-        <SkillsTable />
       </div>
     </div>
   );
