@@ -3,8 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { BenchmarkAnalysis } from "./BenchmarkAnalysis";
-import { Card } from "@/components/ui/card";
-import { SkillsMatrixSection } from "./SkillsMatrixSection";
+import { SkillsTable } from "@/components/SkillsTable";
 
 const requiredSkills = [
   { name: "React", level: "advanced" },
@@ -49,7 +48,7 @@ export const RoleBenchmark = () => {
         </div>
 
         <div className="space-y-6">
-          <Card className="p-6 bg-white">
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Required Skills</span>
@@ -69,9 +68,9 @@ export const RoleBenchmark = () => {
                 </Badge>
               ))}
             </div>
-          </Card>
+          </div>
 
-          <Card className="p-6 bg-white">
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Preferred Skills</span>
@@ -91,15 +90,13 @@ export const RoleBenchmark = () => {
                 </Badge>
               ))}
             </div>
-          </Card>
+          </div>
 
           <Separator className="my-6" />
 
-          <Card className="p-6 bg-white">
-            <BenchmarkAnalysis />
-          </Card>
+          <BenchmarkAnalysis />
 
-          <Card className="p-6 bg-white">
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Missing Skills / Seniority or Certification</span>
@@ -122,9 +119,9 @@ export const RoleBenchmark = () => {
                 </Badge>
               ))}
             </div>
-          </Card>
+          </div>
 
-          <SkillsMatrixSection />
+          <SkillsTable />
         </div>
       </div>
     </div>
