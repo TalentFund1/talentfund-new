@@ -1,3 +1,4 @@
+import { LayoutDashboard, Users, LineChart, BookOpen, Store, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
@@ -13,15 +14,15 @@ export const Sidebar = () => {
   }, [isCollapsed]);
 
   const primaryMenuItems = [
-    { name: "Dashboard", path: "/" },
-    { name: "Skill Profiles", path: "/skills" },
-    { name: "Employees", path: "/employees" },
-    { name: "Market Data", path: "/market" },
+    { name: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, path: "/" },
+    { name: "Skill Profiles", icon: <BookOpen className="w-5 h-5" />, path: "/skills" },
+    { name: "Employees", icon: <Users className="w-5 h-5" />, path: "/employees" },
+    { name: "Market Data", icon: <LineChart className="w-5 h-5" />, path: "/market" },
   ];
 
   const secondaryMenuItems = [
-    { name: "Talent Marketplace", path: "/marketplace" },
-    { name: "Settings", path: "/settings" },
+    { name: "Talent Marketplace", icon: <Store className="w-5 h-5" />, path: "/marketplace" },
+    { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/settings" },
   ];
 
   return (
@@ -38,9 +39,11 @@ export const Sidebar = () => {
           className="p-1 hover:bg-gray-100 rounded-full transition-colors"
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          <span className="text-sm">
-            {isCollapsed ? "→" : "←"}
-          </span>
+          {isCollapsed ? (
+            <ChevronRight className="w-5 h-5" />
+          ) : (
+            <ChevronLeft className="w-5 h-5" />
+          )}
         </button>
       </div>
 
@@ -52,7 +55,10 @@ export const Sidebar = () => {
               to={item.path}
               className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 transition-colors"
             >
-              <span className="font-medium text-foreground">{item.name}</span>
+              {item.icon}
+              {!isCollapsed && (
+                <span className="font-medium text-foreground">{item.name}</span>
+              )}
             </Link>
           ))}
         </div>
@@ -65,7 +71,10 @@ export const Sidebar = () => {
               to={item.path}
               className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 transition-colors"
             >
-              <span className="font-medium text-foreground">{item.name}</span>
+              {item.icon}
+              {!isCollapsed && (
+                <span className="font-medium text-foreground">{item.name}</span>
+              )}
             </Link>
           ))}
         </div>

@@ -1,6 +1,7 @@
 import { StatCard } from "@/components/StatCard";
 import { SkillsOverview } from "@/components/SkillsOverview";
 import { Sidebar } from "@/components/Sidebar";
+import { Users, Target, TrendingUp, Award } from "lucide-react";
 
 const Index = () => {
   return (
@@ -18,21 +19,25 @@ const Index = () => {
               title="Total Employees"
               value="124"
               description="+12% from last month"
+              icon={<Users className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Skills Coverage"
               value="87%"
               description="Above industry average"
+              icon={<Target className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Growth Rate"
               value="+15%"
               description="Year over year"
+              icon={<TrendingUp className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Skill Score"
               value="4.8/5"
               description="Team performance"
+              icon={<Award className="h-6 w-6 text-primary-icon" />}
             />
           </div>
 
