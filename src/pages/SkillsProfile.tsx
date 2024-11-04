@@ -96,8 +96,8 @@ const SkillsProfile = () => {
                   </TableHead>
                   <TableHead className="w-[15%]">Function</TableHead>
                   <TableHead className="w-[10%] text-center">Skill Count</TableHead>
-                  <TableHead className="w-[15%] text-center">People with the Job</TableHead>
-                  <TableHead className="w-[20%] text-center">People that match the Job</TableHead>
+                  <TableHead className="w-[18%] text-center">Employees</TableHead>
+                  <TableHead className="w-[17%] text-center">Profile Matches</TableHead>
                   <TableHead className="w-[10%] text-right">Last Updated</TableHead>
                 </TableRow>
               </TableHeader>
