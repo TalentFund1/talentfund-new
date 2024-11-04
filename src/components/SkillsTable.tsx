@@ -69,14 +69,19 @@ export const SkillsTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const specializedSkills = useMemo(() => {
+    return skills.filter(skill => skill.type === "specialized");
+  }, []);
+
+  const commonSkills = useMemo(() => {
+    return skills.filter(skill => skill.type === "common");
+  }, []);
+
   const filteredSkills = useMemo(() => {
-    return skills.filter(skill => {
-      if (selectedFilter === "all") return true;
-      if (selectedFilter === "specialized") return skill.type === "specialized";
-      if (selectedFilter === "common") return skill.type === "common";
-      return true;
-    });
-  }, [selectedFilter]);
+    if (selectedFilter === "specialized") return specializedSkills;
+    if (selectedFilter === "common") return commonSkills;
+    return skills;
+  }, [selectedFilter, specializedSkills, commonSkills]);
 
   const paginatedSkills = useMemo(() => {
     const startIndex = (currentPage - 1) * rowsPerPage;
@@ -118,19 +123,46 @@ export const SkillsTable = () => {
           </div>
         </div>
         
-        <div className="px-4">
-          <Table>
-            <SkillTableHeader />
-            <TableBody>
-              {paginatedSkills.map((skill) => (
-                <SkillTableRow 
-                  key={skill.title} 
-                  skill={skill} 
-                  onGrowthClick={handleGrowthClick}
-                />
-              ))}
-            </TableBody>
-          </Table>
+        <div className="px-4 space-y-8">
+          {(selectedFilter === "all" || selectedFilter === "specialized") && specializedSkills.length > 0 && (
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold px-4 pt-4">Specialized Skills</h3>
+              <Table>
+                <SkillTableHeader />
+                <TableBody>
+                  {paginatedSkills
+                    .filter(skill => skill.type === "specialized")
+                    .map((skill) => (
+                      <SkillTableRow 
+                        key={skill.title} 
+                        skill={skill} 
+                        onGrowthClick={handleGrowthClick}
+                      />
+                    ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          {(selectedFilter === "all" || selectedFilter === "common") && commonSkills.length > 0 && (
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold px-4 pt-4">Common Skills</h3>
+              <Table>
+                <SkillTableHeader />
+                <TableBody>
+                  {paginatedSkills
+                    .filter(skill => skill.type === "common")
+                    .map((skill) => (
+                      <SkillTableRow 
+                        key={skill.title} 
+                        skill={skill} 
+                        onGrowthClick={handleGrowthClick}
+                      />
+                    ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </div>
         
         <div className="flex justify-between items-center px-6 py-4 border-t border-border">
