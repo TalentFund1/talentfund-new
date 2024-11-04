@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Avatar } from "@/components/ui/avatar";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SkillProfileHeader } from "@/components/skills/SkillProfileHeader";
-import { SkillProfileEmployees } from "@/components/skills/SkillProfileEmployees";
 import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
 
 const SkillProfileDetail = () => {
@@ -31,8 +29,6 @@ const SkillProfileDetail = () => {
 
       <Card className="p-8 bg-white">
         <SkillProfileHeader />
-        <Separator className="my-8" />
-        <SkillProfileEmployees />
       </Card>
 
       <Tabs defaultValue="skills" className="w-full space-y-6">
