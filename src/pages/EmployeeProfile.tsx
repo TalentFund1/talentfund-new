@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
 import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
+import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 
 const EmployeeProfile = () => {
   const navigate = useNavigate();
@@ -117,6 +118,7 @@ const EmployeeProfile = () => {
           <Card className="p-8 bg-white">
             <RoleBenchmark />
           </Card>
+          <SkillsMatrix />
           <BenchmarkAnalysis />
         </TabsContent>
       </Tabs>
