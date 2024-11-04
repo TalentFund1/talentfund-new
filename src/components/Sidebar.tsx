@@ -1,6 +1,7 @@
 import { LayoutDashboard, Users, LineChart, BookOpen, Store, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Separator } from "@/components/ui/separator"; // Importing the Separator component
 
 export const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -54,6 +55,8 @@ export const Sidebar = () => {
             </Link>
           ))}
         </div>
+
+        <Separator className="my-2" /> {/* Adding the separator here */}
 
         <div className="space-y-1">
           {secondaryMenuItems.map((item) => (
