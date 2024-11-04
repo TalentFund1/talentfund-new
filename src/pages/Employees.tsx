@@ -28,7 +28,7 @@ const Employees = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
-              title="Total number of Employees"
+              title="Total Number of Employees"
               value="112"
               icon={<Users className="h-6 w-6 text-primary-icon" />}
             />
