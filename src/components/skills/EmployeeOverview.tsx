@@ -29,7 +29,7 @@ export const EmployeeOverview = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <Card className="p-6 space-y-6 bg-white">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-primary">Employees</h2>
         <span className="text-sm text-muted-foreground">5 total</span>
@@ -37,7 +37,7 @@ export const EmployeeOverview = () => {
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {employees.map((section) => (
-          <Card key={section.section} className="p-6 space-y-4 bg-white">
+          <Card key={section.section} className="p-6 space-y-4 border border-border">
             <div className="flex items-center justify-between">
               <h3 className="font-medium text-sm text-muted-foreground">{section.section}</h3>
               <Button 
@@ -77,6 +77,6 @@ export const EmployeeOverview = () => {
           </Card>
         ))}
       </div>
-    </div>
+    </Card>
   );
 };
