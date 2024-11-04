@@ -6,11 +6,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ChevronLeft, ChevronRight, CircleDot } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useMemo } from "react";
 import { SkillGrowthSheet } from "./skills/SkillGrowthSheet";
-import { TableHeader } from "./skills-table/TableHeader";
-import { TablePagination } from "./skills-table/TablePagination";
-import { SkillLevelIcon } from "./skills-table/SkillLevelIcon";
 
 const skills = [
   {
@@ -64,6 +64,19 @@ const skills = [
   }
 ];
 
+const SkillLevelIcon = ({ level }: { level: string }) => {
+  switch (level) {
+    case "advanced":
+      return <CircleDot className="h-5 w-5 text-primary-accent mx-auto" />;
+    case "intermediate":
+      return <CircleDot className="h-5 w-5 text-primary-icon mx-auto" />;
+    case "beginner":
+      return <CircleDot className="h-5 w-5 text-[#008000] mx-auto" />;
+    default:
+      return null;
+  }
+};
+
 export const SkillsTable = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("all");
   const [selectedSkill, setSelectedSkill] = useState<{ title: string; growth: string } | null>(null);
@@ -85,20 +98,42 @@ export const SkillsTable = () => {
     return filteredSkills.slice(startIndex, startIndex + rowsPerPage);
   }, [filteredSkills, currentPage, rowsPerPage]);
 
+  const totalPages = Math.ceil(filteredSkills.length / rowsPerPage);
+
   const handleGrowthClick = (skill: { title: string; growth: string }) => {
     setSelectedSkill(skill);
     setSheetOpen(true);
   };
 
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
+    setCurrentPage(1); // Reset to first page when changing rows per page
+  };
+
   return (
-    <div className="w-full space-y-6">
-      <div className="bg-white rounded-2xl border border-border shadow-sm w-full">
-        <TableHeader 
-          selectedFilter={selectedFilter}
-          setSelectedFilter={setSelectedFilter}
-        />
+    <div className="space-y-6">
+      <div className="bg-white rounded-2xl border border-border shadow-sm">
+        <div className="px-6 py-4 border-b border-border">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+            <Select value={selectedFilter} onValueChange={setSelectedFilter}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="All Skills" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Skills</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
         
-        <div className="w-full overflow-x-auto">
+        <div className="px-4">
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
@@ -140,16 +175,44 @@ export const SkillsTable = () => {
           </Table>
         </div>
         
-        <TablePagination
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          totalItems={filteredSkills.length}
-          onPageChange={setCurrentPage}
-          onRowsPerPageChange={(value) => {
-            setRowsPerPage(Number(value));
-            setCurrentPage(1);
-          }}
-        />
+        <div className="flex justify-between items-center px-6 py-4 border-t border-border">
+          <Select value={String(rowsPerPage)} onValueChange={handleRowsPerPageChange}>
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="10 rows" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10 rows</SelectItem>
+              <SelectItem value="20">20 rows</SelectItem>
+              <SelectItem value="50">50 rows</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              {`${(currentPage - 1) * rowsPerPage + 1}-${Math.min(currentPage * rowsPerPage, filteredSkills.length)} of ${filteredSkills.length}`}
+            </span>
+            <div className="flex gap-1">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="w-8 h-8"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="w-8 h-8"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {selectedSkill && (
