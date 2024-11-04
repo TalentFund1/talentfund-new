@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import SkillsProfile from "./pages/SkillsProfile";
 import Employees from "./pages/Employees";
 import EmployeeProfile from "./pages/EmployeeProfile";
+import BenchmarkAnalysis from "./pages/BenchmarkAnalysis";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/skills" element={<SkillsProfile />} />
           <Route path="/employees" element={<Employees />} />
           <Route path="/employee-profile" element={<EmployeeProfile />} />
+          <Route path="/benchmark-analysis" element={<BenchmarkAnalysis />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
