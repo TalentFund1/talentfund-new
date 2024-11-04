@@ -8,6 +8,7 @@ import { SkillsTable } from "@/components/SkillsTable";
 import { useNavigate } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
+import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
 
 const EmployeeProfile = () => {
   const navigate = useNavigate();
@@ -112,10 +113,11 @@ const EmployeeProfile = () => {
           <SkillsTable />
         </TabsContent>
 
-        <TabsContent value="benchmark">
+        <TabsContent value="benchmark" className="space-y-6">
           <Card className="p-8 bg-white">
             <RoleBenchmark />
           </Card>
+          <BenchmarkAnalysis />
         </TabsContent>
       </Tabs>
     </div>
