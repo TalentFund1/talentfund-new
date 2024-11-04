@@ -9,7 +9,7 @@ import {
 import { ChevronLeft, ChevronRight, CircleDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { SkillGrowthSheet } from "./skills/SkillGrowthSheet";
 
 const skills = [
@@ -81,17 +81,37 @@ export const SkillsTable = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("all");
   const [selectedSkill, setSelectedSkill] = useState<{ title: string; growth: string } | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const filteredSkills = skills.filter(skill => {
-    if (selectedFilter === "all") return true;
-    if (selectedFilter === "specialized") return skill.type === "specialized";
-    if (selectedFilter === "common") return skill.type === "common";
-    return true;
-  });
+  const filteredSkills = useMemo(() => {
+    return skills.filter(skill => {
+      if (selectedFilter === "all") return true;
+      if (selectedFilter === "specialized") return skill.type === "specialized";
+      if (selectedFilter === "common") return skill.type === "common";
+      return true;
+    });
+  }, [selectedFilter]);
+
+  const paginatedSkills = useMemo(() => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    return filteredSkills.slice(startIndex, startIndex + rowsPerPage);
+  }, [filteredSkills, currentPage, rowsPerPage]);
+
+  const totalPages = Math.ceil(filteredSkills.length / rowsPerPage);
 
   const handleGrowthClick = (skill: { title: string; growth: string }) => {
     setSelectedSkill(skill);
     setSheetOpen(true);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
+    setCurrentPage(1); // Reset to first page when changing rows per page
   };
 
   return (
@@ -126,7 +146,7 @@ export const SkillsTable = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredSkills.map((skill) => (
+              {paginatedSkills.map((skill) => (
                 <TableRow key={skill.title}>
                   <TableCell className="font-medium">{skill.title}</TableCell>
                   <TableCell>{skill.subcategory}</TableCell>
@@ -156,7 +176,7 @@ export const SkillsTable = () => {
         </div>
         
         <div className="flex justify-between items-center px-6 py-4 border-t border-border">
-          <Select defaultValue="10">
+          <Select value={String(rowsPerPage)} onValueChange={handleRowsPerPageChange}>
             <SelectTrigger className="w-[100px]">
               <SelectValue placeholder="10 rows" />
             </SelectTrigger>
@@ -168,12 +188,26 @@ export const SkillsTable = () => {
           </Select>
           
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">1-4 of 4</span>
+            <span className="text-sm text-muted-foreground">
+              {`${(currentPage - 1) * rowsPerPage + 1}-${Math.min(currentPage * rowsPerPage, filteredSkills.length)} of ${filteredSkills.length}`}
+            </span>
             <div className="flex gap-1">
-              <Button variant="outline" size="icon" className="w-8 h-8">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="w-8 h-8"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="icon" className="w-8 h-8">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="w-8 h-8"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
