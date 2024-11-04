@@ -31,9 +31,9 @@ export const SkillTableRow = ({ skill, onGrowthClick }: SkillTableRowProps) => {
       <TableCell className="text-center bg-[#F7F9FF]/50 border-x border-border">
         {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
       </TableCell>
-      <TableCell>
+      <TableCell className="text-center w-[150px]">
         <span 
-          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
+          className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
             skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
           }`}
           onClick={() => onGrowthClick(skill)}

@@ -12,7 +12,7 @@ export const SkillTableHeader = () => (
       <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Beginner</TableHead>
       <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Intermediate</TableHead>
       <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Advanced</TableHead>
-      <TableHead>Projected Growth</TableHead>
+      <TableHead className="w-[150px] text-center">Projected Growth</TableHead>
     </TableRow>
   </TableHeader>
 );
