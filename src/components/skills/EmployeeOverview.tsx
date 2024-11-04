@@ -29,7 +29,7 @@ export const EmployeeOverview = () => {
   ];
 
   return (
-    <Card className="p-6 space-y-6 animate-fade-in">
+    <Card className="p-6 space-y-6 animate-fade-in bg-white">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-primary">Employees</h2>
         <span className="text-sm text-muted-foreground">5 total</span>
@@ -43,7 +43,7 @@ export const EmployeeOverview = () => {
               {section.people.map((person) => (
                 <div 
                   key={person.name} 
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer group"
+                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer group bg-white"
                 >
                   <Avatar className="h-10 w-10 border-2 border-border">
                     <img 
