@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { SkillLevelIcon } from "./SkillLevelIcon";
+import { CircleDot } from "lucide-react";
 
 interface SkillTableRowProps {
   skill: {
@@ -22,14 +22,20 @@ export const SkillTableRow = ({ skill, onGrowthClick }: SkillTableRowProps) => {
       <TableCell className="text-muted-foreground" title={skill.subcategory}>
         {truncateText(skill.subcategory)}
       </TableCell>
-      <TableCell className="text-center">
-        {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
+      <TableCell className={`text-center ${skill.level === "beginner" ? "bg-[#F8F7FF]" : ""}`}>
+        {skill.level === "beginner" && (
+          <CircleDot className="h-5 w-5 text-[#008000] mx-auto" />
+        )}
       </TableCell>
-      <TableCell className="text-center">
-        {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
+      <TableCell className={`text-center ${skill.level === "intermediate" ? "bg-[#FFF8F5]" : ""}`}>
+        {skill.level === "intermediate" && (
+          <CircleDot className="h-5 w-5 text-primary-icon mx-auto" />
+        )}
       </TableCell>
-      <TableCell className="text-center">
-        {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
+      <TableCell className={`text-center ${skill.level === "advanced" ? "bg-[#F5F8FF]" : ""}`}>
+        {skill.level === "advanced" && (
+          <CircleDot className="h-5 w-5 text-primary-accent mx-auto" />
+        )}
       </TableCell>
       <TableCell>
         <div className="flex justify-center">
