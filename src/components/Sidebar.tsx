@@ -19,7 +19,7 @@ export const Sidebar = () => {
 
   return (
     <div 
-      className={`fixed top-0 left-0 h-screen border-r border-border bg-white shadow-sm flex flex-col transition-all duration-300 ${
+      className={`fixed top-0 left-0 h-screen border-r border-border bg-white shadow-sm flex flex-col transition-all duration-300 z-50 ${
         isCollapsed ? "w-16" : "w-72"
       }`}
       style={{ backgroundColor: 'white' }}
