@@ -56,9 +56,8 @@ export const Sidebar = () => {
           ))}
         </div>
 
-        <Separator className="my-2" /> {/* Added separator above Talent Marketplace */}
-
         <div className="space-y-1">
+          <Separator className="my-8" /> {/* Increased margin to create more space */}
           {secondaryMenuItems.map((item) => (
             <Link
               key={item.name}
