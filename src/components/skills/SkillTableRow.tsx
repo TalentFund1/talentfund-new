@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { CircleDot } from "lucide-react";
+import { SkillLevelIcon } from "./SkillLevelIcon";
 
 interface SkillTableRowProps {
   skill: {
@@ -17,39 +17,31 @@ export const SkillTableRow = ({ skill, onGrowthClick }: SkillTableRowProps) => {
   };
 
   return (
-    <TableRow className="hover:bg-muted/30 transition-colors border-b border-border last:border-0">
-      <TableCell className="font-medium sticky left-0 bg-white">{skill.title}</TableCell>
-      <TableCell className="text-muted-foreground" title={skill.subcategory}>
+    <TableRow className="border-b border-border">
+      <TableCell className="font-medium w-[200px] bg-[#F7F9FF]/50 border-x border-border">
+        {skill.title}
+      </TableCell>
+      <TableCell className="w-[250px] border-r border-border" title={skill.subcategory}>
         {truncateText(skill.subcategory)}
       </TableCell>
-      <TableCell className={`text-center ${skill.level === "beginner" ? "bg-[#F8F7FF]" : ""}`}>
-        {skill.level === "beginner" && (
-          <CircleDot className="h-5 w-5 text-[#008000] mx-auto" />
-        )}
+      <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border">
+        {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
       </TableCell>
-      <TableCell className={`text-center ${skill.level === "intermediate" ? "bg-[#FFF8F5]" : ""}`}>
-        {skill.level === "intermediate" && (
-          <CircleDot className="h-5 w-5 text-primary-icon mx-auto" />
-        )}
+      <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border">
+        {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
       </TableCell>
-      <TableCell className={`text-center ${skill.level === "advanced" ? "bg-[#F5F8FF]" : ""}`}>
-        {skill.level === "advanced" && (
-          <CircleDot className="h-5 w-5 text-primary-accent mx-auto" />
-        )}
+      <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border">
+        {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
       </TableCell>
-      <TableCell>
-        <div className="flex justify-center">
-          <span 
-            className={`px-2.5 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors ${
-              skill.growth === "0%" 
-                ? 'bg-gray-100 text-gray-800 hover:bg-gray-200' 
-                : 'bg-green-100 text-green-800 hover:bg-green-200'
-            }`}
-            onClick={() => onGrowthClick(skill)}
-          >
-            ↗ {skill.growth}
-          </span>
-        </div>
+      <TableCell className="text-center w-[150px] border-r border-border">
+        <span 
+          className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity ${
+            skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
+          }`}
+          onClick={() => onGrowthClick(skill)}
+        >
+          ↗ {skill.growth}
+        </span>
       </TableCell>
     </TableRow>
   );

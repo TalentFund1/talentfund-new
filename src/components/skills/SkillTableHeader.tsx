@@ -7,12 +7,12 @@ import {
 export const SkillTableHeader = () => (
   <TableHeader>
     <TableRow className="hover:bg-transparent border-b border-border">
-      <TableHead className="w-[25%] bg-background/40 font-medium text-foreground sticky top-0">Skill Title</TableHead>
-      <TableHead className="w-[30%] bg-background/40 font-medium text-foreground sticky top-0">Subcategory</TableHead>
-      <TableHead className="w-[10%] text-center bg-[#F8F7FF] font-medium text-foreground sticky top-0">Beginner</TableHead>
-      <TableHead className="w-[10%] text-center bg-[#FFF8F5] font-medium text-foreground sticky top-0">Intermediate</TableHead>
-      <TableHead className="w-[10%] text-center bg-[#F5F8FF] font-medium text-foreground sticky top-0">Advanced</TableHead>
-      <TableHead className="w-[15%] text-center bg-background/40 font-medium text-foreground sticky top-0">Projected Growth</TableHead>
+      <TableHead className="w-[200px] bg-[#F7F9FF] border-x border-border font-semibold">Skill Title</TableHead>
+      <TableHead className="w-[250px] border-r border-border">Subcategory</TableHead>
+      <TableHead className="text-center bg-[#F7F9FF] border-r border-border">Beginner</TableHead>
+      <TableHead className="text-center bg-[#F7F9FF] border-r border-border">Intermediate</TableHead>
+      <TableHead className="text-center bg-[#F7F9FF] border-r border-border">Advanced</TableHead>
+      <TableHead className="w-[150px] text-center border-r border-border">Projected Growth</TableHead>
     </TableRow>
   </TableHeader>
 );
