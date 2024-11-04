@@ -80,8 +80,6 @@ export const RoleBenchmark = () => {
               ))}
             </div>
           </div>
-
-          <Separator className="my-6" />
         </div>
       </div>
     </div>
