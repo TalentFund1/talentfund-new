@@ -19,11 +19,12 @@ export const Sidebar = () => {
 
   return (
     <div 
-      className={`fixed top-0 left-0 h-screen border-r border-border bg-popover shadow-sm flex flex-col transition-all duration-300 ${
+      className={`fixed top-0 left-0 h-screen border-r border-border bg-white shadow-sm flex flex-col transition-all duration-300 ${
         isCollapsed ? "w-16" : "w-72"
       }`}
+      style={{ backgroundColor: 'white' }}
     >
-      <div className="p-4 border-b border-border flex items-center justify-between bg-popover">
+      <div className="p-4 border-b border-border flex items-center justify-between" style={{ backgroundColor: 'white' }}>
         {!isCollapsed && <h1 className="text-xl font-bold text-foreground">TalentFund</h1>}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -38,7 +39,7 @@ export const Sidebar = () => {
         </button>
       </div>
 
-      <nav className="flex-1 px-2 py-4 flex flex-col justify-between bg-popover">
+      <nav className="flex-1 px-2 py-4 flex flex-col justify-between" style={{ backgroundColor: 'white' }}>
         <div className="space-y-1">
           {primaryMenuItems.map((item) => (
             <Link
