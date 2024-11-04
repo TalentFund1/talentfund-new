@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator"; // Ensure Separator is imported
+import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
@@ -41,7 +41,6 @@ const EmployeeProfile = () => {
                 <span className="text-sm text-muted-foreground">Employee ID: 123</span>
               </div>
               <h2 className="text-lg">Senior Frontend Engineer: P4</h2>
-              <Separator className="my-4" /> {/* Added Separator here */}
               <div className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="h-4 w-4" />
                 <span>Toronto, ON</span>
