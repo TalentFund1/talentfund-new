@@ -34,7 +34,7 @@ export const SkillProfileHeader = () => {
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <p className="font-medium">Software Developer</p>
+            <p className="font-medium">Artificial Engineer</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
