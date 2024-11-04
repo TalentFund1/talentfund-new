@@ -29,15 +29,15 @@ export const EmployeeOverview = () => {
   ];
 
   return (
-    <Card className="p-6 space-y-6 animate-fade-in bg-white">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-primary">Employees</h2>
         <span className="text-sm text-muted-foreground">5 total</span>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-t pt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {employees.map((section) => (
-          <div key={section.section} className="space-y-4">
+          <Card key={section.section} className="p-6 space-y-4 bg-white">
             <div className="flex items-center justify-between">
               <h3 className="font-medium text-sm text-muted-foreground">{section.section}</h3>
               <Button 
@@ -51,7 +51,7 @@ export const EmployeeOverview = () => {
               {section.people.map((person) => (
                 <div 
                   key={person.name} 
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer group bg-white"
+                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer group"
                 >
                   <Avatar className="h-10 w-10 border-2 border-border">
                     <img 
@@ -74,9 +74,9 @@ export const EmployeeOverview = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         ))}
       </div>
-    </Card>
+    </div>
   );
 };
