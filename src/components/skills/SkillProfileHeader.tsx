@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Building2, DollarSign } from "lucide-react";
 import { useState } from "react";
+import { Separator } from "@/components/ui/separator"; // Importing Separator
 
 export const SkillProfileHeader = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -15,7 +16,6 @@ export const SkillProfileHeader = () => {
             <h1 className="text-2xl font-semibold text-foreground">AI Engineer</h1>
             <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: 123</span>
           </div>
-          {/* Removed the "Artificial Engineer" heading */}
         </div>
 
         <div className="flex gap-2">
@@ -59,6 +59,8 @@ export const SkillProfileHeader = () => {
           </button>
         </div>
       </div>
+
+      <Separator /> {/* Added Separator here */}
     </div>
   );
 };
