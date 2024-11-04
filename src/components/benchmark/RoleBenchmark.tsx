@@ -121,7 +121,10 @@ export const RoleBenchmark = () => {
             </div>
           </div>
 
-          <SkillsTable />
+          <div className="space-y-4">
+            <h4 className="text-xl font-semibold text-foreground">Skills Matrix</h4>
+            <SkillsTable />
+          </div>
         </div>
       </div>
     </div>
