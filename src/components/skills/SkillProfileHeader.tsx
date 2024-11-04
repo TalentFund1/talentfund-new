@@ -45,6 +45,8 @@ export const SkillProfileHeader = () => {
         </div>
       </div>
 
+      <Separator /> {/* Moved Separator above job description */}
+
       <div className="space-y-1">
         <span className="text-sm text-muted-foreground">Job Description</span>
         <div className="space-y-2">
@@ -59,8 +61,6 @@ export const SkillProfileHeader = () => {
           </button>
         </div>
       </div>
-
-      <Separator /> {/* Added Separator here */}
     </div>
   );
 };
