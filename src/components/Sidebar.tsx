@@ -1,10 +1,17 @@
 import { LayoutDashboard, Users, LineChart, BookOpen, Store, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { Separator } from "@/components/ui/separator"; // Importing the Separator component
+import { useState, useEffect } from "react";
+import { Separator } from "@/components/ui/separator";
 
 export const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem("sidebarCollapsed");
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("sidebarCollapsed", JSON.stringify(isCollapsed));
+  }, [isCollapsed]);
 
   const primaryMenuItems = [
     { name: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, path: "/" },
@@ -57,7 +64,7 @@ export const Sidebar = () => {
         </div>
 
         <div className="space-y-1">
-          <Separator className="my-8" /> {/* Increased margin to create more space */}
+          <Separator className="my-8" />
           {secondaryMenuItems.map((item) => (
             <Link
               key={item.name}
