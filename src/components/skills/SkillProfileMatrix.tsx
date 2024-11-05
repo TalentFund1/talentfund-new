@@ -66,13 +66,15 @@ export const SkillProfileMatrix = () => {
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
             <Select defaultValue="all">
-              <SelectTrigger className="w-[120px] bg-white">
+              <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="selected">Selected</SelectItem>
-                <SelectItem value="unselected">Unselected</SelectItem>
+                <SelectItem value="all">All Skills</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
+                <SelectItem value="soft">Soft Skills</SelectItem>
               </SelectContent>
             </Select>
             <Select defaultValue="sortByAll">
@@ -80,7 +82,7 @@ export const SkillProfileMatrix = () => {
                 <SelectValue placeholder="Sort By All" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="sortByAll">Sort By All</SelectItem>
+                <SelectItem value="sortByAll">Sort by Benchmark</SelectItem>
                 <SelectItem value="name">Sort By Name</SelectItem>
                 <SelectItem value="growth">Sort By Growth</SelectItem>
                 <SelectItem value="salary">Sort By Salary</SelectItem>
