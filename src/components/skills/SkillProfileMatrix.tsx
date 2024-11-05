@@ -39,6 +39,17 @@ export const SkillProfileMatrix = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
+            <Select value={skillType} onValueChange={setSkillType}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="All Skills" />
+              </SelectTrigger>
+              <SelectContent align="end" className="w-[280px]">
+                <SelectItem value="all">All Skills</SelectItem>
+                <SelectItem value="defining">Defining Skills</SelectItem>
+                <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
+                <SelectItem value="necessary">Necessary Skills</SelectItem>
+              </SelectContent>
+            </Select>
             <TooltipProvider delayDuration={300}>
               <Select value={skillType} onValueChange={setSkillType}>
                 <SelectTrigger className="w-[180px] bg-white">
@@ -73,17 +84,6 @@ export const SkillProfileMatrix = () => {
                 </SelectContent>
               </Select>
             </TooltipProvider>
-            <Select defaultValue="all">
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Skills</SelectItem>
-                <SelectItem value="specialized">Specialized Skills</SelectItem>
-                <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certification</SelectItem>
-              </SelectContent>
-            </Select>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="Sort by" />
