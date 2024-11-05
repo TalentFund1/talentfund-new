@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -15,15 +14,6 @@ export const SkillProfileMatrix = () => {
     { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$153,344", benchmarks: { J: false, B: true, O: true } },
     { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$161,536", benchmarks: { J: true, B: true, O: true } }
   ].sort((a, b) => {
-    if (sortBy === "name") {
-      return a.title.localeCompare(b.title);
-    }
-    if (sortBy === "growth") {
-      return parseInt(b.growth) - parseInt(a.growth);
-    }
-    if (sortBy === "salary") {
-      return parseInt(b.salary.replace(/\$|,/g, '')) - parseInt(a.salary.replace(/\$|,/g, ''));
-    }
     if (sortBy === "jobDescription") {
       return b.benchmarks.J - a.benchmarks.J;
     }
@@ -38,49 +28,6 @@ export const SkillProfileMatrix = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <h3 className="text-lg font-semibold mb-4">Skill Benchmark</h3>
-        
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium text-muted-foreground">Custom Benchmark</h4>
-            <Select defaultValue="nationwide">
-              <SelectTrigger>
-                <SelectValue placeholder="Select benchmark" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="nationwide">Nationwide / All Companies (default)</SelectItem>
-                <SelectItem value="core">Core Competitors</SelectItem>
-                <SelectItem value="finance">Finance/Banking</SelectItem>
-                <SelectItem value="healthcare">Healthcare</SelectItem>
-                <SelectItem value="retail">Large Retailers</SelectItem>
-                <SelectItem value="tech">Technology</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">Locations</h4>
-              <Input placeholder="Add a Location" />
-            </div>
-            <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">Companies</h4>
-              <Input placeholder="Add a Company" />
-            </div>
-            <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">Industries</h4>
-              <Input placeholder="Add a Industry" />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline">Save To Role</Button>
-          <Button variant="outline">Clear All</Button>
-        </div>
-      </Card>
-
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
@@ -101,9 +48,6 @@ export const SkillProfileMatrix = () => {
                 <SelectValue placeholder="Sort By" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="name">Sort By Name</SelectItem>
-                <SelectItem value="growth">Sort By Growth</SelectItem>
-                <SelectItem value="salary">Sort By Salary</SelectItem>
                 <SelectItem value="jobDescription">Sort By Job Description</SelectItem>
                 <SelectItem value="benchmark">Sort By Benchmark</SelectItem>
                 <SelectItem value="occupation">Sort By Occupation</SelectItem>
