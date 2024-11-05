@@ -4,14 +4,14 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const MarketDataMap = () => {
   return (
-    <Card className="p-4">
+    <Card className="p-4 bg-white">
       <Tabs defaultValue="location" className="w-full">
-        <TabsList className="mb-4">
+        <TabsList className="mb-4 bg-white">
           <TabsTrigger value="location">Location Analysis</TabsTrigger>
           <TabsTrigger value="compensation">Compensation Analysis</TabsTrigger>
         </TabsList>
         
-        <div className="aspect-[16/9] bg-slate-100 rounded-lg">
+        <div className="aspect-[16/9] bg-white rounded-lg border border-border">
           {/* Map would be integrated here using a mapping library like react-leaflet */}
           <div className="w-full h-full flex items-center justify-center text-slate-500">
             Map Visualization

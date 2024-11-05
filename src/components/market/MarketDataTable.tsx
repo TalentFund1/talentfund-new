@@ -34,7 +34,7 @@ export const MarketDataTable = () => {
   ];
 
   return (
-    <div className="rounded-lg border">
+    <div className="rounded-lg border bg-white">
       <Table>
         <TableHeader>
           <TableRow>
