@@ -21,10 +21,10 @@ const skills = [
 
 export const CompetencyMatrix = () => {
   return (
-    <div className="space-y-6 bg-white p-8 rounded-xl border border-border shadow-sm">
+    <div className="space-y-6 bg-white p-6 rounded-lg border border-border">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-foreground">Competency Levels</h2>
-        <div className="flex items-center gap-3">
+        <h2 className="text-xl font-semibold">Competency Levels</h2>
+        <div className="flex items-center gap-2">
           <Select defaultValue="0">
             <SelectTrigger className="w-[120px] bg-background">
               <SelectValue placeholder="0 Selected" />
@@ -33,18 +33,14 @@ export const CompetencyMatrix = () => {
               <SelectItem value="0">0 Selected</SelectItem>
             </SelectContent>
           </Select>
-          <div className="space-x-2">
-            <Button>Save</Button>
-            <Button variant="outline">Cancel</Button>
-          </div>
+          <Button>Save</Button>
+          <Button variant="outline">Cancel</Button>
         </div>
       </div>
 
-      <Separator className="my-6" />
-      
-      <h3 className="text-lg font-semibold text-primary mb-6">AI Engineer: P2</h3>
+      <Separator className="my-4" />
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         <Button 
           variant="ghost" 
           className="text-primary p-0 h-auto flex items-center gap-2 hover:bg-transparent hover:text-primary-accent"
@@ -54,7 +50,7 @@ export const CompetencyMatrix = () => {
 
         <div className="space-y-3">
           {["P2", "P3", "P4"].map((level) => (
-            <div key={level} className="flex items-center gap-3 bg-background/40 p-4 rounded-lg hover:bg-background/60 transition-colors">
+            <div key={level} className="flex items-center gap-3 bg-background/40 p-3 rounded-lg hover:bg-background/60 transition-colors">
               <Checkbox className="rounded-sm" />
               <span className="text-sm font-medium">AI Engineer</span>
               <Select defaultValue={level}>
@@ -70,13 +66,17 @@ export const CompetencyMatrix = () => {
         </div>
       </div>
 
-      <div className="border rounded-xl overflow-hidden bg-white shadow-sm">
-        <div className="grid grid-cols-3 gap-4 p-4 bg-background/50">
+      <Separator className="my-4" />
+      
+      <h3 className="text-lg font-semibold text-primary mb-4">AI Engineer: P2</h3>
+
+      <div className="border rounded-lg overflow-hidden">
+        <div className="grid grid-cols-3 gap-4 p-4 bg-background">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-foreground/80">Skills (36)</span>
+            <span className="text-sm font-medium">Skills (36)</span>
           </div>
-          <div className="text-sm font-medium text-foreground/80">Skill Level</div>
-          <div className="text-sm font-medium text-foreground/80">Required</div>
+          <div className="text-sm font-medium">Skill Level</div>
+          <div className="text-sm font-medium">Required</div>
         </div>
 
         <div className="divide-y divide-border">
