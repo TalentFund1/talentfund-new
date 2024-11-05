@@ -68,8 +68,6 @@ export const CompetencyMatrix = () => {
       </div>
 
       <Separator className="my-2" />
-      
-      <h3 className="text-lg font-semibold text-primary mb-2">AI Engineer: P2</h3>
 
       <div className="border rounded-lg overflow-hidden">
         <div className="grid grid-cols-3 gap-4 p-3 bg-background">
