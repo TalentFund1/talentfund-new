@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -41,6 +42,13 @@ export const SkillProfileMatrix = () => {
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
+          <div className="flex gap-2">
+            <Button variant="outline" className="bg-white">Cancel</Button>
+            <Button>Save</Button>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
             <Select value={skillType} onValueChange={setSkillType}>
               <SelectTrigger className="w-[180px] bg-white">
