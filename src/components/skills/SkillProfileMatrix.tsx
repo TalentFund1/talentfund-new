@@ -12,8 +12,8 @@ import { useState } from "react";
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
-  const [benchmarkType, setBenchmarkType] = useState("all");
   const [skillType, setSkillType] = useState("all");
+  const [benchmarkType, setBenchmarkType] = useState("all");
 
   const skills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$160,256", benchmarks: { J: true, B: true, O: false } },
@@ -45,9 +45,9 @@ export const SkillProfileMatrix = () => {
               </SelectTrigger>
               <SelectContent align="end" className="w-[280px]">
                 <SelectItem value="all">All Skills</SelectItem>
-                <SelectItem value="defining">Defining Skills</SelectItem>
-                <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
-                <SelectItem value="necessary">Necessary Skills</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
               </SelectContent>
             </Select>
             <TooltipProvider delayDuration={300}>
