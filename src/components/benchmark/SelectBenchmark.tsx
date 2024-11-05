@@ -47,7 +47,6 @@ export const SelectBenchmark = () => {
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button variant="default">Cancel</Button>
             <Button variant="outline">Clear All</Button>
             <Button variant="outline">Save To Role</Button>
             <Button className="gap-2">
