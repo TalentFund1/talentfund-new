@@ -1,4 +1,4 @@
-import { Target } from "lucide-react";
+import { Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SkillLevelIconProps {
@@ -13,19 +13,25 @@ export const SkillLevelIcon = ({ level }: SkillLevelIconProps) => {
       case "advanced":
         return (
           <div className={cn(baseClasses, "text-primary-accent")}>
-            <Target className="w-8 h-8" strokeWidth={1.5} />
+            <Circle className="w-8 h-8 absolute" strokeWidth={1.5} />
+            <Circle className="w-5 h-5 absolute" strokeWidth={1.5} />
+            <Circle className="w-2 h-2 absolute fill-current" />
           </div>
         );
       case "intermediate":
         return (
           <div className={cn(baseClasses, "text-primary-icon")}>
-            <Target className="w-8 h-8" strokeWidth={1.5} />
+            <Circle className="w-8 h-8 absolute" strokeWidth={1.5} />
+            <Circle className="w-5 h-5 absolute" strokeWidth={1.5} />
+            <Circle className="w-2 h-2 absolute fill-current" />
           </div>
         );
       case "beginner":
         return (
           <div className={cn(baseClasses, "text-[#008000]")}>
-            <Target className="w-8 h-8" strokeWidth={1.5} />
+            <Circle className="w-8 h-8 absolute" strokeWidth={1.5} />
+            <Circle className="w-5 h-5 absolute" strokeWidth={1.5} />
+            <Circle className="w-2 h-2 absolute fill-current" />
           </div>
         );
       default:
