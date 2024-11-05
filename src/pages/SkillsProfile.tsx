@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Users, Briefcase, Equal, Clock, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -105,7 +106,11 @@ const SkillsProfile = () => {
                   <TableCell>
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">AI Engineer</TableCell>
+                  <TableCell>
+                    <Link to="/skills/ai-engineer" className="text-[#1F2144] hover:underline cursor-pointer font-medium">
+                      AI Engineer
+                    </Link>
+                  </TableCell>
                   <TableCell>Engineering</TableCell>
                   <TableCell className="text-center">16</TableCell>
                   <TableCell className="text-center">2</TableCell>
@@ -116,7 +121,11 @@ const SkillsProfile = () => {
                   <TableCell>
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">Backend Engineer</TableCell>
+                  <TableCell>
+                    <Link to="/skills/backend-engineer" className="text-[#1F2144] hover:underline cursor-pointer font-medium">
+                      Backend Engineer
+                    </Link>
+                  </TableCell>
                   <TableCell>Engineering</TableCell>
                   <TableCell className="text-center">12</TableCell>
                   <TableCell className="text-center">3</TableCell>
@@ -127,7 +136,11 @@ const SkillsProfile = () => {
                   <TableCell>
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">Frontend Engineer</TableCell>
+                  <TableCell>
+                    <Link to="/skills/frontend-engineer" className="text-[#1F2144] hover:underline cursor-pointer font-medium">
+                      Frontend Engineer
+                    </Link>
+                  </TableCell>
                   <TableCell>Engineering</TableCell>
                   <TableCell className="text-center">17</TableCell>
                   <TableCell className="text-center">0</TableCell>
@@ -138,7 +151,11 @@ const SkillsProfile = () => {
                   <TableCell>
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell className="text-[#1F2144] hover:underline cursor-pointer font-medium">Engineering Manager</TableCell>
+                  <TableCell>
+                    <Link to="/skills/engineering-manager" className="text-[#1F2144] hover:underline cursor-pointer font-medium">
+                      Engineering Manager
+                    </Link>
+                  </TableCell>
                   <TableCell>Engineering</TableCell>
                   <TableCell className="text-center">11</TableCell>
                   <TableCell className="text-center">2</TableCell>
