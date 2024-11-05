@@ -7,6 +7,7 @@ import { SkillProfileHeader } from "@/components/skills/SkillProfileHeader";
 import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
 import { EmployeeOverview } from "@/components/skills/EmployeeOverview";
 import { SelectBenchmark } from "@/components/benchmark/SelectBenchmark";
+import { CompetencyMatrix } from "@/components/skills/CompetencyMatrix";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const SkillProfileDetail = () => {
         </TabsContent>
 
         <TabsContent value="matrix">
-          <SkillProfileMatrix />
+          <CompetencyMatrix />
         </TabsContent>
       </Tabs>
     </div>
