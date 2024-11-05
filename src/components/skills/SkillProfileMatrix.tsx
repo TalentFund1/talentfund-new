@@ -1,161 +1,113 @@
-import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Plus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
 
-export const SkillProfileMatrix = () => {
-  const [sortBy, setSortBy] = useState("benchmark");
-  const [skillType, setSkillType] = useState("all");
-  const [benchmarkType, setBenchmarkType] = useState("all");
+const skills = [
+  { name: "Amazon Web Services", level: "Advanced", required: "Required" },
+  { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
+  { name: "Behavioral Analytics", level: "Intermediate", required: "Required" },
+  { name: "Business To Business", level: "Unspecified", required: "Preferred" },
+  { name: "Coaching", level: "Unspecified", required: "Preferred" },
+  { name: "Communication", level: "Unspecified", required: "Preferred" },
+  { name: "Conversational AI", level: "Unspecified", required: "Preferred" },
+  { name: "Data Science", level: "Unspecified", required: "Preferred" },
+  { name: "Deep Learning", level: "Unspecified", required: "Preferred" },
+  { name: "Experimentation", level: "Unspecified", required: "Preferred" },
+  { name: "Full Stack Development", level: "Unspecified", required: "Preferred" },
+];
 
-  const skills = [
-    { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$160,256", benchmarks: { J: true, B: true, O: true } },
-    { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$164,608", benchmarks: { J: true, B: true, O: true } },
-    { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$153,344", benchmarks: { J: true, B: true, O: true } },
-    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$161,536", benchmarks: { J: true, B: true, O: true } },
-    { title: "Scalability", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "25%", salary: "$175,616", benchmarks: { J: true, B: true, O: true } },
-    { title: "Software Engineering", subcategory: "Software Development Tools", level: "advanced", growth: "23%", salary: "$160,512", benchmarks: { J: true, B: true, O: true } },
-    { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$158,208", benchmarks: { J: true, B: true, O: true } }
-  ].sort((a, b) => {
-    if (sortBy === "jobDescription") {
-      return b.benchmarks.J - a.benchmarks.J;
-    }
-    if (sortBy === "benchmark") {
-      return b.benchmarks.B - a.benchmarks.B;
-    }
-    if (sortBy === "occupation") {
-      return b.benchmarks.O - a.benchmarks.O;
-    }
-    return 0;
-  });
-
+export const CompetencyMatrix = () => {
   return (
-    <div className="space-y-6">
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
-          <div className="flex gap-2">
-            <Button>Save</Button>
-            <Button variant="outline" className="bg-white">Cancel</Button>
-          </div>
+    <div className="space-y-6 bg-white p-6 rounded-lg border border-border">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Competency Levels</h2>
+        <div className="flex items-center gap-2">
+          <Select defaultValue="0">
+            <SelectTrigger className="w-[120px] bg-muted/50">
+              <SelectValue placeholder="0 Selected" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="0">0 Selected</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline">Save</Button>
+          <Button variant="outline" className="border border-input bg-white">Cancel</Button>
         </div>
+      </div>
 
-        <Separator className="my-4" />
+      <Separator className="my-4" />
 
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex gap-2">
-            <Select value={skillType} onValueChange={setSkillType}>
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Skills" />
-              </SelectTrigger>
-              <SelectContent align="end" className="w-[280px]">
-                <SelectItem value="all">All Skills</SelectItem>
-                <SelectItem value="specialized">Specialized Skills</SelectItem>
-                <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certification</SelectItem>
-              </SelectContent>
-            </Select>
-            <TooltipProvider delayDuration={300}>
-              <Select value={skillType} onValueChange={setSkillType}>
-                <SelectTrigger className="w-[180px] bg-white">
-                  <SelectValue placeholder="All Skill Types" />
+      <div className="space-y-2">
+        <Button variant="link" className="text-primary p-0 h-auto flex items-center gap-1">
+          <Plus className="h-4 w-4" /> Add Level
+        </Button>
+
+        <div className="space-y-2">
+          {["P2", "P3", "P4"].map((level) => (
+            <div key={level} className="flex items-center gap-2">
+              <Checkbox />
+              <span className="text-sm">AI Engineer</span>
+              <Select defaultValue={level}>
+                <SelectTrigger className="w-[80px]">
+                  <SelectValue />
                 </SelectTrigger>
-                <SelectContent align="end" className="w-[280px]">
-                  <SelectItem value="all">All Skill Types</SelectItem>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SelectItem value="defining">Defining Skills</SelectItem>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="max-w-[200px]">
-                      <p>Skills needed to qualify for a job and perform day-to-day tasks and responsibilities successfully.</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="max-w-[200px]">
-                      <p>Skills that highlight technical proficiency and differentiate job seekers from other candidates.</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SelectItem value="necessary">Necessary Skills</SelectItem>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="max-w-[200px]">
-                      <p>Skills required for a specific job, relevant across other similar jobs, and are building blocks for performing more complex defining skills.</p>
-                    </TooltipContent>
-                  </Tooltip>
+                <SelectContent>
+                  <SelectItem value={level}>{level}</SelectItem>
                 </SelectContent>
               </Select>
-            </TooltipProvider>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Sort by All</SelectItem>
-                <SelectItem value="jobDescription">Sort by Job Description</SelectItem>
-                <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
-                <SelectItem value="occupation">Sort by Occupation</SelectItem>
-              </SelectContent>
-            </Select>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Separator className="my-4" />
+
+      <div className="border rounded-lg">
+        <div className="grid grid-cols-3 gap-4 p-4 bg-muted/50 border-b">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Skills (36)</span>
           </div>
+          <div className="text-sm font-medium">Skill Level</div>
+          <div className="text-sm font-medium">Required</div>
         </div>
 
-        <div className="rounded-lg border border-border overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-background text-left">
-                <th className="py-3 px-4 font-medium w-[25%]">Skill Title</th>
-                <th className="py-3 px-4 font-medium w-[30%]">Subcategory</th>
-                <th className="py-3 px-4 font-medium text-center w-[15%]">Projected Growth</th>
-                <th className="py-3 px-4 font-medium text-right w-[15%]">Salary With Skill</th>
-                <th className="py-3 px-4 font-medium text-center w-[15%]">Benchmark</th>
-              </tr>
-            </thead>
-            <tbody>
-              {skills.map((skill) => (
-                <tr key={skill.title} className="border-t border-border hover:bg-muted/50 transition-colors">
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-2">
-                      <Switch />
-                      <span className="text-sm">{skill.title}</span>
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-sm">
-                    <span className="block truncate" title={skill.subcategory}>
-                      {skill.subcategory}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm">
-                      ↗ {skill.growth}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-right text-sm">{skill.salary}</td>
-                  <td className="py-3 px-4">
-                    <div className="flex justify-center gap-1">
-                      <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
-                      <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
-                      <span className="w-6 h-6 rounded-full bg-primary-icon/10 text-primary-icon flex items-center justify-center text-sm font-medium">O</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="divide-y">
+          {skills.map((skill) => (
+            <div key={skill.name} className="grid grid-cols-3 gap-4 p-4">
+              <span className="text-sm text-primary">{skill.name}</span>
+              <Select defaultValue={skill.level.toLowerCase()}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="advanced">Advanced</SelectItem>
+                  <SelectItem value="intermediate">Intermediate</SelectItem>
+                  <SelectItem value="unspecified">Unspecified</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select defaultValue={skill.required.toLowerCase()}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="required">Required</SelectItem>
+                  <SelectItem value="preferred">Preferred</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          ))}
         </div>
-      </Card>
+      </div>
+
+      <Separator className="my-4" />
+
+      <div>
+        <Button variant="outline">Export</Button>
+      </div>
     </div>
   );
 };
+
