@@ -13,27 +13,27 @@ export const SkillsSummary = () => {
         <SkillSection title="Specialized Skills" count={66}>
           <div className="flex flex-wrap gap-2 mb-4">
             {[
-              "React", 
-              "JavaScript", 
-              "Git", 
-              "GraphQL", 
-              "HTML and CSS3",
-              "Computer Architecture",
-              "Internet of Things",
-              "SystemVerilog",
-              "Static Timing Analysis",
-              "Cadence Encounter",
-              "Synopsys Primetime",
-              "Xilinx ISE",
-              "UART",
-              "I2C"
+              { name: "React", level: "advanced" },
+              { name: "JavaScript", level: "advanced" },
+              { name: "GraphQL", level: "advanced" },
+              { name: "Computer Architecture", level: "intermediate" },
+              { name: "Internet of Things", level: "intermediate" },
+              { name: "SystemVerilog", level: "intermediate" },
+              { name: "Static Timing Analysis", level: "beginner" },
+              { name: "Cadence Encounter", level: "beginner" },
+              { name: "Synopsys Primetime", level: "beginner" }
             ].map((skill) => (
               <Badge 
-                key={skill} 
+                key={skill.name} 
                 variant="outline" 
                 className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
               >
-                {skill} <div className="h-2 w-2 rounded-full bg-primary-accent" />
+                {skill.name} 
+                <div className={`h-2 w-2 rounded-full ${
+                  skill.level === "advanced" ? "bg-primary-accent" :
+                  skill.level === "intermediate" ? "bg-primary-icon" :
+                  "bg-[#008000]"
+                }`} />
               </Badge>
             ))}
           </div>
@@ -51,23 +51,26 @@ export const SkillsSummary = () => {
         <SkillSection title="Common Skills" count={14}>
           <div className="flex flex-wrap gap-3">
             {[
-              { name: "UI/UX Design Principles", color: "bg-primary-accent" },
-              { name: "Communication", color: "bg-primary-icon" },
-              { name: "Microsoft Excel", color: "bg-primary-icon" },
-              { name: "Project Management", color: "bg-primary-icon" },
-              { name: "Team Leadership", color: "bg-primary-accent" },
-              { name: "Problem Solving", color: "bg-primary-icon" },
-              { name: "Agile Methodologies", color: "bg-primary-accent" },
-              { name: "Technical Writing", color: "bg-primary-icon" },
-              { name: "Time Management", color: "bg-primary-icon" },
-              { name: "Critical Thinking", color: "bg-primary-accent" }
+              { name: "UI/UX Design Principles", level: "advanced" },
+              { name: "Team Leadership", level: "advanced" },
+              { name: "Project Management", level: "intermediate" },
+              { name: "Communication", level: "intermediate" },
+              { name: "Problem Solving", level: "intermediate" },
+              { name: "Technical Writing", level: "beginner" },
+              { name: "Time Management", level: "beginner" },
+              { name: "Microsoft Excel", level: "beginner" }
             ].map((skill) => (
               <Badge 
                 key={skill.name} 
                 variant="outline" 
                 className="rounded-lg px-4 py-2 border-2 flex items-center gap-2 bg-white"
               >
-                {skill.name} <div className={`h-2 w-2 rounded-full ${skill.color}`} />
+                {skill.name} 
+                <div className={`h-2 w-2 rounded-full ${
+                  skill.level === "advanced" ? "bg-primary-accent" :
+                  skill.level === "intermediate" ? "bg-primary-icon" :
+                  "bg-[#008000]"
+                }`} />
               </Badge>
             ))}
           </div>
