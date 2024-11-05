@@ -26,35 +26,32 @@ export const CompetencyMatrix = () => {
         <h2 className="text-xl font-semibold">Competency Levels</h2>
         <div className="flex items-center gap-2">
           <Select defaultValue="0">
-            <SelectTrigger className="w-[120px] bg-background">
+            <SelectTrigger className="w-[120px] bg-muted/50">
               <SelectValue placeholder="0 Selected" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="0">0 Selected</SelectItem>
             </SelectContent>
           </Select>
-          <Button>Save</Button>
+          <Button variant="outline">Save</Button>
           <Button variant="outline">Cancel</Button>
         </div>
       </div>
 
       <Separator className="my-4" />
 
-      <div className="space-y-4">
-        <Button 
-          variant="ghost" 
-          className="text-primary p-0 h-auto flex items-center gap-2 hover:bg-transparent hover:text-primary-accent"
-        >
+      <div className="space-y-2">
+        <Button variant="link" className="text-primary p-0 h-auto flex items-center gap-1">
           <Plus className="h-4 w-4" /> Add Level
         </Button>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {["P2", "P3", "P4"].map((level) => (
-            <div key={level} className="flex items-center gap-3 bg-background/40 p-3 rounded-lg hover:bg-background/60 transition-colors">
-              <Checkbox className="rounded-sm" />
-              <span className="text-sm font-medium">AI Engineer</span>
+            <div key={level} className="flex items-center gap-2">
+              <Checkbox />
+              <span className="text-sm">AI Engineer</span>
               <Select defaultValue={level}>
-                <SelectTrigger className="w-[80px] bg-white">
+                <SelectTrigger className="w-[80px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -68,8 +65,8 @@ export const CompetencyMatrix = () => {
 
       <Separator className="my-4" />
 
-      <div className="border rounded-lg overflow-hidden">
-        <div className="grid grid-cols-3 gap-4 p-4 bg-background">
+      <div className="border rounded-lg">
+        <div className="grid grid-cols-3 gap-4 p-4 bg-muted/50 border-b">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">Skills (36)</span>
           </div>
@@ -77,12 +74,12 @@ export const CompetencyMatrix = () => {
           <div className="text-sm font-medium">Required</div>
         </div>
 
-        <div className="divide-y divide-border">
+        <div className="divide-y">
           {skills.map((skill) => (
-            <div key={skill.name} className="grid grid-cols-3 gap-4 p-4 hover:bg-background/40 transition-colors">
-              <span className="text-sm text-primary hover:text-primary-accent transition-colors cursor-pointer">{skill.name}</span>
+            <div key={skill.name} className="grid grid-cols-3 gap-4 p-4">
+              <span className="text-sm text-primary">{skill.name}</span>
               <Select defaultValue={skill.level.toLowerCase()}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -92,7 +89,7 @@ export const CompetencyMatrix = () => {
                 </SelectContent>
               </Select>
               <Select defaultValue={skill.required.toLowerCase()}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
