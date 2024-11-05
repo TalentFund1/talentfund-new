@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SkillSection } from "./SkillSection";
 import { SkillsHeader } from "./SkillsHeader";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -14,6 +14,9 @@ export const SkillsSummary = () => {
     common: false,
     certifications: false,
   });
+
+  const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const specializedSkills = [
     { name: "React", level: "advanced" },
@@ -53,8 +56,22 @@ export const SkillsSummary = () => {
     }));
   };
 
-  const renderSkills = (skills: typeof specializedSkills, isExpanded: boolean) => {
-    const displaySkills = isExpanded ? skills : skills.slice(0, 7);
+  useEffect(() => {
+    if (containerRef.current) {
+      const container = containerRef.current;
+      const containerWidth = container.offsetWidth;
+      const skillWidth = 150; // Approximate width of each skill badge including gap
+      const skillsPerRow = Math.floor(containerWidth / skillWidth);
+      const optimalRows = 2; // Number of rows to show before "See More"
+      setVisibleSpecializedCount(skillsPerRow * optimalRows);
+    }
+  }, []);
+
+  const renderSkills = (skills: typeof specializedSkills, isExpanded: boolean, isSpecialized: boolean = false) => {
+    const displaySkills = isSpecialized 
+      ? (isExpanded ? skills : skills.slice(0, visibleSpecializedCount))
+      : (isExpanded ? skills : skills.slice(0, 7));
+
     return displaySkills.map((skill) => (
       <Badge 
         key={skill.name} 
@@ -78,10 +95,10 @@ export const SkillsSummary = () => {
       
       <div className="space-y-6">
         <SkillSection title="Specialized Skills" count={specializedSkills.length}>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {renderSkills(specializedSkills, expandedSections.specialized)}
+          <div ref={containerRef} className="flex flex-wrap gap-2 mb-4">
+            {renderSkills(specializedSkills, expandedSections.specialized, true)}
           </div>
-          {specializedSkills.length > 7 && (
+          {specializedSkills.length > visibleSpecializedCount && (
             <div className="flex justify-start">
               <Button 
                 variant="outline" 
@@ -91,7 +108,7 @@ export const SkillsSummary = () => {
               >
                 {expandedSections.specialized ? 'Show Less' : 'See More'} 
                 <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                  {specializedSkills.length - 7}
+                  {specializedSkills.length - visibleSpecializedCount}
                 </span>
               </Button>
             </div>
