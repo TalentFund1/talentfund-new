@@ -50,7 +50,7 @@ export const CompetencyMatrix = () => {
         </Button>
 
         <div className="space-y-2">
-          {["P2", "P3", "P4"].map((level) => (
+          {["P3", "P4"].map((level) => (
             <div key={level} className="flex items-center gap-3 bg-background/40 p-2 rounded-lg hover:bg-background/60 transition-colors">
               <Checkbox className="rounded-sm" />
               <span className="text-sm font-medium">AI Engineer</span>
@@ -67,18 +67,16 @@ export const CompetencyMatrix = () => {
         </div>
       </div>
 
-      <Separator className="my-2" />
-
-      <div className="border rounded-lg overflow-hidden">
-        <div className="grid grid-cols-3 gap-4 p-3 bg-background">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Skills (36)</span>
+      <div className="pt-4">
+        <div className="border rounded-lg overflow-hidden">
+          <div className="grid grid-cols-3 gap-4 p-3 bg-background">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Skills (36)</span>
+            </div>
+            <div className="text-sm font-medium">Skill Level</div>
+            <div className="text-sm font-medium">Required</div>
           </div>
-          <div className="text-sm font-medium">Skill Level</div>
-          <div className="text-sm font-medium">Required</div>
-        </div>
 
-        <div className="divide-y divide-border">
           {skills.map((skill) => (
             <div key={skill.name} className="grid grid-cols-3 gap-4 p-3 hover:bg-background/40 transition-colors">
               <Link 
