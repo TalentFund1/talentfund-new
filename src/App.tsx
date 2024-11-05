@@ -8,6 +8,7 @@ import SkillsProfile from "./pages/SkillsProfile";
 import Employees from "./pages/Employees";
 import EmployeeProfile from "./pages/EmployeeProfile";
 import SkillProfileDetail from "./pages/SkillProfileDetail";
+import MarketData from "./pages/MarketData";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/skills/:id" element={<SkillProfileDetail />} />
           <Route path="/employees" element={<Employees />} />
           <Route path="/employee-profile" element={<EmployeeProfile />} />
+          <Route path="/market" element={<MarketData />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
