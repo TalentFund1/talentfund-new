@@ -7,10 +7,14 @@ import { Input } from "@/components/ui/input";
 export const SkillProfileMatrix = () => {
   const skills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$160,256" },
-    { title: "Software Development", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "23%", salary: "$164,608" },
+    { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$164,608" },
     { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$153,344" },
-    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine Learning", level: "intermediate", growth: "26%", salary: "$161,536" }
+    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$161,536" }
   ];
+
+  const truncateText = (text: string, maxLength: number = 35) => {
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+  };
 
   return (
     <div className="space-y-6">
@@ -62,11 +66,11 @@ export const SkillProfileMatrix = () => {
           <table className="w-full">
             <thead>
               <tr className="bg-background text-left">
-                <th className="py-3 px-4 font-medium">Skill Title</th>
-                <th className="py-3 px-4 font-medium">Subcategory</th>
-                <th className="py-3 px-4 font-medium text-center">Projected Growth</th>
-                <th className="py-3 px-4 font-medium text-right">Salary With Skill</th>
-                <th className="py-3 px-4 font-medium text-center">Benchmark</th>
+                <th className="py-3 px-4 font-medium w-[25%]">Skill Title</th>
+                <th className="py-3 px-4 font-medium w-[30%]">Subcategory</th>
+                <th className="py-3 px-4 font-medium text-center w-[15%]">Projected Growth</th>
+                <th className="py-3 px-4 font-medium text-right w-[15%]">Salary With Skill</th>
+                <th className="py-3 px-4 font-medium text-center w-[15%]">Benchmark</th>
               </tr>
             </thead>
             <tbody>
@@ -78,7 +82,11 @@ export const SkillProfileMatrix = () => {
                       <span className="text-sm">{skill.title}</span>
                     </div>
                   </td>
-                  <td className="py-3 px-4 text-sm">{skill.subcategory}</td>
+                  <td className="py-3 px-4 text-sm">
+                    <span className="block truncate" title={skill.subcategory}>
+                      {skill.subcategory}
+                    </span>
+                  </td>
                   <td className="py-3 px-4 text-center">
                     <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm">
                       ↗ {skill.growth}
