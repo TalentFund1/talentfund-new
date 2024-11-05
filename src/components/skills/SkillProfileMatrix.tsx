@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 
 export const SkillProfileMatrix = () => {
@@ -47,6 +48,8 @@ export const SkillProfileMatrix = () => {
             <Button>Save</Button>
           </div>
         </div>
+
+        <Separator className="my-4" />
 
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
