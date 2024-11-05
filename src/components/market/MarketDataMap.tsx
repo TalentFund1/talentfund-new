@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const MarketDataMap = () => {
   return (
-    <Card className="p-4 bg-white">
+    <Card className="p-4">
       <Tabs defaultValue="location" className="w-full space-y-6">
         <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
           <TabsTrigger 
