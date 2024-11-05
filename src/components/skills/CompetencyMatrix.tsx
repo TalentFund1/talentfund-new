@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 const skills = [
   { name: "Amazon Web Services", level: "Advanced", required: "Required" },
@@ -37,6 +38,8 @@ export const CompetencyMatrix = () => {
         </div>
       </div>
 
+      <Separator className="my-4" />
+
       <div className="space-y-2">
         <Button variant="link" className="text-primary p-0 h-auto flex items-center gap-1">
           <Plus className="h-4 w-4" /> Add Level
@@ -59,6 +62,8 @@ export const CompetencyMatrix = () => {
           ))}
         </div>
       </div>
+
+      <Separator className="my-4" />
 
       <div className="border rounded-lg">
         <div className="grid grid-cols-3 gap-4 p-4 bg-muted/50 border-b">
@@ -96,6 +101,8 @@ export const CompetencyMatrix = () => {
           ))}
         </div>
       </div>
+
+      <Separator className="my-4" />
 
       <div>
         <Button variant="outline">Export</Button>
