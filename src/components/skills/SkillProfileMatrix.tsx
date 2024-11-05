@@ -5,21 +5,21 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
-export const SkillProfileMatrix = () => {
-  const skills = [
-    { name: "Amazon Web Services", level: "Advanced", required: "Required" },
-    { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
-    { name: "Behavioral Analytics", level: "Intermediate", required: "Required" },
-    { name: "Business To Business", level: "Unspecified", required: "Preferred" },
-    { name: "Coaching", level: "Unspecified", required: "Preferred" },
-    { name: "Communication", level: "Unspecified", required: "Preferred" },
-    { name: "Conversational AI", level: "Unspecified", required: "Preferred" },
-    { name: "Data Science", level: "Unspecified", required: "Preferred" },
-    { name: "Deep Learning", level: "Unspecified", required: "Preferred" },
-    { name: "Experimentation", level: "Unspecified", required: "Preferred" },
-    { name: "Full Stack Development", level: "Unspecified", required: "Preferred" },
-  ];
+const skills = [
+  { name: "Amazon Web Services", level: "Advanced", required: "Required" },
+  { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
+  { name: "Behavioral Analytics", level: "Intermediate", required: "Required" },
+  { name: "Business To Business", level: "Unspecified", required: "Preferred" },
+  { name: "Coaching", level: "Unspecified", required: "Preferred" },
+  { name: "Communication", level: "Unspecified", required: "Preferred" },
+  { name: "Conversational AI", level: "Unspecified", required: "Preferred" },
+  { name: "Data Science", level: "Unspecified", required: "Preferred" },
+  { name: "Deep Learning", level: "Unspecified", required: "Preferred" },
+  { name: "Experimentation", level: "Unspecified", required: "Preferred" },
+  { name: "Full Stack Development", level: "Unspecified", required: "Preferred" },
+];
 
+export const CompetencyMatrix = () => {
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg border border-border">
       <div className="flex items-center justify-between">
@@ -110,3 +110,4 @@ export const SkillProfileMatrix = () => {
     </div>
   );
 };
+
