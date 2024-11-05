@@ -22,20 +22,7 @@ export const CompetencyMatrix = () => {
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg border border-border">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Checkbox />
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Role</span>
-            <Select defaultValue="level">
-              <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Level" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="level">Level</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <h2 className="text-xl font-semibold">Competency Matrix</h2>
         <div className="flex items-center gap-2">
           <Select defaultValue="0">
             <SelectTrigger className="w-[120px] bg-muted/50">
