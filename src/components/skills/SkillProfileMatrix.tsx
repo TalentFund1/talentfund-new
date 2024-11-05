@@ -39,18 +39,18 @@ export const SkillProfileMatrix = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
-            <TooltipProvider>
+            <TooltipProvider delayDuration={300}>
               <Select value={skillType} onValueChange={setSkillType}>
                 <SelectTrigger className="w-[180px] bg-white">
                   <SelectValue placeholder="All Skill Types" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent align="end" className="w-[280px]">
                   <SelectItem value="all">All Skill Types</SelectItem>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <SelectItem value="defining">Defining Skills</SelectItem>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-sm">
+                    <TooltipContent side="right" className="max-w-[200px]">
                       <p>Skills needed to qualify for a job and perform day-to-day tasks and responsibilities successfully.</p>
                     </TooltipContent>
                   </Tooltip>
@@ -58,7 +58,7 @@ export const SkillProfileMatrix = () => {
                     <TooltipTrigger asChild>
                       <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-sm">
+                    <TooltipContent side="right" className="max-w-[200px]">
                       <p>Skills that highlight technical proficiency and differentiate job seekers from other candidates.</p>
                     </TooltipContent>
                   </Tooltip>
@@ -66,7 +66,7 @@ export const SkillProfileMatrix = () => {
                     <TooltipTrigger asChild>
                       <SelectItem value="necessary">Necessary Skills</SelectItem>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-sm">
+                    <TooltipContent side="right" className="max-w-[200px]">
                       <p>Skills required for a specific job, relevant across other similar jobs, and are building blocks for performing more complex defining skills.</p>
                     </TooltipContent>
                   </Tooltip>
