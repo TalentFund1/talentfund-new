@@ -54,7 +54,7 @@ export const SkillsSummary = () => {
   };
 
   const renderSkills = (skills: typeof specializedSkills, isExpanded: boolean) => {
-    const displaySkills = isExpanded ? skills : skills.slice(0, 8);
+    const displaySkills = isExpanded ? skills : skills.slice(0, 7);
     return displaySkills.map((skill) => (
       <Badge 
         key={skill.name} 
@@ -81,7 +81,7 @@ export const SkillsSummary = () => {
           <div className="flex flex-wrap gap-2 mb-4">
             {renderSkills(specializedSkills, expandedSections.specialized)}
           </div>
-          {specializedSkills.length > 8 && (
+          {specializedSkills.length > 7 && (
             <div className="flex justify-start">
               <Button 
                 variant="outline" 
@@ -91,7 +91,7 @@ export const SkillsSummary = () => {
               >
                 {expandedSections.specialized ? 'Show Less' : 'See More'} 
                 <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                  {specializedSkills.length - 8}
+                  {specializedSkills.length - 7}
                 </span>
               </Button>
             </div>
@@ -99,10 +99,10 @@ export const SkillsSummary = () => {
         </SkillSection>
 
         <SkillSection title="Common Skills" count={commonSkills.length}>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             {renderSkills(commonSkills, expandedSections.common)}
           </div>
-          {commonSkills.length > 8 && (
+          {commonSkills.length > 7 && (
             <div className="flex justify-start mt-4">
               <Button 
                 variant="outline" 
@@ -112,7 +112,7 @@ export const SkillsSummary = () => {
               >
                 {expandedSections.common ? 'Show Less' : 'See More'} 
                 <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                  {commonSkills.length - 8}
+                  {commonSkills.length - 7}
                 </span>
               </Button>
             </div>
