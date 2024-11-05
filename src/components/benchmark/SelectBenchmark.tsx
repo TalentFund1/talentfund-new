@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { PlayCircle } from "lucide-react";
 
 export const SelectBenchmark = () => {
   return (
@@ -42,7 +43,11 @@ export const SelectBenchmark = () => {
 
           <div className="flex justify-end gap-2">
             <Button variant="outline">Clear All</Button>
-            <Button>Save To Role</Button>
+            <Button variant="outline">Save To Role</Button>
+            <Button className="gap-2">
+              <PlayCircle className="h-4 w-4" />
+              Run
+            </Button>
           </div>
         </div>
       </div>
