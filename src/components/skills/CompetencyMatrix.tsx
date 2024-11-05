@@ -1,25 +1,27 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 
 const skills = [
-  { name: "Amazon Web Services", level: "Advanced", required: "Required" },
-  { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
-  { name: "Behavioral Analytics", level: "Intermediate", required: "Required" },
-  { name: "Business To Business", level: "Unspecified", required: "Preferred" },
-  { name: "Coaching", level: "Unspecified", required: "Preferred" },
-  { name: "Communication", level: "Unspecified", required: "Preferred" },
-  { name: "Conversational AI", level: "Unspecified", required: "Preferred" },
-  { name: "Data Science", level: "Unspecified", required: "Preferred" },
-  { name: "Deep Learning", level: "Unspecified", required: "Preferred" },
-  { name: "Experimentation", level: "Unspecified", required: "Preferred" },
-  { name: "Full Stack Development", level: "Unspecified", required: "Preferred" },
+  {
+    name: "React",
+    level: "advanced",
+    required: "required"
+  },
+  {
+    name: "TypeScript",
+    level: "intermediate",
+    required: "preferred"
+  }
 ];
 
 export const CompetencyMatrix = () => {
+  const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
+
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg border border-border">
       <div className="flex items-center justify-between">
@@ -51,7 +53,13 @@ export const CompetencyMatrix = () => {
         <div className="space-y-3">
           {["P2", "P3", "P4"].map((level) => (
             <div key={level} className="flex items-center gap-3 bg-background/40 p-3 rounded-lg hover:bg-background/60 transition-colors">
-              <Checkbox className="rounded-sm" />
+              <Checkbox 
+                className="rounded-sm"
+                checked={selectedLevel === level}
+                onCheckedChange={(checked) => {
+                  setSelectedLevel(checked ? level : null);
+                }}
+              />
               <span className="text-sm font-medium">AI Engineer</span>
               <Select defaultValue={level}>
                 <SelectTrigger className="w-[80px] bg-white">
@@ -86,9 +94,9 @@ export const CompetencyMatrix = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="advanced">Advanced</SelectItem>
+                  <SelectItem value="beginner">Beginner</SelectItem>
                   <SelectItem value="intermediate">Intermediate</SelectItem>
-                  <SelectItem value="unspecified">Unspecified</SelectItem>
+                  <SelectItem value="advanced">Advanced</SelectItem>
                 </SelectContent>
               </Select>
               <Select defaultValue={skill.required.toLowerCase()}>
@@ -103,12 +111,6 @@ export const CompetencyMatrix = () => {
             </div>
           ))}
         </div>
-      </div>
-
-      <Separator className="my-4" />
-
-      <div>
-        <Button variant="outline">Export</Button>
       </div>
     </div>
   );
