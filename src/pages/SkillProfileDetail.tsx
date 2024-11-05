@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SkillProfileHeader } from "@/components/skills/SkillProfileHeader";
 import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
 import { EmployeeOverview } from "@/components/skills/EmployeeOverview";
+import { SelectBenchmark } from "@/components/benchmark/SelectBenchmark";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ const SkillProfileDetail = () => {
       <Card className="p-8 bg-white">
         <SkillProfileHeader />
       </Card>
+
+      <SelectBenchmark />
 
       <EmployeeOverview />
 
