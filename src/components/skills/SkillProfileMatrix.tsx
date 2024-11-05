@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -10,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useState } from "react";
+import { SkillBenchmark } from "./SkillBenchmark";
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
@@ -131,11 +131,7 @@ export const SkillProfileMatrix = () => {
                   </td>
                   <td className="py-3 px-4 text-right text-sm">{skill.salary}</td>
                   <td className="py-3 px-4">
-                    <div className="flex justify-center gap-1">
-                      <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
-                      <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
-                      <span className="w-6 h-6 rounded-full bg-primary-icon/10 text-primary-icon flex items-center justify-center text-sm font-medium">O</span>
-                    </div>
+                    <SkillBenchmark benchmarks={skill.benchmarks} />
                   </td>
                 </tr>
               ))}
