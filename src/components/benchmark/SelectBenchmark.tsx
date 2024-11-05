@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export const SelectBenchmark = () => {
   return (
     <Card className="p-6 space-y-6 bg-white mb-6">
-      <h2 className="text-lg font-semibold text-foreground">1. Select Benchmark</h2>
+      <h2 className="text-lg font-semibold text-foreground">Skill Benchmark</h2>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
