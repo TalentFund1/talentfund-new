@@ -49,7 +49,7 @@ export const SelectBenchmark = () => {
           <div className="flex justify-end gap-2">
             <Button variant="outline">Clear All</Button>
             <Button variant="outline">Save To Role</Button>
-            <Button className="gap-2">
+            <Button variant="outline" className="gap-2 bg-white">
               <PlayCircle className="h-4 w-4" />
               Run
             </Button>
