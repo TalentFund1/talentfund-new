@@ -74,6 +74,7 @@ export const SkillsTable = () => {
       if (selectedFilter === "all") return true;
       if (selectedFilter === "specialized") return skill.type === "specialized";
       if (selectedFilter === "common") return skill.type === "common";
+      if (selectedFilter === "certification") return skill.type === "certification";
       return true;
     });
   }, [selectedFilter]);
@@ -113,6 +114,7 @@ export const SkillsTable = () => {
                 <SelectItem value="all">All Skills</SelectItem>
                 <SelectItem value="specialized">Specialized Skills</SelectItem>
                 <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
               </SelectContent>
             </Select>
           </div>
