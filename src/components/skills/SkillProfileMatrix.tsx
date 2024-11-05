@@ -19,7 +19,7 @@ export const SkillProfileMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <h3 className="text-lg font-semibold mb-4">1. Select Benchmark</h3>
+        <h3 className="text-lg font-semibold mb-4">Select Benchmark</h3>
         
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-4">
