@@ -45,7 +45,7 @@ export const SkillProfileMatrix = () => {
                   <SelectValue placeholder="All Skill Types" />
                 </SelectTrigger>
                 <SelectContent align="end" className="w-[280px]">
-                  <SelectItem value="all">All Skill Types</SelectItem>
+                  <SelectItem value="all">All Skills</SelectItem>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <SelectItem value="defining">Defining Skills</SelectItem>
