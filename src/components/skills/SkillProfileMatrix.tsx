@@ -3,11 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useState } from "react";
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [benchmarkType, setBenchmarkType] = useState("all");
+  const [skillType, setSkillType] = useState("all");
 
   const skills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$160,256", benchmarks: { J: true, B: true, O: false } },
@@ -33,6 +40,40 @@ export const SkillProfileMatrix = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
+            <TooltipProvider>
+              <Select value={skillType} onValueChange={setSkillType}>
+                <SelectTrigger className="w-[180px] bg-white">
+                  <SelectValue placeholder="All Skill Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Skill Types</SelectItem>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectItem value="defining">Defining Skills</SelectItem>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-sm">
+                      <p>Skills needed to qualify for a job and perform day-to-day tasks and responsibilities successfully.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-sm">
+                      <p>Skills that highlight technical proficiency and differentiate job seekers from other candidates.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectItem value="necessary">Necessary Skills</SelectItem>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-sm">
+                      <p>Skills required for a specific job, relevant across other similar jobs, and are building blocks for performing more complex defining skills.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </SelectContent>
+              </Select>
+            </TooltipProvider>
             <Select defaultValue="all">
               <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="All" />
@@ -46,12 +87,13 @@ export const SkillProfileMatrix = () => {
             </Select>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="Sort By" />
+                <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="jobDescription">Sort By Job Description</SelectItem>
-                <SelectItem value="benchmark">Sort By Benchmark</SelectItem>
-                <SelectItem value="occupation">Sort By Occupation</SelectItem>
+                <SelectItem value="all">Sort by All</SelectItem>
+                <SelectItem value="jobDescription">Sort by Job Description</SelectItem>
+                <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
+                <SelectItem value="occupation">Sort by Occupation</SelectItem>
               </SelectContent>
             </Select>
           </div>
