@@ -45,7 +45,7 @@ export const SkillProfileMatrix = () => {
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
             <Button>Save</Button>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" className="bg-white text-foreground border border-input hover:bg-accent">Cancel</Button>
           </div>
         </div>
 
