@@ -19,6 +19,11 @@ export const SelectBenchmark = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="nationwide">Nationwide / All Companies (default)</SelectItem>
+                <SelectItem value="core">Core Competitors</SelectItem>
+                <SelectItem value="finance">Finance/Banking</SelectItem>
+                <SelectItem value="healthcare">Healthcare</SelectItem>
+                <SelectItem value="retail">Large Retailers</SelectItem>
+                <SelectItem value="tech">Technology</SelectItem>
                 <SelectItem value="custom">Custom Benchmark</SelectItem>
               </SelectContent>
             </Select>
