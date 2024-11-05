@@ -16,6 +16,7 @@ export const SkillsSummary = () => {
   });
 
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
+  const [visibleCommonCount, setVisibleCommonCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const specializedSkills = [
@@ -46,7 +47,12 @@ export const SkillsSummary = () => {
     { name: "Scrum", level: "intermediate" },
     { name: "Technical Writing", level: "beginner" },
     { name: "Time Management", level: "beginner" },
-    { name: "Microsoft Excel", level: "beginner" }
+    { name: "Microsoft Excel", level: "beginner" },
+    { name: "Presentation Skills", level: "advanced" },
+    { name: "Conflict Resolution", level: "intermediate" },
+    { name: "Critical Thinking", level: "advanced" },
+    { name: "Stakeholder Management", level: "intermediate" },
+    { name: "Business Analysis", level: "beginner" }
   ];
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -64,13 +70,13 @@ export const SkillsSummary = () => {
       const skillsPerRow = Math.floor(containerWidth / skillWidth);
       const optimalRows = 2; // Number of rows to show before "See More"
       setVisibleSpecializedCount(skillsPerRow * optimalRows);
+      setVisibleCommonCount(skillsPerRow * optimalRows);
     }
   }, []);
 
   const renderSkills = (skills: typeof specializedSkills, isExpanded: boolean, isSpecialized: boolean = false) => {
-    const displaySkills = isSpecialized 
-      ? (isExpanded ? skills : skills.slice(0, visibleSpecializedCount))
-      : (isExpanded ? skills : skills.slice(0, 7));
+    const visibleCount = isSpecialized ? visibleSpecializedCount : visibleCommonCount;
+    const displaySkills = isExpanded ? skills : skills.slice(0, 7);
 
     return displaySkills.map((skill) => (
       <Badge 
@@ -98,7 +104,7 @@ export const SkillsSummary = () => {
           <div ref={containerRef} className="flex flex-wrap gap-2 mb-4">
             {renderSkills(specializedSkills, expandedSections.specialized, true)}
           </div>
-          {specializedSkills.length > visibleSpecializedCount && (
+          {specializedSkills.length > 7 && (
             <div className="flex justify-start">
               <Button 
                 variant="outline" 
@@ -108,7 +114,7 @@ export const SkillsSummary = () => {
               >
                 {expandedSections.specialized ? 'Show Less' : 'See More'} 
                 <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                  {specializedSkills.length - visibleSpecializedCount}
+                  {specializedSkills.length - 7}
                 </span>
               </Button>
             </div>
@@ -116,11 +122,11 @@ export const SkillsSummary = () => {
         </SkillSection>
 
         <SkillSection title="Common Skills" count={commonSkills.length}>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-4">
             {renderSkills(commonSkills, expandedSections.common)}
           </div>
           {commonSkills.length > 7 && (
-            <div className="flex justify-start mt-4">
+            <div className="flex justify-start">
               <Button 
                 variant="outline" 
                 size="sm" 
