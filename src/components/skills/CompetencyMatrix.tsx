@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Link } from "react-router-dom";
 
 const skills = [
   { name: "Amazon Web Services", level: "Advanced", required: "Required" },
@@ -82,7 +83,12 @@ export const CompetencyMatrix = () => {
         <div className="divide-y divide-border">
           {skills.map((skill) => (
             <div key={skill.name} className="grid grid-cols-3 gap-4 p-4 hover:bg-background/40 transition-colors">
-              <span className="text-sm text-primary hover:text-primary-accent transition-colors cursor-pointer">{skill.name}</span>
+              <Link 
+                to={`/skills/${skill.name.toLowerCase().replace(/\s+/g, '-')}`}
+                className="text-sm text-primary hover:text-primary-accent transition-colors cursor-pointer"
+              >
+                {skill.name}
+              </Link>
               <Select defaultValue={skill.level.toLowerCase()}>
                 <SelectTrigger className="bg-white">
                   <SelectValue />
