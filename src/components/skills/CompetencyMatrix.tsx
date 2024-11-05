@@ -104,12 +104,6 @@ export const CompetencyMatrix = () => {
           ))}
         </div>
       </div>
-
-      <Separator className="my-4" />
-
-      <div>
-        <Button variant="outline">Export</Button>
-      </div>
     </div>
   );
 };
