@@ -32,7 +32,7 @@ export const MarketDataMap = () => {
             <input type="checkbox" /> Diversity
           </label>
         </div>
-      </Card>
+      </Tabs>
     </Card>
   );
 };
