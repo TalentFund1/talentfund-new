@@ -19,7 +19,7 @@ export const SkillProfileMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <h3 className="text-lg font-semibold mb-4">Select Benchmark</h3>
+        <h3 className="text-lg font-semibold mb-4">Skill Benchmark</h3>
         
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-4">
@@ -63,7 +63,7 @@ export const SkillProfileMatrix = () => {
 
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-foreground">Add Skills in Skill Profile</h2>
+          <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
             <Select defaultValue="all">
               <SelectTrigger className="w-[120px] bg-white">
