@@ -11,8 +11,23 @@ export const SkillsSummary = () => {
       
       <div className="space-y-6">
         <SkillSection title="Specialized Skills" count={66}>
-          <div className="flex flex-wrap gap-2">
-            {["React", "JavaScript", "Git", "GraphQL", "HTML and CSS3"].map((skill) => (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {[
+              "React", 
+              "JavaScript", 
+              "Git", 
+              "GraphQL", 
+              "HTML and CSS3",
+              "Computer Architecture",
+              "Internet of Things",
+              "SystemVerilog",
+              "Static Timing Analysis",
+              "Cadence Encounter",
+              "Synopsys Primetime",
+              "Xilinx ISE",
+              "UART",
+              "I2C"
+            ].map((skill) => (
               <Badge 
                 key={skill} 
                 variant="outline" 
@@ -21,12 +36,14 @@ export const SkillsSummary = () => {
                 {skill} <div className="h-2 w-2 rounded-full bg-primary-accent" />
               </Badge>
             ))}
+          </div>
+          <div className="flex justify-start">
             <Button 
               variant="outline" 
               size="sm" 
               className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
             >
-              See More <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">12</span>
+              See More <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">36</span>
             </Button>
           </div>
         </SkillSection>
