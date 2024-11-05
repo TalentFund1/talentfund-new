@@ -20,7 +20,7 @@ const skills = [
 
 export const CompetencyMatrix = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white p-6 rounded-lg border border-border">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Checkbox />
