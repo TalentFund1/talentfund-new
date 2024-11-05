@@ -24,8 +24,8 @@ export const SkillLevelIcon = ({ level }: SkillLevelIconProps) => {
       <div className="w-8 h-8 rounded-full border-2 border-current absolute" />
       {/* Middle circle (white space) */}
       <div className="w-5 h-5 rounded-full bg-white absolute" />
-      {/* Inner circle */}
-      <div className="w-2 h-2 rounded-full bg-current absolute" />
+      {/* Inner circle (dot) - increased size from w-2/h-2 to w-3/h-3 */}
+      <div className="w-3 h-3 rounded-full bg-current absolute" />
     </div>
   );
 };
