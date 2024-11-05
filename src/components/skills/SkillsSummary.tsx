@@ -53,7 +53,14 @@ export const SkillsSummary = () => {
             {[
               { name: "UI/UX Design Principles", color: "bg-primary-accent" },
               { name: "Communication", color: "bg-primary-icon" },
-              { name: "Microsoft Excel", color: "bg-primary-icon" }
+              { name: "Microsoft Excel", color: "bg-primary-icon" },
+              { name: "Project Management", color: "bg-primary-icon" },
+              { name: "Team Leadership", color: "bg-primary-accent" },
+              { name: "Problem Solving", color: "bg-primary-icon" },
+              { name: "Agile Methodologies", color: "bg-primary-accent" },
+              { name: "Technical Writing", color: "bg-primary-icon" },
+              { name: "Time Management", color: "bg-primary-icon" },
+              { name: "Critical Thinking", color: "bg-primary-accent" }
             ].map((skill) => (
               <Badge 
                 key={skill.name} 
