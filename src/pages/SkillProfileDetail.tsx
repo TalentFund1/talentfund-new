@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -34,8 +33,6 @@ const SkillProfileDetail = () => {
       </Card>
 
       <SelectBenchmark />
-
-      <EmployeeOverview />
 
       <Tabs defaultValue="skills" className="w-full space-y-6">
         <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
