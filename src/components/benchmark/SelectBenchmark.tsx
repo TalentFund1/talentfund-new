@@ -47,9 +47,9 @@ export const SelectBenchmark = () => {
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button variant="default">Cancel</Button>
             <Button variant="outline">Clear All</Button>
             <Button variant="outline">Save To Role</Button>
+            <Button className="bg-white text-foreground border border-input hover:bg-accent">Cancel</Button>
             <Button className="gap-2">
               <PlayCircle className="h-4 w-4" />
               Run
