@@ -60,9 +60,9 @@ export const SkillsSummary = () => {
     if (containerRef.current) {
       const container = containerRef.current;
       const containerWidth = container.offsetWidth;
-      const skillWidth = 150;
+      const skillWidth = 150; // Approximate width of each skill badge including gap
       const skillsPerRow = Math.floor(containerWidth / skillWidth);
-      const optimalRows = 2;
+      const optimalRows = 2; // Number of rows to show before "See More"
       setVisibleSpecializedCount(skillsPerRow * optimalRows);
     }
   }, []);
@@ -76,12 +76,12 @@ export const SkillsSummary = () => {
       <Badge 
         key={skill.name} 
         variant="outline" 
-        className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80"
+        className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
       >
-        {skill.name}
+        {skill.name} 
         <div className={`h-2 w-2 rounded-full ${
-          skill.level === "advanced" ? "bg-[#8073ec]" :
-          skill.level === "intermediate" ? "bg-[#ff8256]" :
+          skill.level === "advanced" ? "bg-primary-accent" :
+          skill.level === "intermediate" ? "bg-primary-icon" :
           "bg-[#008000]"
         }`} />
       </Badge>
@@ -95,7 +95,7 @@ export const SkillsSummary = () => {
       
       <div className="space-y-6">
         <SkillSection title="Specialized Skills" count={specializedSkills.length}>
-          <div ref={containerRef} className="flex flex-wrap gap-3 mb-4">
+          <div ref={containerRef} className="flex flex-wrap gap-2 mb-4">
             {renderSkills(specializedSkills, expandedSections.specialized, true)}
           </div>
           {specializedSkills.length > visibleSpecializedCount && (
@@ -103,11 +103,11 @@ export const SkillsSummary = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="rounded-full px-4 py-2 border border-border bg-white hover:bg-background/80 flex items-center gap-2"
+                className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
                 onClick={() => toggleSection('specialized')}
               >
                 {expandedSections.specialized ? 'Show Less' : 'See More'} 
-                <span className="bg-[#8073ec]/10 rounded-full px-2 py-0.5 text-foreground">
+                <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
                   {specializedSkills.length - visibleSpecializedCount}
                 </span>
               </Button>
@@ -116,7 +116,7 @@ export const SkillsSummary = () => {
         </SkillSection>
 
         <SkillSection title="Common Skills" count={commonSkills.length}>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             {renderSkills(commonSkills, expandedSections.common)}
           </div>
           {commonSkills.length > 7 && (
@@ -124,11 +124,11 @@ export const SkillsSummary = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="rounded-full px-4 py-2 border border-border bg-white hover:bg-background/80 flex items-center gap-2"
+                className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
                 onClick={() => toggleSection('common')}
               >
                 {expandedSections.common ? 'Show Less' : 'See More'} 
-                <span className="bg-[#8073ec]/10 rounded-full px-2 py-0.5 text-foreground">
+                <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
                   {commonSkills.length - 7}
                 </span>
               </Button>
@@ -140,7 +140,7 @@ export const SkillsSummary = () => {
           <div className="flex flex-wrap gap-3">
             <Badge 
               variant="outline" 
-              className="rounded-full px-4 py-2 border border-border bg-white"
+              className="rounded-lg px-4 py-2 border-2 bg-white"
             >
               Cybersecurity License
             </Badge>
