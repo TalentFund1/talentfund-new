@@ -62,6 +62,33 @@ export const SkillProfileMatrix = () => {
       </Card>
 
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-foreground">Add Skills in Skill Profile</h2>
+          <div className="flex gap-2">
+            <Select defaultValue="all">
+              <SelectTrigger className="w-[120px] bg-white">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="selected">Selected</SelectItem>
+                <SelectItem value="unselected">Unselected</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select defaultValue="sortByAll">
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="Sort By All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="sortByAll">Sort By All</SelectItem>
+                <SelectItem value="name">Sort By Name</SelectItem>
+                <SelectItem value="growth">Sort By Growth</SelectItem>
+                <SelectItem value="salary">Sort By Salary</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         <div className="rounded-lg border border-border overflow-hidden">
           <table className="w-full">
             <thead>
