@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 
 export const SkillProfileMatrix = () => {
-  const [sortBy, setSortBy] = useState("benchmark");
+  const [sortBy, setSortBy] = useState("all");
   const [benchmarkType, setBenchmarkType] = useState("all");
 
   const skills = [
@@ -46,12 +46,13 @@ export const SkillProfileMatrix = () => {
             </Select>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="Sort By" />
+                <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="jobDescription">Sort By Job Description</SelectItem>
-                <SelectItem value="benchmark">Sort By Benchmark</SelectItem>
-                <SelectItem value="occupation">Sort By Occupation</SelectItem>
+                <SelectItem value="all">Sort by All</SelectItem>
+                <SelectItem value="jobDescription">Sort by Job Description</SelectItem>
+                <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
+                <SelectItem value="occupation">Sort by Occupation</SelectItem>
               </SelectContent>
             </Select>
           </div>
