@@ -3,18 +3,38 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export const SkillProfileMatrix = () => {
-  const skills = [
-    { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$160,256" },
-    { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$164,608" },
-    { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$153,344" },
-    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$161,536" }
-  ];
+  const [sortBy, setSortBy] = useState("benchmark");
+  const [benchmarkType, setBenchmarkType] = useState("all");
 
-  const truncateText = (text: string, maxLength: number = 35) => {
-    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
-  };
+  const skills = [
+    { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$160,256", benchmarks: { J: true, B: true, O: false } },
+    { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$164,608", benchmarks: { J: true, B: false, O: true } },
+    { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$153,344", benchmarks: { J: false, B: true, O: true } },
+    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$161,536", benchmarks: { J: true, B: true, O: true } }
+  ].sort((a, b) => {
+    if (sortBy === "name") {
+      return a.title.localeCompare(b.title);
+    }
+    if (sortBy === "growth") {
+      return parseInt(b.growth) - parseInt(a.growth);
+    }
+    if (sortBy === "salary") {
+      return parseInt(b.salary.replace(/\$|,/g, '')) - parseInt(a.salary.replace(/\$|,/g, ''));
+    }
+    if (sortBy === "jobDescription") {
+      return b.benchmarks.J - a.benchmarks.J;
+    }
+    if (sortBy === "benchmark") {
+      return b.benchmarks.B - a.benchmarks.B;
+    }
+    if (sortBy === "occupation") {
+      return b.benchmarks.O - a.benchmarks.O;
+    }
+    return 0;
+  });
 
   return (
     <div className="space-y-6">
@@ -76,15 +96,17 @@ export const SkillProfileMatrix = () => {
                 <SelectItem value="certification">Certification</SelectItem>
               </SelectContent>
             </Select>
-            <Select defaultValue="sortByAll">
+            <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="Sort By All" />
+                <SelectValue placeholder="Sort By" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="sortByAll">Sort by Benchmark</SelectItem>
                 <SelectItem value="name">Sort By Name</SelectItem>
                 <SelectItem value="growth">Sort By Growth</SelectItem>
                 <SelectItem value="salary">Sort By Salary</SelectItem>
+                <SelectItem value="jobDescription">Sort By Job Description</SelectItem>
+                <SelectItem value="benchmark">Sort By Benchmark</SelectItem>
+                <SelectItem value="occupation">Sort By Occupation</SelectItem>
               </SelectContent>
             </Select>
           </div>
