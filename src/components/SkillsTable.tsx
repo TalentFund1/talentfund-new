@@ -65,7 +65,7 @@ export const SkillsTable = () => {
         <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
         <Select value={selectedFilter} onValueChange={setSelectedFilter}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories" />
+            <SelectValue placeholder="All Skills" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Skills</SelectItem>

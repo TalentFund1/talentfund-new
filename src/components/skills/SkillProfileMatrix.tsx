@@ -64,7 +64,7 @@ export const SkillProfileMatrix = () => {
           <div className="flex gap-2">
             <Select value={skillType} onValueChange={setSkillType}>
               <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Categories" />
+                <SelectValue placeholder="All Skills" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Skills</SelectItem>
