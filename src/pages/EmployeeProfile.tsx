@@ -10,7 +10,6 @@ import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
 import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
 import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { Sidebar } from "@/components/Sidebar";
-import { Header } from "@/components/Header";
 
 const EmployeeProfile = () => {
   const navigate = useNavigate();
@@ -18,10 +17,8 @@ const EmployeeProfile = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 ml-16">
-        <Header />
-        <div className="p-6 mt-16 transition-all duration-300">
-          <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex-1 p-6 ml-16 transition-all duration-300">
+        <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex justify-between items-center mb-4">
             <Button 
               variant="outline" 
@@ -128,7 +125,6 @@ const EmployeeProfile = () => {
               <SkillsMatrix />
             </TabsContent>
           </Tabs>
-          </div>
         </div>
       </div>
     </div>

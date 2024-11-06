@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { MarketDataMap } from '@/components/market/MarketDataMap';
 import { MarketDataTable } from '@/components/market/MarketDataTable';
-import { Header } from "@/components/Header";
-import { Sidebar } from "@/components/Sidebar";
 
 const MarketData = () => {
   const [jobTitle, setJobTitle] = useState('');
@@ -16,11 +20,7 @@ const MarketData = () => {
   const [location, setLocation] = useState('');
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      <div className="flex-1 ml-16">
-        <Header />
-        <div className="p-6 mt-16 transition-all duration-300">
+    <div className="flex-1 space-y-6 p-6 ml-16">
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Market Data</h2>
         
@@ -139,8 +139,6 @@ const MarketData = () => {
 
         <MarketDataMap />
         <MarketDataTable />
-      </div>
-        </div>
       </div>
     </div>
   );
