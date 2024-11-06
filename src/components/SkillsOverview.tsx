@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
 
 const data = [
   {
@@ -47,22 +49,61 @@ const data = [
 ];
 
 export const SkillsOverview = () => {
+  const [selectedView, setSelectedView] = useState<"category" | "subcategory" | "skill">("category");
+
+  const getChartData = () => {
+    if (selectedView === "category") {
+      const categoryData = data.reduce((acc, curr) => {
+        const existingCategory = acc.find(item => item.name === curr.category);
+        if (existingCategory) {
+          existingCategory.proficiency = (existingCategory.proficiency + curr.proficiency) / 2;
+        } else {
+          acc.push({ name: curr.category, proficiency: curr.proficiency });
+        }
+        return acc;
+      }, [] as { name: string; proficiency: number }[]);
+      return categoryData;
+    }
+
+    if (selectedView === "subcategory") {
+      const subcategoryData = data.reduce((acc, curr) => {
+        const existingSubcategory = acc.find(item => item.name === curr.subcategory);
+        if (existingSubcategory) {
+          existingSubcategory.proficiency = (existingSubcategory.proficiency + curr.proficiency) / 2;
+        } else {
+          acc.push({ name: curr.subcategory, proficiency: curr.proficiency });
+        }
+        return acc;
+      }, [] as { name: string; proficiency: number }[]);
+      return subcategoryData;
+    }
+
+    return data.map(item => ({
+      name: item.skill,
+      proficiency: item.proficiency
+    }));
+  };
+
   return (
     <Card className="p-6 animate-fade-in border-border border bg-white">
       <h2 className="text-xl font-semibold text-foreground mb-2">Skills Distribution</h2>
       <p className="text-sm text-secondary-foreground mb-6">
         Here you can find an overview of skills in your organization, categorized into three levels. Check the Employee tab to explore further.
       </p>
-      <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="text-sm font-medium">Category</div>
-        <div className="text-sm font-medium">Subcategory</div>
-        <div className="text-sm font-medium">Skill Title</div>
-      </div>
+
+      <Tabs defaultValue="category" className="w-full mb-6" onValueChange={(value) => setSelectedView(value as "category" | "subcategory" | "skill")}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="category">Category</TabsTrigger>
+          <TabsTrigger value="subcategory">Subcategory</TabsTrigger>
+          <TabsTrigger value="skill">Skill Title</TabsTrigger>
+        </TabsList>
+      </Tabs>
+
       <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+          <BarChart data={getChartData()} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
-            <XAxis dataKey="skill" />
+            <XAxis dataKey="name" />
             <YAxis />
             <Tooltip
               content={({ active, payload }) => {
@@ -70,9 +111,7 @@ export const SkillsOverview = () => {
                   const data = payload[0].payload;
                   return (
                     <div className="bg-white p-2 border border-border rounded shadow-sm">
-                      <p className="font-medium">{data.skill}</p>
-                      <p className="text-sm text-secondary-foreground">{data.category}</p>
-                      <p className="text-sm text-secondary-foreground">{data.subcategory}</p>
+                      <p className="font-medium">{data.name}</p>
                       <p className="text-sm font-medium">Proficiency: {data.proficiency}%</p>
                     </div>
                   );
