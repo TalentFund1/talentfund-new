@@ -21,6 +21,7 @@ interface SkillProfileListProps {
 export const SkillProfileList = ({ skills, visibleSkills, onGrowthClick, loadMore }: SkillProfileListProps) => {
   const { ref, inView } = useInView({
     threshold: 0.5,
+    rootMargin: '100px',
   });
 
   useEffect(() => {
@@ -28,6 +29,10 @@ export const SkillProfileList = ({ skills, visibleSkills, onGrowthClick, loadMor
       loadMore();
     }
   }, [inView, visibleSkills.length, skills.length, loadMore]);
+
+  if (!visibleSkills || visibleSkills.length === 0) {
+    return null;
+  }
 
   return (
     <TableBody>
