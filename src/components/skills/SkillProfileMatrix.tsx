@@ -6,32 +6,32 @@ import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { SkillProfileMatrixPagination } from "./SkillProfileMatrixPagination";
 
+const skills = [
+  { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
+  { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
+  { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
+  { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$181,536", benchmarks: { J: true, B: true, O: true } },
+  { title: "Scalability", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
+  { title: "Software Engineering", subcategory: "Software Development Tools", level: "advanced", growth: "23%", salary: "$180,512", benchmarks: { J: true, B: true, O: true } },
+  { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
+].sort((a, b) => {
+  if (sortBy === "jobDescription") {
+    return Number(b.benchmarks.J) - Number(a.benchmarks.J);
+  }
+  if (sortBy === "benchmark") {
+    return Number(b.benchmarks.B) - Number(a.benchmarks.B);
+  }
+  if (sortBy === "occupation") {
+    return Number(b.benchmarks.O) - Number(a.benchmarks.O);
+  }
+  return 0;
+});
+
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const skills = [
-    { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
-    { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
-    { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
-    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$181,536", benchmarks: { J: true, B: true, O: true } },
-    { title: "Scalability", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
-    { title: "Software Engineering", subcategory: "Software Development Tools", level: "advanced", growth: "23%", salary: "$180,512", benchmarks: { J: true, B: true, O: true } },
-    { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
-  ].sort((a, b) => {
-    if (sortBy === "jobDescription") {
-      return Number(b.benchmarks.J) - Number(a.benchmarks.J);
-    }
-    if (sortBy === "benchmark") {
-      return Number(b.benchmarks.B) - Number(a.benchmarks.B);
-    }
-    if (sortBy === "occupation") {
-      return Number(b.benchmarks.O) - Number(a.benchmarks.O);
-    }
-    return 0;
-  });
 
   const totalPages = Math.ceil(skills.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
@@ -70,6 +70,7 @@ export const SkillProfileMatrix = () => {
                 <SelectItem value="all">All Skills</SelectItem>
                 <SelectItem value="specialized">Specialized Skills</SelectItem>
                 <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
               </SelectContent>
             </Select>
 
