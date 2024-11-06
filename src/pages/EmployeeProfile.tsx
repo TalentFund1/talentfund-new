@@ -114,6 +114,7 @@ const EmployeeProfile = () => {
               <Card className="p-8 bg-white">
                 <SkillsSummary />
               </Card>
+              <SkillsMatrix />
             </TabsContent>
 
             <TabsContent value="benchmark" className="space-y-6">
