@@ -22,9 +22,9 @@ const skills = [
 
 export const CompetencyMatrix = () => {
   return (
-    <div className="space-y-4 bg-white p-4 rounded-lg border border-border">
+    <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Competency Levels</h2>
+        <h2 className="text-xl font-semibold text-foreground">Competency Levels</h2>
         <div className="flex items-center gap-2">
           <Select defaultValue="0">
             <SelectTrigger className="w-[120px] bg-background">
@@ -39,9 +39,9 @@ export const CompetencyMatrix = () => {
         </div>
       </div>
 
-      <Separator className="my-2" />
+      <Separator className="my-4" />
 
-      <div className="space-y-2">
+      <div className="space-y-4">
         <Button 
           variant="ghost" 
           className="text-primary p-0 h-auto flex items-center gap-2 hover:bg-transparent hover:text-primary-accent"
@@ -68,17 +68,20 @@ export const CompetencyMatrix = () => {
       </div>
 
       <div className="pt-4">
-        <div className="border rounded-lg overflow-hidden">
-          <div className="grid grid-cols-3 gap-4 p-3 bg-background">
+        <div className="border border-border rounded-lg overflow-hidden">
+          <div className="grid grid-cols-3 gap-4 p-3 bg-[#F7F9FF] border-b border-border">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Skills (36)</span>
+              <span className="text-sm font-medium text-foreground">Skills (36)</span>
             </div>
-            <div className="text-sm font-medium">Skill Level</div>
-            <div className="text-sm font-medium">Required</div>
+            <div className="text-sm font-medium text-foreground">Skill Level</div>
+            <div className="text-sm font-medium text-foreground">Required</div>
           </div>
 
-          {skills.map((skill) => (
-            <div key={skill.name} className="grid grid-cols-3 gap-4 p-3 hover:bg-background/40 transition-colors">
+          {skills.map((skill, index) => (
+            <div 
+              key={skill.name} 
+              className="grid grid-cols-3 gap-4 p-3 hover:bg-background/40 transition-colors border-b border-border last:border-b-0"
+            >
               <Link 
                 to={`/skills/${skill.name.toLowerCase().replace(/\s+/g, '-')}`}
                 className="text-sm text-primary hover:text-primary-accent transition-colors cursor-pointer"
@@ -86,7 +89,7 @@ export const CompetencyMatrix = () => {
                 {skill.name}
               </Link>
               <Select defaultValue={skill.level.toLowerCase()}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-white border-border">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -96,7 +99,7 @@ export const CompetencyMatrix = () => {
                 </SelectContent>
               </Select>
               <Select defaultValue={skill.required.toLowerCase()}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-white border-border">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
