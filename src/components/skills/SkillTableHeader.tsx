@@ -34,7 +34,7 @@ export const SkillTableHeader = () => {
                     <div>
                       <h4 className="font-semibold mb-1">Salary with Skill:</h4>
                       <p className="text-sm text-muted-foreground">
-                        Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Lightcast Skill
+                        Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill
                       </p>
                     </div>
                     <div>
