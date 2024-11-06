@@ -53,8 +53,8 @@ export const SkillProfileMatrix = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
-            <Button>Save</Button>
             <Button variant="outline">Cancel</Button>
+            <Button>Save</Button>
           </div>
         </div>
 
