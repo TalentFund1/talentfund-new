@@ -72,6 +72,19 @@ export const SkillProfileMatrix = () => {
                 <SelectItem value="common">Common Skills</SelectItem>
               </SelectContent>
             </Select>
+
+            <Select value={skillType} onValueChange={setSkillType}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="All Skill Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Skill Types</SelectItem>
+                <SelectItem value="technical">Technical Skills</SelectItem>
+                <SelectItem value="soft">Soft Skills</SelectItem>
+                <SelectItem value="domain">Domain Skills</SelectItem>
+              </SelectContent>
+            </Select>
+
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="Sort by" />
