@@ -23,7 +23,7 @@ const SkillsProfile = () => {
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
             <div className="space-x-2">
-              <Button variant="default" className="bg-[#E5E7FF] text-[#1F2144] hover:bg-[#E5E7FF]/80">Export Data</Button>
+              <Button variant="outline">Export Data</Button>
               <Button>Add Profile</Button>
             </div>
           </div>
