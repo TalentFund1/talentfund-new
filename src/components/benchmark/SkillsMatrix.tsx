@@ -62,7 +62,7 @@ export const SkillsMatrix = () => {
         <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
         <Select defaultValue="all">
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skills" />
+            <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Skills</SelectItem>
