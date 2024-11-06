@@ -1,8 +1,8 @@
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { SkillProfileMatrixPagination } from "./SkillProfileMatrixPagination";
 
@@ -82,7 +82,6 @@ export const SkillProfileMatrix = () => {
                 <SelectItem value="defining">Defining Skills</SelectItem>
                 <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
                 <SelectItem value="necessary">Necessary Skills</SelectItem>
-                <SelectItem value="certification">Certification</SelectItem>
               </SelectContent>
             </Select>
 
