@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -15,7 +15,6 @@ import { Sidebar } from "@/components/Sidebar";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
-  const [selectedFilter, setSelectedFilter] = useState<string>("all");
 
   return (
     <ToastProvider>
@@ -40,10 +39,7 @@ const SkillProfileDetail = () => {
               </div>
 
               <Card className="p-8 bg-white">
-                <SkillProfileHeader 
-                  selectedFilter={selectedFilter}
-                  setSelectedFilter={setSelectedFilter}
-                />
+                <SkillProfileHeader />
               </Card>
 
               <EmployeeOverview />
