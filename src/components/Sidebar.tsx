@@ -94,6 +94,8 @@ export const Sidebar = () => {
             </Link>
           ))}
           
+          <Separator className="my-4" />
+          
           <DropdownMenu>
             <DropdownMenuTrigger className="w-full">
               <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 transition-colors">
