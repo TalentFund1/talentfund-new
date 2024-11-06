@@ -29,17 +29,12 @@ export const SkillTableHeader = () => {
                 <TooltipTrigger>
                   <HelpCircle className="h-4 w-4 text-muted-foreground" />
                 </TooltipTrigger>
-                <TooltipContent className="p-4 max-w-[300px]">
+                <TooltipContent className="p-4 max-w-[300px] text-left">
                   <div className="space-y-4">
                     <div>
                       <h4 className="font-semibold mb-1">Salary with Skill:</h4>
                       <p className="text-sm text-muted-foreground">
                         Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Projected growth indicates the expected increase in demand for this skill over the next 12 months based on market analysis and industry trends.
                       </p>
                     </div>
                   </div>
