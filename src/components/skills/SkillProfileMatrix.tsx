@@ -79,9 +79,9 @@ export const SkillProfileMatrix = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Skill Types</SelectItem>
-                <SelectItem value="technical">Technical Skills</SelectItem>
-                <SelectItem value="soft">Soft Skills</SelectItem>
-                <SelectItem value="domain">Domain Skills</SelectItem>
+                <SelectItem value="defining">Defining Skills</SelectItem>
+                <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
+                <SelectItem value="necessary">Necessary Skills</SelectItem>
               </SelectContent>
             </Select>
 
