@@ -20,22 +20,14 @@ const skills = [
   { name: "Full Stack Development", level: "Unspecified", required: "Preferred" },
 ];
 
-const jobLevels = [
-  { role: "AI Engineer", levels: ["P3", "P4", "P5"] },
-  { role: "Backend Engineer", levels: ["P3", "P4", "P5"] },
-  { role: "Frontend Engineer", levels: ["P3", "P4", "P5"] },
-  { role: "Data Scientist", levels: ["P3", "P4", "P5"] },
-];
-
 export const CompetencyMatrix = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
 
-  const handleLevelSelect = (role: string, level: string) => {
-    const levelId = `${role} ${level}`;
+  const handleLevelSelect = (level: string) => {
     setSelectedLevels(prev => 
-      prev.includes(levelId) 
-        ? prev.filter(l => l !== levelId)
-        : [...prev, levelId]
+      prev.includes(level) 
+        ? prev.filter(l => l !== level)
+        : [...prev, level]
     );
   };
 
@@ -70,29 +62,22 @@ export const CompetencyMatrix = () => {
         </Button>
 
         <div className="space-y-2">
-          {jobLevels.map((job) => (
-            <div key={job.role} className="space-y-2">
-              {job.levels.map((level) => (
-                <div 
-                  key={`${job.role}-${level}`} 
-                  className="flex items-center gap-3 bg-background/40 p-2 rounded-lg hover:bg-background/60 transition-colors"
-                >
-                  <Checkbox 
-                    className="rounded-sm"
-                    checked={selectedLevels.includes(`${job.role} ${level}`)}
-                    onCheckedChange={() => handleLevelSelect(job.role, level)}
-                  />
-                  <span className="text-sm font-medium">{job.role}</span>
-                  <Select defaultValue={level}>
-                    <SelectTrigger className="w-[80px] bg-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={level}>{level}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              ))}
+          {["P3", "P4"].map((level) => (
+            <div key={level} className="flex items-center gap-3 bg-background/40 p-2 rounded-lg hover:bg-background/60 transition-colors">
+              <Checkbox 
+                className="rounded-sm"
+                checked={selectedLevels.includes(`AI Engineer ${level}`)}
+                onCheckedChange={() => handleLevelSelect(`AI Engineer ${level}`)}
+              />
+              <span className="text-sm font-medium">AI Engineer</span>
+              <Select defaultValue={level}>
+                <SelectTrigger className="w-[80px] bg-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={level}>{level}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           ))}
         </div>
