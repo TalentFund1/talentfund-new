@@ -1,5 +1,11 @@
 import { Switch } from "@/components/ui/switch";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, HelpCircle } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Skill {
   title: string;
@@ -21,7 +27,26 @@ export const SkillProfileMatrixTable = ({ paginatedSkills }: SkillProfileMatrixT
         <tr className="bg-background text-left">
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">Projected Growth</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
+            <div className="flex items-center justify-center gap-1">
+              Projected Growth
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-left">Salary with Skill:</h4>
+                      <p className="text-sm text-left font-normal">
+                        Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill
+                      </p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">Salary With Skill</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
