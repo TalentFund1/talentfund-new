@@ -1,19 +1,24 @@
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
-import { SkillProfileTableHeader } from "./SkillProfileTableHeader";
-import { SkillProfileTableRow } from "./SkillProfileTableRow";
-
-const INITIAL_VISIBLE_ITEMS = 5;
-const ITEMS_TO_LOAD = 5;
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [benchmarkType, setBenchmarkType] = useState("all");
-  const [visibleItems, setVisibleItems] = useState(INITIAL_VISIBLE_ITEMS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const skills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$160,256", benchmarks: { J: true, B: true, O: true } },
@@ -36,12 +41,19 @@ export const SkillProfileMatrix = () => {
     return 0;
   });
 
-  const handleShowMore = () => {
-    setVisibleItems(prev => Math.min(prev + ITEMS_TO_LOAD, skills.length));
+  const totalPages = Math.ceil(skills.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedSkills = skills.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
   };
 
-  const visibleSkills = skills.slice(0, visibleItems);
-  const hasMoreItems = visibleItems < skills.length;
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
+    setCurrentPage(1);
+  };
 
   return (
     <div className="space-y-6">
@@ -54,57 +66,151 @@ export const SkillProfileMatrix = () => {
           </div>
         </div>
 
+        <Separator className="my-4" />
+
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
             <Select value={skillType} onValueChange={setSkillType}>
               <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="All Skills" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent align="end" className="w-[280px]">
                 <SelectItem value="all">All Skills</SelectItem>
                 <SelectItem value="specialized">Specialized Skills</SelectItem>
                 <SelectItem value="common">Common Skills</SelectItem>
                 <SelectItem value="certification">Certification</SelectItem>
               </SelectContent>
             </Select>
-            <TooltipProvider>
-              <Select value={sortBy} onValueChange={setSortBy}>
+            <TooltipProvider delayDuration={300}>
+              <Select value={skillType} onValueChange={setSkillType}>
                 <SelectTrigger className="w-[180px] bg-white">
-                  <SelectValue placeholder="Sort by" />
+                  <SelectValue placeholder="All Skill Types" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Sort by All</SelectItem>
-                  <SelectItem value="jobDescription">Sort by Job Description</SelectItem>
-                  <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
-                  <SelectItem value="occupation">Sort by Occupation</SelectItem>
+                <SelectContent align="end" className="w-[280px]">
+                  <SelectItem value="all">All Skill Types</SelectItem>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectItem value="defining">Defining Skills</SelectItem>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-[200px]">
+                      <p>Skills needed to qualify for a job and perform day-to-day tasks and responsibilities successfully.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-[200px]">
+                      <p>Skills that highlight technical proficiency and differentiate job seekers from other candidates.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectItem value="necessary">Necessary Skills</SelectItem>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-[200px]">
+                      <p>Skills required for a specific job, relevant across other similar jobs, and are building blocks for performing more complex defining skills.</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </SelectContent>
               </Select>
             </TooltipProvider>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Sort by All</SelectItem>
+                <SelectItem value="jobDescription">Sort by Job Description</SelectItem>
+                <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
+                <SelectItem value="occupation">Sort by Occupation</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         <div className="rounded-lg border border-border overflow-hidden">
           <table className="w-full">
-            <SkillProfileTableHeader />
+            <thead>
+              <tr className="bg-background text-left">
+                <th className="py-3 px-4 font-medium w-[25%]">Skill Title</th>
+                <th className="py-3 px-4 font-medium w-[30%]">Subcategory</th>
+                <th className="py-3 px-4 font-medium text-center w-[15%]">Projected Growth</th>
+                <th className="py-3 px-4 font-medium text-right w-[15%]">Salary With Skill</th>
+                <th className="py-3 px-4 font-medium text-center w-[15%]">Benchmark</th>
+              </tr>
+            </thead>
             <tbody>
-              {visibleSkills.map((skill) => (
-                <SkillProfileTableRow key={skill.title} skill={skill} />
+              {paginatedSkills.map((skill) => (
+                <tr key={skill.title} className="border-t border-border hover:bg-muted/50 transition-colors">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-2">
+                      <Switch />
+                      <span className="text-sm">{skill.title}</span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-sm">
+                    <span className="block truncate" title={skill.subcategory}>
+                      {skill.subcategory}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm">
+                      ↗ {skill.growth}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-right text-sm">{skill.salary}</td>
+                  <td className="py-3 px-4">
+                    <div className="flex justify-center gap-1">
+                      <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
+                      <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
+                      <span className="w-6 h-6 rounded-full bg-primary-icon/10 text-primary-icon flex items-center justify-center text-sm font-medium">O</span>
+                    </div>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        {hasMoreItems && (
-          <div className="flex justify-center pt-4">
-            <Button 
-              variant="outline" 
-              onClick={handleShowMore}
-              className="px-6"
-            >
-              Show More ({skills.length - visibleItems} remaining)
-            </Button>
+        <div className="flex justify-between items-center border-t border-border pt-4">
+          <Select value={String(rowsPerPage)} onValueChange={handleRowsPerPageChange}>
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="10 rows" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10 rows</SelectItem>
+              <SelectItem value="20">20 rows</SelectItem>
+              <SelectItem value="50">50 rows</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <div className="flex items-center gap-2 ml-auto">
+            <span className="text-sm text-muted-foreground">
+              {`${startIndex + 1}-${Math.min(endIndex, skills.length)} of ${skills.length}`}
+            </span>
+            <div className="flex gap-1">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="w-8 h-8"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="w-8 h-8"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-        )}
+        </div>
       </Card>
     </div>
   );
