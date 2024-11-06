@@ -43,6 +43,18 @@ const SkillsProfile = () => {
                     <SelectItem value="senior">Senior</SelectItem>
                   </SelectContent>
                 </Select>
+
+                <Select>
+                  <SelectTrigger className="w-[180px] bg-white">
+                    <SelectValue placeholder="Level" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white">
+                    <SelectItem value="p1">P1</SelectItem>
+                    <SelectItem value="p2">P2</SelectItem>
+                    <SelectItem value="p3">P3</SelectItem>
+                    <SelectItem value="p4">P4</SelectItem>
+                  </SelectContent>
+                </Select>
                 
                 <Select>
                   <SelectTrigger className="w-[180px] bg-white">
