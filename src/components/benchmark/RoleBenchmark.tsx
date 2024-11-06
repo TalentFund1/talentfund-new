@@ -18,6 +18,10 @@ const preferredSkills = [
   { name: "Angular", level: "beginner" },
 ];
 
+const certifications = [
+  { name: "Cybersecurity License" }
+];
+
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
 
@@ -90,6 +94,28 @@ export const RoleBenchmark = () => {
                   className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
                 >
                   {skill.name} <div className="h-2 w-2 rounded-full bg-primary-icon" />
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">Certifications</span>
+                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                  {certifications.length}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {certifications.map((cert) => (
+                <Badge 
+                  key={cert.name}
+                  variant="outline" 
+                  className="rounded-lg px-4 py-2 border-2 bg-white"
+                >
+                  {cert.name}
                 </Badge>
               ))}
             </div>
