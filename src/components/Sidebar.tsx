@@ -1,7 +1,14 @@
-import { LayoutDashboard, Users, LineChart, BookOpen, Store, Settings, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Users, LineChart, BookOpen, Store, Settings, ChevronLeft, ChevronRight, UserCircle, LogOut, Key } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar } from "@/components/ui/avatar";
 
 export const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -24,6 +31,16 @@ export const Sidebar = () => {
     { name: "Talent Marketplace", icon: <Store className="w-5 h-5" />, path: "/marketplace" },
     { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/settings" },
   ];
+
+  const handleLogout = () => {
+    // Add logout functionality here
+    console.log("Logging out...");
+  };
+
+  const handleResetPassword = () => {
+    // Add reset password functionality here
+    console.log("Resetting password...");
+  };
 
   return (
     <div 
@@ -77,6 +94,36 @@ export const Sidebar = () => {
               )}
             </Link>
           ))}
+          
+          <div className="mt-8">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="w-full">
+                <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 transition-colors">
+                  <UserCircle className="w-5 h-5" />
+                  {!isCollapsed && (
+                    <div className="flex items-center justify-between flex-1">
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <img src="https://github.com/shadcn.png" alt="Profile" />
+                        </Avatar>
+                        <span className="font-medium text-foreground">Nadia Pulcova</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={handleResetPassword} className="cursor-pointer">
+                  <Key className="mr-2 h-4 w-4" />
+                  <span>Reset Password</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </nav>
     </div>
