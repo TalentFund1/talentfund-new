@@ -11,11 +11,14 @@ import {
 } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [benchmarkType, setBenchmarkType] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const skills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$160,256", benchmarks: { J: true, B: true, O: true } },
@@ -37,6 +40,20 @@ export const SkillProfileMatrix = () => {
     }
     return 0;
   });
+
+  const totalPages = Math.ceil(skills.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedSkills = skills.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
+    setCurrentPage(1);
+  };
 
   return (
     <div className="space-y-6">
@@ -124,7 +141,7 @@ export const SkillProfileMatrix = () => {
               </tr>
             </thead>
             <tbody>
-              {skills.map((skill) => (
+              {paginatedSkills.map((skill) => (
                 <tr key={skill.title} className="border-t border-border hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
@@ -154,6 +171,45 @@ export const SkillProfileMatrix = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="flex justify-between items-center border-t border-border pt-4">
+          <Select value={String(rowsPerPage)} onValueChange={handleRowsPerPageChange}>
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="10 rows" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10 rows</SelectItem>
+              <SelectItem value="20">20 rows</SelectItem>
+              <SelectItem value="50">50 rows</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <div className="flex items-center gap-2 ml-auto">
+            <span className="text-sm text-muted-foreground">
+              {`${startIndex + 1}-${Math.min(endIndex, skills.length)} of ${skills.length}`}
+            </span>
+            <div className="flex gap-1">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="w-8 h-8"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="w-8 h-8"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
       </Card>
     </div>
