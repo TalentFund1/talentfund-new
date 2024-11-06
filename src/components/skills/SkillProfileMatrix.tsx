@@ -82,6 +82,7 @@ export const SkillProfileMatrix = () => {
                 <SelectItem value="defining">Defining Skills</SelectItem>
                 <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
                 <SelectItem value="necessary">Necessary Skills</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
               </SelectContent>
             </Select>
 
