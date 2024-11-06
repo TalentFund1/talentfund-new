@@ -50,7 +50,7 @@ export const SkillProfileMatrixTable = ({ paginatedSkills }: SkillProfileMatrixT
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">Salary With Skill</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
-              Benchmark
+              Appears In
               <ArrowUp className="h-4 w-4" />
             </div>
           </th>
