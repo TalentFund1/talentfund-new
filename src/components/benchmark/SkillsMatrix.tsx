@@ -91,8 +91,8 @@ export const SkillsMatrix = () => {
                       </TooltipTrigger>
                       <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                         <div className="space-y-2">
-                          <h4 className="font-semibold">Salary with Skill:</h4>
-                          <p className="text-sm text-left">
+                          <h4 className="font-medium">Salary with Skill:</h4>
+                          <p className="text-sm text-left font-normal">
                             Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Lightcast Job Title and the Lightcast Skill
                           </p>
                         </div>
