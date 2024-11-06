@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,17 +21,29 @@ const skills = [
 ];
 
 export const CompetencyMatrix = () => {
+  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+
+  const handleLevelSelect = (level: string) => {
+    setSelectedLevels(prev => 
+      prev.includes(level) 
+        ? prev.filter(l => l !== level)
+        : [...prev, level]
+    );
+  };
+
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-foreground">Competency Levels</h2>
         <div className="flex items-center gap-2">
-          <Select defaultValue="0">
+          <Select defaultValue={selectedLevels.length.toString()}>
             <SelectTrigger className="w-[120px] bg-background">
-              <SelectValue placeholder="0 Selected" />
+              <SelectValue placeholder={`${selectedLevels.length} Selected`} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="0">0 Selected</SelectItem>
+              <SelectItem value={selectedLevels.length.toString()}>
+                {selectedLevels.length} Selected
+              </SelectItem>
             </SelectContent>
           </Select>
           <Button>Save</Button>
@@ -52,7 +64,11 @@ export const CompetencyMatrix = () => {
         <div className="space-y-2">
           {["P3", "P4"].map((level) => (
             <div key={level} className="flex items-center gap-3 bg-background/40 p-2 rounded-lg hover:bg-background/60 transition-colors">
-              <Checkbox className="rounded-sm" />
+              <Checkbox 
+                className="rounded-sm"
+                checked={selectedLevels.includes(`AI Engineer ${level}`)}
+                onCheckedChange={() => handleLevelSelect(`AI Engineer ${level}`)}
+              />
               <span className="text-sm font-medium">AI Engineer</span>
               <Select defaultValue={level}>
                 <SelectTrigger className="w-[80px] bg-white">
