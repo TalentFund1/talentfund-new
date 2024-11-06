@@ -4,7 +4,7 @@ import { LogOut, User } from "lucide-react";
 
 export const Header = () => {
   return (
-    <header className="fixed top-0 right-0 left-16 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
+    <header className="fixed top-0 right-0 left-16 h-16 border-b bg-background/60 backdrop-blur-sm z-50">
       <div className="flex h-16 items-center px-6 justify-end gap-4">
         <Avatar className="h-8 w-8">
           <AvatarImage src="https://github.com/shadcn.png" alt="User" />
