@@ -91,7 +91,7 @@ export const SkillsMatrix = () => {
                       </TooltipTrigger>
                       <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                         <div className="space-y-2">
-                          <h4 className="text-left">Salary with Skill:</h4>
+                          <h4 className="font-medium text-left">Salary with Skill:</h4>
                           <p className="text-sm text-left font-normal">
                             Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill
                           </p>
@@ -105,7 +105,7 @@ export const SkillsMatrix = () => {
           </TableHeader>
           <TableBody>
             {skills.map((skill) => (
-              <TableRow key={skill.title} className="border-t border-border hover:bg-muted/50 transition-colors">
+              <TableRow key={skill.title}>
                 <TableCell className="font-medium border-r border-border">{skill.title}</TableCell>
                 <TableCell>{skill.subcategory}</TableCell>
                 <TableCell className="text-center bg-[#F7F9FF]/50 border-x border-border">
