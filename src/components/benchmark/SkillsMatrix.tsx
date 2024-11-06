@@ -119,14 +119,12 @@ export const SkillsMatrix = () => {
         
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">1-7 of 7</span>
-          <div className="flex gap-1">
-            <Button variant="outline" size="icon" className="w-8 h-8">
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="w-8 h-8">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+          <Button variant="outline" size="icon" className="w-8 h-8">
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon" className="w-8 h-8">
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>
