@@ -1,14 +1,10 @@
-import {
-  Table,
-  TableBody,
-} from "@/components/ui/table";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody } from "@/components/ui/table";
 import { useState, useMemo } from "react";
 import { SkillGrowthSheet } from "./skills/SkillGrowthSheet";
 import { SkillTableHeader } from "./skills/SkillTableHeader";
 import { SkillTableRow } from "./skills/SkillTableRow";
+import { SkillsTableFilter } from "./skills/SkillsTableFilter";
+import { SkillsTablePagination } from "./skills/SkillsTablePagination";
 
 const skills = [
   {
@@ -91,34 +87,13 @@ export const SkillsTable = () => {
     setSheetOpen(true);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (value: string) => {
-    setRowsPerPage(Number(value));
-    setCurrentPage(1);
-  };
-
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-2xl border border-border shadow-sm">
-        <div className="px-6 py-4 border-b border-border">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
-            <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Skills" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Skills</SelectItem>
-                <SelectItem value="specialized">Specialized Skills</SelectItem>
-                <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certification</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <SkillsTableFilter 
+          selectedFilter={selectedFilter}
+          onFilterChange={setSelectedFilter}
+        />
         
         <div className="px-4">
           <Table>
@@ -135,44 +110,17 @@ export const SkillsTable = () => {
           </Table>
         </div>
         
-        <div className="flex justify-between items-center px-6 py-4 border-t border-border">
-          <div className="flex items-center gap-2">
-            <Select value={String(rowsPerPage)} onValueChange={handleRowsPerPageChange}>
-              <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="10 rows" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10 rows</SelectItem>
-                <SelectItem value="20">20 rows</SelectItem>
-                <SelectItem value="50">50 rows</SelectItem>
-              </SelectContent>
-            </Select>
-            <span className="text-sm text-muted-foreground ml-4">
-              {`${(currentPage - 1) * rowsPerPage + 1}-${Math.min(currentPage * rowsPerPage, filteredSkills.length)} of ${filteredSkills.length}`}
-            </span>
-          </div>
-          
-          <div className="flex gap-1">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="w-8 h-8"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="w-8 h-8"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+        <SkillsTablePagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          rowsPerPage={rowsPerPage}
+          totalItems={filteredSkills.length}
+          onPageChange={setCurrentPage}
+          onRowsPerPageChange={(value) => {
+            setRowsPerPage(Number(value));
+            setCurrentPage(1);
+          }}
+        />
       </div>
 
       {selectedSkill && (
