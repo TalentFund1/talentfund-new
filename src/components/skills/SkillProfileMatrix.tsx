@@ -27,13 +27,13 @@ export const SkillProfileMatrix = () => {
     { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$158,208", benchmarks: { J: true, B: true, O: true } }
   ].sort((a, b) => {
     if (sortBy === "jobDescription") {
-      return b.benchmarks.J - a.benchmarks.J;
+      return Number(b.benchmarks.J) - Number(a.benchmarks.J);
     }
     if (sortBy === "benchmark") {
-      return b.benchmarks.B - a.benchmarks.B;
+      return Number(b.benchmarks.B) - Number(a.benchmarks.B);
     }
     if (sortBy === "occupation") {
-      return b.benchmarks.O - a.benchmarks.O;
+      return Number(b.benchmarks.O) - Number(a.benchmarks.O);
     }
     return 0;
   });
