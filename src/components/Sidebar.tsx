@@ -80,7 +80,6 @@ export const Sidebar = () => {
         </div>
 
         <div className="space-y-1">
-          <Separator className="my-4" />
           {secondaryMenuItems.map((item) => (
             <Link
               key={item.name}
