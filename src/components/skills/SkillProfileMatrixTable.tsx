@@ -18,11 +18,11 @@ export const SkillProfileMatrixTable = ({ paginatedSkills }: SkillProfileMatrixT
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-3 px-4 font-medium w-[25%]">Skill Title</th>
-          <th className="py-3 px-4 font-medium w-[30%]">Subcategory</th>
-          <th className="py-3 px-4 font-medium text-center w-[15%]">Projected Growth</th>
-          <th className="py-3 px-4 font-medium text-center w-[15%]">Salary With Skill</th>
-          <th className="py-3 px-4 font-medium text-center w-[15%]">Benchmark</th>
+          <th className="py-2 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
+          <th className="py-2 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
+          <th className="py-2 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">Projected Growth</th>
+          <th className="py-2 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">Salary With Skill</th>
+          <th className="py-2 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">Benchmark</th>
         </tr>
       </thead>
       <tbody>
