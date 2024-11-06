@@ -85,34 +85,69 @@ export const SkillsOverview = () => {
   };
 
   return (
-    <Card className="p-6 animate-fade-in border-border border bg-white">
-      <h2 className="text-xl font-semibold text-foreground mb-2">Skills Distribution</h2>
-      <p className="text-sm text-secondary-foreground mb-6">
-        Here you can find an overview of skills in your organization, categorized into three levels. Check the Employee tab to explore further.
-      </p>
+    <Card className="p-8 animate-fade-in border-border border bg-white shadow-sm hover:shadow-md transition-all">
+      <div className="space-y-4 mb-8">
+        <h2 className="text-2xl font-semibold text-foreground tracking-tight">Skills Distribution</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+          Here you can find an overview of skills in your organization, categorized into three levels. 
+          Check the Employee tab to explore further.
+        </p>
+      </div>
 
-      <Tabs defaultValue="category" className="w-full mb-6" onValueChange={(value) => setSelectedView(value as "category" | "subcategory" | "skill")}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="category">Category</TabsTrigger>
-          <TabsTrigger value="subcategory">Subcategory</TabsTrigger>
-          <TabsTrigger value="skill">Skill Title</TabsTrigger>
+      <Tabs 
+        defaultValue="category" 
+        className="w-full mb-8" 
+        onValueChange={(value) => setSelectedView(value as "category" | "subcategory" | "skill")}
+      >
+        <TabsList className="grid w-full grid-cols-3 bg-muted/20">
+          <TabsTrigger 
+            value="category"
+            className="data-[state=active]:bg-white data-[state=active]:text-primary-accent data-[state=active]:shadow-sm"
+          >
+            Category
+          </TabsTrigger>
+          <TabsTrigger 
+            value="subcategory"
+            className="data-[state=active]:bg-white data-[state=active]:text-primary-accent data-[state=active]:shadow-sm"
+          >
+            Subcategory
+          </TabsTrigger>
+          <TabsTrigger 
+            value="skill"
+            className="data-[state=active]:bg-white data-[state=active]:text-primary-accent data-[state=active]:shadow-sm"
+          >
+            Skill Title
+          </TabsTrigger>
         </TabsList>
       </Tabs>
 
-      <div className="h-[400px]">
+      <div className="h-[400px] bg-background/40 p-4 rounded-lg">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getChartData()} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
-            <XAxis dataKey="name" />
-            <YAxis />
+            <CartesianGrid strokeDasharray="3 3" className="stroke-border/30" />
+            <XAxis 
+              dataKey="name" 
+              tick={{ fill: '#1F2144', fontSize: 12 }}
+              tickLine={{ stroke: '#CCDBFF' }}
+            />
+            <YAxis 
+              tick={{ fill: '#1F2144', fontSize: 12 }}
+              tickLine={{ stroke: '#CCDBFF' }}
+              axisLine={{ stroke: '#CCDBFF' }}
+            />
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-white p-2 border border-border rounded shadow-sm">
-                      <p className="font-medium">{data.name}</p>
-                      <p className="text-sm font-medium">Proficiency: {data.proficiency}%</p>
+                    <div className="bg-white p-4 border border-border rounded-lg shadow-lg">
+                      <p className="font-medium text-foreground mb-2">{data.name}</p>
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-primary-accent" />
+                        <p className="text-sm font-medium">
+                          Proficiency: {data.proficiency}%
+                        </p>
+                      </div>
                     </div>
                   );
                 }
@@ -124,6 +159,7 @@ export const SkillsOverview = () => {
               fill="#8073ec"
               radius={[4, 4, 0, 0]}
               barSize={40}
+              className="hover:opacity-80 transition-opacity"
             />
           </BarChart>
         </ResponsiveContainer>
