@@ -1,4 +1,5 @@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
+import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const SkillProfileTable = () => {
@@ -37,51 +38,51 @@ export const SkillProfileTable = () => {
           <TableCell className="text-center align-middle">0</TableCell>
           <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
         </TableRow>
-                <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
-                  <TableCell className="align-middle">
-                    <input type="checkbox" className="rounded border-gray-300" />
-                  </TableCell>
-                  <TableCell className="align-middle font-medium">
-                    <Link to="/skills/backend-engineer" className="text-primary hover:underline">
-                      Backend Engineer
-                    </Link>
-                  </TableCell>
-                  <TableCell className="align-middle">Engineering</TableCell>
-                  <TableCell className="text-center align-middle">12</TableCell>
-                  <TableCell className="text-center align-middle">3</TableCell>
-                  <TableCell className="text-center align-middle">4</TableCell>
-                  <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
-                </TableRow>
-                <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
-                  <TableCell className="align-middle">
-                    <input type="checkbox" className="rounded border-gray-300" />
-                  </TableCell>
-                  <TableCell className="align-middle font-medium">
-                    <Link to="/skills/frontend-engineer" className="text-primary hover:underline">
-                      Frontend Engineer
-                    </Link>
-                  </TableCell>
-                  <TableCell className="align-middle">Engineering</TableCell>
-                  <TableCell className="text-center align-middle">17</TableCell>
-                  <TableCell className="text-center align-middle">0</TableCell>
-                  <TableCell className="text-center align-middle">5</TableCell>
-                  <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
-                </TableRow>
-                <TableRow className="h-16 hover:bg-muted/50 transition-colors">
-                  <TableCell className="align-middle">
-                    <input type="checkbox" className="rounded border-gray-300" />
-                  </TableCell>
-                  <TableCell className="align-middle font-medium">
-                    <Link to="/skills/engineering-manager" className="text-primary hover:underline">
-                      Engineering Manager
-                    </Link>
-                  </TableCell>
-                  <TableCell className="align-middle">Engineering</TableCell>
-                  <TableCell className="text-center align-middle">11</TableCell>
-                  <TableCell className="text-center align-middle">2</TableCell>
-                  <TableCell className="text-center align-middle">5</TableCell>
-                  <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
-                </TableRow>
+        <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+          <TableCell className="align-middle">
+            <input type="checkbox" className="rounded border-gray-300" />
+          </TableCell>
+          <TableCell className="align-middle font-medium">
+            <Link to="/skills/backend-engineer" className="text-primary hover:underline">
+              Backend Engineer
+            </Link>
+          </TableCell>
+          <TableCell className="align-middle">Engineering</TableCell>
+          <TableCell className="text-center align-middle">12</TableCell>
+          <TableCell className="text-center align-middle">3</TableCell>
+          <TableCell className="text-center align-middle">4</TableCell>
+          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
+        </TableRow>
+        <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+          <TableCell className="align-middle">
+            <input type="checkbox" className="rounded border-gray-300" />
+          </TableCell>
+          <TableCell className="align-middle font-medium">
+            <Link to="/skills/frontend-engineer" className="text-primary hover:underline">
+              Frontend Engineer
+            </Link>
+          </TableCell>
+          <TableCell className="align-middle">Engineering</TableCell>
+          <TableCell className="text-center align-middle">17</TableCell>
+          <TableCell className="text-center align-middle">0</TableCell>
+          <TableCell className="text-center align-middle">5</TableCell>
+          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
+        </TableRow>
+        <TableRow className="h-16 hover:bg-muted/50 transition-colors">
+          <TableCell className="align-middle">
+            <input type="checkbox" className="rounded border-gray-300" />
+          </TableCell>
+          <TableCell className="align-middle font-medium">
+            <Link to="/skills/engineering-manager" className="text-primary hover:underline">
+              Engineering Manager
+            </Link>
+          </TableCell>
+          <TableCell className="align-middle">Engineering</TableCell>
+          <TableCell className="text-center align-middle">11</TableCell>
+          <TableCell className="text-center align-middle">2</TableCell>
+          <TableCell className="text-center align-middle">5</TableCell>
+          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
+        </TableRow>
       </TableBody>
     </Table>
   );
