@@ -86,6 +86,7 @@ export const CompetencyMatrix = () => {
       <Separator className="my-4 border-border" />
 
       <div>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Competency Matrix</h3>
         <div className="border border-border rounded-lg overflow-hidden">
           <div className="grid grid-cols-3 gap-4 p-3 bg-[#F7F9FF] border-b border-border">
             <div className="flex items-center gap-2">
