@@ -136,41 +136,41 @@ export const SkillsTable = () => {
         </div>
         
         <div className="flex justify-between items-center px-6 py-4 border-t border-border">
-          <Select value={String(rowsPerPage)} onValueChange={handleRowsPerPageChange}>
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="10 rows" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10 rows</SelectItem>
-              <SelectItem value="20">20 rows</SelectItem>
-              <SelectItem value="50">50 rows</SelectItem>
-            </SelectContent>
-          </Select>
-          
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">
+            <Select value={String(rowsPerPage)} onValueChange={handleRowsPerPageChange}>
+              <SelectTrigger className="w-[100px]">
+                <SelectValue placeholder="10 rows" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10 rows</SelectItem>
+                <SelectItem value="20">20 rows</SelectItem>
+                <SelectItem value="50">50 rows</SelectItem>
+              </SelectContent>
+            </Select>
+            <span className="text-sm text-muted-foreground ml-4">
               {`${(currentPage - 1) * rowsPerPage + 1}-${Math.min(currentPage * rowsPerPage, filteredSkills.length)} of ${filteredSkills.length}`}
             </span>
-            <div className="flex gap-1">
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="w-8 h-8"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="w-8 h-8"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+          </div>
+          
+          <div className="flex gap-1">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="w-8 h-8"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="w-8 h-8"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>

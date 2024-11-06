@@ -1,18 +1,20 @@
-import {
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { TableHeader, TableHead, TableRow } from "@/components/ui/table";
+import { ChevronDown } from "lucide-react";
 
-export const SkillTableHeader = () => (
-  <TableHeader>
-    <TableRow className="hover:bg-transparent">
-      <TableHead className="w-[200px] border-r border-border">Skill Title</TableHead>
-      <TableHead className="w-[250px]">Subcategory</TableHead>
-      <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Beginner</TableHead>
-      <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Intermediate</TableHead>
-      <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Advanced</TableHead>
-      <TableHead className="w-[150px] text-center">Projected Growth</TableHead>
-    </TableRow>
-  </TableHeader>
-);
+export const SkillTableHeader = () => {
+  return (
+    <TableHeader>
+      <TableRow className="hover:bg-transparent">
+        <TableHead className="w-[30%]">
+          <div className="flex items-center gap-1">
+            Skill Title <ChevronDown className="h-4 w-4" />
+          </div>
+        </TableHead>
+        <TableHead className="w-[30%]">Subcategory</TableHead>
+        <TableHead className="w-[13.33%] text-center">Beginner</TableHead>
+        <TableHead className="w-[13.33%] text-center">Intermediate</TableHead>
+        <TableHead className="w-[13.33%] text-center">Advanced</TableHead>
+      </TableRow>
+    </TableHeader>
+  );
+};
