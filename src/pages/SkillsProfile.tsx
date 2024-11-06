@@ -103,64 +103,64 @@ const SkillsProfile = () => {
               </TableHeader>
               <TableBody>
                 <TableRow>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <Link to="/skills/ai-engineer" className="text-[#1F2144] hover:underline cursor-pointer font-medium">
                       AI Engineer
                     </Link>
                   </TableCell>
-                  <TableCell>Engineering</TableCell>
-                  <TableCell className="text-center">16</TableCell>
-                  <TableCell className="text-center">2</TableCell>
-                  <TableCell className="text-center">0</TableCell>
-                  <TableCell className="text-right">10/20/24</TableCell>
+                  <TableCell className="py-4">Engineering</TableCell>
+                  <TableCell className="py-4 text-center">16</TableCell>
+                  <TableCell className="py-4 text-center">2</TableCell>
+                  <TableCell className="py-4 text-center">0</TableCell>
+                  <TableCell className="py-4 text-right">10/20/24</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <Link to="/skills/backend-engineer" className="text-[#1F2144] hover:underline cursor-pointer font-medium">
                       Backend Engineer
                     </Link>
                   </TableCell>
-                  <TableCell>Engineering</TableCell>
-                  <TableCell className="text-center">12</TableCell>
-                  <TableCell className="text-center">3</TableCell>
-                  <TableCell className="text-center">4</TableCell>
-                  <TableCell className="text-right">10/20/24</TableCell>
+                  <TableCell className="py-4">Engineering</TableCell>
+                  <TableCell className="py-4 text-center">12</TableCell>
+                  <TableCell className="py-4 text-center">3</TableCell>
+                  <TableCell className="py-4 text-center">4</TableCell>
+                  <TableCell className="py-4 text-right">10/20/24</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <Link to="/skills/frontend-engineer" className="text-[#1F2144] hover:underline cursor-pointer font-medium">
                       Frontend Engineer
                     </Link>
                   </TableCell>
-                  <TableCell>Engineering</TableCell>
-                  <TableCell className="text-center">17</TableCell>
-                  <TableCell className="text-center">0</TableCell>
-                  <TableCell className="text-center">5</TableCell>
-                  <TableCell className="text-right">10/20/24</TableCell>
+                  <TableCell className="py-4">Engineering</TableCell>
+                  <TableCell className="py-4 text-center">17</TableCell>
+                  <TableCell className="py-4 text-center">0</TableCell>
+                  <TableCell className="py-4 text-center">5</TableCell>
+                  <TableCell className="py-4 text-right">10/20/24</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <input type="checkbox" className="rounded border-gray-300" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <Link to="/skills/engineering-manager" className="text-[#1F2144] hover:underline cursor-pointer font-medium">
                       Engineering Manager
                     </Link>
                   </TableCell>
-                  <TableCell>Engineering</TableCell>
-                  <TableCell className="text-center">11</TableCell>
-                  <TableCell className="text-center">2</TableCell>
-                  <TableCell className="text-center">5</TableCell>
-                  <TableCell className="text-right">10/20/24</TableCell>
+                  <TableCell className="py-4">Engineering</TableCell>
+                  <TableCell className="py-4 text-center">11</TableCell>
+                  <TableCell className="py-4 text-center">2</TableCell>
+                  <TableCell className="py-4 text-center">5</TableCell>
+                  <TableCell className="py-4 text-right">10/20/24</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
