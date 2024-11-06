@@ -46,8 +46,8 @@ export const CompetencyMatrix = () => {
               </SelectItem>
             </SelectContent>
           </Select>
-          <Button>Save</Button>
           <Button variant="outline">Cancel</Button>
+          <Button>Save</Button>
         </div>
       </div>
 
