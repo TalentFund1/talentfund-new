@@ -1,8 +1,14 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
 import { SkillLevelIcon } from "../skills/SkillLevelIcon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const skills = [
   {
@@ -75,7 +81,23 @@ export const SkillsMatrix = () => {
               <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Beginner</TableHead>
               <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Intermediate</TableHead>
               <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Advanced</TableHead>
-              <TableHead className="w-[150px] text-center">Projected Growth</TableHead>
+              <TableHead className="w-[150px] text-center">
+                <div className="flex items-center justify-center gap-1">
+                  Projected Growth
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                        <p className="text-sm text-left">
+                          Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Lightcast Skill
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
