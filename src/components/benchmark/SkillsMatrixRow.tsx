@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 
 interface SkillsMatrixRowProps {
@@ -26,15 +26,27 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
     }
   };
 
+  // Function to determine if a skill is a company skill
+  const isCompanySkill = (skillTitle: string) => {
+    const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
+    return !nonCompanySkills.includes(skillTitle);
+  };
+
   return (
     <TableRow className="group hover:bg-muted/50 border-b border-gray-200 transition-colors">
       <TableCell className="font-medium border-r border-blue-200 py-2 group-hover:bg-muted/30">{skill.title}</TableCell>
       <TableCell className="border-r border-blue-200 py-2 group-hover:bg-muted/30">{skill.subcategory}</TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2 group-hover:bg-muted/30">
         <div className="flex justify-center">
-          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-            <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
-          </div>
+          {isCompanySkill(skill.title) ? (
+            <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+              <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
+            </div>
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+              <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
+            </div>
+          )}
         </div>
       </TableCell>
       <SkillLevelCell initialLevel={skill.level} />
