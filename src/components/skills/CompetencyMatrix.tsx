@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
 import { CompetencyMatrixHeader } from "./CompetencyMatrixHeader";
 import { CompetencyLevels } from "./CompetencyLevels";
 import { SkillsGrid } from "./SkillsGrid";
@@ -89,10 +88,10 @@ export const CompetencyMatrix = () => {
             <button
               key={category.id}
               onClick={() => handleCategorySelect(category.id)}
-              className={`rounded-lg p-4 transition-colors border border-border ${
+              className={`rounded-lg p-4 transition-colors ${
                 selectedCategory === category.id
-                  ? 'bg-primary-accent/5 border-primary-accent'
-                  : 'bg-background hover:border-primary-accent/50'
+                  ? 'bg-primary-accent/5 border border-primary-accent'
+                  : 'bg-background border border-input hover:border-primary-accent/50'
               }`}
             >
               <div className="flex flex-col items-start">
