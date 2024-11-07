@@ -1,6 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
 import { CategorySelect } from "./competency/CategorySelect";
@@ -17,7 +16,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   });
 
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
-  const [skillsData, setSkillsData] = useState(skillsByCategory);
 
   useEffect(() => {
     setCurrentTrack(track);
@@ -28,29 +26,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   }, [selectedCategory]);
 
   const getSkillsForCategory = () => {
-    const categoryData = skillsData[selectedCategory as keyof typeof skillsData];
+    const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
     return currentTrack === "Professional" ? categoryData.professional : categoryData.managerial;
-  };
-
-  const handleSkillUpdate = (skillName: string, level: string, field: 'level' | 'required', newValue: string) => {
-    setSkillsData(prevData => {
-      const newData = { ...prevData };
-      const categoryData = newData[selectedCategory as keyof typeof skillsData];
-      const trackData = currentTrack === "Professional" ? categoryData.professional : categoryData.managerial;
-      
-      Object.keys(trackData).forEach(levelKey => {
-        const skills = trackData[levelKey];
-        const skillIndex = skills.findIndex(s => s.name === skillName && s.level === level);
-        if (skillIndex !== -1) {
-          skills[skillIndex] = {
-            ...skills[skillIndex],
-            [field]: newValue
-          };
-        }
-      });
-
-      return newData;
-    });
   };
 
   const skills = getSkillsForCategory();
@@ -105,49 +82,13 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
                 <TableCell className="font-medium border-r border-border">
                   {skillName}
                 </TableCell>
-                {levels.map((level, index) => {
-                  const details = getSkillDetails(skillName, level);
-                  return (
-                    <TableCell 
-                      key={level}
-                      className={`text-center p-2 align-middle ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
-                    >
-                      {details.level !== "-" ? (
-                        <div className="flex flex-col items-center gap-2">
-                          <Select 
-                            defaultValue={details.level.toLowerCase()}
-                            onValueChange={(value) => handleSkillUpdate(skillName, details.level, 'level', value)}
-                          >
-                            <SelectTrigger className="w-[140px] bg-white border-border">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="advanced">Advanced</SelectItem>
-                              <SelectItem value="intermediate">Intermediate</SelectItem>
-                              <SelectItem value="beginner">Beginner</SelectItem>
-                              <SelectItem value="unspecified">Unspecified</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Select 
-                            defaultValue={details.required.toLowerCase()}
-                            onValueChange={(value) => handleSkillUpdate(skillName, details.level, 'required', value)}
-                          >
-                            <SelectTrigger className="w-[140px] bg-white border-border">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="required">Required</SelectItem>
-                              <SelectItem value="preferred">Preferred</SelectItem>
-                              <SelectItem value="unspecified">Unspecified</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground/30">-</span>
-                      )}
-                    </TableCell>
-                  );
-                })}
+                {levels.map((level, index) => (
+                  <SkillCell 
+                    key={level}
+                    details={getSkillDetails(skillName, level)}
+                    isLastColumn={index === levels.length - 1}
+                  />
+                ))}
               </TableRow>
             ))}
           </TableBody>
