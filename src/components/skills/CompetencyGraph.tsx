@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
 import { CategoryCards } from "./competency/CategoryCards";
@@ -55,28 +56,39 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
-          <div className="flex items-center gap-2">
-            <div className="text-sm text-muted-foreground mr-2">Track:</div>
-            <Select value={currentTrack} onValueChange={handleTrackChange}>
-              <SelectTrigger className="w-[180px] bg-white border-border">
-                <SelectValue placeholder="Select track" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Professional">Professional</SelectItem>
-                <SelectItem value="Managerial">Managerial</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
+        <div className="flex items-center gap-2">
+          <Button variant="outline">Cancel</Button>
+          <Button>Save</Button>
         </div>
-        <Separator className="my-4" />
-        <CategoryCards 
-          selectedCategory={selectedCategory} 
-          onCategoryChange={setSelectedCategory}
-        />
       </div>
+      
+      <div className="flex items-center gap-4 mb-4">
+        <div className="flex items-center gap-2">
+          <div className="text-sm text-muted-foreground">Track:</div>
+          <Select value={currentTrack} onValueChange={handleTrackChange}>
+            <SelectTrigger className="w-[180px] bg-white border-border">
+              <SelectValue placeholder="Select track" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Professional">Professional</SelectItem>
+              <SelectItem value="Managerial">Managerial</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <Separator className="my-4" />
+      
+      <div className="mb-6">
+        <h3 className="text-lg font-medium text-foreground">AI Engineer</h3>
+      </div>
+
+      <CategoryCards 
+        selectedCategory={selectedCategory} 
+        onCategoryChange={setSelectedCategory}
+      />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
         <Table>
