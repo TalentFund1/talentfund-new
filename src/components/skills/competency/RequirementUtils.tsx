@@ -13,7 +13,7 @@ export const getRequirementStyles = (requirement: string, level: string) => {
     return 'invisible h-[22px]';
   }
 
-  const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-0';
+  const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
   
   switch (requirement.toLowerCase()) {
     case 'required':
@@ -21,7 +21,7 @@ export const getRequirementStyles = (requirement: string, level: string) => {
     case 'preferred':
       return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
     case 'unspecified':
-      return `${baseStyles} bg-gray-50/50 border-x-2 border-b-2 rounded-b-md border-gray-200`;
+      return `${baseStyles} bg-transparent border-x border-b rounded-b-md border-gray-200`;
     default:
       return `${baseStyles} bg-transparent`;
   }
