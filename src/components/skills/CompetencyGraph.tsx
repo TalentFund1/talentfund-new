@@ -83,26 +83,26 @@ const managerialSkills: SkillLevels = {
 const getLevelStyles = (level: string) => {
   switch (level.toLowerCase()) {
     case 'advanced':
-      return 'bg-primary-accent/10 text-primary-accent font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
+      return 'bg-primary-accent/10 text-primary-accent font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
     case 'intermediate':
-      return 'bg-primary-icon/10 text-primary-icon font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
+      return 'bg-primary-icon/10 text-primary-icon font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
     case 'beginner':
-      return 'bg-[#008000]/10 text-[#008000] font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
+      return 'bg-[#008000]/10 text-[#008000] font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
     case 'unspecified':
-      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
+      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
     default:
-      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
+      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
   }
 };
 
 const getRequirementStyles = (requirement: string) => {
   switch (requirement.toLowerCase()) {
     case 'required':
-      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px] uppercase';
+      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px] capitalize';
     case 'preferred':
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px] uppercase';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px] capitalize';
     default:
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px] uppercase';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px] capitalize';
   }
 };
 
@@ -189,4 +189,5 @@ export const CompetencyGraph = () => {
     </div>
   );
 };
+
 
