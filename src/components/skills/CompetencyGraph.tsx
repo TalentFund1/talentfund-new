@@ -1,9 +1,8 @@
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
+import { SkillCell } from "./competency/SkillCell";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState, useEffect } from "react";
-import { CompetencyTableHeader } from "./competency/CompetencyTableHeader";
-import { CompetencySkillCell } from "./competency/CompetencySkillCell";
-import { columnStyles } from "./competency/CompetencyStyles";
 
 type Skill = {
   name: string;
@@ -221,21 +220,33 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
             </SelectContent>
           </Select>
         </div>
+        <Separator className="my-4" />
       </div>
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
         <Table>
-          <CompetencyTableHeader levels={levels} />
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-[200px] font-semibold bg-background/80 border-r border-border">Skill</TableHead>
+              {levels.map((level, index) => (
+                <TableHead 
+                  key={level} 
+                  className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
+                >
+                  <div className="font-semibold">{level}</div>
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
           <TableBody>
             {uniqueSkills.map((skillName) => (
               <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
-                <TableCell className={`font-medium border-r border-border ${columnStyles.skillColumn}`}>
-                  {skillName}
-                </TableCell>
-                {levels.map((level) => (
-                  <CompetencySkillCell
-                    key={`${skillName}-${level}`}
+                <TableCell className="font-medium border-r border-border">{skillName}</TableCell>
+                {levels.map((level, index) => (
+                  <SkillCell 
+                    key={level}
                     details={getSkillDetails(skillName, level)}
+                    isLastColumn={index === levels.length - 1}
                   />
                 ))}
               </TableRow>
