@@ -87,6 +87,12 @@ export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <CompetencyMatrixHeader selectedLevels={selectedLevels} />
       
+      <CompetencyLevels 
+        selectedLevels={selectedLevels}
+        onLevelSelect={handleLevelSelect}
+        onTrackChange={handleTrackChange}
+      />
+
       <div>
         <div className="grid grid-cols-4 gap-4 mb-6">
           {skillCategories.map((category) => (
@@ -114,15 +120,9 @@ export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
             </button>
           ))}
         </div>
+
+        <SkillsGrid currentSkills={currentSkills} />
       </div>
-
-      <CompetencyLevels 
-        selectedLevels={selectedLevels}
-        onLevelSelect={handleLevelSelect}
-        onTrackChange={handleTrackChange}
-      />
-
-      <SkillsGrid currentSkills={currentSkills} />
     </div>
   );
 };
