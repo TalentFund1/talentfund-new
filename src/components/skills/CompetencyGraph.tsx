@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
+import { Check, Heart, Circle } from "lucide-react";
 
 type Skill = {
   name: string;
@@ -98,17 +99,28 @@ const getLevelStyles = (level: string) => {
 const getRequirementStyles = (requirement: string) => {
   switch (requirement.toLowerCase()) {
     case 'required':
-      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px]';
+      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px] flex items-center justify-center gap-1';
     case 'preferred':
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px]';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px] flex items-center justify-center gap-1';
     default:
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px]';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px] flex items-center justify-center gap-1';
+  }
+};
+
+const getRequirementIcon = (requirement: string) => {
+  switch (requirement.toLowerCase()) {
+    case 'required':
+      return <Check className="h-3 w-3" />;
+    case 'preferred':
+      return <Heart className="h-3 w-3" />;
+    default:
+      return <Circle className="h-3 w-3" />;
   }
 };
 
 export const CompetencyGraph = () => {
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
-  
+
   const skills = track === "Professional" ? professionalSkills : managerialSkills;
   const levels = track === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
@@ -172,7 +184,8 @@ export const CompetencyGraph = () => {
                             {details.level}
                           </div>
                           <div className={getRequirementStyles(details.required)}>
-                            {details.required}
+                            {getRequirementIcon(details.required)}
+                            <span>{details.required}</span>
                           </div>
                         </div>
                       ) : (
@@ -189,5 +202,3 @@ export const CompetencyGraph = () => {
     </div>
   );
 };
-
-
