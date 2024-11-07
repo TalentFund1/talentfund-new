@@ -75,7 +75,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
   const getRequirementIcon = (requirement: string) => {
     switch (requirement.toLowerCase()) {
       case 'required':
-        return '✓';
+        return '✓ '; // Added space after the checkmark
       case 'preferred':
         return <Heart className="w-3 h-3" />;
       default:
