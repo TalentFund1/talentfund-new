@@ -21,10 +21,9 @@ const skills = [
 ];
 
 const skillCategories = [
-  { id: "web-services", name: "Web Services", count: 5 },
-  { id: "ai-ml", name: "Artificial Intelligence and Machine Learning", count: 8 },
-  { id: "nlp", name: "Natural Language Processing (NLP)", count: 3 },
-  { id: "dev-tools", name: "Software Development Tools", count: 6 }
+  { id: "specialized", name: "Specialized Skills", count: 15 },
+  { id: "common", name: "Common Skills", count: 10 },
+  { id: "certification", name: "Certification", count: 3 }
 ];
 
 export const CompetencyMatrix = () => {
@@ -97,7 +96,7 @@ export const CompetencyMatrix = () => {
         {/* Skill Categories Section */}
         <div className="mb-6">
           <h3 className="text-sm font-medium text-muted-foreground mb-3">Skill Categories</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             {skillCategories.map((category) => (
               <button
                 key={category.id}
