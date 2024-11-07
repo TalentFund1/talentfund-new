@@ -43,15 +43,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
               {row.map((level) => (
                 <div key={level} className="flex items-center gap-3 bg-background/40 p-2 rounded-lg hover:bg-background/60 transition-colors">
                   <RadioGroupItem value={`AI Engineer ${level}`} id={level} />
-                  <Label htmlFor={level} className="text-sm font-medium">AI Engineer</Label>
-                  <Select defaultValue={level}>
-                    <SelectTrigger className="w-[80px] bg-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={level}>{level}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor={level} className="text-sm font-medium">AI Engineer {level}</Label>
                 </div>
               ))}
             </React.Fragment>
