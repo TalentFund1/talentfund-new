@@ -15,11 +15,11 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
       className={`text-center p-3 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
     >
       {details.level !== "-" ? (
-        <div className="flex flex-col items-center gap-0.5">
-          <div className={`${getLevelStyles(details.level)} min-w-[100px]`}>
+        <div className="flex flex-col items-center gap-0">
+          <div className={`${getLevelStyles(details.level)} min-w-[120px]`}>
             {details.level}
           </div>
-          <div className={`${getRequirementStyles(details.required, details.level)} min-w-[100px]`}>
+          <div className={`${getRequirementStyles(details.required, details.level)} min-w-[120px]`}>
             {getRequirementIcon(details.required)}
             <span>{details.required}</span>
           </div>
