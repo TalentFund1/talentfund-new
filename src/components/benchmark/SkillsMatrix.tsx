@@ -75,7 +75,7 @@ const skills = [
 
 export const SkillsMatrix = () => {
   return (
-    <div className="space-y-6 bg-white rounded-lg border border-blue-200 p-6">
+    <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
         <Select defaultValue="all">
@@ -95,19 +95,19 @@ export const SkillsMatrix = () => {
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-[180px] border-r border-blue-200 bg-white">Skill Title</TableHead>
-              <TableHead className="w-[220px] border-r border-blue-200 bg-white">Subcategory</TableHead>
-              <TableHead className="text-center border-x border-blue-200 w-[100px] bg-white">Unspecified</TableHead>
-              <TableHead className="text-center border-x border-blue-200 w-[100px] bg-white">Beginner</TableHead>
-              <TableHead className="text-center border-x border-blue-200 w-[100px] bg-white">Intermediate</TableHead>
-              <TableHead className="text-center border-x border-blue-200 w-[100px] bg-white">Advanced</TableHead>
-              <TableHead className="w-[120px] text-center border-r border-blue-200 bg-white">
+              <TableHead className="w-[180px] border-r border-blue-200">Skill Title</TableHead>
+              <TableHead className="w-[220px] border-r border-blue-200">Subcategory</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[100px]">Unspecified</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[100px]">Beginner</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[100px]">Intermediate</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[100px]">Advanced</TableHead>
+              <TableHead className="w-[120px] text-center border-r border-blue-200">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                        <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                       </TooltipTrigger>
                       <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                         <div className="space-y-2">
@@ -125,22 +125,22 @@ export const SkillsMatrix = () => {
           </TableHeader>
           <TableBody>
             {skills.map((skill) => (
-              <TableRow key={skill.title}>
-                <TableCell className="font-medium border-r border-blue-200 bg-white">{skill.title}</TableCell>
-                <TableCell className="border-r border-blue-200 bg-white">{skill.subcategory}</TableCell>
-                <TableCell className="text-center border-x border-blue-200 bg-white">
+              <TableRow key={skill.title} className="hover:bg-muted/50">
+                <TableCell className="font-medium border-r border-blue-200">{skill.title}</TableCell>
+                <TableCell className="border-r border-blue-200">{skill.subcategory}</TableCell>
+                <TableCell className="text-center border-r border-blue-200">
                   {skill.level === "unspecified" && <SkillLevelIcon level="unspecified" />}
                 </TableCell>
-                <TableCell className="text-center border-x border-blue-200 bg-white">
+                <TableCell className="text-center border-r border-blue-200">
                   {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
                 </TableCell>
-                <TableCell className="text-center border-x border-blue-200 bg-white">
+                <TableCell className="text-center border-r border-blue-200">
                   {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
                 </TableCell>
-                <TableCell className="text-center border-x border-blue-200 bg-white">
+                <TableCell className="text-center border-r border-blue-200">
                   {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
                 </TableCell>
-                <TableCell className="text-center border-r border-blue-200 bg-white">
+                <TableCell className="text-center border-r border-blue-200">
                   <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
                     skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
                   }`}>
