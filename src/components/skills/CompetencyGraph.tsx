@@ -83,26 +83,26 @@ const managerialSkills: SkillLevels = {
 const getLevelStyles = (level: string) => {
   switch (level.toLowerCase()) {
     case 'advanced':
-      return 'bg-primary-accent/10 text-primary-accent font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
+      return 'bg-primary-accent/10 text-primary-accent font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
     case 'intermediate':
-      return 'bg-primary-icon/10 text-primary-icon font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
+      return 'bg-primary-icon/10 text-primary-icon font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
     case 'beginner':
-      return 'bg-[#008000]/10 text-[#008000] font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
+      return 'bg-[#008000]/10 text-[#008000] font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
     case 'unspecified':
-      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
+      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
     default:
-      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
+      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full uppercase';
   }
 };
 
 const getRequirementStyles = (requirement: string) => {
   switch (requirement.toLowerCase()) {
     case 'required':
-      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px]';
+      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px] uppercase';
     case 'preferred':
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px]';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px] uppercase';
     default:
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px]';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px] uppercase';
   }
 };
 
@@ -189,3 +189,4 @@ export const CompetencyGraph = () => {
     </div>
   );
 };
+
