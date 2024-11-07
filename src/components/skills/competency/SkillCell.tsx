@@ -29,14 +29,14 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
       className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
     >
       {details.level !== "-" ? (
-        <div className="flex flex-col items-center gap-0 group transition-all duration-200 hover:animate-scale-up focus-within:ring-2 focus-within:ring-primary-accent/20 rounded-md">
-          <div className={`${getLevelStyles(details.level)} min-w-[120px] shadow-sm hover:shadow-md transition-shadow`}>
+        <div className="flex flex-col items-center gap-0">
+          <div className={`${getLevelStyles(details.level)} min-w-[120px]`}>
             <span className="flex items-center gap-2 justify-center text-[15px]">
               {getLevelIcon(details.level)}
               {details.level}
             </span>
           </div>
-          <div className={`${getRequirementStyles(details.required, details.level)} min-w-[120px] shadow-sm`}>
+          <div className={`${getRequirementStyles(details.required, details.level)} min-w-[120px]`}>
             {getRequirementIcon(details.required)}
             <span>{details.required}</span>
           </div>
