@@ -2,7 +2,6 @@ import { Table, TableBody } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
 import { SkillsMatrixTableHeader } from "./SkillsMatrixTableHeader";
 import { SkillsMatrixRow } from "./SkillsMatrixRow";
 
@@ -103,31 +102,33 @@ export const SkillsMatrix = () => {
         </div>
       </div>
 
-      <div className="flex gap-4 mb-6">
-        <Select defaultValue="all">
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="specialized">Specialized Skills</SelectItem>
-            <SelectItem value="common">Common Skills</SelectItem>
-            <SelectItem value="certification">Certification</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="border-t pt-6">
+        <div className="flex gap-4 mb-6">
+          <Select defaultValue="all">
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="specialized">Specialized Skills</SelectItem>
+              <SelectItem value="common">Common Skills</SelectItem>
+              <SelectItem value="certification">Certification</SelectItem>
+            </SelectContent>
+          </Select>
 
-        <Select defaultValue="sort">
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Sort by All" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="sort">Sort by All</SelectItem>
-            <SelectItem value="reports">Sort by Reports</SelectItem>
-            <SelectItem value="enrich">Sort by Enrich</SelectItem>
-            <SelectItem value="leader">Sort by Leader</SelectItem>
-            <SelectItem value="self">Sort by Self</SelectItem>
-          </SelectContent>
-        </Select>
+          <Select defaultValue="sort">
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Sort by All" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="sort">Sort by All</SelectItem>
+              <SelectItem value="reports">Sort by Reports</SelectItem>
+              <SelectItem value="enrich">Sort by Enrich</SelectItem>
+              <SelectItem value="leader">Sort by Leader</SelectItem>
+              <SelectItem value="self">Sort by Self</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="rounded-lg border border-blue-200 overflow-x-auto">
