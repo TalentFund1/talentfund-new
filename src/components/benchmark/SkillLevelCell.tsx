@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Heart } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Heart, HeartOff } from "lucide-react";
 import { useState } from "react";
 
 interface SkillLevelCellProps {
@@ -43,8 +43,10 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
     switch (requirement) {
       case 'required':
         return `${baseStyles} bg-gray-100/90 ${getLevelBorderColor(level)}`;
-      case 'preferred':
+      case 'interested':
         return `${baseStyles} bg-gray-50/90 border-gray-300`;
+      case 'not-interested':
+        return `${baseStyles} bg-white border-gray-50 text-gray-400`;
       default:
         return `${baseStyles} bg-white border-gray-50 text-gray-400`;
     }
@@ -111,20 +113,26 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
           >
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">
-                {required === 'required' ? <Heart className="w-3.5 h-3.5" /> : <span className="w-3.5 h-3.5 flex items-center justify-center">-</span>}
-                {required === 'required' ? 'Skill Goal' : 'Unspecified'}
+                {required === 'required' ? (
+                  <Heart className="w-3.5 h-3.5" />
+                ) : required === 'not-interested' ? (
+                  <HeartOff className="w-3.5 h-3.5" />
+                ) : (
+                  <Heart className="w-3.5 h-3.5" />
+                )}
+                {required === 'required' ? 'Interested' : required === 'not-interested' ? 'Not Interested' : 'Interested'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
               <span className="flex items-center gap-1.5">
-                <Heart className="w-3.5 h-3.5" /> Skill Goal
+                <Heart className="w-3.5 h-3.5" /> Interested
               </span>
             </SelectItem>
-            <SelectItem value="preferred">
+            <SelectItem value="not-interested">
               <span className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 flex items-center justify-center">-</span> Unspecified
+                <HeartOff className="w-3.5 h-3.5" /> Not Interested
               </span>
             </SelectItem>
           </SelectContent>
