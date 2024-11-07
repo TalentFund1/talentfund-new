@@ -11,13 +11,13 @@ export const getRequirementStyles = (requirement: string, level: string) => {
     return 'invisible h-[22px]';
   }
 
-  const baseStyles = 'text-xs px-2 py-1 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 transition-colors border-x border-b rounded-b-md';
+  const baseStyles = 'text-xs px-2 py-1 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 transition-colors';
   
   switch (requirement.toLowerCase()) {
     case 'required':
-      return `${baseStyles} bg-gray-100/80 ${borderColor}`;
+      return `${baseStyles} bg-gray-100/80 border-x border-b rounded-b-md ${borderColor}`;
     case 'preferred':
-      return `${baseStyles} bg-gray-50/80 border-gray-300`;
+      return `${baseStyles} bg-gray-50/80 border-x border-b rounded-b-md border-gray-300`;
     default:
       return `${baseStyles} bg-transparent`;
   }
