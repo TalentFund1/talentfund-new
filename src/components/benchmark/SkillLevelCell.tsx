@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
 import { useState } from "react";
 
 interface SkillLevelCellProps {
@@ -109,17 +109,21 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
           <SelectTrigger className={getRequirementStyles(required)}>
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">
-                {required === 'required' ? '✓' : '♡'}
-                {required.charAt(0).toUpperCase() + required.slice(1)}
+                <Heart className="w-3 h-3" />
+                Skill Goal
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
-              <span className="flex items-center gap-1.5">✓ Required</span>
+              <span className="flex items-center gap-1.5">
+                <Heart className="w-3 h-3" /> Skill Goal
+              </span>
             </SelectItem>
             <SelectItem value="preferred">
-              <span className="flex items-center gap-1.5">♡ Preferred</span>
+              <span className="flex items-center gap-1.5">
+                <Heart className="w-3 h-3" /> Optional
+              </span>
             </SelectItem>
           </SelectContent>
         </Select>
