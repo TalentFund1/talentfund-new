@@ -12,8 +12,8 @@ interface SkillCellProps {
 }
 
 export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
-  const [level, setLevel] = useState(details.level);
-  const [required, setRequired] = useState(details.required || "preferred");
+  const [level, setLevel] = useState(details.level === "-" ? "unspecified" : details.level.toLowerCase());
+  const [required, setRequired] = useState(details.required === "-" ? "preferred" : details.required.toLowerCase());
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -26,15 +26,11 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
       case 'unspecified':
         return <CircleDashed className="w-4 h-4 text-gray-400" />;
       default:
-        return null;
+        return <CircleDashed className="w-4 h-4 text-gray-400" />;
     }
   };
 
   const getLevelStyles = (level: string) => {
-    if (!level || level === '-') {
-      return 'text-gray-300 text-sm font-medium h-[26px] flex items-center justify-center';
-    }
-
     const baseStyles = 'rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]';
 
     switch (level.toLowerCase()) {
@@ -47,7 +43,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
       case 'unspecified':
         return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
       default:
-        return `${baseStyles} border-2 border-gray-300 text-gray-400`;
+        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
     }
   };
 
@@ -58,13 +54,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
         ? 'border-primary-icon'
         : level.toLowerCase() === 'beginner'
           ? 'border-[#008000]'
-          : level.toLowerCase() === 'unspecified'
-            ? 'border-gray-400'
-            : 'border-gray-300';
-
-    if (!requirement || requirement === '-') {
-      return 'invisible h-[22px]';
-    }
+          : 'border-gray-400';
 
     const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
@@ -74,18 +64,18 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
       case 'preferred':
         return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
       default:
-        return `${baseStyles} bg-transparent`;
+        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
     }
   };
 
   const getRequirementIcon = (requirement: string) => {
     switch (requirement.toLowerCase()) {
       case 'required':
-        return '✓ '; // Added space after the checkmark
+        return '✓';
       case 'preferred':
         return <Heart className="w-3 h-3" />;
       default:
-        return '';
+        return <Heart className="w-3 h-3" />;
     }
   };
 
@@ -93,79 +83,75 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
     <TableCell 
       className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
     >
-      {level !== "-" ? (
-        <div className="flex flex-col items-center gap-0">
-          <Select 
-            value={level.toLowerCase()} 
-            onValueChange={(value) => setLevel(value)}
+      <div className="flex flex-col items-center gap-0">
+        <Select 
+          value={level} 
+          onValueChange={(value) => setLevel(value)}
+        >
+          <SelectTrigger 
+            className={`${getLevelStyles(level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
-            <SelectTrigger 
-              className={`${getLevelStyles(level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
-            >
-              <SelectValue>
-                <span className="flex items-center gap-2 justify-center text-[15px]">
-                  {getLevelIcon(level)}
-                  {level}
-                </span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="unspecified">
-                <span className="flex items-center gap-2">
-                  <CircleDashed className="w-4 h-4 text-gray-400" />
-                  Unspecified
-                </span>
-              </SelectItem>
-              <SelectItem value="beginner">
-                <span className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-[#008000]" />
-                  Beginner
-                </span>
-              </SelectItem>
-              <SelectItem value="intermediate">
-                <span className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-primary-icon" />
-                  Intermediate
-                </span>
-              </SelectItem>
-              <SelectItem value="advanced">
-                <span className="flex items-center gap-2">
-                  <Star className="w-4 h-4 text-primary-accent" />
-                  Advanced
-                </span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
+            <SelectValue>
+              <span className="flex items-center gap-2 justify-center text-[15px]">
+                {getLevelIcon(level)}
+                {level.charAt(0).toUpperCase() + level.slice(1)}
+              </span>
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="unspecified">
+              <span className="flex items-center gap-2">
+                <CircleDashed className="w-4 h-4 text-gray-400" />
+                Unspecified
+              </span>
+            </SelectItem>
+            <SelectItem value="beginner">
+              <span className="flex items-center gap-2">
+                <Target className="w-4 h-4 text-[#008000]" />
+                Beginner
+              </span>
+            </SelectItem>
+            <SelectItem value="intermediate">
+              <span className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-primary-icon" />
+                Intermediate
+              </span>
+            </SelectItem>
+            <SelectItem value="advanced">
+              <span className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-primary-accent" />
+                Advanced
+              </span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
 
-          <Select 
-            value={required.toLowerCase()} 
-            onValueChange={(value) => setRequired(value)}
+        <Select 
+          value={required} 
+          onValueChange={(value) => setRequired(value)}
+        >
+          <SelectTrigger 
+            className={`${getRequirementStyles(required, level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
-            <SelectTrigger 
-              className={`${getRequirementStyles(required, level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
-            >
-              <SelectValue>
-                <span className="flex items-center gap-2 justify-center">
-                  {getRequirementIcon(required)}
-                  {required}
-                </span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="required">
-                <span className="flex items-center gap-2">✓ Required</span>
-              </SelectItem>
-              <SelectItem value="preferred">
-                <span className="flex items-center gap-2">
-                  <Heart className="w-3 h-3" /> Preferred
-                </span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      ) : (
-        <span className="text-muted-foreground/30">-</span>
-      )}
+            <SelectValue>
+              <span className="flex items-center gap-2 justify-center">
+                {getRequirementIcon(required)}
+                {required.charAt(0).toUpperCase() + required.slice(1)}
+              </span>
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="required">
+              <span className="flex items-center gap-2">✓ Required</span>
+            </SelectItem>
+            <SelectItem value="preferred">
+              <span className="flex items-center gap-2">
+                <Heart className="w-3 h-3" /> Preferred
+              </span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
     </TableCell>
   );
 };
