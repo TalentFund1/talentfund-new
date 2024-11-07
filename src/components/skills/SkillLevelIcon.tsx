@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Star, Shield, Target, Circle } from "lucide-react";
+import { Star, Shield, Target, CircleDashed } from "lucide-react";
 
 interface SkillLevelIconProps {
   level: string;
@@ -30,7 +30,7 @@ export const SkillLevelIcon = ({ level }: SkillLevelIconProps) => {
       case "beginner":
         return <Target className="w-5 h-5" strokeWidth={2} />;
       case "unspecified":
-        return <Circle className="w-5 h-5" strokeWidth={2} />;
+        return <CircleDashed className="w-5 h-5" strokeWidth={2} />;
       default:
         return null;
     }
