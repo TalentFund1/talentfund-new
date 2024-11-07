@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
 import { Sidebar } from '@/components/Sidebar';
 
 const MarketData = () => {
@@ -22,123 +23,86 @@ const MarketData = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Market Data</h2>
-            
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-foreground">Market Data</h1>
+          </div>
+
+          <Card className="p-6">
             <div className="space-y-4">
-              <h3 className="font-medium">Search</h3>
+              <div className="relative max-w-sm">
+                <Input
+                  value={jobTitle}
+                  onChange={(e) => setJobTitle(e.target.value)}
+                  placeholder="Search Job Title..."
+                  className="bg-white"
+                />
+              </div>
               
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm mb-2 block">Job Title</label>
-                  <div className="flex gap-2">
-                    <Input 
-                      value={jobTitle}
-                      onChange={(e) => setJobTitle(e.target.value)}
-                      placeholder="Artificial Engineer"
-                    />
-                    {jobTitle && (
-                      <Button variant="outline" size="icon" onClick={() => setJobTitle('')}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-sm mb-2 block">Has ANY of the following skills</label>
-                  <div className="flex gap-2">
-                    <Input 
-                      value={anySkills}
-                      onChange={(e) => setAnySkills(e.target.value)}
-                      placeholder="NLP"
-                    />
-                    {anySkills && (
-                      <Button variant="outline" size="icon" onClick={() => setAnySkills('')}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-
-                <div className="text-center">- AND -</div>
-
-                <div>
-                  <label className="text-sm mb-2 block">Has ALL of the following skills</label>
-                  <div className="flex gap-2">
-                    <Input 
-                      value={allSkills}
-                      onChange={(e) => setAllSkills(e.target.value)}
-                      placeholder="Python"
-                    />
-                    {allSkills && (
-                      <Button variant="outline" size="icon" onClick={() => setAllSkills('')}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-sm mb-2 block">Company</label>
-                  <Input 
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
+              <div className="flex flex-wrap gap-4">
+                <div className="w-[180px]">
+                  <Input
+                    value={anySkills}
+                    onChange={(e) => setAnySkills(e.target.value)}
+                    placeholder="Has ANY skills..."
+                    className="bg-white"
                   />
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <label className="text-sm mb-2 block">Location</label>
-                    <div className="flex gap-2">
-                      <Input 
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        placeholder="New York, NYC"
-                      />
-                      {location && (
-                        <Button variant="outline" size="icon" onClick={() => setLocation('')}>
-                          <X className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm block">Select Timeframe</label>
-                    <div className="flex gap-2">
-                      <Select defaultValue="may2023">
-                        <SelectTrigger className="w-[120px]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="may2023">May 2023</SelectItem>
-                          <SelectItem value="jun2023">Jun 2023</SelectItem>
-                          <SelectItem value="jul2023">Jul 2023</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Select defaultValue="may2024">
-                        <SelectTrigger className="w-[120px]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="may2024">May 2024</SelectItem>
-                          <SelectItem value="jun2024">Jun 2024</SelectItem>
-                          <SelectItem value="jul2024">Jul 2024</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
+                <div className="w-[180px]">
+                  <Input
+                    value={allSkills}
+                    onChange={(e) => setAllSkills(e.target.value)}
+                    placeholder="Has ALL skills..."
+                    className="bg-white"
+                  />
                 </div>
 
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline">Clear All</Button>
-                  <Button>Run</Button>
+                <div className="w-[180px]">
+                  <Input
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    placeholder="Company..."
+                    className="bg-white"
+                  />
                 </div>
+
+                <div className="w-[180px]">
+                  <Input
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="Location..."
+                    className="bg-white"
+                  />
+                </div>
+
+                <Select defaultValue="may2023">
+                  <SelectTrigger className="w-[120px] bg-white">
+                    <SelectValue placeholder="From" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="may2023">May 2023</SelectItem>
+                    <SelectItem value="jun2023">Jun 2023</SelectItem>
+                    <SelectItem value="jul2023">Jul 2023</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select defaultValue="may2024">
+                  <SelectTrigger className="w-[120px] bg-white">
+                    <SelectValue placeholder="To" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="may2024">May 2024</SelectItem>
+                    <SelectItem value="jun2024">Jun 2024</SelectItem>
+                    <SelectItem value="jul2024">Jul 2024</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Button variant="outline">Clear All</Button>
+                <Button>Run</Button>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </div>
