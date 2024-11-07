@@ -83,9 +83,17 @@ const managerialSkills: SkillLevels = {
 
 export const CompetencyGraph = () => {
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const skills = track === "Professional" ? professionalSkills : managerialSkills;
   const levels = track === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
+
+  const skillCategories = [
+    { id: "all", name: "All Skills", count: 28 },
+    { id: "specialized", name: "Specialized Skills", count: 15 },
+    { id: "common", name: "Common Skills", count: 10 },
+    { id: "certification", name: "Certification", count: 3 }
+  ];
 
   const uniqueSkills = Array.from(
     new Set(
@@ -103,6 +111,34 @@ export const CompetencyGraph = () => {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-foreground">Skill Graph</h2>
+      
+      <div className="grid grid-cols-4 gap-4 mb-6">
+        {skillCategories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setSelectedCategory(category.id)}
+            className={`rounded-lg p-4 transition-colors ${
+              selectedCategory === category.id
+                ? 'bg-primary-accent/5 border border-primary-accent'
+                : 'bg-background border border-border hover:border-primary-accent/50'
+            }`}
+          >
+            <div className="flex flex-col items-start">
+              <span className={`text-sm font-semibold mb-1 ${
+                selectedCategory === category.id
+                  ? 'text-primary-accent'
+                  : 'text-foreground group-hover:text-primary-accent'
+              }`}>
+                {category.name}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {category.count} skills
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
+
       <div className="flex items-center gap-4">
         <span className="text-sm font-medium">Track:</span>
         <Select value={track} onValueChange={(value) => setTrack(value as "Professional" | "Managerial")}>
