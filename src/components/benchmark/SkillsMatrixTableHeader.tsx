@@ -55,7 +55,7 @@ export const SkillsMatrixTableHeader = () => {
             </TooltipProvider>
           </div>
         </TableHead>
-        <TableHead className="w-[120px] text-center py-2">
+        <TableHead className="w-[100px] text-center py-2">
           <div className="flex items-center justify-center gap-1 text-sm">
             Appears In
             <ArrowUp className="h-4 w-4" />
