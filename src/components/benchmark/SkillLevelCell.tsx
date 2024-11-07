@@ -73,15 +73,15 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
                 {getLevelIcon(level)}
-                {level.charAt(0).toUpperCase() + level.slice(1)}
+                {level === "" ? "-" : level.charAt(0).toUpperCase() + level.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="unspecified">
+            <SelectItem value="">
               <span className="flex items-center gap-1.5">
                 <CircleDashed className="w-3.5 h-3.5 text-gray-400" />
-                Unspecified
+                -
               </span>
             </SelectItem>
             <SelectItem value="beginner">
