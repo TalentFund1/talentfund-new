@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Heart, CheckCircle } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Heart } from "lucide-react";
 import { useState } from "react";
 
 interface SkillLevelCellProps {
@@ -14,7 +14,7 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return <CheckCircle className="w-4 h-4 text-primary-accent" />;
+        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
       case 'intermediate':
         return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
       case 'beginner':
@@ -98,7 +98,7 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
             </SelectItem>
             <SelectItem value="advanced">
               <span className="flex items-center gap-1.5">
-                <CheckCircle className="w-4 h-4 text-primary-accent" />
+                <Star className="w-3.5 h-3.5 text-primary-accent" />
                 Advanced
               </span>
             </SelectItem>
