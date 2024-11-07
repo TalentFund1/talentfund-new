@@ -65,7 +65,7 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center px-2 py-1">
         <Select value={level} onValueChange={setLevel}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
