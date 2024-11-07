@@ -18,6 +18,12 @@ const preferredSkills = [
   { name: "Angular", level: "beginner" },
 ];
 
+const missingSkills = [
+  { name: "UI/UX Design Principles" },
+  { name: "Communication" },
+  { name: "Angular" },
+];
+
 const certifications = [
   { name: "Cybersecurity License" }
 ];
@@ -72,6 +78,28 @@ export const RoleBenchmark = () => {
                   className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
                 >
                   {skill.name} <div className="h-2 w-2 rounded-full bg-primary-accent" />
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">Missing Skills</span>
+                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                  {missingSkills.length}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {missingSkills.map((skill) => (
+                <Badge 
+                  key={skill.name} 
+                  variant="outline" 
+                  className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
+                >
+                  {skill.name} <div className="h-2 w-2 rounded-full bg-destructive" />
                 </Badge>
               ))}
             </div>
