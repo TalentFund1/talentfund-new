@@ -58,6 +58,7 @@ interface CompetencyMatrixProps {
 export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
   const { toast } = useToast();
 
   const handleLevelSelect = (level: string) => {
@@ -88,7 +89,7 @@ export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
       <CompetencyLevels 
         selectedLevels={selectedLevels}
         onLevelSelect={handleLevelSelect}
-        onTrackChange={onTrackChange}
+        onTrackChange={handleTrackChange}
       />
 
       <div>
