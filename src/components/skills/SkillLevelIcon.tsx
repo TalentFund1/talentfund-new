@@ -22,18 +22,21 @@ export const SkillLevelIcon = ({ level }: SkillLevelIconProps) => {
   const getIcon = () => {
     switch (level) {
       case "advanced":
-        return <Star className="w-4 h-4" />;
+        return <Star className="w-5 h-5" strokeWidth={2} />;
       case "intermediate":
-        return <Shield className="w-4 h-4" />;
+        return <Shield className="w-5 h-5" strokeWidth={2} />;
       case "beginner":
-        return <Target className="w-4 h-4" />;
+        return <Target className="w-5 h-5" strokeWidth={2} />;
       default:
         return null;
     }
   };
 
   return (
-    <div className={cn("relative inline-flex items-center justify-center w-6 h-6 rounded-full", getColorClass())}>
+    <div className={cn(
+      "relative inline-flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 hover:scale-110",
+      getColorClass()
+    )}>
       {getIcon()}
     </div>
   );
