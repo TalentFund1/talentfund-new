@@ -29,10 +29,7 @@ export const RoleBenchmark = () => {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
-            <Button>Add Skill</Button>
-          </div>
+          <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
           <Button 
             variant="outline" 
             className="bg-white"
