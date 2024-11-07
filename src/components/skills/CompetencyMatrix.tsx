@@ -53,6 +53,7 @@ const skillCategories = [
 export const CompetencyMatrix = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
   const { toast } = useToast();
 
   const handleLevelSelect = (level: string) => {
@@ -61,6 +62,10 @@ export const CompetencyMatrix = () => {
         ? prev.filter(l => l !== level)
         : [...prev, level]
     );
+  };
+
+  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
+    setTrack(newTrack);
   };
 
   const handleCategorySelect = (categoryId: string) => {
@@ -80,6 +85,7 @@ export const CompetencyMatrix = () => {
       <CompetencyLevels 
         selectedLevels={selectedLevels}
         onLevelSelect={handleLevelSelect}
+        onTrackChange={handleTrackChange}
       />
 
       <div>
