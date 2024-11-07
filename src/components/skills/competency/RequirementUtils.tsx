@@ -28,15 +28,15 @@ export const getLevelStyles = (level: string) => {
     return 'text-gray-300 text-sm font-medium h-[26px] flex items-center justify-center';
   }
 
-  const baseStyles = 'border-2 rounded-t-md px-3 py-1 text-sm font-medium w-full capitalize transition-colors flex items-center justify-center min-h-[26px]';
+  const baseStyles = 'border-2 rounded-t-md px-3 py-1 text-sm font-medium w-full capitalize transition-colors flex items-center justify-center min-h-[26px] text-[#1f2144]';
 
   switch (level.toLowerCase()) {
     case 'advanced':
-      return `${baseStyles} border-primary-accent bg-primary-accent/5 text-primary-accent hover:bg-primary-accent/10`;
+      return `${baseStyles} border-primary-accent bg-primary-accent/5 hover:bg-primary-accent/10`;
     case 'intermediate':
-      return `${baseStyles} border-primary-icon bg-primary-icon/5 text-primary-icon hover:bg-primary-icon/10`;
+      return `${baseStyles} border-primary-icon bg-primary-icon/5 hover:bg-primary-icon/10`;
     case 'beginner':
-      return `${baseStyles} border-[#008000] bg-[#008000]/5 text-[#008000] hover:bg-[#008000]/10`;
+      return `${baseStyles} border-[#008000] bg-[#008000]/5 hover:bg-[#008000]/10`;
     default:
       return `${baseStyles} border-gray-300 text-gray-400`;
   }
