@@ -83,25 +83,25 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
             <SelectItem value="unspecified">
               <span className="flex items-center gap-1.5">
                 <CircleDashed className="w-3.5 h-3.5 text-gray-400" />
-                <span className="text-gray-400">Unspecified</span>
+                Unspecified
               </span>
             </SelectItem>
             <SelectItem value="beginner">
               <span className="flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5 text-[#008000]" />
-                <span className="text-[#008000]">Beginner</span>
+                Beginner
               </span>
             </SelectItem>
             <SelectItem value="intermediate">
               <span className="flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5 text-primary-icon" />
-                <span className="text-primary-icon">Intermediate</span>
+                Intermediate
               </span>
             </SelectItem>
             <SelectItem value="advanced">
               <span className="flex items-center gap-1.5">
                 <Star className="w-3.5 h-3.5 text-primary-accent" />
-                <span className="text-primary-accent">Advanced</span>
+                Advanced
               </span>
             </SelectItem>
           </SelectContent>
