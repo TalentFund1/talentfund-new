@@ -94,7 +94,7 @@ export const SkillsMatrix = () => {
       <div className="rounded-lg border border-blue-200">
         <Table>
           <TableHeader>
-            <TableRow className="hover:bg-transparent">
+            <TableRow className="hover:bg-transparent border-b border-blue-200">
               <TableHead className="w-[180px] border-r border-blue-200">Skill Title</TableHead>
               <TableHead className="w-[220px] border-r border-blue-200">Subcategory</TableHead>
               <TableHead className="text-center border-r border-blue-200 w-[120px]">Unspecified</TableHead>
@@ -125,7 +125,7 @@ export const SkillsMatrix = () => {
           </TableHeader>
           <TableBody>
             {skills.map((skill) => (
-              <TableRow key={skill.title} className="hover:bg-muted/50">
+              <TableRow key={skill.title} className="hover:bg-muted/50 border-b border-blue-200">
                 <TableCell className="font-medium border-r border-blue-200">{skill.title}</TableCell>
                 <TableCell className="border-r border-blue-200">{skill.subcategory}</TableCell>
                 <TableCell className="text-center border-r border-blue-200">
