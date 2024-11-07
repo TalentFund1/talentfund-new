@@ -78,8 +78,6 @@ export const CompetencyMatrix = () => {
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <CompetencyMatrixHeader selectedLevels={selectedLevels} />
       
-      <Separator className="my-4" />
-      
       <CompetencyLevels 
         selectedLevels={selectedLevels}
         onLevelSelect={handleLevelSelect}
@@ -91,10 +89,10 @@ export const CompetencyMatrix = () => {
             <button
               key={category.id}
               onClick={() => handleCategorySelect(category.id)}
-              className={`stat-card group transition-all duration-200 ${
+              className={`rounded-lg p-4 transition-colors border border-border ${
                 selectedCategory === category.id
-                  ? 'ring-2 ring-primary-accent bg-primary-accent/5'
-                  : 'hover:border-primary-accent/50'
+                  ? 'bg-primary-accent/5 border-primary-accent'
+                  : 'bg-background hover:border-primary-accent/50'
               }`}
             >
               <div className="flex flex-col items-start">
