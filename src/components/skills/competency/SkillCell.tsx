@@ -12,7 +12,7 @@ interface SkillCellProps {
 }
 
 export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
-  const [level, setLevel] = useState(details.level);
+  const [level, setLevel] = useState(details.level || "unspecified");
   const [required, setRequired] = useState(details.required || "preferred");
 
   const getLevelIcon = (level: string) => {

@@ -16,43 +16,43 @@ const skills = [
   {
     title: "Amazon Web Services",
     subcategory: "Web Services",
-    level: "Advanced",
+    level: "unspecified",
     growth: "12%"
   },
   {
     title: "Artificial Intelligence",
     subcategory: "Artificial Intelligence and Machine Learning",
-    level: "Advanced",
+    level: "unspecified",
     growth: "19%"
   },
   {
     title: "Conversational AI",
     subcategory: "Natural Language Processing (NLP)",
-    level: "Advanced",
+    level: "unspecified",
     growth: "12%"
   },
   {
     title: "Deep Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
-    level: "Intermediate",
+    level: "unspecified",
     growth: "19%"
   },
   {
     title: "Machine Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
-    level: "Intermediate",
+    level: "unspecified",
     growth: "10%"
   },
   {
     title: "Docker (Software)",
     subcategory: "Software Development Tools",
-    level: "Intermediate",
+    level: "unspecified",
     growth: "0%"
   },
   {
     title: "MLflow",
     subcategory: "Artificial Intelligence and Machine Learning",
-    level: "Beginner",
+    level: "unspecified",
     growth: "11%"
   }
 ];
