@@ -82,7 +82,7 @@ export const SkillsMatrix = () => {
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
           <Select defaultValue="modify">
             <SelectTrigger className="w-[180px] bg-white">
@@ -103,7 +103,7 @@ export const SkillsMatrix = () => {
 
       <div className="border-t border-blue-200 pt-6">
         <div className="flex gap-4 mb-6 items-center justify-between">
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <Select defaultValue="all">
               <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="All Categories" />
