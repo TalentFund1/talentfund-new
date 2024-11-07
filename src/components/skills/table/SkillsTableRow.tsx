@@ -20,8 +20,6 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
         return "bg-primary-icon/5";
       case "Beginner":
         return "bg-[#008000]/5";
-      case "Unspecified":
-        return "bg-[#F7F9FF]/50";
       default:
         return "";
     }
@@ -34,9 +32,6 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
       </TableCell>
       <TableCell className="border-r border-border group-hover:bg-transparent py-4">
         {skill.subcategory}
-      </TableCell>
-      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 w-[100px] ${getLevelBackgroundColor("Unspecified")}`}>
-        {skill.level === "Unspecified" && <SkillLevelIcon level="unspecified" />}
       </TableCell>
       <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 w-[100px] ${getLevelBackgroundColor("Beginner")}`}>
         {skill.level === "Beginner" && <SkillLevelIcon level="beginner" />}
