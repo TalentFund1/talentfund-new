@@ -50,10 +50,10 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
             {pair.map((level) => (
               <div 
                 key={level} 
-                className={`flex items-center gap-3 p-4 rounded-lg border transition-colors ${
+                className={`flex items-center gap-3 p-4 rounded-lg transition-colors ${
                   selectedLevel === `AI Engineer: ${level}`
-                    ? 'bg-primary-accent/5 border-primary-accent'
-                    : 'bg-background/40 border-border hover:border-primary-accent/50'
+                    ? 'bg-primary-accent/5 border border-primary-accent'
+                    : 'bg-background/40 hover:bg-background/60'
                 }`}
               >
                 <RadioGroupItem value={`AI Engineer: ${level}`} id={level} />
