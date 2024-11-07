@@ -3,7 +3,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card } from "@/components/ui/card";
 
 interface CompetencyLevelsProps {
   selectedLevels: string[];
@@ -66,25 +65,27 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
       </RadioGroup>
 
       {selectedLevel && (
-        <Card className="p-6 mt-6">
-          <h3 className="text-lg font-semibold mb-4">{selectedLevel} Matrix</h3>
-          <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
-              <div className="p-4 bg-background/40 rounded-lg">
-                <h4 className="font-medium mb-2">All Skills</h4>
-                <p className="text-sm text-muted-foreground">28 skills</p>
-              </div>
-              <div className="p-4 bg-background/40 rounded-lg">
-                <h4 className="font-medium mb-2">Specialized Skills</h4>
-                <p className="text-sm text-muted-foreground">15 skills</p>
-              </div>
-              <div className="p-4 bg-background/40 rounded-lg">
-                <h4 className="font-medium mb-2">Common Skills</h4>
-                <p className="text-sm text-muted-foreground">10 skills</p>
-              </div>
+        <div className="space-y-6">
+          <h3 className="text-lg font-semibold">{selectedLevel}</h3>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="p-4 bg-background/40 rounded-lg border border-border hover:border-primary-accent/50 transition-colors">
+              <h4 className="font-medium mb-2">All Skills</h4>
+              <p className="text-sm text-muted-foreground">28 skills</p>
+            </div>
+            <div className="p-4 bg-background/40 rounded-lg border border-border hover:border-primary-accent/50 transition-colors">
+              <h4 className="font-medium mb-2">Specialized Skills</h4>
+              <p className="text-sm text-muted-foreground">15 skills</p>
+            </div>
+            <div className="p-4 bg-background/40 rounded-lg border border-border hover:border-primary-accent/50 transition-colors">
+              <h4 className="font-medium mb-2">Common Skills</h4>
+              <p className="text-sm text-muted-foreground">10 skills</p>
+            </div>
+            <div className="p-4 bg-background/40 rounded-lg border border-border hover:border-primary-accent/50 transition-colors">
+              <h4 className="font-medium mb-2">Certification</h4>
+              <p className="text-sm text-muted-foreground">3 skills</p>
             </div>
           </div>
-        </Card>
+        </div>
       )}
     </div>
   );
