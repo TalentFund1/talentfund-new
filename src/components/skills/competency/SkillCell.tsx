@@ -19,12 +19,10 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
           <div className={`${getLevelStyles(details.level)} min-w-[100px]`}>
             {details.level}
           </div>
-          {details.required !== "unspecified" && (
-            <div className={`${getRequirementStyles(details.required, details.level)} min-w-[100px]`}>
-              {getRequirementIcon(details.required)}
-              <span>{details.required}</span>
-            </div>
-          )}
+          <div className={`${getRequirementStyles(details.required, details.level)} min-w-[100px]`}>
+            {getRequirementIcon(details.required)}
+            <span>{details.required}</span>
+          </div>
         </div>
       ) : (
         <span className="text-muted-foreground/30">-</span>
