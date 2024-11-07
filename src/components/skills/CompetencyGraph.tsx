@@ -50,13 +50,13 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     <div className="space-y-6">
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-foreground">Competency Graph</h2>
+        <Separator className="my-4" />
         <div className="mb-6">
           <CategorySelect 
             selectedCategory={selectedCategory} 
             onCategoryChange={setSelectedCategory}
           />
         </div>
-        <Separator className="my-4" />
       </div>
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
