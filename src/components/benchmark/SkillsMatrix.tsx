@@ -91,26 +91,16 @@ export const SkillsMatrix = () => {
         </Select>
       </div>
 
-      <div className="relative overflow-x-auto border rounded-lg border-blue-200">
+      <div className="rounded-lg border border-blue-200">
         <Table>
           <TableHeader>
-            <TableRow className="hover:bg-transparent border-b border-blue-200">
-              <TableHead className="w-[180px] border-r border-blue-200 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                Skill Title
-              </TableHead>
-              <TableHead className="w-[220px] border-r border-blue-200 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                Subcategory
-              </TableHead>
-              <TableHead className="w-[150px] text-center border-r border-blue-200 bg-[#F7F9FF]">
-                Skill Level
-              </TableHead>
-              <TableHead className="w-[150px] text-center border-r border-blue-200 bg-[#F7F9FF]">
-                Confidence Score
-              </TableHead>
-              <TableHead className="w-[120px] text-center border-r border-blue-200 bg-[#F7F9FF]">
-                Company Skill
-              </TableHead>
-              <TableHead className="w-[150px] text-center border-r border-blue-200 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <TableRow className="hover:bg-transparent border-b border-gray-200 bg-[#F7F9FF]">
+              <TableHead className="w-[180px] border-r border-blue-200">Skill Title</TableHead>
+              <TableHead className="w-[220px] border-r border-blue-200">Subcategory</TableHead>
+              <TableHead className="w-[150px] text-center border-r border-blue-200">Skill Level</TableHead>
+              <TableHead className="w-[150px] text-center border-r border-blue-200">Confidence Score</TableHead>
+              <TableHead className="w-[120px] text-center border-r border-blue-200">Company Skill</TableHead>
+              <TableHead className="w-[150px] text-center border-r border-blue-200">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
                   <TooltipProvider>
@@ -130,28 +120,15 @@ export const SkillsMatrix = () => {
                   </TooltipProvider>
                 </div>
               </TableHead>
-              <TableHead className="w-[120px] text-center bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                Appears In
-              </TableHead>
+              <TableHead className="w-[120px] text-center">Appears In</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {skills.map((skill, index) => (
-              <TableRow 
-                key={skill.title} 
-                className={`group transition-all duration-200 hover:bg-muted/50 ${
-                  index % 2 === 0 ? 'bg-muted/5' : ''
-                }`}
-              >
-                <TableCell className="font-medium border-r border-blue-200">
-                  {skill.title}
-                </TableCell>
-                <TableCell className="border-r border-blue-200">
-                  {skill.subcategory}
-                </TableCell>
-                <TableCell className="border-r border-blue-200">
-                  <SkillLevelCell initialLevel={skill.level} />
-                </TableCell>
+            {skills.map((skill) => (
+              <TableRow key={skill.title} className="hover:bg-muted/50 border-b border-gray-200">
+                <TableCell className="font-medium border-r border-blue-200">{skill.title}</TableCell>
+                <TableCell className="border-r border-blue-200">{skill.subcategory}</TableCell>
+                <SkillLevelCell initialLevel={skill.level} />
                 <TableCell className="text-center border-r border-blue-200">
                   {Math.random() > 0.5 ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -163,7 +140,7 @@ export const SkillsMatrix = () => {
                 </TableCell>
                 <TableCell className="text-center border-r border-blue-200">
                   <div className="flex justify-center">
-                    <Check className="w-5 h-5 text-green-600" />
+                    <Check className="w-6 h-6 text-green-600" />
                   </div>
                 </TableCell>
                 <TableCell className="text-center border-r border-blue-200">
@@ -175,9 +152,9 @@ export const SkillsMatrix = () => {
                 </TableCell>
                 <TableCell className="text-center">
                   <div className="flex items-center justify-center space-x-1">
-                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium text-blue-800">J</span>
-                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium text-blue-800">B</span>
-                    <span className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center text-xs font-medium text-orange-800">O</span>
+                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium">J</span>
+                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium">B</span>
+                    <span className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center text-xs font-medium">O</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -198,7 +175,7 @@ export const SkillsMatrix = () => {
           </SelectContent>
         </Select>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-auto">
           <span className="text-sm text-muted-foreground">1-7 of 7</span>
           <Button variant="outline" size="icon" className="w-8 h-8">
             <ChevronLeft className="h-4 w-4" />
