@@ -8,7 +8,7 @@ interface SkillLevelCellProps {
 }
 
 export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
-  const [level, setLevel] = useState(initialLevel.toLowerCase());
+  const [level, setLevel] = useState(initialLevel.toLowerCase() === "-" ? "none" : initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
 
   const getLevelIcon = (level: string) => {
@@ -73,12 +73,12 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
                 {getLevelIcon(level)}
-                {level === "" ? "-" : level.charAt(0).toUpperCase() + level.slice(1)}
+                {level === "none" ? "-" : level.charAt(0).toUpperCase() + level.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">
+            <SelectItem value="none">
               <span className="flex items-center gap-1.5">
                 <CircleDashed className="w-3.5 h-3.5 text-gray-400" />
                 -
