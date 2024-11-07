@@ -83,11 +83,11 @@ const managerialSkills: SkillLevels = {
 const getLevelStyles = (level: string) => {
   switch (level.toLowerCase()) {
     case 'advanced':
-      return 'text-purple-700 font-medium bg-purple-50 px-2 py-1 rounded-full';
+      return 'bg-primary/10 text-primary font-medium px-2 py-0.5 rounded';
     case 'intermediate':
-      return 'text-orange-600 font-medium bg-orange-50 px-2 py-1 rounded-full';
+      return 'bg-secondary/20 text-secondary-foreground font-medium px-2 py-0.5 rounded';
     case 'beginner':
-      return 'text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full';
+      return 'bg-muted text-muted-foreground font-medium px-2 py-0.5 rounded';
     default:
       return '';
   }
@@ -96,9 +96,9 @@ const getLevelStyles = (level: string) => {
 const getRequirementStyles = (requirement: string) => {
   switch (requirement.toLowerCase()) {
     case 'required':
-      return 'text-gray-700 bg-gray-100 text-xs px-2 py-0.5 rounded-full font-medium';
+      return 'border border-border text-xs px-1.5 py-0.5 rounded font-medium text-foreground/80';
     case 'preferred':
-      return 'text-blue-700 bg-blue-50 text-xs px-2 py-0.5 rounded-full font-medium';
+      return 'border border-border/50 text-xs px-1.5 py-0.5 rounded font-medium text-muted-foreground';
     default:
       return '';
   }
@@ -138,13 +138,13 @@ export const CompetencyGraph = () => {
         </Select>
       </div>
 
-      <div className="rounded-lg border">
+      <div className="rounded-lg border bg-card">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50">
-              <TableHead className="w-[200px] font-semibold">Skill</TableHead>
+            <TableRow className="hover:bg-transparent border-b border-border/50">
+              <TableHead className="w-[200px] font-semibold bg-muted/50">Skill</TableHead>
               {levels.map((level) => (
-                <TableHead key={level} className="text-center">
+                <TableHead key={level} className="text-center bg-muted/50">
                   <div className="font-semibold">{level}</div>
                   <div className="text-xs text-muted-foreground mt-1">Level / Required</div>
                 </TableHead>
@@ -153,14 +153,14 @@ export const CompetencyGraph = () => {
           </TableHeader>
           <TableBody>
             {uniqueSkills.map((skillName) => (
-              <TableRow key={skillName} className="hover:bg-gray-50/50">
-                <TableCell className="font-medium">{skillName}</TableCell>
+              <TableRow key={skillName} className="hover:bg-muted/5">
+                <TableCell className="font-medium bg-muted/5">{skillName}</TableCell>
                 {levels.map((level) => {
                   const details = getSkillDetails(skillName, level);
                   return (
                     <TableCell key={level} className="text-center">
                       {details.level !== "-" ? (
-                        <div className="space-y-1.5">
+                        <div className="space-y-1">
                           <div className={getLevelStyles(details.level)}>
                             {details.level}
                           </div>
@@ -169,7 +169,7 @@ export const CompetencyGraph = () => {
                           </div>
                         </div>
                       ) : (
-                        <span className="text-gray-300">-</span>
+                        <span className="text-muted-foreground/40">-</span>
                       )}
                     </TableCell>
                   );
