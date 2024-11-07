@@ -5,20 +5,26 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
-const skills = [
-  { name: "Amazon Web Services", level: "Advanced", required: "Required" },
-  { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
-  { name: "Behavioral Analytics", level: "Intermediate", required: "Required" },
-  { name: "Business To Business", level: "Unspecified", required: "Preferred" },
-  { name: "Coaching", level: "Unspecified", required: "Preferred" },
-  { name: "Communication", level: "Unspecified", required: "Preferred" },
-  { name: "Conversational AI", level: "Unspecified", required: "Preferred" },
-  { name: "Data Science", level: "Unspecified", required: "Preferred" },
-  { name: "Deep Learning", level: "Unspecified", required: "Preferred" },
-  { name: "Experimentation", level: "Unspecified", required: "Preferred" },
-  { name: "Full Stack Development", level: "Unspecified", required: "Preferred" },
-];
+const skillsData = {
+  specialized: [
+    { name: "Amazon Web Services", level: "Advanced", required: "Required" },
+    { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
+    { name: "Deep Learning", level: "Intermediate", required: "Required" },
+    { name: "Machine Learning", level: "Advanced", required: "Required" },
+    { name: "Data Science", level: "Advanced", required: "Required" },
+  ],
+  common: [
+    { name: "Communication", level: "Intermediate", required: "Required" },
+    { name: "Problem Solving", level: "Advanced", required: "Required" },
+    { name: "Team Collaboration", level: "Intermediate", required: "Preferred" },
+  ],
+  certification: [
+    { name: "AWS Certified Solutions Architect", level: "Advanced", required: "Required" },
+    { name: "Google Cloud Professional", level: "Intermediate", required: "Preferred" },
+  ]
+};
 
 const skillCategories = [
   { id: "specialized", name: "Specialized Skills", count: 15 },
@@ -28,7 +34,8 @@ const skillCategories = [
 
 export const CompetencyMatrix = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("specialized");
+  const { toast } = useToast();
 
   const handleLevelSelect = (level: string) => {
     setSelectedLevels(prev => 
@@ -37,6 +44,16 @@ export const CompetencyMatrix = () => {
         : [...prev, level]
     );
   };
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    toast({
+      title: `Viewing ${skillCategories.find(cat => cat.id === categoryId)?.name}`,
+      duration: 2000
+    });
+  };
+
+  const currentSkills = skillsData[selectedCategory as keyof typeof skillsData] || [];
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
@@ -100,7 +117,7 @@ export const CompetencyMatrix = () => {
             {skillCategories.map((category) => (
               <button
                 key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
+                onClick={() => handleCategorySelect(category.id)}
                 className={`p-3 rounded-lg border text-left transition-colors ${
                   selectedCategory === category.id
                     ? 'border-primary bg-primary/5'
@@ -117,13 +134,15 @@ export const CompetencyMatrix = () => {
         <div className="border border-border rounded-lg overflow-hidden">
           <div className="grid grid-cols-3 gap-4 p-3 bg-[#F7F9FF] border-b border-border">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-foreground">Skills (36)</span>
+              <span className="text-sm font-medium text-foreground">
+                Skills ({currentSkills.length})
+              </span>
             </div>
             <div className="text-sm font-medium text-foreground">Skill Level</div>
             <div className="text-sm font-medium text-foreground">Required</div>
           </div>
 
-          {skills.map((skill) => (
+          {currentSkills.map((skill) => (
             <div 
               key={skill.name} 
               className="grid grid-cols-3 gap-4 p-3 hover:bg-background/40 transition-colors border-b border-border last:border-b-0"
