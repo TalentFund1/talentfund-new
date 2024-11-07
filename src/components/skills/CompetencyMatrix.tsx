@@ -8,38 +8,38 @@ const skillsData = {
   all: [
     ...Object.values({
       specialized: [
-        { name: "Amazon Web Services", level: "unspecified", required: "preferred" },
-        { name: "Artificial Intelligence", level: "unspecified", required: "preferred" },
-        { name: "Deep Learning", level: "unspecified", required: "preferred" },
-        { name: "Machine Learning", level: "unspecified", required: "preferred" },
-        { name: "Data Science", level: "unspecified", required: "preferred" },
+        { name: "Amazon Web Services", level: "Advanced", required: "Required" },
+        { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
+        { name: "Deep Learning", level: "Intermediate", required: "Required" },
+        { name: "Machine Learning", level: "Advanced", required: "Required" },
+        { name: "Data Science", level: "Advanced", required: "Required" },
       ],
       common: [
-        { name: "Communication", level: "unspecified", required: "preferred" },
-        { name: "Problem Solving", level: "unspecified", required: "preferred" },
-        { name: "Team Collaboration", level: "unspecified", required: "preferred" },
+        { name: "Communication", level: "Intermediate", required: "Required" },
+        { name: "Problem Solving", level: "Advanced", required: "Required" },
+        { name: "Team Collaboration", level: "Intermediate", required: "Preferred" },
       ],
       certification: [
-        { name: "AWS Certified Solutions Architect", level: "unspecified", required: "preferred" },
-        { name: "Google Cloud Professional", level: "unspecified", required: "preferred" },
+        { name: "AWS Certified Solutions Architect", level: "Advanced", required: "Required" },
+        { name: "Google Cloud Professional", level: "Intermediate", required: "Preferred" },
       ]
     }).flat(),
   ],
   specialized: [
-    { name: "Amazon Web Services", level: "unspecified", required: "preferred" },
-    { name: "Artificial Intelligence", level: "unspecified", required: "preferred" },
-    { name: "Deep Learning", level: "unspecified", required: "preferred" },
-    { name: "Machine Learning", level: "unspecified", required: "preferred" },
-    { name: "Data Science", level: "unspecified", required: "preferred" },
+    { name: "Amazon Web Services", level: "Advanced", required: "Required" },
+    { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
+    { name: "Deep Learning", level: "Intermediate", required: "Required" },
+    { name: "Machine Learning", level: "Advanced", required: "Required" },
+    { name: "Data Science", level: "Advanced", required: "Required" },
   ],
   common: [
-    { name: "Communication", level: "unspecified", required: "preferred" },
-    { name: "Problem Solving", level: "unspecified", required: "preferred" },
-    { name: "Team Collaboration", level: "unspecified", required: "preferred" },
+    { name: "Communication", level: "Intermediate", required: "Required" },
+    { name: "Problem Solving", level: "Advanced", required: "Required" },
+    { name: "Team Collaboration", level: "Intermediate", required: "Preferred" },
   ],
   certification: [
-    { name: "AWS Certified Solutions Architect", level: "unspecified", required: "preferred" },
-    { name: "Google Cloud Professional", level: "unspecified", required: "preferred" },
+    { name: "AWS Certified Solutions Architect", level: "Advanced", required: "Required" },
+    { name: "Google Cloud Professional", level: "Intermediate", required: "Preferred" },
   ]
 };
 
