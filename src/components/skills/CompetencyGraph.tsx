@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -87,10 +87,23 @@ interface CompetencyGraphProps {
 }
 
 export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+    const savedCategory = localStorage.getItem('selectedCategory');
+    return savedCategory || "all";
+  });
 
-  const skills = track === "Professional" ? professionalSkills : managerialSkills;
-  const levels = track === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
+  const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
+
+  useEffect(() => {
+    setCurrentTrack(track);
+  }, [track]);
+
+  useEffect(() => {
+    localStorage.setItem('selectedCategory', selectedCategory);
+  }, [selectedCategory]);
+
+  const skills = currentTrack === "Professional" ? professionalSkills : managerialSkills;
+  const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
   const uniqueSkills = Array.from(
     new Set(
