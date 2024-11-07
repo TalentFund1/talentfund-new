@@ -68,24 +68,6 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
         <div className="space-y-6">
           <Separator className="my-4" />
           <h3 className="text-lg font-semibold">{selectedLevel}</h3>
-          <div className="grid grid-cols-4 gap-4">
-            <div className="p-4 bg-background/40 rounded-lg border border-border hover:border-primary-accent/50 transition-colors">
-              <h4 className="font-medium mb-2">All Skills</h4>
-              <p className="text-sm text-muted-foreground">28 skills</p>
-            </div>
-            <div className="p-4 bg-background/40 rounded-lg border border-border hover:border-primary-accent/50 transition-colors">
-              <h4 className="font-medium mb-2">Specialized Skills</h4>
-              <p className="text-sm text-muted-foreground">15 skills</p>
-            </div>
-            <div className="p-4 bg-background/40 rounded-lg border border-border hover:border-primary-accent/50 transition-colors">
-              <h4 className="font-medium mb-2">Common Skills</h4>
-              <p className="text-sm text-muted-foreground">10 skills</p>
-            </div>
-            <div className="p-4 bg-background/40 rounded-lg border border-border hover:border-primary-accent/50 transition-colors">
-              <h4 className="font-medium mb-2">Certification</h4>
-              <p className="text-sm text-muted-foreground">3 skills</p>
-            </div>
-          </div>
         </div>
       )}
     </div>
