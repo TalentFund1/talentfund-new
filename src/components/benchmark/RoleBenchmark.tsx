@@ -69,7 +69,7 @@ export const RoleBenchmark = () => {
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
-                  className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white h-8 w-[120px] justify-center"
+                  className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
                 >
                   {skill.name} <div className="h-2 w-2 rounded-full bg-primary-accent" />
                 </Badge>
@@ -91,7 +91,7 @@ export const RoleBenchmark = () => {
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
-                  className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white h-8 w-[120px] justify-center"
+                  className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
                 >
                   {skill.name} <div className="h-2 w-2 rounded-full bg-primary-icon" />
                 </Badge>
@@ -113,7 +113,7 @@ export const RoleBenchmark = () => {
                 <Badge 
                   key={cert.name}
                   variant="outline" 
-                  className="rounded-lg px-3 py-1.5 border-2 bg-white h-8 w-[120px] justify-center"
+                  className="rounded-lg px-4 py-2 border-2 bg-white"
                 >
                   {cert.name}
                 </Badge>
