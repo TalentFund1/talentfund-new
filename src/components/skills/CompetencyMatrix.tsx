@@ -85,10 +85,7 @@ export const CompetencyMatrix = () => {
         onLevelSelect={handleLevelSelect}
       />
 
-      <Separator className="my-4 border-border" />
-
       <div>
-        <h3 className="text-sm font-medium text-muted-foreground mb-3">Skill Categories</h3>
         <div className="grid grid-cols-4 gap-4 mb-6">
           {skillCategories.map((category) => (
             <button
