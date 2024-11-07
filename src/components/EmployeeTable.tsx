@@ -57,11 +57,11 @@ export const EmployeeTable = () => {
   return (
     <Table>
       <TableHeader>
-        <TableRow className="hover:bg-transparent">
-          <TableHead className="w-[4%] pl-4">
+        <TableRow className="hover:bg-transparent border-b border-border">
+          <TableHead className="w-[4%]">
             <input type="checkbox" className="rounded border-gray-300" />
           </TableHead>
-          <TableHead className="w-[22%]">
+          <TableHead className="w-[25%]">
             <div className="flex items-center gap-1">
               Employee Name <ChevronDown className="h-4 w-4" />
             </div>
@@ -69,25 +69,27 @@ export const EmployeeTable = () => {
           <TableHead className="w-[20%]">Current Role</TableHead>
           <TableHead className="w-[15%]">Department</TableHead>
           <TableHead className="w-[12%] text-center">Skill Count</TableHead>
-          <TableHead className="w-[15%] text-center">Benchmark</TableHead>
-          <TableHead className="w-[12%] text-right pr-6">Last Updated</TableHead>
+          <TableHead className="w-[12%] text-center">Benchmark</TableHead>
+          <TableHead className="w-[12%] text-right">Last Updated</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {employees.map((employee, index) => (
-          <TableRow key={employee.name}>
-            <TableCell className="pl-4">
+          <TableRow key={employee.name} className="border-b border-border">
+            <TableCell>
               <input type="checkbox" className="rounded border-gray-300" />
             </TableCell>
-            <TableCell className="flex items-center gap-3">
-              <img 
-                src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
-                alt={employee.name}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-              <Link to="/employee-profile" className="text-primary hover:underline font-medium">
-                {employee.name}
-              </Link>
+            <TableCell>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
+                  alt={employee.name}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+                <Link to="/employee-profile" className="text-primary hover:underline font-medium">
+                  {employee.name}
+                </Link>
+              </div>
             </TableCell>
             <TableCell className="font-medium">{employee.role}</TableCell>
             <TableCell>{employee.department}</TableCell>
@@ -101,7 +103,7 @@ export const EmployeeTable = () => {
                 </span>
               </div>
             </TableCell>
-            <TableCell className="text-right pr-6 text-muted-foreground">
+            <TableCell className="text-right text-muted-foreground">
               {employee.lastUpdated}
             </TableCell>
           </TableRow>
