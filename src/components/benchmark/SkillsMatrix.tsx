@@ -161,13 +161,13 @@ export const SkillsMatrix = () => {
                   {skill.confidence === 'n/a' ? (
                     <span className="text-gray-500 text-sm">n/a</span>
                   ) : (
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${getConfidenceStyles(skill.confidence)}`}>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getConfidenceStyles(skill.confidence)}`}>
                       {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
                     </span>
                   )}
                 </TableCell>
                 <TableCell className="text-center border-r border-blue-200 py-2">
-                  <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
+                  <span className={`inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded-full text-sm ${
                     skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
                   }`}>
                     ↗ {skill.growth}
@@ -176,8 +176,8 @@ export const SkillsMatrix = () => {
                 <TableCell className="text-center py-2">
                   <div className="flex items-center justify-center space-x-1">
                     <span className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium">J</span>
-                    <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xs font-medium">B</span>
-                    <span className="w-5 h-5 rounded-full bg-primary-icon/10 text-primary-icon flex items-center justify-center text-xs font-medium">O</span>
+                    <span className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium">B</span>
+                    <span className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium">O</span>
                   </div>
                 </TableCell>
               </TableRow>
