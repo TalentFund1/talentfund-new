@@ -1,9 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
-import { SkillLevelIcon } from "./skills/SkillLevelIcon";
-import { useState } from "react";
+import { HelpCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -11,6 +7,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
+import { SkillsTableHeader } from "./skills/table/SkillsTableHeader";
+import { SkillsTableFooter } from "./skills/table/SkillsTableFooter";
+import { SkillsTableRow } from "./skills/table/SkillsTableRow";
 
 const skills = [
   {
@@ -86,20 +86,7 @@ export const SkillsTable = () => {
 
   return (
     <div className="space-y-6 bg-white rounded-lg">
-      <div className="flex justify-between items-center px-6 py-4 border-b border-border">
-        <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
-        <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skills" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="specialized">Specialized Skills</SelectItem>
-            <SelectItem value="common">Common Skills</SelectItem>
-            <SelectItem value="certification">Certification</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <SkillsTableHeader selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
 
       <div className="relative overflow-x-auto">
         <Table>
@@ -142,62 +129,15 @@ export const SkillsTable = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              skills.map((skill, index) => (
-                <TableRow 
-                  key={skill.title} 
-                  className="group transition-colors hover:bg-muted/50 even:bg-muted/5"
-                >
-                  <TableCell className="font-medium border-x border-border group-hover:bg-transparent">
-                    {skill.title}
-                  </TableCell>
-                  <TableCell className="border-r border-border group-hover:bg-transparent">
-                    {skill.subcategory}
-                  </TableCell>
-                  <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border group-hover:bg-transparent">
-                    {skill.level === "Beginner" && <SkillLevelIcon level="beginner" />}
-                  </TableCell>
-                  <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border group-hover:bg-transparent">
-                    {skill.level === "Intermediate" && <SkillLevelIcon level="intermediate" />}
-                  </TableCell>
-                  <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border group-hover:bg-transparent">
-                    {skill.level === "Advanced" && <SkillLevelIcon level="advanced" />}
-                  </TableCell>
-                  <TableCell className="text-center border-r border-border group-hover:bg-transparent">
-                    <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
-                      skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-                    }`}>
-                      ↗ {skill.growth}
-                    </span>
-                  </TableCell>
-                </TableRow>
+              skills.map((skill) => (
+                <SkillsTableRow key={skill.title} skill={skill} />
               ))
             )}
           </TableBody>
         </Table>
       </div>
 
-      <div className="flex justify-between items-center p-4 border-t border-border">
-        <Select defaultValue="10">
-          <SelectTrigger className="w-[100px]">
-            <SelectValue placeholder="10 rows" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="10">10 rows</SelectItem>
-            <SelectItem value="20">20 rows</SelectItem>
-            <SelectItem value="50">50 rows</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        <div className="flex items-center gap-2 ml-auto">
-          <span className="text-sm text-muted-foreground">1-7 of 7</span>
-          <Button variant="outline" size="icon" className="w-8 h-8">
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" className="w-8 h-8">
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      <SkillsTableFooter />
     </div>
   );
 };
