@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
-import { SkillCell } from "./competency/SkillCell";
+import { Check, Heart, Circle } from "lucide-react";
 
 type Skill = {
   name: string;
@@ -81,6 +81,43 @@ const managerialSkills: SkillLevels = {
   ],
 };
 
+const getLevelStyles = (level: string) => {
+  switch (level.toLowerCase()) {
+    case 'advanced':
+      return 'bg-primary-accent/10 text-primary-accent font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
+    case 'intermediate':
+      return 'bg-primary-icon/10 text-primary-icon font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
+    case 'beginner':
+      return 'bg-[#008000]/10 text-[#008000] font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
+    case 'unspecified':
+      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
+    default:
+      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
+  }
+};
+
+const getRequirementStyles = (requirement: string) => {
+  switch (requirement.toLowerCase()) {
+    case 'required':
+      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px] flex items-center justify-center gap-1';
+    case 'preferred':
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px] flex items-center justify-center gap-1';
+    default:
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px] flex items-center justify-center gap-1';
+  }
+};
+
+const getRequirementIcon = (requirement: string) => {
+  switch (requirement.toLowerCase()) {
+    case 'required':
+      return <Check className="h-3 w-3" />;
+    case 'preferred':
+      return <Heart className="h-3 w-3" />;
+    default:
+      return <Circle className="h-3 w-3" />;
+  }
+};
+
 export const CompetencyGraph = () => {
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
 
@@ -134,13 +171,29 @@ export const CompetencyGraph = () => {
             {uniqueSkills.map((skillName) => (
               <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
                 <TableCell className="font-medium border-r border-border">{skillName}</TableCell>
-                {levels.map((level, index) => (
-                  <SkillCell 
-                    key={level}
-                    details={getSkillDetails(skillName, level)}
-                    isLastColumn={index === levels.length - 1}
-                  />
-                ))}
+                {levels.map((level, index) => {
+                  const details = getSkillDetails(skillName, level);
+                  return (
+                    <TableCell 
+                      key={level} 
+                      className={`text-center ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
+                    >
+                      {details.level !== "-" ? (
+                        <div className="flex flex-col items-center">
+                          <div className={getLevelStyles(details.level)}>
+                            {details.level}
+                          </div>
+                          <div className={getRequirementStyles(details.required)}>
+                            {getRequirementIcon(details.required)}
+                            <span>{details.required}</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground/30">-</span>
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))}
           </TableBody>
