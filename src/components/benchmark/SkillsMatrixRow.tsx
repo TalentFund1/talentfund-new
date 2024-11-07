@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 
 interface SkillsMatrixRowProps {
@@ -43,7 +43,9 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
               <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
             </div>
           ) : (
-            <span className="text-gray-500 text-sm">n/a</span>
+            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+              <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
+            </div>
           )}
         </div>
       </TableCell>
