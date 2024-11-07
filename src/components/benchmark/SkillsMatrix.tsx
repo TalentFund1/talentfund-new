@@ -81,7 +81,7 @@ const skills = [
 export const SkillsMatrix = () => {
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-start">
         <div className="flex items-center gap-4">
           <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
           <Select defaultValue="modify">
@@ -95,9 +95,12 @@ export const SkillsMatrix = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-white">Cancel</Button>
-          <Button>Save</Button>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <Button variant="outline" className="bg-white">Cancel</Button>
+            <Button>Save</Button>
+          </div>
+          <Button className="bg-[#1F2144]">Add Skill</Button>
         </div>
       </div>
 
