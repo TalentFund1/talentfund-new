@@ -73,11 +73,17 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
                 {getLevelIcon(level)}
-                {level.charAt(0).toUpperCase() + level.slice(1)}
+                {level === 'unspecified' ? '' : level.charAt(0).toUpperCase() + level.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="unspecified">
+              <span className="flex items-center gap-1.5">
+                <CircleDashed className="w-3.5 h-3.5 text-gray-400" />
+                Unspecified
+              </span>
+            </SelectItem>
             <SelectItem value="beginner">
               <span className="flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5 text-[#008000]" />
@@ -105,7 +111,7 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
           >
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">
-                {required === 'required' ? <Heart className="w-3.5 h-3.5" /> : <span className="w-3.5 h-3.5 flex items-center justify-center">-</span>}
+                {required === 'required' ? <Heart className="w-3.5 h-3.5" /> : <span className="w-3.5 h-3.5 flex items-center justify-center"></span>}
                 {required === 'required' ? 'Skill Goal' : 'Unspecified'}
               </span>
             </SelectValue>
@@ -118,7 +124,7 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
             </SelectItem>
             <SelectItem value="preferred">
               <span className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 flex items-center justify-center">-</span> Unspecified
+                <span className="w-3.5 h-3.5 flex items-center justify-center"></span> Unspecified
               </span>
             </SelectItem>
           </SelectContent>
