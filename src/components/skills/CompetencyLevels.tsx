@@ -28,7 +28,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
         <div className="flex items-center gap-2">
           <div className="text-primary text-sm font-medium">Track:</div>
           <Select defaultValue={track} onValueChange={setTrack}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] border-border">
               <SelectValue placeholder="Select track" />
             </SelectTrigger>
             <SelectContent>
@@ -50,10 +50,10 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
             {pair.map((level) => (
               <div 
                 key={level} 
-                className={`flex items-center gap-3 p-4 rounded-lg transition-colors ${
+                className={`flex items-center gap-3 p-4 rounded-lg border transition-colors ${
                   selectedLevel === `AI Engineer: ${level}`
-                    ? 'bg-primary/10 border border-primary'
-                    : 'bg-background/40 hover:bg-background/60'
+                    ? 'bg-primary-accent/5 border-primary-accent'
+                    : 'bg-background/40 border-border hover:border-primary-accent/50'
                 }`}
               >
                 <RadioGroupItem value={`AI Engineer: ${level}`} id={level} />
