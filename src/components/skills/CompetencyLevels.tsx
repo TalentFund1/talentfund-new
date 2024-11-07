@@ -2,6 +2,7 @@ import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface CompetencyLevelsProps {
   selectedLevels: string[];
@@ -15,12 +16,22 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
     ["P5", "P6"]
   ];
 
+  const [track, setTrack] = React.useState("Professional");
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="flex items-center gap-2">
           <div className="text-primary text-sm font-medium">Track:</div>
-          <div className="text-sm font-medium">Professional</div>
+          <Select defaultValue={track} onValueChange={setTrack}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select track" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Professional">Professional</SelectItem>
+              <SelectItem value="Managerial">Managerial</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <Separator className="my-2" />
       </div>
