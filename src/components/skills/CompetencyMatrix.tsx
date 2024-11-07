@@ -8,6 +8,26 @@ import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 
 const skillsData = {
+  all: [
+    ...Object.values({
+      specialized: [
+        { name: "Amazon Web Services", level: "Advanced", required: "Required" },
+        { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
+        { name: "Deep Learning", level: "Intermediate", required: "Required" },
+        { name: "Machine Learning", level: "Advanced", required: "Required" },
+        { name: "Data Science", level: "Advanced", required: "Required" },
+      ],
+      common: [
+        { name: "Communication", level: "Intermediate", required: "Required" },
+        { name: "Problem Solving", level: "Advanced", required: "Required" },
+        { name: "Team Collaboration", level: "Intermediate", required: "Preferred" },
+      ],
+      certification: [
+        { name: "AWS Certified Solutions Architect", level: "Advanced", required: "Required" },
+        { name: "Google Cloud Professional", level: "Intermediate", required: "Preferred" },
+      ]
+    }).flat(),
+  ],
   specialized: [
     { name: "Amazon Web Services", level: "Advanced", required: "Required" },
     { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
@@ -27,6 +47,7 @@ const skillsData = {
 };
 
 const skillCategories = [
+  { id: "all", name: "All Skills", count: Object.values(skillsData).flat().length },
   { id: "specialized", name: "Specialized Skills", count: 15 },
   { id: "common", name: "Common Skills", count: 10 },
   { id: "certification", name: "Certification", count: 3 }
@@ -34,7 +55,7 @@ const skillCategories = [
 
 export const CompetencyMatrix = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("specialized");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { toast } = useToast();
 
   const handleLevelSelect = (level: string) => {
@@ -111,7 +132,7 @@ export const CompetencyMatrix = () => {
 
       <div>
         <h3 className="text-sm font-medium text-muted-foreground mb-3">Skill Categories</h3>
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-4 gap-4 mb-6">
           {skillCategories.map((category) => (
             <button
               key={category.id}
