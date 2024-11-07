@@ -25,11 +25,11 @@ export const getRequirementIcon = (requirement: string) => {
 export const getLevelStyles = (level: string) => {
   switch (level.toLowerCase()) {
     case 'advanced':
-      return 'bg-primary-accent/10 text-[#1f2144] font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
+      return 'bg-primary-accent/20 text-[#1f2144] font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
     case 'intermediate':
-      return 'bg-primary-icon/10 text-[#1f2144] font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
+      return 'bg-primary-icon/20 text-[#1f2144] font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
     case 'beginner':
-      return 'bg-[#008000]/10 text-[#1f2144] font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
+      return 'bg-[#008000]/20 text-[#1f2144] font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
     case 'unspecified':
       return 'bg-gray-100 text-[#1f2144] font-medium px-2.5 py-1 rounded-t-md text-sm w-full capitalize';
     default:
