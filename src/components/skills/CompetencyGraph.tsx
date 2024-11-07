@@ -19,11 +19,15 @@ const professionalSkills: SkillLevels = {
     { name: "Amazon Web Services", level: "beginner", required: "required" },
     { name: "Python", level: "intermediate", required: "required" },
     { name: "Machine Learning", level: "beginner", required: "preferred" },
+    { name: "Data Visualization", level: "intermediate", required: "unspecified" },
+    { name: "SQL", level: "beginner", required: "unspecified" },
   ],
   "P2": [
     { name: "Amazon Web Services", level: "intermediate", required: "required" },
     { name: "Python", level: "intermediate", required: "required" },
     { name: "Machine Learning", level: "intermediate", required: "required" },
+    { name: "Data Visualization", level: "intermediate", required: "unspecified" },
+    { name: "SQL", level: "intermediate", required: "unspecified" },
   ],
   "P3": [
     { name: "Amazon Web Services", level: "advanced", required: "required" },
@@ -58,12 +62,16 @@ const managerialSkills: SkillLevels = {
     { name: "Team Leadership", level: "intermediate", required: "required" },
     { name: "Project Management", level: "intermediate", required: "required" },
     { name: "Technical Architecture", level: "intermediate", required: "preferred" },
+    { name: "Stakeholder Management", level: "intermediate", required: "unspecified" },
+    { name: "Resource Planning", level: "beginner", required: "unspecified" },
   ],
   "M4": [
     { name: "Team Leadership", level: "advanced", required: "required" },
     { name: "Project Management", level: "advanced", required: "required" },
     { name: "Technical Architecture", level: "advanced", required: "required" },
     { name: "Strategic Planning", level: "intermediate", required: "required" },
+    { name: "Stakeholder Management", level: "intermediate", required: "unspecified" },
+    { name: "Resource Planning", level: "intermediate", required: "unspecified" },
   ],
   "M5": [
     { name: "Team Leadership", level: "advanced", required: "required" },
