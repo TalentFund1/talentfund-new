@@ -153,7 +153,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
                 </span>
               </SelectItem>
               <SelectItem value="unspecified">
-                <span className="flex items-center gap-2">− Unspecified</span>
+                <span className="flex items-center gap-2">−  Unspecified</span>
               </SelectItem>
             </SelectContent>
           </Select>
