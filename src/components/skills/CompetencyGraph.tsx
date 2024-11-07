@@ -64,8 +64,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
         </div>
       </div>
       
-      <Separator className="my-4" />
-      
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-center gap-2">
           <div className="text-sm text-muted-foreground">Track:</div>
@@ -80,6 +78,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
           </Select>
         </div>
       </div>
+
+      <Separator className="my-4" />
       
       <div className="mb-6">
         <h3 className="text-lg font-medium text-foreground">AI Engineer</h3>
