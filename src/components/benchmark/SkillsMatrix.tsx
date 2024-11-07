@@ -15,63 +15,86 @@ const skills = [
     title: "Amazon Web Services",
     subcategory: "Web Services",
     level: "advanced",
-    growth: "12%"
+    growth: "12%",
+    confidence: "high"
   },
   {
     title: "Artificial Intelligence",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "advanced",
-    growth: "19%"
+    growth: "19%",
+    confidence: "high"
   },
   {
     title: "Conversational AI",
     subcategory: "Natural Language Processing (NLP)",
     level: "advanced",
-    growth: "12%"
+    growth: "12%",
+    confidence: "medium"
   },
   {
     title: "Deep Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "intermediate",
-    growth: "19%"
+    growth: "19%",
+    confidence: "medium"
   },
   {
     title: "Machine Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "intermediate",
-    growth: "10%"
+    growth: "10%",
+    confidence: "low"
   },
   {
     title: "Docker (Software)",
     subcategory: "Software Development Tools",
     level: "intermediate",
-    growth: "0%"
+    growth: "0%",
+    confidence: "n/a"
   },
   {
     title: "MLflow",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "beginner",
-    growth: "11%"
+    growth: "11%",
+    confidence: "n/a"
   },
   {
     title: "Natural Language Understanding",
     subcategory: "Natural Language Processing (NLP)",
     level: "unspecified",
-    growth: "15%"
+    growth: "15%",
+    confidence: "n/a"
   },
   {
     title: "Computer Vision",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "unspecified",
-    growth: "18%"
+    growth: "18%",
+    confidence: "n/a"
   },
   {
     title: "Kubernetes",
     subcategory: "Software Development Tools",
     level: "unspecified",
-    growth: "14%"
+    growth: "14%",
+    confidence: "n/a"
   }
 ];
+
+const getConfidenceStyles = (confidence: string) => {
+  switch (confidence) {
+    case 'high':
+      return 'bg-green-100 text-green-800';
+    case 'medium':
+      return 'bg-orange-100 text-orange-800';
+    case 'low':
+      return 'bg-red-100 text-red-800';
+    default:
+      return 'text-gray-500 text-sm';
+  }
+};
 
 export const SkillsMatrix = () => {
   return (
@@ -135,12 +158,12 @@ export const SkillsMatrix = () => {
                 </TableCell>
                 <SkillLevelCell initialLevel={skill.level} />
                 <TableCell className="text-center border-r border-blue-200 py-2">
-                  {Math.random() > 0.5 ? (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      High
-                    </span>
-                  ) : (
+                  {skill.confidence === 'n/a' ? (
                     <span className="text-gray-500 text-sm">n/a</span>
+                  ) : (
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getConfidenceStyles(skill.confidence)}`}>
+                      {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
+                    </span>
                   )}
                 </TableCell>
                 <TableCell className="text-center border-r border-blue-200 py-2">
