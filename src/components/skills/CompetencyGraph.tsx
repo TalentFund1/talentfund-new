@@ -121,7 +121,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">Competency Graph</h2>
+        <h2 className="text-xl font-semibold text-foreground">Skill Graph</h2>
+        <Separator className="my-4" />
       </div>
       
       <div className="mb-6">
@@ -137,8 +138,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
           </SelectContent>
         </Select>
       </div>
-
-      <Separator className="my-4" />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
         <Table>
