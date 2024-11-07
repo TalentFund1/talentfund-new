@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
-import { SkillProfileMatrixPagination } from "./SkillProfileMatrixPagination";
+import { useToast } from "@/components/ui/use-toast";
+
+// Initial page size
+const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef<IntersectionObserver>();
+  const { toast } = useToast();
 
-  const skills = [
+  // Simulated skills data - in a real app, this would come from an API
+  const allSkills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
     { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
     { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
@@ -20,32 +27,34 @@ export const SkillProfileMatrix = () => {
     { title: "Scalability", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
     { title: "Software Engineering", subcategory: "Software Development Tools", level: "advanced", growth: "23%", salary: "$180,512", benchmarks: { J: true, B: true, O: true } },
     { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
-  ].sort((a, b) => {
-    if (sortBy === "jobDescription") {
-      return Number(b.benchmarks.J) - Number(a.benchmarks.J);
-    }
-    if (sortBy === "benchmark") {
-      return Number(b.benchmarks.B) - Number(a.benchmarks.B);
-    }
-    if (sortBy === "occupation") {
-      return Number(b.benchmarks.O) - Number(a.benchmarks.O);
-    }
-    return 0;
-  });
+  ];
 
-  const totalPages = Math.ceil(skills.length / rowsPerPage);
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
-  const paginatedSkills = skills.slice(startIndex, endIndex);
+  // Calculate the current page of skills
+  const paginatedSkills = allSkills.slice(0, page * PAGE_SIZE);
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (value: string) => {
-    setRowsPerPage(Number(value));
-    setCurrentPage(1);
-  };
+  const lastSkillElementRef = useCallback((node: HTMLElement | null) => {
+    if (loading) return;
+    
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => {
+          const nextPage = prevPage + 1;
+          if (nextPage * PAGE_SIZE >= allSkills.length) {
+            setHasMore(false);
+            toast({
+              title: "End of list",
+              description: "You've reached the end of the skills list.",
+            });
+          }
+          return nextPage;
+        });
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
 
   return (
     <div className="space-y-6">
@@ -64,7 +73,7 @@ export const SkillProfileMatrix = () => {
           <div className="flex gap-2">
             <Select value={skillType} onValueChange={setSkillType}>
               <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Skills" />
+                <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
@@ -101,19 +110,11 @@ export const SkillProfileMatrix = () => {
         </div>
 
         <div className="rounded-lg border border-border overflow-hidden">
-          <SkillProfileMatrixTable paginatedSkills={paginatedSkills} />
+          <SkillProfileMatrixTable 
+            paginatedSkills={paginatedSkills} 
+            lastSkillElementRef={lastSkillElementRef}
+          />
         </div>
-
-        <SkillProfileMatrixPagination
-          rowsPerPage={rowsPerPage}
-          handleRowsPerPageChange={handleRowsPerPageChange}
-          startIndex={startIndex}
-          endIndex={endIndex}
-          totalSkills={skills.length}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          handlePageChange={handlePageChange}
-        />
       </Card>
     </div>
   );

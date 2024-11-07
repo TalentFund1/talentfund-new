@@ -18,9 +18,10 @@ interface Skill {
 
 interface SkillProfileMatrixTableProps {
   paginatedSkills: Skill[];
+  lastSkillElementRef: (node: HTMLElement | null) => void;
 }
 
-export const SkillProfileMatrixTable = ({ paginatedSkills }: SkillProfileMatrixTableProps) => {
+export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }: SkillProfileMatrixTableProps) => {
   return (
     <table className="w-full">
       <thead>
@@ -57,8 +58,12 @@ export const SkillProfileMatrixTable = ({ paginatedSkills }: SkillProfileMatrixT
         </tr>
       </thead>
       <tbody>
-        {paginatedSkills.map((skill) => (
-          <tr key={skill.title} className="border-t border-border hover:bg-muted/50 transition-colors">
+        {paginatedSkills.map((skill, index) => (
+          <tr 
+            key={skill.title} 
+            ref={index === paginatedSkills.length - 1 ? lastSkillElementRef : null}
+            className="border-t border-border hover:bg-muted/50 transition-colors"
+          >
             <td className="py-3 px-4">
               <div className="flex items-center gap-2">
                 <Switch />
