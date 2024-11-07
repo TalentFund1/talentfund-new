@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import { TablePagination } from "./TablePagination";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -112,22 +113,7 @@ export const EmployeeTable = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-between px-4 py-4 border-t border-border">
-        <select className="px-3 py-1.5 border border-border rounded-md text-sm">
-          <option>10 rows</option>
-          <option>20 rows</option>
-          <option>50 rows</option>
-        </select>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">1-4 of 4</span>
-          <button className="p-1 rounded border border-border" disabled>
-            <ChevronDown className="h-4 w-4 rotate-90" />
-          </button>
-          <button className="p-1 rounded border border-border" disabled>
-            <ChevronDown className="h-4 w-4 -rotate-90" />
-          </button>
-        </div>
-      </div>
+      <TablePagination />
     </div>
   );
 };
