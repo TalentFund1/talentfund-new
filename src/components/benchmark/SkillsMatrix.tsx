@@ -97,9 +97,9 @@ export const SkillsMatrix = () => {
             <TableRow className="hover:bg-transparent border-b border-gray-200 bg-[#F7F9FF]">
               <TableHead className="w-[180px] border-r border-blue-200 py-2">Skill Title</TableHead>
               <TableHead className="w-[220px] border-r border-blue-200 py-2">Subcategory</TableHead>
+              <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">Company Skill</TableHead>
               <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">Skill Level</TableHead>
               <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">Confidence Score</TableHead>
-              <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">Company Skill</TableHead>
               <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
@@ -128,6 +128,11 @@ export const SkillsMatrix = () => {
               <TableRow key={skill.title} className="hover:bg-muted/50 border-b border-gray-200">
                 <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
                 <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
+                <TableCell className="text-center border-r border-blue-200 py-2">
+                  <div className="flex justify-center">
+                    <Check className="w-4 h-4 text-green-600" />
+                  </div>
+                </TableCell>
                 <SkillLevelCell initialLevel={skill.level} />
                 <TableCell className="text-center border-r border-blue-200 py-2">
                   {Math.random() > 0.5 ? (
@@ -137,11 +142,6 @@ export const SkillsMatrix = () => {
                   ) : (
                     <span className="text-gray-500 text-sm">n/a</span>
                   )}
-                </TableCell>
-                <TableCell className="text-center border-r border-blue-200 py-2">
-                  <div className="flex justify-center">
-                    <Check className="w-4 h-4 text-green-600" />
-                  </div>
                 </TableCell>
                 <TableCell className="text-center border-r border-blue-200 py-2">
                   <span className={`inline-flex items-center justify-center gap-1 px-2 py-0.5 rounded-full text-sm ${
