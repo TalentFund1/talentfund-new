@@ -38,7 +38,7 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
   };
 
   const getRequirementStyles = (requirement: string) => {
-    const baseStyles = "text-xs px-2 py-1 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md";
+    const baseStyles = "text-xs px-2 py-1 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md";
     
     switch (requirement) {
       case 'required':
@@ -64,14 +64,14 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
   };
 
   return (
-    <TableCell className="border-r border-blue-200 p-2">
+    <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select value={level} onValueChange={setLevel}>
           <SelectTrigger 
-            className={`rounded-t-md px-3 py-1.5 text-xs font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
+            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
             <SelectValue>
-              <span className="flex items-center gap-2 justify-center">
+              <span className="flex items-center gap-2 justify-center text-[15px]">
                 {getLevelIcon(level)}
                 {level.charAt(0).toUpperCase() + level.slice(1)}
               </span>
@@ -106,20 +106,24 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
         </Select>
 
         <Select value={required} onValueChange={setRequired}>
-          <SelectTrigger className={getRequirementStyles(required)}>
+          <SelectTrigger 
+            className={`text-xs px-2 py-1 font-normal w-full flex items-center justify-center min-h-[24px] border-x-2 border-b-2 rounded-b-md ${getRequirementStyles(required)}`}
+          >
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">
-                {required === 'required' ? <Heart className="w-3.5 h-3.5" /> : <span className="w-3.5 h-3.5 flex items-center justify-center">-</span>}
-                {required === 'required' ? 'Skill Goal' : 'Unspecified'}
+                {required === 'required' ? <Heart className="w-3 h-3" /> : null}
+                {required === 'required' ? 'Required' : 'Unspecified'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
-              <span className="flex items-center gap-1.5"><Heart className="w-3.5 h-3.5" /> Skill Goal</span>
+              <span className="flex items-center gap-1.5">
+                <Heart className="w-3 h-3" /> Required
+              </span>
             </SelectItem>
             <SelectItem value="preferred">
-              <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 flex items-center justify-center">-</span> Unspecified</span>
+              <span className="flex items-center gap-1.5">Unspecified</span>
             </SelectItem>
           </SelectContent>
         </Select>
