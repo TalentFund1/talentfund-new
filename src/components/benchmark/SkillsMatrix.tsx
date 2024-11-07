@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, HelpCircle, Heart, Check } from "lucide-react";
 import { SkillLevelIcon } from "../skills/SkillLevelIcon";
 import {
   Tooltip,
@@ -97,10 +97,10 @@ export const SkillsMatrix = () => {
             <TableRow className="hover:bg-transparent border-b border-gray-200">
               <TableHead className="w-[180px] border-r border-blue-200">Skill Title</TableHead>
               <TableHead className="w-[220px] border-r border-blue-200">Subcategory</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[120px] bg-[#F7F9FF]">Unspecified</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[120px] bg-[#F7F9FF]">Beginner</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[120px] bg-[#F7F9FF]">Intermediate</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[120px] bg-[#F7F9FF]">Advanced</TableHead>
+              <TableHead className="w-[150px] text-center border-r border-blue-200">Skill Level</TableHead>
+              <TableHead className="w-[120px] text-center border-r border-blue-200">Appears In</TableHead>
+              <TableHead className="w-[150px] text-center border-r border-blue-200">Confidence Score</TableHead>
+              <TableHead className="w-[120px] text-center border-r border-blue-200">Company Skill</TableHead>
               <TableHead className="w-[120px] text-center">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
@@ -111,9 +111,9 @@ export const SkillsMatrix = () => {
                       </TooltipTrigger>
                       <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                         <div className="space-y-2">
-                          <h4 className="font-medium text-left">Salary with Skill:</h4>
+                          <h4 className="font-medium text-left">Projected Growth:</h4>
                           <p className="text-sm text-left font-normal">
-                            Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill
+                            Projected growth in demand for this skill over the next year
                           </p>
                         </div>
                       </TooltipContent>
@@ -128,17 +128,48 @@ export const SkillsMatrix = () => {
               <TableRow key={skill.title} className="hover:bg-muted/50 border-b border-gray-200">
                 <TableCell className="font-medium border-r border-blue-200">{skill.title}</TableCell>
                 <TableCell className="border-r border-blue-200">{skill.subcategory}</TableCell>
-                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "unspecified" ? 'bg-white border border-gray-300' : ''}`}>
-                  {skill.level === "unspecified" && <SkillLevelIcon level="unspecified" />}
+                <TableCell className="border-r border-blue-200">
+                  <div className="flex flex-col items-center gap-1">
+                    <div className={`w-full px-3 py-1.5 rounded-md flex items-center justify-center gap-2 ${
+                      skill.level === "advanced" 
+                        ? 'border-2 border-primary-accent bg-primary-accent/5'
+                        : skill.level === "intermediate"
+                          ? 'border-2 border-primary-icon bg-primary-icon/5'
+                          : skill.level === "beginner"
+                            ? 'border-2 border-[#008000] bg-[#008000]/5'
+                            : 'border border-gray-300 bg-white'
+                    }`}>
+                      <SkillLevelIcon level={skill.level.toLowerCase()} />
+                      <span className="text-sm font-medium capitalize">{skill.level}</span>
+                    </div>
+                    {skill.level === "intermediate" && (
+                      <div className="w-full px-3 py-1 rounded-md border-2 border-primary-icon bg-primary-icon/5 flex items-center justify-center gap-2">
+                        <Heart className="w-4 h-4 text-primary-icon" />
+                        <span className="text-xs font-medium">Skill Goal</span>
+                      </div>
+                    )}
+                  </div>
                 </TableCell>
-                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "beginner" ? 'bg-[#008000]/5 border-2 border-[#008000]' : ''}`}>
-                  {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
+                <TableCell className="text-center border-r border-blue-200">
+                  <div className="flex items-center justify-center space-x-1">
+                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium">J</span>
+                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium">B</span>
+                    <span className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center text-xs font-medium">O</span>
+                  </div>
                 </TableCell>
-                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "intermediate" ? 'bg-primary-icon/5 border-2 border-primary-icon' : ''}`}>
-                  {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
+                <TableCell className="text-center border-r border-blue-200">
+                  {Math.random() > 0.5 ? (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      High
+                    </span>
+                  ) : (
+                    <span className="text-gray-500 text-sm">n/a</span>
+                  )}
                 </TableCell>
-                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "advanced" ? 'bg-primary-accent/5 border-2 border-primary-accent' : ''}`}>
-                  {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
+                <TableCell className="text-center border-r border-blue-200">
+                  <div className="flex justify-center">
+                    <Check className="w-6 h-6 text-green-600" />
+                  </div>
                 </TableCell>
                 <TableCell className="text-center">
                   <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
