@@ -44,10 +44,9 @@ export const SkillsGrid = ({ currentSkills }: SkillsGridProps) => {
               <SelectItem value="advanced">Advanced</SelectItem>
               <SelectItem value="intermediate">Intermediate</SelectItem>
               <SelectItem value="beginner">Beginner</SelectItem>
-              <SelectItem value="unspecified">Unspecified</SelectItem>
             </SelectContent>
           </Select>
-          <Select defaultValue={skill.required.toLowerCase()}>
+          <Select defaultValue={skill.required.toLowerCase() || "preferred"}>
             <SelectTrigger className="bg-white border-border">
               <SelectValue />
             </SelectTrigger>

@@ -13,7 +13,7 @@ interface SkillCellProps {
 
 export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
   const [level, setLevel] = useState(details.level);
-  const [required, setRequired] = useState(details.required);
+  const [required, setRequired] = useState(details.required || "preferred");
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -67,8 +67,6 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
         return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
       case 'preferred':
         return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
-      case 'unspecified':
-        return `${baseStyles} bg-gray-50/50 border-x-2 border-b-2 rounded-b-md border-gray-200`;
       default:
         return `${baseStyles} bg-transparent`;
     }
@@ -80,8 +78,6 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
         return '✓';
       case 'preferred':
         return <Heart className="w-3 h-3" />;
-      case 'unspecified':
-        return '−';
       default:
         return '';
     }
@@ -151,9 +147,6 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
                 <span className="flex items-center gap-2">
                   <Heart className="w-3 h-3" /> Preferred
                 </span>
-              </SelectItem>
-              <SelectItem value="unspecified">
-                <span className="flex items-center gap-2">− Unspecified</span>
               </SelectItem>
             </SelectContent>
           </Select>
