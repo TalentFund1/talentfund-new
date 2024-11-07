@@ -38,7 +38,7 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
   };
 
   const getRequirementStyles = (requirement: string) => {
-    const baseStyles = "text-xs px-2 py-0.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md";
+    const baseStyles = "text-xs px-2 py-1 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md";
     
     switch (requirement) {
       case 'required':
@@ -64,11 +64,11 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
   };
 
   return (
-    <TableCell className="border-r border-blue-200 p-0">
+    <TableCell className="border-r border-blue-200 p-2">
       <div className="flex flex-col items-center">
         <Select value={level} onValueChange={setLevel}>
           <SelectTrigger 
-            className={`rounded-t-md px-2 py-1 text-xs font-medium w-full capitalize flex items-center justify-center min-h-[24px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
+            className={`rounded-t-md px-3 py-1.5 text-xs font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center">
