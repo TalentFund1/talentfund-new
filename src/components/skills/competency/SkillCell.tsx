@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target } from "lucide-react";
+import { Star, Shield, Target, Heart } from "lucide-react";
 import { useState } from "react";
 
 interface SkillCellProps {
@@ -79,7 +79,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
       case 'required':
         return '✓';
       case 'preferred':
-        return '○';
+        return <Heart className="w-3 h-3" />;
       case 'unspecified':
         return '−';
       default:
@@ -144,9 +144,17 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="required">✓ Required</SelectItem>
-              <SelectItem value="preferred">○ Preferred</SelectItem>
-              <SelectItem value="unspecified">− Unspecified</SelectItem>
+              <SelectItem value="required">
+                <span className="flex items-center gap-2">✓ Required</span>
+              </SelectItem>
+              <SelectItem value="preferred">
+                <span className="flex items-center gap-2">
+                  <Heart className="w-3 h-3" /> Preferred
+                </span>
+              </SelectItem>
+              <SelectItem value="unspecified">
+                <span className="flex items-center gap-2">− Unspecified</span>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
