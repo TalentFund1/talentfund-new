@@ -15,7 +15,7 @@ export const SkillsMatrixTableHeader = () => {
         <TableHead className="w-[220px] border-r border-blue-200 py-2">Subcategory</TableHead>
         <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">Company Skill</TableHead>
         <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">Skill Level</TableHead>
-        <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">
+        <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">
           <div className="flex items-center justify-center gap-1">
             Confidence Score
             <TooltipProvider>
