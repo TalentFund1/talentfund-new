@@ -32,13 +32,13 @@ export const SkillsTableRow = ({ skill }: SkillsTableRowProps) => {
       <TableCell className="border-r border-border group-hover:bg-transparent py-4">
         {skill.subcategory}
       </TableCell>
-      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 w-[120px] ${getLevelBackgroundColor("Beginner")}`}>
+      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 w-[100px] ${getLevelBackgroundColor("Beginner")}`}>
         {skill.level === "Beginner" && <SkillLevelIcon level="beginner" />}
       </TableCell>
-      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 w-[120px] ${getLevelBackgroundColor("Intermediate")}`}>
+      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 w-[100px] ${getLevelBackgroundColor("Intermediate")}`}>
         {skill.level === "Intermediate" && <SkillLevelIcon level="intermediate" />}
       </TableCell>
-      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 w-[120px] ${getLevelBackgroundColor("Advanced")}`}>
+      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 w-[100px] ${getLevelBackgroundColor("Advanced")}`}>
         {skill.level === "Advanced" && <SkillLevelIcon level="advanced" />}
       </TableCell>
       <TableCell className="text-center border-r border-border group-hover:bg-transparent py-4">
