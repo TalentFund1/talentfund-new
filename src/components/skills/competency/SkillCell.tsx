@@ -31,7 +31,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
   };
 
   const getLevelStyles = (level: string) => {
-    const baseStyles = 'rounded-t-md py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]';
+    const baseStyles = 'rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]';
 
     switch (level.toLowerCase()) {
       case 'advanced':
@@ -56,7 +56,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
           ? 'border-[#008000]'
           : 'border-gray-400';
 
-    const baseStyles = 'text-xs py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
+    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
     switch (requirement.toLowerCase()) {
       case 'required':
@@ -81,7 +81,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
 
   return (
     <TableCell 
-      className={`text-center p-0 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
+      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
     >
       <div className="flex flex-col items-center gap-0">
         <Select 
