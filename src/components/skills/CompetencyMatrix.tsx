@@ -113,6 +113,7 @@ export const CompetencyMatrix = () => {
                 <SelectContent>
                   <SelectItem value="advanced">Advanced</SelectItem>
                   <SelectItem value="intermediate">Intermediate</SelectItem>
+                  <SelectItem value="beginner">Beginner</SelectItem>
                   <SelectItem value="unspecified">Unspecified</SelectItem>
                 </SelectContent>
               </Select>
