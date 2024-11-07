@@ -61,7 +61,7 @@ const SkillProfileDetail = () => {
                     value="graph"
                     className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
                   >
-                    Competency Graph
+                    Competency Matrix
                   </TabsTrigger>
                 </TabsList>
 
