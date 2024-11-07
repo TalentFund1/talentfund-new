@@ -10,13 +10,11 @@ interface CompetencyLevelsProps {
 }
 
 export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLevelsProps) => {
-  const levelPairs = [
-    ["P1", "P2"],
-    ["P3", "P4"],
-    ["P5", "P6"]
-  ];
-
   const [track, setTrack] = React.useState("Professional");
+
+  const levelPairs = track === "Professional" 
+    ? [["P1", "P2"], ["P3", "P4"], ["P5", "P6"]]
+    : [["M3", "M4"], ["M5", "M6"]];
 
   return (
     <div className="space-y-6">
@@ -48,7 +46,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
                 key={level} 
                 className="flex items-center gap-3 bg-background/40 p-4 rounded-lg hover:bg-background/60 transition-colors"
               >
-                <RadioGroupItem value={`AI Engineer ${level}`} id={level} />
+                <RadioGroupItem value={`AI Engineer: ${level}`} id={level} />
                 <Label htmlFor={level} className="text-sm font-medium">AI Engineer: {level}</Label>
               </div>
             ))}
