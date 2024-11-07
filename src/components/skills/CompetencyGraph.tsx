@@ -141,12 +141,11 @@ export const CompetencyGraph = () => {
       <div className="rounded-lg border border-border bg-white">
         <Table>
           <TableHeader>
-            <TableRow className="hover:bg-transparent border-b border-border">
-              <TableHead className="w-[200px] font-semibold bg-background/80">Skill</TableHead>
+            <TableRow className="hover:bg-transparent border-y border-border">
+              <TableHead className="w-[200px] font-semibold bg-background/80 border-x border-border">Skill</TableHead>
               {levels.map((level) => (
-                <TableHead key={level} className="text-center bg-background/80">
+                <TableHead key={level} className="text-center bg-background/80 border-r border-border">
                   <div className="font-semibold">{level}</div>
-                  <div className="text-xs text-muted-foreground mt-1">Level / Required</div>
                 </TableHead>
               ))}
             </TableRow>
@@ -154,11 +153,11 @@ export const CompetencyGraph = () => {
           <TableBody>
             {uniqueSkills.map((skillName) => (
               <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
-                <TableCell className="font-medium">{skillName}</TableCell>
+                <TableCell className="font-medium border-x border-border">{skillName}</TableCell>
                 {levels.map((level) => {
                   const details = getSkillDetails(skillName, level);
                   return (
-                    <TableCell key={level} className="text-center">
+                    <TableCell key={level} className="text-center border-r border-border">
                       {details.level !== "-" ? (
                         <div className="space-y-1.5">
                           <div className={getLevelStyles(details.level)}>
