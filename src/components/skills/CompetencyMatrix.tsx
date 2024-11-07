@@ -20,8 +20,16 @@ const skills = [
   { name: "Full Stack Development", level: "Unspecified", required: "Preferred" },
 ];
 
+const skillCategories = [
+  { id: "web-services", name: "Web Services", count: 5 },
+  { id: "ai-ml", name: "Artificial Intelligence and Machine Learning", count: 8 },
+  { id: "nlp", name: "Natural Language Processing (NLP)", count: 3 },
+  { id: "dev-tools", name: "Software Development Tools", count: 6 }
+];
+
 export const CompetencyMatrix = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const handleLevelSelect = (level: string) => {
     setSelectedLevels(prev => 
@@ -86,6 +94,27 @@ export const CompetencyMatrix = () => {
       <Separator className="my-4 border-border" />
 
       <div>
+        {/* Skill Categories Section */}
+        <div className="mb-6">
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">Skill Categories</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {skillCategories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`p-3 rounded-lg border text-left transition-colors ${
+                  selectedCategory === category.id
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border hover:border-primary/50'
+                }`}
+              >
+                <div className="font-medium text-sm">{category.name}</div>
+                <div className="text-xs text-muted-foreground mt-1">{category.count} skills</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="border border-border rounded-lg overflow-hidden">
           <div className="grid grid-cols-3 gap-4 p-3 bg-[#F7F9FF] border-b border-border">
             <div className="flex items-center gap-2">
@@ -95,7 +124,7 @@ export const CompetencyMatrix = () => {
             <div className="text-sm font-medium text-foreground">Required</div>
           </div>
 
-          {skills.map((skill, index) => (
+          {skills.map((skill) => (
             <div 
               key={skill.name} 
               className="grid grid-cols-3 gap-4 p-3 hover:bg-background/40 transition-colors border-b border-border last:border-b-0"
