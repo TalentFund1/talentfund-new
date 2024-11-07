@@ -97,10 +97,10 @@ export const SkillsMatrix = () => {
             <TableRow className="hover:bg-transparent border-b border-blue-200">
               <TableHead className="w-[180px] border-r border-blue-200">Skill Title</TableHead>
               <TableHead className="w-[220px] border-r border-blue-200">Subcategory</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[120px]">Unspecified</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[120px]">Beginner</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[120px]">Intermediate</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[120px]">Advanced</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[120px] bg-[#F7F9FF]">Unspecified</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[120px] bg-[#F7F9FF]">Beginner</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[120px] bg-[#F7F9FF]">Intermediate</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[120px] bg-[#F7F9FF]">Advanced</TableHead>
               <TableHead className="w-[120px] text-center">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
@@ -128,16 +128,16 @@ export const SkillsMatrix = () => {
               <TableRow key={skill.title} className="hover:bg-muted/50 border-b border-blue-200">
                 <TableCell className="font-medium border-r border-blue-200">{skill.title}</TableCell>
                 <TableCell className="border-r border-blue-200">{skill.subcategory}</TableCell>
-                <TableCell className="text-center border-r border-blue-200">
+                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "unspecified" ? 'bg-gray-50' : ''}`}>
                   {skill.level === "unspecified" && <SkillLevelIcon level="unspecified" />}
                 </TableCell>
-                <TableCell className="text-center border-r border-blue-200">
+                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "beginner" ? 'bg-[#008000]/5' : ''}`}>
                   {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
                 </TableCell>
-                <TableCell className="text-center border-r border-blue-200">
+                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "intermediate" ? 'bg-primary-icon/5' : ''}`}>
                   {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
                 </TableCell>
-                <TableCell className="text-center border-r border-blue-200">
+                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "advanced" ? 'bg-primary-accent/5' : ''}`}>
                   {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
                 </TableCell>
                 <TableCell className="text-center">
