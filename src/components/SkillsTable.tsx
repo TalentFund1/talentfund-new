@@ -94,6 +94,7 @@ export const SkillsTable = () => {
             <TableRow className="hover:bg-transparent border-y border-border">
               <TableHead className="w-[200px] border-x border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">Skill Title</TableHead>
               <TableHead className="w-[250px] border-r border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">Subcategory</TableHead>
+              <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Unspecified</TableHead>
               <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Beginner</TableHead>
               <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Intermediate</TableHead>
               <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Advanced</TableHead>
@@ -124,7 +125,7 @@ export const SkillsTable = () => {
               Array(5).fill(0).map((_, index) => renderSkeletonRow())
             ) : skills.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                <TableCell colSpan={7} className="h-32 text-center text-muted-foreground">
                   No skills found
                 </TableCell>
               </TableRow>
