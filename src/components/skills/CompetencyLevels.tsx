@@ -11,11 +11,19 @@ interface CompetencyLevelsProps {
 
 export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLevelsProps) => {
   const [track, setTrack] = React.useState("Professional");
-  const [selectedLevel, setSelectedLevel] = React.useState<string | null>(null);
+  const [selectedLevel, setSelectedLevel] = React.useState<string>(`AI Engineer: ${track === "Professional" ? "P1" : "M3"}`);
 
   const levelPairs = track === "Professional" 
     ? [["P1", "P2"], ["P3", "P4"], ["P5", "P6"]]
     : [["M3", "M4"], ["M5", "M6"]];
+
+  const handleTrackChange = (value: string) => {
+    setTrack(value);
+    // Set default selection based on track
+    const defaultLevel = value === "Professional" ? "P1" : "M3";
+    setSelectedLevel(`AI Engineer: ${defaultLevel}`);
+    handleLevelSelect(`AI Engineer: ${defaultLevel}`);
+  };
 
   const handleLevelSelect = (value: string) => {
     setSelectedLevel(value);
@@ -27,7 +35,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
       <div className="space-y-4">
         <div className="flex items-center gap-2">
           <div className="text-primary text-sm font-medium">Track:</div>
-          <Select defaultValue={track} onValueChange={setTrack}>
+          <Select defaultValue={track} onValueChange={handleTrackChange}>
             <SelectTrigger className="w-[180px] border-border">
               <SelectValue placeholder="Select track" />
             </SelectTrigger>
@@ -41,7 +49,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
       </div>
 
       <RadioGroup 
-        value={selectedLevel || undefined}
+        value={selectedLevel}
         onValueChange={handleLevelSelect}
         className="space-y-4"
       >
