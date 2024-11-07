@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
 import { useState } from "react";
 
 interface SkillCellProps {
@@ -23,6 +23,8 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
         return <Shield className="w-4 h-4 text-primary-icon" />;
       case 'beginner':
         return <Target className="w-4 h-4 text-[#008000]" />;
+      case 'unspecified':
+        return <CircleDashed className="w-4 h-4 text-gray-400" />;
       default:
         return null;
     }
@@ -42,6 +44,8 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
         return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
       case 'beginner':
         return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
+      case 'unspecified':
+        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
       default:
         return `${baseStyles} border-2 border-gray-300 text-gray-400`;
     }
@@ -54,7 +58,9 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
         ? 'border-primary-icon'
         : level.toLowerCase() === 'beginner'
           ? 'border-[#008000]'
-          : 'border-gray-300';
+          : level.toLowerCase() === 'unspecified'
+            ? 'border-gray-400'
+            : 'border-gray-300';
 
     if (!requirement || requirement === '-') {
       return 'invisible h-[22px]';
@@ -104,6 +110,12 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="unspecified">
+                <span className="flex items-center gap-2">
+                  <CircleDashed className="w-4 h-4 text-gray-400" />
+                  Unspecified
+                </span>
+              </SelectItem>
               <SelectItem value="beginner">
                 <span className="flex items-center gap-2">
                   <Target className="w-4 h-4 text-[#008000]" />
