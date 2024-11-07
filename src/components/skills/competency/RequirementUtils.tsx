@@ -21,7 +21,7 @@ export const getRequirementStyles = (requirement: string, level: string) => {
     case 'preferred':
       return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300 text-[#1f2144]`;
     case 'unspecified':
-      return `${baseStyles} bg-white border-x border-b rounded-b-md border-gray-50 text-gray-400`;
+      return `${baseStyles} bg-white border-[0.5px] rounded-b-md border-gray-50 text-gray-400`;
     default:
       return `${baseStyles} bg-transparent`;
   }
