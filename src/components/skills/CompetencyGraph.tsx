@@ -138,7 +138,7 @@ export const CompetencyGraph = () => {
         </Select>
       </div>
 
-      <div className="rounded-lg border border-border bg-white">
+      <div className="rounded-lg border border-border bg-white overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
