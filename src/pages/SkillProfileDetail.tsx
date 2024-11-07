@@ -18,6 +18,10 @@ const SkillProfileDetail = () => {
   const navigate = useNavigate();
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
 
+  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
+    setTrack(newTrack);
+  };
+
   return (
     <ToastProvider>
       <TooltipProvider>
@@ -74,7 +78,7 @@ const SkillProfileDetail = () => {
                 </TabsContent>
 
                 <TabsContent value="matrix">
-                  <CompetencyMatrix />
+                  <CompetencyMatrix onTrackChange={handleTrackChange} />
                 </TabsContent>
 
                 <TabsContent value="graph">

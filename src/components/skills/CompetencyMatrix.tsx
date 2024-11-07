@@ -50,7 +50,11 @@ const skillCategories = [
   { id: "certification", name: "Certification", count: 3 }
 ];
 
-export const CompetencyMatrix = () => {
+interface CompetencyMatrixProps {
+  onTrackChange: (track: "Professional" | "Managerial") => void;
+}
+
+export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
@@ -66,6 +70,7 @@ export const CompetencyMatrix = () => {
 
   const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
     setTrack(newTrack);
+    onTrackChange(newTrack);
   };
 
   const handleCategorySelect = (categoryId: string) => {
