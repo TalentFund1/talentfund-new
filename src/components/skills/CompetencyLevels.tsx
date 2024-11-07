@@ -10,7 +10,18 @@ interface CompetencyLevelsProps {
 export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLevelsProps) => {
   return (
     <div className="space-y-4">
-      <div className="text-primary text-sm font-medium">Track: Professional</div>
+      <div className="flex items-center gap-2">
+        <div className="text-primary text-sm font-medium">Track:</div>
+        <Select defaultValue="professional">
+          <SelectTrigger className="w-[140px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="professional">Professional</SelectItem>
+            <SelectItem value="managerial">Managerial</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       <div className="space-y-2">
         {["P3", "P4"].map((level) => (
