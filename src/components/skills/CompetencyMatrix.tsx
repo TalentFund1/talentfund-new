@@ -91,7 +91,7 @@ export const CompetencyMatrix = () => {
               className={`rounded-lg p-4 transition-colors ${
                 selectedCategory === category.id
                   ? 'bg-primary-accent/5 border border-primary-accent'
-                  : 'bg-background border border-input hover:border-primary-accent/50'
+                  : 'bg-background border border-border hover:border-primary-accent/50'
               }`}
             >
               <div className="flex flex-col items-start">
