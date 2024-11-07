@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -11,8 +11,20 @@ interface CompetencyLevelsProps {
 }
 
 export const CompetencyLevels = ({ selectedLevels, onLevelSelect, onTrackChange }: CompetencyLevelsProps) => {
-  const [track, setTrack] = React.useState<"Professional" | "Managerial">("Professional");
-  const [selectedLevel, setSelectedLevel] = React.useState<string>(`AI Engineer: ${track === "Professional" ? "P1" : "M3"}`);
+  const [track, setTrack] = React.useState<"Professional" | "Managerial">(() => {
+    const savedTrack = localStorage.getItem('selectedTrack');
+    return (savedTrack as "Professional" | "Managerial") || "Professional";
+  });
+  
+  const [selectedLevel, setSelectedLevel] = React.useState<string>(() => {
+    const savedLevel = localStorage.getItem('selectedLevel');
+    return savedLevel || `AI Engineer: ${track === "Professional" ? "P1" : "M3"}`;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('selectedTrack', track);
+    localStorage.setItem('selectedLevel', selectedLevel);
+  }, [track, selectedLevel]);
 
   const levelPairs = track === "Professional" 
     ? [["P1", "P2"], ["P3", "P4"], ["P5", "P6"]]
@@ -37,7 +49,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect, onTrackChange 
       <div className="space-y-4">
         <div className="flex items-center gap-2">
           <div className="text-primary text-sm font-medium">Track:</div>
-          <Select defaultValue={track} onValueChange={handleTrackChange}>
+          <Select value={track} onValueChange={handleTrackChange}>
             <SelectTrigger className="w-[180px] border-border">
               <SelectValue placeholder="Select track" />
             </SelectTrigger>
