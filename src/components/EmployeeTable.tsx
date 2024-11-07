@@ -1,4 +1,3 @@
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -55,10 +54,10 @@ const employees: Employee[] = [
 
 export const EmployeeTable = () => {
   return (
-    <div className="rounded-lg border border-border overflow-hidden">
+    <div className="rounded-lg border border-border">
       <table className="w-full">
         <thead>
-          <tr className="bg-background text-left border-b border-border">
+          <tr className="border-b border-border bg-background">
             <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[4%]">
               <input type="checkbox" className="rounded border-gray-300" />
             </th>
@@ -76,35 +75,39 @@ export const EmployeeTable = () => {
         </thead>
         <tbody>
           {employees.map((employee, index) => (
-            <tr key={employee.name} className="border-b border-border hover:bg-muted/50 transition-colors">
-              <td className="py-3 px-4">
+            <tr key={employee.name} className="border-b border-border hover:bg-muted/50">
+              <td className="py-4 px-4">
                 <input type="checkbox" className="rounded border-gray-300" />
               </td>
-              <td className="py-3 px-4">
+              <td className="py-4 px-4">
                 <div className="flex items-center gap-3">
                   <img 
                     src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
                     alt={employee.name}
                     className="w-8 h-8 rounded-full object-cover"
                   />
-                  <Link to="/employee-profile" className="text-primary hover:underline font-medium">
+                  <Link to="/employee-profile" className="text-primary hover:text-primary-accent transition-colors">
                     {employee.name}
                   </Link>
                 </div>
               </td>
-              <td className="py-3 px-4 font-medium">{employee.role}</td>
-              <td className="py-3 px-4">{employee.department}</td>
-              <td className="py-3 px-4 text-center">{employee.skillCount}</td>
-              <td className="py-3 px-4">
+              <td className="py-4 px-4">{employee.role}</td>
+              <td className="py-4 px-4">{employee.department}</td>
+              <td className="py-4 px-4 text-center">{employee.skillCount}</td>
+              <td className="py-4 px-4">
                 <div className="flex justify-center">
-                  <span className={`px-2.5 py-1 rounded-full text-sm font-medium ${
-                    employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
+                  <span className={`px-2.5 py-1 rounded-full text-sm ${
+                    employee.benchmark >= 80 
+                      ? 'bg-green-100 text-green-800' 
+                      : employee.benchmark >= 70
+                      ? 'bg-orange-100 text-orange-800'
+                      : 'bg-red-100 text-red-800'
                   }`}>
                     {employee.benchmark}%
                   </span>
                 </div>
               </td>
-              <td className="py-3 px-4 text-right text-muted-foreground">
+              <td className="py-4 px-4 text-right text-muted-foreground">
                 {employee.lastUpdated}
               </td>
             </tr>
