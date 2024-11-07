@@ -14,7 +14,7 @@ export const getLevelStyles = (level: string) => {
     case 'advanced':
       return 'border-2 border-primary-accent rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full';
     case 'intermediate':
-      return 'border-2 border-dotted border-primary-icon rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full';
+      return 'border-2 border-primary-icon rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full';
     case 'beginner':
       return 'border-2 border-[#008000] rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full';
     default:
