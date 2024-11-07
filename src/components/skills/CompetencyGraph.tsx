@@ -2,7 +2,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 
-const professionalSkills = {
+type Skill = {
+  name: string;
+  level: string;
+  required: string;
+};
+
+type SkillLevels = {
+  [key: string]: Skill[];
+};
+
+const professionalSkills: SkillLevels = {
   "P1": [
     { name: "Amazon Web Services", level: "beginner", required: "required" },
     { name: "Python", level: "intermediate", required: "required" },
@@ -20,7 +30,7 @@ const professionalSkills = {
   ],
 };
 
-const managerialSkills = {
+const managerialSkills: SkillLevels = {
   "M3": [
     { name: "Team Leadership", level: "intermediate", required: "required" },
     { name: "Project Management", level: "intermediate", required: "required" },
@@ -49,10 +59,8 @@ export const CompetencyGraph = () => {
   );
 
   const getSkillDetails = (skillName: string, level: string) => {
-    const skill = skills[level as keyof typeof skills]?.find(
-      (s) => s.name === skillName
-    );
-    return skill || { level: "-", required: "-" };
+    const skillLevel = skills[level];
+    return skillLevel?.find((s) => s.name === skillName) || { level: "-", required: "-" };
   };
 
   return (
