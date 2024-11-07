@@ -109,7 +109,7 @@ export const SkillsTable = () => {
               </TableHead>
               <TableHead className="w-[150px] text-center border-r border-blue-200/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 text-sm font-semibold">
                 <div className="flex items-center justify-center gap-1.5">
-                  Projected Growth
+                  Salary With Skill
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
