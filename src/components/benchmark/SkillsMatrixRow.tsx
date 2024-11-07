@@ -32,7 +32,9 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
       <TableCell className="border-r border-blue-200 py-2 group-hover:bg-muted/30">{skill.subcategory}</TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2 group-hover:bg-muted/30">
         <div className="flex justify-center">
-          <Check className="w-4 h-4 text-green-600" />
+          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+            <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
+          </div>
         </div>
       </TableCell>
       <SkillLevelCell initialLevel={skill.level} />
