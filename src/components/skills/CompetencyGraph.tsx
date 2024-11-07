@@ -1,10 +1,166 @@
-import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableBody } from "@/components/ui/table";
-import { CompetencyTableHeader } from "./competency/CompetencyTableHeader";
-import { CompetencySkillRow } from "./competency/CompetencySkillRow";
+import { useEffect, useState } from "react";
+import { SkillCell } from "./competency/SkillCell";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+type Skill = {
+  name: string;
+  level: string;
+  required: string;
+};
+
+type SkillLevels = {
+  [key: string]: Skill[];
+};
+
+const professionalSkills: SkillLevels = {
+  "P1": [
+    { name: "Amazon Web Services", level: "beginner", required: "required" },
+    { name: "Python", level: "intermediate", required: "required" },
+    { name: "Machine Learning", level: "beginner", required: "preferred" },
+  ],
+  "P2": [
+    { name: "Amazon Web Services", level: "intermediate", required: "required" },
+    { name: "Python", level: "intermediate", required: "required" },
+    { name: "Machine Learning", level: "intermediate", required: "required" },
+  ],
+  "P3": [
+    { name: "Amazon Web Services", level: "advanced", required: "required" },
+    { name: "Python", level: "advanced", required: "required" },
+    { name: "Machine Learning", level: "advanced", required: "required" },
+  ],
+  "P4": [
+    { name: "Amazon Web Services", level: "advanced", required: "required" },
+    { name: "Python", level: "advanced", required: "required" },
+    { name: "Machine Learning", level: "advanced", required: "required" },
+    { name: "System Design", level: "advanced", required: "required" },
+  ],
+  "P5": [
+    { name: "Amazon Web Services", level: "advanced", required: "required" },
+    { name: "Python", level: "advanced", required: "required" },
+    { name: "Machine Learning", level: "advanced", required: "required" },
+    { name: "System Design", level: "advanced", required: "required" },
+    { name: "Technical Leadership", level: "intermediate", required: "required" },
+  ],
+  "P6": [
+    { name: "Amazon Web Services", level: "advanced", required: "required" },
+    { name: "Python", level: "advanced", required: "required" },
+    { name: "Machine Learning", level: "advanced", required: "required" },
+    { name: "System Design", level: "advanced", required: "required" },
+    { name: "Technical Leadership", level: "advanced", required: "required" },
+    { name: "Strategic Planning", level: "advanced", required: "required" },
+  ],
+};
+
+const managerialSkills: SkillLevels = {
+  "M3": [
+    { name: "Team Leadership", level: "intermediate", required: "required" },
+    { name: "Project Management", level: "intermediate", required: "required" },
+    { name: "Technical Architecture", level: "intermediate", required: "preferred" },
+  ],
+  "M4": [
+    { name: "Team Leadership", level: "advanced", required: "required" },
+    { name: "Project Management", level: "advanced", required: "required" },
+    { name: "Technical Architecture", level: "advanced", required: "required" },
+    { name: "Strategic Planning", level: "intermediate", required: "required" },
+  ],
+  "M5": [
+    { name: "Team Leadership", level: "advanced", required: "required" },
+    { name: "Project Management", level: "advanced", required: "required" },
+    { name: "Technical Architecture", level: "advanced", required: "required" },
+    { name: "Strategic Planning", level: "advanced", required: "required" },
+    { name: "Organizational Development", level: "intermediate", required: "required" },
+  ],
+  "M6": [
+    { name: "Team Leadership", level: "advanced", required: "required" },
+    { name: "Project Management", level: "advanced", required: "required" },
+    { name: "Technical Architecture", level: "advanced", required: "required" },
+    { name: "Strategic Planning", level: "advanced", required: "required" },
+    { name: "Organizational Development", level: "advanced", required: "required" },
+    { name: "Business Strategy", level: "advanced", required: "required" },
+  ],
+};
+
+// Categorized skills
+const skillsByCategory = {
+  all: {
+    professional: {
+      ...professionalSkills,
+    },
+    managerial: {
+      ...managerialSkills,
+    }
+  },
+  specialized: {
+    professional: {
+      "P1": [
+        { name: "Amazon Web Services", level: "beginner", required: "required" },
+        { name: "Machine Learning", level: "beginner", required: "preferred" },
+      ],
+      "P2": [
+        { name: "Amazon Web Services", level: "intermediate", required: "required" },
+        { name: "Machine Learning", level: "intermediate", required: "required" },
+      ],
+      "P3": [
+        { name: "Amazon Web Services", level: "advanced", required: "required" },
+        { name: "Machine Learning", level: "advanced", required: "required" },
+      ],
+    },
+    managerial: {
+      "M3": [
+        { name: "Technical Architecture", level: "intermediate", required: "preferred" },
+      ],
+      "M4": [
+        { name: "Technical Architecture", level: "advanced", required: "required" },
+      ],
+    }
+  },
+  common: {
+    professional: {
+      "P1": [
+        { name: "Python", level: "intermediate", required: "required" },
+      ],
+      "P2": [
+        { name: "Python", level: "intermediate", required: "required" },
+      ],
+      "P3": [
+        { name: "Python", level: "advanced", required: "required" },
+      ],
+    },
+    managerial: {
+      "M3": [
+        { name: "Team Leadership", level: "intermediate", required: "required" },
+        { name: "Project Management", level: "intermediate", required: "required" },
+      ],
+      "M4": [
+        { name: "Team Leadership", level: "advanced", required: "required" },
+        { name: "Project Management", level: "advanced", required: "required" },
+      ],
+    }
+  },
+  certification: {
+    professional: {
+      "P1": [
+        { name: "AWS Certified Cloud Practitioner", level: "beginner", required: "preferred" },
+      ],
+      "P2": [
+        { name: "AWS Certified Developer", level: "intermediate", required: "required" },
+      ],
+      "P3": [
+        { name: "AWS Certified Solutions Architect", level: "advanced", required: "required" },
+      ],
+    },
+    managerial: {
+      "M3": [
+        { name: "Project Management Professional (PMP)", level: "intermediate", required: "preferred" },
+      ],
+      "M4": [
+        { name: "Project Management Professional (PMP)", level: "advanced", required: "required" },
+      ],
+    }
+  }
+};
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
@@ -16,155 +172,15 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     return savedCategory || "all";
   });
 
-  const [currentTrack] = useState<"Professional" | "Managerial">(track);
-  const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
+  const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
 
-  const professionalSkills = {
-    "P1": [
-      { name: "Amazon Web Services", level: "beginner", required: "required" },
-      { name: "Python", level: "intermediate", required: "required" },
-      { name: "Machine Learning", level: "beginner", required: "preferred" },
-    ],
-    "P2": [
-      { name: "Amazon Web Services", level: "intermediate", required: "required" },
-      { name: "Python", level: "intermediate", required: "required" },
-      { name: "Machine Learning", level: "intermediate", required: "required" },
-    ],
-    "P3": [
-      { name: "Amazon Web Services", level: "advanced", required: "required" },
-      { name: "Python", level: "advanced", required: "required" },
-      { name: "Machine Learning", level: "advanced", required: "required" },
-    ],
-    "P4": [
-      { name: "Amazon Web Services", level: "advanced", required: "required" },
-      { name: "Python", level: "advanced", required: "required" },
-      { name: "Machine Learning", level: "advanced", required: "required" },
-      { name: "System Design", level: "advanced", required: "required" },
-    ],
-    "P5": [
-      { name: "Amazon Web Services", level: "advanced", required: "required" },
-      { name: "Python", level: "advanced", required: "required" },
-      { name: "Machine Learning", level: "advanced", required: "required" },
-      { name: "System Design", level: "advanced", required: "required" },
-      { name: "Technical Leadership", level: "intermediate", required: "required" },
-    ],
-    "P6": [
-      { name: "Amazon Web Services", level: "advanced", required: "required" },
-      { name: "Python", level: "advanced", required: "required" },
-      { name: "Machine Learning", level: "advanced", required: "required" },
-      { name: "System Design", level: "advanced", required: "required" },
-      { name: "Technical Leadership", level: "advanced", required: "required" },
-      { name: "Strategic Planning", level: "advanced", required: "required" },
-    ],
-  };
+  useEffect(() => {
+    setCurrentTrack(track);
+  }, [track]);
 
-  const managerialSkills = {
-    "M3": [
-      { name: "Team Leadership", level: "intermediate", required: "required" },
-      { name: "Project Management", level: "intermediate", required: "required" },
-      { name: "Technical Architecture", level: "intermediate", required: "preferred" },
-    ],
-    "M4": [
-      { name: "Team Leadership", level: "advanced", required: "required" },
-      { name: "Project Management", level: "advanced", required: "required" },
-      { name: "Technical Architecture", level: "advanced", required: "required" },
-      { name: "Strategic Planning", level: "intermediate", required: "required" },
-    ],
-    "M5": [
-      { name: "Team Leadership", level: "advanced", required: "required" },
-      { name: "Project Management", level: "advanced", required: "required" },
-      { name: "Technical Architecture", level: "advanced", required: "required" },
-      { name: "Strategic Planning", level: "advanced", required: "required" },
-      { name: "Organizational Development", level: "intermediate", required: "required" },
-    ],
-    "M6": [
-      { name: "Team Leadership", level: "advanced", required: "required" },
-      { name: "Project Management", level: "advanced", required: "required" },
-      { name: "Technical Architecture", level: "advanced", required: "required" },
-      { name: "Strategic Planning", level: "advanced", required: "required" },
-      { name: "Organizational Development", level: "advanced", required: "required" },
-      { name: "Business Strategy", level: "advanced", required: "required" },
-    ],
-  };
-
-  const skillsByCategory = {
-    all: {
-      professional: {
-        ...professionalSkills,
-      },
-      managerial: {
-        ...managerialSkills,
-      }
-    },
-    specialized: {
-      professional: {
-        "P1": [
-          { name: "Amazon Web Services", level: "beginner", required: "required" },
-          { name: "Machine Learning", level: "beginner", required: "preferred" },
-        ],
-        "P2": [
-          { name: "Amazon Web Services", level: "intermediate", required: "required" },
-          { name: "Machine Learning", level: "intermediate", required: "required" },
-        ],
-        "P3": [
-          { name: "Amazon Web Services", level: "advanced", required: "required" },
-          { name: "Machine Learning", level: "advanced", required: "required" },
-        ],
-      },
-      managerial: {
-        "M3": [
-          { name: "Technical Architecture", level: "intermediate", required: "preferred" },
-        ],
-        "M4": [
-          { name: "Technical Architecture", level: "advanced", required: "required" },
-        ],
-      }
-    },
-    common: {
-      professional: {
-        "P1": [
-          { name: "Python", level: "intermediate", required: "required" },
-        ],
-        "P2": [
-          { name: "Python", level: "intermediate", required: "required" },
-        ],
-        "P3": [
-          { name: "Python", level: "advanced", required: "required" },
-        ],
-      },
-      managerial: {
-        "M3": [
-          { name: "Team Leadership", level: "intermediate", required: "required" },
-          { name: "Project Management", level: "intermediate", required: "required" },
-        ],
-        "M4": [
-          { name: "Team Leadership", level: "advanced", required: "required" },
-          { name: "Project Management", level: "advanced", required: "required" },
-        ],
-      }
-    },
-    certification: {
-      professional: {
-        "P1": [
-          { name: "AWS Certified Cloud Practitioner", level: "beginner", required: "preferred" },
-        ],
-        "P2": [
-          { name: "AWS Certified Developer", level: "intermediate", required: "required" },
-        ],
-        "P3": [
-          { name: "AWS Certified Solutions Architect", level: "advanced", required: "required" },
-        ],
-      },
-      managerial: {
-        "M3": [
-          { name: "Project Management Professional (PMP)", level: "intermediate", required: "preferred" },
-        ],
-        "M4": [
-          { name: "Project Management Professional (PMP)", level: "advanced", required: "required" },
-        ],
-      }
-    }
-  };
+  useEffect(() => {
+    localStorage.setItem('selectedCategory', selectedCategory);
+  }, [selectedCategory]);
 
   const getSkillsForCategory = () => {
     const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
@@ -172,6 +188,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   };
 
   const skills = getSkillsForCategory();
+  const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
+
   const uniqueSkills = Array.from(
     new Set(
       Object.values(skills)
@@ -181,8 +199,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   );
 
   const getSkillDetails = (skillName: string, level: string) => {
-    const skillLevel = skills[level]?.find((s) => s.name === skillName);
-    return skillLevel || { level: "-", required: "-" };
+    const skillLevel = skills[level];
+    return skillLevel?.find((s) => s.name === skillName) || { level: "-", required: "-" };
   };
 
   return (
@@ -207,15 +225,31 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
         <Table>
-          <CompetencyTableHeader levels={levels} />
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-[200px] font-semibold bg-background/80 border-r border-border">Skill</TableHead>
+              {levels.map((level, index) => (
+                <TableHead 
+                  key={level} 
+                  className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
+                >
+                  <div className="font-semibold">{level}</div>
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
           <TableBody>
             {uniqueSkills.map((skillName) => (
-              <CompetencySkillRow
-                key={skillName}
-                skillName={skillName}
-                levels={levels}
-                getSkillDetails={getSkillDetails}
-              />
+              <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
+                <TableCell className="font-medium border-r border-border">{skillName}</TableCell>
+                {levels.map((level, index) => (
+                  <SkillCell 
+                    key={level}
+                    details={getSkillDetails(skillName, level)}
+                    isLastColumn={index === levels.length - 1}
+                  />
+                ))}
+              </TableRow>
             ))}
           </TableBody>
         </Table>
