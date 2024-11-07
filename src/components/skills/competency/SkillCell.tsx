@@ -79,7 +79,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
       case 'required':
         return '✓';
       case 'preferred':
-        return 'o';
+        return <Heart className="w-3 h-3" />;
       case 'unspecified':
         return '−';
       default:
@@ -145,13 +145,15 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="required">
-                <span className="flex items-center gap-2">✓  Required</span>
+                <span className="flex items-center gap-2">✓ Required</span>
               </SelectItem>
               <SelectItem value="preferred">
-                <span className="flex items-center gap-2">o  Preferred</span>
+                <span className="flex items-center gap-2">
+                  <Heart className="w-3 h-3" /> Preferred
+                </span>
               </SelectItem>
               <SelectItem value="unspecified">
-                <span className="flex items-center gap-2">−  Unspecified</span>
+                <span className="flex items-center gap-2">− Unspecified</span>
               </SelectItem>
             </SelectContent>
           </Select>
