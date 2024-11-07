@@ -55,60 +55,62 @@ const employees: Employee[] = [
 
 export const EmployeeTable = () => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow className="hover:bg-transparent border-b border-border">
-          <TableHead className="w-[4%]">
-            <input type="checkbox" className="rounded border-gray-300" />
-          </TableHead>
-          <TableHead className="w-[25%]">
-            <div className="flex items-center gap-1">
-              Employee Name <ChevronDown className="h-4 w-4" />
-            </div>
-          </TableHead>
-          <TableHead className="w-[20%]">Current Role</TableHead>
-          <TableHead className="w-[15%]">Department</TableHead>
-          <TableHead className="w-[12%] text-center">Skill Count</TableHead>
-          <TableHead className="w-[12%] text-center">Benchmark</TableHead>
-          <TableHead className="w-[12%] text-right">Last Updated</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {employees.map((employee, index) => (
-          <TableRow key={employee.name} className="border-b border-border">
-            <TableCell>
+    <div className="rounded-lg border border-border overflow-hidden">
+      <table className="w-full">
+        <thead>
+          <tr className="bg-background text-left border-b border-border">
+            <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[4%]">
               <input type="checkbox" className="rounded border-gray-300" />
-            </TableCell>
-            <TableCell>
-              <div className="flex items-center gap-3">
-                <img 
-                  src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
-                  alt={employee.name}
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-                <Link to="/employee-profile" className="text-primary hover:underline font-medium">
-                  {employee.name}
-                </Link>
+            </th>
+            <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">
+              <div className="flex items-center gap-1">
+                Employee Name <ChevronDown className="h-4 w-4" />
               </div>
-            </TableCell>
-            <TableCell className="font-medium">{employee.role}</TableCell>
-            <TableCell>{employee.department}</TableCell>
-            <TableCell className="text-center">{employee.skillCount}</TableCell>
-            <TableCell>
-              <div className="flex justify-center">
-                <span className={`px-2.5 py-1 rounded-full text-sm font-medium ${
-                  employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
-                }`}>
-                  {employee.benchmark}%
-                </span>
-              </div>
-            </TableCell>
-            <TableCell className="text-right text-muted-foreground">
-              {employee.lastUpdated}
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+            </th>
+            <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">Current Role</th>
+            <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">Department</th>
+            <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Skill Count</th>
+            <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Benchmark</th>
+            <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-right w-[12%]">Last Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.map((employee, index) => (
+            <tr key={employee.name} className="border-b border-border hover:bg-muted/50 transition-colors">
+              <td className="py-3 px-4">
+                <input type="checkbox" className="rounded border-gray-300" />
+              </td>
+              <td className="py-3 px-4">
+                <div className="flex items-center gap-3">
+                  <img 
+                    src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
+                    alt={employee.name}
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <Link to="/employee-profile" className="text-primary hover:underline font-medium">
+                    {employee.name}
+                  </Link>
+                </div>
+              </td>
+              <td className="py-3 px-4 font-medium">{employee.role}</td>
+              <td className="py-3 px-4">{employee.department}</td>
+              <td className="py-3 px-4 text-center">{employee.skillCount}</td>
+              <td className="py-3 px-4">
+                <div className="flex justify-center">
+                  <span className={`px-2.5 py-1 rounded-full text-sm font-medium ${
+                    employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
+                  }`}>
+                    {employee.benchmark}%
+                  </span>
+                </div>
+              </td>
+              <td className="py-3 px-4 text-right text-muted-foreground">
+                {employee.lastUpdated}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
