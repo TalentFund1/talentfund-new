@@ -21,28 +21,9 @@ export const getRequirementStyles = (requirement: string, level: string) => {
     case 'preferred':
       return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300 text-[#1f2144]`;
     case 'unspecified':
-      return `${baseStyles} bg-white border-x border-b rounded-b-md border-gray-100 text-gray-400`;
+      return `${baseStyles} bg-white border-x border-b rounded-b-md border-gray-50 text-gray-400`;
     default:
       return `${baseStyles} bg-transparent`;
-  }
-};
-
-export const getLevelStyles = (level: string) => {
-  if (!level || level === '-') {
-    return 'text-gray-300 text-sm font-medium h-[26px] flex items-center justify-center';
-  }
-
-  const baseStyles = 'rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144] border-0';
-
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
-    case 'intermediate':
-      return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
-    case 'beginner':
-      return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
-    default:
-      return `${baseStyles} border-2 border-gray-300 text-gray-400`;
   }
 };
 
