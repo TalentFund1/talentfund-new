@@ -3,14 +3,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { CompetencyMatrixHeader } from "./CompetencyMatrixHeader";
 import { CompetencyLevels } from "./CompetencyLevels";
 import { SkillsGrid } from "./SkillsGrid";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-const skillCategories = [
-  { id: "all", name: "All Skills", count: 28 },
-  { id: "specialized", name: "Specialized Skills", count: 15 },
-  { id: "common", name: "Common Skills", count: 10 },
-  { id: "certification", name: "Certification", count: 3 }
-];
 
 const skillsData = {
   all: [
@@ -51,6 +43,13 @@ const skillsData = {
   ]
 };
 
+const skillCategories = [
+  { id: "all", name: "All Skills", count: 28 },
+  { id: "specialized", name: "Specialized Skills", count: 15 },
+  { id: "common", name: "Common Skills", count: 10 },
+  { id: "certification", name: "Certification", count: 3 }
+];
+
 interface CompetencyMatrixProps {
   onTrackChange: (track: "Professional" | "Managerial") => void;
 }
@@ -69,15 +68,17 @@ export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
     );
   };
 
+  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
+    setTrack(newTrack);
+    onTrackChange(newTrack);
+  };
+
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
-    const category = skillCategories.find(cat => cat.id === categoryId);
-    if (category) {
-      toast({
-        title: `Viewing ${category.name}`,
-        duration: 2000
-      });
-    }
+    toast({
+      title: `Viewing ${skillCategories.find(cat => cat.id === categoryId)?.name}`,
+      duration: 2000
+    });
   };
 
   const currentSkills = skillsData[selectedCategory as keyof typeof skillsData] || [];
@@ -89,29 +90,35 @@ export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
       <CompetencyLevels 
         selectedLevels={selectedLevels}
         onLevelSelect={handleLevelSelect}
-        onTrackChange={onTrackChange}
+        onTrackChange={handleTrackChange}
       />
 
       <div>
-        <div className="flex items-center gap-2 mb-6">
-          <span className="text-sm font-medium text-foreground">Category:</span>
-          <Select value={selectedCategory} onValueChange={handleCategorySelect}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent>
-              {skillCategories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  <span className="flex items-center justify-between w-full">
-                    <span>{category.name}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {category.count} skills
-                    </span>
-                  </span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="grid grid-cols-4 gap-4 mb-6">
+          {skillCategories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategorySelect(category.id)}
+              className={`rounded-lg p-4 transition-colors ${
+                selectedCategory === category.id
+                  ? 'bg-primary-accent/5 border border-primary-accent'
+                  : 'bg-background border border-border hover:border-primary-accent/50'
+              }`}
+            >
+              <div className="flex flex-col items-start">
+                <span className={`text-sm font-semibold mb-1 ${
+                  selectedCategory === category.id
+                    ? 'text-primary-accent'
+                    : 'text-foreground group-hover:text-primary-accent'
+                }`}>
+                  {category.name}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {category.count} skills
+                </span>
+              </div>
+            </button>
+          ))}
         </div>
 
         <SkillsGrid currentSkills={currentSkills} />
