@@ -72,7 +72,7 @@ export const BenchmarkAnalysis = () => {
               <Badge 
                 key={`${skill.name}-${index}`}
                 variant="outline" 
-                className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
+                className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white"
               >
                 {skill.name} <div className="h-2 w-2 rounded-full bg-primary-icon" />
               </Badge>
