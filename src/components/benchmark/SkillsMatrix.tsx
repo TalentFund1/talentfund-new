@@ -77,12 +77,13 @@ export const SkillsMatrix = () => {
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-[200px] border-r border-border">Skill Title</TableHead>
-              <TableHead className="w-[250px]">Subcategory</TableHead>
-              <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Beginner</TableHead>
-              <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Intermediate</TableHead>
-              <TableHead className="text-center bg-[#F7F9FF] border-x border-border">Advanced</TableHead>
-              <TableHead className="w-[150px] text-center">
+              <TableHead className="w-[180px] border-r border-border">Skill Title</TableHead>
+              <TableHead className="w-[220px]">Subcategory</TableHead>
+              <TableHead className="text-center bg-[#F7F9FF] border-x border-border w-[100px]">Unspecified</TableHead>
+              <TableHead className="text-center bg-[#F7F9FF] border-x border-border w-[100px]">Beginner</TableHead>
+              <TableHead className="text-center bg-[#F7F9FF] border-x border-border w-[100px]">Intermediate</TableHead>
+              <TableHead className="text-center bg-[#F7F9FF] border-x border-border w-[100px]">Advanced</TableHead>
+              <TableHead className="w-[120px] text-center">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
                   <TooltipProvider>
@@ -109,6 +110,9 @@ export const SkillsMatrix = () => {
               <TableRow key={skill.title}>
                 <TableCell className="font-medium border-r border-border">{skill.title}</TableCell>
                 <TableCell>{skill.subcategory}</TableCell>
+                <TableCell className="text-center bg-[#F7F9FF]/50 border-x border-border">
+                  {skill.level === "unspecified" && <SkillLevelIcon level="unspecified" />}
+                </TableCell>
                 <TableCell className="text-center bg-[#F7F9FF]/50 border-x border-border">
                   {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
                 </TableCell>
