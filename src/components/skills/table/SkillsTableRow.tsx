@@ -11,6 +11,19 @@ interface SkillsTableRowProps {
 }
 
 export const SkillsTableRow = ({ skill }: SkillsTableRowProps) => {
+  const getLevelBackgroundColor = (level: string) => {
+    switch (level) {
+      case "Advanced":
+        return "bg-primary-accent/10";
+      case "Intermediate":
+        return "bg-primary-icon/10";
+      case "Beginner":
+        return "bg-[#008000]/10";
+      default:
+        return "bg-[#F7F9FF]/50";
+    }
+  };
+
   return (
     <TableRow className="group transition-colors hover:bg-muted/50 even:bg-muted/5">
       <TableCell className="font-medium border-x border-border group-hover:bg-transparent py-4">
@@ -19,13 +32,13 @@ export const SkillsTableRow = ({ skill }: SkillsTableRowProps) => {
       <TableCell className="border-r border-border group-hover:bg-transparent py-4">
         {skill.subcategory}
       </TableCell>
-      <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border group-hover:bg-transparent py-4">
+      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 ${skill.level === "Beginner" ? getLevelBackgroundColor(skill.level) : ""}`}>
         {skill.level === "Beginner" && <SkillLevelIcon level="beginner" />}
       </TableCell>
-      <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border group-hover:bg-transparent py-4">
+      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 ${skill.level === "Intermediate" ? getLevelBackgroundColor(skill.level) : ""}`}>
         {skill.level === "Intermediate" && <SkillLevelIcon level="intermediate" />}
       </TableCell>
-      <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border group-hover:bg-transparent py-4">
+      <TableCell className={`text-center border-r border-border group-hover:bg-transparent py-4 ${skill.level === "Advanced" ? getLevelBackgroundColor(skill.level) : ""}`}>
         {skill.level === "Advanced" && <SkillLevelIcon level="advanced" />}
       </TableCell>
       <TableCell className="text-center border-r border-border group-hover:bg-transparent py-4">
