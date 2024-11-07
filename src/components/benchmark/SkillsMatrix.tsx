@@ -98,7 +98,7 @@ export const SkillsMatrix = () => {
               <TableHead className="w-[180px] border-r border-blue-200 py-2">Skill Title</TableHead>
               <TableHead className="w-[220px] border-r border-blue-200 py-2">Subcategory</TableHead>
               <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">Company Skill</TableHead>
-              <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">Skill Level</TableHead>
+              <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">Skill Level</TableHead>
               <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">Confidence Score</TableHead>
               <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">
                 <div className="flex items-center justify-center gap-1">
