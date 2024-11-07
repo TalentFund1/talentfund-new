@@ -2,7 +2,6 @@ import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 
 interface CompetencyLevelsProps {
   selectedLevels: string[];
@@ -25,7 +24,6 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
             </SelectContent>
           </Select>
         </div>
-        <Separator className="my-2" />
       </div>
 
       <div className="space-y-2">
