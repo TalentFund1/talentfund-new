@@ -34,31 +34,31 @@ export const MarketDataTable = () => {
   ];
 
   return (
-    <div className="rounded-lg border bg-white">
+    <div className="rounded-lg border border-blue-200 bg-white">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Location</TableHead>
-            <TableHead>Number of Profiles</TableHead>
-            <TableHead>Number of Unique Jobs</TableHead>
-            <TableHead>Median Compensation</TableHead>
-            <TableHead>Total Diversity</TableHead>
-            <TableHead>Percent Diversity</TableHead>
-            <TableHead>Posting Intensity</TableHead>
-            <TableHead>Median Posting Duration</TableHead>
+            <TableHead className="border-r border-blue-200">Location</TableHead>
+            <TableHead className="border-r border-blue-200">Number of Profiles</TableHead>
+            <TableHead className="border-r border-blue-200">Number of Unique Jobs</TableHead>
+            <TableHead className="border-r border-blue-200">Median Compensation</TableHead>
+            <TableHead className="border-r border-blue-200">Total Diversity</TableHead>
+            <TableHead className="border-r border-blue-200">Percent Diversity</TableHead>
+            <TableHead className="border-r border-blue-200">Posting Intensity</TableHead>
+            <TableHead className="border-r border-blue-200">Median Posting Duration</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((row, index) => (
             <TableRow key={index}>
-              <TableCell>{row.location}</TableCell>
-              <TableCell>{row.profiles}</TableCell>
-              <TableCell>{row.uniqueJobs}</TableCell>
-              <TableCell>{row.medianCompensation}</TableCell>
-              <TableCell>{row.totalDiversity}</TableCell>
-              <TableCell>{row.percentDiversity}</TableCell>
-              <TableCell>{row.postingIntensity}</TableCell>
-              <TableCell>{row.medianPostingDuration}</TableCell>
+              <TableCell className="border-r border-blue-200">{row.location}</TableCell>
+              <TableCell className="border-r border-blue-200">{row.profiles}</TableCell>
+              <TableCell className="border-r border-blue-200">{row.uniqueJobs}</TableCell>
+              <TableCell className="border-r border-blue-200">{row.medianCompensation}</TableCell>
+              <TableCell className="border-r border-blue-200">{row.totalDiversity}</TableCell>
+              <TableCell className="border-r border-blue-200">{row.percentDiversity}</TableCell>
+              <TableCell className="border-r border-blue-200">{row.postingIntensity}</TableCell>
+              <TableCell className="border-r border-blue-200">{row.medianPostingDuration}</TableCell>
             </TableRow>
           ))}
         </TableBody>
