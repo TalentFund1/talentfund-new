@@ -9,6 +9,7 @@ import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
 import { EmployeeOverview } from "@/components/skills/EmployeeOverview";
 import { SelectBenchmark } from "@/components/benchmark/SelectBenchmark";
 import { CompetencyMatrix } from "@/components/skills/CompetencyMatrix";
+import { CompetencyGraph } from "@/components/skills/CompetencyGraph";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
 import { Sidebar } from "@/components/Sidebar";
@@ -58,6 +59,12 @@ const SkillProfileDetail = () => {
                   >
                     Competency Matrix
                   </TabsTrigger>
+                  <TabsTrigger 
+                    value="graph"
+                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                  >
+                    Competency Graph
+                  </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="skills">
@@ -67,6 +74,12 @@ const SkillProfileDetail = () => {
 
                 <TabsContent value="matrix">
                   <CompetencyMatrix />
+                </TabsContent>
+
+                <TabsContent value="graph">
+                  <Card className="p-6 bg-white">
+                    <CompetencyGraph />
+                  </Card>
                 </TabsContent>
               </Tabs>
             </div>
