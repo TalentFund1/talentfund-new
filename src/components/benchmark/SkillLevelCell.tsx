@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
+import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useState } from "react";
 
 interface SkillLevelCellProps {
@@ -25,38 +25,41 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
   };
 
   const getLevelStyles = (level: string) => {
-    const baseStyles = "rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]";
-    
     switch (level.toLowerCase()) {
       case 'advanced':
-        return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
+        return "border-2 border-primary-accent bg-primary-accent/10";
       case 'intermediate':
-        return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
+        return "border-2 border-primary-icon bg-primary-icon/10";
       case 'beginner':
-        return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
+        return "border-2 border-[#008000] bg-[#008000]/10";
       default:
-        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
+        return "border-2 border-gray-400 bg-gray-100/50";
     }
   };
 
-  const getRequirementStyles = (requirement: string, level: string) => {
-    const borderColor = level === 'advanced' 
-      ? 'border-primary-accent'
-      : level === 'intermediate'
-        ? 'border-primary-icon'
-        : level === 'beginner'
-          ? 'border-[#008000]'
-          : 'border-gray-300';
-
-    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
+  const getRequirementStyles = (requirement: string) => {
+    const baseStyles = "text-xs px-2 py-1 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md";
     
     switch (requirement) {
       case 'required':
-        return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
+        return `${baseStyles} bg-gray-100/90 ${getLevelBorderColor(level)}`;
       case 'preferred':
-        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
+        return `${baseStyles} bg-gray-50/90 border-gray-300`;
       default:
-        return `${baseStyles} bg-white border-[0.5px] rounded-b-md border-gray-50 text-gray-400`;
+        return `${baseStyles} bg-white border-gray-50 text-gray-400`;
+    }
+  };
+
+  const getLevelBorderColor = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return 'border-primary-accent';
+      case 'intermediate':
+        return 'border-primary-icon';
+      case 'beginner':
+        return 'border-[#008000]';
+      default:
+        return 'border-gray-300';
     }
   };
 
@@ -64,7 +67,9 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
     <TableCell className="border-r border-blue-200">
       <div className="flex flex-col items-center gap-0">
         <Select value={level} onValueChange={setLevel}>
-          <SelectTrigger className={`${getLevelStyles(level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}>
+          <SelectTrigger 
+            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
+          >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
                 {getLevelIcon(level)}
@@ -101,10 +106,10 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
         </Select>
 
         <Select value={required} onValueChange={setRequired}>
-          <SelectTrigger className={`${getRequirementStyles(required, level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}>
+          <SelectTrigger className={getRequirementStyles(required)}>
             <SelectValue>
               <span className="flex items-center gap-2 justify-center">
-                {required === 'required' ? '✓' : <Heart className="w-3 h-3" />}
+                {required === 'required' ? '✓' : '♡'}
                 {required.charAt(0).toUpperCase() + required.slice(1)}
               </span>
             </SelectValue>
@@ -114,9 +119,7 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
               <span className="flex items-center gap-2">✓ Required</span>
             </SelectItem>
             <SelectItem value="preferred">
-              <span className="flex items-center gap-2">
-                <Heart className="w-3 h-3" /> Preferred
-              </span>
+              <span className="flex items-center gap-2">♡ Preferred</span>
             </SelectItem>
           </SelectContent>
         </Select>
