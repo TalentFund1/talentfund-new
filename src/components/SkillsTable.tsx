@@ -85,25 +85,25 @@ export const SkillsTable = () => {
   );
 
   return (
-    <div className="space-y-6 bg-white rounded-lg">
+    <div className="space-y-6 bg-white rounded-lg shadow-sm">
       <SkillsTableHeader selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
 
       <div className="relative overflow-x-auto">
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-white">
             <TableRow className="hover:bg-transparent border-y border-border">
-              <TableHead className="w-[200px] border-x border-border">Skill Title</TableHead>
-              <TableHead className="w-[250px] border-r border-border">Subcategory</TableHead>
+              <TableHead className="w-[200px] border-x border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">Skill Title</TableHead>
+              <TableHead className="w-[250px] border-r border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">Subcategory</TableHead>
               <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Beginner</TableHead>
               <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Intermediate</TableHead>
               <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Advanced</TableHead>
-              <TableHead className="w-[150px] text-center border-r border-border">
+              <TableHead className="w-[150px] text-center border-r border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                        <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                       </TooltipTrigger>
                       <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                         <div className="space-y-2">
@@ -129,8 +129,8 @@ export const SkillsTable = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              skills.map((skill) => (
-                <SkillsTableRow key={skill.title} skill={skill} />
+              skills.map((skill, index) => (
+                <SkillsTableRow key={skill.title} skill={skill} isEven={index % 2 === 0} />
               ))
             )}
           </TableBody>
