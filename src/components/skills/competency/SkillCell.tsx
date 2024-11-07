@@ -142,7 +142,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
-              <span className="flex items-center gap-2">✓ Required</span>
+              <span className="flex items-center gap-2">✓  Required</span>
             </SelectItem>
             <SelectItem value="preferred">
               <span className="flex items-center gap-2">
