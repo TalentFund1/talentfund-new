@@ -49,7 +49,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">Competency Graph</h2>
+        <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
         <Separator className="my-4" />
         <div className="mb-6">
           <CategorySelect 
