@@ -19,8 +19,6 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
         return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
       case 'beginner':
         return <Target className="w-3.5 h-3.5 text-[#008000]" />;
-      case 'unknown':
-        return <HelpCircle className="w-3.5 h-3.5 text-gray-400" />;
       default:
         return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
     }
@@ -34,8 +32,6 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
         return "border-2 border-primary-icon bg-primary-icon/10";
       case 'beginner':
         return "border-2 border-[#008000] bg-[#008000]/10";
-      case 'unknown':
-        return "border-2 border-gray-400 bg-gray-100/50";
       default:
         return "border-2 border-gray-400 bg-gray-100/50";
     }
@@ -50,6 +46,8 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
       case 'interested':
         return `${baseStyles} bg-gray-50/90 border-gray-300`;
       case 'not-interested':
+        return `${baseStyles} bg-white border-gray-50 text-gray-400`;
+      case 'unknown':
         return `${baseStyles} bg-white border-gray-50 text-gray-400`;
       default:
         return `${baseStyles} bg-white border-gray-50 text-gray-400`;
@@ -69,17 +67,10 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
     }
   };
 
-  const handleLevelChange = (newLevel: string) => {
-    setLevel(newLevel);
-    if (newLevel === 'unknown') {
-      setRequired('not-interested');
-    }
-  };
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={level} onValueChange={handleLevelChange}>
+        <Select value={level} onValueChange={setLevel}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
@@ -115,20 +106,10 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
                 Advanced
               </span>
             </SelectItem>
-            <SelectItem value="unknown">
-              <span className="flex items-center gap-1.5">
-                <HelpCircle className="w-3.5 h-3.5 text-gray-400" />
-                Unknown
-              </span>
-            </SelectItem>
           </SelectContent>
         </Select>
 
-        <Select 
-          value={required} 
-          onValueChange={setRequired}
-          disabled={level === 'unknown'}
-        >
+        <Select value={required} onValueChange={setRequired}>
           <SelectTrigger 
             className={`text-xs px-2 py-1 font-normal w-full flex items-center justify-center min-h-[24px] border-x-2 border-b-2 rounded-b-md ${getRequirementStyles(required)}`}
           >
@@ -138,10 +119,12 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
                   <Heart className="w-3.5 h-3.5" />
                 ) : required === 'not-interested' ? (
                   <HeartOff className="w-3.5 h-3.5" />
+                ) : required === 'unknown' ? (
+                  <HelpCircle className="w-3.5 h-3.5" />
                 ) : (
                   <Heart className="w-3.5 h-3.5" />
                 )}
-                {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : 'Skill Goal'}
+                {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : required === 'unknown' ? 'Unknown' : 'Skill Goal'}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -154,6 +137,11 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
             <SelectItem value="not-interested">
               <span className="flex items-center gap-1.5">
                 <HeartOff className="w-3.5 h-3.5" /> Not Interested
+              </span>
+            </SelectItem>
+            <SelectItem value="unknown">
+              <span className="flex items-center gap-1.5">
+                <HelpCircle className="w-3.5 h-3.5" /> Unknown
               </span>
             </SelectItem>
           </SelectContent>
