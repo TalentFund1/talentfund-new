@@ -38,7 +38,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
                 className="flex items-center gap-3 bg-background/40 p-4 rounded-lg hover:bg-background/60 transition-colors"
               >
                 <RadioGroupItem value={`AI Engineer ${level}`} id={level} />
-                <Label htmlFor={level} className="text-sm font-medium">AI Engineer {level}</Label>
+                <Label htmlFor={level} className="text-sm font-medium">AI Engineer: {level}</Label>
               </div>
             ))}
           </div>
