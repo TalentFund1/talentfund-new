@@ -128,7 +128,7 @@ export const SkillsMatrix = () => {
               <TableRow key={skill.title} className="hover:bg-muted/50 border-b border-gray-200">
                 <TableCell className="font-medium border-r border-blue-200">{skill.title}</TableCell>
                 <TableCell className="border-r border-blue-200">{skill.subcategory}</TableCell>
-                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "unspecified" ? 'bg-white' : ''}`}>
+                <TableCell className={`text-center border-r border-blue-200 ${skill.level === "unspecified" ? 'bg-gray-50' : ''}`}>
                   {skill.level === "unspecified" && <SkillLevelIcon level="unspecified" />}
                 </TableCell>
                 <TableCell className={`text-center border-r border-blue-200 ${skill.level === "beginner" ? 'bg-[#008000]/5' : ''}`}>
