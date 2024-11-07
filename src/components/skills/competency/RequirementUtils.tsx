@@ -8,7 +8,7 @@ export const getRequirementStyles = (requirement: string, level: string) => {
         : 'border-gray-300';
 
   if (requirement.toLowerCase() === 'unspecified') {
-    return 'text-xs px-3 py-1 font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1.5';
+    return '';  // Return empty string to not render the requirement section
   }
 
   switch (requirement.toLowerCase()) {
@@ -28,13 +28,13 @@ export const getLevelStyles = (level: string) => {
 
   switch (level.toLowerCase()) {
     case 'advanced':
-      return 'border-2 border-primary-accent bg-primary-accent/5 rounded-t-md px-3 py-1.5 text-xs font-medium text-[#1f2144] w-full capitalize transition-colors hover:bg-primary-accent/10';
+      return 'border-2 border-primary-accent bg-primary-accent/5 rounded-md px-3 py-1.5 text-xs font-medium text-[#1f2144] w-full capitalize transition-colors hover:bg-primary-accent/10';
     case 'intermediate':
-      return 'border-2 border-primary-icon bg-primary-icon/5 rounded-t-md px-3 py-1.5 text-xs font-medium text-[#1f2144] w-full capitalize transition-colors hover:bg-primary-icon/10';
+      return 'border-2 border-primary-icon bg-primary-icon/5 rounded-md px-3 py-1.5 text-xs font-medium text-[#1f2144] w-full capitalize transition-colors hover:bg-primary-icon/10';
     case 'beginner':
-      return 'border-2 border-[#008000] bg-[#008000]/5 rounded-t-md px-3 py-1.5 text-xs font-medium text-[#1f2144] w-full capitalize transition-colors hover:bg-[#008000]/10';
+      return 'border-2 border-[#008000] bg-[#008000]/5 rounded-md px-3 py-1.5 text-xs font-medium text-[#1f2144] w-full capitalize transition-colors hover:bg-[#008000]/10';
     default:
-      return 'border-2 border-gray-300 rounded-t-md px-3 py-1.5 text-xs font-medium text-[#1f2144] w-full capitalize';
+      return 'border-2 border-gray-300 rounded-md px-3 py-1.5 text-xs font-medium text-[#1f2144] w-full capitalize';
   }
 };
 
@@ -45,8 +45,8 @@ export const getRequirementIcon = (requirement: string) => {
     case 'preferred':
       return '♡';
     case 'unspecified':
-      return '○';
+      return '';  // Return empty string for unspecified
     default:
-      return '○';
+      return '';
   }
 };
