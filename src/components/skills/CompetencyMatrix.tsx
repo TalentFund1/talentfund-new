@@ -89,7 +89,7 @@ export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
       <CompetencyLevels 
         selectedLevels={selectedLevels}
         onLevelSelect={handleLevelSelect}
-        onTrackChange={handleTrackChange}
+        onTrackChange={onTrackChange}
       />
 
       <div>
