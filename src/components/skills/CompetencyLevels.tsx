@@ -66,6 +66,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
 
       {selectedLevel && (
         <div className="space-y-6">
+          <Separator className="my-4" />
           <h3 className="text-lg font-semibold">{selectedLevel}</h3>
           <div className="grid grid-cols-4 gap-4">
             <div className="p-4 bg-background/40 rounded-lg border border-border hover:border-primary-accent/50 transition-colors">
