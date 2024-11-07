@@ -3,11 +3,11 @@ import { Check, Heart, Circle } from "lucide-react";
 export const getRequirementStyles = (requirement: string) => {
   switch (requirement.toLowerCase()) {
     case 'required':
-      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
+      return 'bg-gray-100 border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
     case 'preferred':
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
+      return 'bg-gray-100 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
     default:
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
+      return 'bg-gray-100 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
   }
 };
 
