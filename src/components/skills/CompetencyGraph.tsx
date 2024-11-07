@@ -91,51 +91,39 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
       />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-[200px] font-semibold bg-background/80 border-r border-border">
+                Skill
+              </TableHead>
+              {levels.map((level, index) => (
                 <TableHead 
-                  className="w-[200px] min-w-[200px] max-w-[200px] font-semibold bg-background/80 border-r border-border sticky left-0 z-20"
+                  key={level} 
+                  className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
                 >
-                  Skill
+                  <div className="font-semibold">{level}</div>
                 </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {uniqueSkills.map((skillName) => (
+              <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
+                <TableCell className="font-medium border-r border-border">
+                  {skillName}
+                </TableCell>
                 {levels.map((level, index) => (
-                  <TableHead 
-                    key={level} 
-                    className={`w-[160px] min-w-[160px] max-w-[160px] text-center bg-background/80 ${
-                      index !== levels.length - 1 ? 'border-r' : ''
-                    } border-border`}
-                  >
-                    <div className="font-semibold">{level}</div>
-                  </TableHead>
+                  <SkillCell 
+                    key={level}
+                    details={getSkillDetails(skillName, level)}
+                    isLastColumn={index === levels.length - 1}
+                  />
                 ))}
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {uniqueSkills.map((skillName) => (
-                <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
-                  <TableCell 
-                    className="font-medium border-r border-border sticky left-0 bg-white z-10 w-[200px] min-w-[200px] max-w-[200px]"
-                  >
-                    {skillName}
-                  </TableCell>
-                  {levels.map((level, index) => (
-                    <TableCell 
-                      key={level}
-                      className="w-[160px] min-w-[160px] max-w-[160px]"
-                    >
-                      <SkillCell 
-                        details={getSkillDetails(skillName, level)}
-                        isLastColumn={index === levels.length - 1}
-                      />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
