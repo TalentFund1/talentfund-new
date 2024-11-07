@@ -19,13 +19,13 @@ export const SkillLevelIcon = ({ level }: SkillLevelIconProps) => {
   };
 
   return (
-    <div className={cn("relative inline-flex items-center justify-center", getColorClass())}>
+    <div className={cn("relative inline-flex items-center justify-center w-8 h-8", getColorClass())}>
       {/* Outer circle */}
-      <div className="w-8 h-8 rounded-full border-2 border-current absolute" />
-      {/* Middle circle (white space) */}
-      <div className="w-5 h-5 rounded-full bg-white absolute" />
-      {/* Inner circle (dot) - increased size from w-2/h-2 to w-3/h-3 */}
-      <div className="w-3 h-3 rounded-full bg-current absolute" />
+      <div className="absolute w-8 h-8 rounded-full border-2 border-current" />
+      {/* Middle circle (white background) */}
+      <div className="absolute w-5 h-5 rounded-full bg-white" />
+      {/* Inner circle (filled dot) */}
+      <div className="absolute w-2.5 h-2.5 rounded-full bg-current" />
     </div>
   );
 };
