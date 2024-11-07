@@ -143,8 +143,11 @@ export const CompetencyGraph = () => {
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="w-[200px] font-semibold bg-background/80 border-r border-border">Skill</TableHead>
-              {levels.map((level) => (
-                <TableHead key={level} className="text-center bg-background/80 border-r border-border">
+              {levels.map((level, index) => (
+                <TableHead 
+                  key={level} 
+                  className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
+                >
                   <div className="font-semibold">{level}</div>
                 </TableHead>
               ))}
@@ -154,10 +157,13 @@ export const CompetencyGraph = () => {
             {uniqueSkills.map((skillName) => (
               <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
                 <TableCell className="font-medium border-r border-border">{skillName}</TableCell>
-                {levels.map((level) => {
+                {levels.map((level, index) => {
                   const details = getSkillDetails(skillName, level);
                   return (
-                    <TableCell key={level} className="text-center border-r border-border">
+                    <TableCell 
+                      key={level} 
+                      className={`text-center ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
+                    >
                       {details.level !== "-" ? (
                         <div className="space-y-1.5">
                           <div className={getLevelStyles(details.level)}>
