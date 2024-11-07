@@ -20,7 +20,7 @@ const MarketData = () => {
   const [location, setLocation] = useState('');
 
   return (
-    <div className="flex-1 space-y-6 p-6 ml-16">
+    <div className="flex-1 space-y-6 p-6 ml-16 bg-white min-h-screen">
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Market Data</h2>
         
