@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Heart, HeartOff } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Heart, HeartOff, HelpCircle } from "lucide-react";
 import { useState } from "react";
 
 interface SkillLevelCellProps {
@@ -19,6 +19,8 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
         return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
       case 'beginner':
         return <Target className="w-3.5 h-3.5 text-[#008000]" />;
+      case 'unknown':
+        return <HelpCircle className="w-3.5 h-3.5 text-gray-400" />;
       default:
         return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
     }
@@ -32,6 +34,8 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
         return "border-2 border-primary-icon bg-primary-icon/10";
       case 'beginner':
         return "border-2 border-[#008000] bg-[#008000]/10";
+      case 'unknown':
+        return "border-2 border-gray-400 bg-gray-100/50";
       default:
         return "border-2 border-gray-400 bg-gray-100/50";
     }
@@ -65,10 +69,17 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
     }
   };
 
+  const handleLevelChange = (newLevel: string) => {
+    setLevel(newLevel);
+    if (newLevel === 'unknown') {
+      setRequired('not-interested');
+    }
+  };
+
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={level} onValueChange={setLevel}>
+        <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
@@ -104,10 +115,20 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
                 Advanced
               </span>
             </SelectItem>
+            <SelectItem value="unknown">
+              <span className="flex items-center gap-1.5">
+                <HelpCircle className="w-3.5 h-3.5 text-gray-400" />
+                Unknown
+              </span>
+            </SelectItem>
           </SelectContent>
         </Select>
 
-        <Select value={required} onValueChange={setRequired}>
+        <Select 
+          value={required} 
+          onValueChange={setRequired}
+          disabled={level === 'unknown'}
+        >
           <SelectTrigger 
             className={`text-xs px-2 py-1 font-normal w-full flex items-center justify-center min-h-[24px] border-x-2 border-b-2 rounded-b-md ${getRequirementStyles(required)}`}
           >
