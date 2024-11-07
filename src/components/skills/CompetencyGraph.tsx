@@ -80,13 +80,36 @@ const managerialSkills: SkillLevels = {
   ],
 };
 
+const getLevelStyles = (level: string) => {
+  switch (level.toLowerCase()) {
+    case 'advanced':
+      return 'text-purple-700 font-medium bg-purple-50 px-2 py-1 rounded-full';
+    case 'intermediate':
+      return 'text-orange-600 font-medium bg-orange-50 px-2 py-1 rounded-full';
+    case 'beginner':
+      return 'text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full';
+    default:
+      return '';
+  }
+};
+
+const getRequirementStyles = (requirement: string) => {
+  switch (requirement.toLowerCase()) {
+    case 'required':
+      return 'text-gray-700 bg-gray-100 text-xs px-2 py-0.5 rounded-full font-medium';
+    case 'preferred':
+      return 'text-blue-700 bg-blue-50 text-xs px-2 py-0.5 rounded-full font-medium';
+    default:
+      return '';
+  }
+};
+
 export const CompetencyGraph = () => {
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
   
   const skills = track === "Professional" ? professionalSkills : managerialSkills;
   const levels = track === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
-  // Get unique skill names
   const uniqueSkills = Array.from(
     new Set(
       Object.values(skills)
@@ -118,8 +141,8 @@ export const CompetencyGraph = () => {
       <div className="rounded-lg border">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-[200px]">Skill</TableHead>
+            <TableRow className="bg-gray-50">
+              <TableHead className="w-[200px] font-semibold">Skill</TableHead>
               {levels.map((level) => (
                 <TableHead key={level} className="text-center">
                   <div className="font-semibold">{level}</div>
@@ -130,26 +153,24 @@ export const CompetencyGraph = () => {
           </TableHeader>
           <TableBody>
             {uniqueSkills.map((skillName) => (
-              <TableRow key={skillName}>
+              <TableRow key={skillName} className="hover:bg-gray-50/50">
                 <TableCell className="font-medium">{skillName}</TableCell>
                 {levels.map((level) => {
                   const details = getSkillDetails(skillName, level);
                   return (
                     <TableCell key={level} className="text-center">
-                      <div className="space-y-1">
-                        <div className={`text-sm capitalize ${
-                          details.level === "advanced" 
-                            ? "text-primary-accent" 
-                            : details.level === "intermediate"
-                            ? "text-primary-icon"
-                            : "text-[#008000]"
-                        }`}>
-                          {details.level}
+                      {details.level !== "-" ? (
+                        <div className="space-y-1.5">
+                          <div className={getLevelStyles(details.level)}>
+                            {details.level}
+                          </div>
+                          <div className={getRequirementStyles(details.required)}>
+                            {details.required}
+                          </div>
                         </div>
-                        <div className="text-xs text-muted-foreground capitalize">
-                          {details.required}
-                        </div>
-                      </div>
+                      ) : (
+                        <span className="text-gray-300">-</span>
+                      )}
                     </TableCell>
                   );
                 })}
