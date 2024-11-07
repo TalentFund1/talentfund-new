@@ -1,6 +1,5 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
-import { TablePagination } from "./TablePagination";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -56,63 +55,78 @@ const employees: Employee[] = [
 export const EmployeeTable = () => {
   return (
     <div className="bg-white rounded-lg">
-      <table className="w-full">
-        <thead>
-          <tr className="border-y border-border">
-            <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[4%]">
-              <input type="checkbox" className="rounded border-gray-300" />
-            </th>
-            <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[25%]">
-              <div className="flex items-center gap-1">
-                Employee Name <ChevronDown className="h-4 w-4" />
-              </div>
-            </th>
-            <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[20%]">Current Role</th>
-            <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">Department</th>
-            <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Skill Count</th>
-            <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Benchmark</th>
-            <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-right w-[12%]">Last Updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          {employees.map((employee, index) => (
-            <tr key={employee.name} className="border-t border-border hover:bg-muted/50 transition-colors">
-              <td className="py-4 px-4">
+      <div className="relative">
+        <table className="w-full">
+          <thead>
+            <tr className="border-y border-border">
+              <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[4%]">
                 <input type="checkbox" className="rounded border-gray-300" />
-              </td>
-              <td className="py-4 px-4">
-                <div className="flex items-center gap-3">
-                  <img 
-                    src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
-                    alt={employee.name}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                  <Link to="/employee-profile" className="text-primary hover:underline">
-                    {employee.name}
-                  </Link>
+              </th>
+              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[25%]">
+                <div className="flex items-center gap-1">
+                  Employee Name <ChevronDown className="h-4 w-4" />
                 </div>
-              </td>
-              <td className="py-4 px-4 text-left">{employee.role}</td>
-              <td className="py-4 px-4 text-left">{employee.department}</td>
-              <td className="py-4 px-4 text-center">{employee.skillCount}</td>
-              <td className="py-4 px-4">
-                <div className="flex justify-center">
-                  <span className={`px-2.5 py-1 rounded-full text-sm ${
-                    employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
-                  }`}>
-                    {employee.benchmark}%
-                  </span>
-                </div>
-              </td>
-              <td className="py-4 px-4 text-right text-muted-foreground">
-                {employee.lastUpdated}
-              </td>
+              </th>
+              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[20%]">Current Role</th>
+              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">Department</th>
+              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Skill Count</th>
+              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Benchmark</th>
+              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-right w-[12%]">Last Updated</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="px-4 py-4 border-t border-border">
-        <TablePagination />
+          </thead>
+          <tbody>
+            {employees.map((employee, index) => (
+              <tr key={employee.name} className="border-t border-border hover:bg-muted/50 transition-colors">
+                <td className="py-4 px-4">
+                  <input type="checkbox" className="rounded border-gray-300" />
+                </td>
+                <td className="py-4 px-4">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
+                      alt={employee.name}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <Link to="/employee-profile" className="text-primary hover:underline">
+                      {employee.name}
+                    </Link>
+                  </div>
+                </td>
+                <td className="py-4 px-4 text-left">{employee.role}</td>
+                <td className="py-4 px-4 text-left">{employee.department}</td>
+                <td className="py-4 px-4 text-center">{employee.skillCount}</td>
+                <td className="py-4 px-4">
+                  <div className="flex justify-center">
+                    <span className={`px-2.5 py-1 rounded-full text-sm ${
+                      employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
+                    }`}>
+                      {employee.benchmark}%
+                    </span>
+                  </div>
+                </td>
+                <td className="py-4 px-4 text-right text-muted-foreground">
+                  {employee.lastUpdated}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex items-center justify-between px-4 py-4 border-t border-border">
+        <select className="px-3 py-1.5 border border-border rounded-md text-sm">
+          <option>10 rows</option>
+          <option>20 rows</option>
+          <option>50 rows</option>
+        </select>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">1-4 of 4</span>
+          <button className="p-1 rounded border border-border" disabled>
+            <ChevronDown className="h-4 w-4 rotate-90" />
+          </button>
+          <button className="p-1 rounded border border-border" disabled>
+            <ChevronDown className="h-4 w-4 -rotate-90" />
+          </button>
+        </div>
       </div>
     </div>
   );
