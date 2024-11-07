@@ -12,7 +12,7 @@ interface SkillCellProps {
 export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
   return (
     <TableCell 
-      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
+      className={`text-center p-3 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
     >
       {details.level !== "-" ? (
         <div className="flex flex-col items-center gap-0">
