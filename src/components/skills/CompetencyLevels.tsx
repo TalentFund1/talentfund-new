@@ -3,6 +3,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
 
 interface CompetencyLevelsProps {
   selectedLevels: string[];
@@ -11,10 +12,16 @@ interface CompetencyLevelsProps {
 
 export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLevelsProps) => {
   const [track, setTrack] = React.useState("Professional");
+  const [selectedLevel, setSelectedLevel] = React.useState<string | null>(null);
 
   const levelPairs = track === "Professional" 
     ? [["P1", "P2"], ["P3", "P4"], ["P5", "P6"]]
     : [["M3", "M4"], ["M5", "M6"]];
+
+  const handleLevelSelect = (value: string) => {
+    setSelectedLevel(value);
+    onLevelSelect(value);
+  };
 
   return (
     <div className="space-y-6">
@@ -35,8 +42,8 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
       </div>
 
       <RadioGroup 
-        defaultValue={selectedLevels[0]} 
-        onValueChange={onLevelSelect}
+        value={selectedLevel || undefined}
+        onValueChange={handleLevelSelect}
         className="space-y-4"
       >
         {levelPairs.map((pair, rowIndex) => (
@@ -44,7 +51,11 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
             {pair.map((level) => (
               <div 
                 key={level} 
-                className="flex items-center gap-3 bg-background/40 p-4 rounded-lg hover:bg-background/60 transition-colors"
+                className={`flex items-center gap-3 p-4 rounded-lg transition-colors ${
+                  selectedLevel === `AI Engineer: ${level}`
+                    ? 'bg-primary/10 border border-primary'
+                    : 'bg-background/40 hover:bg-background/60'
+                }`}
               >
                 <RadioGroupItem value={`AI Engineer: ${level}`} id={level} />
                 <Label htmlFor={level} className="text-sm font-medium">AI Engineer: {level}</Label>
@@ -53,6 +64,28 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
           </div>
         ))}
       </RadioGroup>
+
+      {selectedLevel && (
+        <Card className="p-6 mt-6">
+          <h3 className="text-lg font-semibold mb-4">{selectedLevel} Matrix</h3>
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="p-4 bg-background/40 rounded-lg">
+                <h4 className="font-medium mb-2">All Skills</h4>
+                <p className="text-sm text-muted-foreground">28 skills</p>
+              </div>
+              <div className="p-4 bg-background/40 rounded-lg">
+                <h4 className="font-medium mb-2">Specialized Skills</h4>
+                <p className="text-sm text-muted-foreground">15 skills</p>
+              </div>
+              <div className="p-4 bg-background/40 rounded-lg">
+                <h4 className="font-medium mb-2">Common Skills</h4>
+                <p className="text-sm text-muted-foreground">10 skills</p>
+              </div>
+            </div>
+          </div>
+        </Card>
+      )}
     </div>
   );
 };
