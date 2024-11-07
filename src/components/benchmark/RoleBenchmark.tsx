@@ -64,7 +64,7 @@ export const RoleBenchmark = () => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               {requiredSkills.map((skill) => (
                 <Badge 
                   key={skill.name} 
@@ -86,7 +86,7 @@ export const RoleBenchmark = () => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               {preferredSkills.map((skill) => (
                 <Badge 
                   key={skill.name} 
@@ -108,7 +108,7 @@ export const RoleBenchmark = () => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               {certifications.map((cert) => (
                 <Badge 
                   key={cert.name}
