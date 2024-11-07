@@ -53,6 +53,67 @@ const skills = [
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "beginner",
     growth: "11%"
+  },
+  // Adding 10 new skills
+  {
+    title: "TensorFlow",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "advanced",
+    growth: "15%"
+  },
+  {
+    title: "PyTorch",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "intermediate",
+    growth: "18%"
+  },
+  {
+    title: "Natural Language Processing",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "advanced",
+    growth: "21%"
+  },
+  {
+    title: "Computer Vision",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "intermediate",
+    growth: "17%"
+  },
+  {
+    title: "Kubernetes",
+    subcategory: "Software Development Tools",
+    level: "advanced",
+    growth: "14%"
+  },
+  {
+    title: "Data Engineering",
+    subcategory: "Data Science",
+    level: "intermediate",
+    growth: "16%"
+  },
+  {
+    title: "Neural Networks",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "advanced",
+    growth: "20%"
+  },
+  {
+    title: "Apache Spark",
+    subcategory: "Big Data",
+    level: "beginner",
+    growth: "13%"
+  },
+  {
+    title: "Git",
+    subcategory: "Software Development Tools",
+    level: "advanced",
+    growth: "8%"
+  },
+  {
+    title: "Python Programming",
+    subcategory: "Programming Languages",
+    level: "advanced",
+    growth: "15%"
   }
 ];
 
