@@ -85,9 +85,9 @@ const getLevelStyles = (level: string) => {
     case 'advanced':
       return 'bg-primary-accent/10 text-primary-accent font-medium px-2.5 py-1 rounded-md text-sm';
     case 'intermediate':
-      return 'bg-primary/5 text-primary font-medium px-2.5 py-1 rounded-md text-sm';
+      return 'bg-primary-icon/10 text-primary-icon font-medium px-2.5 py-1 rounded-md text-sm';
     case 'beginner':
-      return 'bg-secondary/10 text-foreground font-medium px-2.5 py-1 rounded-md text-sm';
+      return 'bg-[#008000]/10 text-[#008000] font-medium px-2.5 py-1 rounded-md text-sm';
     default:
       return '';
   }
