@@ -60,9 +60,9 @@ export const SkillsSummary = () => {
     if (containerRef.current) {
       const container = containerRef.current;
       const containerWidth = container.offsetWidth;
-      const skillWidth = 150; // Approximate width of each skill badge including gap
+      const skillWidth = 150;
       const skillsPerRow = Math.floor(containerWidth / skillWidth);
-      const optimalRows = 2; // Number of rows to show before "See More"
+      const optimalRows = 2;
       setVisibleSpecializedCount(skillsPerRow * optimalRows);
     }
   }, []);
@@ -76,7 +76,7 @@ export const SkillsSummary = () => {
       <Badge 
         key={skill.name} 
         variant="outline" 
-        className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white"
+        className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white h-8 min-w-[120px] justify-center whitespace-nowrap"
       >
         {skill.name} 
         <div className={`h-2 w-2 rounded-full ${
@@ -140,7 +140,7 @@ export const SkillsSummary = () => {
           <div className="flex flex-wrap gap-3">
             <Badge 
               variant="outline" 
-              className="rounded-lg px-4 py-2 border-2 bg-white"
+              className="rounded-lg px-4 py-2 border-2 bg-white h-8 min-w-[120px] justify-center whitespace-nowrap"
             >
               Cybersecurity License
             </Badge>
