@@ -27,18 +27,18 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
   const getLevelStyles = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return "border border-primary-accent bg-primary-accent/10";
+        return "border-2 border-primary-accent bg-primary-accent/10";
       case 'intermediate':
-        return "border border-primary-icon bg-primary-icon/10";
+        return "border-2 border-primary-icon bg-primary-icon/10";
       case 'beginner':
-        return "border border-[#008000] bg-[#008000]/10";
+        return "border-2 border-[#008000] bg-[#008000]/10";
       default:
-        return "border border-gray-400 bg-gray-100/50";
+        return "border-2 border-gray-400 bg-gray-100/50";
     }
   };
 
   const getRequirementStyles = (requirement: string) => {
-    const baseStyles = "text-xs px-2 py-1 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x border-b rounded-b-md";
+    const baseStyles = "text-xs px-2 py-1 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md";
     
     switch (requirement) {
       case 'required':
