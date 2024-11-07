@@ -97,10 +97,10 @@ export const SkillsMatrix = () => {
             <TableRow className="hover:bg-transparent">
               <TableHead className="w-[180px] border-r border-blue-200">Skill Title</TableHead>
               <TableHead className="w-[220px] border-r border-blue-200">Subcategory</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[100px]">Unspecified</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[100px]">Beginner</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[100px]">Intermediate</TableHead>
-              <TableHead className="text-center border-r border-blue-200 w-[100px]">Advanced</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[120px]">Unspecified</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[120px]">Beginner</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[120px]">Intermediate</TableHead>
+              <TableHead className="text-center border-r border-blue-200 w-[120px]">Advanced</TableHead>
               <TableHead className="w-[120px] text-center">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
