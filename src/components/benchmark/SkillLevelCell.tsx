@@ -78,12 +78,6 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="unspecified">
-              <span className="flex items-center gap-1.5">
-                <CircleDashed className="w-3.5 h-3.5 text-gray-400" />
-                Unspecified
-              </span>
-            </SelectItem>
             <SelectItem value="beginner">
               <span className="flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5 text-[#008000]" />
