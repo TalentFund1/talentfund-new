@@ -97,10 +97,10 @@ export const SkillsMatrix = () => {
             <TableRow className="hover:bg-transparent border-b border-gray-200 bg-[#F7F9FF]">
               <TableHead className="w-[180px] border-r border-blue-200 py-2">Skill Title</TableHead>
               <TableHead className="w-[220px] border-r border-blue-200 py-2">Subcategory</TableHead>
-              <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">Company Skill</TableHead>
-              <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">Skill Level</TableHead>
-              <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">Confidence Score</TableHead>
-              <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">
+              <TableHead className="w-[100px] text-center border-r border-blue-200 py-2">Company Skill</TableHead>
+              <TableHead className="w-[100px] text-center border-r border-blue-200 py-2">Skill Level</TableHead>
+              <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">Confidence Score</TableHead>
+              <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
                   <TooltipProvider>
@@ -120,7 +120,7 @@ export const SkillsMatrix = () => {
                   </TooltipProvider>
                 </div>
               </TableHead>
-              <TableHead className="w-[120px] text-center py-2">Appears In</TableHead>
+              <TableHead className="w-[100px] text-center py-2">Appears In</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
