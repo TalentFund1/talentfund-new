@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Plus } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
+import { CompetencyMatrixHeader } from "./CompetencyMatrixHeader";
+import { CompetencyLevels } from "./CompetencyLevels";
+import { SkillsGrid } from "./SkillsGrid";
 
 const skillsData = {
   all: [
@@ -78,55 +76,14 @@ export const CompetencyMatrix = () => {
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-foreground">Competency Levels</h2>
-        <div className="flex items-center gap-2">
-          <Select defaultValue={selectedLevels.length.toString()}>
-            <SelectTrigger className="w-[120px] bg-background">
-              <SelectValue placeholder={`${selectedLevels.length} Selected`} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={selectedLevels.length.toString()}>
-                {selectedLevels.length} Selected
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline">Cancel</Button>
-          <Button>Save</Button>
-        </div>
-      </div>
-
+      <CompetencyMatrixHeader selectedLevels={selectedLevels} />
+      
       <Separator className="my-4" />
-
-      <div className="space-y-4">
-        <Button 
-          variant="ghost" 
-          className="text-primary p-0 h-auto flex items-center gap-2 hover:bg-transparent hover:text-primary-accent"
-        >
-          <Plus className="h-4 w-4" /> Add Level
-        </Button>
-
-        <div className="space-y-2">
-          {["P3", "P4"].map((level) => (
-            <div key={level} className="flex items-center gap-3 bg-background/40 p-2 rounded-lg hover:bg-background/60 transition-colors">
-              <Checkbox 
-                className="rounded-sm"
-                checked={selectedLevels.includes(`AI Engineer ${level}`)}
-                onCheckedChange={() => handleLevelSelect(`AI Engineer ${level}`)}
-              />
-              <span className="text-sm font-medium">AI Engineer</span>
-              <Select defaultValue={level}>
-                <SelectTrigger className="w-[80px] bg-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={level}>{level}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          ))}
-        </div>
-      </div>
+      
+      <CompetencyLevels 
+        selectedLevels={selectedLevels}
+        onLevelSelect={handleLevelSelect}
+      />
 
       <Separator className="my-4 border-border" />
 
@@ -159,51 +116,7 @@ export const CompetencyMatrix = () => {
           ))}
         </div>
 
-        <div className="border border-border rounded-lg overflow-hidden">
-          <div className="grid grid-cols-3 gap-4 p-3 bg-[#F7F9FF] border-b border-border">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-foreground">
-                Skills ({currentSkills.length})
-              </span>
-            </div>
-            <div className="text-sm font-medium text-foreground">Skill Level</div>
-            <div className="text-sm font-medium text-foreground">Required</div>
-          </div>
-
-          {currentSkills.map((skill) => (
-            <div 
-              key={skill.name} 
-              className="grid grid-cols-3 gap-4 p-3 hover:bg-background/40 transition-colors border-b border-border last:border-b-0"
-            >
-              <Link 
-                to={`/skills/${skill.name.toLowerCase().replace(/\s+/g, '-')}`}
-                className="text-sm text-primary hover:text-primary-accent transition-colors cursor-pointer"
-              >
-                {skill.name}
-              </Link>
-              <Select defaultValue={skill.level.toLowerCase()}>
-                <SelectTrigger className="bg-white border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="advanced">Advanced</SelectItem>
-                  <SelectItem value="intermediate">Intermediate</SelectItem>
-                  <SelectItem value="beginner">Beginner</SelectItem>
-                  <SelectItem value="unspecified">Unspecified</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select defaultValue={skill.required.toLowerCase()}>
-                <SelectTrigger className="bg-white border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="required">Required</SelectItem>
-                  <SelectItem value="preferred">Preferred</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          ))}
-        </div>
+        <SkillsGrid currentSkills={currentSkills} />
       </div>
     </div>
   );
