@@ -59,7 +59,7 @@ export const EmployeeTable = () => {
       <div className="relative">
         <table className="w-full">
           <thead>
-            <tr className="border-y border-border">
+            <tr className="border-b border-border">
               <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[4%]">
                 <input type="checkbox" className="rounded border-gray-300" />
               </th>
