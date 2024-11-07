@@ -28,6 +28,27 @@ const professionalSkills: SkillLevels = {
     { name: "Python", level: "advanced", required: "required" },
     { name: "Machine Learning", level: "advanced", required: "required" },
   ],
+  "P4": [
+    { name: "Amazon Web Services", level: "advanced", required: "required" },
+    { name: "Python", level: "advanced", required: "required" },
+    { name: "Machine Learning", level: "advanced", required: "required" },
+    { name: "System Design", level: "advanced", required: "required" },
+  ],
+  "P5": [
+    { name: "Amazon Web Services", level: "advanced", required: "required" },
+    { name: "Python", level: "advanced", required: "required" },
+    { name: "Machine Learning", level: "advanced", required: "required" },
+    { name: "System Design", level: "advanced", required: "required" },
+    { name: "Technical Leadership", level: "intermediate", required: "required" },
+  ],
+  "P6": [
+    { name: "Amazon Web Services", level: "advanced", required: "required" },
+    { name: "Python", level: "advanced", required: "required" },
+    { name: "Machine Learning", level: "advanced", required: "required" },
+    { name: "System Design", level: "advanced", required: "required" },
+    { name: "Technical Leadership", level: "advanced", required: "required" },
+    { name: "Strategic Planning", level: "advanced", required: "required" },
+  ],
 };
 
 const managerialSkills: SkillLevels = {
@@ -40,6 +61,22 @@ const managerialSkills: SkillLevels = {
     { name: "Team Leadership", level: "advanced", required: "required" },
     { name: "Project Management", level: "advanced", required: "required" },
     { name: "Technical Architecture", level: "advanced", required: "required" },
+    { name: "Strategic Planning", level: "intermediate", required: "required" },
+  ],
+  "M5": [
+    { name: "Team Leadership", level: "advanced", required: "required" },
+    { name: "Project Management", level: "advanced", required: "required" },
+    { name: "Technical Architecture", level: "advanced", required: "required" },
+    { name: "Strategic Planning", level: "advanced", required: "required" },
+    { name: "Organizational Development", level: "intermediate", required: "required" },
+  ],
+  "M6": [
+    { name: "Team Leadership", level: "advanced", required: "required" },
+    { name: "Project Management", level: "advanced", required: "required" },
+    { name: "Technical Architecture", level: "advanced", required: "required" },
+    { name: "Strategic Planning", level: "advanced", required: "required" },
+    { name: "Organizational Development", level: "advanced", required: "required" },
+    { name: "Business Strategy", level: "advanced", required: "required" },
   ],
 };
 
@@ -47,7 +84,7 @@ export const CompetencyGraph = () => {
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
   
   const skills = track === "Professional" ? professionalSkills : managerialSkills;
-  const levels = track === "Professional" ? ["P1", "P2", "P3"] : ["M3", "M4"];
+  const levels = track === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
   // Get unique skill names
   const uniqueSkills = Array.from(
