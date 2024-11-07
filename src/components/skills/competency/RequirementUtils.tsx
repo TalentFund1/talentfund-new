@@ -1,11 +1,11 @@
 export const getRequirementStyles = (requirement: string) => {
   switch (requirement.toLowerCase()) {
     case 'required':
-      return 'bg-gray-100 border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
+      return 'bg-white border-t-2 border-primary-accent text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
     case 'preferred':
-      return 'bg-gray-100 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
+      return 'bg-white text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
     default:
-      return 'bg-gray-100 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
+      return 'bg-white text-xs px-2 py-0.5 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1';
   }
 };
 
