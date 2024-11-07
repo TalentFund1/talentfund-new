@@ -70,7 +70,7 @@ export const SkillProfileMatrix = () => {
         <Separator className="my-4" />
 
         <div className="flex justify-between items-center mb-4">
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <Select value={skillType} onValueChange={setSkillType}>
               <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="All Categories" />
