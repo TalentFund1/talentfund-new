@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MarketDataTable } from '@/components/market/MarketDataTable';
 import { Sidebar } from '@/components/Sidebar';
 
 const MarketData = () => {
@@ -139,8 +138,6 @@ const MarketData = () => {
                 </div>
               </div>
             </div>
-
-            <MarketDataTable />
           </div>
         </div>
       </div>
