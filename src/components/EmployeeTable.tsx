@@ -67,11 +67,11 @@ export const EmployeeTable = () => {
                   Employee Name <ChevronDown className="h-4 w-4" />
                 </div>
               </th>
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-left w-[20%]">Current Role</th>
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">Department</th>
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-center w-[13%]">Skill Count</th>
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-center w-[13%]">Benchmark</th>
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-right w-[12%]">Last Updated</th>
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-left w-[18%]">Current Role</th>
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-left w-[14%]">Department</th>
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-center w-[14%]">Skill Count</th>
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-center w-[14%]">Benchmark</th>
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-right w-[13%]">Last Updated</th>
             </tr>
           </thead>
           <tbody>
