@@ -98,11 +98,11 @@ const getLevelStyles = (level: string) => {
 const getRequirementStyles = (requirement: string) => {
   switch (requirement.toLowerCase()) {
     case 'required':
-      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px] capitalize';
+      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px]';
     case 'preferred':
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px] capitalize';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px]';
     default:
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px] capitalize';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px]';
   }
 };
 
