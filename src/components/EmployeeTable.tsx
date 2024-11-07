@@ -59,19 +59,19 @@ export const EmployeeTable = () => {
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground w-[10%]">
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground w-[5%]">
                 <input type="checkbox" className="rounded border-gray-300" />
               </th>
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-left w-[25%]">
                 <div className="flex items-center gap-1">
                   Employee Name <ChevronDown className="h-4 w-4" />
                 </div>
               </th>
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">Current Role</th>
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-left w-[25%]">Current Role</th>
               <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">Department</th>
               <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">Skill Count</th>
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">Benchmark</th>
-              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-right w-[15%]">Last Updated</th>
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-center w-[8%]">Benchmark</th>
+              <th className="h-12 px-4 text-sm font-medium text-muted-foreground text-right w-[7%]">Last Updated</th>
             </tr>
           </thead>
           <tbody>
