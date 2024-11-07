@@ -96,13 +96,16 @@ export const SkillsMatrix = () => {
           </Select>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-white">Add Skill</Button>
           <Button variant="outline" className="bg-white">Cancel</Button>
           <Button>Save</Button>
         </div>
       </div>
 
       <div className="border-t border-blue-200 pt-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Button>Add Skill</Button>
+        </div>
+        
         <div className="flex gap-4 mb-6">
           <Select defaultValue="all">
             <SelectTrigger className="w-[180px] bg-white">
