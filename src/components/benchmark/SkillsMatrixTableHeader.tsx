@@ -1,5 +1,5 @@
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, ArrowUp } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -55,7 +55,12 @@ export const SkillsMatrixTableHeader = () => {
             </TooltipProvider>
           </div>
         </TableHead>
-        <TableHead className="w-[120px] text-center py-2">Appears In</TableHead>
+        <TableHead className="w-[120px] text-center py-2">
+          <div className="flex items-center justify-center gap-1">
+            Appears In
+            <ArrowUp className="h-4 w-4" />
+          </div>
+        </TableHead>
       </TableRow>
     </TableHeader>
   );
