@@ -47,6 +47,12 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     return skillLevel?.find((s) => s.name === skillName) || { level: "-", required: "-" };
   };
 
+  const handleTrackChange = (value: string) => {
+    if (value === "Professional" || value === "Managerial") {
+      setCurrentTrack(value);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -54,7 +60,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
           <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
           <div className="flex items-center gap-2">
             <div className="text-sm text-muted-foreground mr-2">Track:</div>
-            <Select value={currentTrack} onValueChange={setCurrentTrack}>
+            <Select value={currentTrack} onValueChange={handleTrackChange}>
               <SelectTrigger className="w-[180px] bg-white border-border">
                 <SelectValue placeholder="Select track" />
               </SelectTrigger>
