@@ -18,6 +18,8 @@ export const getRequirementStyles = (requirement: string, level: string) => {
       return `${baseStyles} bg-gray-100/90 border-x border-b rounded-b-md ${borderColor}`;
     case 'preferred':
       return `${baseStyles} bg-gray-50/90 border-x border-b rounded-b-md border-gray-300`;
+    case 'unspecified':
+      return `${baseStyles} bg-gray-50/50 border-x border-b rounded-b-md border-gray-200`;
     default:
       return `${baseStyles} bg-transparent`;
   }
@@ -48,6 +50,8 @@ export const getRequirementIcon = (requirement: string) => {
       return '✓';
     case 'preferred':
       return '○';
+    case 'unspecified':
+      return '−';
     default:
       return '';
   }

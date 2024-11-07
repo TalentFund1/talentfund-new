@@ -1,6 +1,8 @@
 import { TableCell } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getLevelStyles, getRequirementStyles, getRequirementIcon } from "./RequirementUtils";
 import { Star, Shield, Target } from "lucide-react";
+import { useState } from "react";
 
 interface SkillCellProps {
   details: {
@@ -11,6 +13,9 @@ interface SkillCellProps {
 }
 
 export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
+  const [level, setLevel] = useState(details.level);
+  const [required, setRequired] = useState(details.required);
+
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
@@ -28,18 +33,39 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
     <TableCell 
       className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
     >
-      {details.level !== "-" ? (
+      {level !== "-" ? (
         <div className="flex flex-col items-center gap-0">
-          <div className={`${getLevelStyles(details.level)} min-w-[120px]`}>
-            <span className="flex items-center gap-2 justify-center text-[15px]">
-              {getLevelIcon(details.level)}
-              {details.level}
-            </span>
-          </div>
-          <div className={`${getRequirementStyles(details.required, details.level)} min-w-[120px]`}>
-            {getRequirementIcon(details.required)}
-            <span>{details.required}</span>
-          </div>
+          <Select value={level.toLowerCase()} onValueChange={(value) => setLevel(value)}>
+            <SelectTrigger className={`${getLevelStyles(level)} min-w-[120px] border-0`}>
+              <SelectValue>
+                <span className="flex items-center gap-2 justify-center text-[15px]">
+                  {getLevelIcon(level)}
+                  {level}
+                </span>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="beginner">Beginner</SelectItem>
+              <SelectItem value="intermediate">Intermediate</SelectItem>
+              <SelectItem value="advanced">Advanced</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={required.toLowerCase()} onValueChange={(value) => setRequired(value)}>
+            <SelectTrigger className={`${getRequirementStyles(required, level)} min-w-[120px] border-0`}>
+              <SelectValue>
+                <span className="flex items-center gap-2 justify-center">
+                  {getRequirementIcon(required)}
+                  {required}
+                </span>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="required">Required</SelectItem>
+              <SelectItem value="preferred">Preferred</SelectItem>
+              <SelectItem value="unspecified">Unspecified</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       ) : (
         <span className="text-muted-foreground/30">-</span>
