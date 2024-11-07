@@ -12,13 +12,13 @@ export const getRequirementStyles = (requirement: string) => {
 export const getLevelStyles = (level: string) => {
   switch (level.toLowerCase()) {
     case 'advanced':
-      return 'border-2 border-primary-accent rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full';
+      return 'border-2 border-primary-accent rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full capitalize';
     case 'intermediate':
-      return 'border-2 border-primary-icon rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full';
+      return 'border-2 border-primary-icon rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full capitalize';
     case 'beginner':
-      return 'border-2 border-[#008000] rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full';
+      return 'border-2 border-[#008000] rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full capitalize';
     default:
-      return 'border-2 border-gray-300 rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full';
+      return 'border-2 border-gray-300 rounded-t-md px-2 py-1 text-xs font-medium text-[#1f2144] w-full capitalize';
   }
 };
 

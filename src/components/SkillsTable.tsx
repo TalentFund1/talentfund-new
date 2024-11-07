@@ -15,43 +15,43 @@ const skills = [
   {
     title: "Amazon Web Services",
     subcategory: "Web Services",
-    level: "advanced",
+    level: "Advanced",
     growth: "12%"
   },
   {
     title: "Artificial Intelligence",
     subcategory: "Artificial Intelligence and Machine Learning",
-    level: "advanced",
+    level: "Advanced",
     growth: "19%"
   },
   {
     title: "Conversational AI",
     subcategory: "Natural Language Processing (NLP)",
-    level: "advanced",
+    level: "Advanced",
     growth: "12%"
   },
   {
     title: "Deep Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
+    level: "Intermediate",
     growth: "19%"
   },
   {
     title: "Machine Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
+    level: "Intermediate",
     growth: "10%"
   },
   {
     title: "Docker (Software)",
     subcategory: "Software Development Tools",
-    level: "intermediate",
+    level: "Intermediate",
     growth: "0%"
   },
   {
     title: "MLflow",
     subcategory: "Artificial Intelligence and Machine Learning",
-    level: "beginner",
+    level: "Beginner",
     growth: "11%"
   }
 ];
@@ -114,13 +114,13 @@ export const SkillsTable = () => {
               <TableCell className="font-medium border-x border-border">{skill.title}</TableCell>
               <TableCell className="border-r border-border">{skill.subcategory}</TableCell>
               <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border">
-                {skill.level === "beginner" && <SkillLevelIcon level="beginner" />}
+                {skill.level === "Beginner" && <SkillLevelIcon level="beginner" />}
               </TableCell>
               <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border">
-                {skill.level === "intermediate" && <SkillLevelIcon level="intermediate" />}
+                {skill.level === "Intermediate" && <SkillLevelIcon level="intermediate" />}
               </TableCell>
               <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-border">
-                {skill.level === "advanced" && <SkillLevelIcon level="advanced" />}
+                {skill.level === "Advanced" && <SkillLevelIcon level="advanced" />}
               </TableCell>
               <TableCell className="text-center border-r border-border">
                 <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
