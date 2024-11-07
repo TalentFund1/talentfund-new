@@ -24,6 +24,19 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
     }
   };
 
+  const getLevelTextColor = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return 'text-primary-accent';
+      case 'intermediate':
+        return 'text-primary-icon';
+      case 'beginner':
+        return 'text-[#008000]';
+      default:
+        return 'text-gray-400';
+    }
+  };
+
   const getLevelStyles = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
@@ -68,10 +81,10 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
       <div className="flex flex-col items-center px-2 py-1">
         <Select value={level} onValueChange={setLevel}>
           <SelectTrigger 
-            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
+            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
             <SelectValue>
-              <span className="flex items-center gap-2 justify-center text-[15px]">
+              <span className={`flex items-center gap-2 justify-center text-[15px] ${getLevelTextColor(level)}`}>
                 {getLevelIcon(level)}
                 {level.charAt(0).toUpperCase() + level.slice(1)}
               </span>
@@ -79,25 +92,25 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="unspecified">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 text-gray-400">
                 <CircleDashed className="w-3.5 h-3.5 text-gray-400" />
                 Unspecified
               </span>
             </SelectItem>
             <SelectItem value="beginner">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 text-[#008000]">
                 <Target className="w-3.5 h-3.5 text-[#008000]" />
                 Beginner
               </span>
             </SelectItem>
             <SelectItem value="intermediate">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 text-primary-icon">
                 <Shield className="w-3.5 h-3.5 text-primary-icon" />
                 Intermediate
               </span>
             </SelectItem>
             <SelectItem value="advanced">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 text-primary-accent">
                 <Star className="w-3.5 h-3.5 text-primary-accent" />
                 Advanced
               </span>
