@@ -94,7 +94,7 @@ export const SkillsMatrix = () => {
       <div className="rounded-lg border border-blue-200">
         <Table>
           <TableHeader>
-            <TableRow className="hover:bg-transparent border-b border-gray-200">
+            <TableRow className="hover:bg-transparent border-b border-gray-200 bg-[#F7F9FF]">
               <TableHead className="w-[180px] border-r border-blue-200">Skill Title</TableHead>
               <TableHead className="w-[220px] border-r border-blue-200">Subcategory</TableHead>
               <TableHead className="w-[150px] text-center border-r border-blue-200">Skill Level</TableHead>
