@@ -38,9 +38,9 @@ export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }
                   </TooltipTrigger>
                   <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                     <div className="space-y-2">
-                      <h4 className="font-medium text-left">Salary with Skill:</h4>
+                      <h4 className="font-medium text-left">Projected Growth:</h4>
                       <p className="text-sm text-left font-normal">
-                        Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill
+                        Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
                       </p>
                     </div>
                   </TooltipContent>
@@ -48,7 +48,26 @@ export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }
               </TooltipProvider>
             </div>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">Salary With Skill</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
+            <div className="flex items-center justify-center gap-1">
+              Salary With Skill
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-left">Salary with Skill:</h4>
+                      <p className="text-sm text-left font-normal">
+                        Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
+                      </p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
               Appears In
