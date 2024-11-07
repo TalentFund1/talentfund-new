@@ -8,7 +8,7 @@ export const getRequirementStyles = (requirement: string, level: string) => {
         : 'border-gray-300';
 
   if (requirement.toLowerCase() === 'unspecified') {
-    return `bg-gray-100/80 border-x border-b ${borderColor} text-xs px-3 py-1 rounded-b-md font-medium text-transparent w-full -mt-[1px] flex items-center justify-center gap-1.5 transition-colors hover:bg-gray-100`;
+    return '';  // Return empty string to not render the requirement section
   }
 
   switch (requirement.toLowerCase()) {
@@ -45,7 +45,7 @@ export const getRequirementIcon = (requirement: string) => {
     case 'preferred':
       return '♡';
     case 'unspecified':
-      return '✓';  // Adding icon to maintain height but making it invisible with text-transparent
+      return '';  // Return empty string for unspecified
     default:
       return '';
   }
