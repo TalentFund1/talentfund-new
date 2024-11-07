@@ -102,35 +102,35 @@ export const SkillsMatrix = () => {
       </div>
 
       <div className="border-t border-blue-200 pt-6">
-        <div className="flex items-center gap-3 mb-6">
-          <Button>Add Skill</Button>
-        </div>
-        
-        <div className="flex gap-4 mb-6">
-          <Select defaultValue="all">
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="specialized">Specialized Skills</SelectItem>
-              <SelectItem value="common">Common Skills</SelectItem>
-              <SelectItem value="certification">Certification</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="flex gap-4 mb-6 items-center justify-between">
+          <div className="flex gap-4">
+            <Select defaultValue="all">
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <Select defaultValue="sort">
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="Sort by All" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="sort">Sort by All</SelectItem>
-              <SelectItem value="reports">Sort by Reports</SelectItem>
-              <SelectItem value="enrich">Sort by Enrich</SelectItem>
-              <SelectItem value="leader">Sort by Leader</SelectItem>
-              <SelectItem value="self">Sort by Self</SelectItem>
-            </SelectContent>
-          </Select>
+            <Select defaultValue="sort">
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="Sort by All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="sort">Sort by All</SelectItem>
+                <SelectItem value="reports">Sort by Reports</SelectItem>
+                <SelectItem value="enrich">Sort by Enrich</SelectItem>
+                <SelectItem value="leader">Sort by Leader</SelectItem>
+                <SelectItem value="self">Sort by Self</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <Button>Add Skill</Button>
         </div>
       </div>
 
