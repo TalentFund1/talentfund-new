@@ -25,20 +25,21 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Label htmlFor="track" className="text-sm font-medium text-foreground">Track:</Label>
-        <Select defaultValue={track} onValueChange={setTrack}>
-          <SelectTrigger id="track" className="w-[180px] bg-white border-input">
-            <SelectValue placeholder="Select track" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Professional">Professional</SelectItem>
-            <SelectItem value="Managerial">Managerial</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <div className="text-primary text-sm font-medium">Track:</div>
+          <Select defaultValue={track} onValueChange={setTrack}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select track" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Professional">Professional</SelectItem>
+              <SelectItem value="Managerial">Managerial</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <Separator className="my-2" />
       </div>
-
-      <Separator className="my-6" />
 
       <RadioGroup 
         value={selectedLevel || undefined}
@@ -47,53 +48,37 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
       >
         {levelPairs.map((pair, rowIndex) => (
           <div key={rowIndex} className="grid grid-cols-2 gap-4">
-            {pair.map((level) => {
-              const levelValue = `AI Engineer: ${level}`;
-              const isSelected = selectedLevel === levelValue;
-              
-              return (
-                <div 
-                  key={level} 
-                  className={`relative flex items-center gap-3 p-4 rounded-lg border transition-all duration-200 ${
-                    isSelected
-                      ? 'bg-white border-primary shadow-sm'
-                      : 'bg-white border-border hover:border-primary/50'
-                  }`}
-                >
-                  <RadioGroupItem 
-                    value={levelValue} 
-                    id={level}
-                    className="data-[state=checked]:border-primary data-[state=checked]:text-primary"
-                  />
-                  <Label 
-                    htmlFor={level} 
-                    className={`text-sm font-medium ${
-                      isSelected ? 'text-primary' : 'text-foreground'
-                    }`}
-                  >
-                    AI Engineer: {level}
-                  </Label>
-                </div>
-              );
-            })}
+            {pair.map((level) => (
+              <div 
+                key={level} 
+                className={`flex items-center gap-3 p-4 rounded-lg transition-colors ${
+                  selectedLevel === `AI Engineer: ${level}`
+                    ? 'bg-primary/10 border border-primary'
+                    : 'bg-background/40 hover:bg-background/60'
+                }`}
+              >
+                <RadioGroupItem value={`AI Engineer: ${level}`} id={level} />
+                <Label htmlFor={level} className="text-sm font-medium">AI Engineer: {level}</Label>
+              </div>
+            ))}
           </div>
         ))}
       </RadioGroup>
 
       {selectedLevel && (
-        <Card className="p-6 mt-6 border-border bg-white">
-          <h3 className="text-lg font-semibold mb-4 text-foreground">{selectedLevel} Matrix</h3>
+        <Card className="p-6 mt-6">
+          <h3 className="text-lg font-semibold mb-4">{selectedLevel} Matrix</h3>
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
-              <div className="stat-card">
+              <div className="p-4 bg-background/40 rounded-lg">
                 <h4 className="font-medium mb-2">All Skills</h4>
                 <p className="text-sm text-muted-foreground">28 skills</p>
               </div>
-              <div className="stat-card">
+              <div className="p-4 bg-background/40 rounded-lg">
                 <h4 className="font-medium mb-2">Specialized Skills</h4>
                 <p className="text-sm text-muted-foreground">15 skills</p>
               </div>
-              <div className="stat-card">
+              <div className="p-4 bg-background/40 rounded-lg">
                 <h4 className="font-medium mb-2">Common Skills</h4>
                 <p className="text-sm text-muted-foreground">10 skills</p>
               </div>
