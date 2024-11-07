@@ -83,24 +83,26 @@ const managerialSkills: SkillLevels = {
 const getLevelStyles = (level: string) => {
   switch (level.toLowerCase()) {
     case 'advanced':
-      return 'bg-primary-accent/10 text-primary-accent font-medium px-2.5 py-1 rounded-md text-sm';
+      return 'bg-primary-accent/10 text-primary-accent font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
     case 'intermediate':
-      return 'bg-primary-icon/10 text-primary-icon font-medium px-2.5 py-1 rounded-md text-sm';
+      return 'bg-primary-icon/10 text-primary-icon font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
     case 'beginner':
-      return 'bg-[#008000]/10 text-[#008000] font-medium px-2.5 py-1 rounded-md text-sm';
+      return 'bg-[#008000]/10 text-[#008000] font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
+    case 'unspecified':
+      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
     default:
-      return '';
+      return 'bg-gray-100 text-gray-500 font-medium px-2.5 py-1 rounded-t-md text-sm w-full';
   }
 };
 
 const getRequirementStyles = (requirement: string) => {
   switch (requirement.toLowerCase()) {
     case 'required':
-      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-md font-medium text-foreground/70';
+      return 'bg-background border border-border text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/70 w-full -mt-[1px]';
     case 'preferred':
-      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-md font-medium text-foreground/50';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/50 w-full -mt-[1px]';
     default:
-      return '';
+      return 'bg-background/50 border border-border/60 text-xs px-2 py-0.5 rounded-b-md font-medium text-foreground/30 w-full -mt-[1px]';
   }
 };
 
@@ -165,7 +167,7 @@ export const CompetencyGraph = () => {
                       className={`text-center ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
                     >
                       {details.level !== "-" ? (
-                        <div className="space-y-1.5">
+                        <div className="flex flex-col items-center">
                           <div className={getLevelStyles(details.level)}>
                             {details.level}
                           </div>
