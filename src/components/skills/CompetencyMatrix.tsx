@@ -110,25 +110,32 @@ export const CompetencyMatrix = () => {
       <Separator className="my-4 border-border" />
 
       <div>
-        {/* Skill Categories Section */}
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">Skill Categories</h3>
-          <div className="grid grid-cols-3 gap-4">
-            {skillCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => handleCategorySelect(category.id)}
-                className={`p-3 rounded-lg border text-left transition-colors ${
+        <h3 className="text-sm font-medium text-muted-foreground mb-3">Skill Categories</h3>
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          {skillCategories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategorySelect(category.id)}
+              className={`stat-card group transition-all duration-200 ${
+                selectedCategory === category.id
+                  ? 'ring-2 ring-primary-accent bg-primary-accent/5'
+                  : 'hover:border-primary-accent/50'
+              }`}
+            >
+              <div className="flex flex-col items-start">
+                <span className={`text-sm font-semibold mb-1 ${
                   selectedCategory === category.id
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50'
-                }`}
-              >
-                <div className="font-medium text-sm">{category.name}</div>
-                <div className="text-xs text-muted-foreground mt-1">{category.count} skills</div>
-              </button>
-            ))}
-          </div>
+                    ? 'text-primary-accent'
+                    : 'text-foreground group-hover:text-primary-accent'
+                }`}>
+                  {category.name}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {category.count} skills
+                </span>
+              </div>
+            </button>
+          ))}
         </div>
 
         <div className="border border-border rounded-lg overflow-hidden">
