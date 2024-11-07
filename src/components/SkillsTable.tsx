@@ -53,67 +53,6 @@ const skills = [
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "beginner",
     growth: "11%"
-  },
-  // Adding 10 new skills
-  {
-    title: "TensorFlow",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "advanced",
-    growth: "15%"
-  },
-  {
-    title: "PyTorch",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
-    growth: "18%"
-  },
-  {
-    title: "Natural Language Processing",
-    subcategory: "Natural Language Processing (NLP)",
-    level: "advanced",
-    growth: "20%"
-  },
-  {
-    title: "Computer Vision",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
-    growth: "16%"
-  },
-  {
-    title: "Kubernetes",
-    subcategory: "Software Development Tools",
-    level: "beginner",
-    growth: "14%"
-  },
-  {
-    title: "Neural Networks",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "advanced",
-    growth: "17%"
-  },
-  {
-    title: "Data Science",
-    subcategory: "Data Analytics",
-    level: "intermediate",
-    growth: "13%"
-  },
-  {
-    title: "Scikit-learn",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
-    growth: "11%"
-  },
-  {
-    title: "Git",
-    subcategory: "Software Development Tools",
-    level: "advanced",
-    growth: "8%"
-  },
-  {
-    title: "REST APIs",
-    subcategory: "Web Services",
-    level: "intermediate",
-    growth: "9%"
   }
 ];
 
