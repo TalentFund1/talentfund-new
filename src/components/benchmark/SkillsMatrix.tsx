@@ -1,14 +1,14 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, HelpCircle, Heart, Check } from "lucide-react";
-import { SkillLevelIcon } from "../skills/SkillLevelIcon";
+import { ChevronLeft, ChevronRight, HelpCircle, Check } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { SkillLevelCell } from "./SkillLevelCell";
 
 const skills = [
   {
@@ -128,28 +128,7 @@ export const SkillsMatrix = () => {
               <TableRow key={skill.title} className="hover:bg-muted/50 border-b border-gray-200">
                 <TableCell className="font-medium border-r border-blue-200">{skill.title}</TableCell>
                 <TableCell className="border-r border-blue-200">{skill.subcategory}</TableCell>
-                <TableCell className="border-r border-blue-200">
-                  <div className="flex flex-col items-center gap-1">
-                    <div className={`w-full px-3 py-1.5 rounded-md flex items-center justify-center gap-2 ${
-                      skill.level === "advanced" 
-                        ? 'border-2 border-primary-accent bg-primary-accent/5'
-                        : skill.level === "intermediate"
-                          ? 'border-2 border-primary-icon bg-primary-icon/5'
-                          : skill.level === "beginner"
-                            ? 'border-2 border-[#008000] bg-[#008000]/5'
-                            : 'border border-gray-300 bg-white'
-                    }`}>
-                      <SkillLevelIcon level={skill.level.toLowerCase()} />
-                      <span className="text-sm font-medium capitalize">{skill.level}</span>
-                    </div>
-                    {skill.level === "intermediate" && (
-                      <div className="w-full px-3 py-1 rounded-md border-2 border-primary-icon bg-primary-icon/5 flex items-center justify-center gap-2">
-                        <Heart className="w-4 h-4 text-primary-icon" />
-                        <span className="text-xs font-medium">Skill Goal</span>
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
+                <SkillLevelCell initialLevel={skill.level} />
                 <TableCell className="text-center border-r border-blue-200">
                   {Math.random() > 0.5 ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
