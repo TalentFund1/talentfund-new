@@ -7,19 +7,19 @@ export const SkillProfileTable = () => {
     <Table>
       <TableHeader>
         <TableRow className="hover:bg-transparent border-b border-border">
-          <TableHead className="w-[5%] h-12">
+          <TableCell className="w-[4%] py-4">
             <input type="checkbox" className="rounded border-gray-300" />
-          </TableHead>
-          <TableHead className="w-[22%] h-12">
-            <div className="flex items-center gap-1">
+          </TableCell>
+          <TableCell className="w-[25%] py-4">
+            <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
               Role Name <ChevronDown className="h-4 w-4" />
             </div>
-          </TableHead>
-          <TableHead className="w-[18%] h-12">Function</TableHead>
-          <TableHead className="w-[15%] text-center h-12">Skill Count</TableHead>
-          <TableHead className="w-[15%] text-center h-12">Employees</TableHead>
-          <TableHead className="w-[15%] text-center h-12">Profile Matches</TableHead>
-          <TableHead className="w-[10%] text-right whitespace-nowrap h-12">Last Updated</TableHead>
+          </TableCell>
+          <TableCell className="w-[20%] py-4 text-sm font-medium text-muted-foreground">Function</TableCell>
+          <TableCell className="w-[15%] py-4 text-center text-sm font-medium text-muted-foreground">Skill Count</TableCell>
+          <TableCell className="w-[15%] py-4 text-center text-sm font-medium text-muted-foreground">Employees</TableCell>
+          <TableCell className="w-[15%] py-4 text-center text-sm font-medium text-muted-foreground">Profile Matches</TableCell>
+          <TableCell className="w-[10%] py-4 text-right text-sm font-medium text-muted-foreground">Last Updated</TableCell>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -27,7 +27,7 @@ export const SkillProfileTable = () => {
           <TableCell className="align-middle">
             <input type="checkbox" className="rounded border-gray-300" />
           </TableCell>
-          <TableCell className="align-middle font-medium">
+          <TableCell className="align-middle">
             <Link to="/skills/ai-engineer" className="text-primary hover:underline">
               AI Engineer
             </Link>
@@ -42,7 +42,7 @@ export const SkillProfileTable = () => {
           <TableCell className="align-middle">
             <input type="checkbox" className="rounded border-gray-300" />
           </TableCell>
-          <TableCell className="align-middle font-medium">
+          <TableCell className="align-middle">
             <Link to="/skills/backend-engineer" className="text-primary hover:underline">
               Backend Engineer
             </Link>
@@ -57,7 +57,7 @@ export const SkillProfileTable = () => {
           <TableCell className="align-middle">
             <input type="checkbox" className="rounded border-gray-300" />
           </TableCell>
-          <TableCell className="align-middle font-medium">
+          <TableCell className="align-middle">
             <Link to="/skills/frontend-engineer" className="text-primary hover:underline">
               Frontend Engineer
             </Link>
@@ -72,7 +72,7 @@ export const SkillProfileTable = () => {
           <TableCell className="align-middle">
             <input type="checkbox" className="rounded border-gray-300" />
           </TableCell>
-          <TableCell className="align-middle font-medium">
+          <TableCell className="align-middle">
             <Link to="/skills/engineering-manager" className="text-primary hover:underline">
               Engineering Manager
             </Link>
