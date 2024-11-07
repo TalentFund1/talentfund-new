@@ -94,9 +94,9 @@ export const SkillsTable = () => {
             <TableRow className="hover:bg-transparent border-y border-border">
               <TableHead className="w-[200px] border-x border-border">Skill Title</TableHead>
               <TableHead className="w-[250px] border-r border-border">Subcategory</TableHead>
-              <TableHead className="text-center bg-[#F7F9FF] border-r border-border">Beginner</TableHead>
-              <TableHead className="text-center bg-[#F7F9FF] border-r border-border">Intermediate</TableHead>
-              <TableHead className="text-center bg-[#F7F9FF] border-r border-border">Advanced</TableHead>
+              <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Beginner</TableHead>
+              <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Intermediate</TableHead>
+              <TableHead className="text-center bg-[#F7F9FF] border-r border-border w-[100px]">Advanced</TableHead>
               <TableHead className="w-[150px] text-center border-r border-border">
                 <div className="flex items-center justify-center gap-1">
                   Projected Growth
