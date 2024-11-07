@@ -52,6 +52,24 @@ const skills = [
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "beginner",
     growth: "11%"
+  },
+  {
+    title: "Natural Language Understanding",
+    subcategory: "Natural Language Processing (NLP)",
+    level: "unspecified",
+    growth: "15%"
+  },
+  {
+    title: "Computer Vision",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "unspecified",
+    growth: "18%"
+  },
+  {
+    title: "Kubernetes",
+    subcategory: "Software Development Tools",
+    level: "unspecified",
+    growth: "14%"
   }
 ];
 
