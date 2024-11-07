@@ -63,22 +63,22 @@ export const SkillsTable = () => {
 
   const renderSkeletonRow = () => (
     <TableRow>
-      <TableCell className="w-[200px] border-x border-blue-200">
+      <TableCell className="w-[200px] border-x border-blue-200/60">
         <Skeleton className="h-4 w-3/4" />
       </TableCell>
-      <TableCell className="border-r border-blue-200">
+      <TableCell className="border-r border-blue-200/60">
         <Skeleton className="h-4 w-1/2" />
       </TableCell>
-      <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-blue-200">
+      <TableCell className="text-center bg-[#F7F9FF]/30 border-r border-blue-200/60">
         <Skeleton className="h-6 w-6 mx-auto rounded-full" />
       </TableCell>
-      <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-blue-200">
+      <TableCell className="text-center bg-[#F7F9FF]/30 border-r border-blue-200/60">
         <Skeleton className="h-6 w-6 mx-auto rounded-full" />
       </TableCell>
-      <TableCell className="text-center bg-[#F7F9FF]/50 border-r border-blue-200">
+      <TableCell className="text-center bg-[#F7F9FF]/30 border-r border-blue-200/60">
         <Skeleton className="h-6 w-6 mx-auto rounded-full" />
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200">
+      <TableCell className="text-center border-r border-blue-200/60">
         <Skeleton className="h-6 w-16 mx-auto rounded-full" />
       </TableCell>
     </TableRow>
@@ -88,17 +88,27 @@ export const SkillsTable = () => {
     <div className="space-y-6 bg-white rounded-lg shadow-sm">
       <SkillsTableHeader selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
 
-      <div className="relative overflow-x-auto">
+      <div className="relative overflow-x-auto rounded-lg border border-blue-200/60">
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-white">
-            <TableRow className="hover:bg-transparent border-y border-blue-200">
-              <TableHead className="w-[200px] border-x border-blue-200 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">Skill Title</TableHead>
-              <TableHead className="w-[250px] border-r border-blue-200 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">Subcategory</TableHead>
-              <TableHead className="text-center bg-[#F7F9FF] border-r border-blue-200 w-[100px]">Beginner</TableHead>
-              <TableHead className="text-center bg-[#F7F9FF] border-r border-blue-200 w-[100px]">Intermediate</TableHead>
-              <TableHead className="text-center bg-[#F7F9FF] border-r border-blue-200 w-[100px]">Advanced</TableHead>
-              <TableHead className="w-[150px] text-center border-r border-blue-200 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="flex items-center justify-center gap-1">
+            <TableRow className="hover:bg-transparent border-y border-blue-200/60">
+              <TableHead className="w-[200px] border-x border-blue-200/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 text-sm font-semibold">
+                Skill Title
+              </TableHead>
+              <TableHead className="w-[250px] border-r border-blue-200/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 text-sm font-semibold">
+                Subcategory
+              </TableHead>
+              <TableHead className="text-center bg-[#F7F9FF]/50 border-r border-blue-200/60 w-[100px] py-4 text-sm font-semibold">
+                Beginner
+              </TableHead>
+              <TableHead className="text-center bg-[#F7F9FF]/50 border-r border-blue-200/60 w-[100px] py-4 text-sm font-semibold">
+                Intermediate
+              </TableHead>
+              <TableHead className="text-center bg-[#F7F9FF]/50 border-r border-blue-200/60 w-[100px] py-4 text-sm font-semibold">
+                Advanced
+              </TableHead>
+              <TableHead className="w-[150px] text-center border-r border-blue-200/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 text-sm font-semibold">
+                <div className="flex items-center justify-center gap-1.5">
                   Projected Growth
                   <TooltipProvider>
                     <Tooltip>
