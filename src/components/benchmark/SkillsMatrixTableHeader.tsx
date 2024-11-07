@@ -35,8 +35,8 @@ export const SkillsMatrixTableHeader = () => {
             </TooltipProvider>
           </div>
         </TableHead>
-        <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">
-          <div className="flex items-center justify-center gap-1">
+        <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">
+          <div className="flex items-center justify-center gap-1 text-sm">
             Projected Growth
             <TooltipProvider>
               <Tooltip>
@@ -55,8 +55,8 @@ export const SkillsMatrixTableHeader = () => {
             </TooltipProvider>
           </div>
         </TableHead>
-        <TableHead className="w-[150px] text-center py-2">
-          <div className="flex items-center justify-center gap-1">
+        <TableHead className="w-[120px] text-center py-2">
+          <div className="flex items-center justify-center gap-1 text-sm">
             Appears In
             <ArrowUp className="h-4 w-4" />
           </div>
