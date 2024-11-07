@@ -25,6 +25,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
             </SelectContent>
           </Select>
         </div>
+        <Separator className="my-2" />
       </div>
 
       <div className="space-y-2">
