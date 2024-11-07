@@ -93,7 +93,7 @@ export const SkillsTable = () => {
             <SelectValue placeholder="All Skills" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Skills</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
             <SelectItem value="specialized">Specialized Skills</SelectItem>
             <SelectItem value="common">Common Skills</SelectItem>
             <SelectItem value="certification">Certification</SelectItem>
