@@ -12,10 +12,10 @@ interface SkillCellProps {
 export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
   return (
     <TableCell 
-      className={`text-center p-3 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
+      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
     >
       {details.level !== "-" ? (
-        <div className="flex flex-col items-center gap-0">
+        <div className="flex flex-col items-center">
           <div className={`${getLevelStyles(details.level)} min-w-[120px]`}>
             {details.level}
           </div>
@@ -25,7 +25,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
           </div>
         </div>
       ) : (
-        <span className="text-muted-foreground/30">-</span>
+        <span className="text-muted-foreground">-</span>
       )}
     </TableCell>
   );

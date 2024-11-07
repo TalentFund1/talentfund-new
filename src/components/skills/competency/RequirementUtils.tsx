@@ -1,5 +1,5 @@
 export const getRequirementStyles = (requirement: string, level: string) => {
-  const borderColor = level.toLowerCase() === 'advanced' 
+  const borderColor = level.toLowerCase() === 'advanced'
     ? 'border-primary-accent'
     : level.toLowerCase() === 'intermediate'
       ? 'border-primary-icon'
@@ -8,10 +8,10 @@ export const getRequirementStyles = (requirement: string, level: string) => {
         : 'border-gray-300';
 
   if (!requirement || requirement === '-') {
-    return 'invisible h-[26px]'; // Maintain consistent height
+    return 'invisible h-[22px]'; // Reduced height
   }
 
-  const baseStyles = 'text-xs px-3 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 transition-colors';
+  const baseStyles = 'text-xs px-3 py-1 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 transition-colors';
   
   switch (requirement.toLowerCase()) {
     case 'required':
@@ -25,10 +25,10 @@ export const getRequirementStyles = (requirement: string, level: string) => {
 
 export const getLevelStyles = (level: string) => {
   if (!level || level === '-') {
-    return 'text-gray-300 text-sm font-medium h-[32px] flex items-center justify-center';
+    return 'text-gray-300 text-sm font-medium h-[28px] flex items-center justify-center';
   }
 
-  const baseStyles = 'border-2 rounded-t-md px-4 py-2 text-sm font-medium w-full capitalize transition-colors flex items-center justify-center min-h-[32px]';
+  const baseStyles = 'border-2 rounded-t-md px-4 py-1 text-sm font-medium w-full capitalize transition-colors flex items-center justify-center min-h-[28px]';
 
   switch (level.toLowerCase()) {
     case 'advanced':
