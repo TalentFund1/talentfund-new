@@ -111,19 +111,21 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
           >
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">
-                {required === 'required' ? <Heart className="w-3 h-3" /> : null}
-                {required === 'required' ? 'Required' : 'Unspecified'}
+                {required === 'required' ? <Heart className="w-3.5 h-3.5" /> : <span className="w-3.5 h-3.5 flex items-center justify-center">-</span>}
+                {required === 'required' ? 'Skill Goal' : 'Unspecified'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
               <span className="flex items-center gap-1.5">
-                <Heart className="w-3 h-3" /> Required
+                <Heart className="w-3.5 h-3.5" /> Skill Goal
               </span>
             </SelectItem>
             <SelectItem value="preferred">
-              <span className="flex items-center gap-1.5">Unspecified</span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-3.5 h-3.5 flex items-center justify-center">-</span> Unspecified
+              </span>
             </SelectItem>
           </SelectContent>
         </Select>
