@@ -1,3 +1,5 @@
+import { Heart } from "lucide-react";
+
 export const getRequirementStyles = (requirement: string, level: string) => {
   const borderColor = level.toLowerCase() === 'advanced' 
     ? 'border-primary-accent'
@@ -49,7 +51,7 @@ export const getRequirementIcon = (requirement: string) => {
     case 'required':
       return '✓';
     case 'preferred':
-      return '○';
+      return <Heart className="w-3 h-3" />;
     case 'unspecified':
       return '−';
     default:
