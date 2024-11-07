@@ -24,7 +24,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLe
       </div>
 
       <div className="space-y-2">
-        {["P3", "P4"].map((level) => (
+        {["P1", "P2", "P3", "P4", "P5", "P6"].map((level) => (
           <div key={level} className="flex items-center gap-3 bg-background/40 p-2 rounded-lg hover:bg-background/60 transition-colors">
             <Checkbox 
               className="rounded-sm"
