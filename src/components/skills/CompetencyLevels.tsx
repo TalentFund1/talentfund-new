@@ -2,6 +2,7 @@ import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 interface CompetencyLevelsProps {
   selectedLevels: string[];
@@ -10,18 +11,21 @@ interface CompetencyLevelsProps {
 
 export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLevelsProps) => {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <div className="text-primary text-sm font-medium">Track:</div>
-        <Select defaultValue="professional">
-          <SelectTrigger className="w-[140px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="professional">Professional</SelectItem>
-            <SelectItem value="managerial">Managerial</SelectItem>
-          </SelectContent>
-        </Select>
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <div className="text-primary text-sm font-medium">Track:</div>
+          <Select defaultValue="professional">
+            <SelectTrigger className="w-[140px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="professional">Professional</SelectItem>
+              <SelectItem value="managerial">Managerial</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <Separator className="my-2" />
       </div>
 
       <div className="space-y-2">
