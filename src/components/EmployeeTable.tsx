@@ -1,6 +1,5 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
-import { TablePagination } from "./TablePagination";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -113,7 +112,6 @@ export const EmployeeTable = () => {
           </tbody>
         </table>
       </div>
-      <TablePagination />
     </div>
   );
 };
