@@ -55,62 +55,60 @@ const employees: Employee[] = [
 
 export const EmployeeTable = () => {
   return (
-    <div className="border border-border rounded-lg overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow className="hover:bg-transparent border-b border-border bg-secondary">
-            <TableHead className="w-[40px]">
+    <Table>
+      <TableHeader>
+        <TableRow className="hover:bg-transparent border-b border-border">
+          <TableHead className="w-[4%]">
+            <input type="checkbox" className="rounded border-gray-300" />
+          </TableHead>
+          <TableHead className="w-[25%]">
+            <div className="flex items-center gap-1">
+              Employee Name <ChevronDown className="h-4 w-4" />
+            </div>
+          </TableHead>
+          <TableHead className="w-[20%]">Current Role</TableHead>
+          <TableHead className="w-[15%]">Department</TableHead>
+          <TableHead className="w-[12%] text-center">Skill Count</TableHead>
+          <TableHead className="w-[12%] text-center">Benchmark</TableHead>
+          <TableHead className="w-[12%] text-right">Last Updated</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {employees.map((employee, index) => (
+          <TableRow key={employee.name} className="border-b border-border">
+            <TableCell>
               <input type="checkbox" className="rounded border-gray-300" />
-            </TableHead>
-            <TableHead className="w-[250px]">
-              <div className="flex items-center gap-1">
-                Employee Name <ChevronDown className="h-4 w-4" />
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
+                  alt={employee.name}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+                <Link to="/employee-profile" className="text-primary hover:underline font-medium">
+                  {employee.name}
+                </Link>
               </div>
-            </TableHead>
-            <TableHead className="w-[200px]">Current Role</TableHead>
-            <TableHead className="w-[150px]">Department</TableHead>
-            <TableHead className="w-[100px] text-center">Skill Count</TableHead>
-            <TableHead className="w-[120px] text-center">Benchmark</TableHead>
-            <TableHead className="w-[120px] text-right">Last Updated</TableHead>
+            </TableCell>
+            <TableCell className="font-medium">{employee.role}</TableCell>
+            <TableCell>{employee.department}</TableCell>
+            <TableCell className="text-center">{employee.skillCount}</TableCell>
+            <TableCell>
+              <div className="flex justify-center">
+                <span className={`px-2.5 py-1 rounded-full text-sm font-medium ${
+                  employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
+                }`}>
+                  {employee.benchmark}%
+                </span>
+              </div>
+            </TableCell>
+            <TableCell className="text-right text-muted-foreground">
+              {employee.lastUpdated}
+            </TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-          {employees.map((employee, index) => (
-            <TableRow key={employee.name} className="border-b border-border hover:bg-secondary/50">
-              <TableCell className="w-[40px]">
-                <input type="checkbox" className="rounded border-gray-300" />
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-3">
-                  <img 
-                    src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
-                    alt={employee.name}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                  <Link to="/employee-profile" className="text-primary hover:underline font-medium">
-                    {employee.name}
-                  </Link>
-                </div>
-              </TableCell>
-              <TableCell className="font-medium">{employee.role}</TableCell>
-              <TableCell>{employee.department}</TableCell>
-              <TableCell className="text-center">{employee.skillCount}</TableCell>
-              <TableCell>
-                <div className="flex justify-center">
-                  <span className={`px-2.5 py-0.5 rounded-full text-sm font-medium ${
-                    employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
-                  }`}>
-                    {employee.benchmark}%
-                  </span>
-                </div>
-              </TableCell>
-              <TableCell className="text-right text-muted-foreground">
-                {employee.lastUpdated}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
