@@ -88,7 +88,6 @@ const softSkills = [
 export const EmployeeFilters = () => {
   const [open, setOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState("");
-  const [sortBy, setSortBy] = useState("all");
 
   return (
     <div className="space-y-4">
@@ -138,19 +137,6 @@ export const EmployeeFilters = () => {
       </div>
       
       <div className="flex flex-wrap gap-4">
-        <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Sort by All" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="all">Sort by All</SelectItem>
-            <SelectItem value="reports">Sort by Reports</SelectItem>
-            <SelectItem value="enrich">Sort by Enrich</SelectItem>
-            <SelectItem value="leader">Sort by Leader</SelectItem>
-            <SelectItem value="self">Sort by Self</SelectItem>
-          </SelectContent>
-        </Select>
-
         <Select>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="Job Title" />
