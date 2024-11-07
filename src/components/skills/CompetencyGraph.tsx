@@ -1,5 +1,4 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
@@ -82,8 +81,11 @@ const managerialSkills: SkillLevels = {
   ],
 };
 
-export const CompetencyGraph = () => {
-  const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
+interface CompetencyGraphProps {
+  track: "Professional" | "Managerial";
+}
+
+export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const skills = track === "Professional" ? professionalSkills : managerialSkills;
@@ -113,18 +115,6 @@ export const CompetencyGraph = () => {
     <div className="space-y-6">
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-foreground">Skill Graph</h2>
-        <div className="flex items-center gap-4">
-          <span className="text-sm font-medium">Track:</span>
-          <Select value={track} onValueChange={(value) => setTrack(value as "Professional" | "Managerial")}>
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Professional">Professional</SelectItem>
-              <SelectItem value="Managerial">Managerial</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
         <Separator className="my-4" />
       </div>
       

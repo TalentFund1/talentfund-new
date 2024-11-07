@@ -7,18 +7,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface CompetencyLevelsProps {
   selectedLevels: string[];
   onLevelSelect: (level: string) => void;
+  onTrackChange: (track: "Professional" | "Managerial") => void;
 }
 
-export const CompetencyLevels = ({ selectedLevels, onLevelSelect }: CompetencyLevelsProps) => {
-  const [track, setTrack] = React.useState("Professional");
+export const CompetencyLevels = ({ selectedLevels, onLevelSelect, onTrackChange }: CompetencyLevelsProps) => {
+  const [track, setTrack] = React.useState<"Professional" | "Managerial">("Professional");
   const [selectedLevel, setSelectedLevel] = React.useState<string>(`AI Engineer: ${track === "Professional" ? "P1" : "M3"}`);
 
   const levelPairs = track === "Professional" 
     ? [["P1", "P2"], ["P3", "P4"], ["P5", "P6"]]
     : [["M3", "M4"], ["M5", "M6"]];
 
-  const handleTrackChange = (value: string) => {
+  const handleTrackChange = (value: "Professional" | "Managerial") => {
     setTrack(value);
+    onTrackChange(value);
     // Set default selection based on track
     const defaultLevel = value === "Professional" ? "P1" : "M3";
     setSelectedLevel(`AI Engineer: ${defaultLevel}`);

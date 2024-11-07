@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -16,6 +16,7 @@ import { Sidebar } from "@/components/Sidebar";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
+  const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
 
   return (
     <ToastProvider>
@@ -78,7 +79,7 @@ const SkillProfileDetail = () => {
 
                 <TabsContent value="graph">
                   <Card className="p-6 bg-white">
-                    <CompetencyGraph />
+                    <CompetencyGraph track={track} />
                   </Card>
                 </TabsContent>
               </Tabs>
