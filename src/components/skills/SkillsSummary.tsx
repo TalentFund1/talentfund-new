@@ -76,7 +76,7 @@ export const SkillsSummary = () => {
       <Badge 
         key={skill.name} 
         variant="outline" 
-        className="rounded-lg px-3 py-1.5 border-2 flex items-center gap-2 bg-white h-8 min-w-[120px] justify-center whitespace-nowrap"
+        className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
       >
         {skill.name} 
         <div className={`h-2 w-2 rounded-full ${
