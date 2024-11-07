@@ -59,43 +59,43 @@ export const EmployeeTable = () => {
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
-              <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[4%]">
+              <th className="py-3 px-4 text-sm font-medium text-muted-foreground w-[4%]">
                 <input type="checkbox" className="rounded border-gray-300" />
               </th>
-              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[25%]">
+              <th className="py-3 px-4 text-sm font-medium text-muted-foreground text-left w-[25%]">
                 <div className="flex items-center gap-1">
                   Employee Name <ChevronDown className="h-4 w-4" />
                 </div>
               </th>
-              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[20%]">Current Role</th>
-              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">Department</th>
-              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Skill Count</th>
-              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Benchmark</th>
-              <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-right w-[12%]">Last Updated</th>
+              <th className="py-3 px-4 text-sm font-medium text-muted-foreground text-left w-[20%]">Current Role</th>
+              <th className="py-3 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">Department</th>
+              <th className="py-3 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Skill Count</th>
+              <th className="py-3 px-4 text-sm font-medium text-muted-foreground text-center w-[12%]">Benchmark</th>
+              <th className="py-3 px-4 text-sm font-medium text-muted-foreground text-right w-[12%]">Last Updated</th>
             </tr>
           </thead>
           <tbody>
             {employees.map((employee, index) => (
               <tr key={employee.name} className="border-t border-border hover:bg-muted/50 transition-colors">
-                <td className="py-4 px-4">
+                <td className="py-3 px-4">
                   <input type="checkbox" className="rounded border-gray-300" />
                 </td>
-                <td className="py-4 px-4">
+                <td className="py-3 px-4">
                   <div className="flex items-center gap-3">
                     <img 
                       src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=32&h=32`}
                       alt={employee.name}
                       className="w-8 h-8 rounded-full object-cover"
                     />
-                    <Link to="/employee-profile" className="text-primary hover:underline">
+                    <Link to="/employee-profile" className="text-primary hover:underline text-sm">
                       {employee.name}
                     </Link>
                   </div>
                 </td>
-                <td className="py-4 px-4 text-left">{employee.role}</td>
-                <td className="py-4 px-4 text-left">{employee.department}</td>
-                <td className="py-4 px-4 text-center">{employee.skillCount}</td>
-                <td className="py-4 px-4">
+                <td className="py-3 px-4 text-left text-sm">{employee.role}</td>
+                <td className="py-3 px-4 text-left text-sm">{employee.department}</td>
+                <td className="py-3 px-4 text-center text-sm">{employee.skillCount}</td>
+                <td className="py-3 px-4">
                   <div className="flex justify-center">
                     <span className={`px-2.5 py-1 rounded-full text-sm ${
                       employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
@@ -104,7 +104,7 @@ export const EmployeeTable = () => {
                     </span>
                   </div>
                 </td>
-                <td className="py-4 px-4 text-right text-muted-foreground">
+                <td className="py-3 px-4 text-right text-sm text-muted-foreground">
                   {employee.lastUpdated}
                 </td>
               </tr>
