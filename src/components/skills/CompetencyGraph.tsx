@@ -118,10 +118,10 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Skills (28)</SelectItem>
-            <SelectItem value="specialized">Specialized Skills (15)</SelectItem>
-            <SelectItem value="common">Common Skills (10)</SelectItem>
-            <SelectItem value="certification">Certification (3)</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="specialized">Specialized Skills</SelectItem>
+            <SelectItem value="common">Common Skills</SelectItem>
+            <SelectItem value="certification">Certification</SelectItem>
           </SelectContent>
         </Select>
       </div>
