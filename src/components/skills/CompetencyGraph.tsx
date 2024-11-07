@@ -102,6 +102,7 @@ export const CompetencyGraph = () => {
 
   return (
     <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-foreground">Skill Graph</h2>
       <div className="flex items-center gap-4">
         <span className="text-sm font-medium">Track:</span>
         <Select value={track} onValueChange={(value) => setTrack(value as "Professional" | "Managerial")}>
