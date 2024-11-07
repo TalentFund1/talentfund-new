@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
 
@@ -110,7 +111,22 @@ export const CompetencyGraph = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-foreground">Skill Graph</h2>
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Skill Graph</h2>
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-medium">Track:</span>
+          <Select value={track} onValueChange={(value) => setTrack(value as "Professional" | "Managerial")}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Professional">Professional</SelectItem>
+              <SelectItem value="Managerial">Managerial</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <Separator className="my-4" />
+      </div>
       
       <div className="grid grid-cols-4 gap-4 mb-6">
         {skillCategories.map((category) => (
@@ -137,19 +153,6 @@ export const CompetencyGraph = () => {
             </div>
           </button>
         ))}
-      </div>
-
-      <div className="flex items-center gap-4">
-        <span className="text-sm font-medium">Track:</span>
-        <Select value={track} onValueChange={(value) => setTrack(value as "Professional" | "Managerial")}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Professional">Professional</SelectItem>
-            <SelectItem value="Managerial">Managerial</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
