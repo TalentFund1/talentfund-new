@@ -47,7 +47,7 @@ const skillsData = {
 };
 
 const skillCategories = [
-  { id: "all", name: "All Skills", count: Object.values(skillsData).flat().length },
+  { id: "all", name: "All Skills", count: 28 },
   { id: "specialized", name: "Specialized Skills", count: 15 },
   { id: "common", name: "Common Skills", count: 10 },
   { id: "certification", name: "Certification", count: 3 }
