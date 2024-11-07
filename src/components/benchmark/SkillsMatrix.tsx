@@ -82,7 +82,53 @@ const skills = [
 export const SkillsMatrix = () => {
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
-      <SkillsMatrixHeader />
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+          <Select defaultValue="modify">
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Modify As" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="modify">Modify As</SelectItem>
+              <SelectItem value="employee">Employee</SelectItem>
+              <SelectItem value="manager">Manager</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="bg-white">Add Skill</Button>
+          <Button variant="outline" className="bg-white">Cancel</Button>
+          <Button>Save</Button>
+        </div>
+      </div>
+
+      <div className="flex gap-4 mb-6">
+        <Select defaultValue="all">
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="specialized">Specialized Skills</SelectItem>
+            <SelectItem value="common">Common Skills</SelectItem>
+            <SelectItem value="certification">Certification</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select defaultValue="sort">
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="Sort by All" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="sort">Sort by All</SelectItem>
+            <SelectItem value="reports">Sort by Reports</SelectItem>
+            <SelectItem value="enrich">Sort by Enrich</SelectItem>
+            <SelectItem value="leader">Sort by Leader</SelectItem>
+            <SelectItem value="self">Sort by Self</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       <div className="rounded-lg border border-blue-200 overflow-x-auto">
         <Table>
