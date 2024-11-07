@@ -7,6 +7,10 @@ export const getRequirementStyles = (requirement: string, level: string) => {
         ? 'border-[#008000]'
         : 'border-gray-300';
 
+  if (requirement.toLowerCase() === 'unspecified') {
+    return 'text-xs px-3 py-1 font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1.5';
+  }
+
   switch (requirement.toLowerCase()) {
     case 'required':
       return `bg-gray-100/80 border-x border-b ${borderColor} text-xs px-3 py-1 rounded-b-md font-medium text-[#1f2144] w-full -mt-[1px] flex items-center justify-center gap-1.5 transition-colors hover:bg-gray-100`;
@@ -18,6 +22,10 @@ export const getRequirementStyles = (requirement: string, level: string) => {
 };
 
 export const getLevelStyles = (level: string) => {
+  if (level.toLowerCase() === 'unspecified') {
+    return 'text-xs px-3 py-1.5 font-medium text-[#1f2144] w-full capitalize';
+  }
+
   switch (level.toLowerCase()) {
     case 'advanced':
       return 'border-2 border-primary-accent bg-primary-accent/5 rounded-t-md px-3 py-1.5 text-xs font-medium text-[#1f2144] w-full capitalize transition-colors hover:bg-primary-accent/10';
@@ -36,6 +44,8 @@ export const getRequirementIcon = (requirement: string) => {
       return '✓';
     case 'preferred':
       return '♡';
+    case 'unspecified':
+      return '○';
     default:
       return '○';
   }
