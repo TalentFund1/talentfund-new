@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type Skill = {
   name: string;
@@ -91,13 +92,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const skills = track === "Professional" ? professionalSkills : managerialSkills;
   const levels = track === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
-  const skillCategories = [
-    { id: "all", name: "All Skills", count: 28 },
-    { id: "specialized", name: "Specialized Skills", count: 15 },
-    { id: "common", name: "Common Skills", count: 10 },
-    { id: "certification", name: "Certification", count: 3 }
-  ];
-
   const uniqueSkills = Array.from(
     new Set(
       Object.values(skills)
@@ -118,31 +112,18 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
         <Separator className="my-4" />
       </div>
       
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        {skillCategories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => setSelectedCategory(category.id)}
-            className={`rounded-lg p-4 transition-colors ${
-              selectedCategory === category.id
-                ? 'bg-primary-accent/5 border border-primary-accent'
-                : 'bg-background border border-border hover:border-primary-accent/50'
-            }`}
-          >
-            <div className="flex flex-col items-start">
-              <span className={`text-sm font-semibold mb-1 ${
-                selectedCategory === category.id
-                  ? 'text-primary-accent'
-                  : 'text-foreground group-hover:text-primary-accent'
-              }`}>
-                {category.name}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {category.count} skills
-              </span>
-            </div>
-          </button>
-        ))}
+      <div className="mb-6">
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-[200px] bg-white">
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Skills (28)</SelectItem>
+            <SelectItem value="specialized">Specialized Skills (15)</SelectItem>
+            <SelectItem value="common">Common Skills (10)</SelectItem>
+            <SelectItem value="certification">Certification (3)</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
