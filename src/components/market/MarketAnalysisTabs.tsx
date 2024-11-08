@@ -88,7 +88,7 @@ export const MarketAnalysisTabs = () => {
         <TabsContent value="location" className="pt-6">
           <div className="space-y-6">
             <div className="space-y-6">
-              <Card className="overflow-hidden border border-border">
+              <Card className="overflow-hidden border border-border bg-white">
                 <div className="h-[400px] w-full overflow-hidden">
                   <HeatMap locations={locations} selectedFilters={selectedFilters} />
                 </div>
@@ -123,7 +123,7 @@ export const MarketAnalysisTabs = () => {
                 </div>
               </Card>
 
-              <Card className="overflow-hidden border border-border">
+              <Card className="overflow-hidden border border-border bg-white">
                 <LocationsTable locations={locations} />
               </Card>
             </div>
@@ -131,11 +131,11 @@ export const MarketAnalysisTabs = () => {
         </TabsContent>
         
         <TabsContent value="compensation" className="pt-6">
-          <div>
+          <Card className="p-6 bg-white">
             <p className="text-sm text-muted-foreground">
               Compensation analysis data will be displayed here.
             </p>
-          </div>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
