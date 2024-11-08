@@ -67,7 +67,7 @@ export const MarketAnalysisTabs = () => {
   };
 
   return (
-    <Card className="p-8 mt-6 bg-white shadow-sm">
+    <Card className="p-8 mt-6 bg-white">
       <div className="space-y-4">
         <div className="overflow-hidden border border-border rounded-lg">
           <h3 className="text-xl font-semibold p-4 border-b border-border">Global Location Insights</h3>
