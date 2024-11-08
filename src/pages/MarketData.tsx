@@ -57,24 +57,25 @@ const MarketData = () => {
                   </TabsTrigger>
                 </TabsList>
 
-                <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-                  <CollapsibleContent>
-                    <div className="mt-6 border rounded-lg p-6 space-y-6">
-                      <SearchFilter
-                        label="Job Title"  // Updated label here
-                        placeholder="Search job titles..."
-                        items={jobTitles}
-                        selectedItems={selectedJobs}
-                        onItemsChange={setSelectedJobs}
-                      />
+              <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+                <CollapsibleContent>
+                  <div className="mt-6 border rounded-lg p-6 space-y-6">
+                    <SearchFilter
+                      label="Job Title"
+                      placeholder="Search job titles..."
+                      items={jobTitles}
+                      selectedItems={selectedJobs}
+                      onItemsChange={setSelectedJobs}
+                      singleSelect={true}
+                    />
 
-                      <SearchFilter
-                        label="Skills"
-                        placeholder="Search skills..."
-                        items={skills}
-                        selectedItems={selectedSkills}
-                        onItemsChange={setSelectedSkills}
-                      />
+                    <SearchFilter
+                      label="Skills"
+                      placeholder="Search skills..."
+                      items={skills}
+                      selectedItems={selectedSkills}
+                      onItemsChange={setSelectedSkills}
+                    />
 
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
@@ -179,9 +180,10 @@ const MarketData = () => {
                         </Button>
                         <Button>Run</Button>
                       </div>
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
+
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
 
                 <TabsContent value="location">
                   <MarketAnalysisTabs />
