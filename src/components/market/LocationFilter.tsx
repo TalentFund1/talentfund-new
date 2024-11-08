@@ -27,12 +27,16 @@ export const LocationFilter = ({ selectedLocations, onLocationChange }: Location
     <div className="space-y-2">
       <label className="text-sm mb-2 block">Location</label>
       <div className="relative">
-        <div className="flex flex-wrap gap-2 mb-2">
+        <div className="flex flex-wrap gap-2 mb-2 min-h-[32px] max-w-full overflow-x-hidden">
           {selectedLocations.map((location) => (
-            <Badge key={location} variant="secondary" className="flex items-center gap-1">
+            <Badge 
+              key={location} 
+              variant="secondary" 
+              className="flex items-center gap-1.5 py-1 px-3 bg-primary-accent/10 text-primary hover:bg-primary-accent/20 transition-colors"
+            >
               {location}
               <X 
-                className="h-3 w-3 cursor-pointer" 
+                className="h-3 w-3 cursor-pointer hover:text-primary-accent transition-colors" 
                 onClick={() => removeLocation(location)}
               />
             </Badge>
