@@ -8,7 +8,7 @@ interface CompensationTableHeaderProps {
 export const CompensationTableHeader = ({ track, onTrackChange }: CompensationTableHeaderProps) => {
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4">
         <h3 className="text-lg font-semibold">Compensation Analysis</h3>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Track:</span>
