@@ -1,7 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -55,24 +54,6 @@ const employees: Employee[] = [
 ];
 
 export const EmployeeTable = () => {
-  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedEmployees(employees.map(emp => emp.name));
-    } else {
-      setSelectedEmployees([]);
-    }
-  };
-
-  const handleSelectEmployee = (name: string, checked: boolean) => {
-    if (checked) {
-      setSelectedEmployees(prev => [...prev, name]);
-    } else {
-      setSelectedEmployees(prev => prev.filter(emp => emp !== name));
-    }
-  };
-
   return (
     <div className="bg-white rounded-lg">
       <div className="relative">
@@ -81,10 +62,7 @@ export const EmployeeTable = () => {
             <tr className="border-b border-border">
               <th className="h-16 px-3 text-sm font-medium text-muted-foreground w-[5%]">
                 <div className="flex items-center justify-center">
-                  <Checkbox 
-                    checked={selectedEmployees.length === employees.length}
-                    onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
-                  />
+                  <Checkbox />
                 </div>
               </th>
               <th className="h-16 px-3 text-sm font-medium text-muted-foreground text-left w-[22%]">
@@ -104,10 +82,7 @@ export const EmployeeTable = () => {
               <tr key={employee.name} className="h-16 border-t border-border hover:bg-muted/50 transition-colors">
                 <td className="px-3">
                   <div className="flex items-center justify-center">
-                    <Checkbox 
-                      checked={selectedEmployees.includes(employee.name)}
-                      onCheckedChange={(checked) => handleSelectEmployee(employee.name, checked as boolean)}
-                    />
+                    <Checkbox />
                   </div>
                 </td>
                 <td className="px-3">
@@ -117,24 +92,24 @@ export const EmployeeTable = () => {
                       alt={employee.name}
                       className="w-6 h-6 rounded-full object-cover"
                     />
-                    <Link to="/employee-profile" className="text-primary hover:underline">
+                    <Link to="/employee-profile" className="text-primary hover:underline text-sm">
                       {employee.name}
                     </Link>
                   </div>
                 </td>
-                <td className="px-3 text-left">{employee.role}</td>
-                <td className="px-3 text-left">{employee.department}</td>
-                <td className="px-3 text-center">{employee.skillCount}</td>
+                <td className="px-3 text-left text-sm">{employee.role}</td>
+                <td className="px-3 text-left text-sm">{employee.department}</td>
+                <td className="px-3 text-center text-sm">{employee.skillCount}</td>
                 <td className="px-3">
                   <div className="flex justify-center">
-                    <span className={`px-2 py-0.5 rounded-full ${
+                    <span className={`px-2 py-0.5 rounded-full text-sm ${
                       employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
                     }`}>
                       {employee.benchmark}%
                     </span>
                   </div>
                 </td>
-                <td className="px-3 text-right text-muted-foreground">
+                <td className="px-3 text-right text-sm text-muted-foreground">
                   {employee.lastUpdated}
                 </td>
               </tr>
