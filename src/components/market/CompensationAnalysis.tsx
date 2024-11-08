@@ -11,6 +11,7 @@ export const CompensationAnalysis = () => {
       <Card className="p-6">
         <div className="space-y-6">
           <div>
+            <h1 className="text-2xl font-bold mb-6">Compensation Analysis</h1>
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
