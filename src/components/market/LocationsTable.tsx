@@ -84,7 +84,7 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
             onClick={() => handleSort('uniqueJobs')}
           >
             <div className="flex items-center justify-end gap-2">
-              Number of Unique Jobs
+              Unique Jobs
               {getSortIcon('uniqueJobs')}
             </div>
           </TableHead>
