@@ -99,6 +99,12 @@ export const GlobalLocationInsights = () => {
             </Button>
           </div>
           <Separator className="mt-4 bg-border" />
+          <div className="mt-4">
+            <div className="flex items-end gap-3">
+              <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
+              <span className="text-secondary-foreground text-sm mb-1">SOC: (11-9041)</span>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 border-b border-border pb-12">
