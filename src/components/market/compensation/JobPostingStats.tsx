@@ -26,6 +26,34 @@ export const JobPostingStats = () => {
       <div className="space-y-6">
         <div>
           <h3 className="text-xl font-semibold text-primary mb-4">Job Postings vs. Hires</h3>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <StatCard
+              title="Employers Competing"
+              value="114"
+              description="47,116 Total Employers"
+              icon={<Building2 className="h-5 w-5" />}
+            />
+            <StatCard
+              title="Unique Postings"
+              value="1,749"
+              description="8,116 Total Postings"
+              icon={<Users className="h-5 w-5" />}
+            />
+            <StatCard
+              title="Posting Intensity"
+              value="6:1"
+              description="Regional Average 6:1"
+              icon={<Clock className="h-5 w-5" />}
+            />
+            <StatCard
+              title="Medial Posting Duration"
+              value="27 Days"
+              description="Regional Average: 29"
+              icon={<Calendar className="h-5 w-5" />}
+            />
+          </div>
+
           <p className="text-secondary-foreground mb-4">
             In an average month, there are <strong>1,749</strong> unique job postings for Artificial Engineer from May 2023 to May 2024, of which <strong>6,345</strong> were unique. These numbers give us a Posting Intensity of <strong>6-to-1</strong>, meaning that for every 6 postings, there is 1 unique job posting.
           </p>
@@ -35,34 +63,7 @@ export const JobPostingStats = () => {
           <Separator className="mb-6 bg-border" />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard
-            title="Employers Competing"
-            value="114"
-            description="47,116 Total Employers"
-            icon={<Building2 className="h-5 w-5" />}
-          />
-          <StatCard
-            title="Unique Postings"
-            value="1,749"
-            description="8,116 Total Postings"
-            icon={<Users className="h-5 w-5" />}
-          />
-          <StatCard
-            title="Posting Intensity"
-            value="6:1"
-            description="Regional Average 6:1"
-            icon={<Clock className="h-5 w-5" />}
-          />
-          <StatCard
-            title="Medial Posting Duration"
-            value="27 Days"
-            description="Regional Average: 29"
-            icon={<Calendar className="h-5 w-5" />}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card className="p-6">
             <RankingSection 
               title="Top Companies" 
