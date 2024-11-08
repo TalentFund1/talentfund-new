@@ -33,7 +33,6 @@ export const CompensationTrendsChart = () => {
             <Button variant="outline" size="sm">6M</Button>
             <Button variant="outline" size="sm">1Y</Button>
             <Button variant="outline" size="sm">3Y</Button>
-            <Button variant="outline" size="sm">CUSTOM</Button>
           </div>
         </div>
 
