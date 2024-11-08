@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Select,
   SelectContent,
@@ -17,6 +25,11 @@ const MarketData = () => {
   const [allSkills, setAllSkills] = useState('');
   const [company, setCompany] = useState('');
   const [location, setLocation] = useState('');
+  const [openJobTitle, setOpenJobTitle] = useState(false);
+  const [openAnySkills, setOpenAnySkills] = useState(false);
+  const [openAllSkills, setOpenAllSkills] = useState(false);
+  const [openCompany, setOpenCompany] = useState(false);
+  const [openLocation, setOpenLocation] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -32,33 +45,71 @@ const MarketData = () => {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm mb-2 block">Job Title</label>
-                  <div className="flex gap-2">
-                    <Input 
+                  <div className="relative">
+                    <Input
                       value={jobTitle}
-                      onChange={(e) => setJobTitle(e.target.value)}
+                      onClick={() => setOpenJobTitle(true)}
+                      readOnly
                       placeholder="Artificial Engineer"
+                      className="bg-white"
                     />
-                    {jobTitle && (
-                      <Button variant="outline" size="icon" onClick={() => setJobTitle('')}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
+                    <CommandDialog open={openJobTitle} onOpenChange={setOpenJobTitle}>
+                      <Command className="rounded-lg border shadow-md">
+                        <CommandInput placeholder="Search job titles..." />
+                        <CommandList>
+                          <CommandEmpty>No job titles found.</CommandEmpty>
+                          <CommandGroup>
+                            <CommandItem onSelect={(value) => {
+                              setJobTitle(value);
+                              setOpenJobTitle(false);
+                            }}>
+                              Software Engineer
+                            </CommandItem>
+                            <CommandItem onSelect={(value) => {
+                              setJobTitle(value);
+                              setOpenJobTitle(false);
+                            }}>
+                              Data Scientist
+                            </CommandItem>
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </CommandDialog>
                   </div>
                 </div>
 
                 <div>
                   <label className="text-sm mb-2 block">Has ANY of the following skills</label>
-                  <div className="flex gap-2">
-                    <Input 
+                  <div className="relative">
+                    <Input
                       value={anySkills}
-                      onChange={(e) => setAnySkills(e.target.value)}
+                      onClick={() => setOpenAnySkills(true)}
+                      readOnly
                       placeholder="NLP"
+                      className="bg-white"
                     />
-                    {anySkills && (
-                      <Button variant="outline" size="icon" onClick={() => setAnySkills('')}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
+                    <CommandDialog open={openAnySkills} onOpenChange={setOpenAnySkills}>
+                      <Command className="rounded-lg border shadow-md">
+                        <CommandInput placeholder="Search skills..." />
+                        <CommandList>
+                          <CommandEmpty>No skills found.</CommandEmpty>
+                          <CommandGroup>
+                            <CommandItem onSelect={(value) => {
+                              setAnySkills(value);
+                              setOpenAnySkills(false);
+                            }}>
+                              NLP
+                            </CommandItem>
+                            <CommandItem onSelect={(value) => {
+                              setAnySkills(value);
+                              setOpenAnySkills(false);
+                            }}>
+                              Machine Learning
+                            </CommandItem>
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </CommandDialog>
                   </div>
                 </div>
 
@@ -66,42 +117,106 @@ const MarketData = () => {
 
                 <div>
                   <label className="text-sm mb-2 block">Has ALL of the following skills</label>
-                  <div className="flex gap-2">
-                    <Input 
+                  <div className="relative">
+                    <Input
                       value={allSkills}
-                      onChange={(e) => setAllSkills(e.target.value)}
+                      onClick={() => setOpenAllSkills(true)}
+                      readOnly
                       placeholder="Python"
+                      className="bg-white"
                     />
-                    {allSkills && (
-                      <Button variant="outline" size="icon" onClick={() => setAllSkills('')}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
+                    <CommandDialog open={openAllSkills} onOpenChange={setOpenAllSkills}>
+                      <Command className="rounded-lg border shadow-md">
+                        <CommandInput placeholder="Search skills..." />
+                        <CommandList>
+                          <CommandEmpty>No skills found.</CommandEmpty>
+                          <CommandGroup>
+                            <CommandItem onSelect={(value) => {
+                              setAllSkills(value);
+                              setOpenAllSkills(false);
+                            }}>
+                              Python
+                            </CommandItem>
+                            <CommandItem onSelect={(value) => {
+                              setAllSkills(value);
+                              setOpenAllSkills(false);
+                            }}>
+                              JavaScript
+                            </CommandItem>
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </CommandDialog>
                   </div>
                 </div>
 
                 <div>
                   <label className="text-sm mb-2 block">Company</label>
-                  <Input 
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                  />
+                  <div className="relative">
+                    <Input
+                      value={company}
+                      onClick={() => setOpenCompany(true)}
+                      readOnly
+                      className="bg-white"
+                    />
+                    <CommandDialog open={openCompany} onOpenChange={setOpenCompany}>
+                      <Command className="rounded-lg border shadow-md">
+                        <CommandInput placeholder="Search companies..." />
+                        <CommandList>
+                          <CommandEmpty>No companies found.</CommandEmpty>
+                          <CommandGroup>
+                            <CommandItem onSelect={(value) => {
+                              setCompany(value);
+                              setOpenCompany(false);
+                            }}>
+                              Google
+                            </CommandItem>
+                            <CommandItem onSelect={(value) => {
+                              setCompany(value);
+                              setOpenCompany(false);
+                            }}>
+                              Microsoft
+                            </CommandItem>
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </CommandDialog>
+                  </div>
                 </div>
 
                 <div className="flex gap-4">
                   <div className="flex-1">
                     <label className="text-sm mb-2 block">Location</label>
-                    <div className="flex gap-2">
-                      <Input 
+                    <div className="relative">
+                      <Input
                         value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        onClick={() => setOpenLocation(true)}
+                        readOnly
                         placeholder="New York, NYC"
+                        className="bg-white"
                       />
-                      {location && (
-                        <Button variant="outline" size="icon" onClick={() => setLocation('')}>
-                          <X className="h-4 w-4" />
-                        </Button>
-                      )}
+                      <CommandDialog open={openLocation} onOpenChange={setOpenLocation}>
+                        <Command className="rounded-lg border shadow-md">
+                          <CommandInput placeholder="Search locations..." />
+                          <CommandList>
+                            <CommandEmpty>No locations found.</CommandEmpty>
+                            <CommandGroup>
+                              <CommandItem onSelect={(value) => {
+                                setLocation(value);
+                                setOpenLocation(false);
+                              }}>
+                                New York, NYC
+                              </CommandItem>
+                              <CommandItem onSelect={(value) => {
+                                setLocation(value);
+                                setOpenLocation(false);
+                              }}>
+                                San Francisco, CA
+                              </CommandItem>
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </CommandDialog>
                     </div>
                   </div>
 
