@@ -39,12 +39,12 @@ const MarketData = () => {
                 onItemsChange={setSelectedSkills}
               />
 
-              <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-8">
                 <div className="space-y-1.5">
                   <label className="text-sm text-[#1F2144]">Select Graduation Year</label>
                   <div className="flex items-center gap-2">
                     <Select defaultValue="2020">
-                      <SelectTrigger className="w-[180px] bg-white">
+                      <SelectTrigger className="w-[120px] bg-white">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -56,7 +56,7 @@ const MarketData = () => {
                     </Select>
                     <span className="text-sm text-[#1F2144]">to</span>
                     <Select defaultValue="2024">
-                      <SelectTrigger className="w-[180px] bg-white">
+                      <SelectTrigger className="w-[120px] bg-white">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -103,7 +103,7 @@ const MarketData = () => {
                 <label className="text-sm text-[#1F2144]">Select Timeframe</label>
                 <div className="flex items-center gap-2">
                   <Select defaultValue="may2023">
-                    <SelectTrigger className="w-[180px] bg-white">
+                    <SelectTrigger className="w-[120px] bg-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -114,7 +114,7 @@ const MarketData = () => {
                   </Select>
                   <span className="text-sm text-[#1F2144]">to</span>
                   <Select defaultValue="may2024">
-                    <SelectTrigger className="w-[180px] bg-white">
+                    <SelectTrigger className="w-[120px] bg-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
