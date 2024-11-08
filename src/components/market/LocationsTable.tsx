@@ -58,7 +58,7 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
   };
 
   return (
-    <div>
+    <div className="rounded-lg border border-border overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow className="bg-secondary hover:bg-secondary">
@@ -151,8 +151,8 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
           ))}
         </TableBody>
       </Table>
-      <div className="flex justify-end p-4 border-t border-border">
-        <p className="text-sm text-secondary-foreground">
+      <div className="flex justify-end p-4 border-t border-border bg-white">
+        <p className="text-sm text-muted-foreground">
           Powered by <span className="text-red-500">Lightcast</span>
         </p>
       </div>
