@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Building2, Users, Clock, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const CompensationAnalysis = () => {
   return (
@@ -15,9 +16,12 @@ export const CompensationAnalysis = () => {
                 <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
                 <p className="text-secondary-foreground mt-1">New York, NYC</p>
               </div>
-              <button className="px-4 py-2 bg-primary text-white font-medium rounded hover:bg-primary/90 transition-colors">
+              <Button 
+                variant="default"
+                className="bg-[#1F2144] text-white hover:bg-[#1F2144]/90"
+              >
                 Add Skill Profile
-              </button>
+              </Button>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
@@ -32,18 +36,26 @@ export const CompensationAnalysis = () => {
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              <StatCard
-                title="Matching Profiles"
-                value="8,745"
-                description="Regional diversity: 58%"
-                icon={<Users className="h-5 w-5" />}
-              />
-              <StatCard
-                title="Median Advertised Salary"
-                value="$140,456"
-                description="749 salary observations"
-                icon={<Building2 className="h-5 w-5" />}
-              />
+              <Card className="p-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-secondary-foreground">Matching Profiles</p>
+                    <h3 className="text-2xl font-bold text-primary mt-2">8,745</h3>
+                    <p className="text-sm text-secondary-foreground mt-1">Regional diversity: 58%</p>
+                  </div>
+                  <Users className="h-5 w-5 text-primary-accent" />
+                </div>
+              </Card>
+              <Card className="p-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
+                    <h3 className="text-2xl font-bold text-primary mt-2">$140,456</h3>
+                    <p className="text-sm text-secondary-foreground mt-1">749 salary observations</p>
+                  </div>
+                  <Building2 className="h-5 w-5 text-primary-accent" />
+                </div>
+              </Card>
             </div>
 
             <div className="mt-6">
