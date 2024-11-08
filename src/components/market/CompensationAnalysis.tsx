@@ -34,35 +34,39 @@ export const CompensationAnalysis = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-              <div className="flex flex-col items-center justify-center">
-                <p className="text-secondary-foreground">Function</p>
-                <p className="font-medium text-primary mt-1">Technology</p>
-              </div>
-              <div className="flex flex-col items-center justify-center">
-                <p className="text-secondary-foreground">Occupation</p>
-                <p className="font-medium text-primary mt-1">Software Developer</p>
-              </div>
-              <Card className="p-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm text-secondary-foreground">Matching Profiles</p>
-                    <h3 className="text-2xl font-bold text-primary mt-2">8,745</h3>
-                    <p className="text-sm text-secondary-foreground mt-1">Regional diversity: 58%</p>
-                  </div>
-                  <Users className="h-5 w-5 text-primary-accent" />
+            <div className="flex justify-between mt-8">
+              <div className="flex-1">
+                <div className="flex flex-col items-start">
+                  <p className="text-secondary-foreground">Function</p>
+                  <p className="font-medium text-primary mt-1">Technology</p>
                 </div>
-              </Card>
-              <Card className="p-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
-                    <h3 className="text-2xl font-bold text-primary mt-2">$140,456</h3>
-                    <p className="text-sm text-secondary-foreground mt-1">749 salary observations</p>
-                  </div>
-                  <Building2 className="h-5 w-5 text-primary-accent" />
+                <div className="flex flex-col items-start mt-4">
+                  <p className="text-secondary-foreground">Occupation</p>
+                  <p className="font-medium text-primary mt-1">Software Developer</p>
                 </div>
-              </Card>
+              </div>
+              <div className="flex-1 flex justify-end space-x-4">
+                <Card className="p-4 w-64">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm text-secondary-foreground">Matching Profiles</p>
+                      <h3 className="text-2xl font-bold text-primary mt-2">8,745</h3>
+                      <p className="text-sm text-secondary-foreground mt-1">Regional diversity: 58%</p>
+                    </div>
+                    <Users className="h-5 w-5 text-primary-accent" />
+                  </div>
+                </Card>
+                <Card className="p-4 w-64">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
+                      <h3 className="text-2xl font-bold text-primary mt-2">$140,456</h3>
+                      <p className="text-sm text-secondary-foreground mt-1">749 salary observations</p>
+                    </div>
+                    <Building2 className="h-5 w-5 text-primary-accent" />
+                  </div>
+                </Card>
+              </div>
             </div>
 
             <Separator className="my-6" />
@@ -74,36 +78,37 @@ export const CompensationAnalysis = () => {
                 <button className="text-primary-accent ml-2 hover:underline">See more</button>
               </p>
             </div>
-
-            <Separator className="my-6" />
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard
-                title="Employers Competing"
-                value="114"
-                description="47,116 Total Employers"
-                icon={<Building2 className="h-5 w-5" />}
-              />
-              <StatCard
-                title="Unique Postings"
-                value="1,749"
-                description="8,116 Total Postings"
-                icon={<Users className="h-5 w-5" />}
-              />
-              <StatCard
-                title="Posting Intensity"
-                value="6:1"
-                description="Regional Average 6:1"
-                icon={<Clock className="h-5 w-5" />}
-              />
-              <StatCard
-                title="Medial Posting Duration"
-                value="27 Days"
-                description="Regional Average: 29"
-                icon={<Calendar className="h-5 w-5" />}
-              />
-            </div>
           </div>
+        </div>
+      </Card>
+
+      {/* Stats Section */}
+      <Card className="p-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard
+            title="Employers Competing"
+            value="114"
+            description="47,116 Total Employers"
+            icon={<Building2 className="h-5 w-5" />}
+          />
+          <StatCard
+            title="Unique Postings"
+            value="1,749"
+            description="8,116 Total Postings"
+            icon={<Users className="h-5 w-5" />}
+          />
+          <StatCard
+            title="Posting Intensity"
+            value="6:1"
+            description="Regional Average 6:1"
+            icon={<Clock className="h-5 w-5" />}
+          />
+          <StatCard
+            title="Medial Posting Duration"
+            value="27 Days"
+            description="Regional Average: 29"
+            icon={<Calendar className="h-5 w-5" />}
+          />
         </div>
       </Card>
 
