@@ -128,13 +128,15 @@ export const FilterSection = ({
         required={activeTab === 'compensation'}
       />
 
-      <SearchFilter
-        label="Companies"
-        placeholder="Search companies..."
-        items={companies}
-        selectedItems={selectedCompanies}
-        onItemsChange={setSelectedCompanies}
-      />
+      {activeTab === 'compensation' && (
+        <SearchFilter
+          label="Companies"
+          placeholder="Search companies..."
+          items={companies}
+          selectedItems={selectedCompanies}
+          onItemsChange={setSelectedCompanies}
+        />
+      )}
 
       <div className="space-y-2">
         <label className="text-sm text-muted-foreground">Timeframe</label>
