@@ -38,7 +38,7 @@ export const CompensationHeader = () => {
                 <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
                 <span className="text-secondary-foreground text-sm mb-1">SOC: (11-9041)</span>
               </div>
-              <p className="text-secondary-foreground mt-1">New York, NYC</p>
+              <p className="text-secondary-foreground mt-3">New York, NYC</p>
             </div>
           </div>
 
