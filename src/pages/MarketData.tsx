@@ -16,10 +16,16 @@ const MarketData = () => {
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [isFiltersOpen, setIsFiltersOpen] = useState(true);
-  const [showResults, setShowResults] = useState(false);
+  const [showLocationResults, setShowLocationResults] = useState(false);
+  const [showCompensationResults, setShowCompensationResults] = useState(false);
 
   const handleRun = () => {
-    setShowResults(true);
+    const activeTab = document.querySelector('[data-state="active"][role="tab"]')?.getAttribute('value');
+    if (activeTab === 'location') {
+      setShowLocationResults(true);
+    } else if (activeTab === 'compensation') {
+      setShowCompensationResults(true);
+    }
   };
 
   const handleClearAll = () => {
@@ -27,7 +33,8 @@ const MarketData = () => {
     setSelectedCompanies([]);
     setSelectedSkills([]);
     setSelectedLocations([]);
-    setShowResults(false);
+    setShowLocationResults(false);
+    setShowCompensationResults(false);
   };
 
   return (
@@ -55,12 +62,14 @@ const MarketData = () => {
                   <TabsTrigger 
                     value="location" 
                     className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                    onClick={() => setShowCompensationResults(false)}
                   >
                     Location Analysis
                   </TabsTrigger>
                   <TabsTrigger 
                     value="compensation" 
                     className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                    onClick={() => setShowLocationResults(false)}
                   >
                     Market Analysis
                   </TabsTrigger>
@@ -89,11 +98,11 @@ const MarketData = () => {
                 </Collapsible>
 
                 <TabsContent value="location" className="space-y-8 mt-8">
-                  <GlobalLocationInsights />
+                  {showLocationResults && <GlobalLocationInsights />}
                 </TabsContent>
                 
                 <TabsContent value="compensation" className="mt-8">
-                  <CompensationAnalysis isVisible={showResults} />
+                  <CompensationAnalysis isVisible={showCompensationResults} />
                 </TabsContent>
               </Tabs>
             </div>
