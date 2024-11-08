@@ -97,7 +97,7 @@ export const EmployeeTable = () => {
                 <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
                 <td className="px-4 py-4">
                   <div className="flex justify-center">
-                    <span className={`px-3 py-1.5 rounded-full text-sm ${
+                    <span className={`px-2 py-0.5 rounded-full text-xs ${
                       employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
                     }`}>
                       {employee.benchmark}%
