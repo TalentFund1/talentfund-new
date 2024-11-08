@@ -98,7 +98,7 @@ export const GlobalLocationInsights = () => {
               Export Data
             </Button>
           </div>
-          <Separator className="mt-4" />
+          <Separator className="mt-4 bg-primary-accent/20" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -123,6 +123,8 @@ export const GlobalLocationInsights = () => {
             icon={<Clock className="h-6 w-6" />}
           />
         </div>
+
+        <Separator className="bg-primary-accent/20" />
 
         <div className="overflow-hidden border border-border rounded-lg">
           <div className="h-[400px] w-full overflow-hidden">
@@ -158,6 +160,8 @@ export const GlobalLocationInsights = () => {
             </div>
           </div>
         </div>
+
+        <Separator className="bg-primary-accent/20" />
 
         <div className="mt-12">
           <Card className="overflow-hidden border border-border">
