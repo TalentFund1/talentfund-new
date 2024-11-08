@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 const locations: Location[] = [
   { 
@@ -84,17 +85,20 @@ export const GlobalLocationInsights = () => {
   return (
     <Card className="p-8 mt-8 bg-white shadow-sm">
       <div className="space-y-12">
-        <div className="flex justify-between items-center">
-          <h3 className="text-xl font-semibold text-primary">Global Location Insights</h3>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={handleExport}
-            className="flex items-center gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export Data
-          </Button>
+        <div>
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-semibold text-primary">Global Location Insights</h3>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleExport}
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export Data
+            </Button>
+          </div>
+          <Separator className="mt-4" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
