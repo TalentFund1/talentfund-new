@@ -16,14 +16,14 @@ const MarketData = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
           <div className="space-y-6">
             <h2 className="text-2xl font-bold">Market Data</h2>
             
             <div className="space-y-4">
               <h3 className="font-medium">Search</h3>
               
-              <div className="bg-white rounded-lg border border-border p-6 space-y-4">
+              <div className="space-y-4">
                 <SearchFilter
                   label="Job Titles"
                   placeholder="Search job titles..."
@@ -54,7 +54,7 @@ const MarketData = () => {
                 />
 
                 <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground block">Select Timeframe</label>
+                  <label className="text-sm block">Select Timeframe</label>
                   <div className="flex gap-2">
                     <Select defaultValue="may2023">
                       <SelectTrigger className="w-[120px]">
@@ -79,7 +79,7 @@ const MarketData = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2">
+                <div className="flex justify-end gap-2">
                   <Button variant="outline" onClick={() => {
                     setSelectedJobs([]);
                     setSelectedCompanies([]);
