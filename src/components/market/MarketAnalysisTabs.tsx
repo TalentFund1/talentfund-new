@@ -66,25 +66,17 @@ export const MarketAnalysisTabs = () => {
   };
 
   return (
-    <div className="mt-6">
+    <Card className="p-8 mt-6 bg-white shadow-sm">
       <Tabs defaultValue="location" className="w-full">
-        <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0">
-          <TabsTrigger 
-            value="location" 
-            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-          >
-            Location Analysis
-          </TabsTrigger>
-          <TabsTrigger 
-            value="compensation" 
-            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-          >
-            Compensation Analysis
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 mb-8">
+          <TabsTrigger value="location" className="text-sm">Location Analysis</TabsTrigger>
+          <TabsTrigger value="compensation" className="text-sm">Compensation Analysis</TabsTrigger>
         </TabsList>
         
-        <div className="bg-white p-6 rounded-lg mt-6">
-          <TabsContent value="location" className="space-y-6">
+        <TabsContent value="location" className="space-y-8">
+          <div className="space-y-8">
+            <h3 className="text-lg font-semibold text-primary">Location Analysis</h3>
+            
             <div className="space-y-6">
               <Card className="overflow-hidden border border-border">
                 <div className="h-[400px] w-full overflow-hidden">
@@ -125,17 +117,18 @@ export const MarketAnalysisTabs = () => {
                 <LocationsTable locations={locations} />
               </Card>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="compensation">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Compensation analysis data will be displayed here.
-              </p>
-            </div>
-          </TabsContent>
-        </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="compensation" className="space-y-4">
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-primary">Compensation Analysis</h3>
+            <p className="text-sm text-muted-foreground mt-2">
+              Compensation analysis data will be displayed here.
+            </p>
+          </div>
+        </TabsContent>
       </Tabs>
-    </div>
+    </Card>
   );
 };
