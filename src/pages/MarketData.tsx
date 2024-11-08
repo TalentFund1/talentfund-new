@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Sidebar } from '@/components/Sidebar';
 import { MarketAnalysisTabs } from '@/components/market/MarketAnalysisTabs';
 import { CompensationAnalysis } from '@/components/market/CompensationAnalysis';
+import { GlobalLocationInsights } from '@/components/market/GlobalLocationInsights';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -54,6 +55,12 @@ const MarketData = () => {
                     >
                       Compensation Analysis
                     </TabsTrigger>
+                    <TabsTrigger 
+                      value="global" 
+                      className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                    >
+                      Global Insights
+                    </TabsTrigger>
                   </TabsList>
 
                   <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
@@ -75,11 +82,15 @@ const MarketData = () => {
                   </Collapsible>
 
                   <TabsContent value="location">
-                    <MarketAnalysisTabs />
+                    <MarketAnalysisTabs showGlobalInsights={false} />
                   </TabsContent>
                   
                   <TabsContent value="compensation">
                     <CompensationAnalysis />
+                  </TabsContent>
+
+                  <TabsContent value="global">
+                    <GlobalLocationInsights />
                   </TabsContent>
                 </Tabs>
               </div>
