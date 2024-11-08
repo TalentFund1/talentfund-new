@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Sidebar } from '@/components/Sidebar';
-import { MarketAnalysisTabs } from '@/components/market/MarketAnalysisTabs';
 import { CompensationAnalysis } from '@/components/market/CompensationAnalysis';
 import { GlobalLocationInsights } from '@/components/market/GlobalLocationInsights';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
@@ -24,7 +23,7 @@ const MarketData = () => {
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-sm">
+            <div>
               <div className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-2xl font-bold text-primary">Market Data</h2>
@@ -81,8 +80,10 @@ const MarketData = () => {
                     </CollapsibleContent>
                   </Collapsible>
 
-                  <TabsContent value="location">
-                    <MarketAnalysisTabs showGlobalInsights={false} />
+                  <TabsContent value="location" className="space-y-8">
+                    <div className="mt-8">
+                      <GlobalLocationInsights />
+                    </div>
                   </TabsContent>
                   
                   <TabsContent value="compensation">
@@ -95,8 +96,6 @@ const MarketData = () => {
                 </Tabs>
               </div>
             </div>
-
-            <div className="h-2 w-full bg-background rounded-full" />
           </div>
         </div>
       </div>
