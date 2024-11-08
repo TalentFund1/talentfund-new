@@ -22,7 +22,7 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
       </TableHeader>
       <TableBody>
         {locations.map((location) => (
-          <TableRow key={location.name} className="border-b border-border">
+          <TableRow key={location.name} className="border-b border-gray-200">
             <TableCell className="font-medium text-sm py-4 border-r border-border">{location.name}</TableCell>
             <TableCell className="text-right text-sm py-4 border-r border-border">{location.profiles.toLocaleString()}</TableCell>
             <TableCell className="text-right text-sm py-4 border-r border-border">{location.uniqueJobs}</TableCell>
