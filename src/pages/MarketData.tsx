@@ -9,7 +9,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FilterSection } from '@/components/market/FilterSection';
-import { Card } from "@/components/ui/card";
 
 const MarketData = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
@@ -21,49 +20,49 @@ const MarketData = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <Card className="p-6 bg-white shadow-sm">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-primary">Market Data</h2>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                className="flex items-center gap-2"
-              >
-                {isFiltersOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                Filters
-              </Button>
-            </div>
-
-            <Separator className="mb-4" />
-
-            <Tabs defaultValue="location" className="w-full">
-              <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
-                <TabsTrigger 
-                  value="location" 
-                  className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+      <div className="flex-1 p-6 ml-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-primary">Market Data</h2>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                  className="flex items-center gap-2"
                 >
-                  Location Analysis
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="compensation" 
-                  className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-                >
-                  Compensation Analysis
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="global" 
-                  className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-                >
-                  Global Insights
-                </TabsTrigger>
-              </TabsList>
+                  {isFiltersOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  Filters
+                </Button>
+              </div>
 
-              <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-                <CollapsibleContent>
-                  <Card className="mt-4 bg-white shadow-sm">
+              <Separator className="mb-4" />
+
+              <Tabs defaultValue="location" className="w-full">
+                <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
+                  <TabsTrigger 
+                    value="location" 
+                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                  >
+                    Location Analysis
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="compensation" 
+                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                  >
+                    Compensation Analysis
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="global" 
+                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                  >
+                    Global Insights
+                  </TabsTrigger>
+                </TabsList>
+
+                <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+                  <CollapsibleContent>
                     <FilterSection 
                       selectedJobs={selectedJobs}
                       setSelectedJobs={setSelectedJobs}
@@ -77,13 +76,13 @@ const MarketData = () => {
                       skills={skills}
                       companies={companies}
                     />
-                  </Card>
-                </CollapsibleContent>
-              </Collapsible>
+                  </CollapsibleContent>
+                </Collapsible>
 
-              <div className="mt-6">
                 <TabsContent value="location" className="space-y-8">
-                  <GlobalLocationInsights />
+                  <div className="mt-8">
+                    <GlobalLocationInsights />
+                  </div>
                 </TabsContent>
                 
                 <TabsContent value="compensation">
@@ -93,9 +92,9 @@ const MarketData = () => {
                 <TabsContent value="global">
                   <GlobalLocationInsights />
                 </TabsContent>
-              </div>
-            </Tabs>
-          </Card>
+              </Tabs>
+            </div>
+          </div>
         </div>
       </div>
     </div>
