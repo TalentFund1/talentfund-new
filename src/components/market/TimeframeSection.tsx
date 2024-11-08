@@ -3,12 +3,14 @@ import { getPastFiveYears, getCurrentMonthYear } from "./utils/dateUtils";
 
 export const TimeframeSection = () => {
   const timeframeOptions = getPastFiveYears();
+  const defaultStartDate = "Oct 2023";
+  const defaultEndDate = "Oct 2024";
 
   return (
     <div className="space-y-2">
       <label className="text-sm text-muted-foreground">Timeframe</label>
       <div className="flex items-center gap-2">
-        <Select defaultValue={timeframeOptions[0]}>
+        <Select defaultValue={defaultStartDate}>
           <SelectTrigger className="w-[120px] bg-white">
             <SelectValue />
           </SelectTrigger>
@@ -19,7 +21,7 @@ export const TimeframeSection = () => {
           </SelectContent>
         </Select>
         <span className="text-sm">to</span>
-        <Select defaultValue="Dec 2024">
+        <Select defaultValue={defaultEndDate}>
           <SelectTrigger className="w-[120px] bg-white">
             <SelectValue />
           </SelectTrigger>
