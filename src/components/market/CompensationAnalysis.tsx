@@ -15,7 +15,7 @@ export const CompensationAnalysis = () => {
                 <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
                 <p className="text-secondary-foreground mt-1">New York, NYC</p>
               </div>
-              <button className="px-4 py-2 border-2 border-primary text-primary font-medium rounded hover:bg-primary hover:text-white transition-colors">
+              <button className="px-4 py-2 bg-primary text-white font-medium rounded hover:bg-primary/90 transition-colors">
                 Add Skill Profile
               </button>
             </div>
