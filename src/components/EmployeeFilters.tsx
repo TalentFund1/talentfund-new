@@ -8,143 +8,91 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-
-export const technicalSkills = [
-  // Programming Languages
-  "JavaScript", "TypeScript", "Python", "Java", "C++", "Ruby", "Go", "Rust", "PHP", "Swift",
-  
-  // Web Development
-  "React", "Angular", "Vue.js", "Next.js", "Node.js", "Express.js", "Django", "Flask",
-  "HTML5", "CSS3", "Sass", "Tailwind CSS", "Bootstrap", "Material UI",
-  
-  // Database
-  "SQL", "PostgreSQL", "MongoDB", "Redis", "Elasticsearch", "Oracle", "MySQL",
-  
-  // Cloud & DevOps
-  "AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Jenkins", "GitLab CI",
-  "Terraform", "Ansible", "Linux", "Nginx", "Apache",
-  
-  // AI & ML
-  "TensorFlow", "PyTorch", "Scikit-learn", "Natural Language Processing",
-  "Computer Vision", "Machine Learning", "Deep Learning", "Data Science",
-  
-  // Mobile Development
-  "React Native", "Flutter", "iOS Development", "Android Development",
-  "Kotlin", "SwiftUI", "Mobile App Architecture",
-  
-  // Testing
-  "Jest", "Cypress", "Selenium", "JUnit", "TestNG", "Mocha", "Testing Methodologies",
-  
-  // Version Control
-  "Git", "GitHub", "Bitbucket", "GitLab", "Version Control Best Practices"
-];
-
-export const softSkills = [
-  // Leadership & Management
-  "Team Leadership", "Project Management", "Strategic Planning", "Decision Making",
-  "Conflict Resolution", "Change Management", "Performance Management",
-  "Mentoring", "Coaching", "Team Building",
-  
-  // Communication
-  "Verbal Communication", "Written Communication", "Public Speaking",
-  "Presentation Skills", "Technical Writing", "Active Listening",
-  "Interpersonal Communication", "Cross-cultural Communication",
-  
-  // Problem Solving
-  "Critical Thinking", "Analytical Skills", "Problem Analysis",
-  "Creative Problem Solving", "Research Skills", "Logical Reasoning",
-  "Innovation", "Design Thinking",
-  
-  // Collaboration
-  "Team Collaboration", "Cross-functional Collaboration", "Remote Collaboration",
-  "Stakeholder Management", "Client Relations", "Partnership Building",
-  
-  // Work Management
-  "Time Management", "Task Prioritization", "Organization Skills",
-  "Meeting Management", "Deadline Management", "Multitasking",
-  
-  // Personal Development
-  "Adaptability", "Learning Agility", "Growth Mindset", "Self-motivation",
-  "Emotional Intelligence", "Resilience", "Work Ethics", "Initiative",
-  
-  // Business Skills
-  "Business Acumen", "Strategic Thinking", "Requirements Gathering",
-  "Process Improvement", "Risk Management", "Quality Assurance",
-  
-  // Customer Focus
-  "Customer Service", "User Experience", "Client Communication",
-  "Needs Assessment", "Customer Feedback Management"
-];
+import { technicalSkills, softSkills } from './skillsData';
 
 export const EmployeeFilters = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
+  const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
+  const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
+  const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
+  const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
 
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
     <div className="space-y-4">
       <SearchFilter
-        label=""
+        label="Job Title"
+        placeholder="Search job titles..."
+        items={[
+          "Software Engineer",
+          "Product Manager",
+          "Designer",
+          "Data Scientist",
+          "DevOps Engineer"
+        ]}
+        selectedItems={selectedJobTitle}
+        onItemsChange={setSelectedJobTitle}
+        singleSelect={true}
+      />
+      
+      <SearchFilter
+        label="Skills"
         placeholder="Search skills..."
         items={allSkills}
         selectedItems={selectedSkills}
         onItemsChange={setSelectedSkills}
+        singleSelect={false}
       />
       
       <div className="flex flex-wrap gap-4">
-        <Select>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Job Title" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="engineer">Engineer</SelectItem>
-            <SelectItem value="manager">Manager</SelectItem>
-          </SelectContent>
-        </Select>
+        <SearchFilter
+          label="Level"
+          placeholder="Search levels..."
+          items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
+          selectedItems={selectedLevel}
+          onItemsChange={setSelectedLevel}
+          singleSelect={false}
+        />
         
-        <Select>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Level" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="p4">P4</SelectItem>
-            <SelectItem value="m3">M3</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        <Select>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Office" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="canada">Canada</SelectItem>
-            <SelectItem value="us">US</SelectItem>
-          </SelectContent>
-        </Select>
+        <SearchFilter
+          label="Office"
+          placeholder="Search offices..."
+          items={["New York", "San Francisco", "London", "Toronto", "Berlin"]}
+          selectedItems={selectedOffice}
+          onItemsChange={setSelectedOffice}
+          singleSelect={false}
+        />
 
-        <Select>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Department" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="engineering">Engineering</SelectItem>
-            <SelectItem value="design">Design</SelectItem>
-          </SelectContent>
-        </Select>
+        <SearchFilter
+          label="Department"
+          placeholder="Search departments..."
+          items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
+          selectedItems={selectedDepartment}
+          onItemsChange={setSelectedDepartment}
+          singleSelect={false}
+        />
 
-        <Select>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Employment Type" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="fulltime">Full Time</SelectItem>
-            <SelectItem value="contract">Contract</SelectItem>
-          </SelectContent>
-        </Select>
+        <SearchFilter
+          label="Employment Type"
+          placeholder="Search employment types..."
+          items={["Full Time", "Part Time", "Contract", "Internship"]}
+          selectedItems={selectedEmploymentType}
+          onItemsChange={setSelectedEmploymentType}
+          singleSelect={false}
+        />
 
         <Button 
           variant="outline" 
-          onClick={() => setSelectedSkills([])}
+          onClick={() => {
+            setSelectedSkills([]);
+            setSelectedJobTitle([]);
+            setSelectedLevel([]);
+            setSelectedOffice([]);
+            setSelectedDepartment([]);
+            setSelectedEmploymentType([]);
+          }}
         >
           Clear All
         </Button>

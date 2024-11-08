@@ -10,6 +10,7 @@ interface SearchFilterProps {
   items: string[];
   selectedItems: string[];
   onItemsChange: (items: string[]) => void;
+  singleSelect?: boolean;
 }
 
 export const SearchFilter = ({ 
@@ -17,19 +18,29 @@ export const SearchFilter = ({
   placeholder, 
   items, 
   selectedItems, 
-  onItemsChange 
+  onItemsChange,
+  singleSelect = false
 }: SearchFilterProps) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSelect = (item: string) => {
-    // Only allow one item to be selected
-    onItemsChange([item]);
+    if (singleSelect) {
+      onItemsChange([item]);
+    } else {
+      if (!selectedItems.includes(item)) {
+        onItemsChange([...selectedItems, item]);
+      }
+    }
     setOpen(false);
   };
 
   const removeItem = (item: string) => {
-    onItemsChange([]);
+    if (singleSelect) {
+      onItemsChange([]);
+    } else {
+      onItemsChange(selectedItems.filter(i => i !== item));
+    }
   };
 
   const filteredItems = items.filter(item => 
