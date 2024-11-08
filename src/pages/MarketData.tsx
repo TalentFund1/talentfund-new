@@ -73,19 +73,19 @@ const MarketData = () => {
                       />
                     </CollapsibleContent>
                   </Collapsible>
+
+                  <TabsContent value="location">
+                    <MarketAnalysisTabs />
+                  </TabsContent>
+                  
+                  <TabsContent value="compensation">
+                    <CompensationAnalysis />
+                  </TabsContent>
                 </Tabs>
               </div>
             </div>
 
             <div className="h-2 w-full bg-background rounded-full" />
-
-            <TabsContent value="location">
-              <MarketAnalysisTabs />
-            </TabsContent>
-            
-            <TabsContent value="compensation">
-              <CompensationAnalysis />
-            </TabsContent>
           </div>
         </div>
       </div>
