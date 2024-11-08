@@ -18,9 +18,9 @@ const MarketData = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(true);
   const [showLocationResults, setShowLocationResults] = useState(false);
   const [showCompensationResults, setShowCompensationResults] = useState(false);
+  const [activeTab, setActiveTab] = useState('location');
 
   const handleRun = () => {
-    const activeTab = document.querySelector('[data-state="active"][role="tab"]')?.getAttribute('value');
     if (activeTab === 'location') {
       setShowLocationResults(true);
     } else if (activeTab === 'compensation') {
@@ -57,19 +57,17 @@ const MarketData = () => {
                 </Button>
               </div>
 
-              <Tabs defaultValue="location" className="w-full">
+              <Tabs defaultValue="location" onValueChange={setActiveTab}>
                 <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
                   <TabsTrigger 
                     value="location" 
                     className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-                    onClick={() => setShowCompensationResults(false)}
                   >
                     Location Analysis
                   </TabsTrigger>
                   <TabsTrigger 
                     value="compensation" 
                     className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-                    onClick={() => setShowLocationResults(false)}
                   >
                     Market Analysis
                   </TabsTrigger>
