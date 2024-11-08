@@ -86,6 +86,9 @@ export const PayBands = () => {
   return (
     <Card className="p-6">
       <h3 className="text-xl font-semibold text-primary mb-6">Pay Bands</h3>
+      <p className="text-secondary-foreground mb-6">
+        Salary Range: $130,456 - $170,439: There are 749 advertised salary observations (11% of the 6749 matching postings).
+      </p>
       
       <div className="mt-6">
         <div className="flex items-center gap-2 mb-4">
