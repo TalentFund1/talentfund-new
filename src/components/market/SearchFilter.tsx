@@ -28,6 +28,7 @@ export const SearchFilter = ({
       onItemsChange([...selectedItems, item]);
     }
     setSearchQuery("");
+    setIsOpen(false);
   };
 
   const removeItem = (item: string) => {
@@ -38,7 +39,6 @@ export const SearchFilter = ({
     item.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -75,22 +75,27 @@ export const SearchFilter = ({
           onFocus={() => setIsOpen(true)}
           className="bg-white"
         />
-        {isOpen && searchQuery && (
-          <Command className="absolute w-full z-50 mt-2 rounded-lg border shadow-md bg-white">
-            <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
-            <CommandGroup>
-              {filteredItems.map((item) => (
-                <CommandItem
-                  key={item}
-                  onSelect={() => handleSelect(item)}
-                  className="cursor-pointer"
-                >
-                  {item}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </Command>
-        )}
+        <Command className="absolute w-full z-50 mt-2 rounded-lg border shadow-md bg-white">
+          <CommandGroup>
+            {isOpen && (
+              <>
+                {filteredItems.length === 0 ? (
+                  <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
+                ) : (
+                  filteredItems.map((item) => (
+                    <CommandItem
+                      key={item}
+                      onSelect={() => handleSelect(item)}
+                      className="cursor-pointer"
+                    >
+                      {item}
+                    </CommandItem>
+                  ))
+                )}
+              </>
+            )}
+          </CommandGroup>
+        </Command>
       </div>
     </div>
   );
