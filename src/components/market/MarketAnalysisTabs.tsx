@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -93,17 +94,18 @@ export const MarketAnalysisTabs = () => {
                         { id: "diversity", label: "Diversity" }
                       ].map((filter) => (
                         <div key={filter.id} className="flex items-center space-x-2">
-                          <Checkbox 
+                          <Checkbox
                             id={filter.id}
                             checked={selectedFilters.includes(filter.id)}
                             onCheckedChange={() => toggleFilter(filter.id)}
+                            className="data-[state=checked]:bg-primary-accent data-[state=checked]:border-primary-accent"
                           />
-                          <label 
+                          <Label
                             htmlFor={filter.id}
                             className="text-sm font-medium leading-none text-primary cursor-pointer"
                           >
                             {filter.label}
-                          </label>
+                          </Label>
                         </div>
                       ))}
                     </div>
