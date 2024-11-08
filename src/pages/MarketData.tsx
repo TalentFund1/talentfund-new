@@ -75,6 +75,8 @@ const MarketData = () => {
                   </CollapsibleContent>
                 </Collapsible>
 
+                <div className="h-1 w-full bg-primary-accent/20 -mx-8" />
+
                 <TabsContent value="location" className="space-y-8 mt-8">
                   <GlobalLocationInsights />
                 </TabsContent>
