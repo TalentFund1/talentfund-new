@@ -21,7 +21,7 @@ export const CompensationHeader = () => {
             </Button>
           </div>
 
-          <Separator className="mb-4" />
+          <Separator className="mb-6" />
 
           <div className="flex justify-between items-start">
             <div>
