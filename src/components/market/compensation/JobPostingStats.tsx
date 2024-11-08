@@ -1,6 +1,7 @@
 import { StatCard } from "@/components/StatCard";
 import { Building2, Users, Clock, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export const JobPostingStats = () => {
   return (
@@ -14,6 +15,7 @@ export const JobPostingStats = () => {
           <p className="text-secondary-foreground mb-6">
             This is close to the Posting Intensity for all other occupations and companies in the location (6-to-1), indicating that they are making an average effort toward hiring for this position.
           </p>
+          <Separator className="mb-6 bg-border" />
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
