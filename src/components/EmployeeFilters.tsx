@@ -84,7 +84,7 @@ export const EmployeeFilters = () => {
   return (
     <div className="space-y-4">
       <SearchFilter
-        label="Skills"
+        label=""
         placeholder="Search skills..."
         items={allSkills}
         selectedItems={selectedSkills}
