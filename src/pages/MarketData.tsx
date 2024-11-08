@@ -6,6 +6,7 @@ import { LocationFilter } from '@/components/market/LocationFilter';
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
 import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
 
 const MarketData = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
@@ -17,39 +18,44 @@ const MarketData = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-8 shadow-sm">
+        <Card className="max-w-7xl mx-auto space-y-8 p-8">
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-[#1F2144]">Market Data</h2>
-            <Separator className="my-4" />
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-foreground">Market Data</h2>
+            </div>
             
-            <div className="space-y-6">              
-              <SearchFilter
-                label="Job Titles"
-                placeholder="Search job titles..."
-                items={jobTitles}
-                selectedItems={selectedJobs}
-                onItemsChange={setSelectedJobs}
-              />
+            <Separator />
+            
+            <div className="grid gap-8">              
+              <div className="space-y-6">
+                <SearchFilter
+                  label="Job Titles"
+                  placeholder="Search job titles..."
+                  items={jobTitles}
+                  selectedItems={selectedJobs}
+                  onItemsChange={setSelectedJobs}
+                />
 
-              <SearchFilter
-                label="Skills"
-                placeholder="Search skills..."
-                items={skills}
-                selectedItems={selectedSkills}
-                onItemsChange={setSelectedSkills}
-              />
+                <SearchFilter
+                  label="Skills"
+                  placeholder="Search skills..."
+                  items={skills}
+                  selectedItems={selectedSkills}
+                  onItemsChange={setSelectedSkills}
+                />
 
-              <LocationFilter 
-                selectedLocations={selectedLocations}
-                onLocationChange={setSelectedLocations}
-              />
+                <LocationFilter 
+                  selectedLocations={selectedLocations}
+                  onLocationChange={setSelectedLocations}
+                />
+              </div>
 
-              <div className="grid grid-cols-2 gap-8">
-                <div className="space-y-1.5">
-                  <label className="text-sm text-[#1F2144]">Select Graduation Year</label>
-                  <div className="flex items-center gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <label className="text-sm font-medium text-foreground">Select Graduation Year</label>
+                  <div className="flex items-center gap-4">
                     <Select defaultValue="2020">
-                      <SelectTrigger className="w-[120px] bg-white">
+                      <SelectTrigger className="w-full bg-white">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -59,9 +65,9 @@ const MarketData = () => {
                         <SelectItem value="2023">2023</SelectItem>
                       </SelectContent>
                     </Select>
-                    <span className="text-sm text-[#1F2144]">to</span>
+                    <span className="text-sm text-foreground">to</span>
                     <Select defaultValue="2024">
-                      <SelectTrigger className="w-[120px] bg-white">
+                      <SelectTrigger className="w-full bg-white">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -74,8 +80,8 @@ const MarketData = () => {
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm text-[#1F2144]">Select Graduation Program</label>
+                <div className="space-y-4">
+                  <label className="text-sm font-medium text-foreground">Select Graduation Program</label>
                   <Select defaultValue="">
                     <SelectTrigger className="w-full bg-white">
                       <SelectValue placeholder="Select a program" />
@@ -99,11 +105,11 @@ const MarketData = () => {
                 onItemsChange={setSelectedCompanies}
               />
 
-              <div className="space-y-1.5">
-                <label className="text-sm text-[#1F2144]">Select Timeframe</label>
-                <div className="flex items-center gap-2">
+              <div className="space-y-4">
+                <label className="text-sm font-medium text-foreground">Select Timeframe</label>
+                <div className="flex items-center gap-4">
                   <Select defaultValue="may2023">
-                    <SelectTrigger className="w-[120px] bg-white">
+                    <SelectTrigger className="w-full bg-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -112,9 +118,9 @@ const MarketData = () => {
                       <SelectItem value="jul2023">Jul 2023</SelectItem>
                     </SelectContent>
                   </Select>
-                  <span className="text-sm text-[#1F2144]">to</span>
+                  <span className="text-sm text-foreground">to</span>
                   <Select defaultValue="may2024">
-                    <SelectTrigger className="w-[120px] bg-white">
+                    <SelectTrigger className="w-full bg-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -126,7 +132,7 @@ const MarketData = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2">
+              <div className="flex justify-end gap-4 pt-4">
                 <Button 
                   variant="outline" 
                   onClick={() => {
@@ -142,7 +148,7 @@ const MarketData = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );
