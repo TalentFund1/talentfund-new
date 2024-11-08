@@ -1,6 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { LocationsTable } from "./LocationsTable";
-import { Location } from "./types";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import 'leaflet.heat';
@@ -13,7 +11,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const locations: Location[] = [
+const locations = [
   { 
     name: "New York, NY",
     position: [40.7128, -74.0060],
@@ -59,7 +57,9 @@ export const MarketAnalysisTabs = ({ showGlobalInsights = true }: MarketAnalysis
       <div className="space-y-8">
         <div className="mt-12">
           <Card className="overflow-hidden border border-border">
-            <LocationsTable locations={locations} />
+            <div className="p-6 text-center text-muted-foreground">
+              Select filters above to view market analysis data
+            </div>
           </Card>
         </div>
       </div>
