@@ -66,7 +66,7 @@ export const MarketAnalysisTabs = () => {
   };
 
   return (
-    <Card className="p-8 mt-6 bg-white shadow-sm">
+    <div className="mt-6">
       <Tabs defaultValue="location" className="w-full">
         <div className="border-b border-border">
           <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0">
@@ -138,6 +138,6 @@ export const MarketAnalysisTabs = () => {
           </div>
         </TabsContent>
       </Tabs>
-    </Card>
+    </div>
   );
 };
