@@ -75,15 +75,13 @@ const MarketData = () => {
                   </CollapsibleContent>
                 </Collapsible>
 
-                <div className="mt-8 bg-background -mx-8 -mb-8 p-8">
-                  <TabsContent value="location" className="space-y-8 mt-0">
-                    <GlobalLocationInsights />
-                  </TabsContent>
-                  
-                  <TabsContent value="compensation" className="mt-0">
-                    <CompensationAnalysis />
-                  </TabsContent>
-                </div>
+                <TabsContent value="location" className="space-y-8 mt-8">
+                  <GlobalLocationInsights />
+                </TabsContent>
+                
+                <TabsContent value="compensation" className="mt-8">
+                  <CompensationAnalysis />
+                </TabsContent>
               </Tabs>
             </div>
           </div>
