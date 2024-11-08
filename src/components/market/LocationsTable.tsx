@@ -10,26 +10,26 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
     <Table>
       <TableHeader>
         <TableRow className="bg-secondary">
-          <TableHead className="font-medium text-sm text-primary py-4 w-[200px]">Location</TableHead>
-          <TableHead className="text-right font-medium text-sm text-primary py-4">Number of Profiles ↑</TableHead>
-          <TableHead className="text-right font-medium text-sm text-primary py-4">Number of Unique Jobs ↑</TableHead>
-          <TableHead className="text-right font-medium text-sm text-primary py-4">Median Compensation ↑</TableHead>
-          <TableHead className="text-right font-medium text-sm text-primary py-4">Total Diversity ↑</TableHead>
-          <TableHead className="text-right font-medium text-sm text-primary py-4">Percent Diversity</TableHead>
-          <TableHead className="text-right font-medium text-sm text-primary py-4">Posting Intensity</TableHead>
+          <TableHead className="font-medium text-sm text-primary py-4 w-[200px] border-r border-border">Location</TableHead>
+          <TableHead className="text-right font-medium text-sm text-primary py-4 border-r border-border">Number of Profiles ↑</TableHead>
+          <TableHead className="text-right font-medium text-sm text-primary py-4 border-r border-border">Number of Unique Jobs ↑</TableHead>
+          <TableHead className="text-right font-medium text-sm text-primary py-4 border-r border-border">Median Compensation ↑</TableHead>
+          <TableHead className="text-right font-medium text-sm text-primary py-4 border-r border-border">Total Diversity ↑</TableHead>
+          <TableHead className="text-right font-medium text-sm text-primary py-4 border-r border-border">Percent Diversity</TableHead>
+          <TableHead className="text-right font-medium text-sm text-primary py-4 border-r border-border">Posting Intensity</TableHead>
           <TableHead className="text-right font-medium text-sm text-primary py-4">Median Duration</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {locations.map((location) => (
           <TableRow key={location.name} className="border-b border-border">
-            <TableCell className="font-medium text-sm py-4">{location.name}</TableCell>
-            <TableCell className="text-right text-sm py-4">{location.profiles.toLocaleString()}</TableCell>
-            <TableCell className="text-right text-sm py-4">{location.uniqueJobs}</TableCell>
-            <TableCell className="text-right text-sm py-4">${location.medianCompensation.toLocaleString()}</TableCell>
-            <TableCell className="text-right text-sm py-4">{location.totalDiversity.toLocaleString()}</TableCell>
-            <TableCell className="text-right text-sm py-4">{location.percentDiversity}</TableCell>
-            <TableCell className="text-right text-sm py-4">{location.postingIntensity}</TableCell>
+            <TableCell className="font-medium text-sm py-4 border-r border-border">{location.name}</TableCell>
+            <TableCell className="text-right text-sm py-4 border-r border-border">{location.profiles.toLocaleString()}</TableCell>
+            <TableCell className="text-right text-sm py-4 border-r border-border">{location.uniqueJobs}</TableCell>
+            <TableCell className="text-right text-sm py-4 border-r border-border">${location.medianCompensation.toLocaleString()}</TableCell>
+            <TableCell className="text-right text-sm py-4 border-r border-border">{location.totalDiversity.toLocaleString()}</TableCell>
+            <TableCell className="text-right text-sm py-4 border-r border-border">{location.percentDiversity}</TableCell>
+            <TableCell className="text-right text-sm py-4 border-r border-border">{location.postingIntensity}</TableCell>
             <TableCell className="text-right text-sm py-4">{location.medianDuration}</TableCell>
           </TableRow>
         ))}
