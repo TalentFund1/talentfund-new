@@ -3,16 +3,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card } from "@/components/ui/card";
 import { CompensationTableHeader } from "./CompensationTableHeader";
 import { CompensationDescription } from "./CompensationDescription";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const CompensationTable = () => {
   const [track, setTrack] = useState("Professional");
 
   return (
     <Card className="p-6">
-      <CompensationTableHeader 
-        track={track}
-        onTrackChange={setTrack}
-      />
+      <CompensationTableHeader />
       
       <CompensationDescription 
         range="$130,456 - $170,439"
@@ -24,21 +22,35 @@ export const CompensationTable = () => {
         adjustedMedian="$154,147"
       />
 
-      <div className="mt-6 overflow-x-auto rounded-lg border border-border">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-secondary hover:bg-secondary">
-              <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Role Name</TableHead>
-              <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Level</TableHead>
-              <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Currency</TableHead>
-              <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Salary Range</TableHead>
-              <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">10th</TableHead>
-              <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">25th</TableHead>
-              <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">50th</TableHead>
-              <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">75th</TableHead>
-              <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 bg-[#F7F9FF]/50">90th</TableHead>
-            </TableRow>
-          </TableHeader>
+      <div className="mt-6">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-sm text-muted-foreground">Track:</span>
+          <Select value={track} onValueChange={setTrack}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Professional">Professional</SelectItem>
+              <SelectItem value="Managerial">Managerial</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="overflow-x-auto rounded-lg border border-border">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-secondary hover:bg-secondary">
+                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Role Name</TableHead>
+                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Level</TableHead>
+                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Currency</TableHead>
+                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Salary Range</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">10th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">25th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">50th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">75th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 bg-[#F7F9FF]/50">90th</TableHead>
+              </TableRow>
+            </TableHeader>
           <TableBody>
             {[
               {
@@ -105,9 +117,10 @@ export const CompensationTable = () => {
               </TableRow>
             ))}
           </TableBody>
-        </Table>
-        <div className="flex justify-end p-4 border-t border-border">
-          <p className="text-sm text-secondary-foreground">Powered by Lightcast</p>
+          </Table>
+          <div className="flex justify-end p-4 border-t border-border">
+            <p className="text-sm text-secondary-foreground">Powered by Lightcast</p>
+          </div>
         </div>
       </div>
     </Card>
