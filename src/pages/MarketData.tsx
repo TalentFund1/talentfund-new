@@ -1,21 +1,16 @@
 import React, { useState } from 'react';
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sidebar } from '@/components/Sidebar';
 import { LocationFilter } from '@/components/market/LocationFilter';
+import { SearchFilter } from '@/components/market/SearchFilter';
+import { jobTitles, companies, skills } from '@/components/market/FilterData';
 
 const MarketData = () => {
-  const [jobTitle, setJobTitle] = useState('');
-  const [anySkills, setAnySkills] = useState('');
-  const [allSkills, setAllSkills] = useState('');
-  const [company, setCompany] = useState('');
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [openJobTitle, setOpenJobTitle] = useState(false);
-  const [openAnySkills, setOpenAnySkills] = useState(false);
-  const [openAllSkills, setOpenAllSkills] = useState(false);
-  const [openCompany, setOpenCompany] = useState(false);
+  const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -29,158 +24,35 @@ const MarketData = () => {
               <h3 className="font-medium">Search</h3>
               
               <div className="space-y-4">
-                {/* Job Title */}
-                <div>
-                  <label className="text-sm mb-2 block">Job Title</label>
-                  <div className="relative">
-                    <Input
-                      value={jobTitle}
-                      onClick={() => setOpenJobTitle(true)}
-                      readOnly
-                      placeholder="Artificial Engineer"
-                      className="bg-white"
-                    />
-                    <CommandDialog open={openJobTitle} onOpenChange={setOpenJobTitle}>
-                      <Command className="rounded-lg border shadow-md">
-                        <CommandInput placeholder="Search job titles..." />
-                        <CommandList>
-                          <CommandEmpty>No job titles found.</CommandEmpty>
-                          <CommandGroup>
-                            <CommandItem onSelect={(value) => {
-                              setJobTitle(value);
-                              setOpenJobTitle(false);
-                            }}>
-                              Software Engineer
-                            </CommandItem>
-                            <CommandItem onSelect={(value) => {
-                              setJobTitle(value);
-                              setOpenJobTitle(false);
-                            }}>
-                              Data Scientist
-                            </CommandItem>
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </CommandDialog>
-                  </div>
-                </div>
+                <SearchFilter
+                  label="Job Titles"
+                  placeholder="Search job titles..."
+                  items={jobTitles}
+                  selectedItems={selectedJobs}
+                  onItemsChange={setSelectedJobs}
+                />
 
-                {/* ANY Skills */}
-                <div>
-                  <label className="text-sm mb-2 block">Has ANY of the following skills</label>
-                  <div className="relative">
-                    <Input
-                      value={anySkills}
-                      onClick={() => setOpenAnySkills(true)}
-                      readOnly
-                      placeholder="NLP"
-                      className="bg-white"
-                    />
-                    <CommandDialog open={openAnySkills} onOpenChange={setOpenAnySkills}>
-                      <Command className="rounded-lg border shadow-md">
-                        <CommandInput placeholder="Search skills..." />
-                        <CommandList>
-                          <CommandEmpty>No skills found.</CommandEmpty>
-                          <CommandGroup>
-                            <CommandItem onSelect={(value) => {
-                              setAnySkills(value);
-                              setOpenAnySkills(false);
-                            }}>
-                              NLP
-                            </CommandItem>
-                            <CommandItem onSelect={(value) => {
-                              setAnySkills(value);
-                              setOpenAnySkills(false);
-                            }}>
-                              Machine Learning
-                            </CommandItem>
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </CommandDialog>
-                  </div>
-                </div>
+                <SearchFilter
+                  label="Companies"
+                  placeholder="Search companies..."
+                  items={companies}
+                  selectedItems={selectedCompanies}
+                  onItemsChange={setSelectedCompanies}
+                />
 
-                <div className="text-center">- AND -</div>
+                <SearchFilter
+                  label="Skills"
+                  placeholder="Search skills..."
+                  items={skills}
+                  selectedItems={selectedSkills}
+                  onItemsChange={setSelectedSkills}
+                />
 
-                {/* ALL Skills */}
-                <div>
-                  <label className="text-sm mb-2 block">Has ALL of the following skills</label>
-                  <div className="relative">
-                    <Input
-                      value={allSkills}
-                      onClick={() => setOpenAllSkills(true)}
-                      readOnly
-                      placeholder="Python"
-                      className="bg-white"
-                    />
-                    <CommandDialog open={openAllSkills} onOpenChange={setOpenAllSkills}>
-                      <Command className="rounded-lg border shadow-md">
-                        <CommandInput placeholder="Search skills..." />
-                        <CommandList>
-                          <CommandEmpty>No skills found.</CommandEmpty>
-                          <CommandGroup>
-                            <CommandItem onSelect={(value) => {
-                              setAllSkills(value);
-                              setOpenAllSkills(false);
-                            }}>
-                              Python
-                            </CommandItem>
-                            <CommandItem onSelect={(value) => {
-                              setAllSkills(value);
-                              setOpenAllSkills(false);
-                            }}>
-                              JavaScript
-                            </CommandItem>
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </CommandDialog>
-                  </div>
-                </div>
-
-                {/* Company */}
-                <div>
-                  <label className="text-sm mb-2 block">Company</label>
-                  <div className="relative">
-                    <Input
-                      value={company}
-                      onClick={() => setOpenCompany(true)}
-                      readOnly
-                      className="bg-white"
-                    />
-                    <CommandDialog open={openCompany} onOpenChange={setOpenCompany}>
-                      <Command className="rounded-lg border shadow-md">
-                        <CommandInput placeholder="Search companies..." />
-                        <CommandList>
-                          <CommandEmpty>No companies found.</CommandEmpty>
-                          <CommandGroup>
-                            <CommandItem onSelect={(value) => {
-                              setCompany(value);
-                              setOpenCompany(false);
-                            }}>
-                              Google
-                            </CommandItem>
-                            <CommandItem onSelect={(value) => {
-                              setCompany(value);
-                              setOpenCompany(false);
-                            }}>
-                              Microsoft
-                            </CommandItem>
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </CommandDialog>
-                  </div>
-                </div>
-
-                {/* Location with multi-select */}
                 <LocationFilter 
                   selectedLocations={selectedLocations}
                   onLocationChange={setSelectedLocations}
                 />
 
-                {/* Timeframe */}
                 <div className="space-y-2">
                   <label className="text-sm block">Select Timeframe</label>
                   <div className="flex gap-2">
@@ -208,7 +80,12 @@ const MarketData = () => {
                 </div>
 
                 <div className="flex justify-end gap-2">
-                  <Button variant="outline">Clear All</Button>
+                  <Button variant="outline" onClick={() => {
+                    setSelectedJobs([]);
+                    setSelectedCompanies([]);
+                    setSelectedSkills([]);
+                    setSelectedLocations([]);
+                  }}>Clear All</Button>
                   <Button>Run</Button>
                 </div>
               </div>
