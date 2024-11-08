@@ -23,7 +23,7 @@ const MarketData = () => {
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="bg-white rounded-lg p-6 shadow-sm">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-primary">Market Data</h2>
               <Button 
                 variant="outline" 
@@ -37,8 +37,8 @@ const MarketData = () => {
             </div>
 
             <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-              <CollapsibleContent className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+              <CollapsibleContent className="space-y-8">
+                <div className="grid grid-cols-2 gap-8">
                   <SearchFilter
                     label="Job Titles"
                     placeholder="Search job titles..."
@@ -56,10 +56,10 @@ const MarketData = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-8">
+                  <div className="space-y-4">
                     <label className="text-sm text-muted-foreground">Graduation Year</label>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-4">
                       <Select defaultValue="2020">
                         <SelectTrigger className="w-[120px] bg-white">
                           <SelectValue />
@@ -86,7 +86,7 @@ const MarketData = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     <label className="text-sm text-muted-foreground">Graduation Program</label>
                     <Select defaultValue="">
                       <SelectTrigger className="w-full bg-white">
@@ -103,7 +103,7 @@ const MarketData = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-8">
                   <LocationFilter 
                     selectedLocations={selectedLocations}
                     onLocationChange={setSelectedLocations}
@@ -118,9 +118,9 @@ const MarketData = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-4">
                   <label className="text-sm text-muted-foreground">Timeframe</label>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
                     <Select defaultValue="may2023">
                       <SelectTrigger className="w-[120px] bg-white">
                         <SelectValue />
