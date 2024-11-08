@@ -44,8 +44,8 @@ const MarketData = () => {
                 onLocationChange={setSelectedLocations}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="space-y-1.5">
                   <label className="text-sm block">Select Graduation Year</label>
                   <div className="flex items-center gap-2">
                     <Select defaultValue="2020">
@@ -74,7 +74,7 @@ const MarketData = () => {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <label className="text-sm block">Select Graduation Program</label>
                   <Select defaultValue="">
                     <SelectTrigger className="w-full bg-white">
