@@ -75,15 +75,13 @@ export const MarketAnalysisTabs = () => {
             <h3 className="text-lg font-semibold mb-4">Location Analysis</h3>
             <div style={{ height: "400px", width: "100%" }}>
               <MapContainer 
-                center={[40.7128, -74.0060]}
+                zoom={4}
+                center={[40.7128, -74.0060] as L.LatLngExpression}
                 style={{ height: "100%", width: "100%" }}
                 zoomControl={true}
                 doubleClickZoom={true}
                 scrollWheelZoom={false}
                 dragging={true}
-                animate={true}
-                easeLinearity={0.35}
-                defaultZoom={4}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -92,7 +90,7 @@ export const MarketAnalysisTabs = () => {
                 {locations.map((location, index) => (
                   <Marker 
                     key={index} 
-                    position={location.position as [number, number]}
+                    position={location.position as L.LatLngExpression}
                   >
                     <Popup>{location.name}</Popup>
                   </Marker>
