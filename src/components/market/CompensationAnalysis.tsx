@@ -22,8 +22,6 @@ export const CompensationAnalysis = () => {
               </Button>
             </div>
 
-            <Separator className="mb-6" />
-
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2">
@@ -34,12 +32,12 @@ export const CompensationAnalysis = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-              <div className="flex flex-col items-center justify-center">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+              <div>
                 <p className="text-secondary-foreground">Function</p>
                 <p className="font-medium text-primary mt-1">Technology</p>
               </div>
-              <div className="flex flex-col items-center justify-center">
+              <div>
                 <p className="text-secondary-foreground">Occupation</p>
                 <p className="font-medium text-primary mt-1">Software Developer</p>
               </div>
