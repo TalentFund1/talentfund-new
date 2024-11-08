@@ -125,7 +125,7 @@ export const GlobalLocationInsights = () => {
         </div>
 
         <div className="overflow-hidden border border-border rounded-lg">
-          <div className="h-[400px] w-full overflow-hidden">
+          <div className="h-[500px] w-full relative">
             <HeatMap locations={locations} selectedFilters={selectedFilters} />
           </div>
 

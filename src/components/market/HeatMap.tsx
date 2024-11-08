@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import { useEffect, useRef, useState } from "react";
 import L from 'leaflet';
 import { Location } from './types';
+import 'leaflet/dist/leaflet.css';
 
 interface HeatMapProps {
   locations: Location[];
@@ -11,6 +12,16 @@ interface HeatMapProps {
 export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
   const [map, setMap] = useState<L.Map | null>(null);
   const mapRef = useRef<L.Map | null>(null);
+
+  // Fix for default marker icons in react-leaflet
+  useEffect(() => {
+    delete (L.Icon.Default.prototype as any)._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    });
+  }, []);
 
   const getRadius = (value: number, type: string) => {
     switch(type) {
@@ -65,63 +76,67 @@ export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
   };
 
   return (
-    <MapContainer 
-      center={[40.7128, -74.0060] as L.LatLngExpression}
-      zoom={4}
-      className="h-full w-full"
-      ref={(map) => {
-        if (map) {
-          mapRef.current = map;
-          setMap(map);
-        }
-      }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {selectedFilters.map(filter => 
-        locations.map((location, index) => {
-          let value;
-          switch(filter) {
-            case 'profiles':
-              value = location.profiles;
-              break;
-            case 'uniqueJobs':
-              value = location.uniqueJobs;
-              break;
-            case 'compensation':
-              value = location.medianCompensation;
-              break;
-            case 'diversity':
-              value = location.totalDiversity;
-              break;
-            default:
-              value = 0;
+    <div className="relative w-full h-full">
+      <MapContainer 
+        center={[40.7128, -74.0060] as L.LatLngExpression}
+        zoom={4}
+        className="h-full w-full z-0"
+        ref={(map) => {
+          if (map) {
+            mapRef.current = map;
+            setMap(map);
           }
+        }}
+        style={{ height: '100%', width: '100%', position: 'absolute', top: 0, left: 0 }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {selectedFilters.map(filter => 
+          locations.map((location, index) => {
+            let value;
+            switch(filter) {
+              case 'profiles':
+                value = location.profiles;
+                break;
+              case 'uniqueJobs':
+                value = location.uniqueJobs;
+                break;
+              case 'compensation':
+                value = location.medianCompensation;
+                break;
+              case 'diversity':
+                value = location.totalDiversity;
+                break;
+              default:
+                value = 0;
+            }
 
-          const style = getCircleStyle(filter);
+            const style = getCircleStyle(filter);
 
-          return (
-            <CircleMarker
-              key={`${filter}-${index}`}
-              center={location.position as L.LatLngExpression}
-              radius={getRadius(value, filter)}
-              fillColor={style.fillColor}
-              color={style.color}
-              weight={1}
-              opacity={0.8}
-              fillOpacity={0.35}
-            >
-              <Popup>
-                <div className="p-2">
-                  <h3 className="font-semibold">{location.name}</h3>
-                  <p className="text-sm">{getMetricName(filter)}: {formatValue(value, filter)}</p>
-                </div>
-              </Popup>
-            </CircleMarker>
-          );
-        })
-      )}
-    </MapContainer>
+            return (
+              <CircleMarker
+                key={`${filter}-${index}`}
+                center={location.position as L.LatLngExpression}
+                radius={getRadius(value, filter)}
+                fillColor={style.fillColor}
+                color={style.color}
+                weight={1}
+                opacity={0.8}
+                fillOpacity={0.35}
+              >
+                <Popup>
+                  <div className="p-2">
+                    <h3 className="font-semibold">{location.name}</h3>
+                    <p className="text-sm">{getMetricName(filter)}: {formatValue(value, filter)}</p>
+                  </div>
+                </Popup>
+              </CircleMarker>
+            );
+          })
+        )}
+      </MapContainer>
+    </div>
   );
 };
