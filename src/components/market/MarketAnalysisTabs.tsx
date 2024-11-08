@@ -66,7 +66,7 @@ export const MarketAnalysisTabs = () => {
   };
 
   return (
-    <div className="mt-6">
+    <Card className="p-8 mt-6 bg-white shadow-sm">
       <Tabs defaultValue="location" className="w-full">
         <div className="border-b border-border">
           <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0">
@@ -88,7 +88,7 @@ export const MarketAnalysisTabs = () => {
         <TabsContent value="location" className="pt-6">
           <div className="space-y-6">
             <div className="space-y-6">
-              <Card className="overflow-hidden border border-border bg-white">
+              <Card className="overflow-hidden border border-border">
                 <div className="h-[400px] w-full overflow-hidden">
                   <HeatMap locations={locations} selectedFilters={selectedFilters} />
                 </div>
@@ -123,7 +123,7 @@ export const MarketAnalysisTabs = () => {
                 </div>
               </Card>
 
-              <Card className="overflow-hidden border border-border bg-white">
+              <Card className="overflow-hidden border border-border">
                 <LocationsTable locations={locations} />
               </Card>
             </div>
@@ -131,13 +131,13 @@ export const MarketAnalysisTabs = () => {
         </TabsContent>
         
         <TabsContent value="compensation" className="pt-6">
-          <Card className="p-6 bg-white">
+          <div>
             <p className="text-sm text-muted-foreground">
               Compensation analysis data will be displayed here.
             </p>
-          </Card>
+          </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </Card>
   );
 };
