@@ -161,6 +161,8 @@ export const GlobalLocationInsights = () => {
           </div>
         </div>
 
+        <Separator className="bg-[#4285f4]" />
+
         <div>
           <Card className="overflow-hidden border border-border">
             <LocationsTable locations={locations} />
