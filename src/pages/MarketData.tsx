@@ -36,8 +36,6 @@ const MarketData = () => {
               </Button>
             </div>
 
-            <Separator className="my-4" />
-
             <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
               <CollapsibleContent className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
@@ -146,6 +144,8 @@ const MarketData = () => {
                     </Select>
                   </div>
                 </div>
+
+                <Separator className="my-4" />
 
                 <div className="flex justify-end gap-2">
                   <Button 
