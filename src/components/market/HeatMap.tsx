@@ -28,8 +28,16 @@ export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
         return Math.sqrt(value) * 0.5;
       case 'uniqueJobs':
         return Math.sqrt(value) * 0.8;
-      case 'compensation':
-        return Math.sqrt(value/1000) * 0.8;
+      case 'compensation': {
+        // Find min and max compensation values
+        const compensationValues = locations.map(loc => loc.medianCompensation);
+        const minComp = Math.min(...compensationValues);
+        const maxComp = Math.max(...compensationValues);
+        
+        // Normalize the value between 5 and 25 for circle radius
+        const normalized = ((value - minComp) / (maxComp - minComp)) * 20 + 5;
+        return normalized;
+      }
       case 'diversity':
         return Math.sqrt(value) * 0.6;
       default:
