@@ -12,7 +12,15 @@ export const CompensationAnalysis = () => {
       <Card className="p-6">
         <div className="space-y-6">
           <div>
-            <h3 className="text-xl font-semibold text-primary">Compensation Analysis</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-semibold text-primary">Compensation Analysis</h3>
+              <Button 
+                variant="default"
+                className="bg-[#1F2144] text-white hover:bg-[#1F2144]/90"
+              >
+                Add Skill Profile
+              </Button>
+            </div>
             <Separator className="my-4" />
             <div className="flex justify-between items-start mb-6">
               <div>
