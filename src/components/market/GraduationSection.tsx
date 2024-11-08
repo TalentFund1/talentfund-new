@@ -9,9 +9,9 @@ export const GraduationSection = () => {
       <div className="space-y-2">
         <label className="text-sm text-muted-foreground">Graduation Year</label>
         <div className="flex items-center gap-2">
-          <Select>
+          <Select defaultValue="2020">
             <SelectTrigger className="w-[120px] bg-white">
-              <SelectValue placeholder="From" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {graduationYears.map((year) => (
@@ -20,9 +20,9 @@ export const GraduationSection = () => {
             </SelectContent>
           </Select>
           <span className="text-sm">to</span>
-          <Select>
+          <Select defaultValue="2024">
             <SelectTrigger className="w-[120px] bg-white">
-              <SelectValue placeholder="To" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {graduationYears.map((year) => (
