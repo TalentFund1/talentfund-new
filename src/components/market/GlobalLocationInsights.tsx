@@ -98,10 +98,10 @@ export const GlobalLocationInsights = () => {
               Export Data
             </Button>
           </div>
-          <Separator className="mt-4 bg-border" />
+          <Separator className="mt-4 bg-[#4285f4]" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 border-b border-border pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             title="Total Profiles"
             value="2,845"
@@ -124,7 +124,9 @@ export const GlobalLocationInsights = () => {
           />
         </div>
 
-        <div className="overflow-hidden border border-border rounded-lg pb-12 border-b border-border">
+        <Separator className="bg-[#4285f4]" />
+
+        <div className="overflow-hidden border border-border rounded-lg">
           <div className="h-[500px] w-full relative">
             <HeatMap locations={locations} selectedFilters={selectedFilters} />
           </div>
@@ -159,7 +161,9 @@ export const GlobalLocationInsights = () => {
           </div>
         </div>
 
-        <div className="mt-12">
+        <Separator className="bg-[#4285f4]" />
+
+        <div>
           <Card className="overflow-hidden border border-border">
             <LocationsTable locations={locations} />
           </Card>
