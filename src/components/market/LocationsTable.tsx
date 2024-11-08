@@ -93,7 +93,7 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
             onClick={() => handleSort('medianCompensation')}
           >
             <div className="flex items-center justify-end gap-2">
-              Median Compensation
+              Median Salary
               {getSortIcon('medianCompensation')}
             </div>
           </TableHead>
