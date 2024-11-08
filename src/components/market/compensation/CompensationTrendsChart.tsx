@@ -3,15 +3,13 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "rec
 import { Button } from "@/components/ui/button";
 
 const data = [
-  { date: "Jun '18", salary: 110000, postings: 5200 },
-  { date: "Oct '18", salary: 112000, postings: 5300 },
-  { date: "Feb '19", salary: 110000, postings: 5400 },
-  { date: "Jun '19", salary: 113000, postings: 6000 },
-  { date: "Oct '19", salary: 112000, postings: 5800 },
-  { date: "Feb '20", salary: 114000, postings: 5500 },
-  { date: "Jun '20", salary: 113000, postings: 5600 },
-  { date: "Oct '20", salary: 114000, postings: 5900 },
-  { date: "Feb '21", salary: 115000, postings: 6100 }
+  { date: "Apr '24", salary: 115000, postings: 5800 },
+  { date: "May '24", salary: 116500, postings: 5900 },
+  { date: "Jun '24", salary: 118000, postings: 6000 },
+  { date: "Jul '24", salary: 117500, postings: 6100 },
+  { date: "Aug '24", salary: 119000, postings: 6200 },
+  { date: "Sep '24", salary: 120000, postings: 6300 },
+  { date: "Oct '24", salary: 121000, postings: 6400 }
 ];
 
 export const CompensationTrendsChart = () => {
@@ -23,10 +21,10 @@ export const CompensationTrendsChart = () => {
             <h3 className="text-xl font-semibold text-primary">Compensation Trends</h3>
             <div className="flex items-center gap-4">
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-primary">4.2%</span>
+                <span className="text-2xl font-bold text-primary">5.2%</span>
                 <span className="text-sm text-secondary-foreground">Growth</span>
               </div>
-              <div className="text-sm text-secondary-foreground">Jun 2018 - May 2021</div>
+              <div className="text-sm text-secondary-foreground">Apr 2024 - Oct 2024</div>
             </div>
           </div>
           <div className="flex gap-2">
