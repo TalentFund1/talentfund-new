@@ -68,55 +68,47 @@ export const MarketAnalysisTabs = () => {
 
   return (
     <Card className="p-8 mt-6 bg-white shadow-sm">
-      <Tabs defaultValue="location" className="w-full">
-        <TabsContent value="location" className="pt-2">
-          <div className="space-y-4">
-            <Card className="overflow-hidden border border-border">
-              <h3 className="text-xl font-semibold p-4 border-b border-border">Global Location Insights</h3>
-              <div className="h-[400px] w-full overflow-hidden">
-                <HeatMap locations={locations} selectedFilters={selectedFilters} />
-              </div>
-
-              <div className="border-t border-border bg-secondary p-6">
-                <div className="flex items-center gap-8">
-                  <span className="text-sm font-medium text-primary">Display:</span>
-                  <div className="flex items-center gap-6">
-                    {[
-                      { id: "profiles", label: "Profiles" },
-                      { id: "uniqueJobs", label: "Unique Jobs" },
-                      { id: "compensation", label: "Compensation" },
-                      { id: "diversity", label: "Diversity" }
-                    ].map((filter) => (
-                      <div key={filter.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={filter.id}
-                          checked={selectedFilters.includes(filter.id)}
-                          onCheckedChange={() => toggleFilter(filter.id)}
-                          className="h-4 w-4 rounded border-primary data-[state=checked]:bg-[#4285f4] data-[state=checked]:border-[#4285f4]"
-                        />
-                        <Label
-                          htmlFor={filter.id}
-                          className="text-sm font-medium leading-none text-primary cursor-pointer"
-                        >
-                          {filter.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="overflow-hidden border border-border">
-              <LocationsTable locations={locations} />
-            </Card>
+      <div className="space-y-4">
+        <Card className="overflow-hidden border border-border">
+          <h3 className="text-xl font-semibold p-4 border-b border-border">Global Location Insights</h3>
+          <div className="h-[400px] w-full overflow-hidden">
+            <HeatMap locations={locations} selectedFilters={selectedFilters} />
           </div>
-        </TabsContent>
-        
-        <TabsContent value="compensation" className="pt-2">
-          <CompensationAnalysis />
-        </TabsContent>
-      </Tabs>
+
+          <div className="border-t border-border bg-secondary p-6">
+            <div className="flex items-center gap-8">
+              <span className="text-sm font-medium text-primary">Display:</span>
+              <div className="flex items-center gap-6">
+                {[
+                  { id: "profiles", label: "Profiles" },
+                  { id: "uniqueJobs", label: "Unique Jobs" },
+                  { id: "compensation", label: "Compensation" },
+                  { id: "diversity", label: "Diversity" }
+                ].map((filter) => (
+                  <div key={filter.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={filter.id}
+                      checked={selectedFilters.includes(filter.id)}
+                      onCheckedChange={() => toggleFilter(filter.id)}
+                      className="h-4 w-4 rounded border-primary data-[state=checked]:bg-[#4285f4] data-[state=checked]:border-[#4285f4]"
+                    />
+                    <Label
+                      htmlFor={filter.id}
+                      className="text-sm font-medium leading-none text-primary cursor-pointer"
+                    >
+                      {filter.label}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="overflow-hidden border border-border">
+          <LocationsTable locations={locations} />
+        </Card>
+      </div>
     </Card>
   );
 };

@@ -39,25 +39,26 @@ const MarketData = () => {
 
             <Separator className="mb-4" />
 
-            <div className="border-b border-border">
-              <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0">
-                <TabsTrigger 
-                  value="location" 
-                  className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-                >
-                  Location Analysis
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="compensation" 
-                  className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-                >
-                  Compensation Analysis
-                </TabsTrigger>
-              </TabsList>
-            </div>
+            <Tabs defaultValue="location">
+              <div className="border-b border-border">
+                <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0">
+                  <TabsTrigger 
+                    value="location" 
+                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                  >
+                    Location Analysis
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="compensation" 
+                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                  >
+                    Compensation Analysis
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
-            <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-              <CollapsibleContent className="space-y-6">
+              <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+                <CollapsibleContent className="space-y-6">
                 <SearchFilter
                   label="Job Titles"
                   placeholder="Search job titles..."
@@ -177,11 +178,18 @@ const MarketData = () => {
                   </Button>
                   <Button>Run</Button>
                 </div>
-              </CollapsibleContent>
-            </Collapsible>
+                </CollapsibleContent>
+              </Collapsible>
+
+              <TabsContent value="location">
+                <MarketAnalysisTabs />
+              </TabsContent>
+              
+              <TabsContent value="compensation">
+                <MarketAnalysisTabs />
+              </TabsContent>
+            </Tabs>
           </div>
-          
-          <MarketAnalysisTabs />
         </div>
       </div>
     </div>
