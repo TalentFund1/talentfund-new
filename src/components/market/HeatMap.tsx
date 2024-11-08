@@ -13,7 +13,6 @@ export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
   const [map, setMap] = useState<L.Map | null>(null);
   const mapRef = useRef<L.Map | null>(null);
 
-  // Fix for default marker icons in react-leaflet
   useEffect(() => {
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
@@ -76,7 +75,7 @@ export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full rounded-lg overflow-hidden">
       <MapContainer 
         center={[40.7128, -74.0060] as L.LatLngExpression}
         zoom={4}
@@ -87,11 +86,19 @@ export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
             setMap(map);
           }
         }}
-        style={{ height: '100%', width: '100%', position: 'absolute', top: 0, left: 0 }}
+        style={{ 
+          height: '100%', 
+          width: '100%', 
+          position: 'absolute', 
+          top: 0, 
+          left: 0,
+          background: 'transparent'
+        }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          className="map-tiles"
         />
         {selectedFilters.map(filter => 
           locations.map((location, index) => {

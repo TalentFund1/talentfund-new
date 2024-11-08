@@ -40,3 +40,22 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Map styles */
+.leaflet-container {
+  border-radius: 0.5rem;
+}
+
+.map-tiles {
+  filter: saturate(0.8) brightness(1.1);
+}
+
+.leaflet-tile-pane {
+  opacity: 0.9;
+}
+
+.leaflet-control-container .leaflet-control {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0.5rem;
+  border: 1px solid #CCDBFF;
+}
