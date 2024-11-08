@@ -12,6 +12,19 @@ const MarketData = () => {
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [showAnalysis, setShowAnalysis] = useState(false);
+
+  const handleRun = () => {
+    setShowAnalysis(true);
+  };
+
+  const handleClearAll = () => {
+    setSelectedJobs([]);
+    setSelectedCompanies([]);
+    setSelectedSkills([]);
+    setSelectedLocations([]);
+    setShowAnalysis(false);
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -39,12 +52,6 @@ const MarketData = () => {
                   >
                     Compensation Analysis
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="filters" 
-                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-                  >
-                    Filters
-                  </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="location" className="space-y-8 mt-8">
@@ -52,10 +59,6 @@ const MarketData = () => {
                 </TabsContent>
                 
                 <TabsContent value="compensation" className="mt-8">
-                  <CompensationAnalysis />
-                </TabsContent>
-
-                <TabsContent value="filters" className="mt-8">
                   <FilterSection 
                     selectedJobs={selectedJobs}
                     setSelectedJobs={setSelectedJobs}
@@ -68,7 +71,10 @@ const MarketData = () => {
                     jobTitles={jobTitles}
                     skills={skills}
                     companies={companies}
+                    onRun={handleRun}
+                    onClearAll={handleClearAll}
                   />
+                  <CompensationAnalysis isVisible={showAnalysis} />
                 </TabsContent>
               </Tabs>
             </div>
