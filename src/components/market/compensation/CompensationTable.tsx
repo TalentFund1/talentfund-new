@@ -118,7 +118,7 @@ export const CompensationTable = () => {
             <TableHeader>
               <TableRow className="bg-secondary hover:bg-secondary">
                 <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Role Name</TableHead>
-                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Level</TableHead>
+                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">Level</TableHead>
                 <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Currency</TableHead>
                 <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Salary Range</TableHead>
                 <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">10th</TableHead>
@@ -137,7 +137,7 @@ export const CompensationTable = () => {
                   }`}
                 >
                   <TableCell className="px-4 py-4 font-semibold text-sm border-r border-border">{row.role}</TableCell>
-                  <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.level}</TableCell>
+                  <TableCell className="px-4 py-4 font-medium text-sm border-r border-border bg-[#F7F9FF]/30 group-hover:bg-transparent">{row.level}</TableCell>
                   <TableCell className="px-4 py-4 text-sm border-r border-border">{row.currency}</TableCell>
                   <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.range}</TableCell>
                   {row.percentiles.map((value, i) => (
