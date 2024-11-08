@@ -10,9 +10,9 @@ export const CompensationAnalysis = () => {
     <div className="space-y-6">
       {/* Job Overview Section */}
       <Card className="p-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-xl font-semibold text-primary">Compensation Analysis</h3>
               <Button 
                 variant="default"
@@ -22,7 +22,7 @@ export const CompensationAnalysis = () => {
               </Button>
             </div>
 
-            <Separator className="mb-6" />
+            <Separator className="mb-4" />
 
             <div className="flex justify-between items-start">
               <div>
@@ -34,9 +34,9 @@ export const CompensationAnalysis = () => {
               </div>
             </div>
 
-            <div className="flex mt-8">
+            <div className="flex mt-6">
               <div className="flex-1 flex items-center">
-                <div className="grid grid-cols-2 gap-x-12 w-full max-w-md">
+                <div className="grid grid-cols-2 gap-x-8 w-full max-w-md">
                   <div>
                     <p className="text-secondary-foreground">Function</p>
                     <p className="font-medium text-primary mt-1">Technology</p>
@@ -71,7 +71,7 @@ export const CompensationAnalysis = () => {
               </div>
             </div>
 
-            <Separator className="my-6" />
+            <Separator className="my-4" />
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Job Description</h3>
