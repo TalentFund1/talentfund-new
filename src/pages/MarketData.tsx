@@ -12,7 +12,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 const MarketData = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [selectedJob, setSelectedJob] = useState<string>('');
+  const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [isFiltersOpen, setIsFiltersOpen] = useState(true);
@@ -40,21 +40,13 @@ const MarketData = () => {
 
             <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
               <CollapsibleContent className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Job Title</label>
-                  <Select value={selectedJob} onValueChange={setSelectedJob}>
-                    <SelectTrigger className="w-full bg-white">
-                      <SelectValue placeholder="Select a job title" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {jobTitles.map((title) => (
-                        <SelectItem key={title} value={title}>
-                          {title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <SearchFilter
+                  label="Job Titles"
+                  placeholder="Search job titles..."
+                  items={jobTitles}
+                  selectedItems={selectedJobs}
+                  onItemsChange={setSelectedJobs}
+                />
 
                 <SearchFilter
                   label="Skills"
@@ -157,7 +149,7 @@ const MarketData = () => {
                   <Button 
                     variant="outline" 
                     onClick={() => {
-                      setSelectedJob('');
+                      setSelectedJobs([]);
                       setSelectedCompanies([]);
                       setSelectedSkills([]);
                       setSelectedLocations([]);
