@@ -80,6 +80,10 @@ const EmployeeProfile = () => {
                 <p className="font-medium">Full-time</p>
               </div>
               <div className="space-y-1.5">
+                <span className="text-sm text-muted-foreground">Manager</span>
+                <p className="font-medium">Sarah Chen</p>
+              </div>
+              <div className="space-y-1.5">
                 <span className="text-sm text-muted-foreground">Start Date</span>
                 <p className="font-medium">2024-01-01</p>
               </div>
