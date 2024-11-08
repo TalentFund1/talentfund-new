@@ -55,7 +55,7 @@ const locations: Location[] = [
 ];
 
 export const MarketAnalysisTabs = () => {
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>(["profiles"]);
 
   const toggleFilter = (filter: string) => {
     setSelectedFilters(prev => 
@@ -80,7 +80,7 @@ export const MarketAnalysisTabs = () => {
             <div className="space-y-6">
               <Card className="overflow-hidden border border-border">
                 <div className="h-[400px] w-full overflow-hidden">
-                  <HeatMap locations={locations} />
+                  <HeatMap locations={locations} selectedFilters={selectedFilters} />
                 </div>
 
                 <div className="border-t border-border bg-secondary p-6">

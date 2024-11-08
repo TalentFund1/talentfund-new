@@ -5,15 +5,22 @@ import { Location } from './types';
 
 interface HeatMapProps {
   locations: Location[];
+  selectedFilters: string[];
 }
 
-export const HeatMap = ({ locations }: HeatMapProps) => {
+export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
   const [map, setMap] = useState<L.Map | null>(null);
   const [heatLayer, setHeatLayer] = useState<L.HeatLayer | null>(null);
   const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    if (mapRef.current && !heatLayer) {
+    if (mapRef.current && selectedFilters.includes('profiles')) {
+      // Remove existing heat layer if it exists
+      if (heatLayer) {
+        mapRef.current.removeLayer(heatLayer);
+        setHeatLayer(null);
+      }
+
       const points = locations.map(loc => [
         ...loc.position,
         loc.profiles / 1000
@@ -34,6 +41,10 @@ export const HeatMap = ({ locations }: HeatMapProps) => {
       
       heat.addTo(mapRef.current);
       setHeatLayer(heat);
+    } else if (mapRef.current && heatLayer) {
+      // Remove heat layer if profiles filter is not selected
+      mapRef.current.removeLayer(heatLayer);
+      setHeatLayer(null);
     }
 
     return () => {
@@ -42,7 +53,7 @@ export const HeatMap = ({ locations }: HeatMapProps) => {
         setHeatLayer(null);
       }
     };
-  }, [mapRef.current, locations]);
+  }, [mapRef.current, locations, selectedFilters]);
 
   return (
     <MapContainer 
