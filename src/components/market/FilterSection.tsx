@@ -122,6 +122,8 @@ export const FilterSection = ({
         </div>
       </div>
 
+      <Separator className="my-4" />
+
       <LocationFilter 
         selectedLocations={selectedLocations}
         onLocationChange={setSelectedLocations}
