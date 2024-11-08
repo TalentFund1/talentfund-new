@@ -72,7 +72,7 @@ const MarketData = () => {
                   </CollapsibleContent>
                 </Collapsible>
 
-                <div className="mt-8 bg-background -mx-8 -mb-8 p-8">
+                <div className="mt-6 bg-background -mx-8 -mb-8 p-6">
                   <TabsContent value="location" className="space-y-8 mt-0">
                     <GlobalLocationInsights />
                   </TabsContent>
