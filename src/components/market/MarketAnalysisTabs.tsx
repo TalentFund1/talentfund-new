@@ -55,13 +55,6 @@ export const MarketAnalysisTabs = ({ showGlobalInsights = true }: MarketAnalysis
   return (
     <Card className="p-8 mt-6 bg-white shadow-sm">
       <div className="space-y-8">
-        <div className="mt-12">
-          <Card className="overflow-hidden border border-border">
-            <div className="p-6 text-center text-muted-foreground">
-              Select filters above to view market analysis data
-            </div>
-          </Card>
-        </div>
       </div>
     </Card>
   );
