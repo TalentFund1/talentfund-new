@@ -55,6 +55,40 @@ export const FilterSection = ({
   const isRunDisabled = selectedJobs.length === 0 || 
     (activeTab === 'compensation' && selectedLocations.length === 0);
 
+  // Get dates for timeframe
+  const getCurrentMonthYear = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.toLocaleString('default', { month: 'short' });
+    return `${month} ${year}`;
+  };
+
+  const getPastFiveYears = () => {
+    const dates = [];
+    const currentDate = new Date();
+    for (let i = 0; i < 60; i++) { // 5 years * 12 months
+      const date = new Date(currentDate);
+      date.setMonth(currentDate.getMonth() - i);
+      const month = date.toLocaleString('default', { month: 'short' });
+      const year = date.getFullYear();
+      dates.push(`${month} ${year}`);
+    }
+    return dates;
+  };
+
+  // Generate graduation years from 1970 to current year + 5
+  const getGraduationYears = () => {
+    const years = [];
+    const currentYear = new Date().getFullYear();
+    for (let year = 1970; year <= currentYear + 5; year++) {
+      years.push(year.toString());
+    }
+    return years;
+  };
+
+  const graduationYears = getGraduationYears();
+  const timeframeOptions = getPastFiveYears();
+
   return (
     <div className="mt-4 border rounded-lg p-4 space-y-4">
       <SearchFilter
@@ -84,10 +118,9 @@ export const FilterSection = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="2020">2020</SelectItem>
-                <SelectItem value="2021">2021</SelectItem>
-                <SelectItem value="2022">2022</SelectItem>
-                <SelectItem value="2023">2023</SelectItem>
+                {graduationYears.map((year) => (
+                  <SelectItem key={year} value={year}>{year}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <span className="text-sm">to</span>
@@ -96,10 +129,9 @@ export const FilterSection = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="2024">2024</SelectItem>
-                <SelectItem value="2025">2025</SelectItem>
-                <SelectItem value="2026">2026</SelectItem>
-                <SelectItem value="2027">2027</SelectItem>
+                {graduationYears.map((year) => (
+                  <SelectItem key={year} value={year}>{year}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -143,25 +175,25 @@ export const FilterSection = ({
       <div className="space-y-2">
         <label className="text-sm text-muted-foreground">Timeframe</label>
         <div className="flex items-center gap-2">
-          <Select defaultValue="may2023">
+          <Select defaultValue={timeframeOptions[0]}>
             <SelectTrigger className="w-[120px] bg-white">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="may2023">May 2023</SelectItem>
-              <SelectItem value="jun2023">Jun 2023</SelectItem>
-              <SelectItem value="jul2023">Jul 2023</SelectItem>
+              {timeframeOptions.map((date) => (
+                <SelectItem key={date} value={date}>{date}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <span className="text-sm">to</span>
-          <Select defaultValue="may2024">
+          <Select defaultValue={getCurrentMonthYear()}>
             <SelectTrigger className="w-[120px] bg-white">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="may2024">May 2024</SelectItem>
-              <SelectItem value="jun2024">Jun 2024</SelectItem>
-              <SelectItem value="jul2024">Jul 2024</SelectItem>
+              {timeframeOptions.map((date) => (
+                <SelectItem key={date} value={date}>{date}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
