@@ -32,14 +32,6 @@ const MarketData = () => {
               />
 
               <SearchFilter
-                label="Companies"
-                placeholder="Search companies..."
-                items={companies}
-                selectedItems={selectedCompanies}
-                onItemsChange={setSelectedCompanies}
-              />
-
-              <SearchFilter
                 label="Skills"
                 placeholder="Search skills..."
                 items={skills}
@@ -123,6 +115,14 @@ const MarketData = () => {
                   </Select>
                 </div>
               </div>
+
+              <SearchFilter
+                label="Companies"
+                placeholder="Search companies..."
+                items={companies}
+                selectedItems={selectedCompanies}
+                onItemsChange={setSelectedCompanies}
+              />
 
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => {
