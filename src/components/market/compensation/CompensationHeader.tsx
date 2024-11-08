@@ -30,6 +30,8 @@ export const CompensationHeader = () => {
             </div>
           </div>
 
+          <Separator className="mb-6" />
+
           <div className="flex justify-between items-start">
             <div>
               <div className="flex items-center gap-2">
