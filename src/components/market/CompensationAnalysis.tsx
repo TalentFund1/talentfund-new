@@ -34,15 +34,17 @@ export const CompensationAnalysis = () => {
               </div>
             </div>
 
-            <div className="flex justify-between mt-8">
-              <div className="flex-1">
-                <div className="flex flex-col items-start">
-                  <p className="text-secondary-foreground">Function</p>
-                  <p className="font-medium text-primary mt-1">Technology</p>
-                </div>
-                <div className="flex flex-col items-start mt-4">
-                  <p className="text-secondary-foreground">Occupation</p>
-                  <p className="font-medium text-primary mt-1">Software Developer</p>
+            <div className="flex mt-8">
+              <div className="flex-1 flex items-center">
+                <div className="grid grid-cols-2 gap-x-12 w-full max-w-md">
+                  <div>
+                    <p className="text-secondary-foreground">Function</p>
+                    <p className="font-medium text-primary mt-1">Technology</p>
+                  </div>
+                  <div>
+                    <p className="text-secondary-foreground">Occupation</p>
+                    <p className="font-medium text-primary mt-1">Software Developer</p>
+                  </div>
                 </div>
               </div>
               <div className="flex-1 flex justify-end space-x-4">
