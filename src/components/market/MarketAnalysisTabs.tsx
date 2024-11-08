@@ -9,6 +9,8 @@ import 'leaflet.heat';
 import { LocationsTable } from "./LocationsTable";
 import { HeatMap } from "./HeatMap";
 import { Location } from "./types";
+import { CompensationOverview } from "./CompensationOverview";
+import { CompensationTable } from "./CompensationTable";
 
 // Fix for default marker icon in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -54,6 +56,48 @@ const locations: Location[] = [
   }
 ];
 
+const mockSalaryData = [
+  {
+    role: "Artificial Engineer",
+    level: "P3",
+    currency: "USD",
+    range: "$110,000 -115,000",
+    percentiles: {
+      p10: "$110,500",
+      p25: "$111,250",
+      p50: "$112,500",
+      p75: "$113,750",
+      p90: "$114,500"
+    }
+  },
+  {
+    role: "Artificial Engineer",
+    level: "P4",
+    currency: "USD",
+    range: "$120,000 -125,000",
+    percentiles: {
+      p10: "$120,500",
+      p25: "$121,500",
+      p50: "$122,500",
+      p75: "$123,750",
+      p90: "$124,500"
+    }
+  },
+  {
+    role: "Artificial Engineer",
+    level: "P5",
+    currency: "USD",
+    range: "$130,000 -145,000",
+    percentiles: {
+      p10: "$131,500",
+      p25: "$133,750",
+      p50: "$137,500",
+      p75: "$141,250",
+      p90: "$143,500"
+    }
+  }
+];
+
 export const MarketAnalysisTabs = () => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>(["profiles"]);
 
@@ -66,7 +110,7 @@ export const MarketAnalysisTabs = () => {
   };
 
   return (
-    <Card className="p-8 mt-6 bg-white shadow-sm">
+    <Card className="mt-6">
       <Tabs defaultValue="location" className="w-full">
         <div className="border-b border-border">
           <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0">
@@ -85,56 +129,32 @@ export const MarketAnalysisTabs = () => {
           </TabsList>
         </div>
         
-        <TabsContent value="location" className="pt-6">
+        <TabsContent value="location" className="p-6 bg-white rounded-b-lg">
           <div className="space-y-6">
-            <div className="space-y-6">
-              <Card className="overflow-hidden border border-border">
-                <div className="h-[400px] w-full overflow-hidden">
-                  <HeatMap locations={locations} selectedFilters={selectedFilters} />
-                </div>
-
-                <div className="border-t border-border bg-secondary p-6">
-                  <div className="flex items-center gap-8">
-                    <span className="text-sm font-medium text-primary">Display:</span>
-                    <div className="flex items-center gap-6">
-                      {[
-                        { id: "profiles", label: "Profiles" },
-                        { id: "uniqueJobs", label: "Unique Jobs" },
-                        { id: "compensation", label: "Compensation" },
-                        { id: "diversity", label: "Diversity" }
-                      ].map((filter) => (
-                        <div key={filter.id} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={filter.id}
-                            checked={selectedFilters.includes(filter.id)}
-                            onCheckedChange={() => toggleFilter(filter.id)}
-                            className="h-4 w-4 rounded border-primary data-[state=checked]:bg-[#4285f4] data-[state=checked]:border-[#4285f4]"
-                          />
-                          <Label
-                            htmlFor={filter.id}
-                            className="text-sm font-medium leading-none text-primary cursor-pointer"
-                          >
-                            {filter.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="overflow-hidden border border-border">
-                <LocationsTable locations={locations} />
-              </Card>
-            </div>
+            <HeatMap locations={locations} selectedFilters={selectedFilters} />
+            <LocationsTable locations={locations} />
           </div>
         </TabsContent>
         
-        <TabsContent value="compensation" className="pt-6">
-          <div>
-            <p className="text-sm text-muted-foreground">
-              Compensation analysis data will be displayed here.
-            </p>
+        <TabsContent value="compensation" className="p-6 bg-white rounded-b-lg">
+          <div className="space-y-6">
+            <CompensationOverview 
+              title="Artificial Engineer"
+              location="New York, NYC"
+              function="Technology"
+              occupation="Software Developer"
+              matchingProfiles={8745}
+              regionalDiversity="58%"
+              medianSalary="$140,456"
+              salaryObservations={749}
+              jobDescription="AI engineer engineer will join a multidisciplinary team helping to shape our AI strategy and showcasing the potential for AI through early-stage solutions. This is an excellent opportunity to take advantage of emerging trends and technologies and make a real-world difference."
+            />
+            <CompensationTable 
+              salaryRange="$130,456 - $170,439"
+              observations="There are 749 advertised salary observations (10% of the 6,749 matching postings)."
+              locationData="Typical compensation in New York, NYC ranges from $130,456 - $170,439. The median wage is $150,447, which is about the same as the national median. When you adjust the median wage for location cost of living (which is 2.4% below the average) workers 'feel like' they make $154,147."
+              salaryData={mockSalaryData}
+            />
           </div>
         </TabsContent>
       </Tabs>
