@@ -35,14 +35,6 @@ export const CompensationAnalysis = () => {
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-              <div className="flex flex-col items-center justify-center">
-                <p className="text-secondary-foreground">Function</p>
-                <p className="font-medium text-primary mt-1">Technology</p>
-              </div>
-              <div className="flex flex-col items-center justify-center">
-                <p className="text-secondary-foreground">Occupation</p>
-                <p className="font-medium text-primary mt-1">Software Developer</p>
-              </div>
               <Card className="p-4">
                 <div className="flex items-start justify-between">
                   <div>
@@ -63,6 +55,14 @@ export const CompensationAnalysis = () => {
                   <Building2 className="h-5 w-5 text-primary-accent" />
                 </div>
               </Card>
+              <div className="flex flex-col items-end justify-center">
+                <p className="text-secondary-foreground">Function</p>
+                <p className="font-medium text-primary mt-1">Technology</p>
+              </div>
+              <div className="flex flex-col items-end justify-center">
+                <p className="text-secondary-foreground">Occupation</p>
+                <p className="font-medium text-primary mt-1">Software Developer</p>
+              </div>
             </div>
 
             <Separator className="my-6" />
