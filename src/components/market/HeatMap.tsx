@@ -129,9 +129,9 @@ export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
                 radius={getRadius(value, filter)}
                 fillColor={style.fillColor}
                 color={style.color}
-                weight={1}
-                opacity={0.8}
-                fillOpacity={0.35}
+                weight={0.5}
+                opacity={0.6}
+                fillOpacity={0.25}
               >
                 <Popup>
                   <div className="p-2">
