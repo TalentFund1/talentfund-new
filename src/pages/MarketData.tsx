@@ -36,27 +36,27 @@ const MarketData = () => {
               </Button>
             </div>
 
+            <Separator className="mb-6" />
+
             <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-              <CollapsibleContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <SearchFilter
-                    label="Job Titles"
-                    placeholder="Search job titles..."
-                    items={jobTitles}
-                    selectedItems={selectedJobs}
-                    onItemsChange={setSelectedJobs}
-                  />
+              <CollapsibleContent className="space-y-8">
+                <SearchFilter
+                  label="Job Titles"
+                  placeholder="Search job titles..."
+                  items={jobTitles}
+                  selectedItems={selectedJobs}
+                  onItemsChange={setSelectedJobs}
+                />
 
-                  <SearchFilter
-                    label="Skills"
-                    placeholder="Search skills..."
-                    items={skills}
-                    selectedItems={selectedSkills}
-                    onItemsChange={setSelectedSkills}
-                  />
-                </div>
+                <SearchFilter
+                  label="Skills"
+                  placeholder="Search skills..."
+                  items={skills}
+                  selectedItems={selectedSkills}
+                  onItemsChange={setSelectedSkills}
+                />
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-8">
                   <div className="space-y-2">
                     <label className="text-sm text-muted-foreground">Graduation Year</label>
                     <div className="flex items-center gap-2">
@@ -103,20 +103,18 @@ const MarketData = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <LocationFilter 
-                    selectedLocations={selectedLocations}
-                    onLocationChange={setSelectedLocations}
-                  />
+                <LocationFilter 
+                  selectedLocations={selectedLocations}
+                  onLocationChange={setSelectedLocations}
+                />
 
-                  <SearchFilter
-                    label="Companies"
-                    placeholder="Search companies..."
-                    items={companies}
-                    selectedItems={selectedCompanies}
-                    onItemsChange={setSelectedCompanies}
-                  />
-                </div>
+                <SearchFilter
+                  label="Companies"
+                  placeholder="Search companies..."
+                  items={companies}
+                  selectedItems={selectedCompanies}
+                  onItemsChange={setSelectedCompanies}
+                />
 
                 <div className="space-y-2">
                   <label className="text-sm text-muted-foreground">Timeframe</label>
@@ -145,7 +143,9 @@ const MarketData = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-2 pt-4">
+                <Separator />
+
+                <div className="flex justify-end gap-2">
                   <Button 
                     variant="outline" 
                     onClick={() => {
