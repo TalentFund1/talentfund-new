@@ -10,7 +10,7 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
     <Table>
       <TableHeader>
         <TableRow className="bg-secondary">
-          <TableHead className="font-medium text-sm text-primary py-4">Location</TableHead>
+          <TableHead className="font-medium text-sm text-primary py-4 w-[300px]">Location</TableHead>
           <TableHead className="text-right font-medium text-sm text-primary py-4">Number of Profiles ↑</TableHead>
           <TableHead className="text-right font-medium text-sm text-primary py-4">Number of Unique Jobs ↑</TableHead>
           <TableHead className="text-right font-medium text-sm text-primary py-4">Median Compensation ↑</TableHead>
