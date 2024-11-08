@@ -14,7 +14,7 @@ export const jobTitles = [
   "System Architect",
   "Technical Lead",
   "Engineering Manager",
-  "Artificial Intelligence Engineer"
+  "Artificial Engineer" // Updated title
 ];
 
 export const companies = [
