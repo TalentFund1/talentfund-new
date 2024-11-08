@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 
-const technicalSkills = [
+export const technicalSkills = [
   // Programming Languages
   "JavaScript", "TypeScript", "Python", "Java", "C++", "Ruby", "Go", "Rust", "PHP", "Swift",
   
@@ -39,7 +39,7 @@ const technicalSkills = [
   "Git", "GitHub", "Bitbucket", "GitLab", "Version Control Best Practices"
 ];
 
-const softSkills = [
+export const softSkills = [
   // Leadership & Management
   "Team Leadership", "Project Management", "Strategic Planning", "Decision Making",
   "Conflict Resolution", "Change Management", "Performance Management",
