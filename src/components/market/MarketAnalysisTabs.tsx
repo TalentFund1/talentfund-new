@@ -110,6 +110,29 @@ export const MarketAnalysisTabs = () => {
           </Button>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            title="Total Profiles"
+            value="2,845"
+            icon={<Users className="h-6 w-6" />}
+          />
+          <StatCard
+            title="Median Base Salary"
+            value="$125,000"
+            icon={<DollarSign className="h-6 w-6" />}
+          />
+          <StatCard
+            title="YoY Growth"
+            value="12.5%"
+            icon={<TrendingUp className="h-6 w-6" />}
+          />
+          <StatCard
+            title="Time in Role"
+            value="2.3 years"
+            icon={<Clock className="h-6 w-6" />}
+          />
+        </div>
+
         <div className="overflow-hidden border border-border rounded-lg">
           <div className="flex justify-between items-center p-4 border-b border-border">
             <h3 className="text-xl font-semibold">Global Location Insights</h3>
@@ -146,29 +169,6 @@ export const MarketAnalysisTabs = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            title="Total Profiles"
-            value="2,845"
-            icon={<Users className="h-6 w-6" />}
-          />
-          <StatCard
-            title="Median Base Salary"
-            value="$125,000"
-            icon={<DollarSign className="h-6 w-6" />}
-          />
-          <StatCard
-            title="YoY Growth"
-            value="12.5%"
-            icon={<TrendingUp className="h-6 w-6" />}
-          />
-          <StatCard
-            title="Time in Role"
-            value="2.3 years"
-            icon={<Clock className="h-6 w-6" />}
-          />
         </div>
 
         <div className="mt-12">
