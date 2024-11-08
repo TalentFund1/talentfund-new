@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Building2, Users } from "lucide-react";
+import { Building2, Download, Users } from "lucide-react";
 import { useState } from "react";
 
 export const CompensationHeader = () => {
@@ -12,16 +12,23 @@ export const CompensationHeader = () => {
       <div className="space-y-4">
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xl font-semibold text-primary">Supply and Demand Analysis</h3>
-            <Button 
-              variant="default"
-              className="bg-[#1F2144] text-white hover:bg-[#1F2144]/90"
-            >
-              Add Skill Profile
-            </Button>
+            <h3 className="text-xl font-semibold text-primary">Market Analysis</h3>
+            <div className="space-x-2">
+              <Button 
+                variant="outline"
+                className="text-primary hover:text-primary/90"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Export Data
+              </Button>
+              <Button 
+                variant="default"
+                className="bg-[#1F2144] text-white hover:bg-[#1F2144]/90"
+              >
+                Add Skill Profile
+              </Button>
+            </div>
           </div>
-
-          <Separator className="mb-6 bg-border" />
 
           <div className="flex justify-between items-start">
             <div>
@@ -69,8 +76,6 @@ export const CompensationHeader = () => {
               </Card>
             </div>
           </div>
-
-          <Separator className="my-4" />
 
           <div>
             <h3 className="text-lg font-semibold mb-2">Job Description</h3>
