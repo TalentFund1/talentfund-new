@@ -27,7 +27,7 @@ export const JobPostingStats = () => {
         <div>
           <h3 className="text-xl font-semibold text-primary mb-4">Job Postings vs. Hires</h3>
           <p className="text-secondary-foreground mb-4">
-            In an average month, there are 1,749 unique job postings for Artificial Engineer from May 2023 to May 2024, of which 6,345 were unique. These numbers give us a Posting Intensity of 6-to-1, meaning that for every 6 postings, there is 1 unique job posting.
+            In an average month, there are <strong>1,749</strong> unique job postings for Artificial Engineer from May 2023 to May 2024, of which <strong>6,345</strong> were unique. These numbers give us a Posting Intensity of <strong>6-to-1</strong>, meaning that for every 6 postings, there is 1 unique job posting.
           </p>
           <p className="text-secondary-foreground mb-6">
             This is close to the Posting Intensity for all other occupations and companies in the location (6-to-1), indicating that they are making an average effort toward hiring for this position.
