@@ -53,7 +53,7 @@ const MarketData = () => {
               />
 
               <div className="space-y-2">
-                <label className="text-sm block">Select Graduation Year Range</label>
+                <label className="text-sm block">Select Graduation Year</label>
                 <div className="flex items-center gap-2">
                   <Select defaultValue="2020">
                     <SelectTrigger className="w-[120px]">
