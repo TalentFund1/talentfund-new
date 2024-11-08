@@ -60,7 +60,6 @@ const managerialLevels = [
     role: "Artificial Engineer Manager",
     level: "M4",
     currency: "USD",
-    currency: "USD",
     range: "$180,000-205,000",
     percentiles: ["$181,500", "$186,250", "$192,500", "$198,750", "$203,500"]
   },
