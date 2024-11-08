@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { FilterSection } from '@/components/market/FilterSection';
 import { CompensationAnalysis } from '@/components/market/CompensationAnalysis';
 import { GlobalLocationInsights } from '@/components/market/GlobalLocationInsights';
+import { CompensationSegment } from '@/components/market/CompensationSegment';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
 
 const MarketData = () => {
@@ -69,6 +70,7 @@ const MarketData = () => {
                     skills={skills}
                     companies={companies}
                   />
+                  <CompensationSegment />
                 </TabsContent>
               </Tabs>
             </div>
