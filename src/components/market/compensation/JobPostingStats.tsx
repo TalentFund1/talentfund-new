@@ -12,12 +12,12 @@ const topCompanies = [
   { name: "Verizon Communications Inc.", profiles: 281 }
 ];
 
-const topJobTitles = [
-  { name: "Software Engineer", profiles: 2887 },
-  { name: ".NET Software Engineer", profiles: 1845 },
-  { name: "Software Developer", profiles: 1368 },
-  { name: "Software Development Engineer", profiles: 313 },
-  { name: "Application Developer", profiles: 280 }
+const moreCompanies = [
+  { name: "Oracle Corporation", profiles: 275 },
+  { name: "IBM Corporation", profiles: 268 },
+  { name: "Cisco Systems Inc.", profiles: 254 },
+  { name: "Intel Corporation", profiles: 243 },
+  { name: "Salesforce.com Inc.", profiles: 235 }
 ];
 
 export const JobPostingStats = () => {
@@ -73,9 +73,9 @@ export const JobPostingStats = () => {
           </Card>
           <Card className="p-6">
             <RankingSection 
-              title="Top Job Titles" 
-              items={topJobTitles}
-              maxProfiles={2887}
+              title="More Companies" 
+              items={moreCompanies}
+              maxProfiles={418}
             />
           </Card>
         </div>

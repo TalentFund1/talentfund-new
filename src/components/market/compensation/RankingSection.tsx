@@ -25,7 +25,7 @@ export const RankingSection = ({ title, items, maxProfiles }: RankingSectionProp
             <div className="flex items-center gap-3">
               <span className="text-sm text-secondary-foreground">{item.profiles.toLocaleString()}</span>
               <div 
-                className="h-2 bg-[#4285f4] rounded" 
+                className="h-2 bg-primary-accent rounded" 
                 style={{ 
                   width: `${(item.profiles / maxProfiles) * 100}px`
                 }} 
