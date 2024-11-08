@@ -1,11 +1,12 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { useState } from "react";
+import 'leaflet.heat';
+import { useState, useEffect } from "react";
 
 // Fix for default marker icon in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -53,6 +54,8 @@ const locations = [
 
 export const MarketAnalysisTabs = () => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [map, setMap] = useState<L.Map | null>(null);
+  const [heatLayer, setHeatLayer] = useState<L.HeatLayer | null>(null);
 
   const toggleFilter = (filter: string) => {
     setSelectedFilters(prev => 
@@ -61,6 +64,38 @@ export const MarketAnalysisTabs = () => {
         : [...prev, filter]
     );
   };
+
+  useEffect(() => {
+    if (map && !heatLayer) {
+      const points = locations.map(loc => [
+        ...loc.position,
+        loc.profiles / 1000 // Normalize the intensity based on profiles
+      ] as [number, number, number]);
+      
+      const heat = (L as any).heatLayer(points, {
+        radius: 25,
+        blur: 15,
+        maxZoom: 10,
+        max: Math.max(...locations.map(l => l.profiles)) / 1000,
+        gradient: {
+          0.4: 'blue',
+          0.6: 'lime',
+          0.8: 'yellow',
+          1.0: 'red'
+        }
+      });
+      
+      heat.addTo(map);
+      setHeatLayer(heat);
+    }
+
+    return () => {
+      if (map && heatLayer) {
+        map.removeLayer(heatLayer);
+        setHeatLayer(null);
+      }
+    };
+  }, [map]);
 
   return (
     <Card className="p-6 mt-6">
@@ -75,26 +110,14 @@ export const MarketAnalysisTabs = () => {
             <h3 className="text-lg font-semibold mb-4">Location Analysis</h3>
             <div style={{ height: "400px", width: "100%" }}>
               <MapContainer 
-                zoom={4}
                 center={[40.7128, -74.0060] as L.LatLngExpression}
+                zoom={4}
                 style={{ height: "100%", width: "100%" }}
-                zoomControl={true}
-                doubleClickZoom={true}
-                scrollWheelZoom={false}
-                dragging={true}
+                whenCreated={setMap}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
-                {locations.map((location, index) => (
-                  <Marker 
-                    key={index} 
-                    position={location.position as L.LatLngExpression}
-                  >
-                    <Popup>{location.name}</Popup>
-                  </Marker>
-                ))}
               </MapContainer>
             </div>
 
