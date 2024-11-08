@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -54,6 +55,24 @@ const employees: Employee[] = [
 ];
 
 export const EmployeeTable = () => {
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedEmployees(employees.map(emp => emp.name));
+    } else {
+      setSelectedEmployees([]);
+    }
+  };
+
+  const handleSelectEmployee = (checked: boolean, employeeName: string) => {
+    if (checked) {
+      setSelectedEmployees(prev => [...prev, employeeName]);
+    } else {
+      setSelectedEmployees(prev => prev.filter(name => name !== employeeName));
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg">
       <div className="relative">
@@ -62,7 +81,11 @@ export const EmployeeTable = () => {
             <tr className="border-b border-border">
               <th className="h-16 px-3 text-sm font-medium text-muted-foreground w-[5%]">
                 <div className="flex items-center justify-center">
-                  <Checkbox />
+                  <Checkbox 
+                    checked={selectedEmployees.length === employees.length}
+                    onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
                 </div>
               </th>
               <th className="h-16 px-3 text-sm font-medium text-muted-foreground text-left w-[22%]">
@@ -82,7 +105,11 @@ export const EmployeeTable = () => {
               <tr key={employee.name} className="h-16 border-t border-border hover:bg-muted/50 transition-colors">
                 <td className="px-3">
                   <div className="flex items-center justify-center">
-                    <Checkbox />
+                    <Checkbox 
+                      checked={selectedEmployees.includes(employee.name)}
+                      onCheckedChange={(checked) => handleSelectEmployee(checked as boolean, employee.name)}
+                      className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    />
                   </div>
                 </td>
                 <td className="px-3">
