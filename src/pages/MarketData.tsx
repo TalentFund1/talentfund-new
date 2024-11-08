@@ -89,7 +89,7 @@ const MarketData = () => {
                 </Collapsible>
 
                 <TabsContent value="location" className="space-y-8 mt-8">
-                  <GlobalLocationInsights isVisible={showResults} />
+                  <GlobalLocationInsights />
                 </TabsContent>
                 
                 <TabsContent value="compensation" className="mt-8">
