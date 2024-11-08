@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
 import { Users, Briefcase, Equal, Clock, ChevronLeft, ChevronRight } from "lucide-react";
@@ -13,8 +13,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
+import { SearchFilter } from '@/components/market/SearchFilter';
+import { technicalSkills, softSkills } from '@/components/EmployeeFilters';
 
 const SkillsProfile = () => {
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const allSkills = [...technicalSkills, ...softSkills];
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -30,7 +35,13 @@ const SkillsProfile = () => {
 
           <Card className="p-6">
             <div className="space-y-4">
-              <Input id="search" type="search" placeholder="Search Skills..." className="max-w-sm bg-white" />
+              <SearchFilter
+                label=""
+                placeholder="Search skills..."
+                items={allSkills}
+                selectedItems={selectedSkills}
+                onItemsChange={setSelectedSkills}
+              />
               
               <div className="flex flex-wrap gap-4">
                 <Select>
@@ -65,7 +76,12 @@ const SkillsProfile = () => {
                   </SelectContent>
                 </Select>
 
-                <Button variant="outline">Clear All</Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setSelectedSkills([])}
+                >
+                  Clear All
+                </Button>
               </div>
             </div>
           </Card>
