@@ -19,13 +19,7 @@ export const CompensationTrendsChart = () => {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <h3 className="text-xl font-semibold text-primary">Compensation Trends</h3>
-            <div className="flex items-center gap-4">
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-primary">5.2%</span>
-                <span className="text-sm text-secondary-foreground">Growth</span>
-              </div>
-              <div className="text-sm text-secondary-foreground">Apr 2024 - Oct 2024</div>
-            </div>
+            <div className="text-sm text-secondary-foreground">Apr 2024 - Oct 2024</div>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm">6M</Button>
