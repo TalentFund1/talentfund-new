@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -10,7 +11,7 @@ import { LocationsTable } from "./LocationsTable";
 import { HeatMap } from "./HeatMap";
 import { Location } from "./types";
 import { StatCard } from "@/components/StatCard";
-import { Users, DollarSign, TrendingUp, Clock } from "lucide-react";
+import { Users, DollarSign, TrendingUp, Clock, Download } from "lucide-react";
 
 // Fix for default marker icon in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -67,6 +68,33 @@ export const MarketAnalysisTabs = () => {
     );
   };
 
+  const handleExport = () => {
+    const csvContent = [
+      // CSV Headers
+      ["Location", "Profiles", "Unique Jobs", "Median Compensation", "Total Diversity", "Percent Diversity", "Posting Intensity", "Median Duration"],
+      // CSV Data
+      ...locations.map(loc => [
+        loc.name,
+        loc.profiles,
+        loc.uniqueJobs,
+        loc.medianCompensation,
+        loc.totalDiversity,
+        loc.percentDiversity,
+        loc.postingIntensity,
+        loc.medianDuration
+      ])
+    ].map(row => row.join(",")).join("\n");
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'market_data.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Card className="p-8 mt-6 bg-white shadow-sm">
       <div className="space-y-4">
@@ -94,7 +122,18 @@ export const MarketAnalysisTabs = () => {
         </div>
 
         <div className="overflow-hidden border border-border rounded-lg">
-          <h3 className="text-xl font-semibold p-4 border-b border-border">Global Location Insights</h3>
+          <div className="flex justify-between items-center p-4 border-b border-border">
+            <h3 className="text-xl font-semibold">Global Location Insights</h3>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleExport}
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export Data
+            </Button>
+          </div>
           <div className="h-[400px] w-full overflow-hidden">
             <HeatMap locations={locations} selectedFilters={selectedFilters} />
           </div>
