@@ -76,13 +76,13 @@ export const MarketAnalysisTabs = () => {
           <div className="space-y-8">
             <h3 className="text-lg font-semibold text-primary">Location Analysis</h3>
             
-            <div className="space-y-0">
-              <div className="h-[400px] w-full rounded-t-lg overflow-hidden border border-border">
-                <HeatMap locations={locations} />
-              </div>
+            <div className="space-y-6">
+              <Card className="overflow-hidden border border-border">
+                <div className="h-[400px] w-full overflow-hidden">
+                  <HeatMap locations={locations} />
+                </div>
 
-              <Card className="rounded-t-none border-t-0 bg-secondary">
-                <div className="p-6">
+                <div className="border-t border-border bg-secondary p-6">
                   <div className="flex items-center gap-8">
                     <span className="text-sm font-medium text-primary">Display:</span>
                     <div className="flex items-center gap-6">
@@ -111,7 +111,7 @@ export const MarketAnalysisTabs = () => {
                 </div>
               </Card>
 
-              <Card className="mt-8 overflow-hidden border border-border p-0">
+              <Card className="overflow-hidden border border-border">
                 <LocationsTable locations={locations} />
               </Card>
             </div>
