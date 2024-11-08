@@ -6,8 +6,12 @@ export const CompensationAnalysis = () => {
   return (
     <div className="space-y-6">
       <CompensationHeader />
-      <JobPostingStats />
-      <CompensationTable />
+      <div className="mt-8">
+        <JobPostingStats />
+      </div>
+      <div className="mt-8">
+        <CompensationTable />
+      </div>
     </div>
   );
 };
