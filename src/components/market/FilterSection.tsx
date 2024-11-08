@@ -19,6 +19,7 @@ interface FilterSectionProps {
   companies: string[];
   onRun: () => void;
   onClearAll: () => void;
+  activeTab?: string;
 }
 
 export const FilterSection = ({
@@ -35,14 +36,24 @@ export const FilterSection = ({
   companies,
   onRun,
   onClearAll,
+  activeTab = 'location',
 }: FilterSectionProps) => {
   const handleRun = () => {
     if (selectedJobs.length === 0) {
       toast.error("Please select a job title before running the report");
       return;
     }
+
+    if (activeTab === 'compensation' && selectedLocations.length === 0) {
+      toast.error("Please select a location before running the market analysis report");
+      return;
+    }
+
     onRun();
   };
+
+  const isRunDisabled = selectedJobs.length === 0 || 
+    (activeTab === 'compensation' && selectedLocations.length === 0);
 
   return (
     <div className="mt-4 border rounded-lg p-4 space-y-4">
@@ -114,6 +125,7 @@ export const FilterSection = ({
       <LocationFilter 
         selectedLocations={selectedLocations}
         onLocationChange={setSelectedLocations}
+        required={activeTab === 'compensation'}
       />
 
       <SearchFilter
@@ -162,7 +174,7 @@ export const FilterSection = ({
         </Button>
         <Button 
           onClick={handleRun}
-          disabled={selectedJobs.length === 0}
+          disabled={isRunDisabled}
         >
           Run
         </Button>

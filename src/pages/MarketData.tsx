@@ -90,6 +90,7 @@ const MarketData = () => {
                         companies={companies}
                         onRun={handleRun}
                         onClearAll={handleClearAll}
+                        activeTab={activeTab}
                       />
                     </div>
                   </CollapsibleContent>

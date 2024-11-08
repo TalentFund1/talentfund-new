@@ -7,9 +7,14 @@ import { cn } from "@/lib/utils";
 interface LocationFilterProps {
   selectedLocations: string[];
   onLocationChange: (locations: string[]) => void;
+  required?: boolean;
 }
 
-export const LocationFilter = ({ selectedLocations, onLocationChange }: LocationFilterProps) => {
+export const LocationFilter = ({ 
+  selectedLocations, 
+  onLocationChange,
+  required = false 
+}: LocationFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -27,7 +32,6 @@ export const LocationFilter = ({ selectedLocations, onLocationChange }: Location
   }, []);
 
   const handleSelect = (location: string) => {
-    // Only allow one location to be selected
     onLocationChange([location]);
     setSearchQuery("");
     setIsOpen(false);
@@ -44,7 +48,10 @@ export const LocationFilter = ({ selectedLocations, onLocationChange }: Location
 
   return (
     <div className="space-y-2" ref={dropdownRef}>
-      <label className="text-sm mb-2 block">Location</label>
+      <label className="text-sm mb-2 block text-muted-foreground">
+        Location
+        {required && <span className="text-destructive ml-1">*</span>}
+      </label>
       <div className="relative">
         <div className="flex flex-wrap gap-2 mb-2">
           {selectedLocations.map((location) => (
