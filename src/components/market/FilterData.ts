@@ -13,7 +13,8 @@ export const jobTitles = [
   "QA Engineer",
   "System Architect",
   "Technical Lead",
-  "Engineering Manager"
+  "Engineering Manager",
+  "Artificial Intelligence Engineer"
 ];
 
 export const companies = [
