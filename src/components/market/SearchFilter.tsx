@@ -57,7 +57,6 @@ export const SearchFilter = ({
           onClick={() => setOpen(true)}
           readOnly
           className="bg-white"
-          value={selectedItems.join(", ")}
         />
         <CommandDialog open={open} onOpenChange={setOpen}>
           <Command className="rounded-lg border shadow-md">
