@@ -37,8 +37,8 @@ const MarketData = () => {
             </div>
 
             <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-              <CollapsibleContent className="space-y-6">
-                <div className="grid grid-cols-2 gap-6">
+              <CollapsibleContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
                   <SearchFilter
                     label="Job Titles"
                     placeholder="Search job titles..."
@@ -56,9 +56,7 @@ const MarketData = () => {
                   />
                 </div>
 
-                <Separator className="my-4" />
-
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm text-muted-foreground">Graduation Year</label>
                     <div className="flex items-center gap-2">
@@ -105,9 +103,7 @@ const MarketData = () => {
                   </div>
                 </div>
 
-                <Separator className="my-4" />
-
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-4">
                   <LocationFilter 
                     selectedLocations={selectedLocations}
                     onLocationChange={setSelectedLocations}
@@ -121,8 +117,6 @@ const MarketData = () => {
                     onItemsChange={setSelectedCompanies}
                   />
                 </div>
-
-                <Separator className="my-4" />
 
                 <div className="space-y-2">
                   <label className="text-sm text-muted-foreground">Timeframe</label>
