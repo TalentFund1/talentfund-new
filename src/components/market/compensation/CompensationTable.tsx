@@ -22,15 +22,15 @@ export const CompensationTable = () => {
           <Table>
             <TableHeader>
               <TableRow className="bg-secondary hover:bg-secondary">
-                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Role Name</TableHead>
-                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Level</TableHead>
-                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Currency</TableHead>
-                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Salary Range</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">10th</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">25th</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">50th</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">75th</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 bg-[#F7F9FF]/50">90th</TableHead>
+                <TableHead className="h-12 px-4 text-left font-medium text-sm text-primary py-4 border-r border-border">Role Name</TableHead>
+                <TableHead className="h-12 px-4 text-left font-medium text-sm text-primary py-4 border-r border-border">Level</TableHead>
+                <TableHead className="h-12 px-4 text-left font-medium text-sm text-primary py-4 border-r border-border">Currency</TableHead>
+                <TableHead className="h-12 px-4 text-left font-medium text-sm text-primary py-4 border-r border-border">Salary Range</TableHead>
+                <TableHead className="h-12 px-4 text-center font-medium text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">10th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-medium text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">25th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-medium text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">50th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-medium text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">75th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-medium text-sm text-primary py-4 bg-[#F7F9FF]/50">90th</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -84,14 +84,14 @@ export const CompensationTable = () => {
                     index % 2 === 0 ? 'bg-muted/5' : ''
                   }`}
                 >
-                  <TableCell className="px-4 py-4 font-semibold text-sm border-r border-border">{row.role}</TableCell>
-                  <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.level}</TableCell>
+                  <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.role}</TableCell>
+                  <TableCell className="px-4 py-4 text-sm border-r border-border">{row.level}</TableCell>
                   <TableCell className="px-4 py-4 text-sm border-r border-border">{row.currency}</TableCell>
-                  <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.range}</TableCell>
+                  <TableCell className="px-4 py-4 text-sm border-r border-border">{row.range}</TableCell>
                   {row.percentiles.map((value, i) => (
                     <TableCell 
                       key={i} 
-                      className="px-4 py-4 text-center font-medium text-sm border-r last:border-r-0 border-border bg-[#F7F9FF]/30 group-hover:bg-transparent"
+                      className="px-4 py-4 text-center text-sm border-r last:border-r-0 border-border bg-[#F7F9FF]/30 group-hover:bg-transparent"
                     >
                       {value}
                     </TableCell>
