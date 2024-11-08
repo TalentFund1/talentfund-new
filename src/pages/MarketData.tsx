@@ -37,8 +37,6 @@ const MarketData = () => {
                 </Button>
               </div>
 
-              <Separator className="mb-6" />
-
               <Tabs defaultValue="location" className="w-full">
                 <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
                   <TabsTrigger 
@@ -51,7 +49,7 @@ const MarketData = () => {
                     value="compensation" 
                     className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
                   >
-                    Supply and Demand Analysis
+                    Market Analysis
                   </TabsTrigger>
                 </TabsList>
 
