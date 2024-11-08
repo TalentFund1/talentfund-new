@@ -20,11 +20,11 @@ const MarketData = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 p-6 ml-16">
-        <div className="max-w-7xl mx-auto">
+      <div className="flex-1 p-8 ml-16">
+        <div className="max-w-7xl mx-auto space-y-8">
           <div className="bg-white rounded-lg shadow-sm">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
+            <div className="p-8">
+              <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-primary">Market Data</h2>
                 <Button 
                   variant="outline" 
@@ -37,7 +37,7 @@ const MarketData = () => {
                 </Button>
               </div>
 
-              <Separator className="mb-4" />
+              <Separator className="mb-6" />
 
               <Tabs defaultValue="location" className="w-full">
                 <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
@@ -57,29 +57,29 @@ const MarketData = () => {
 
                 <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
                   <CollapsibleContent>
-                    <FilterSection 
-                      selectedJobs={selectedJobs}
-                      setSelectedJobs={setSelectedJobs}
-                      selectedSkills={selectedSkills}
-                      setSelectedSkills={setSelectedSkills}
-                      selectedLocations={selectedLocations}
-                      setSelectedLocations={setSelectedLocations}
-                      selectedCompanies={selectedCompanies}
-                      setSelectedCompanies={setSelectedCompanies}
-                      jobTitles={jobTitles}
-                      skills={skills}
-                      companies={companies}
-                    />
+                    <div className="py-8">
+                      <FilterSection 
+                        selectedJobs={selectedJobs}
+                        setSelectedJobs={setSelectedJobs}
+                        selectedSkills={selectedSkills}
+                        setSelectedSkills={setSelectedSkills}
+                        selectedLocations={selectedLocations}
+                        setSelectedLocations={setSelectedLocations}
+                        selectedCompanies={selectedCompanies}
+                        setSelectedCompanies={setSelectedCompanies}
+                        jobTitles={jobTitles}
+                        skills={skills}
+                        companies={companies}
+                      />
+                    </div>
                   </CollapsibleContent>
                 </Collapsible>
 
-                <TabsContent value="location" className="space-y-8">
-                  <div className="mt-8">
-                    <GlobalLocationInsights />
-                  </div>
+                <TabsContent value="location" className="space-y-8 mt-8">
+                  <GlobalLocationInsights />
                 </TabsContent>
                 
-                <TabsContent value="compensation">
+                <TabsContent value="compensation" className="mt-8">
                   <CompensationAnalysis />
                 </TabsContent>
               </Tabs>

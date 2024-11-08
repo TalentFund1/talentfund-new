@@ -1,11 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
-import { Users, DollarSign, TrendingUp, Clock } from "lucide-react";
+import { Users, DollarSign, TrendingUp, Clock, Download } from "lucide-react";
 import { HeatMap } from "./HeatMap";
 import { LocationsTable } from "./LocationsTable";
 import { Location } from "./types";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -83,9 +82,9 @@ export const GlobalLocationInsights = () => {
   };
 
   return (
-    <Card className="p-8 mt-6 bg-white shadow-sm">
-      <div className="space-y-8">
-        <div className="flex justify-between items-center mb-6">
+    <Card className="p-8 mt-8 bg-white shadow-sm">
+      <div className="space-y-12">
+        <div className="flex justify-between items-center">
           <h3 className="text-xl font-semibold text-primary">Global Location Insights</h3>
           <Button 
             variant="outline" 
@@ -98,7 +97,7 @@ export const GlobalLocationInsights = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             title="Total Profiles"
             value="2,845"
