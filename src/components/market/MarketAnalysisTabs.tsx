@@ -98,7 +98,8 @@ export const MarketAnalysisTabs = () => {
   return (
     <Card className="p-8 mt-6 bg-white shadow-sm">
       <div className="space-y-8">
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-semibold text-primary">Global Location Insights</h3>
           <Button 
             variant="outline" 
             size="sm"
@@ -134,9 +135,6 @@ export const MarketAnalysisTabs = () => {
         </div>
 
         <div className="overflow-hidden border border-border rounded-lg">
-          <div className="flex justify-between items-center p-4 border-b border-border">
-            <h3 className="text-xl font-semibold">Global Location Insights</h3>
-          </div>
           <div className="h-[400px] w-full overflow-hidden">
             <HeatMap locations={locations} selectedFilters={selectedFilters} />
           </div>
