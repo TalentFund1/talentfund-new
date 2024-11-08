@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 
 const data = [
   { date: "Apr '24", salary: 115000, postings: 5800 },
-  { date: "May '24", salary: 116500, postings: 5900 },
-  { date: "Jun '24", salary: 118000, postings: 6000 },
-  { date: "Jul '24", salary: 117500, postings: 6100 },
-  { date: "Aug '24", salary: 119000, postings: 6200 },
-  { date: "Sep '24", salary: 120000, postings: 6300 },
-  { date: "Oct '24", salary: 121000, postings: 6400 }
+  { date: "May '24", salary: 118500, postings: 5900 },
+  { date: "Jun '24", salary: 116800, postings: 6000 },
+  { date: "Jul '24", salary: 119500, postings: 6100 },
+  { date: "Aug '24", salary: 117900, postings: 6200 },
+  { date: "Sep '24", salary: 120800, postings: 6300 },
+  { date: "Oct '24", salary: 121500, postings: 6400 }
 ];
 
 export const CompensationTrendsChart = () => {
