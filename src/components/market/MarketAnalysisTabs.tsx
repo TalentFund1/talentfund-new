@@ -74,7 +74,7 @@ export const MarketAnalysisTabs = () => {
         
         <TabsContent value="location" className="space-y-8">
           <div className="space-y-8">
-            <h3 className="text-lg font-semibold text-primary mb-6">Location Analysis</h3>
+            <h3 className="text-lg font-semibold text-primary">Location Analysis</h3>
             
             <div className="space-y-0">
               <div className="h-[400px] w-full rounded-t-lg overflow-hidden border border-border">
@@ -85,14 +85,14 @@ export const MarketAnalysisTabs = () => {
                 <div className="p-6">
                   <div className="flex items-center gap-8">
                     <span className="text-sm font-medium text-primary">Display:</span>
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-6">
                       {[
                         { id: "profiles", label: "Profiles" },
                         { id: "uniqueJobs", label: "Unique Jobs" },
                         { id: "compensation", label: "Compensation" },
                         { id: "diversity", label: "Diversity" }
                       ].map((filter) => (
-                        <div key={filter.id} className="flex items-center space-x-3">
+                        <div key={filter.id} className="flex items-center space-x-2">
                           <Checkbox 
                             id={filter.id}
                             checked={selectedFilters.includes(filter.id)}
@@ -111,7 +111,7 @@ export const MarketAnalysisTabs = () => {
                 </div>
               </Card>
 
-              <Card className="mt-12 overflow-hidden border border-border p-0">
+              <Card className="mt-8 overflow-hidden border border-border p-0">
                 <LocationsTable locations={locations} />
               </Card>
             </div>
