@@ -31,6 +31,8 @@ const MarketData = () => {
                 onItemsChange={setSelectedJobs}
               />
 
+              <Separator className="my-2" />
+
               <SearchFilter
                 label="Skills"
                 placeholder="Search skills..."
@@ -38,6 +40,8 @@ const MarketData = () => {
                 selectedItems={selectedSkills}
                 onItemsChange={setSelectedSkills}
               />
+
+              <Separator className="my-2" />
 
               <div className="grid grid-cols-2 gap-8">
                 <div className="space-y-1.5">
@@ -86,10 +90,14 @@ const MarketData = () => {
                 </div>
               </div>
 
+              <Separator className="my-2" />
+
               <LocationFilter 
                 selectedLocations={selectedLocations}
                 onLocationChange={setSelectedLocations}
               />
+
+              <Separator className="my-2" />
 
               <SearchFilter
                 label="Companies"
@@ -98,6 +106,8 @@ const MarketData = () => {
                 selectedItems={selectedCompanies}
                 onItemsChange={setSelectedCompanies}
               />
+
+              <Separator className="my-2" />
 
               <div className="space-y-1.5">
                 <label className="text-sm text-[#1F2144]">Select Timeframe</label>
@@ -126,7 +136,7 @@ const MarketData = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2">
+              <div className="flex justify-end gap-2 pt-4">
                 <Button 
                   variant="outline" 
                   onClick={() => {
