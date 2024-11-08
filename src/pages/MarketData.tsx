@@ -65,7 +65,7 @@ const MarketData = () => {
                       <SelectItem value="jul2023">Jul 2023</SelectItem>
                     </SelectContent>
                   </Select>
-                  <span className="text-sm">To</span>
+                  <span className="text-sm">to</span>
                   <Select defaultValue="may2024">
                     <SelectTrigger className="w-[120px]">
                       <SelectValue />
