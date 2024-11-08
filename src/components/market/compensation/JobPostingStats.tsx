@@ -2,6 +2,23 @@ import { StatCard } from "@/components/StatCard";
 import { Building2, Users, Clock, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { RankingSection } from "./RankingSection";
+
+const topCompanies = [
+  { name: "United Services Automobile Ass...", profiles: 418 },
+  { name: "Capital One Financial Corporation", profiles: 357 },
+  { name: "JPMorgan Chase & Co.", profiles: 312 },
+  { name: "Lockheed Martin Corporation", profiles: 306 },
+  { name: "Verizon Communications Inc.", profiles: 281 }
+];
+
+const topJobTitles = [
+  { name: "Software Engineer", profiles: 2887 },
+  { name: ".NET Software Engineer", profiles: 1845 },
+  { name: "Software Developer", profiles: 1368 },
+  { name: "Software Development Engineer", profiles: 313 },
+  { name: "Application Developer", profiles: 280 }
+];
 
 export const JobPostingStats = () => {
   return (
@@ -43,6 +60,23 @@ export const JobPostingStats = () => {
             description="Regional Average: 29"
             icon={<Calendar className="h-5 w-5" />}
           />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6">
+          <Card className="p-6">
+            <RankingSection 
+              title="Top Companies" 
+              items={topCompanies}
+              maxProfiles={418}
+            />
+          </Card>
+          <Card className="p-6">
+            <RankingSection 
+              title="Top Job Titles" 
+              items={topJobTitles}
+              maxProfiles={2887}
+            />
+          </Card>
         </div>
       </div>
     </Card>
