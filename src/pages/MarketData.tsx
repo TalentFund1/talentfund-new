@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { LocationFilter } from '@/components/market/LocationFilter';
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
+import { Separator } from "@/components/ui/separator";
 
 const MarketData = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
@@ -19,75 +20,72 @@ const MarketData = () => {
         <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
           <div className="space-y-6">
             <h2 className="text-2xl font-bold">Market Data</h2>
+            <Separator className="my-4" />
             
-            <div className="space-y-4">
-              <h3 className="font-medium">Search</h3>
-              
-              <div className="space-y-4">
-                <SearchFilter
-                  label="Job Titles"
-                  placeholder="Search job titles..."
-                  items={jobTitles}
-                  selectedItems={selectedJobs}
-                  onItemsChange={setSelectedJobs}
-                />
+            <div className="space-y-4">              
+              <SearchFilter
+                label="Job Titles"
+                placeholder="Search job titles..."
+                items={jobTitles}
+                selectedItems={selectedJobs}
+                onItemsChange={setSelectedJobs}
+              />
 
-                <SearchFilter
-                  label="Companies"
-                  placeholder="Search companies..."
-                  items={companies}
-                  selectedItems={selectedCompanies}
-                  onItemsChange={setSelectedCompanies}
-                />
+              <SearchFilter
+                label="Companies"
+                placeholder="Search companies..."
+                items={companies}
+                selectedItems={selectedCompanies}
+                onItemsChange={setSelectedCompanies}
+              />
 
-                <SearchFilter
-                  label="Skills"
-                  placeholder="Search skills..."
-                  items={skills}
-                  selectedItems={selectedSkills}
-                  onItemsChange={setSelectedSkills}
-                />
+              <SearchFilter
+                label="Skills"
+                placeholder="Search skills..."
+                items={skills}
+                selectedItems={selectedSkills}
+                onItemsChange={setSelectedSkills}
+              />
 
-                <LocationFilter 
-                  selectedLocations={selectedLocations}
-                  onLocationChange={setSelectedLocations}
-                />
+              <LocationFilter 
+                selectedLocations={selectedLocations}
+                onLocationChange={setSelectedLocations}
+              />
 
-                <div className="space-y-2">
-                  <label className="text-sm block">Select Timeframe</label>
-                  <div className="flex gap-2">
-                    <Select defaultValue="may2023">
-                      <SelectTrigger className="w-[120px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="may2023">May 2023</SelectItem>
-                        <SelectItem value="jun2023">Jun 2023</SelectItem>
-                        <SelectItem value="jul2023">Jul 2023</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Select defaultValue="may2024">
-                      <SelectTrigger className="w-[120px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="may2024">May 2024</SelectItem>
-                        <SelectItem value="jun2024">Jun 2024</SelectItem>
-                        <SelectItem value="jul2024">Jul 2024</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+              <div className="space-y-2">
+                <label className="text-sm block">Select Timeframe</label>
+                <div className="flex gap-2">
+                  <Select defaultValue="may2023">
+                    <SelectTrigger className="w-[120px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="may2023">May 2023</SelectItem>
+                      <SelectItem value="jun2023">Jun 2023</SelectItem>
+                      <SelectItem value="jul2023">Jul 2023</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select defaultValue="may2024">
+                    <SelectTrigger className="w-[120px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="may2024">May 2024</SelectItem>
+                      <SelectItem value="jun2024">Jun 2024</SelectItem>
+                      <SelectItem value="jul2024">Jul 2024</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
+              </div>
 
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline" onClick={() => {
-                    setSelectedJobs([]);
-                    setSelectedCompanies([]);
-                    setSelectedSkills([]);
-                    setSelectedLocations([]);
-                  }}>Clear All</Button>
-                  <Button>Run</Button>
-                </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => {
+                  setSelectedJobs([]);
+                  setSelectedCompanies([]);
+                  setSelectedSkills([]);
+                  setSelectedLocations([]);
+                }}>Clear All</Button>
+                <Button>Run</Button>
               </div>
             </div>
           </div>
