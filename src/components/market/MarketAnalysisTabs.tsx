@@ -98,7 +98,7 @@ export const MarketAnalysisTabs = () => {
                             id={filter.id}
                             checked={selectedFilters.includes(filter.id)}
                             onCheckedChange={() => toggleFilter(filter.id)}
-                            className="data-[state=checked]:bg-primary-accent data-[state=checked]:border-primary-accent"
+                            className="h-4 w-4 rounded border-primary data-[state=checked]:bg-[#4285f4] data-[state=checked]:border-[#4285f4]"
                           />
                           <Label
                             htmlFor={filter.id}
