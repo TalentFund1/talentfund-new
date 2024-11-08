@@ -17,12 +17,12 @@ const MarketData = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-4 bg-white rounded-lg p-6 shadow-sm">
-          <div className="space-y-4">
+        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-8 shadow-sm">
+          <div className="space-y-6">
             <h2 className="text-2xl font-bold text-[#1F2144]">Market Data</h2>
-            <Separator className="my-2" />
+            <Separator className="my-4" />
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">              
+            <div className="space-y-6">              
               <SearchFilter
                 label="Job Titles"
                 placeholder="Search job titles..."
@@ -44,6 +44,53 @@ const MarketData = () => {
                 onLocationChange={setSelectedLocations}
               />
 
+              <div className="grid grid-cols-2 gap-8">
+                <div className="space-y-1.5">
+                  <label className="text-sm text-[#1F2144]">Select Graduation Year</label>
+                  <div className="flex items-center gap-2">
+                    <Select defaultValue="2020">
+                      <SelectTrigger className="w-[120px] bg-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="2020">2020</SelectItem>
+                        <SelectItem value="2021">2021</SelectItem>
+                        <SelectItem value="2022">2022</SelectItem>
+                        <SelectItem value="2023">2023</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <span className="text-sm text-[#1F2144]">to</span>
+                    <Select defaultValue="2024">
+                      <SelectTrigger className="w-[120px] bg-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="2024">2024</SelectItem>
+                        <SelectItem value="2025">2025</SelectItem>
+                        <SelectItem value="2026">2026</SelectItem>
+                        <SelectItem value="2027">2027</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-sm text-[#1F2144]">Select Graduation Program</label>
+                  <Select defaultValue="">
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue placeholder="Select a program" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="bachelors">Bachelor's Degree</SelectItem>
+                      <SelectItem value="masters">Master's Degree</SelectItem>
+                      <SelectItem value="phd">Ph.D.</SelectItem>
+                      <SelectItem value="diploma">Diploma</SelectItem>
+                      <SelectItem value="certificate">Certificate</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
               <SearchFilter
                 label="Companies"
                 placeholder="Search companies..."
@@ -51,51 +98,6 @@ const MarketData = () => {
                 selectedItems={selectedCompanies}
                 onItemsChange={setSelectedCompanies}
               />
-
-              <div className="space-y-1.5">
-                <label className="text-sm text-[#1F2144]">Select Graduation Year</label>
-                <div className="flex items-center gap-2">
-                  <Select defaultValue="2020">
-                    <SelectTrigger className="w-[120px] bg-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="2020">2020</SelectItem>
-                      <SelectItem value="2021">2021</SelectItem>
-                      <SelectItem value="2022">2022</SelectItem>
-                      <SelectItem value="2023">2023</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <span className="text-sm text-[#1F2144]">to</span>
-                  <Select defaultValue="2024">
-                    <SelectTrigger className="w-[120px] bg-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="2024">2024</SelectItem>
-                      <SelectItem value="2025">2025</SelectItem>
-                      <SelectItem value="2026">2026</SelectItem>
-                      <SelectItem value="2027">2027</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-sm text-[#1F2144]">Select Graduation Program</label>
-                <Select defaultValue="">
-                  <SelectTrigger className="w-full bg-white">
-                    <SelectValue placeholder="Select a program" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bachelors">Bachelor's Degree</SelectItem>
-                    <SelectItem value="masters">Master's Degree</SelectItem>
-                    <SelectItem value="phd">Ph.D.</SelectItem>
-                    <SelectItem value="diploma">Diploma</SelectItem>
-                    <SelectItem value="certificate">Certificate</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
               <div className="space-y-1.5">
                 <label className="text-sm text-[#1F2144]">Select Timeframe</label>
@@ -123,21 +125,21 @@ const MarketData = () => {
                   </Select>
                 </div>
               </div>
-            </div>
 
-            <div className="flex justify-end gap-2 pt-4">
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setSelectedJobs([]);
-                  setSelectedCompanies([]);
-                  setSelectedSkills([]);
-                  setSelectedLocations([]);
-                }}
-              >
-                Clear All
-              </Button>
-              <Button>Run</Button>
+              <div className="flex justify-end gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setSelectedJobs([]);
+                    setSelectedCompanies([]);
+                    setSelectedSkills([]);
+                    setSelectedLocations([]);
+                  }}
+                >
+                  Clear All
+                </Button>
+                <Button>Run</Button>
+              </div>
             </div>
           </div>
         </div>
