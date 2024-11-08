@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { useState } from "react";
 
 // Fix for default marker icon in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -51,6 +52,16 @@ const locations = [
 ];
 
 export const MarketAnalysisTabs = () => {
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+  const toggleFilter = (filter: string) => {
+    setSelectedFilters(prev => 
+      prev.includes(filter) 
+        ? prev.filter(f => f !== filter)
+        : [...prev, filter]
+    );
+  };
+
   return (
     <Card className="p-6 mt-6">
       <Tabs defaultValue="location" className="w-full">
@@ -64,12 +75,19 @@ export const MarketAnalysisTabs = () => {
             <h3 className="text-lg font-semibold mb-4">Location Analysis</h3>
             <div style={{ height: "400px", width: "100%" }}>
               <MapContainer 
-                zoom={4} 
-                scrollWheelZoom={false}
+                center={[40.7128, -74.0060]}
                 style={{ height: "100%", width: "100%" }}
+                zoomControl={true}
+                doubleClickZoom={true}
+                scrollWheelZoom={false}
+                dragging={true}
+                animate={true}
+                easeLinearity={0.35}
+                defaultZoom={4}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
                 {locations.map((location, index) => (
                   <Marker 
@@ -82,57 +100,65 @@ export const MarketAnalysisTabs = () => {
               </MapContainer>
             </div>
 
-            <div className="mt-8">
-              <div className="flex items-center gap-8 mb-6">
-                <span className="font-medium">Display:</span>
-                <div className="flex items-center space-x-8">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="profiles" />
-                    <label htmlFor="profiles">Profiles</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="uniqueJobs" />
-                    <label htmlFor="uniqueJobs">Unique Jobs</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="compensation" />
-                    <label htmlFor="compensation">Compensation</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="diversity" />
-                    <label htmlFor="diversity">Diversity</label>
+            <div className="mt-8 space-y-6">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center gap-8">
+                  <span className="font-medium text-gray-700">Display:</span>
+                  <div className="flex items-center gap-6">
+                    {[
+                      { id: "profiles", label: "Profiles" },
+                      { id: "uniqueJobs", label: "Unique Jobs" },
+                      { id: "compensation", label: "Compensation" },
+                      { id: "diversity", label: "Diversity" }
+                    ].map((filter) => (
+                      <div key={filter.id} className="flex items-center space-x-2">
+                        <Checkbox 
+                          id={filter.id}
+                          checked={selectedFilters.includes(filter.id)}
+                          onCheckedChange={() => toggleFilter(filter.id)}
+                        />
+                        <label 
+                          htmlFor={filter.id}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          {filter.label}
+                        </label>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
 
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Location</TableHead>
-                    <TableHead className="text-right">Number of Profiles ↑</TableHead>
-                    <TableHead className="text-right">Number of Unique Jobs ↑</TableHead>
-                    <TableHead className="text-right">Median Compensation ↑</TableHead>
-                    <TableHead className="text-right">Total Diversity ↑</TableHead>
-                    <TableHead className="text-right">Percent Diversity</TableHead>
-                    <TableHead className="text-right">Posting Intensity</TableHead>
-                    <TableHead className="text-right">Median Posting Duration</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {locations.map((location) => (
-                    <TableRow key={location.name}>
-                      <TableCell>{location.name}</TableCell>
-                      <TableCell className="text-right">{location.profiles.toLocaleString()}</TableCell>
-                      <TableCell className="text-right">{location.uniqueJobs}</TableCell>
-                      <TableCell className="text-right">${location.medianCompensation.toLocaleString()}</TableCell>
-                      <TableCell className="text-right">{location.totalDiversity.toLocaleString()}</TableCell>
-                      <TableCell className="text-right">{location.percentDiversity}</TableCell>
-                      <TableCell className="text-right">{location.postingIntensity}</TableCell>
-                      <TableCell className="text-right">{location.medianDuration}</TableCell>
+              <div className="rounded-lg border shadow-sm">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-gray-50">
+                      <TableHead className="font-semibold">Location</TableHead>
+                      <TableHead className="text-right font-semibold">Number of Profiles ↑</TableHead>
+                      <TableHead className="text-right font-semibold">Number of Unique Jobs ↑</TableHead>
+                      <TableHead className="text-right font-semibold">Median Compensation ↑</TableHead>
+                      <TableHead className="text-right font-semibold">Total Diversity ↑</TableHead>
+                      <TableHead className="text-right font-semibold">Percent Diversity</TableHead>
+                      <TableHead className="text-right font-semibold">Posting Intensity</TableHead>
+                      <TableHead className="text-right font-semibold">Median Posting Duration</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {locations.map((location) => (
+                      <TableRow key={location.name} className="hover:bg-gray-50">
+                        <TableCell className="font-medium">{location.name}</TableCell>
+                        <TableCell className="text-right">{location.profiles.toLocaleString()}</TableCell>
+                        <TableCell className="text-right">{location.uniqueJobs}</TableCell>
+                        <TableCell className="text-right">${location.medianCompensation.toLocaleString()}</TableCell>
+                        <TableCell className="text-right">{location.totalDiversity.toLocaleString()}</TableCell>
+                        <TableCell className="text-right">{location.percentDiversity}</TableCell>
+                        <TableCell className="text-right">{location.postingIntensity}</TableCell>
+                        <TableCell className="text-right">{location.medianDuration}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
         </TabsContent>
