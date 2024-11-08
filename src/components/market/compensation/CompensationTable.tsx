@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 
 export const CompensationTable = () => {
   return (
-    <Card className="p-6 bg-white">
+    <Card className="p-6 bg-white shadow-sm">
       <div className="space-y-6">
         <div>
           <h3 className="text-xl font-semibold text-primary mb-4">Compensation Analysis</h3>
