@@ -32,12 +32,14 @@ export const MarketAnalysisTabs = () => {
             <h3 className="text-lg font-semibold mb-4">Location Analysis</h3>
             <div style={{ height: "400px", width: "100%" }}>
               <MapContainer 
-                center={[39.8283, -98.5795]} 
+                center={[39.8283, -98.5795] as [number, number]}
                 zoom={4} 
+                scrollWheelZoom={false}
                 style={{ height: "100%", width: "100%" }}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attributionControl={true}
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
                 {locations.map((location, index) => (
