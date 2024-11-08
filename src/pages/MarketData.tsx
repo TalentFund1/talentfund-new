@@ -4,6 +4,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { CompensationAnalysis } from '@/components/market/CompensationAnalysis';
 import { GlobalLocationInsights } from '@/components/market/GlobalLocationInsights';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
+import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,6 +36,8 @@ const MarketData = () => {
                   Filters
                 </Button>
               </div>
+
+              <Separator className="mb-6" />
 
               <Tabs defaultValue="location" className="w-full">
                 <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
