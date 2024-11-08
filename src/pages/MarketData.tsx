@@ -31,27 +31,6 @@ const MarketData = () => {
                 onItemsChange={setSelectedJobs}
               />
 
-              <SearchFilter
-                label="Companies"
-                placeholder="Search companies..."
-                items={companies}
-                selectedItems={selectedCompanies}
-                onItemsChange={setSelectedCompanies}
-              />
-
-              <SearchFilter
-                label="Skills"
-                placeholder="Search skills..."
-                items={skills}
-                selectedItems={selectedSkills}
-                onItemsChange={setSelectedSkills}
-              />
-
-              <LocationFilter 
-                selectedLocations={selectedLocations}
-                onLocationChange={setSelectedLocations}
-              />
-
               <div className="space-y-2">
                 <label className="text-sm block">Select Graduation Year</label>
                 <div className="flex items-center gap-2">
@@ -96,6 +75,27 @@ const MarketData = () => {
                   </SelectContent>
                 </Select>
               </div>
+
+              <SearchFilter
+                label="Companies"
+                placeholder="Search companies..."
+                items={companies}
+                selectedItems={selectedCompanies}
+                onItemsChange={setSelectedCompanies}
+              />
+
+              <SearchFilter
+                label="Skills"
+                placeholder="Search skills..."
+                items={skills}
+                selectedItems={selectedSkills}
+                onItemsChange={setSelectedSkills}
+              />
+
+              <LocationFilter 
+                selectedLocations={selectedLocations}
+                onLocationChange={setSelectedLocations}
+              />
 
               <div className="space-y-2">
                 <label className="text-sm block">Select Timeframe</label>
