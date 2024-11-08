@@ -38,15 +38,19 @@ export const SearchFilter = ({
   );
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <label className="text-sm text-muted-foreground">{label}</label>
-      <div className="relative">
-        <div className="flex flex-wrap gap-2 mb-2">
+      <div className="relative w-full">
+        <div className="flex flex-wrap gap-2 mb-2 min-h-[32px] max-w-full overflow-hidden">
           {selectedItems.map((item) => (
-            <Badge key={item} variant="secondary" className="flex items-center gap-1">
-              {item}
+            <Badge 
+              key={item} 
+              variant="secondary" 
+              className="flex items-center gap-1 max-w-full truncate"
+            >
+              <span className="truncate">{item}</span>
               <X 
-                className="h-3 w-3 cursor-pointer" 
+                className="h-3 w-3 cursor-pointer flex-shrink-0" 
                 onClick={() => removeItem(item)}
               />
             </Badge>
@@ -56,7 +60,7 @@ export const SearchFilter = ({
           placeholder={placeholder}
           onClick={() => setOpen(true)}
           readOnly
-          className="bg-white"
+          className="bg-white w-full"
         />
         <CommandDialog open={open} onOpenChange={setOpen}>
           <Command className="rounded-lg border shadow-md">
