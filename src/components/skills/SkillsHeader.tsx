@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { technicalSkills, softSkills } from '@/components/EmployeeFilters';
+import { Separator } from "@/components/ui/separator";
 
 export const SkillsHeader = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -17,6 +18,7 @@ export const SkillsHeader = () => {
           onItemsChange={setSelectedSkills}
         />
       </div>
+      <Separator className="my-4" />
     </div>
   );
 };
