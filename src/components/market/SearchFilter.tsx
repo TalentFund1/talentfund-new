@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
 
 interface SearchFilterProps {
   label: string;
@@ -28,7 +28,6 @@ export const SearchFilter = ({
       onItemsChange([...selectedItems, item]);
     }
     setSearchQuery("");
-    setIsOpen(false);
   };
 
   const removeItem = (item: string) => {
@@ -76,26 +75,22 @@ export const SearchFilter = ({
           onFocus={() => setIsOpen(true)}
           className="bg-white"
         />
-        <Command className="absolute w-full z-50 mt-2 rounded-lg border shadow-md bg-white">
-          <CommandList>
-            {isOpen && searchQuery && (
-              <>
-                <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
-                <CommandGroup>
-                  {filteredItems.map((item) => (
-                    <CommandItem
-                      key={item}
-                      onSelect={() => handleSelect(item)}
-                      className="cursor-pointer"
-                    >
-                      {item}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </>
-            )}
-          </CommandList>
-        </Command>
+        {isOpen && searchQuery && (
+          <Command className="absolute w-full z-50 mt-2 rounded-lg border shadow-md bg-white">
+            <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
+            <CommandGroup>
+              {filteredItems.map((item) => (
+                <CommandItem
+                  key={item}
+                  onSelect={() => handleSelect(item)}
+                  className="cursor-pointer"
+                >
+                  {item}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        )}
       </div>
     </div>
   );
