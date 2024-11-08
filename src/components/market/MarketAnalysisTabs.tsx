@@ -90,6 +90,7 @@ export const MarketAnalysisTabs = () => {
           <div className="space-y-6">
             <div className="space-y-6">
               <Card className="overflow-hidden border border-border">
+                <h3 className="text-xl font-semibold p-4 border-b border-border">Global Location Insights</h3>
                 <div className="h-[400px] w-full overflow-hidden">
                   <HeatMap locations={locations} selectedFilters={selectedFilters} />
                 </div>
