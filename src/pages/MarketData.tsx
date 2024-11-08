@@ -39,11 +39,6 @@ const MarketData = () => {
                 onItemsChange={setSelectedSkills}
               />
 
-              <LocationFilter 
-                selectedLocations={selectedLocations}
-                onLocationChange={setSelectedLocations}
-              />
-
               <div className="grid grid-cols-2 gap-8">
                 <div className="space-y-1.5">
                   <label className="text-sm text-[#1F2144]">Select Graduation Year</label>
@@ -90,6 +85,11 @@ const MarketData = () => {
                   </Select>
                 </div>
               </div>
+
+              <LocationFilter 
+                selectedLocations={selectedLocations}
+                onLocationChange={setSelectedLocations}
+              />
 
               <SearchFilter
                 label="Companies"
