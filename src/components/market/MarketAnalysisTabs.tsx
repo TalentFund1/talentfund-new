@@ -52,10 +52,5 @@ interface MarketAnalysisTabsProps {
 }
 
 export const MarketAnalysisTabs = ({ showGlobalInsights = true }: MarketAnalysisTabsProps) => {
-  return (
-    <Card className="p-8 mt-6 bg-white shadow-sm">
-      <div className="space-y-8">
-      </div>
-    </Card>
-  );
+  return null;
 };
