@@ -66,27 +66,25 @@ export const MarketAnalysisTabs = () => {
   };
 
   return (
-    <Card className="p-8 mt-6 bg-white shadow-sm">
+    <div className="mt-6">
       <Tabs defaultValue="location" className="w-full">
-        <div className="border-b border-border">
-          <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0">
-            <TabsTrigger 
-              value="location" 
-              className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-            >
-              Location Analysis
-            </TabsTrigger>
-            <TabsTrigger 
-              value="compensation" 
-              className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-            >
-              Compensation Analysis
-            </TabsTrigger>
-          </TabsList>
-        </div>
+        <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0">
+          <TabsTrigger 
+            value="location" 
+            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+          >
+            Location Analysis
+          </TabsTrigger>
+          <TabsTrigger 
+            value="compensation" 
+            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+          >
+            Compensation Analysis
+          </TabsTrigger>
+        </TabsList>
         
-        <TabsContent value="location" className="pt-6">
-          <div className="space-y-6">
+        <div className="bg-white p-6 rounded-lg mt-6">
+          <TabsContent value="location" className="space-y-6">
             <div className="space-y-6">
               <Card className="overflow-hidden border border-border">
                 <div className="h-[400px] w-full overflow-hidden">
@@ -127,17 +125,17 @@ export const MarketAnalysisTabs = () => {
                 <LocationsTable locations={locations} />
               </Card>
             </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="compensation" className="pt-6">
-          <div>
-            <p className="text-sm text-muted-foreground">
-              Compensation analysis data will be displayed here.
-            </p>
-          </div>
-        </TabsContent>
+          </TabsContent>
+          
+          <TabsContent value="compensation">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Compensation analysis data will be displayed here.
+              </p>
+            </div>
+          </TabsContent>
+        </div>
       </Tabs>
-    </Card>
+    </div>
   );
 };
