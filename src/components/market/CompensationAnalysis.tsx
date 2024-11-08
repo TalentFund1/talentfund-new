@@ -7,68 +7,91 @@ import { Button } from "@/components/ui/button";
 export const CompensationAnalysis = () => {
   return (
     <div className="space-y-6">
-      <Card className="p-8">
-        <div className="space-y-8">
-          {/* Header Section */}
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Compensation Analysis</h2>
-            <Button 
-              variant="default"
-              className="bg-[#1F2144] text-white hover:bg-[#1F2144]/90 rounded-lg"
-            >
-              Add Skill Profile
-            </Button>
-          </div>
-
-          {/* Job Title Section */}
+      {/* Job Overview Section */}
+      <Card className="p-6">
+        <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-[#1F2144] mb-2">Artificial Engineer</h1>
-            <p className="text-gray-600">New York, NYC</p>
-          </div>
-
-          {/* Function & Occupation */}
-          <div className="grid grid-cols-2 gap-x-16 max-w-md">
-            <div>
-              <p className="text-gray-600 mb-1">Function</p>
-              <p className="font-medium">Technology</p>
-            </div>
-            <div>
-              <p className="text-gray-600 mb-1">Occupation</p>
-              <p className="font-medium">Software Developer</p>
-            </div>
-          </div>
-
-          {/* Stats Cards */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="p-6 border border-[#CCDBFF]">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-gray-600 mb-2">Matching Profiles</p>
-                  <h3 className="text-3xl font-bold text-[#1F2144]">8,745</h3>
-                  <p className="text-gray-600 mt-1">Regional diversity: 58%</p>
-                </div>
-                <Users className="h-5 w-5 text-[#8073ec]" />
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
+                <p className="text-secondary-foreground mt-1">New York, NYC</p>
               </div>
-            </Card>
-            <Card className="p-6 border border-[#CCDBFF]">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-gray-600 mb-2">Median Advertised Salary</p>
-                  <h3 className="text-3xl font-bold text-[#1F2144]">$140,456</h3>
-                  <p className="text-gray-600 mt-1">749 salary observations</p>
-                </div>
-                <Building2 className="h-5 w-5 text-[#8073ec]" />
+              <Button 
+                variant="default"
+                className="bg-[#1F2144] text-white hover:bg-[#1F2144]/90"
+              >
+                Add Skill Profile
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div>
+                <p className="text-secondary-foreground">Function</p>
+                <p className="font-medium text-primary mt-1">Technology</p>
               </div>
-            </Card>
+              <div>
+                <p className="text-secondary-foreground">Occupation</p>
+                <p className="font-medium text-primary mt-1">Software Developer</p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card className="p-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-secondary-foreground">Matching Profiles</p>
+                    <h3 className="text-2xl font-bold text-primary mt-2">8,745</h3>
+                    <p className="text-sm text-secondary-foreground mt-1">Regional diversity: 58%</p>
+                  </div>
+                  <Users className="h-5 w-5 text-primary-accent" />
+                </div>
+              </Card>
+              <Card className="p-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
+                    <h3 className="text-2xl font-bold text-primary mt-2">$140,456</h3>
+                    <p className="text-sm text-secondary-foreground mt-1">749 salary observations</p>
+                  </div>
+                  <Building2 className="h-5 w-5 text-primary-accent" />
+                </div>
+              </Card>
+            </div>
+
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold mb-2">Job Description</h3>
+              <p className="text-secondary-foreground">
+                AI engineer engineer will join a multidisciplinary team helping to shape our AI strategy and showcasing the potential for AI through early-stage solutions. This is an excellent opportunity to take advantage of emerging trends and technologies and make a real-world difference.
+                <button className="text-primary-accent ml-2 hover:underline">See more</button>
+              </p>
+            </div>
           </div>
 
-          {/* Job Description */}
-          <div>
-            <h3 className="text-xl font-semibold mb-3">Job Description</h3>
-            <p className="text-gray-600">
-              AI engineer engineer will join a multidisciplinary team helping to shape our AI strategy and showcasing the potential for AI through early-stage solutions. This is an excellent opportunity to take advantage of emerging trends and technologies and make a real-world difference.
-              <button className="text-[#8073ec] ml-2 hover:underline">See more</button>
-            </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            <StatCard
+              title="Employers Competing"
+              value="114"
+              description="47,116 Total Employers"
+              icon={<Building2 className="h-5 w-5" />}
+            />
+            <StatCard
+              title="Unique Postings"
+              value="1,749"
+              description="8,116 Total Postings"
+              icon={<Users className="h-5 w-5" />}
+            />
+            <StatCard
+              title="Posting Intensity"
+              value="6:1"
+              description="Regional Average 6:1"
+              icon={<Clock className="h-5 w-5" />}
+            />
+            <StatCard
+              title="Medial Posting Duration"
+              value="27 Days"
+              description="Regional Average: 29"
+              icon={<Calendar className="h-5 w-5" />}
+            />
           </div>
         </div>
       </Card>
