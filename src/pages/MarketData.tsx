@@ -91,6 +91,14 @@ const MarketData = () => {
                 </div>
               </div>
 
+              <SearchFilter
+                label="Companies"
+                placeholder="Search companies..."
+                items={companies}
+                selectedItems={selectedCompanies}
+                onItemsChange={setSelectedCompanies}
+              />
+
               <div className="space-y-1.5">
                 <label className="text-sm text-[#1F2144]">Select Timeframe</label>
                 <div className="flex items-center gap-2">
@@ -117,14 +125,6 @@ const MarketData = () => {
                   </Select>
                 </div>
               </div>
-
-              <SearchFilter
-                label="Companies"
-                placeholder="Search companies..."
-                items={companies}
-                selectedItems={selectedCompanies}
-                onItemsChange={setSelectedCompanies}
-              />
 
               <div className="flex justify-end gap-2">
                 <Button 
