@@ -48,7 +48,7 @@ export const CompensationHeader = () => {
                 </div>
               </div>
               <div className="flex-1 flex justify-end space-x-4">
-                <Card className="p-4 w-64 bg-white">
+                <Card className="p-4 w-64">
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-sm text-secondary-foreground">Matching Profiles</p>
@@ -58,7 +58,7 @@ export const CompensationHeader = () => {
                     <Users className="h-5 w-5 text-primary-accent" />
                   </div>
                 </Card>
-                <Card className="p-4 w-64 bg-white">
+                <Card className="p-4 w-64">
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
