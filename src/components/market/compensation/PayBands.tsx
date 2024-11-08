@@ -87,8 +87,8 @@ export const PayBands = () => {
     <Card className="p-6">
       <h3 className="text-xl font-semibold text-primary mb-4">Pay Bands</h3>
       
-      <div className="space-y-4 text-muted-foreground">
-        <p className="text-lg">Salary Range: $130,456 - $170,439</p>
+      <div className="space-y-4 text-secondary-foreground">
+        <p>Salary Range: $130,456 - $170,439</p>
         <p>There are 749 advertised salary observations (11% of the 6749 matching postings).</p>
       </div>
       
