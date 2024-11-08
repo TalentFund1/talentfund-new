@@ -53,6 +53,12 @@ const MarketData = () => {
                   >
                     Compensation Analysis
                   </TabsTrigger>
+                  <TabsTrigger 
+                    value="filters" 
+                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                  >
+                    Filters
+                  </TabsTrigger>
                 </TabsList>
 
                 <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
@@ -81,6 +87,22 @@ const MarketData = () => {
                 
                 <TabsContent value="compensation" className="mt-8">
                   <CompensationAnalysis />
+                </TabsContent>
+
+                <TabsContent value="filters" className="mt-8">
+                  <FilterSection 
+                    selectedJobs={selectedJobs}
+                    setSelectedJobs={setSelectedJobs}
+                    selectedSkills={selectedSkills}
+                    setSelectedSkills={setSelectedSkills}
+                    selectedLocations={selectedLocations}
+                    setSelectedLocations={setSelectedLocations}
+                    selectedCompanies={selectedCompanies}
+                    setSelectedCompanies={setSelectedCompanies}
+                    jobTitles={jobTitles}
+                    skills={skills}
+                    companies={companies}
+                  />
                 </TabsContent>
               </Tabs>
             </div>
