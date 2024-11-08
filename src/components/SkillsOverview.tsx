@@ -91,11 +91,30 @@ export const SkillsOverview = () => {
         Here you can find an overview of skills in your organization, categorized into three levels. Check the Employee tab to explore further.
       </p>
 
-      <Tabs defaultValue="category" className="w-full mb-6" onValueChange={(value) => setSelectedView(value as "category" | "subcategory" | "skill")}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="category">Category</TabsTrigger>
-          <TabsTrigger value="subcategory">Subcategory</TabsTrigger>
-          <TabsTrigger value="skill">Skill Title</TabsTrigger>
+      <Tabs 
+        defaultValue="category" 
+        className="w-full mb-6" 
+        onValueChange={(value) => setSelectedView(value as "category" | "subcategory" | "skill")}
+      >
+        <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
+          <TabsTrigger 
+            value="category" 
+            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+          >
+            Category
+          </TabsTrigger>
+          <TabsTrigger 
+            value="subcategory" 
+            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+          >
+            Subcategory
+          </TabsTrigger>
+          <TabsTrigger 
+            value="skill" 
+            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+          >
+            Skill Title
+          </TabsTrigger>
         </TabsList>
       </Tabs>
 
