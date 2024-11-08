@@ -43,8 +43,8 @@ const MarketData = () => {
       <div className="flex-1 p-8 ml-16">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="bg-white rounded-lg shadow-sm">
-            <div className="p-8">
-              <div className="flex justify-between items-center mb-6">
+            <div className="p-8 space-y-8">
+              <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-primary">Market Data</h2>
                 <Button 
                   variant="outline" 
@@ -57,42 +57,40 @@ const MarketData = () => {
                 </Button>
               </div>
 
-              <Tabs defaultValue="location" onValueChange={setActiveTab}>
-                <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
+              <Tabs defaultValue="location" onValueChange={setActiveTab} className="space-y-8">
+                <TabsList className="w-full flex h-14 items-center justify-start bg-transparent p-0 border-b border-border">
                   <TabsTrigger 
                     value="location" 
-                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                    className="relative h-14 rounded-none border-b-2 border-transparent px-8 pb-4 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
                   >
                     Location Analysis
                   </TabsTrigger>
                   <TabsTrigger 
                     value="compensation" 
-                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                    className="relative h-14 rounded-none border-b-2 border-transparent px-8 pb-4 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
                   >
                     Market Analysis
                   </TabsTrigger>
                 </TabsList>
 
                 <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-                  <CollapsibleContent>
-                    <div className="py-8">
-                      <FilterSection 
-                        selectedJobs={selectedJobs}
-                        setSelectedJobs={setSelectedJobs}
-                        selectedSkills={selectedSkills}
-                        setSelectedSkills={setSelectedSkills}
-                        selectedLocations={selectedLocations}
-                        setSelectedLocations={setSelectedLocations}
-                        selectedCompanies={selectedCompanies}
-                        setSelectedCompanies={setSelectedCompanies}
-                        jobTitles={jobTitles}
-                        skills={skills}
-                        companies={companies}
-                        onRun={handleRun}
-                        onClearAll={handleClearAll}
-                        activeTab={activeTab}
-                      />
-                    </div>
+                  <CollapsibleContent className="py-6">
+                    <FilterSection 
+                      selectedJobs={selectedJobs}
+                      setSelectedJobs={setSelectedJobs}
+                      selectedSkills={selectedSkills}
+                      setSelectedSkills={setSelectedSkills}
+                      selectedLocations={selectedLocations}
+                      setSelectedLocations={setSelectedLocations}
+                      selectedCompanies={selectedCompanies}
+                      setSelectedCompanies={setSelectedCompanies}
+                      jobTitles={jobTitles}
+                      skills={skills}
+                      companies={companies}
+                      onRun={handleRun}
+                      onClearAll={handleClearAll}
+                      activeTab={activeTab}
+                    />
                   </CollapsibleContent>
                 </Collapsible>
 
