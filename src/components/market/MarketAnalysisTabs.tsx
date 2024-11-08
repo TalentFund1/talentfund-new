@@ -9,7 +9,8 @@ import 'leaflet.heat';
 import { LocationsTable } from "./LocationsTable";
 import { HeatMap } from "./HeatMap";
 import { Location } from "./types";
-import { CompensationAnalysis } from "./CompensationAnalysis";
+import { StatCard } from "@/components/StatCard";
+import { Users, DollarSign, TrendingUp, Clock } from "lucide-react";
 
 // Fix for default marker icon in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -69,6 +70,29 @@ export const MarketAnalysisTabs = () => {
   return (
     <Card className="p-8 mt-6 bg-white shadow-sm">
       <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            title="Total Profiles"
+            value="2,845"
+            icon={<Users className="h-6 w-6" />}
+          />
+          <StatCard
+            title="Median Base Salary"
+            value="$125,000"
+            icon={<DollarSign className="h-6 w-6" />}
+          />
+          <StatCard
+            title="YoY Growth"
+            value="12.5%"
+            icon={<TrendingUp className="h-6 w-6" />}
+          />
+          <StatCard
+            title="Time in Role"
+            value="2.3 years"
+            icon={<Clock className="h-6 w-6" />}
+          />
+        </div>
+
         <div className="overflow-hidden border border-border rounded-lg">
           <h3 className="text-xl font-semibold p-4 border-b border-border">Global Location Insights</h3>
           <div className="h-[400px] w-full overflow-hidden">
