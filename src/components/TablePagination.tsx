@@ -12,7 +12,7 @@ export const TablePagination = () => {
   return (
     <div className="flex justify-between items-center">
       <Select>
-        <SelectTrigger className="w-[100px]">
+        <SelectTrigger className="w-[120px]">
           <SelectValue placeholder="10 rows" />
         </SelectTrigger>
         <SelectContent>
