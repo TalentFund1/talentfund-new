@@ -37,6 +37,20 @@ export const CompensationTable = () => {
               {[
                 {
                   role: "Artificial Engineer",
+                  level: "P1",
+                  currency: "USD",
+                  range: "$90,000-95,000",
+                  percentiles: ["$90,500", "$91,250", "$92,500", "$93,750", "$94,500"]
+                },
+                {
+                  role: "Artificial Engineer",
+                  level: "P2",
+                  currency: "USD",
+                  range: "$100,000-105,000",
+                  percentiles: ["$100,500", "$101,250", "$102,500", "$103,750", "$104,500"]
+                },
+                {
+                  role: "Artificial Engineer",
                   level: "P3",
                   currency: "USD",
                   range: "$110,000-115,000",
@@ -55,6 +69,13 @@ export const CompensationTable = () => {
                   currency: "USD",
                   range: "$130,000-145,000",
                   percentiles: ["$131,500", "$133,750", "$137,500", "$141,250", "$143,500"]
+                },
+                {
+                  role: "Artificial Engineer",
+                  level: "P6",
+                  currency: "USD",
+                  range: "$150,000-175,000",
+                  percentiles: ["$151,500", "$156,250", "$162,500", "$168,750", "$173,500"]
                 }
               ].map((row, index) => (
                 <TableRow 
