@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Sidebar } from '@/components/Sidebar';
 import { LocationFilter } from '@/components/market/LocationFilter';
 import { SearchFilter } from '@/components/market/SearchFilter';
+import { MarketAnalysisTabs } from '@/components/market/MarketAnalysisTabs';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
 import { Separator } from "@/components/ui/separator";
 
@@ -142,6 +143,8 @@ const MarketData = () => {
                 </Button>
                 <Button>Run</Button>
               </div>
+              
+              <MarketAnalysisTabs />
             </div>
           </div>
         </div>
