@@ -89,7 +89,7 @@ export const PayBands = () => {
       
       <div className="space-y-4 text-secondary-foreground">
         <p>Salary Range: <span className="font-bold">$130,456 - $170,439</span></p>
-        <p>There are 749 advertised salary observations (11% of the 6749 matching postings).</p>
+        <p>There are 749 advertised salary observations (11% of the 6,749 matching postings).</p>
       </div>
       
       <div className="mt-8">
