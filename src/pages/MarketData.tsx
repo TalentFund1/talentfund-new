@@ -1,35 +1,21 @@
 import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sidebar } from '@/components/Sidebar';
+import { LocationFilter } from '@/components/market/LocationFilter';
 
 const MarketData = () => {
   const [jobTitle, setJobTitle] = useState('');
   const [anySkills, setAnySkills] = useState('');
   const [allSkills, setAllSkills] = useState('');
   const [company, setCompany] = useState('');
-  const [location, setLocation] = useState('');
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [openJobTitle, setOpenJobTitle] = useState(false);
   const [openAnySkills, setOpenAnySkills] = useState(false);
   const [openAllSkills, setOpenAllSkills] = useState(false);
   const [openCompany, setOpenCompany] = useState(false);
-  const [openLocation, setOpenLocation] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -43,6 +29,7 @@ const MarketData = () => {
               <h3 className="font-medium">Search</h3>
               
               <div className="space-y-4">
+                {/* Job Title */}
                 <div>
                   <label className="text-sm mb-2 block">Job Title</label>
                   <div className="relative">
@@ -78,6 +65,7 @@ const MarketData = () => {
                   </div>
                 </div>
 
+                {/* ANY Skills */}
                 <div>
                   <label className="text-sm mb-2 block">Has ANY of the following skills</label>
                   <div className="relative">
@@ -115,6 +103,7 @@ const MarketData = () => {
 
                 <div className="text-center">- AND -</div>
 
+                {/* ALL Skills */}
                 <div>
                   <label className="text-sm mb-2 block">Has ALL of the following skills</label>
                   <div className="relative">
@@ -150,6 +139,7 @@ const MarketData = () => {
                   </div>
                 </div>
 
+                {/* Company */}
                 <div>
                   <label className="text-sm mb-2 block">Company</label>
                   <div className="relative">
@@ -184,66 +174,36 @@ const MarketData = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <label className="text-sm mb-2 block">Location</label>
-                    <div className="relative">
-                      <Input
-                        value={location}
-                        onClick={() => setOpenLocation(true)}
-                        readOnly
-                        placeholder="New York, NYC"
-                        className="bg-white"
-                      />
-                      <CommandDialog open={openLocation} onOpenChange={setOpenLocation}>
-                        <Command className="rounded-lg border shadow-md">
-                          <CommandInput placeholder="Search locations..." />
-                          <CommandList>
-                            <CommandEmpty>No locations found.</CommandEmpty>
-                            <CommandGroup>
-                              <CommandItem onSelect={(value) => {
-                                setLocation(value);
-                                setOpenLocation(false);
-                              }}>
-                                New York, NYC
-                              </CommandItem>
-                              <CommandItem onSelect={(value) => {
-                                setLocation(value);
-                                setOpenLocation(false);
-                              }}>
-                                San Francisco, CA
-                              </CommandItem>
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </CommandDialog>
-                    </div>
-                  </div>
+                {/* Location with multi-select */}
+                <LocationFilter 
+                  selectedLocations={selectedLocations}
+                  onLocationChange={setSelectedLocations}
+                />
 
-                  <div className="space-y-2">
-                    <label className="text-sm block">Select Timeframe</label>
-                    <div className="flex gap-2">
-                      <Select defaultValue="may2023">
-                        <SelectTrigger className="w-[120px]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="may2023">May 2023</SelectItem>
-                          <SelectItem value="jun2023">Jun 2023</SelectItem>
-                          <SelectItem value="jul2023">Jul 2023</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Select defaultValue="may2024">
-                        <SelectTrigger className="w-[120px]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="may2024">May 2024</SelectItem>
-                          <SelectItem value="jun2024">Jun 2024</SelectItem>
-                          <SelectItem value="jul2024">Jul 2024</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                {/* Timeframe */}
+                <div className="space-y-2">
+                  <label className="text-sm block">Select Timeframe</label>
+                  <div className="flex gap-2">
+                    <Select defaultValue="may2023">
+                      <SelectTrigger className="w-[120px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="may2023">May 2023</SelectItem>
+                        <SelectItem value="jun2023">Jun 2023</SelectItem>
+                        <SelectItem value="jul2023">Jul 2023</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Select defaultValue="may2024">
+                      <SelectTrigger className="w-[120px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="may2024">May 2024</SelectItem>
+                        <SelectItem value="jun2024">Jun 2024</SelectItem>
+                        <SelectItem value="jul2024">Jul 2024</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
