@@ -29,6 +29,7 @@ export const SearchFilter = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setSearchQuery("");
       }
     };
 
@@ -84,9 +85,14 @@ export const SearchFilter = ({
           <Input
             placeholder={selectedItems.length === 0 ? placeholder : ""}
             value={isOpen ? searchQuery : ""}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onClick={(e) => e.stopPropagation()}
-            onFocus={() => setIsOpen(true)}
+            onChange={(e) => {
+              e.stopPropagation();
+              setSearchQuery(e.target.value);
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(true);
+            }}
             className="bg-white pr-8"
           />
           <ChevronDown className={cn(
