@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { technicalSkills, softSkills } from '@/components/EmployeeFilters';
+import { technicalSkills, softSkills } from '@/components/skillsData';
 
 const SkillsProfile = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);

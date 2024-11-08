@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { technicalSkills, softSkills } from '@/components/EmployeeFilters';
+import { technicalSkills, softSkills } from '@/components/skillsData';
 import { Separator } from "@/components/ui/separator";
 
 export const SkillsHeader = () => {
