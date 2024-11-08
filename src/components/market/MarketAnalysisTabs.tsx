@@ -75,40 +75,43 @@ export const MarketAnalysisTabs = () => {
         <TabsContent value="location" className="space-y-8">
           <div className="space-y-8">
             <h3 className="text-lg font-semibold text-primary">Location Analysis</h3>
-            <div className="h-[400px] w-full rounded-lg overflow-hidden border border-border">
-              <HeatMap locations={locations} />
-            </div>
+            
+            <div className="space-y-0">
+              <div className="h-[400px] w-full rounded-t-lg overflow-hidden border border-border">
+                <HeatMap locations={locations} />
+              </div>
 
-            <div className="space-y-8">
-              <Card className="p-6 bg-secondary">
-                <div className="flex items-center gap-8">
-                  <span className="text-sm font-medium text-primary">Display:</span>
-                  <div className="flex items-center gap-6">
-                    {[
-                      { id: "profiles", label: "Profiles" },
-                      { id: "uniqueJobs", label: "Unique Jobs" },
-                      { id: "compensation", label: "Compensation" },
-                      { id: "diversity", label: "Diversity" }
-                    ].map((filter) => (
-                      <div key={filter.id} className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={filter.id}
-                          checked={selectedFilters.includes(filter.id)}
-                          onCheckedChange={() => toggleFilter(filter.id)}
-                        />
-                        <label 
-                          htmlFor={filter.id}
-                          className="text-sm font-medium leading-none text-primary cursor-pointer"
-                        >
-                          {filter.label}
-                        </label>
-                      </div>
-                    ))}
+              <Card className="rounded-t-none border-t-0 bg-secondary">
+                <div className="p-6">
+                  <div className="flex items-center gap-8">
+                    <span className="text-sm font-medium text-primary">Display:</span>
+                    <div className="flex items-center gap-6">
+                      {[
+                        { id: "profiles", label: "Profiles" },
+                        { id: "uniqueJobs", label: "Unique Jobs" },
+                        { id: "compensation", label: "Compensation" },
+                        { id: "diversity", label: "Diversity" }
+                      ].map((filter) => (
+                        <div key={filter.id} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={filter.id}
+                            checked={selectedFilters.includes(filter.id)}
+                            onCheckedChange={() => toggleFilter(filter.id)}
+                          />
+                          <label 
+                            htmlFor={filter.id}
+                            className="text-sm font-medium leading-none text-primary cursor-pointer"
+                          >
+                            {filter.label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </Card>
 
-              <Card className="overflow-hidden border border-border p-0">
+              <Card className="mt-8 overflow-hidden border border-border p-0">
                 <LocationsTable locations={locations} />
               </Card>
             </div>
