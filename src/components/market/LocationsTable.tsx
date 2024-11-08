@@ -58,97 +58,104 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
   };
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow className="bg-secondary hover:bg-secondary">
-          <TableHead 
-            className="font-medium text-sm text-primary py-4 w-[200px] border-r border-border cursor-pointer"
-            onClick={() => handleSort('name')}
-          >
-            <div className="flex items-center gap-2">
-              Location
-              {getSortIcon('name')}
-            </div>
-          </TableHead>
-          <TableHead 
-            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
-            onClick={() => handleSort('profiles')}
-          >
-            <div className="flex items-center justify-end gap-2">
-              Number of Profiles
-              {getSortIcon('profiles')}
-            </div>
-          </TableHead>
-          <TableHead 
-            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
-            onClick={() => handleSort('uniqueJobs')}
-          >
-            <div className="flex items-center justify-end gap-2">
-              Unique Jobs
-              {getSortIcon('uniqueJobs')}
-            </div>
-          </TableHead>
-          <TableHead 
-            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
-            onClick={() => handleSort('medianCompensation')}
-          >
-            <div className="flex items-center justify-end gap-2">
-              Median Salary
-              {getSortIcon('medianCompensation')}
-            </div>
-          </TableHead>
-          <TableHead 
-            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
-            onClick={() => handleSort('totalDiversity')}
-          >
-            <div className="flex items-center justify-end gap-2">
-              Total Diversity
-              {getSortIcon('totalDiversity')}
-            </div>
-          </TableHead>
-          <TableHead 
-            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
-            onClick={() => handleSort('percentDiversity')}
-          >
-            <div className="flex items-center justify-end gap-2">
-              Percent Diversity
-              {getSortIcon('percentDiversity')}
-            </div>
-          </TableHead>
-          <TableHead 
-            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
-            onClick={() => handleSort('postingIntensity')}
-          >
-            <div className="flex items-center justify-end gap-2">
-              Posting Intensity
-              {getSortIcon('postingIntensity')}
-            </div>
-          </TableHead>
-          <TableHead 
-            className="text-right font-medium text-sm text-primary py-4 cursor-pointer"
-            onClick={() => handleSort('medianDuration')}
-          >
-            <div className="flex items-center justify-end gap-2">
-              Median Duration
-              {getSortIcon('medianDuration')}
-            </div>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {getSortedLocations().map((location) => (
-          <TableRow key={location.name} className="hover:bg-muted/50">
-            <TableCell className="font-medium text-sm py-4 border-r border-border">{location.name}</TableCell>
-            <TableCell className="text-right text-sm py-4 border-r border-border">{location.profiles.toLocaleString()}</TableCell>
-            <TableCell className="text-right text-sm py-4 border-r border-border">{location.uniqueJobs}</TableCell>
-            <TableCell className="text-right text-sm py-4 border-r border-border">${location.medianCompensation.toLocaleString()}</TableCell>
-            <TableCell className="text-right text-sm py-4 border-r border-border">{location.totalDiversity.toLocaleString()}</TableCell>
-            <TableCell className="text-right text-sm py-4 border-r border-border">{location.percentDiversity}</TableCell>
-            <TableCell className="text-right text-sm py-4 border-r border-border">{location.postingIntensity}</TableCell>
-            <TableCell className="text-right text-sm py-4">{location.medianDuration}</TableCell>
+    <div>
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-secondary hover:bg-secondary">
+            <TableHead 
+              className="font-medium text-sm text-primary py-4 w-[200px] border-r border-border cursor-pointer"
+              onClick={() => handleSort('name')}
+            >
+              <div className="flex items-center gap-2">
+                Location
+                {getSortIcon('name')}
+              </div>
+            </TableHead>
+            <TableHead 
+              className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+              onClick={() => handleSort('profiles')}
+            >
+              <div className="flex items-center justify-end gap-2">
+                Number of Profiles
+                {getSortIcon('profiles')}
+              </div>
+            </TableHead>
+            <TableHead 
+              className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+              onClick={() => handleSort('uniqueJobs')}
+            >
+              <div className="flex items-center justify-end gap-2">
+                Unique Jobs
+                {getSortIcon('uniqueJobs')}
+              </div>
+            </TableHead>
+            <TableHead 
+              className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+              onClick={() => handleSort('medianCompensation')}
+            >
+              <div className="flex items-center justify-end gap-2">
+                Median Salary
+                {getSortIcon('medianCompensation')}
+              </div>
+            </TableHead>
+            <TableHead 
+              className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+              onClick={() => handleSort('totalDiversity')}
+            >
+              <div className="flex items-center justify-end gap-2">
+                Total Diversity
+                {getSortIcon('totalDiversity')}
+              </div>
+            </TableHead>
+            <TableHead 
+              className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+              onClick={() => handleSort('percentDiversity')}
+            >
+              <div className="flex items-center justify-end gap-2">
+                Percent Diversity
+                {getSortIcon('percentDiversity')}
+              </div>
+            </TableHead>
+            <TableHead 
+              className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+              onClick={() => handleSort('postingIntensity')}
+            >
+              <div className="flex items-center justify-end gap-2">
+                Posting Intensity
+                {getSortIcon('postingIntensity')}
+              </div>
+            </TableHead>
+            <TableHead 
+              className="text-right font-medium text-sm text-primary py-4 cursor-pointer"
+              onClick={() => handleSort('medianDuration')}
+            >
+              <div className="flex items-center justify-end gap-2">
+                Median Duration
+                {getSortIcon('medianDuration')}
+              </div>
+            </TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {getSortedLocations().map((location) => (
+            <TableRow key={location.name} className="hover:bg-muted/50">
+              <TableCell className="font-medium text-sm py-4 border-r border-border">{location.name}</TableCell>
+              <TableCell className="text-right text-sm py-4 border-r border-border">{location.profiles.toLocaleString()}</TableCell>
+              <TableCell className="text-right text-sm py-4 border-r border-border">{location.uniqueJobs}</TableCell>
+              <TableCell className="text-right text-sm py-4 border-r border-border">${location.medianCompensation.toLocaleString()}</TableCell>
+              <TableCell className="text-right text-sm py-4 border-r border-border">{location.totalDiversity.toLocaleString()}</TableCell>
+              <TableCell className="text-right text-sm py-4 border-r border-border">{location.percentDiversity}</TableCell>
+              <TableCell className="text-right text-sm py-4 border-r border-border">{location.postingIntensity}</TableCell>
+              <TableCell className="text-right text-sm py-4">{location.medianDuration}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <div className="flex justify-end p-4 border-t border-border">
+        <p className="text-sm text-secondary-foreground">
+          Powered by <span className="text-red-500">Lightcast</span>
+        </p>
+      </div>
+    </div>
   );
 };
