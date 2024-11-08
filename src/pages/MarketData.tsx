@@ -20,11 +20,11 @@ const MarketData = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 p-8 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <div className="flex-1 p-6 ml-16 transition-all duration-300">
+        <div className="max-w-7xl mx-auto space-y-6">
           <div className="bg-white rounded-lg shadow-sm">
-            <div className="p-8">
-              <div className="flex justify-between items-center mb-6">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-primary">Market Data</h2>
                 <Button 
                   variant="outline" 
@@ -37,9 +37,9 @@ const MarketData = () => {
                 </Button>
               </div>
 
-              <Separator className="mb-6" />
+              <Separator className="mb-4" />
 
-              <Tabs defaultValue="location" className="space-y-6">
+              <Tabs defaultValue="location">
                 <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
                   <TabsTrigger 
                     value="location" 
@@ -55,7 +55,7 @@ const MarketData = () => {
                   </TabsTrigger>
                 </TabsList>
 
-                <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen} className="space-y-6">
+                <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
                   <CollapsibleContent>
                     <FilterSection 
                       selectedJobs={selectedJobs}
