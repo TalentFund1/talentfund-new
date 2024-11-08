@@ -95,8 +95,6 @@ const MarketData = () => {
                 </Tabs>
               </div>
             </div>
-
-            <div className="h-2 w-full bg-background rounded-full" />
           </div>
         </div>
       </div>
