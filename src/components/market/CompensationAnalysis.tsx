@@ -4,8 +4,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Building2, Users, Clock, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 
 export const CompensationAnalysis = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   return (
     <div className="space-y-6">
       {/* Job Overview Section */}
@@ -75,10 +78,17 @@ export const CompensationAnalysis = () => {
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Job Description</h3>
-              <p className="text-secondary-foreground">
-                AI engineer engineer will join a multidisciplinary team helping to shape our AI strategy and showcasing the potential for AI through early-stage solutions. This is an excellent opportunity to take advantage of emerging trends and technologies and make a real-world difference.
-                <button className="text-primary-accent ml-2 hover:underline">See more</button>
-              </p>
+              <div className="relative">
+                <p className={`text-secondary-foreground ${!isExpanded ? 'line-clamp-2' : ''}`}>
+                  AI engineer engineer will join a multidisciplinary team helping to shape our AI strategy and showcasing the potential for AI through early-stage solutions. This is an excellent opportunity to take advantage of emerging trends and technologies and make a real-world difference.
+                </p>
+                <button 
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="text-primary-accent hover:text-primary-accent/80 transition-colors ml-1"
+                >
+                  {isExpanded ? 'See less' : 'See more'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
