@@ -17,7 +17,7 @@ const MarketData = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(true);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-white">
       <Sidebar />
       <div className="flex-1 p-8 ml-16">
         <div className="max-w-7xl mx-auto space-y-8">
@@ -72,7 +72,7 @@ const MarketData = () => {
                   </CollapsibleContent>
                 </Collapsible>
 
-                <div className="mt-6 bg-background -mx-8 -mb-8 p-6">
+                <div className="mt-6 bg-white -mx-8 -mb-8 p-6">
                   <TabsContent value="location" className="space-y-8 mt-0">
                     <GlobalLocationInsights />
                   </TabsContent>
