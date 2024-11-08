@@ -3,6 +3,7 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { LocationFilter } from '@/components/market/LocationFilter';
+import { toast } from "sonner";
 
 interface FilterSectionProps {
   selectedJobs: string[];
@@ -35,6 +36,14 @@ export const FilterSection = ({
   onRun,
   onClearAll,
 }: FilterSectionProps) => {
+  const handleRun = () => {
+    if (selectedJobs.length === 0) {
+      toast.error("Please select a job title before running the report");
+      return;
+    }
+    onRun();
+  };
+
   return (
     <div className="mt-4 border rounded-lg p-4 space-y-4">
       <SearchFilter
@@ -44,6 +53,7 @@ export const FilterSection = ({
         selectedItems={selectedJobs}
         onItemsChange={setSelectedJobs}
         singleSelect={true}
+        required={true}
       />
 
       <SearchFilter
@@ -150,7 +160,12 @@ export const FilterSection = ({
         >
           Clear All
         </Button>
-        <Button onClick={onRun}>Run</Button>
+        <Button 
+          onClick={handleRun}
+          disabled={selectedJobs.length === 0}
+        >
+          Run
+        </Button>
       </div>
     </div>
   );

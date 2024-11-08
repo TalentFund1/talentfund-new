@@ -11,6 +11,7 @@ interface SearchFilterProps {
   selectedItems: string[];
   onItemsChange: (items: string[]) => void;
   singleSelect?: boolean;
+  required?: boolean;
 }
 
 export const SearchFilter = ({ 
@@ -19,7 +20,8 @@ export const SearchFilter = ({
   items, 
   selectedItems, 
   onItemsChange,
-  singleSelect = false
+  singleSelect = false,
+  required = false
 }: SearchFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,7 +67,10 @@ export const SearchFilter = ({
 
   return (
     <div className="space-y-2" ref={dropdownRef}>
-      <label className="text-sm text-muted-foreground">{label}</label>
+      <label className="text-sm text-muted-foreground">
+        {label}
+        {required && <span className="text-destructive ml-1">*</span>}
+      </label>
       <div className="relative">
         <div className="flex flex-wrap gap-2 mb-2">
           {selectedItems.map((item) => (
