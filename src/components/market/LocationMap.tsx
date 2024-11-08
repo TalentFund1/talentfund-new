@@ -29,6 +29,7 @@ export const LocationMap = () => {
         zoom={4}
         style={{ height: "calc(100% - 57px)", width: "100%" }}
         scrollWheelZoom={false}
+        attributionControl={true}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -47,7 +48,6 @@ export const LocationMap = () => {
                 opacity: 0.8,
                 fillOpacity: 0.4
               }}
-              radius={Math.sqrt(location.profiles) / 10}
             >
               <Popup>
                 <div className="p-2">
