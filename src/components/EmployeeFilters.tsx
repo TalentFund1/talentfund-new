@@ -1,14 +1,5 @@
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { SearchFilter } from '@/components/market/SearchFilter';
 import {
   Select,
   SelectContent,
@@ -86,55 +77,19 @@ const softSkills = [
 ];
 
 export const EmployeeFilters = () => {
-  const [open, setOpen] = useState(false);
-  const [selectedSkill, setSelectedSkill] = useState("");
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+
+  const allSkills = [...technicalSkills, ...softSkills];
 
   return (
     <div className="space-y-4">
-      <div className="relative max-w-sm">
-        <Input
-          type="text"
-          placeholder="Search Skills..."
-          className="bg-white"
-          value={selectedSkill}
-          onClick={() => setOpen(true)}
-          readOnly
-        />
-        <CommandDialog open={open} onOpenChange={setOpen}>
-          <Command className="rounded-lg border shadow-md">
-            <CommandInput placeholder="Search skills..." />
-            <CommandList>
-              <CommandEmpty>No skills found.</CommandEmpty>
-              <CommandGroup heading="Technical Skills">
-                {technicalSkills.map((skill) => (
-                  <CommandItem
-                    key={skill}
-                    onSelect={() => {
-                      setSelectedSkill(skill);
-                      setOpen(false);
-                    }}
-                  >
-                    {skill}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-              <CommandGroup heading="Soft Skills">
-                {softSkills.map((skill) => (
-                  <CommandItem
-                    key={skill}
-                    onSelect={() => {
-                      setSelectedSkill(skill);
-                      setOpen(false);
-                    }}
-                  >
-                    {skill}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </CommandDialog>
-      </div>
+      <SearchFilter
+        label="Skills"
+        placeholder="Search skills..."
+        items={allSkills}
+        selectedItems={selectedSkills}
+        onItemsChange={setSelectedSkills}
+      />
       
       <div className="flex flex-wrap gap-4">
         <Select>
@@ -187,7 +142,12 @@ export const EmployeeFilters = () => {
           </SelectContent>
         </Select>
 
-        <Button variant="outline">Clear All</Button>
+        <Button 
+          variant="outline" 
+          onClick={() => setSelectedSkills([])}
+        >
+          Clear All
+        </Button>
       </div>
     </div>
   );
