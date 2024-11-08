@@ -12,7 +12,7 @@ export const CompensationHeader = () => {
       <div className="space-y-6">
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-medium text-primary">Market Analysis</h3>
+            <h3 className="text-xl font-semibold text-primary">Market Analysis</h3>
             <div className="space-x-3">
               <Button 
                 variant="outline"
@@ -36,7 +36,7 @@ export const CompensationHeader = () => {
             <div className="space-y-6">
               <div>
                 <div className="flex items-end gap-3">
-                  <h2 className="text-2xl font-medium text-primary">Artificial Engineer</h2>
+                  <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
                   <span className="text-secondary-foreground text-sm mb-1">SOC: (11-9041)</span>
                 </div>
                 <p className="text-secondary-foreground mt-4">New York, NYC</p>
@@ -59,7 +59,7 @@ export const CompensationHeader = () => {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-sm text-secondary-foreground">Matching Profiles</p>
-                    <h3 className="text-2xl font-medium text-primary mt-2">8,745</h3>
+                    <h3 className="text-2xl font-bold text-primary mt-2">8,745</h3>
                     <p className="text-sm text-secondary-foreground mt-1">Regional diversity: 58%</p>
                   </div>
                   <Users className="h-5 w-5 text-primary-accent" />
@@ -69,7 +69,7 @@ export const CompensationHeader = () => {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
-                    <h3 className="text-2xl font-medium text-primary mt-2">$140,456</h3>
+                    <h3 className="text-2xl font-bold text-primary mt-2">$140,456</h3>
                     <p className="text-sm text-secondary-foreground mt-1">749 salary observations</p>
                   </div>
                   <Building2 className="h-5 w-5 text-primary-accent" />
@@ -79,7 +79,7 @@ export const CompensationHeader = () => {
           </div>
 
           <div className="mt-8">
-            <h3 className="text-lg font-medium mb-3">Job Description</h3>
+            <h3 className="text-lg font-semibold mb-3">Job Description</h3>
             <div className="relative">
               <p className={`text-secondary-foreground ${!isExpanded ? 'line-clamp-2' : ''}`}>
                 AI engineer engineer will join a multidisciplinary team helping to shape our AI strategy and showcasing the potential for AI through early-stage solutions. This is an excellent opportunity to take advantage of emerging trends and technologies and make a real-world difference.
