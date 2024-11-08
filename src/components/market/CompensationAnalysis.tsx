@@ -34,39 +34,38 @@ export const CompensationAnalysis = () => {
               </div>
             </div>
 
-            <div className="flex justify-between mt-8">
-              <div className="flex-1">
-                <div className="flex flex-col items-start">
-                  <p className="text-secondary-foreground">Function</p>
-                  <p className="font-medium text-primary mt-1">Technology</p>
-                </div>
-                <div className="flex flex-col items-start mt-4">
-                  <p className="text-secondary-foreground">Occupation</p>
-                  <p className="font-medium text-primary mt-1">Software Developer</p>
-                </div>
+            <div className="grid grid-cols-2 gap-8 mt-8">
+              <div className="flex flex-col items-start">
+                <p className="text-secondary-foreground">Function</p>
+                <p className="font-medium text-primary mt-1">Technology</p>
               </div>
-              <div className="flex-1 flex justify-end space-x-4">
-                <Card className="p-4 w-64">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Matching Profiles</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">8,745</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">Regional diversity: 58%</p>
-                    </div>
-                    <Users className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
-                <Card className="p-4 w-64">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">$140,456</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">749 salary observations</p>
-                    </div>
-                    <Building2 className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
+              <div className="flex flex-col items-start">
+                <p className="text-secondary-foreground">Occupation</p>
+                <p className="font-medium text-primary mt-1">Software Developer</p>
               </div>
+            </div>
+
+            <div className="flex justify-end space-x-4 mt-8">
+              <Card className="p-4 w-64">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-secondary-foreground">Matching Profiles</p>
+                    <h3 className="text-2xl font-bold text-primary mt-2">8,745</h3>
+                    <p className="text-sm text-secondary-foreground mt-1">Regional diversity: 58%</p>
+                  </div>
+                  <Users className="h-5 w-5 text-primary-accent" />
+                </div>
+              </Card>
+              <Card className="p-4 w-64">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
+                    <h3 className="text-2xl font-bold text-primary mt-2">$140,456</h3>
+                    <p className="text-sm text-secondary-foreground mt-1">749 salary observations</p>
+                  </div>
+                  <Building2 className="h-5 w-5 text-primary-accent" />
+                </div>
+              </Card>
             </div>
 
             <Separator className="my-6" />
