@@ -50,11 +50,11 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
 
   const getSortIcon = (key: keyof Location) => {
     if (!sortConfig || sortConfig.key !== key) {
-      return <ChevronUp className="h-4 w-4 text-gray-400" />;
+      return <ChevronUp className="h-4 w-4 text-muted-foreground" />;
     }
     return sortConfig.direction === 'asc' 
-      ? <ChevronUp className="h-4 w-4 text-primary" />
-      : <ChevronDown className="h-4 w-4 text-primary" />;
+      ? <ChevronDown className="h-4 w-4 text-primary" />
+      : <ChevronUp className="h-4 w-4 text-primary" />;
   };
 
   return (
@@ -62,74 +62,74 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
       <TableHeader>
         <TableRow className="bg-secondary hover:bg-secondary">
           <TableHead 
-            className="w-[180px] font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+            className="font-medium text-sm text-primary py-4 w-[200px] border-r border-border cursor-pointer"
             onClick={() => handleSort('name')}
           >
-            <div className="flex items-center justify-between gap-2 pr-2">
+            <div className="flex items-center gap-2">
               Location
               {getSortIcon('name')}
             </div>
           </TableHead>
           <TableHead 
-            className="w-[140px] text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
             onClick={() => handleSort('profiles')}
           >
-            <div className="flex items-center justify-between gap-2 px-2">
-              Profiles
+            <div className="flex items-center justify-end gap-2">
+              Number of Profiles
               {getSortIcon('profiles')}
             </div>
           </TableHead>
           <TableHead 
-            className="w-[140px] text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
             onClick={() => handleSort('uniqueJobs')}
           >
-            <div className="flex items-center justify-between gap-2 px-2">
-              Unique Jobs
+            <div className="flex items-center justify-end gap-2">
+              Number of Unique Jobs
               {getSortIcon('uniqueJobs')}
             </div>
           </TableHead>
           <TableHead 
-            className="w-[160px] text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
             onClick={() => handleSort('medianCompensation')}
           >
-            <div className="flex items-center justify-between gap-2 px-2">
-              Median Comp.
+            <div className="flex items-center justify-end gap-2">
+              Median Compensation
               {getSortIcon('medianCompensation')}
             </div>
           </TableHead>
           <TableHead 
-            className="w-[140px] text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
             onClick={() => handleSort('totalDiversity')}
           >
-            <div className="flex items-center justify-between gap-2 px-2">
+            <div className="flex items-center justify-end gap-2">
               Total Diversity
               {getSortIcon('totalDiversity')}
             </div>
           </TableHead>
           <TableHead 
-            className="w-[140px] text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
             onClick={() => handleSort('percentDiversity')}
           >
-            <div className="flex items-center justify-between gap-2 px-2">
-              % Diversity
+            <div className="flex items-center justify-end gap-2">
+              Percent Diversity
               {getSortIcon('percentDiversity')}
             </div>
           </TableHead>
           <TableHead 
-            className="w-[140px] text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
+            className="text-right font-medium text-sm text-primary py-4 border-r border-border cursor-pointer"
             onClick={() => handleSort('postingIntensity')}
           >
-            <div className="flex items-center justify-between gap-2 px-2">
-              Post. Intensity
+            <div className="flex items-center justify-end gap-2">
+              Posting Intensity
               {getSortIcon('postingIntensity')}
             </div>
           </TableHead>
           <TableHead 
-            className="w-[140px] text-right font-medium text-sm text-primary py-4 cursor-pointer"
+            className="text-right font-medium text-sm text-primary py-4 cursor-pointer"
             onClick={() => handleSort('medianDuration')}
           >
-            <div className="flex items-center justify-between gap-2 px-2">
-              Med. Duration
+            <div className="flex items-center justify-end gap-2">
+              Median Duration
               {getSortIcon('medianDuration')}
             </div>
           </TableHead>
