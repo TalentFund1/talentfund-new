@@ -36,8 +36,7 @@ export const CompensationHeader = () => {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
-                <span className="text-sm text-secondary-foreground">ID: 123</span>
-                <span className="text-sm text-secondary-foreground ml-1">SOC: (11-9041)</span>
+                <span className="text-secondary-foreground text-sm">SOC: (11-9041)</span>
               </div>
               <p className="text-secondary-foreground mt-1">New York, NYC</p>
             </div>
