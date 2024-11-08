@@ -16,11 +16,11 @@ const MarketData = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
           <div className="space-y-6">
             <h2 className="text-2xl font-bold">Market Data</h2>
             
-            <div className="bg-white rounded-lg border border-border p-6 space-y-6">
+            <div className="space-y-4">
               <h3 className="font-medium">Search</h3>
               
               <div className="space-y-4">
