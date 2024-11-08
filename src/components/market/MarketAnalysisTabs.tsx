@@ -9,7 +9,6 @@ import { LocationsTable } from "./LocationsTable";
 import { HeatMap } from "./HeatMap";
 import { Location } from "./types";
 
-// Fix for default marker icon in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -72,15 +71,15 @@ export const MarketAnalysisTabs = () => {
           <TabsTrigger value="compensation" className="text-sm">Compensation Analysis</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="location" className="space-y-8">
-          <div className="space-y-8">
-            <h3 className="text-lg font-semibold text-primary">Location Analysis</h3>
+        <TabsContent value="location">
+          <div>
+            <h3 className="text-lg font-semibold text-primary mb-4">Location Analysis</h3>
             <div className="h-[400px] w-full rounded-lg overflow-hidden border border-border">
               <HeatMap locations={locations} />
             </div>
 
-            <div className="space-y-8">
-              <Card className="p-6 bg-secondary">
+            <div className="mt-4">
+              <Card className="p-6 bg-secondary mb-4">
                 <div className="flex items-center gap-8">
                   <span className="text-sm font-medium text-primary">Display:</span>
                   <div className="flex items-center gap-6">
