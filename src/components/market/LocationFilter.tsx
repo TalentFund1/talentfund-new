@@ -11,17 +11,22 @@ interface LocationFilterProps {
 
 export const LocationFilter = ({ selectedLocations, onLocationChange }: LocationFilterProps) => {
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSelect = (location: string) => {
-    if (!selectedLocations.includes(location)) {
-      onLocationChange([...selectedLocations, location]);
-    }
+    // Only allow one location to be selected
+    onLocationChange([location]);
     setOpen(false);
   };
 
   const removeLocation = (location: string) => {
-    onLocationChange(selectedLocations.filter(l => l !== location));
+    onLocationChange([]);
   };
+
+  const locations = ["New York, NYC", "San Francisco, CA", "London, UK"];
+  const filteredLocations = locations.filter(location => 
+    location.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-2">
@@ -39,26 +44,29 @@ export const LocationFilter = ({ selectedLocations, onLocationChange }: Location
           ))}
         </div>
         <Input
-          placeholder="Add Locations"
+          placeholder={selectedLocations.length === 0 ? "Add Location" : ""}
           onClick={() => setOpen(true)}
           readOnly
           className="bg-white"
         />
         <CommandDialog open={open} onOpenChange={setOpen}>
           <Command className="rounded-lg border shadow-md">
-            <CommandInput placeholder="Search locations..." />
+            <CommandInput 
+              placeholder="Search locations..."
+              value={searchQuery}
+              onValueChange={setSearchQuery}
+            />
             <CommandList>
               <CommandEmpty>No locations found.</CommandEmpty>
               <CommandGroup>
-                <CommandItem onSelect={() => handleSelect("New York, NYC")}>
-                  New York, NYC
-                </CommandItem>
-                <CommandItem onSelect={() => handleSelect("San Francisco, CA")}>
-                  San Francisco, CA
-                </CommandItem>
-                <CommandItem onSelect={() => handleSelect("London, UK")}>
-                  London, UK
-                </CommandItem>
+                {filteredLocations.map((location) => (
+                  <CommandItem
+                    key={location}
+                    onSelect={() => handleSelect(location)}
+                  >
+                    {location}
+                  </CommandItem>
+                ))}
               </CommandGroup>
             </CommandList>
           </Command>

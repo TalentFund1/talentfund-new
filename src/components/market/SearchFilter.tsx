@@ -23,14 +23,13 @@ export const SearchFilter = ({
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSelect = (item: string) => {
-    if (!selectedItems.includes(item)) {
-      onItemsChange([...selectedItems, item]);
-    }
+    // Only allow one item to be selected
+    onItemsChange([item]);
     setOpen(false);
   };
 
   const removeItem = (item: string) => {
-    onItemsChange(selectedItems.filter(i => i !== item));
+    onItemsChange([]);
   };
 
   const filteredItems = items.filter(item => 
@@ -53,7 +52,7 @@ export const SearchFilter = ({
           ))}
         </div>
         <Input
-          placeholder={placeholder}
+          placeholder={selectedItems.length === 0 ? placeholder : ""}
           onClick={() => setOpen(true)}
           readOnly
           className="bg-white"
