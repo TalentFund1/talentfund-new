@@ -54,7 +54,7 @@ const MarketData = () => {
 
               <div className="space-y-2">
                 <label className="text-sm block">Select Timeframe</label>
-                <div className="flex gap-2">
+                <div className="flex items-center gap-2">
                   <Select defaultValue="may2023">
                     <SelectTrigger className="w-[120px]">
                       <SelectValue />
@@ -65,6 +65,7 @@ const MarketData = () => {
                       <SelectItem value="jul2023">Jul 2023</SelectItem>
                     </SelectContent>
                   </Select>
+                  <span className="text-sm">To</span>
                   <Select defaultValue="may2024">
                     <SelectTrigger className="w-[120px]">
                       <SelectValue />
