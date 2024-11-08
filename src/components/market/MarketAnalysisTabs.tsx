@@ -72,14 +72,14 @@ export const MarketAnalysisTabs = () => {
           <TabsTrigger value="compensation" className="text-sm">Compensation Analysis</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="location" className="space-y-4">
-          <div className="space-y-4">
+        <TabsContent value="location" className="space-y-8">
+          <div className="space-y-8">
             <h3 className="text-lg font-semibold text-primary">Location Analysis</h3>
             <div className="h-[400px] w-full rounded-lg overflow-hidden border border-border">
               <HeatMap locations={locations} />
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-8">
               <Card className="p-6 bg-secondary">
                 <div className="flex items-center gap-8">
                   <span className="text-sm font-medium text-primary">Display:</span>
