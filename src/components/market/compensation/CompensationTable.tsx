@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export const CompensationTable = () => {
   return (
@@ -17,58 +18,68 @@ export const CompensationTable = () => {
           </p>
         </div>
 
-        <div className="mt-6 overflow-x-auto">
+        <div className="mt-6 overflow-x-auto rounded-lg border border-blue-200/60">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Role Name</TableHead>
-                <TableHead>Level</TableHead>
-                <TableHead>Currency</TableHead>
-                <TableHead>Salary Range</TableHead>
-                <TableHead>10th</TableHead>
-                <TableHead>25th</TableHead>
-                <TableHead>50th</TableHead>
-                <TableHead>75th</TableHead>
-                <TableHead>90th</TableHead>
+            <TableHeader className="bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+              <TableRow className="hover:bg-transparent border-y border-blue-200/60">
+                <TableHead className="h-12 px-4 text-left font-semibold text-sm">Role Name</TableHead>
+                <TableHead className="h-12 px-4 text-left font-semibold text-sm">Level</TableHead>
+                <TableHead className="h-12 px-4 text-left font-semibold text-sm">Currency</TableHead>
+                <TableHead className="h-12 px-4 text-left font-semibold text-sm">Salary Range</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm bg-[#F7F9FF]/50">10th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm bg-[#F7F9FF]/50">25th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm bg-[#F7F9FF]/50">50th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm bg-[#F7F9FF]/50">75th</TableHead>
+                <TableHead className="h-12 px-4 text-center font-semibold text-sm bg-[#F7F9FF]/50">90th</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>Artificial Engineer</TableCell>
-                <TableCell>P3</TableCell>
-                <TableCell>USD</TableCell>
-                <TableCell>$110,000-115,000</TableCell>
-                <TableCell>$110,500</TableCell>
-                <TableCell>$111,250</TableCell>
-                <TableCell>$112,500</TableCell>
-                <TableCell>$113,750</TableCell>
-                <TableCell>$114,500</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Artificial Engineer</TableCell>
-                <TableCell>P4</TableCell>
-                <TableCell>USD</TableCell>
-                <TableCell>$120,000-125,000</TableCell>
-                <TableCell>$120,500</TableCell>
-                <TableCell>$121,500</TableCell>
-                <TableCell>$122,500</TableCell>
-                <TableCell>$123,750</TableCell>
-                <TableCell>$124,500</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Artificial Engineer</TableCell>
-                <TableCell>P5</TableCell>
-                <TableCell>USD</TableCell>
-                <TableCell>$130,000-145,000</TableCell>
-                <TableCell>$131,500</TableCell>
-                <TableCell>$133,750</TableCell>
-                <TableCell>$137,500</TableCell>
-                <TableCell>$141,250</TableCell>
-                <TableCell>$143,500</TableCell>
-              </TableRow>
+              {[
+                {
+                  role: "Artificial Engineer",
+                  level: "P3",
+                  currency: "USD",
+                  range: "$110,000-115,000",
+                  percentiles: ["$110,500", "$111,250", "$112,500", "$113,750", "$114,500"]
+                },
+                {
+                  role: "Artificial Engineer",
+                  level: "P4",
+                  currency: "USD",
+                  range: "$120,000-125,000",
+                  percentiles: ["$120,500", "$121,500", "$122,500", "$123,750", "$124,500"]
+                },
+                {
+                  role: "Artificial Engineer",
+                  level: "P5",
+                  currency: "USD",
+                  range: "$130,000-145,000",
+                  percentiles: ["$131,500", "$133,750", "$137,500", "$141,250", "$143,500"]
+                }
+              ].map((row, index) => (
+                <TableRow 
+                  key={`${row.role}-${row.level}`}
+                  className={`group transition-all duration-200 hover:bg-muted/50 ${
+                    index % 2 === 0 ? 'bg-muted/5' : ''
+                  }`}
+                >
+                  <TableCell className="px-4 py-4 font-medium">{row.role}</TableCell>
+                  <TableCell className="px-4 py-4">{row.level}</TableCell>
+                  <TableCell className="px-4 py-4">{row.currency}</TableCell>
+                  <TableCell className="px-4 py-4">{row.range}</TableCell>
+                  {row.percentiles.map((value, i) => (
+                    <TableCell 
+                      key={i} 
+                      className="px-4 py-4 text-center bg-[#F7F9FF]/30 group-hover:bg-transparent"
+                    >
+                      {value}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-end p-4 border-t border-blue-200/60">
             <p className="text-sm text-secondary-foreground">Powered by Lightcast</p>
           </div>
         </div>
