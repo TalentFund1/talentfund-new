@@ -20,7 +20,7 @@ export const CompensationDescription = ({
   return (
     <div className="space-y-4">
       <p className="text-secondary-foreground">
-        <span className="font-medium">Compensation Range: {range}:</span> There are {observations} advertised salary observations ({Math.round((observations/totalPostings) * 100)}% of the {totalPostings} matching postings).
+        <span className="font-medium">Salary Range: {range}:</span> There are {observations} advertised salary observations ({Math.round((observations/totalPostings) * 100)}% of the {totalPostings} matching postings).
       </p>
       
       <p className="text-secondary-foreground">
