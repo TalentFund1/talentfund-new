@@ -5,6 +5,7 @@ import { Building2, Users, Clock, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
+import { CompensationStatsCard } from "./CompensationStatsCard";
 
 export const CompensationAnalysis = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -12,7 +13,7 @@ export const CompensationAnalysis = () => {
   return (
     <div className="space-y-6">
       {/* Job Overview Section */}
-      <Card className="p-6">
+      <Card className="p-6 bg-[#F7F9FF]">
         <div className="space-y-4">
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -51,26 +52,18 @@ export const CompensationAnalysis = () => {
                 </div>
               </div>
               <div className="flex-1 flex justify-end space-x-4">
-                <Card className="p-4 w-64">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Matching Profiles</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">8,745</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">Regional diversity: 58%</p>
-                    </div>
-                    <Users className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
-                <Card className="p-4 w-64">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">$140,456</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">749 salary observations</p>
-                    </div>
-                    <Building2 className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
+                <CompensationStatsCard
+                  title="Matching Profiles"
+                  value="8,745"
+                  subtitle="Regional diversity: 58%"
+                  icon={Users}
+                />
+                <CompensationStatsCard
+                  title="Median Advertised Salary"
+                  value="$140,456"
+                  subtitle="749 salary observations"
+                  icon={Building2}
+                />
               </div>
             </div>
 
@@ -95,7 +88,7 @@ export const CompensationAnalysis = () => {
       </Card>
 
       {/* Stats Section */}
-      <Card className="p-6">
+      <Card className="p-6 bg-[#F7F9FF]">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
             title="Employers Competing"
@@ -125,7 +118,7 @@ export const CompensationAnalysis = () => {
       </Card>
 
       {/* Compensation Analysis Section */}
-      <Card className="p-6">
+      <Card className="p-6 bg-[#F7F9FF]">
         <div className="space-y-6">
           <h3 className="text-lg font-semibold">Compensation Analysis</h3>
           
