@@ -16,8 +16,6 @@ interface FilterSectionProps {
   jobTitles: string[];
   skills: string[];
   companies: string[];
-  onRun?: () => void;
-  onClearAll?: () => void;
 }
 
 export const FilterSection = ({
@@ -32,8 +30,6 @@ export const FilterSection = ({
   jobTitles,
   skills,
   companies,
-  onRun,
-  onClearAll
 }: FilterSectionProps) => {
   return (
     <div className="mt-4 border rounded-lg p-4 space-y-4">
@@ -146,11 +142,16 @@ export const FilterSection = ({
       <div className="flex justify-end gap-2">
         <Button 
           variant="outline" 
-          onClick={onClearAll}
+          onClick={() => {
+            setSelectedJobs([]);
+            setSelectedCompanies([]);
+            setSelectedSkills([]);
+            setSelectedLocations([]);
+          }}
         >
           Clear All
         </Button>
-        <Button onClick={onRun}>Run</Button>
+        <Button>Run</Button>
       </div>
     </div>
   );

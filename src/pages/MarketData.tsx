@@ -1,39 +1,40 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { FilterSection } from '@/components/market/FilterSection';
+import { Sidebar } from '@/components/Sidebar';
 import { CompensationAnalysis } from '@/components/market/CompensationAnalysis';
 import { GlobalLocationInsights } from '@/components/market/GlobalLocationInsights';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
+import { Separator } from "@/components/ui/separator";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FilterSection } from '@/components/market/FilterSection';
 
 const MarketData = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [showAnalysis, setShowAnalysis] = useState(false);
-
-  const handleRun = () => {
-    setShowAnalysis(true);
-  };
-
-  const handleClearAll = () => {
-    setSelectedJobs([]);
-    setSelectedCompanies([]);
-    setSelectedSkills([]);
-    setSelectedLocations([]);
-    setShowAnalysis(false);
-  };
+  const [isFiltersOpen, setIsFiltersOpen] = useState(true);
 
   return (
     <div className="flex min-h-screen bg-background">
+      <Sidebar />
       <div className="flex-1 p-8 ml-16">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="bg-white rounded-lg shadow-sm">
             <div className="p-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-primary">Market Data</h2>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                  className="flex items-center gap-2"
+                >
+                  {isFiltersOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  Filters
+                </Button>
               </div>
 
               <Separator className="mb-6" />
@@ -54,27 +55,32 @@ const MarketData = () => {
                   </TabsTrigger>
                 </TabsList>
 
+                <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+                  <CollapsibleContent>
+                    <div className="py-8">
+                      <FilterSection 
+                        selectedJobs={selectedJobs}
+                        setSelectedJobs={setSelectedJobs}
+                        selectedSkills={selectedSkills}
+                        setSelectedSkills={setSelectedSkills}
+                        selectedLocations={selectedLocations}
+                        setSelectedLocations={setSelectedLocations}
+                        selectedCompanies={selectedCompanies}
+                        setSelectedCompanies={setSelectedCompanies}
+                        jobTitles={jobTitles}
+                        skills={skills}
+                        companies={companies}
+                      />
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+
                 <TabsContent value="location" className="space-y-8 mt-8">
                   <GlobalLocationInsights />
                 </TabsContent>
                 
                 <TabsContent value="compensation" className="mt-8">
-                  <FilterSection 
-                    selectedJobs={selectedJobs}
-                    setSelectedJobs={setSelectedJobs}
-                    selectedSkills={selectedSkills}
-                    setSelectedSkills={setSelectedSkills}
-                    selectedLocations={selectedLocations}
-                    setSelectedLocations={setSelectedLocations}
-                    selectedCompanies={selectedCompanies}
-                    setSelectedCompanies={setSelectedCompanies}
-                    jobTitles={jobTitles}
-                    skills={skills}
-                    companies={companies}
-                    onRun={handleRun}
-                    onClearAll={handleClearAll}
-                  />
-                  <CompensationAnalysis isVisible={showAnalysis} />
+                  <CompensationAnalysis />
                 </TabsContent>
               </Tabs>
             </div>
