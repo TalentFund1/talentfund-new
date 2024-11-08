@@ -125,6 +125,8 @@ const MarketData = () => {
                   </Select>
                 </div>
               </div>
+              
+              <Separator className="my-4" />
 
               <div className="flex justify-end gap-2">
                 <Button 
