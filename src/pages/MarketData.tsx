@@ -6,137 +6,12 @@ import { LocationFilter } from '@/components/market/LocationFilter';
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const MarketData = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-
-  const FilterPanel = () => (
-    <div className="space-y-6">
-      <SearchFilter
-        label="Job Titles"
-        placeholder="Search job titles..."
-        items={jobTitles}
-        selectedItems={selectedJobs}
-        onItemsChange={setSelectedJobs}
-      />
-
-      <SearchFilter
-        label="Skills"
-        placeholder="Search skills..."
-        items={skills}
-        selectedItems={selectedSkills}
-        onItemsChange={setSelectedSkills}
-      />
-
-      <div className="grid grid-cols-2 gap-8">
-        <div className="space-y-1.5">
-          <label className="text-sm text-[#1F2144]">Select Graduation Year</label>
-          <div className="flex items-center gap-2">
-            <Select defaultValue="2020">
-              <SelectTrigger className="w-[120px] bg-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="2020">2020</SelectItem>
-                <SelectItem value="2021">2021</SelectItem>
-                <SelectItem value="2022">2022</SelectItem>
-                <SelectItem value="2023">2023</SelectItem>
-              </SelectContent>
-            </Select>
-            <span className="text-sm text-[#1F2144]">to</span>
-            <Select defaultValue="2024">
-              <SelectTrigger className="w-[120px] bg-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="2024">2024</SelectItem>
-                <SelectItem value="2025">2025</SelectItem>
-                <SelectItem value="2026">2026</SelectItem>
-                <SelectItem value="2027">2027</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-sm text-[#1F2144]">Select Graduation Program</label>
-          <Select defaultValue="">
-            <SelectTrigger className="w-full bg-white">
-              <SelectValue placeholder="Select a program" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="bachelors">Bachelor's Degree</SelectItem>
-              <SelectItem value="masters">Master's Degree</SelectItem>
-              <SelectItem value="phd">Ph.D.</SelectItem>
-              <SelectItem value="diploma">Diploma</SelectItem>
-              <SelectItem value="certificate">Certificate</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <LocationFilter 
-        selectedLocations={selectedLocations}
-        onLocationChange={setSelectedLocations}
-      />
-
-      <SearchFilter
-        label="Companies"
-        placeholder="Search companies..."
-        items={companies}
-        selectedItems={selectedCompanies}
-        onItemsChange={setSelectedCompanies}
-      />
-
-      <div className="space-y-1.5">
-        <label className="text-sm text-[#1F2144]">Select Timeframe</label>
-        <div className="flex items-center gap-2">
-          <Select defaultValue="may2023">
-            <SelectTrigger className="w-[120px] bg-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="may2023">May 2023</SelectItem>
-              <SelectItem value="jun2023">Jun 2023</SelectItem>
-              <SelectItem value="jul2023">Jul 2023</SelectItem>
-            </SelectContent>
-          </Select>
-          <span className="text-sm text-[#1F2144]">to</span>
-          <Select defaultValue="may2024">
-            <SelectTrigger className="w-[120px] bg-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="may2024">May 2024</SelectItem>
-              <SelectItem value="jun2024">Jun 2024</SelectItem>
-              <SelectItem value="jul2024">Jul 2024</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      
-      <Separator className="my-4" />
-
-      <div className="flex justify-end gap-2">
-        <Button 
-          variant="outline" 
-          onClick={() => {
-            setSelectedJobs([]);
-            setSelectedCompanies([]);
-            setSelectedSkills([]);
-            setSelectedLocations([]);
-          }}
-        >
-          Clear All
-        </Button>
-        <Button>Run</Button>
-      </div>
-    </div>
-  );
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -147,54 +22,127 @@ const MarketData = () => {
             <h2 className="text-2xl font-bold text-[#1F2144]">Market Data</h2>
             <Separator className="my-4" />
             
-            <Tabs defaultValue="location" className="w-full">
-              <TabsList className="mb-8">
-                <TabsTrigger value="location">Location Analysis</TabsTrigger>
-                <TabsTrigger value="compensation">Compensation Analysis</TabsTrigger>
-                <TabsTrigger value="skills">Skills Analysis</TabsTrigger>
-                <TabsTrigger value="industry">Industry Analysis</TabsTrigger>
-              </TabsList>
+            <div className="space-y-6">              
+              <SearchFilter
+                label="Job Titles"
+                placeholder="Search job titles..."
+                items={jobTitles}
+                selectedItems={selectedJobs}
+                onItemsChange={setSelectedJobs}
+              />
 
-              <TabsContent value="location">
-                <div className="space-y-8">
-                  <FilterPanel />
-                  <div className="mt-8">
-                    <h3 className="text-lg font-semibold mb-4">Location Analysis</h3>
-                    {/* Location analysis content will go here */}
+              <SearchFilter
+                label="Skills"
+                placeholder="Search skills..."
+                items={skills}
+                selectedItems={selectedSkills}
+                onItemsChange={setSelectedSkills}
+              />
+
+              <div className="grid grid-cols-2 gap-8">
+                <div className="space-y-1.5">
+                  <label className="text-sm text-[#1F2144]">Select Graduation Year</label>
+                  <div className="flex items-center gap-2">
+                    <Select defaultValue="2020">
+                      <SelectTrigger className="w-[120px] bg-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="2020">2020</SelectItem>
+                        <SelectItem value="2021">2021</SelectItem>
+                        <SelectItem value="2022">2022</SelectItem>
+                        <SelectItem value="2023">2023</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <span className="text-sm text-[#1F2144]">to</span>
+                    <Select defaultValue="2024">
+                      <SelectTrigger className="w-[120px] bg-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="2024">2024</SelectItem>
+                        <SelectItem value="2025">2025</SelectItem>
+                        <SelectItem value="2026">2026</SelectItem>
+                        <SelectItem value="2027">2027</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
-              </TabsContent>
 
-              <TabsContent value="compensation">
-                <div className="space-y-8">
-                  <FilterPanel />
-                  <div className="mt-8">
-                    <h3 className="text-lg font-semibold mb-4">Compensation Analysis</h3>
-                    {/* Compensation analysis content will go here */}
-                  </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm text-[#1F2144]">Select Graduation Program</label>
+                  <Select defaultValue="">
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue placeholder="Select a program" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="bachelors">Bachelor's Degree</SelectItem>
+                      <SelectItem value="masters">Master's Degree</SelectItem>
+                      <SelectItem value="phd">Ph.D.</SelectItem>
+                      <SelectItem value="diploma">Diploma</SelectItem>
+                      <SelectItem value="certificate">Certificate</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-              </TabsContent>
+              </div>
 
-              <TabsContent value="skills">
-                <div className="space-y-8">
-                  <FilterPanel />
-                  <div className="mt-8">
-                    <h3 className="text-lg font-semibold mb-4">Skills Analysis</h3>
-                    {/* Skills analysis content will go here */}
-                  </div>
-                </div>
-              </TabsContent>
+              <LocationFilter 
+                selectedLocations={selectedLocations}
+                onLocationChange={setSelectedLocations}
+              />
 
-              <TabsContent value="industry">
-                <div className="space-y-8">
-                  <FilterPanel />
-                  <div className="mt-8">
-                    <h3 className="text-lg font-semibold mb-4">Industry Analysis</h3>
-                    {/* Industry analysis content will go here */}
-                  </div>
+              <SearchFilter
+                label="Companies"
+                placeholder="Search companies..."
+                items={companies}
+                selectedItems={selectedCompanies}
+                onItemsChange={setSelectedCompanies}
+              />
+
+              <div className="space-y-1.5">
+                <label className="text-sm text-[#1F2144]">Select Timeframe</label>
+                <div className="flex items-center gap-2">
+                  <Select defaultValue="may2023">
+                    <SelectTrigger className="w-[120px] bg-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="may2023">May 2023</SelectItem>
+                      <SelectItem value="jun2023">Jun 2023</SelectItem>
+                      <SelectItem value="jul2023">Jul 2023</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <span className="text-sm text-[#1F2144]">to</span>
+                  <Select defaultValue="may2024">
+                    <SelectTrigger className="w-[120px] bg-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="may2024">May 2024</SelectItem>
+                      <SelectItem value="jun2024">Jun 2024</SelectItem>
+                      <SelectItem value="jul2024">Jul 2024</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-              </TabsContent>
-            </Tabs>
+              </div>
+              
+              <Separator className="my-4" />
+
+              <div className="flex justify-end gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setSelectedJobs([]);
+                    setSelectedCompanies([]);
+                    setSelectedSkills([]);
+                    setSelectedLocations([]);
+                  }}
+                >
+                  Clear All
+                </Button>
+                <Button>Run</Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
