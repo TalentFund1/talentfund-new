@@ -1,12 +1,13 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { MapContainer, TileLayer } from 'react-leaflet';
 import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import 'leaflet.heat';
+import { LocationsTable } from "./LocationsTable";
+import { HeatMap } from "./HeatMap";
+import { Location } from "./types";
 
 // Fix for default marker icon in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -16,7 +17,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const locations = [
+const locations: Location[] = [
   { 
     name: "New York, NY",
     position: [40.7128, -74.0060],
@@ -54,9 +55,6 @@ const locations = [
 
 export const MarketAnalysisTabs = () => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [map, setMap] = useState<L.Map | null>(null);
-  const [heatLayer, setHeatLayer] = useState<L.HeatLayer | null>(null);
-  const mapRef = useRef<L.Map | null>(null);
 
   const toggleFilter = (filter: string) => {
     setSelectedFilters(prev => 
@@ -66,69 +64,23 @@ export const MarketAnalysisTabs = () => {
     );
   };
 
-  useEffect(() => {
-    if (mapRef.current && !heatLayer) {
-      const points = locations.map(loc => [
-        ...loc.position,
-        loc.profiles / 1000 // Normalize the intensity based on profiles
-      ] as [number, number, number]);
-      
-      const heat = (L as any).heatLayer(points, {
-        radius: 25,
-        blur: 15,
-        maxZoom: 10,
-        max: Math.max(...locations.map(l => l.profiles)) / 1000,
-        gradient: {
-          0.4: 'blue',
-          0.6: 'lime',
-          0.8: 'yellow',
-          1.0: 'red'
-        }
-      });
-      
-      heat.addTo(mapRef.current);
-      setHeatLayer(heat);
-    }
-
-    return () => {
-      if (mapRef.current && heatLayer) {
-        mapRef.current.removeLayer(heatLayer);
-        setHeatLayer(null);
-      }
-    };
-  }, [mapRef.current]);
-
   return (
-    <Card className="p-6 mt-6 bg-white shadow-sm">
+    <Card className="p-8 mt-6 bg-white shadow-sm">
       <Tabs defaultValue="location" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6">
+        <TabsList className="grid w-full grid-cols-2 mb-8">
           <TabsTrigger value="location" className="text-sm">Location Analysis</TabsTrigger>
           <TabsTrigger value="compensation" className="text-sm">Compensation Analysis</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="location" className="space-y-6">
-          <div className="space-y-6">
+        <TabsContent value="location" className="space-y-8">
+          <div className="space-y-8">
             <h3 className="text-lg font-semibold text-primary">Location Analysis</h3>
             <div className="h-[400px] w-full rounded-lg overflow-hidden border border-border">
-              <MapContainer 
-                center={[40.7128, -74.0060] as L.LatLngExpression}
-                zoom={4}
-                className="h-full w-full"
-                ref={(map) => {
-                  if (map) {
-                    mapRef.current = map;
-                    setMap(map);
-                  }
-                }}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-              </MapContainer>
+              <HeatMap locations={locations} />
             </div>
 
-            <div className="space-y-6">
-              <Card className="p-4 bg-secondary">
+            <div className="space-y-8">
+              <Card className="p-6 bg-secondary">
                 <div className="flex items-center gap-8">
                   <span className="text-sm font-medium text-primary">Display:</span>
                   <div className="flex items-center gap-6">
@@ -156,35 +108,8 @@ export const MarketAnalysisTabs = () => {
                 </div>
               </Card>
 
-              <Card className="overflow-hidden border border-border">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-secondary hover:bg-secondary">
-                      <TableHead className="font-medium text-sm text-primary">Location</TableHead>
-                      <TableHead className="text-right font-medium text-sm text-primary">Number of Profiles ↑</TableHead>
-                      <TableHead className="text-right font-medium text-sm text-primary">Number of Unique Jobs ↑</TableHead>
-                      <TableHead className="text-right font-medium text-sm text-primary">Median Compensation ↑</TableHead>
-                      <TableHead className="text-right font-medium text-sm text-primary">Total Diversity ↑</TableHead>
-                      <TableHead className="text-right font-medium text-sm text-primary">Percent Diversity</TableHead>
-                      <TableHead className="text-right font-medium text-sm text-primary">Posting Intensity</TableHead>
-                      <TableHead className="text-right font-medium text-sm text-primary">Median Posting Duration</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {locations.map((location) => (
-                      <TableRow key={location.name} className="hover:bg-secondary/50">
-                        <TableCell className="font-medium text-sm">{location.name}</TableCell>
-                        <TableCell className="text-right text-sm">{location.profiles.toLocaleString()}</TableCell>
-                        <TableCell className="text-right text-sm">{location.uniqueJobs}</TableCell>
-                        <TableCell className="text-right text-sm">${location.medianCompensation.toLocaleString()}</TableCell>
-                        <TableCell className="text-right text-sm">{location.totalDiversity.toLocaleString()}</TableCell>
-                        <TableCell className="text-right text-sm">{location.percentDiversity}</TableCell>
-                        <TableCell className="text-right text-sm">{location.postingIntensity}</TableCell>
-                        <TableCell className="text-right text-sm">{location.medianDuration}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+              <Card className="overflow-hidden border border-border p-0">
+                <LocationsTable locations={locations} />
               </Card>
             </div>
           </div>
