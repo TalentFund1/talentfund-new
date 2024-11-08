@@ -29,34 +29,36 @@ export const CompensationTable = ({
   salaryData
 }: CompensationTableProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-in">
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Compensation Analysis</h3>
-        <p className="text-sm">
-          <span className="font-medium">Compensation Range: {salaryRange}:</span> {observations}
-        </p>
-        <p className="text-sm text-muted-foreground">{locationData}</p>
+        <h3 className="text-xl font-semibold text-foreground">Compensation Analysis</h3>
+        <div className="space-y-2">
+          <p className="text-sm leading-relaxed">
+            <span className="font-medium text-foreground">Compensation Range: {salaryRange}:</span> {observations}
+          </p>
+          <p className="text-sm leading-relaxed text-muted-foreground">{locationData}</p>
+        </div>
       </div>
 
-      <Card>
+      <Card className="overflow-hidden border-border">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Role Name</TableHead>
-              <TableHead>Level</TableHead>
-              <TableHead>Currency</TableHead>
-              <TableHead>Salary Range</TableHead>
-              <TableHead>10th</TableHead>
-              <TableHead>25th</TableHead>
-              <TableHead>50th</TableHead>
-              <TableHead>75th</TableHead>
-              <TableHead>90th</TableHead>
+            <TableRow className="bg-secondary hover:bg-secondary">
+              <TableHead className="font-medium">Role Name</TableHead>
+              <TableHead className="font-medium">Level</TableHead>
+              <TableHead className="font-medium">Currency</TableHead>
+              <TableHead className="font-medium">Salary Range</TableHead>
+              <TableHead className="font-medium">10th</TableHead>
+              <TableHead className="font-medium">25th</TableHead>
+              <TableHead className="font-medium">50th</TableHead>
+              <TableHead className="font-medium">75th</TableHead>
+              <TableHead className="font-medium">90th</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {salaryData.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.role}</TableCell>
+              <TableRow key={index} className="hover:bg-secondary/50">
+                <TableCell className="font-medium">{row.role}</TableCell>
                 <TableCell>{row.level}</TableCell>
                 <TableCell>{row.currency}</TableCell>
                 <TableCell>{row.range}</TableCell>
@@ -72,7 +74,7 @@ export const CompensationTable = ({
       </Card>
 
       <div className="flex justify-end">
-        <img src="/lightcast-logo.png" alt="Powered by Lightcast" className="h-6" />
+        <img src="/lightcast-logo.png" alt="Powered by Lightcast" className="h-6 opacity-75 hover:opacity-100 transition-opacity" />
       </div>
     </div>
   );
