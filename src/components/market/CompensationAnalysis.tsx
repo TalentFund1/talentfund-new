@@ -1,6 +1,6 @@
 import { CompensationHeader } from "./compensation/CompensationHeader";
 import { JobPostingStats } from "./compensation/JobPostingStats";
-import { CompensationTable } from "./compensation/CompensationTable";
+import { PayBands } from "./compensation/PayBands";
 
 interface CompensationAnalysisProps {
   isVisible: boolean;
@@ -13,7 +13,7 @@ export const CompensationAnalysis = ({ isVisible }: CompensationAnalysisProps) =
     <div className="space-y-6">
       <CompensationHeader />
       <JobPostingStats />
-      <CompensationTable />
+      <PayBands />
     </div>
   );
 };
