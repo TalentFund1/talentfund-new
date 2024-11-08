@@ -86,7 +86,7 @@ export const GlobalLocationInsights = () => {
     <Card className="p-8 mt-8 bg-white shadow-sm">
       <div className="space-y-12">
         <div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold text-primary">Global Location Insights</h3>
             <Button 
               variant="outline" 
@@ -98,36 +98,38 @@ export const GlobalLocationInsights = () => {
               Export Data
             </Button>
           </div>
-          <Separator className="mt-4 bg-border" />
-          <div className="mt-4">
-            <div className="flex items-end gap-3">
+
+          <Separator className="mb-8" />
+
+          <div>
+            <div className="flex items-end gap-3 mb-6">
               <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
               <span className="text-secondary-foreground text-sm mb-1">SOC: (11-9041)</span>
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 border-b border-border pb-12">
-          <StatCard
-            title="Total Profiles"
-            value="2,845"
-            icon={<Users className="h-6 w-6" />}
-          />
-          <StatCard
-            title="Median Base Salary"
-            value="$125,000"
-            icon={<DollarSign className="h-6 w-6" />}
-          />
-          <StatCard
-            title="YoY Growth"
-            value="12.5%"
-            icon={<TrendingUp className="h-6 w-6" />}
-          />
-          <StatCard
-            title="Time in Role"
-            value="2.3 years"
-            icon={<Clock className="h-6 w-6" />}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 border-b border-border pb-12">
+            <StatCard
+              title="Total Profiles"
+              value="2,845"
+              icon={<Users className="h-6 w-6" />}
+            />
+            <StatCard
+              title="Median Base Salary"
+              value="$125,000"
+              icon={<DollarSign className="h-6 w-6" />}
+            />
+            <StatCard
+              title="YoY Growth"
+              value="12.5%"
+              icon={<TrendingUp className="h-6 w-6" />}
+            />
+            <StatCard
+              title="Time in Role"
+              value="2.3 years"
+              icon={<Clock className="h-6 w-6" />}
+            />
+          </div>
         </div>
 
         <div className="overflow-hidden border border-border rounded-lg">
