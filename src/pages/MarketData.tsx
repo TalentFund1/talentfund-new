@@ -22,7 +22,7 @@ const MarketData = () => {
             <h2 className="text-2xl font-bold">Market Data</h2>
             <Separator className="my-4" />
             
-            <div className="space-y-4">              
+            <div className="space-y-6">              
               <SearchFilter
                 label="Job Titles"
                 placeholder="Search job titles..."
@@ -44,7 +44,7 @@ const MarketData = () => {
                 onLocationChange={setSelectedLocations}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm block">Select Graduation Year</label>
                   <div className="flex items-center gap-2">
