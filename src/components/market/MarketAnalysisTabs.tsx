@@ -1,3 +1,4 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -56,11 +57,7 @@ const locations: Location[] = [
   }
 ];
 
-interface MarketAnalysisTabsProps {
-  showGlobalInsights?: boolean;
-}
-
-export const MarketAnalysisTabs = ({ showGlobalInsights = true }: MarketAnalysisTabsProps) => {
+export const MarketAnalysisTabs = () => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>(["profiles"]);
 
   const toggleFilter = (filter: string) => {
@@ -97,53 +94,6 @@ export const MarketAnalysisTabs = ({ showGlobalInsights = true }: MarketAnalysis
     link.click();
     document.body.removeChild(link);
   };
-
-  if (!showGlobalInsights) {
-    return (
-      <Card className="p-8 mt-6 bg-white shadow-sm">
-        <div className="overflow-hidden border border-border rounded-lg">
-          <div className="h-[400px] w-full overflow-hidden">
-            <HeatMap locations={locations} selectedFilters={selectedFilters} />
-          </div>
-
-          <div className="border-t border-border bg-secondary p-6">
-            <div className="flex items-center gap-8">
-              <span className="text-sm font-medium text-primary">Display:</span>
-              <div className="flex items-center gap-6">
-                {[
-                  { id: "profiles", label: "Profiles" },
-                  { id: "uniqueJobs", label: "Unique Jobs" },
-                  { id: "compensation", label: "Compensation" },
-                  { id: "diversity", label: "Diversity" }
-                ].map((filter) => (
-                  <div key={filter.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={filter.id}
-                      checked={selectedFilters.includes(filter.id)}
-                      onCheckedChange={() => toggleFilter(filter.id)}
-                      className="h-4 w-4 rounded border-primary data-[state=checked]:bg-[#4285f4] data-[state=checked]:border-[#4285f4]"
-                    />
-                    <Label
-                      htmlFor={filter.id}
-                      className="text-sm font-medium leading-none text-primary cursor-pointer"
-                    >
-                      {filter.label}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-12">
-          <Card className="overflow-hidden border border-border">
-            <LocationsTable locations={locations} />
-          </Card>
-        </div>
-      </Card>
-    );
-  }
 
   return (
     <Card className="p-8 mt-6 bg-white shadow-sm">
