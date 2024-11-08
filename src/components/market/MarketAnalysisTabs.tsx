@@ -97,7 +97,7 @@ export const MarketAnalysisTabs = () => {
 
   return (
     <Card className="p-8 mt-6 bg-white shadow-sm">
-      <div className="space-y-4">
+      <div className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="Total Profiles"
@@ -168,9 +168,11 @@ export const MarketAnalysisTabs = () => {
           </div>
         </div>
 
-        <Card className="overflow-hidden border border-border">
-          <LocationsTable locations={locations} />
-        </Card>
+        <div className="mt-12">
+          <Card className="overflow-hidden border border-border">
+            <LocationsTable locations={locations} />
+          </Card>
+        </div>
       </div>
     </Card>
   );
