@@ -98,6 +98,18 @@ export const MarketAnalysisTabs = () => {
   return (
     <Card className="p-8 mt-6 bg-white shadow-sm">
       <div className="space-y-8">
+        <div className="flex justify-end">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleExport}
+            className="flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export Data
+          </Button>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="Total Profiles"
@@ -124,15 +136,6 @@ export const MarketAnalysisTabs = () => {
         <div className="overflow-hidden border border-border rounded-lg">
           <div className="flex justify-between items-center p-4 border-b border-border">
             <h3 className="text-xl font-semibold">Global Location Insights</h3>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={handleExport}
-              className="flex items-center gap-2"
-            >
-              <Download className="h-4 w-4" />
-              Export Data
-            </Button>
           </div>
           <div className="h-[400px] w-full overflow-hidden">
             <HeatMap locations={locations} selectedFilters={selectedFilters} />
