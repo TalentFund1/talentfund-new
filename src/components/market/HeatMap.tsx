@@ -1,7 +1,6 @@
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { Location } from './types';
 
 interface HeatMapProps {
@@ -10,15 +9,8 @@ interface HeatMapProps {
 }
 
 export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
-  useEffect(() => {
-    // Fix Leaflet default icon path issues
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    });
-  }, []);
+  const [map, setMap] = useState<L.Map | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
 
   const getRadius = (value: number, type: string) => {
     switch(type) {
@@ -74,14 +66,17 @@ export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
 
   return (
     <MapContainer 
-      center={[40.7128, -74.0060]}
+      center={[40.7128, -74.0060] as L.LatLngExpression}
       zoom={4}
       className="h-full w-full"
-      style={{ height: '400px', width: '100%' }}
-      scrollWheelZoom={false}
+      ref={(map) => {
+        if (map) {
+          mapRef.current = map;
+          setMap(map);
+        }
+      }}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {selectedFilters.map(filter => 
@@ -109,15 +104,13 @@ export const HeatMap = ({ locations, selectedFilters }: HeatMapProps) => {
           return (
             <CircleMarker
               key={`${filter}-${index}`}
-              center={[location.position[0], location.position[1]]}
+              center={location.position as L.LatLngExpression}
               radius={getRadius(value, filter)}
-              pathOptions={{
-                fillColor: style.fillColor,
-                color: style.color,
-                weight: 1,
-                opacity: 0.8,
-                fillOpacity: 0.35
-              }}
+              fillColor={style.fillColor}
+              color={style.color}
+              weight={1}
+              opacity={0.8}
+              fillOpacity={0.35}
             >
               <Popup>
                 <div className="p-2">
