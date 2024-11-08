@@ -1,3 +1,5 @@
+import { CompensationTrendsChart } from "./CompensationTrendsChart";
+
 interface CompensationDescriptionProps {
   range: string;
   observations: number;
@@ -24,6 +26,8 @@ export const CompensationDescription = ({
           Typical compensation in {location} ranges from {range}. The median wage is {median}, which is about the same as the national median. When you adjust the median wage for location cost of living (which is {costOfLiving}% below the average) workers "feel like" they make {adjustedMedian}.
         </p>
       </div>
+
+      <CompensationTrendsChart />
     </div>
   );
 };
