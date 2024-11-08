@@ -12,7 +12,7 @@ export const CompensationHeader = () => {
       <div className="space-y-4">
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xl font-semibold text-primary">Demand and Supply Analysis</h3>
+            <h3 className="text-xl font-semibold text-primary">Supply and Demand Analysis</h3>
             <Button 
               variant="default"
               className="bg-[#1F2144] text-white hover:bg-[#1F2144]/90"

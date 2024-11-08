@@ -51,7 +51,7 @@ const MarketData = () => {
                     value="compensation" 
                     className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
                   >
-                    Demand and Supply Analysis
+                    Supply and Demand Analysis
                   </TabsTrigger>
                 </TabsList>
 
