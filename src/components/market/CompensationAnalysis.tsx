@@ -3,6 +3,7 @@ import { StatCard } from "@/components/StatCard";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Building2, Users, Clock, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 export const CompensationAnalysis = () => {
   return (
@@ -12,6 +13,7 @@ export const CompensationAnalysis = () => {
         <div className="space-y-6">
           <div>
             <h3 className="text-xl font-semibold text-primary">Compensation Analysis</h3>
+            <Separator className="my-4" />
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
