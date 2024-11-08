@@ -51,7 +51,7 @@ const MarketData = () => {
                     value="compensation" 
                     className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
                   >
-                    Supply and Demand Analysis
+                    Compensation Analysis
                   </TabsTrigger>
                 </TabsList>
 
@@ -75,7 +75,7 @@ const MarketData = () => {
                   </CollapsibleContent>
                 </Collapsible>
 
-                <div className="mt-8 bg-background -mx-8 -mb-8 p-8">
+                <div className="mt-8 bg-background p-8">
                   <TabsContent value="location" className="space-y-8 mt-0">
                     <GlobalLocationInsights />
                   </TabsContent>
