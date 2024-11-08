@@ -3,10 +3,10 @@ import { Card } from "@/components/ui/card";
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState, useEffect } from "react";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import 'leaflet.heat';
-import { useState, useEffect } from "react";
 
 // Fix for default marker icon in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -98,21 +98,21 @@ export const MarketAnalysisTabs = () => {
   }, [map]);
 
   return (
-    <Card className="p-6 mt-6">
+    <Card className="p-6 mt-6 bg-white shadow-sm">
       <Tabs defaultValue="location" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="location">Location Analysis</TabsTrigger>
-          <TabsTrigger value="compensation">Compensation Analysis</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsTrigger value="location" className="text-sm">Location Analysis</TabsTrigger>
+          <TabsTrigger value="compensation" className="text-sm">Compensation Analysis</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="location" className="space-y-4">
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-4">Location Analysis</h3>
-            <div style={{ height: "400px", width: "100%" }}>
+        <TabsContent value="location" className="space-y-6">
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-primary">Location Analysis</h3>
+            <div className="h-[400px] w-full rounded-lg overflow-hidden border border-border">
               <MapContainer 
                 center={[40.7128, -74.0060] as L.LatLngExpression}
                 zoom={4}
-                style={{ height: "100%", width: "100%" }}
+                className="h-full w-full"
                 whenCreated={setMap}
               >
                 <TileLayer
@@ -121,10 +121,10 @@ export const MarketAnalysisTabs = () => {
               </MapContainer>
             </div>
 
-            <div className="mt-8 space-y-6">
-              <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="space-y-6">
+              <Card className="p-4 bg-secondary">
                 <div className="flex items-center gap-8">
-                  <span className="font-medium text-gray-700">Display:</span>
+                  <span className="text-sm font-medium text-primary">Display:</span>
                   <div className="flex items-center gap-6">
                     {[
                       { id: "profiles", label: "Profiles" },
@@ -140,7 +140,7 @@ export const MarketAnalysisTabs = () => {
                         />
                         <label 
                           htmlFor={filter.id}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          className="text-sm font-medium leading-none text-primary cursor-pointer"
                         >
                           {filter.label}
                         </label>
@@ -148,46 +148,46 @@ export const MarketAnalysisTabs = () => {
                     ))}
                   </div>
                 </div>
-              </div>
+              </Card>
 
-              <div className="rounded-lg border shadow-sm">
+              <Card className="overflow-hidden border border-border">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-gray-50">
-                      <TableHead className="font-semibold">Location</TableHead>
-                      <TableHead className="text-right font-semibold">Number of Profiles ↑</TableHead>
-                      <TableHead className="text-right font-semibold">Number of Unique Jobs ↑</TableHead>
-                      <TableHead className="text-right font-semibold">Median Compensation ↑</TableHead>
-                      <TableHead className="text-right font-semibold">Total Diversity ↑</TableHead>
-                      <TableHead className="text-right font-semibold">Percent Diversity</TableHead>
-                      <TableHead className="text-right font-semibold">Posting Intensity</TableHead>
-                      <TableHead className="text-right font-semibold">Median Posting Duration</TableHead>
+                    <TableRow className="bg-secondary hover:bg-secondary">
+                      <TableHead className="font-medium text-sm text-primary">Location</TableHead>
+                      <TableHead className="text-right font-medium text-sm text-primary">Number of Profiles ↑</TableHead>
+                      <TableHead className="text-right font-medium text-sm text-primary">Number of Unique Jobs ↑</TableHead>
+                      <TableHead className="text-right font-medium text-sm text-primary">Median Compensation ↑</TableHead>
+                      <TableHead className="text-right font-medium text-sm text-primary">Total Diversity ↑</TableHead>
+                      <TableHead className="text-right font-medium text-sm text-primary">Percent Diversity</TableHead>
+                      <TableHead className="text-right font-medium text-sm text-primary">Posting Intensity</TableHead>
+                      <TableHead className="text-right font-medium text-sm text-primary">Median Posting Duration</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {locations.map((location) => (
-                      <TableRow key={location.name} className="hover:bg-gray-50">
-                        <TableCell className="font-medium">{location.name}</TableCell>
-                        <TableCell className="text-right">{location.profiles.toLocaleString()}</TableCell>
-                        <TableCell className="text-right">{location.uniqueJobs}</TableCell>
-                        <TableCell className="text-right">${location.medianCompensation.toLocaleString()}</TableCell>
-                        <TableCell className="text-right">{location.totalDiversity.toLocaleString()}</TableCell>
-                        <TableCell className="text-right">{location.percentDiversity}</TableCell>
-                        <TableCell className="text-right">{location.postingIntensity}</TableCell>
-                        <TableCell className="text-right">{location.medianDuration}</TableCell>
+                      <TableRow key={location.name} className="hover:bg-secondary/50">
+                        <TableCell className="font-medium text-sm">{location.name}</TableCell>
+                        <TableCell className="text-right text-sm">{location.profiles.toLocaleString()}</TableCell>
+                        <TableCell className="text-right text-sm">{location.uniqueJobs}</TableCell>
+                        <TableCell className="text-right text-sm">${location.medianCompensation.toLocaleString()}</TableCell>
+                        <TableCell className="text-right text-sm">{location.totalDiversity.toLocaleString()}</TableCell>
+                        <TableCell className="text-right text-sm">{location.percentDiversity}</TableCell>
+                        <TableCell className="text-right text-sm">{location.postingIntensity}</TableCell>
+                        <TableCell className="text-right text-sm">{location.medianDuration}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-              </div>
+              </Card>
             </div>
           </div>
         </TabsContent>
         
         <TabsContent value="compensation" className="space-y-4">
           <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-4">Compensation Analysis</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-lg font-semibold text-primary">Compensation Analysis</h3>
+            <p className="text-sm text-muted-foreground mt-2">
               Compensation analysis data will be displayed here.
             </p>
           </div>
