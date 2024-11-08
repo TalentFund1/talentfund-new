@@ -78,7 +78,9 @@ export const CompensationHeader = () => {
             </div>
           </div>
 
-          <div className="mt-8">
+          <Separator className="my-8" />
+
+          <div>
             <h3 className="text-lg font-semibold mb-3">Job Description</h3>
             <div className="relative">
               <p className={`text-secondary-foreground ${!isExpanded ? 'line-clamp-2' : ''}`}>
