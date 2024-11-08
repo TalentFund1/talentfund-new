@@ -26,7 +26,7 @@ export const LocationMap = () => {
       </div>
       <MapContainer
         className="map-container"
-        center={center}
+        center={center as LatLngExpression}
         zoom={4}
         style={{ height: "calc(100% - 57px)", width: "100%" }}
         scrollWheelZoom={false}
@@ -34,6 +34,7 @@ export const LocationMap = () => {
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxZoom={19}
         />
         {locations.map((location) => {
           const position: LatLngExpression = [location.lat, location.lng];
