@@ -9,6 +9,7 @@ import { jobTitles, companies, skills } from '@/components/market/FilterData';
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const MarketData = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
@@ -37,6 +38,23 @@ const MarketData = () => {
             </div>
 
             <Separator className="mb-4" />
+
+            <div className="border-b border-border">
+              <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0">
+                <TabsTrigger 
+                  value="location" 
+                  className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                >
+                  Location Analysis
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="compensation" 
+                  className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
+                >
+                  Compensation Analysis
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
               <CollapsibleContent className="space-y-6">
