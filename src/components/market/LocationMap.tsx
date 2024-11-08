@@ -25,15 +25,15 @@ export const LocationMap = () => {
         <h3 className="text-lg font-semibold">Location Analysis</h3>
       </div>
       <MapContainer
+        className="map-container"
         center={center}
         zoom={4}
         style={{ height: "calc(100% - 57px)", width: "100%" }}
         scrollWheelZoom={false}
-        attributionControl={true}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {locations.map((location) => {
           const position: LatLngExpression = [location.lat, location.lng];
