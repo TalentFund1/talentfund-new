@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 
 export const JobPostingStats = () => {
   return (
-    <Card className="p-6">
+    <Card className="p-6 bg-white">
       <div className="space-y-6">
         <div>
           <h3 className="text-xl font-semibold text-primary mb-4">Job Postings vs. Hires</h3>
