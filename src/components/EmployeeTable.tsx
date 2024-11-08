@@ -76,7 +76,7 @@ export const EmployeeTable = () => {
           </thead>
           <tbody>
             {employees.map((employee, index) => (
-              <tr key={employee.name} className="border-b border-border hover:bg-muted/50 transition-colors">
+              <tr key={employee.name} className="border-t border-border hover:bg-muted/50 transition-colors">
                 <td className="px-4 py-4">
                   <input type="checkbox" className="rounded border-gray-300" />
                 </td>
