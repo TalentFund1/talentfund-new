@@ -16,6 +16,19 @@ const MarketData = () => {
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [isFiltersOpen, setIsFiltersOpen] = useState(true);
+  const [showResults, setShowResults] = useState(false);
+
+  const handleRun = () => {
+    setShowResults(true);
+  };
+
+  const handleClearAll = () => {
+    setSelectedJobs([]);
+    setSelectedCompanies([]);
+    setSelectedSkills([]);
+    setSelectedLocations([]);
+    setShowResults(false);
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -68,6 +81,8 @@ const MarketData = () => {
                         jobTitles={jobTitles}
                         skills={skills}
                         companies={companies}
+                        onRun={handleRun}
+                        onClearAll={handleClearAll}
                       />
                     </div>
                   </CollapsibleContent>
@@ -78,7 +93,7 @@ const MarketData = () => {
                 </TabsContent>
                 
                 <TabsContent value="compensation" className="mt-8">
-                  <CompensationAnalysis />
+                  <CompensationAnalysis isVisible={showResults} />
                 </TabsContent>
               </Tabs>
             </div>
