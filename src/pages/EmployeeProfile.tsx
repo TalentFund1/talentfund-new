@@ -68,12 +68,12 @@ const EmployeeProfile = () => {
 
             <div className="grid grid-cols-4 gap-8">
               <div className="space-y-1.5">
-                <span className="text-sm text-muted-foreground">Department</span>
-                <p className="font-medium">Engineering</p>
-              </div>
-              <div className="space-y-1.5">
                 <span className="text-sm text-muted-foreground">Office</span>
                 <p className="font-medium">Toronto</p>
+              </div>
+              <div className="space-y-1.5">
+                <span className="text-sm text-muted-foreground">Department</span>
+                <p className="font-medium">Engineering</p>
               </div>
               <div className="space-y-1.5">
                 <span className="text-sm text-muted-foreground">Category</span>
