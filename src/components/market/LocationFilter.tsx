@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { useState, useRef, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { X, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface LocationFilterProps {
   selectedLocations: string[];
@@ -10,13 +10,27 @@ interface LocationFilterProps {
 }
 
 export const LocationFilter = ({ selectedLocations, onLocationChange }: LocationFilterProps) => {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+        setSearchQuery("");
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSelect = (location: string) => {
     // Only allow one location to be selected
     onLocationChange([location]);
-    setOpen(false);
+    setSearchQuery("");
+    setIsOpen(false);
   };
 
   const removeLocation = (location: string) => {
@@ -29,7 +43,7 @@ export const LocationFilter = ({ selectedLocations, onLocationChange }: Location
   );
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" ref={dropdownRef}>
       <label className="text-sm mb-2 block">Location</label>
       <div className="relative">
         <div className="flex flex-wrap gap-2 mb-2">
@@ -43,34 +57,49 @@ export const LocationFilter = ({ selectedLocations, onLocationChange }: Location
             </Badge>
           ))}
         </div>
-        <Input
-          placeholder={selectedLocations.length === 0 ? "Add Location" : ""}
-          onClick={() => setOpen(true)}
-          readOnly
-          className="bg-white"
-        />
-        <CommandDialog open={open} onOpenChange={setOpen}>
-          <Command className="rounded-lg border shadow-md">
-            <CommandInput 
-              placeholder="Search locations..."
-              value={searchQuery}
-              onValueChange={setSearchQuery}
-            />
-            <CommandList>
-              <CommandEmpty>No locations found.</CommandEmpty>
-              <CommandGroup>
-                {filteredLocations.map((location) => (
-                  <CommandItem
+        <div 
+          className="relative cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <Input
+            placeholder={selectedLocations.length === 0 ? "Add Location" : ""}
+            value={isOpen ? searchQuery : ""}
+            onChange={(e) => {
+              e.stopPropagation();
+              setSearchQuery(e.target.value);
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(true);
+            }}
+            className="bg-white pr-8"
+          />
+          <ChevronDown className={cn(
+            "absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 transition-transform",
+            isOpen && "transform rotate-180"
+          )} />
+        </div>
+        {isOpen && (
+          <div className="absolute z-50 w-full mt-1 bg-white rounded-md border shadow-lg max-h-60 overflow-auto">
+            <div className="p-1">
+              {filteredLocations.length === 0 ? (
+                <div className="py-2 px-3 text-sm text-gray-500">
+                  No locations found.
+                </div>
+              ) : (
+                filteredLocations.map((location) => (
+                  <div
                     key={location}
-                    onSelect={() => handleSelect(location)}
+                    onClick={() => handleSelect(location)}
+                    className="flex items-center justify-between px-3 py-2 text-sm rounded hover:bg-gray-100 cursor-pointer"
                   >
                     {location}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </CommandDialog>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
