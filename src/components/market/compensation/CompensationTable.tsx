@@ -22,7 +22,7 @@ export const CompensationTable = () => {
           <Table>
             <TableHeader>
               <TableRow className="bg-secondary hover:bg-secondary">
-                <TableHead className="h-12 px-4 text-left font-medium text-sm text-primary py-4 border-r border-border">Role Name</TableHead>
+                <TableHead className="h-12 px-4 text-left font-bold text-base text-primary py-4 border-r border-border">Role Name</TableHead>
                 <TableHead className="h-12 px-4 text-left font-medium text-sm text-primary py-4 border-r border-border">Level</TableHead>
                 <TableHead className="h-12 px-4 text-left font-medium text-sm text-primary py-4 border-r border-border">Currency</TableHead>
                 <TableHead className="h-12 px-4 text-left font-medium text-sm text-primary py-4 border-r border-border">Salary Range</TableHead>
@@ -84,7 +84,7 @@ export const CompensationTable = () => {
                     index % 2 === 0 ? 'bg-muted/5' : ''
                   }`}
                 >
-                  <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.role}</TableCell>
+                  <TableCell className="px-4 py-4 font-bold text-sm border-r border-border">{row.role}</TableCell>
                   <TableCell className="px-4 py-4 text-sm border-r border-border">{row.level}</TableCell>
                   <TableCell className="px-4 py-4 text-sm border-r border-border">{row.currency}</TableCell>
                   <TableCell className="px-4 py-4 text-sm border-r border-border">{row.range}</TableCell>
