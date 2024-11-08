@@ -27,12 +27,6 @@ export const CompensationAnalysis = () => {
                 <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
                 <p className="text-secondary-foreground mt-1">New York, NYC</p>
               </div>
-              <Button 
-                variant="default"
-                className="bg-[#1F2144] text-white hover:bg-[#1F2144]/90"
-              >
-                Add Skill Profile
-              </Button>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
