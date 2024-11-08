@@ -30,7 +30,9 @@ export const CompensationHeader = () => {
             </div>
           </div>
 
-          <Separator className="mb-6" />
+          <div className="border border-border rounded-md py-6">
+            <Separator className="mb-6" />
+          </div>
 
           <div className="flex justify-between items-start">
             <div>
