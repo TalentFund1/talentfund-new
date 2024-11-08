@@ -53,12 +53,6 @@ const MarketData = () => {
                   >
                     Compensation Analysis
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="global" 
-                    className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-medium hover:text-primary data-[state=active]:border-primary-accent data-[state=active]:text-primary"
-                  >
-                    Global Insights
-                  </TabsTrigger>
                 </TabsList>
 
                 <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
@@ -87,10 +81,6 @@ const MarketData = () => {
                 
                 <TabsContent value="compensation">
                   <CompensationAnalysis />
-                </TabsContent>
-
-                <TabsContent value="global">
-                  <GlobalLocationInsights />
                 </TabsContent>
               </Tabs>
             </div>
