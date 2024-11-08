@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Card } from "@/components/ui/card";
-import { CompensationTableHeader } from "./CompensationTableHeader";
-import { CompensationDescription } from "./CompensationDescription";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody } from "@/components/ui/table";
+import { CompensationTableHeader } from "./table/TableHeader";
+import { CompensationTableRow } from "./table/TableRow";
+
+interface CompensationTableProps {
+  track: string;
+}
 
 const professionalLevels = [
   {
@@ -81,84 +82,32 @@ const managerialLevels = [
   }
 ];
 
-export const CompensationTable = () => {
-  const [track, setTrack] = useState("Professional");
+export const CompensationTable = ({ track }: CompensationTableProps) => {
   const levels = track === "Professional" ? professionalLevels : managerialLevels;
 
   return (
-    <Card className="p-6">
-      <CompensationTableHeader />
-      
-      <CompensationDescription 
-        range="$130,456 - $170,439"
-        observations={749}
-        totalPostings={6749}
-        location="New York, NYC"
-        median="$150,447"
-        costOfLiving="2.4"
-        adjustedMedian="$154,147"
-      />
-
-      <div className="mt-6">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm text-muted-foreground">Track:</span>
-          <Select value={track} onValueChange={setTrack}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Professional">Professional</SelectItem>
-              <SelectItem value="Managerial">Managerial</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="overflow-x-auto rounded-lg border border-border">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-secondary hover:bg-secondary">
-                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Role Name</TableHead>
-                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Level</TableHead>
-                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Currency</TableHead>
-                <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Salary Range</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">10th</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">25th</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">50th</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border bg-[#F7F9FF]/50">75th</TableHead>
-                <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 bg-[#F7F9FF]/50">90th</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {levels.map((row, index) => (
-                <TableRow 
-                  key={`${row.role}-${row.level}`}
-                  className={`group transition-all duration-200 hover:bg-muted/50 ${
-                    index % 2 === 0 ? 'bg-muted/5' : ''
-                  }`}
-                >
-                  <TableCell className="px-4 py-4 font-semibold text-sm border-r border-border">{row.role}</TableCell>
-                  <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.level}</TableCell>
-                  <TableCell className="px-4 py-4 text-sm border-r border-border">{row.currency}</TableCell>
-                  <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.range}</TableCell>
-                  {row.percentiles.map((value, i) => (
-                    <TableCell 
-                      key={i} 
-                      className="px-4 py-4 text-center font-medium text-sm border-r last:border-r-0 border-border bg-[#F7F9FF]/30 group-hover:bg-transparent"
-                    >
-                      {value}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <div className="flex justify-end p-4 border-t border-border">
-            <p className="text-sm text-secondary-foreground">
-              Powered by <span className="text-[#FF0000]">Lightcast</span>
-            </p>
-          </div>
-        </div>
+    <div className="overflow-x-auto rounded-lg border border-border">
+      <Table>
+        <CompensationTableHeader />
+        <TableBody>
+          {levels.map((row, index) => (
+            <CompensationTableRow
+              key={`${row.role}-${row.level}`}
+              role={row.role}
+              level={row.level}
+              currency={row.currency}
+              range={row.range}
+              percentiles={row.percentiles}
+              index={index}
+            />
+          ))}
+        </TableBody>
+      </Table>
+      <div className="flex justify-end p-4 border-t border-border">
+        <p className="text-sm text-secondary-foreground">
+          Powered by <span className="text-[#FF0000]">Lightcast</span>
+        </p>
       </div>
-    </Card>
+    </div>
   );
 };
