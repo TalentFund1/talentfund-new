@@ -82,6 +82,22 @@ const MarketData = () => {
               </div>
 
               <div className="space-y-2">
+                <label className="text-sm block">Select Graduation Program</label>
+                <Select defaultValue="">
+                  <SelectTrigger className="w-full bg-white">
+                    <SelectValue placeholder="Select a program" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bachelors">Bachelor's Degree</SelectItem>
+                    <SelectItem value="masters">Master's Degree</SelectItem>
+                    <SelectItem value="phd">Ph.D.</SelectItem>
+                    <SelectItem value="diploma">Diploma</SelectItem>
+                    <SelectItem value="certificate">Certificate</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
                 <label className="text-sm block">Select Timeframe</label>
                 <div className="flex items-center gap-2">
                   <Select defaultValue="may2023">
