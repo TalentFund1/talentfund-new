@@ -6,6 +6,7 @@ import { LocationFilter } from '@/components/market/LocationFilter';
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { MarketAnalysisTabs } from '@/components/market/MarketAnalysisTabs';
 import { jobTitles, companies, skills } from '@/components/market/FilterData';
+import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -34,6 +35,8 @@ const MarketData = () => {
                 Filters
               </Button>
             </div>
+
+            <Separator className="my-4" />
 
             <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
               <CollapsibleContent className="space-y-6">
