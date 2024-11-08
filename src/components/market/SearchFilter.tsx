@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
 
 interface SearchFilterProps {
   label: string;
@@ -19,16 +19,14 @@ export const SearchFilter = ({
   selectedItems, 
   onItemsChange 
 }: SearchFilterProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (item: string) => {
     if (!selectedItems.includes(item)) {
       onItemsChange([...selectedItems, item]);
     }
-    setSearchQuery("");
-    setIsOpen(false);
+    setOpen(false);
   };
 
   const removeItem = (item: string) => {
@@ -39,19 +37,8 @@ export const SearchFilter = ({
     item.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
-    <div className="space-y-2" ref={containerRef}>
+    <div className="space-y-2">
       <label className="text-sm text-muted-foreground">{label}</label>
       <div className="relative">
         <div className="flex flex-wrap gap-2 mb-2">
@@ -67,35 +54,32 @@ export const SearchFilter = ({
         </div>
         <Input
           placeholder={placeholder}
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setIsOpen(true);
-          }}
-          onFocus={() => setIsOpen(true)}
+          onClick={() => setOpen(true)}
+          readOnly
           className="bg-white"
         />
-        <Command className="absolute w-full z-50 mt-2 rounded-lg border shadow-md bg-white">
-          <CommandGroup>
-            {isOpen && (
-              <>
-                {filteredItems.length === 0 ? (
-                  <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
-                ) : (
-                  filteredItems.map((item) => (
-                    <CommandItem
-                      key={item}
-                      onSelect={() => handleSelect(item)}
-                      className="cursor-pointer"
-                    >
-                      {item}
-                    </CommandItem>
-                  ))
-                )}
-              </>
-            )}
-          </CommandGroup>
-        </Command>
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <Command className="rounded-lg border shadow-md">
+            <CommandInput 
+              placeholder={`Search ${label.toLowerCase()}...`}
+              value={searchQuery}
+              onValueChange={setSearchQuery}
+            />
+            <CommandList>
+              <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
+              <CommandGroup>
+                {filteredItems.map((item) => (
+                  <CommandItem
+                    key={item}
+                    onSelect={() => handleSelect(item)}
+                  >
+                    {item}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </CommandDialog>
       </div>
     </div>
   );
