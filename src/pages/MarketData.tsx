@@ -61,7 +61,7 @@ const MarketData = () => {
                   <CollapsibleContent>
                     <div className="mt-6 border rounded-lg p-6 space-y-6">
                       <SearchFilter
-                        label="Job Titles"
+                        label="Job Title"  // Updated label here
                         placeholder="Search job titles..."
                         items={jobTitles}
                         selectedItems={selectedJobs}
