@@ -16,7 +16,7 @@ export const CompensationAnalysis = ({ isVisible }: CompensationAnalysisProps) =
       <CompensationHeader />
       <JobPostingStats />
       <Card className="p-6">
-        <h3 className="text-xl font-semibold text-primary mb-6">Compensation Analysis</h3>
+        <h3 className="text-xl font-semibold text-primary mb-6">Compensation Trends</h3>
         <CompensationDescription 
           range="$130,456 - $170,439"
           observations={749}
