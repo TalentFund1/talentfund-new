@@ -8,12 +8,12 @@ export const CompensationHeader = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <Card className="p-6">
-      <div className="space-y-4">
+    <Card className="p-8">
+      <div className="space-y-6">
         <div>
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-primary">Market Analysis</h3>
-            <div className="space-x-2">
+            <div className="space-x-3">
               <Button 
                 variant="outline"
                 className="text-primary hover:text-primary/90"
@@ -30,33 +30,32 @@ export const CompensationHeader = () => {
             </div>
           </div>
 
-          <Separator className="mb-6" />
+          <Separator className="mb-8" />
 
           <div className="flex justify-between items-start">
-            <div>
-              <div className="flex items-end gap-2">
-                <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
-                <span className="text-secondary-foreground text-sm mb-1">SOC: (11-9041)</span>
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-end gap-3">
+                  <h2 className="text-2xl font-bold text-primary">Artificial Engineer</h2>
+                  <span className="text-secondary-foreground text-sm mb-1">SOC: (11-9041)</span>
+                </div>
+                <p className="text-secondary-foreground mt-4">New York, NYC</p>
               </div>
-              <p className="text-secondary-foreground mt-3">New York, NYC</p>
-            </div>
-          </div>
 
-          <div className="flex mt-6">
-            <div className="flex-1 flex items-center">
-              <div className="grid grid-cols-2 gap-x-8 w-full max-w-md">
+              <div className="grid grid-cols-2 gap-x-16 w-full max-w-md">
                 <div>
-                  <p className="text-secondary-foreground">Function</p>
-                  <p className="font-medium text-primary mt-1">Technology</p>
+                  <p className="text-secondary-foreground mb-1">Function</p>
+                  <p className="font-medium text-primary">Technology</p>
                 </div>
                 <div>
-                  <p className="text-secondary-foreground">Occupation</p>
-                  <p className="font-medium text-primary mt-1">Software Developer</p>
+                  <p className="text-secondary-foreground mb-1">Occupation</p>
+                  <p className="font-medium text-primary">Software Developer</p>
                 </div>
               </div>
             </div>
-            <div className="flex-1 flex justify-end space-x-4">
-              <Card className="p-4 w-64">
+
+            <div className="flex space-x-4">
+              <Card className="p-6 w-64">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-sm text-secondary-foreground">Matching Profiles</p>
@@ -66,7 +65,7 @@ export const CompensationHeader = () => {
                   <Users className="h-5 w-5 text-primary-accent" />
                 </div>
               </Card>
-              <Card className="p-4 w-64">
+              <Card className="p-6 w-64">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
@@ -79,8 +78,8 @@ export const CompensationHeader = () => {
             </div>
           </div>
 
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Job Description</h3>
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-3">Job Description</h3>
             <div className="relative">
               <p className={`text-secondary-foreground ${!isExpanded ? 'line-clamp-2' : ''}`}>
                 AI engineer engineer will join a multidisciplinary team helping to shape our AI strategy and showcasing the potential for AI through early-stage solutions. This is an excellent opportunity to take advantage of emerging trends and technologies and make a real-world difference.
