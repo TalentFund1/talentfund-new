@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { LocationFilter } from '@/components/market/LocationFilter';
 
 interface FilterSectionProps {
@@ -135,6 +136,8 @@ export const FilterSection = ({
           </Select>
         </div>
       </div>
+
+      <Separator className="my-4" />
 
       <div className="flex justify-end gap-2">
         <Button 
