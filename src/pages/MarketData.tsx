@@ -44,7 +44,7 @@ const MarketData = () => {
                 onLocationChange={setSelectedLocations}
               />
 
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-sm text-[#1F2144]">Select Graduation Year</label>
                   <div className="flex items-center gap-2">
@@ -91,40 +91,42 @@ const MarketData = () => {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-sm text-[#1F2144]">Select Timeframe</label>
-                <div className="flex items-center gap-2">
-                  <Select defaultValue="may2023">
-                    <SelectTrigger className="w-[120px] bg-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="may2023">May 2023</SelectItem>
-                      <SelectItem value="jun2023">Jun 2023</SelectItem>
-                      <SelectItem value="jul2023">Jul 2023</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <span className="text-sm text-[#1F2144]">to</span>
-                  <Select defaultValue="may2024">
-                    <SelectTrigger className="w-[120px] bg-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="may2024">May 2024</SelectItem>
-                      <SelectItem value="jun2024">Jun 2024</SelectItem>
-                      <SelectItem value="jul2024">Jul 2024</SelectItem>
-                    </SelectContent>
-                  </Select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm text-[#1F2144]">Select Timeframe</label>
+                  <div className="flex items-center gap-2">
+                    <Select defaultValue="may2023">
+                      <SelectTrigger className="w-[120px] bg-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="may2023">May 2023</SelectItem>
+                        <SelectItem value="jun2023">Jun 2023</SelectItem>
+                        <SelectItem value="jul2023">Jul 2023</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <span className="text-sm text-[#1F2144]">to</span>
+                    <Select defaultValue="may2024">
+                      <SelectTrigger className="w-[120px] bg-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="may2024">May 2024</SelectItem>
+                        <SelectItem value="jun2024">Jun 2024</SelectItem>
+                        <SelectItem value="jul2024">Jul 2024</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-              </div>
 
-              <SearchFilter
-                label="Companies"
-                placeholder="Search companies..."
-                items={companies}
-                selectedItems={selectedCompanies}
-                onItemsChange={setSelectedCompanies}
-              />
+                <SearchFilter
+                  label="Companies"
+                  placeholder="Search companies..."
+                  items={companies}
+                  selectedItems={selectedCompanies}
+                  onItemsChange={setSelectedCompanies}
+                />
+              </div>
 
               <div className="flex justify-end gap-2">
                 <Button 
