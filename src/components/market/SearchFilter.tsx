@@ -95,12 +95,10 @@ export const SearchFilter = ({
             }}
             className="bg-white pr-8"
           />
-          <ChevronDown 
-            className={cn(
-              "absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-transform",
-              isOpen && "transform rotate-180"
-            )} 
-          />
+          <ChevronDown className={cn(
+            "absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 transition-transform",
+            isOpen && "transform rotate-180"
+          )} />
         </div>
         {isOpen && (
           <div className="absolute z-50 w-full mt-1 bg-white rounded-md border shadow-lg max-h-60 overflow-auto">
