@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Building2, Users } from "lucide-react";
 import { useState } from "react";
+import { JobStats } from "./JobStats";
+import { PostingStats } from "./PostingStats";
 
 export const CompensationHeader = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -47,28 +48,7 @@ export const CompensationHeader = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex-1 flex justify-end space-x-4">
-                <Card className="p-4 w-64">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Matching Profiles</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">8,745</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">Regional diversity: 58%</p>
-                    </div>
-                    <Users className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
-                <Card className="p-4 w-64">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Median Advertised Salary</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">$140,456</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">749 salary observations</p>
-                    </div>
-                    <Building2 className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
-              </div>
+              <JobStats />
             </div>
 
             <Separator className="my-4" />
@@ -101,53 +81,8 @@ export const CompensationHeader = () => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Card className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Employers Competing</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">114</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">47,116 Total Employers</p>
-                    </div>
-                    <Building2 className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
-                <Card className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Unique Postings</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">1,749</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">8,116 Total Postings</p>
-                    </div>
-                    <Users className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
-                <Card className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Posting Intensity</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">6:1</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">Regional Average 6:1</p>
-                    </div>
-                    <Clock className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
-                <Card className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-secondary-foreground">Medial Posting Duration</p>
-                      <h3 className="text-2xl font-bold text-primary mt-2">27 Days</h3>
-                      <p className="text-sm text-secondary-foreground mt-1">Regional Average: 29</p>
-                    </div>
-                    <Calendar className="h-5 w-5 text-primary-accent" />
-                  </div>
-                </Card>
-              </div>
-            </div>
+              <PostingStats />
 
-            <Separator className="my-6" />
-
-            <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold text-primary mb-4">Compensation Analysis</h3>
                 <p className="text-secondary-foreground mb-4">
