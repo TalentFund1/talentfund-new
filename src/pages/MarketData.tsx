@@ -36,10 +36,10 @@ const MarketData = () => {
               </Button>
             </div>
 
-            <Separator className="mb-6" />
+            <Separator className="mb-4" />
 
             <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-              <CollapsibleContent className="space-y-8">
+              <CollapsibleContent className="space-y-6">
                 <SearchFilter
                   label="Job Titles"
                   placeholder="Search job titles..."
@@ -56,7 +56,7 @@ const MarketData = () => {
                   onItemsChange={setSelectedSkills}
                 />
 
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm text-muted-foreground">Graduation Year</label>
                     <div className="flex items-center gap-2">
