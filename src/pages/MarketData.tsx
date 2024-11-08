@@ -4,12 +4,12 @@ import { Sidebar } from '@/components/Sidebar';
 import { MarketAnalysisTabs } from '@/components/market/MarketAnalysisTabs';
 import { CompensationAnalysis } from '@/components/market/CompensationAnalysis';
 import { GlobalLocationInsights } from '@/components/market/GlobalLocationInsights';
+import { jobTitles, companies, skills } from '@/components/market/FilterData';
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FilterSection } from '@/components/market/FilterSection';
-import { jobTitles, companies, skills } from '@/components/market/FilterData';
 
 const MarketData = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
@@ -39,9 +39,7 @@ const MarketData = () => {
                   </Button>
                 </div>
 
-                <GlobalLocationInsights />
-
-                <Separator className="my-6" />
+                <Separator className="mb-4" />
 
                 <Tabs defaultValue="location">
                   <TabsList className="w-full flex h-12 items-center justify-start bg-transparent p-0 border-b border-border">
@@ -97,6 +95,8 @@ const MarketData = () => {
                 </Tabs>
               </div>
             </div>
+
+            <div className="h-2 w-full bg-background rounded-full" />
           </div>
         </div>
       </div>
