@@ -9,6 +9,7 @@ import 'leaflet.heat';
 import { LocationsTable } from "./LocationsTable";
 import { HeatMap } from "./HeatMap";
 import { Location } from "./types";
+import { CompensationAnalysis } from "./CompensationAnalysis";
 
 // Fix for default marker icon in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -131,11 +132,7 @@ export const MarketAnalysisTabs = () => {
         </TabsContent>
         
         <TabsContent value="compensation" className="pt-6">
-          <div>
-            <p className="text-sm text-muted-foreground">
-              Compensation analysis data will be displayed here.
-            </p>
-          </div>
+          <CompensationAnalysis />
         </TabsContent>
       </Tabs>
     </Card>
