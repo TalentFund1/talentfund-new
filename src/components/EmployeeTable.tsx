@@ -59,52 +59,52 @@ export const EmployeeTable = () => {
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
-              <th className="h-8 px-3 text-xs font-medium text-muted-foreground w-[5%]">
+              <th className="h-12 px-4 text-left">
                 <input type="checkbox" className="rounded border-gray-300" />
               </th>
-              <th className="h-8 px-3 text-xs font-medium text-muted-foreground text-left w-[22%]">
-                <div className="flex items-center gap-1">
-                  Employee Name <ChevronDown className="h-3 w-3" />
+              <th className="h-12 px-4 text-left">
+                <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
+                  Employee Name <ChevronDown className="h-4 w-4" />
                 </div>
               </th>
-              <th className="h-8 px-3 text-xs font-medium text-muted-foreground text-left w-[18%]">Current Role</th>
-              <th className="h-8 px-3 text-xs font-medium text-muted-foreground text-left w-[14%]">Department</th>
-              <th className="h-8 px-3 text-xs font-medium text-muted-foreground text-center w-[14%]">Skill Count</th>
-              <th className="h-8 px-3 text-xs font-medium text-muted-foreground text-center w-[14%]">Benchmark</th>
-              <th className="h-8 px-3 text-xs font-medium text-muted-foreground text-right w-[13%]">Last Updated</th>
+              <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Current Role</th>
+              <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Department</th>
+              <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Count</th>
+              <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Benchmark</th>
+              <th className="h-12 px-4 text-right text-sm font-medium text-muted-foreground">Last Updated</th>
             </tr>
           </thead>
           <tbody>
             {employees.map((employee, index) => (
-              <tr key={employee.name} className="h-12 border-t border-border hover:bg-muted/50 transition-colors">
-                <td className="px-3">
+              <tr key={employee.name} className="border-b border-border hover:bg-muted/50 transition-colors">
+                <td className="px-4 py-4">
                   <input type="checkbox" className="rounded border-gray-300" />
                 </td>
-                <td className="px-3">
+                <td className="px-4 py-4">
                   <div className="flex items-center gap-2">
                     <img 
                       src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=24&h=24`}
                       alt={employee.name}
                       className="w-6 h-6 rounded-full object-cover"
                     />
-                    <Link to="/employee-profile" className="text-primary hover:underline text-xs">
+                    <Link to="/employee-profile" className="text-primary hover:underline text-sm">
                       {employee.name}
                     </Link>
                   </div>
                 </td>
-                <td className="px-3 text-left text-xs">{employee.role}</td>
-                <td className="px-3 text-left text-xs">{employee.department}</td>
-                <td className="px-3 text-center text-xs">{employee.skillCount}</td>
-                <td className="px-3">
+                <td className="px-4 py-4 text-sm">{employee.role}</td>
+                <td className="px-4 py-4 text-sm">{employee.department}</td>
+                <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
+                <td className="px-4 py-4">
                   <div className="flex justify-center">
-                    <span className={`px-2 py-0.5 rounded-full text-xs ${
+                    <span className={`px-3 py-1.5 rounded-full text-sm ${
                       employee.benchmark >= 80 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
                     }`}>
                       {employee.benchmark}%
                     </span>
                   </div>
                 </td>
-                <td className="px-3 text-right text-xs text-muted-foreground">
+                <td className="px-4 py-4 text-right text-sm text-muted-foreground">
                   {employee.lastUpdated}
                 </td>
               </tr>
