@@ -130,16 +130,6 @@ export const FilterSection = ({
         required={activeTab === 'compensation'}
       />
 
-      {activeTab === 'compensation' && (
-        <SearchFilter
-          label="Companies"
-          placeholder="Search companies..."
-          items={companies}
-          selectedItems={selectedCompanies}
-          onItemsChange={setSelectedCompanies}
-        />
-      )}
-
       <div className="space-y-2">
         <label className="text-sm text-muted-foreground">Timeframe</label>
         <div className="flex items-center gap-2">
@@ -166,6 +156,16 @@ export const FilterSection = ({
           </Select>
         </div>
       </div>
+
+      {activeTab === 'compensation' && (
+        <SearchFilter
+          label="Companies"
+          placeholder="Search companies..."
+          items={companies}
+          selectedItems={selectedCompanies}
+          onItemsChange={setSelectedCompanies}
+        />
+      )}
 
       <Separator className="my-4" />
 
