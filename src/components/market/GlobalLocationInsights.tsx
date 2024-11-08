@@ -10,6 +10,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
+interface GlobalLocationInsightsProps {
+  isVisible: boolean;
+}
+
 const locations: Location[] = [
   { 
     name: "New York, NY",
@@ -46,7 +50,9 @@ const locations: Location[] = [
   }
 ];
 
-export const GlobalLocationInsights = () => {
+export const GlobalLocationInsights = ({ isVisible }: GlobalLocationInsightsProps) => {
+  if (!isVisible) return null;
+
   const [selectedFilters, setSelectedFilters] = useState<string[]>(["profiles"]);
 
   const toggleFilter = (filter: string) => {
