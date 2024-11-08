@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import 'leaflet.heat';
@@ -56,6 +56,7 @@ export const MarketAnalysisTabs = () => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [map, setMap] = useState<L.Map | null>(null);
   const [heatLayer, setHeatLayer] = useState<L.HeatLayer | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
 
   const toggleFilter = (filter: string) => {
     setSelectedFilters(prev => 
@@ -66,7 +67,7 @@ export const MarketAnalysisTabs = () => {
   };
 
   useEffect(() => {
-    if (map && !heatLayer) {
+    if (mapRef.current && !heatLayer) {
       const points = locations.map(loc => [
         ...loc.position,
         loc.profiles / 1000 // Normalize the intensity based on profiles
@@ -85,17 +86,17 @@ export const MarketAnalysisTabs = () => {
         }
       });
       
-      heat.addTo(map);
+      heat.addTo(mapRef.current);
       setHeatLayer(heat);
     }
 
     return () => {
-      if (map && heatLayer) {
-        map.removeLayer(heatLayer);
+      if (mapRef.current && heatLayer) {
+        mapRef.current.removeLayer(heatLayer);
         setHeatLayer(null);
       }
     };
-  }, [map]);
+  }, [mapRef.current]);
 
   return (
     <Card className="p-6 mt-6 bg-white shadow-sm">
@@ -113,7 +114,12 @@ export const MarketAnalysisTabs = () => {
                 center={[40.7128, -74.0060] as L.LatLngExpression}
                 zoom={4}
                 className="h-full w-full"
-                whenCreated={setMap}
+                ref={(map) => {
+                  if (map) {
+                    mapRef.current = map;
+                    setMap(map);
+                  }
+                }}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
