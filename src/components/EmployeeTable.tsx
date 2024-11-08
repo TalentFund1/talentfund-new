@@ -1,6 +1,5 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Checkbox } from "@/components/ui/checkbox";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -61,7 +60,7 @@ export const EmployeeTable = () => {
           <thead>
             <tr className="border-b border-border">
               <th className="h-8 px-3 text-xs font-medium text-muted-foreground w-[5%]">
-                <Checkbox />
+                <input type="checkbox" className="rounded border-gray-300" />
               </th>
               <th className="h-8 px-3 text-xs font-medium text-muted-foreground text-left w-[22%]">
                 <div className="flex items-center gap-1">
@@ -79,7 +78,7 @@ export const EmployeeTable = () => {
             {employees.map((employee, index) => (
               <tr key={employee.name} className="h-12 border-t border-border hover:bg-muted/50 transition-colors">
                 <td className="px-3">
-                  <Checkbox />
+                  <input type="checkbox" className="rounded border-gray-300" />
                 </td>
                 <td className="px-3">
                   <div className="flex items-center gap-2">
