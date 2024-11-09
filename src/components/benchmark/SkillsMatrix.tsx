@@ -7,6 +7,13 @@ import { SkillsMatrixRow } from "./SkillsMatrixRow";
 
 const skills = [
   {
+    title: "JavaScript",
+    subcategory: "Programming Languages",
+    level: "advanced",
+    growth: "15%",
+    confidence: "high"
+  },
+  {
     title: "Amazon Web Services",
     subcategory: "Web Services",
     level: "advanced",
