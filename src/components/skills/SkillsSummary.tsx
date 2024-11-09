@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState, useRef, useEffect } from "react";
 import { SkillSection } from "./SkillSection";
-import { SkillsHeader } from "./SkillsHeader";
 import { DetailedSkill, Certification } from "./types";
 import { SkillBadge } from "./SkillBadge";
+import { SearchFilter } from "@/components/market/SearchFilter";
+import { technicalSkills, softSkills } from '@/components/skillsData';
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -17,9 +18,10 @@ export const SkillsSummary = () => {
     certifications: false,
   });
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
+  const allSkills = [...technicalSkills, ...softSkills];
 
   const specializedSkills = [
     { name: "React", level: "advanced", isSkillGoal: true },
@@ -91,9 +93,11 @@ export const SkillsSummary = () => {
   }, []);
 
   const filterSkills = <T extends { name: string }>(skills: T[]) => {
-    if (!searchQuery) return skills;
+    if (selectedSkills.length === 0) return skills;
     return skills.filter(skill => 
-      skill.name.toLowerCase().includes(searchQuery.toLowerCase())
+      selectedSkills.some(selectedSkill => 
+        skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
+      )
     );
   };
 
@@ -117,18 +121,33 @@ export const SkillsSummary = () => {
     ));
   };
 
+  const handleClearAll = () => {
+    setSelectedSkills([]);
+  };
+
   return (
     <div className="space-y-4 w-full">
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
-      <div className="mb-4">
-        <Input
-          type="text"
+      <div className="mb-4 space-y-2">
+        <SearchFilter
+          label=""
           placeholder="Search skills..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-white"
+          items={allSkills}
+          selectedItems={selectedSkills}
+          onItemsChange={setSelectedSkills}
+          singleSelect={false}
         />
+        {selectedSkills.length > 0 && (
+          <Button 
+            variant="outline" 
+            onClick={handleClearAll}
+            size="sm"
+            className="mt-2"
+          >
+            Clear All
+          </Button>
+        )}
       </div>
       
       <div className="space-y-6">
