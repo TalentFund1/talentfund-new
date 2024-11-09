@@ -4,6 +4,7 @@ import { SkillSection } from "./SkillSection";
 import { SkillsHeader } from "./SkillsHeader";
 import { useState, useRef, useEffect } from "react";
 import { Heart } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -16,6 +17,7 @@ export const SkillsSummary = () => {
     certifications: false,
   });
 
+  const [searchQuery, setSearchQuery] = useState("");
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -84,6 +86,16 @@ export const SkillsSummary = () => {
     }
   }, []);
 
+  const filterSkills = (skills: typeof specializedSkills) => {
+    if (!searchQuery) return skills;
+    return skills.filter(skill => 
+      skill.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const filteredSpecializedSkills = filterSkills(specializedSkills);
+  const filteredCommonSkills = filterSkills(commonSkills);
+
   const renderSkills = (skills: typeof specializedSkills, isExpanded: boolean, isSpecialized: boolean = false) => {
     const displaySkills = isSpecialized 
       ? (isExpanded ? skills : skills.slice(0, visibleSpecializedCount))
@@ -116,12 +128,22 @@ export const SkillsSummary = () => {
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       <SkillsHeader />
       
+      <div className="mb-4">
+        <Input
+          type="text"
+          placeholder="Search skills..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="max-w-sm"
+        />
+      </div>
+      
       <div className="space-y-6">
-        <SkillSection title="Specialized Skills" count={specializedSkills.length}>
+        <SkillSection title="Specialized Skills" count={filteredSpecializedSkills.length}>
           <div ref={containerRef} className="flex flex-wrap gap-2 mb-4">
-            {renderSkills(specializedSkills, expandedSections.specialized, true)}
+            {renderSkills(filteredSpecializedSkills, expandedSections.specialized, true)}
           </div>
-          {specializedSkills.length > visibleSpecializedCount && (
+          {filteredSpecializedSkills.length > visibleSpecializedCount && (
             <div className="flex justify-start">
               <Button 
                 variant="outline" 
@@ -131,18 +153,18 @@ export const SkillsSummary = () => {
               >
                 {expandedSections.specialized ? 'Show Less' : 'See More'} 
                 <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                  {specializedSkills.length - visibleSpecializedCount}
+                  {filteredSpecializedSkills.length - visibleSpecializedCount}
                 </span>
               </Button>
             </div>
           )}
         </SkillSection>
 
-        <SkillSection title="Common Skills" count={commonSkills.length}>
+        <SkillSection title="Common Skills" count={filteredCommonSkills.length}>
           <div className="flex flex-wrap gap-2">
-            {renderSkills(commonSkills, expandedSections.common)}
+            {renderSkills(filteredCommonSkills, expandedSections.common)}
           </div>
-          {commonSkills.length > 7 && (
+          {filteredCommonSkills.length > 7 && (
             <div className="flex justify-start mt-4">
               <Button 
                 variant="outline" 
@@ -152,7 +174,7 @@ export const SkillsSummary = () => {
               >
                 {expandedSections.common ? 'Show Less' : 'See More'} 
                 <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                  {commonSkills.length - 7}
+                  {filteredCommonSkills.length - 7}
                 </span>
               </Button>
             </div>
