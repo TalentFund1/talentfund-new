@@ -58,7 +58,7 @@ export const LocationsTable = ({ locations }: LocationsTableProps) => {
   };
 
   return (
-    <div className="rounded-lg border border-border overflow-hidden">
+    <div className="rounded-lg overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow className="bg-secondary hover:bg-secondary">
