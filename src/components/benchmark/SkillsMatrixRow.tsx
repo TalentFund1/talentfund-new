@@ -68,10 +68,10 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
       </TableCell>
       <TableCell className="text-center py-2 group-hover:bg-muted/30">
         <div className="flex items-center justify-center space-x-1">
-          <span className="w-6 h-6 rounded-full bg-blue-50 text-blue-400 flex items-center justify-center text-sm font-medium">R</span>
-          <span className="w-6 h-6 rounded-full bg-purple-50 text-purple-400 flex items-center justify-center text-sm font-medium">S</span>
-          <span className="w-6 h-6 rounded-full bg-orange-50 text-orange-400 flex items-center justify-center text-sm font-medium">M</span>
-          <span className="w-6 h-6 rounded-full bg-green-50 text-green-400 flex items-center justify-center text-sm font-medium">E</span>
+          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
+          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-medium">S</span>
+          <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">M</span>
+          <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
         </div>
       </TableCell>
     </TableRow>
