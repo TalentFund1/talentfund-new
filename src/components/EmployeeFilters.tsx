@@ -14,7 +14,7 @@ export const EmployeeFilters = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <SearchFilter
         placeholder="Search job titles..."
         items={[
@@ -63,7 +63,7 @@ export const EmployeeFilters = () => {
         />
 
         <SearchFilter
-          placeholder="Search employment types..."
+          placeholder="Search employment type..."
           items={["Full Time", "Part Time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
           onItemsChange={setSelectedEmploymentType}
