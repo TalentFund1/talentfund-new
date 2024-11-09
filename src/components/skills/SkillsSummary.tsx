@@ -68,6 +68,10 @@ export const SkillsSummary = () => {
     return levelOrder[a.level as keyof typeof levelOrder] - levelOrder[b.level as keyof typeof levelOrder];
   });
 
+  const certifications = [
+    { name: "Cybersecurity License" }
+  ];
+
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
       ...prev,
@@ -86,7 +90,7 @@ export const SkillsSummary = () => {
     }
   }, []);
 
-  const filterSkills = (skills: typeof specializedSkills) => {
+  const filterSkills = (skills: Array<{ name: string }>) => {
     if (!searchQuery) return skills;
     return skills.filter(skill => 
       skill.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -95,6 +99,7 @@ export const SkillsSummary = () => {
 
   const filteredSpecializedSkills = filterSkills(specializedSkills);
   const filteredCommonSkills = filterSkills(commonSkills);
+  const filteredCertifications = filterSkills(certifications);
 
   const renderSkills = (skills: typeof specializedSkills, isExpanded: boolean, isSpecialized: boolean = false) => {
     const displaySkills = isSpecialized 
@@ -181,14 +186,17 @@ export const SkillsSummary = () => {
           )}
         </SkillSection>
 
-        <SkillSection title="Certifications" count={1}>
+        <SkillSection title="Certifications" count={filteredCertifications.length}>
           <div className="flex flex-wrap gap-2">
-            <Badge 
-              variant="outline" 
-              className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
-            >
-              Cybersecurity License
-            </Badge>
+            {filteredCertifications.map((cert) => (
+              <Badge 
+                key={cert.name} 
+                variant="outline" 
+                className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
+              >
+                {cert.name}
+              </Badge>
+            ))}
           </div>
         </SkillSection>
       </div>
