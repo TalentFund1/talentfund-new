@@ -28,12 +28,12 @@ export const SkillsSummary = () => {
     { name: "Internet of Things", level: "intermediate" },
     { name: "SystemVerilog", level: "intermediate" },
     { name: "Docker", level: "intermediate" },
-    { name: "Kubernetes", level: "intermediate" },
+    { name: "Kubernetes", level: "unspecified" },
     { name: "Static Timing Analysis", level: "beginner" },
     { name: "Cadence Encounter", level: "beginner" },
-    { name: "Synopsys Primetime", level: "beginner" },
+    { name: "Synopsys Primetime", level: "unspecified" },
     { name: "AWS Lambda", level: "beginner" },
-    { name: "Azure Functions", level: "beginner" }
+    { name: "Azure Functions", level: "unspecified" }
   ];
 
   const commonSkills = [
@@ -43,10 +43,10 @@ export const SkillsSummary = () => {
     { name: "Project Management", level: "intermediate" },
     { name: "Communication", level: "intermediate" },
     { name: "Problem Solving", level: "intermediate" },
-    { name: "Scrum", level: "intermediate" },
+    { name: "Scrum", level: "unspecified" },
     { name: "Technical Writing", level: "beginner" },
     { name: "Time Management", level: "beginner" },
-    { name: "Microsoft Excel", level: "beginner" }
+    { name: "Microsoft Excel", level: "unspecified" }
   ];
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -82,7 +82,8 @@ export const SkillsSummary = () => {
         <div className={`h-2 w-2 rounded-full ${
           skill.level === "advanced" ? "bg-[#8073ec]" :
           skill.level === "intermediate" ? "bg-[#ff8256]" :
-          "bg-[#008000]"
+          skill.level === "beginner" ? "bg-[#008000]" :
+          "bg-gray-400"
         }`} />
       </Badge>
     ));
