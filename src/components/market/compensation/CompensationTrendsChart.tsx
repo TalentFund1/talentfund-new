@@ -63,6 +63,11 @@ export const CompensationTrendsChart = () => {
     return `${data[0].date} - ${data[data.length - 1].date}`;
   };
 
+  const getLatestSalary = () => {
+    const data = getDataForPeriod();
+    return `$${(data[data.length - 1].salary / 1000).toFixed(0)}k`;
+  };
+
   return (
     <Card className="p-6">
       <div className="space-y-6">
@@ -75,7 +80,10 @@ export const CompensationTrendsChart = () => {
               </div>
               <span className="text-sm text-muted-foreground">{getTimeRange()}</span>
             </div>
-            <div className="text-sm text-muted-foreground mt-1"></div>
+            <div className="text-sm mt-1">
+              <span className="text-primary-accent font-semibold">{getLatestSalary()}</span>
+              <span className="text-muted-foreground ml-1">Median</span>
+            </div>
           </div>
           <div className="flex gap-2">
             <Button 
