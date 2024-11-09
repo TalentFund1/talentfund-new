@@ -104,7 +104,7 @@ export const SkillsSummary = () => {
             "bg-gray-300"
           }`} />
           {skill.isSkillGoal && (
-            <Heart className="w-3 h-3 text-[#1f2144] fill-current" />
+            <Heart className="w-3 h-3 text-[#1f2144]" />
           )}
         </div>
       </Badge>
