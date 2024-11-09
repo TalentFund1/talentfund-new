@@ -82,7 +82,7 @@ export const EmployeeFilters = () => {
           className="w-[180px]"
         />
 
-        <div className="flex items-center gap-3 mt-[2px]">
+        <div className="flex items-center gap-3">
           <SearchFilter
             label=""
             placeholder="Employment Type"
@@ -96,7 +96,7 @@ export const EmployeeFilters = () => {
           <Button 
             variant="outline" 
             onClick={handleClearAll}
-            className="h-[38px]"
+            className="h-[36px] mt-[1px]"
           >
             Clear All
           </Button>
