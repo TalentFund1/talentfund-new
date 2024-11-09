@@ -38,7 +38,7 @@ export const BenchmarkAnalysis = () => {
               <span className="text-sm text-foreground">2 out of 6</span>
             </div>
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '33%' }} />
+              <div className="h-full bg-primary-accent rounded-full" style={{ width: '33%' }} />
             </div>
           </div>
 
@@ -48,7 +48,7 @@ export const BenchmarkAnalysis = () => {
               <span className="text-sm text-foreground">8 out of 12</span>
             </div>
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '66%' }} />
+              <div className="h-full bg-primary-accent rounded-full" style={{ width: '66%' }} />
             </div>
           </div>
 
@@ -58,7 +58,7 @@ export const BenchmarkAnalysis = () => {
               <span className="text-sm text-foreground">4 out of 6</span>
             </div>
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '66%' }} />
+              <div className="h-full bg-primary-accent rounded-full" style={{ width: '66%' }} />
             </div>
           </div>
         </div>
