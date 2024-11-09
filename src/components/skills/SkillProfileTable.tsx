@@ -1,45 +1,14 @@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 
 export const SkillProfileTable = () => {
-  const [selectedProfiles, setSelectedProfiles] = useState<string[]>([]);
-
-  const profiles = [
-    { name: "AI Engineer", function: "Engineering", skillCount: 16, employees: 2, matches: 0, lastUpdated: "10/20/24" },
-    { name: "Backend Engineer", function: "Engineering", skillCount: 12, employees: 3, matches: 4, lastUpdated: "10/20/24" },
-    { name: "Frontend Engineer", function: "Engineering", skillCount: 17, employees: 0, matches: 5, lastUpdated: "10/20/24" },
-    { name: "Engineering Manager", function: "Engineering", skillCount: 11, employees: 2, matches: 5, lastUpdated: "10/20/24" }
-  ];
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedProfiles(profiles.map(profile => profile.name));
-    } else {
-      setSelectedProfiles([]);
-    }
-  };
-
-  const handleSelectProfile = (checked: boolean, profileName: string) => {
-    if (checked) {
-      setSelectedProfiles(prev => [...prev, profileName]);
-    } else {
-      setSelectedProfiles(prev => prev.filter(name => name !== profileName));
-    }
-  };
-
   return (
     <Table>
       <TableHeader>
         <TableRow className="hover:bg-transparent border-b border-border">
           <TableHead className="w-[5%] h-12">
-            <Checkbox 
-              checked={selectedProfiles.length === profiles.length}
-              onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
-              className="rounded border-gray-300"
-            />
+            <input type="checkbox" className="rounded border-gray-300" />
           </TableHead>
           <TableHead className="w-[22%] h-12">
             <div className="flex items-center gap-1">
@@ -54,27 +23,66 @@ export const SkillProfileTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {profiles.map((profile) => (
-          <TableRow key={profile.name} className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
-            <TableCell className="align-middle">
-              <Checkbox 
-                checked={selectedProfiles.includes(profile.name)}
-                onCheckedChange={(checked) => handleSelectProfile(checked as boolean, profile.name)}
-                className="rounded border-gray-300"
-              />
-            </TableCell>
-            <TableCell className="align-middle font-medium">
-              <Link to={`/skills/${profile.name.toLowerCase().replace(' ', '-')}`} className="text-primary hover:underline">
-                {profile.name}
-              </Link>
-            </TableCell>
-            <TableCell className="align-middle">{profile.function}</TableCell>
-            <TableCell className="text-center align-middle">{profile.skillCount}</TableCell>
-            <TableCell className="text-center align-middle">{profile.employees}</TableCell>
-            <TableCell className="text-center align-middle">{profile.matches}</TableCell>
-            <TableCell className="text-right align-middle text-muted-foreground">{profile.lastUpdated}</TableCell>
-          </TableRow>
-        ))}
+        <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+          <TableCell className="align-middle">
+            <input type="checkbox" className="rounded border-gray-300" />
+          </TableCell>
+          <TableCell className="align-middle font-medium">
+            <Link to="/skills/ai-engineer" className="text-primary hover:underline">
+              AI Engineer
+            </Link>
+          </TableCell>
+          <TableCell className="align-middle">Engineering</TableCell>
+          <TableCell className="text-center align-middle">16</TableCell>
+          <TableCell className="text-center align-middle">2</TableCell>
+          <TableCell className="text-center align-middle">0</TableCell>
+          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
+        </TableRow>
+        <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+          <TableCell className="align-middle">
+            <input type="checkbox" className="rounded border-gray-300" />
+          </TableCell>
+          <TableCell className="align-middle font-medium">
+            <Link to="/skills/backend-engineer" className="text-primary hover:underline">
+              Backend Engineer
+            </Link>
+          </TableCell>
+          <TableCell className="align-middle">Engineering</TableCell>
+          <TableCell className="text-center align-middle">12</TableCell>
+          <TableCell className="text-center align-middle">3</TableCell>
+          <TableCell className="text-center align-middle">4</TableCell>
+          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
+        </TableRow>
+        <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+          <TableCell className="align-middle">
+            <input type="checkbox" className="rounded border-gray-300" />
+          </TableCell>
+          <TableCell className="align-middle font-medium">
+            <Link to="/skills/frontend-engineer" className="text-primary hover:underline">
+              Frontend Engineer
+            </Link>
+          </TableCell>
+          <TableCell className="align-middle">Engineering</TableCell>
+          <TableCell className="text-center align-middle">17</TableCell>
+          <TableCell className="text-center align-middle">0</TableCell>
+          <TableCell className="text-center align-middle">5</TableCell>
+          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
+        </TableRow>
+        <TableRow className="h-16 hover:bg-muted/50 transition-colors">
+          <TableCell className="align-middle">
+            <input type="checkbox" className="rounded border-gray-300" />
+          </TableCell>
+          <TableCell className="align-middle font-medium">
+            <Link to="/skills/engineering-manager" className="text-primary hover:underline">
+              Engineering Manager
+            </Link>
+          </TableCell>
+          <TableCell className="align-middle">Engineering</TableCell>
+          <TableCell className="text-center align-middle">11</TableCell>
+          <TableCell className="text-center align-middle">2</TableCell>
+          <TableCell className="text-center align-middle">5</TableCell>
+          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
+        </TableRow>
       </TableBody>
     </Table>
   );
