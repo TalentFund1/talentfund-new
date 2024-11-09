@@ -4,33 +4,33 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const sixMonthData = [
-  { date: "Apr '24", salary: 115000, postings: 5800 },
-  { date: "May '24", salary: 118500, postings: 5900 },
-  { date: "Jun '24", salary: 116800, postings: 6000 },
-  { date: "Jul '24", salary: 119500, postings: 6100 },
-  { date: "Aug '24", salary: 117900, postings: 6200 },
-  { date: "Sep '24", salary: 120800, postings: 6300 },
-  { date: "Oct '24", salary: 121500, postings: 6400 }
+  { date: "May '23", salary: 115000, postings: 5800 },
+  { date: "Jun '23", salary: 118500, postings: 5900 },
+  { date: "Jul '23", salary: 116800, postings: 6000 },
+  { date: "Aug '23", salary: 119500, postings: 6100 },
+  { date: "Sep '23", salary: 117900, postings: 6200 },
+  { date: "Oct '23", salary: 120800, postings: 6300 }
 ];
 
 const oneYearData = [
-  { date: "Nov '23", salary: 110000, postings: 5200 },
-  { date: "Dec '23", salary: 112000, postings: 5300 },
-  { date: "Jan '24", salary: 113500, postings: 5400 },
-  { date: "Feb '24", salary: 114200, postings: 5500 },
-  { date: "Mar '24", salary: 114800, postings: 5600 },
+  { date: "Nov '22", salary: 110000, postings: 5200 },
+  { date: "Dec '22", salary: 112000, postings: 5300 },
+  { date: "Jan '23", salary: 113500, postings: 5400 },
+  { date: "Feb '23", salary: 114200, postings: 5500 },
+  { date: "Mar '23", salary: 114800, postings: 5600 },
+  { date: "Apr '23", salary: 115000, postings: 5700 },
   ...sixMonthData
 ];
 
 const threeYearData = [
-  { date: "Oct '21", salary: 95000, postings: 4000 },
-  { date: "Jan '22", salary: 98000, postings: 4200 },
-  { date: "Apr '22", salary: 100000, postings: 4400 },
-  { date: "Jul '22", salary: 102000, postings: 4600 },
-  { date: "Oct '22", salary: 105000, postings: 4800 },
-  { date: "Jan '23", salary: 107000, postings: 5000 },
-  { date: "Apr '23", salary: 108500, postings: 5200 },
-  { date: "Jul '23", salary: 109500, postings: 5400 },
+  { date: "Oct '20", salary: 95000, postings: 4000 },
+  { date: "Jan '21", salary: 98000, postings: 4200 },
+  { date: "Apr '21", salary: 100000, postings: 4400 },
+  { date: "Jul '21", salary: 102000, postings: 4600 },
+  { date: "Oct '21", salary: 105000, postings: 4800 },
+  { date: "Jan '22", salary: 107000, postings: 5000 },
+  { date: "Apr '22", salary: 108500, postings: 5200 },
+  { date: "Jul '22", salary: 109500, postings: 5400 },
   ...oneYearData
 ];
 
