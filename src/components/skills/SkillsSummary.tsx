@@ -95,7 +95,7 @@ export const SkillsSummary = () => {
       
       <div className="space-y-6">
         <SkillSection title="Specialized Skills" count={specializedSkills.length}>
-          <div ref={containerRef} className="flex flex-wrap gap-3 mb-4">
+          <div ref={containerRef} className="flex flex-wrap gap-2 mb-4">
             {renderSkills(specializedSkills, expandedSections.specialized, true)}
           </div>
           {specializedSkills.length > visibleSpecializedCount && (
@@ -116,7 +116,7 @@ export const SkillsSummary = () => {
         </SkillSection>
 
         <SkillSection title="Common Skills" count={commonSkills.length}>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             {renderSkills(commonSkills, expandedSections.common)}
           </div>
           {commonSkills.length > 7 && (
@@ -137,7 +137,7 @@ export const SkillsSummary = () => {
         </SkillSection>
 
         <SkillSection title="Certifications" count={1}>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             <Badge 
               variant="outline" 
               className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
