@@ -11,7 +11,7 @@ export const GraduationSection = () => {
         <div className="flex items-center gap-2">
           <Select>
             <SelectTrigger className="w-[120px] bg-white">
-              <SelectValue placeholder="From" />
+              <SelectValue placeholder="From" className="text-muted-foreground" />
             </SelectTrigger>
             <SelectContent>
               {graduationYears.map((year) => (
@@ -22,7 +22,7 @@ export const GraduationSection = () => {
           <span className="text-sm">to</span>
           <Select>
             <SelectTrigger className="w-[120px] bg-white">
-              <SelectValue placeholder="To" />
+              <SelectValue placeholder="To" className="text-muted-foreground" />
             </SelectTrigger>
             <SelectContent>
               {graduationYears.map((year) => (
