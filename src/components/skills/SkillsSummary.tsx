@@ -76,7 +76,7 @@ export const SkillsSummary = () => {
       <Badge 
         key={skill.name} 
         variant="outline" 
-        className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
+        className="rounded-md px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
       >
         {skill.name} 
         <div className={`h-2 w-2 rounded-full ${
@@ -103,7 +103,7 @@ export const SkillsSummary = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
+                className="rounded-md px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
                 onClick={() => toggleSection('specialized')}
               >
                 {expandedSections.specialized ? 'Show Less' : 'See More'} 
@@ -124,7 +124,7 @@ export const SkillsSummary = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
+                className="rounded-md px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
                 onClick={() => toggleSection('common')}
               >
                 {expandedSections.common ? 'Show Less' : 'See More'} 
@@ -140,7 +140,7 @@ export const SkillsSummary = () => {
           <div className="flex flex-wrap gap-3">
             <Badge 
               variant="outline" 
-              className="rounded-full px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
+              className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
             >
               Cybersecurity License
             </Badge>
