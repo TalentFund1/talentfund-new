@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SkillsMatrixTableHeader } from "./SkillsMatrixTableHeader";
 import { SkillsMatrixRow } from "./SkillsMatrixRow";
+import { useState } from "react";
 
 const skills = [
   {
@@ -86,6 +87,13 @@ const skills = [
 ];
 
 export const SkillsMatrix = () => {
+  const [selectedSkill, setSelectedSkill] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const filteredSkills = selectedSkill
+    ? skills.filter(skill => skill.title.toLowerCase() === selectedSkill.toLowerCase())
+    : skills;
+
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <div className="flex justify-between items-center mb-6">
@@ -111,7 +119,10 @@ export const SkillsMatrix = () => {
       <div className="border-t border-blue-200 pt-6">
         <div className="flex gap-4 mb-6 items-center justify-between">
           <div className="flex gap-2">
-            <Select defaultValue="all">
+            <Select 
+              value={selectedCategory} 
+              onValueChange={setSelectedCategory}
+            >
               <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
@@ -123,16 +134,20 @@ export const SkillsMatrix = () => {
               </SelectContent>
             </Select>
 
-            <Select defaultValue="sort">
+            <Select 
+              value={selectedSkill} 
+              onValueChange={setSelectedSkill}
+            >
               <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="Sort by All" />
+                <SelectValue placeholder="Select Skill" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="sort">Sort by All</SelectItem>
-                <SelectItem value="reports">Sort by Reports</SelectItem>
-                <SelectItem value="enrich">Sort by Enrich</SelectItem>
-                <SelectItem value="manager">Sort by Manager</SelectItem>
-                <SelectItem value="self">Sort by Self</SelectItem>
+                <SelectItem value="">All Skills</SelectItem>
+                {skills.map((skill) => (
+                  <SelectItem key={skill.title} value={skill.title}>
+                    {skill.title}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -145,7 +160,7 @@ export const SkillsMatrix = () => {
         <Table>
           <SkillsMatrixTableHeader />
           <TableBody>
-            {skills.map((skill) => (
+            {filteredSkills.map((skill) => (
               <SkillsMatrixRow key={skill.title} skill={skill} />
             ))}
           </TableBody>
@@ -165,7 +180,9 @@ export const SkillsMatrix = () => {
         </Select>
         
         <div className="flex items-center gap-2 ml-auto">
-          <span className="text-sm text-muted-foreground">1-7 of 7</span>
+          <span className="text-sm text-muted-foreground">
+            1-{filteredSkills.length} of {filteredSkills.length}
+          </span>
           <Button variant="outline" size="icon" className="w-8 h-8">
             <ChevronLeft className="h-4 w-4" />
           </Button>
