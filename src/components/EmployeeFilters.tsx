@@ -23,8 +23,8 @@ export const EmployeeFilters = () => {
   };
 
   return (
-    <div className="space-y-0">
-      <div className="w-full mb-0.5">
+    <div className="space-y-0.5">
+      <div className="w-full">
         <SearchFilter
           label=""
           placeholder="Search skills..."
@@ -91,9 +91,7 @@ export const EmployeeFilters = () => {
           singleSelect={false}
           className="w-[180px]"
         />
-      </div>
 
-      <div className="flex justify-end mt-3">
         <Button 
           variant="outline" 
           onClick={handleClearAll}
