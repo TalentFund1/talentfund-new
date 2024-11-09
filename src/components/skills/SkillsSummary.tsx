@@ -130,24 +130,27 @@ export const SkillsSummary = () => {
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
       <div className="mb-4 space-y-2">
-        <SearchFilter
-          label=""
-          placeholder="Search skills..."
-          items={allSkills}
-          selectedItems={selectedSkills}
-          onItemsChange={setSelectedSkills}
-          singleSelect={false}
-        />
-        {selectedSkills.length > 0 && (
-          <Button 
-            variant="outline" 
-            onClick={handleClearAll}
-            size="sm"
-            className="mt-2"
-          >
-            Clear All
-          </Button>
-        )}
+        <div className="flex justify-between items-start gap-2">
+          <div className="flex-1">
+            <SearchFilter
+              label=""
+              placeholder="Search skills..."
+              items={allSkills}
+              selectedItems={selectedSkills}
+              onItemsChange={setSelectedSkills}
+              singleSelect={false}
+            />
+          </div>
+          {selectedSkills.length > 0 && (
+            <Button 
+              variant="outline" 
+              onClick={handleClearAll}
+              size="sm"
+            >
+              Clear All
+            </Button>
+          )}
+        </div>
       </div>
       
       <div className="space-y-6">
