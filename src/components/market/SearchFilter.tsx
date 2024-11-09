@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface SearchFilterProps {
-  label: string;
+  label?: string; // Made label optional by adding ?
   placeholder: string;
   items: string[];
   selectedItems: string[];
@@ -67,10 +67,12 @@ export const SearchFilter = ({
 
   return (
     <div className="space-y-2" ref={dropdownRef}>
-      <label className="text-sm text-muted-foreground">
-        {label}
-        {required && <span className="text-destructive ml-1">*</span>}
-      </label>
+      {label && (
+        <label className="text-sm text-muted-foreground">
+          {label}
+          {required && <span className="text-destructive ml-1">*</span>}
+        </label>
+      )}
       <div className="relative">
         <div className="flex flex-wrap gap-2 mb-2">
           {selectedItems.map((item) => (
@@ -110,7 +112,7 @@ export const SearchFilter = ({
             <div className="p-1">
               {filteredItems.length === 0 ? (
                 <div className="py-2 px-3 text-sm text-gray-500">
-                  No {label.toLowerCase()} found.
+                  No {label ? label.toLowerCase() : "items"} found.
                 </div>
               ) : (
                 filteredItems.map((item) => (
