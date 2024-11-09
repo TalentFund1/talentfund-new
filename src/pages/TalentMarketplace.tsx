@@ -57,80 +57,80 @@ const TalentMarketplace = () => {
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-b border-border">
-                  <TableHead className="w-[25%] py-4 font-medium">Project Title</TableHead>
-                  <TableHead className="w-[20%] py-4 font-medium">Function</TableHead>
-                  <TableHead className="w-[15%] py-4 font-medium">Source</TableHead>
-                  <TableHead className="w-[15%] text-center py-4 font-medium">Skill Count</TableHead>
-                  <TableHead className="w-[15%] text-center py-4 font-medium">Skill Benchmark</TableHead>
-                  <TableHead className="w-[10%] text-right py-4 font-medium">See Details</TableHead>
+                  <TableHead className="w-[25%] py-3 font-medium">Project Title</TableHead>
+                  <TableHead className="w-[20%] py-3 font-medium">Function</TableHead>
+                  <TableHead className="w-[15%] py-3 font-medium">Source</TableHead>
+                  <TableHead className="w-[15%] text-center py-3 font-medium">Skill Count</TableHead>
+                  <TableHead className="w-[15%] text-center py-3 font-medium">Skill Benchmark</TableHead>
+                  <TableHead className="w-[10%] text-right py-3 font-medium">See Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow className="hover:bg-muted/50">
-                  <TableCell className="py-4">RnD</TableCell>
-                  <TableCell className="py-4">Engineering</TableCell>
-                  <TableCell className="py-4">Riipen</TableCell>
-                  <TableCell className="text-center py-4">16</TableCell>
-                  <TableCell className="text-center py-4">
+                  <TableCell className="py-3">RnD</TableCell>
+                  <TableCell className="py-3">Engineering</TableCell>
+                  <TableCell className="py-3">Riipen</TableCell>
+                  <TableCell className="text-center py-3">16</TableCell>
+                  <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">89%</span>
                   </TableCell>
-                  <TableCell className="text-right py-4">
+                  <TableCell className="text-right py-3">
                     <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
                       Click here
                     </Button>
                   </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-muted/50">
-                  <TableCell className="py-4">UX/UI Project</TableCell>
-                  <TableCell className="py-4">Engineering</TableCell>
-                  <TableCell className="py-4">Riipen</TableCell>
-                  <TableCell className="text-center py-4">12</TableCell>
-                  <TableCell className="text-center py-4">
+                  <TableCell className="py-3">UX/UI Project</TableCell>
+                  <TableCell className="py-3">Engineering</TableCell>
+                  <TableCell className="py-3">Riipen</TableCell>
+                  <TableCell className="text-center py-3">12</TableCell>
+                  <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">100%</span>
                   </TableCell>
-                  <TableCell className="text-right py-4">
+                  <TableCell className="text-right py-3">
                     <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
                       Click here
                     </Button>
                   </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-muted/50">
-                  <TableCell className="py-4">AI Implementation</TableCell>
-                  <TableCell className="py-4">Data Science</TableCell>
-                  <TableCell className="py-4">Internal</TableCell>
-                  <TableCell className="text-center py-4">20</TableCell>
-                  <TableCell className="text-center py-4">
+                  <TableCell className="py-3">AI Implementation</TableCell>
+                  <TableCell className="py-3">Data Science</TableCell>
+                  <TableCell className="py-3">Internal</TableCell>
+                  <TableCell className="text-center py-3">20</TableCell>
+                  <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">95%</span>
                   </TableCell>
-                  <TableCell className="text-right py-4">
+                  <TableCell className="text-right py-3">
                     <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
                       Click here
                     </Button>
                   </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-muted/50">
-                  <TableCell className="py-4">Mobile App Development</TableCell>
-                  <TableCell className="py-4">Engineering</TableCell>
-                  <TableCell className="py-4">External</TableCell>
-                  <TableCell className="text-center py-4">15</TableCell>
-                  <TableCell className="text-center py-4">
+                  <TableCell className="py-3">Mobile App Development</TableCell>
+                  <TableCell className="py-3">Engineering</TableCell>
+                  <TableCell className="py-3">External</TableCell>
+                  <TableCell className="text-center py-3">15</TableCell>
+                  <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">92%</span>
                   </TableCell>
-                  <TableCell className="text-right py-4">
+                  <TableCell className="text-right py-3">
                     <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
                       Click here
                     </Button>
                   </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-muted/50">
-                  <TableCell className="py-4">Cloud Migration</TableCell>
-                  <TableCell className="py-4">Infrastructure</TableCell>
-                  <TableCell className="py-4">Internal</TableCell>
-                  <TableCell className="text-center py-4">18</TableCell>
-                  <TableCell className="text-center py-4">
+                  <TableCell className="py-3">Cloud Migration</TableCell>
+                  <TableCell className="py-3">Infrastructure</TableCell>
+                  <TableCell className="py-3">Internal</TableCell>
+                  <TableCell className="text-center py-3">18</TableCell>
+                  <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">87%</span>
                   </TableCell>
-                  <TableCell className="text-right py-4">
+                  <TableCell className="text-right py-3">
                     <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
                       Click here
                     </Button>
