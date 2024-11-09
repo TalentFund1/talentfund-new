@@ -37,7 +37,7 @@ export const GraduationSection = () => {
         <label className="text-sm text-muted-foreground">Graduation Program</label>
         <Select>
           <SelectTrigger className="w-full bg-white">
-            <SelectValue placeholder="Select a program" />
+            <SelectValue placeholder="Select a program" className="text-muted-foreground" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="bachelors">Bachelor's Degree</SelectItem>
