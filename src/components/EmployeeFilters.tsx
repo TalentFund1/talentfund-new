@@ -94,7 +94,7 @@ export const EmployeeFilters = () => {
             setSelectedEmploymentType([]);
           }}
           size="sm"
-          className="whitespace-nowrap"
+          className="h-9"
         >
           Clear All
         </Button>
