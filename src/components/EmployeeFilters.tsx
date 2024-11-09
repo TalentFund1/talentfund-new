@@ -14,7 +14,7 @@ export const EmployeeFilters = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <div className="w-full">
         <SearchFilter
           label=""
@@ -26,7 +26,7 @@ export const EmployeeFilters = () => {
         />
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <SearchFilter
           label=""
           placeholder="Job Title"
@@ -79,7 +79,7 @@ export const EmployeeFilters = () => {
         />
 
         <Button 
-          variant="outline" 
+          variant="ghost" 
           onClick={() => {
             setSelectedSkills([]);
             setSelectedJobTitle([]);
@@ -89,7 +89,7 @@ export const EmployeeFilters = () => {
             setSelectedEmploymentType([]);
           }}
           size="sm"
-          className="ml-auto whitespace-nowrap"
+          className="text-sm font-normal text-primary hover:bg-transparent hover:text-primary/80"
         >
           Clear All
         </Button>
