@@ -79,7 +79,7 @@ export const CompensationHeader = () => {
           </div>
 
           <div className="mt-8">
-            <h3 className="text-lg font-medium text-secondary-foreground mb-3">Job Description</h3>
+            <h3 className="text-sm font-medium text-secondary-foreground mb-3">Job Description</h3>
             <div className="relative">
               <p className={`text-secondary-foreground ${!isExpanded ? 'line-clamp-2' : ''}`}>
                 AI engineer engineer will join a multidisciplinary team helping to shape our AI strategy and showcasing the potential for AI through early-stage solutions. This is an excellent opportunity to take advantage of emerging trends and technologies and make a real-world difference.
