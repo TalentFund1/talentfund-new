@@ -73,9 +73,9 @@ export const CompensationTrendsChart = () => {
                 <span className="text-primary-accent">▲</span>
                 <span className="text-3xl font-bold text-primary">{getGrowthRate()}%</span>
               </div>
-              <span className="text-sm text-muted-foreground">Growth</span>
+              <span className="text-sm text-muted-foreground">{getTimeRange()}</span>
             </div>
-            <div className="text-sm text-muted-foreground mt-1">{getTimeRange()}</div>
+            <div className="text-sm text-muted-foreground mt-1"></div>
           </div>
           <div className="flex gap-2">
             <Button 
