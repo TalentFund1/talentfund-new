@@ -5,6 +5,7 @@ import { DetailedSkill, Certification } from "./types";
 import { SkillBadge } from "./SkillBadge";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { technicalSkills, softSkills } from '@/components/skillsData';
+import { Separator } from "@/components/ui/separator";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -151,6 +152,8 @@ export const SkillsSummary = () => {
           </div>
         )}
       </div>
+
+      <Separator className="my-6" />
       
       <div className="space-y-6">
         <SkillSection title="Specialized Skills" count={filteredSpecializedSkills.length}>
