@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useState, useRef, useEffect } from "react";
 import { SkillSection } from "./SkillSection";
 import { DetailedSkill, Certification } from "./types";
@@ -129,24 +128,27 @@ export const SkillsSummary = () => {
     <div className="space-y-4 w-full">
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
-      <div className="mb-4 space-y-2">
-        <SearchFilter
-          label=""
-          placeholder="Search skills..."
-          items={allSkills}
-          selectedItems={selectedSkills}
-          onItemsChange={setSelectedSkills}
-          singleSelect={false}
-        />
+      <div className="mb-4">
+        <div className="space-y-2">
+          <SearchFilter
+            label=""
+            placeholder="Search skills..."
+            items={allSkills}
+            selectedItems={selectedSkills}
+            onItemsChange={setSelectedSkills}
+            singleSelect={false}
+          />
+        </div>
         {selectedSkills.length > 0 && (
-          <Button 
-            variant="outline" 
-            onClick={handleClearAll}
-            size="sm"
-            className="mt-2"
-          >
-            Clear All
-          </Button>
+          <div className="flex justify-end mt-2">
+            <Button 
+              variant="outline" 
+              onClick={handleClearAll}
+              size="sm"
+            >
+              Clear All
+            </Button>
+          </div>
         )}
       </div>
       
