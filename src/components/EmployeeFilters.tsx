@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { SearchFilter } from '@/components/market/SearchFilter';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 
@@ -15,41 +22,33 @@ export const EmployeeFilters = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-4 items-start">
-        <div className="flex-1">
-          <SearchFilter
-            label=""
-            placeholder="Search job titles..."
-            items={[
-              "Software Engineer",
-              "Product Manager",
-              "Designer",
-              "Data Scientist",
-              "DevOps Engineer"
-            ]}
-            selectedItems={selectedJobTitle}
-            onItemsChange={setSelectedJobTitle}
-            singleSelect={true}
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-wrap gap-4 items-start">
-        <div className="flex-1">
-          <SearchFilter
-            label=""
-            placeholder="Search skills..."
-            items={allSkills}
-            selectedItems={selectedSkills}
-            onItemsChange={setSelectedSkills}
-            singleSelect={false}
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-wrap gap-4 items-center">
+      <SearchFilter
+        label="Job Title"
+        placeholder="Search job titles..."
+        items={[
+          "Software Engineer",
+          "Product Manager",
+          "Designer",
+          "Data Scientist",
+          "DevOps Engineer"
+        ]}
+        selectedItems={selectedJobTitle}
+        onItemsChange={setSelectedJobTitle}
+        singleSelect={true}
+      />
+      
+      <SearchFilter
+        label="Skills"
+        placeholder="Search skills..."
+        items={allSkills}
+        selectedItems={selectedSkills}
+        onItemsChange={setSelectedSkills}
+        singleSelect={false}
+      />
+      
+      <div className="flex flex-wrap gap-4">
         <SearchFilter
-          label=""
+          label="Level"
           placeholder="Search levels..."
           items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
           selectedItems={selectedLevel}
@@ -58,7 +57,7 @@ export const EmployeeFilters = () => {
         />
         
         <SearchFilter
-          label=""
+          label="Office"
           placeholder="Search offices..."
           items={["New York", "San Francisco", "London", "Toronto", "Berlin"]}
           selectedItems={selectedOffice}
@@ -67,7 +66,7 @@ export const EmployeeFilters = () => {
         />
 
         <SearchFilter
-          label=""
+          label="Department"
           placeholder="Search departments..."
           items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
           selectedItems={selectedDepartment}
@@ -76,7 +75,7 @@ export const EmployeeFilters = () => {
         />
 
         <SearchFilter
-          label=""
+          label="Employment Type"
           placeholder="Search employment types..."
           items={["Full Time", "Part Time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
