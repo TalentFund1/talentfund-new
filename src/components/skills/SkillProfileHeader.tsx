@@ -54,7 +54,7 @@ export const SkillProfileHeader = () => {
       <Separator />
 
       <div className="space-y-1">
-        <span className="text-sm font-bold text-muted-foreground">Job Description</span>
+        <span className="text-sm text-muted-foreground">Job Description</span>
         <div className="space-y-2">
           <p className={`text-sm text-foreground/80 transition-all duration-300 ${isExpanded ? '' : 'line-clamp-2'}`}>
             {fullDescription}
