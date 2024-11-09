@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { SkillSection } from "./SkillSection";
 import { SkillsHeader } from "./SkillsHeader";
 import { useState, useRef, useEffect } from "react";
+import { Heart } from "lucide-react";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -19,21 +20,21 @@ export const SkillsSummary = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const specializedSkills = [
-    { name: "React", level: "advanced" },
-    { name: "JavaScript", level: "advanced" },
-    { name: "TypeScript", level: "advanced" },
-    { name: "Node.js", level: "advanced" },
-    { name: "Computer Architecture", level: "intermediate" },
-    { name: "SystemVerilog", level: "intermediate" },
-    { name: "Docker", level: "intermediate" },
-    { name: "Static Timing Analysis", level: "beginner" },
-    { name: "Cadence Encounter", level: "beginner" },
-    { name: "Synopsys Primetime", level: "beginner" },
-    { name: "GraphQL", level: "unspecified" },
-    { name: "Internet of Things", level: "unspecified" },
-    { name: "Kubernetes", level: "unspecified" },
-    { name: "AWS Lambda", level: "unspecified" },
-    { name: "Azure Functions", level: "beginner" }
+    { name: "React", level: "advanced", isSkillGoal: true },
+    { name: "JavaScript", level: "advanced", isSkillGoal: true },
+    { name: "TypeScript", level: "advanced", isSkillGoal: true },
+    { name: "Node.js", level: "advanced", isSkillGoal: false },
+    { name: "Computer Architecture", level: "intermediate", isSkillGoal: true },
+    { name: "SystemVerilog", level: "intermediate", isSkillGoal: false },
+    { name: "Docker", level: "intermediate", isSkillGoal: true },
+    { name: "Static Timing Analysis", level: "beginner", isSkillGoal: false },
+    { name: "Cadence Encounter", level: "beginner", isSkillGoal: false },
+    { name: "Synopsys Primetime", level: "beginner", isSkillGoal: true },
+    { name: "GraphQL", level: "unspecified", isSkillGoal: false },
+    { name: "Internet of Things", level: "unspecified", isSkillGoal: false },
+    { name: "Kubernetes", level: "unspecified", isSkillGoal: false },
+    { name: "AWS Lambda", level: "unspecified", isSkillGoal: false },
+    { name: "Azure Functions", level: "beginner", isSkillGoal: true }
   ].sort((a, b) => {
     const levelOrder = {
       advanced: 0,
@@ -45,16 +46,16 @@ export const SkillsSummary = () => {
   });
 
   const commonSkills = [
-    { name: "UI/UX Design Principles", level: "advanced" },
-    { name: "Agile Methodologies", level: "advanced" },
-    { name: "Project Management", level: "intermediate" },
-    { name: "Problem Solving", level: "intermediate" },
-    { name: "Scrum", level: "intermediate" },
-    { name: "Time Management", level: "beginner" },
-    { name: "Microsoft Excel", level: "beginner" },
-    { name: "Team Leadership", level: "unspecified" },
-    { name: "Communication", level: "unspecified" },
-    { name: "Technical Writing", level: "unspecified" }
+    { name: "UI/UX Design Principles", level: "advanced", isSkillGoal: true },
+    { name: "Agile Methodologies", level: "advanced", isSkillGoal: true },
+    { name: "Project Management", level: "intermediate", isSkillGoal: false },
+    { name: "Problem Solving", level: "intermediate", isSkillGoal: true },
+    { name: "Scrum", level: "intermediate", isSkillGoal: false },
+    { name: "Time Management", level: "beginner", isSkillGoal: true },
+    { name: "Microsoft Excel", level: "beginner", isSkillGoal: false },
+    { name: "Team Leadership", level: "unspecified", isSkillGoal: false },
+    { name: "Communication", level: "unspecified", isSkillGoal: true },
+    { name: "Technical Writing", level: "unspecified", isSkillGoal: false }
   ].sort((a, b) => {
     const levelOrder = {
       advanced: 0,
@@ -94,13 +95,18 @@ export const SkillsSummary = () => {
         variant="outline" 
         className="rounded-md px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
       >
-        {skill.name} 
-        <div className={`h-2 w-2 rounded-full ${
-          skill.level === "advanced" ? "bg-primary-accent" :
-          skill.level === "intermediate" ? "bg-primary-icon" :
-          skill.level === "beginner" ? "bg-[#008000]" :
-          "bg-gray-300"
-        }`} />
+        {skill.name}
+        <div className="flex items-center gap-1.5">
+          <div className={`h-2 w-2 rounded-full ${
+            skill.level === "advanced" ? "bg-primary-accent" :
+            skill.level === "intermediate" ? "bg-primary-icon" :
+            skill.level === "beginner" ? "bg-[#008000]" :
+            "bg-gray-300"
+          }`} />
+          {skill.isSkillGoal && (
+            <Heart className="w-3 h-3 text-[#1f2144] fill-current" />
+          )}
+        </div>
       </Badge>
     ));
   };
