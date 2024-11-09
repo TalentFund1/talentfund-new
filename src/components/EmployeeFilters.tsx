@@ -1,12 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { SearchFilter } from '@/components/market/SearchFilter';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 
@@ -23,7 +16,6 @@ export const EmployeeFilters = () => {
   return (
     <div className="space-y-4">
       <SearchFilter
-        label="Job Title"
         placeholder="Search job titles..."
         items={[
           "Software Engineer",
@@ -38,7 +30,6 @@ export const EmployeeFilters = () => {
       />
       
       <SearchFilter
-        label="Skills"
         placeholder="Search skills..."
         items={allSkills}
         selectedItems={selectedSkills}
@@ -48,7 +39,6 @@ export const EmployeeFilters = () => {
       
       <div className="flex flex-wrap gap-4">
         <SearchFilter
-          label="Level"
           placeholder="Search levels..."
           items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
           selectedItems={selectedLevel}
@@ -57,7 +47,6 @@ export const EmployeeFilters = () => {
         />
         
         <SearchFilter
-          label="Office"
           placeholder="Search offices..."
           items={["New York", "San Francisco", "London", "Toronto", "Berlin"]}
           selectedItems={selectedOffice}
@@ -66,7 +55,6 @@ export const EmployeeFilters = () => {
         />
 
         <SearchFilter
-          label="Department"
           placeholder="Search departments..."
           items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
           selectedItems={selectedDepartment}
@@ -75,7 +63,6 @@ export const EmployeeFilters = () => {
         />
 
         <SearchFilter
-          label="Employment Type"
           placeholder="Search employment types..."
           items={["Full Time", "Part Time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
