@@ -56,7 +56,7 @@ export const SkillProfileHeader = () => {
       <div className="space-y-1">
         <span className="text-sm text-muted-foreground">Job Description</span>
         <div className="space-y-2">
-          <p className={`text-sm text-foreground transition-all duration-300 font-medium ${isExpanded ? '' : 'line-clamp-2'}`}>
+          <p className={`text-sm text-foreground/80 transition-all duration-300 font-medium ${isExpanded ? '' : 'line-clamp-2'}`}>
             {fullDescription}
           </p>
           <button
