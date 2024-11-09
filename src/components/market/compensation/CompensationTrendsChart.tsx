@@ -67,15 +67,10 @@ export const CompensationTrendsChart = () => {
     <Card className="p-6">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <div className="flex items-baseline gap-2">
-              <div className="flex items-center gap-1">
-                <span className="text-green-500">▲</span>
-                <span className="text-3xl font-bold text-primary">{getGrowthRate()}%</span>
-              </div>
-              <span className="text-sm text-muted-foreground">Growth</span>
-            </div>
-            <div className="text-sm text-muted-foreground mt-1">{getTimeRange()}</div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-2xl font-bold text-primary">{getGrowthRate()}%</span>
+            <span className="text-sm text-secondary-foreground">Growth</span>
+            <div className="text-sm text-secondary-foreground ml-4">{getTimeRange()}</div>
           </div>
           <div className="flex gap-2">
             <Button 
