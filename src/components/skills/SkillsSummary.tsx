@@ -76,12 +76,12 @@ export const SkillsSummary = () => {
       <Badge 
         key={skill.name} 
         variant="outline" 
-        className="rounded-md px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
+        className="rounded-full px-4 py-1.5 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
       >
-        {skill.name} 
+        {skill.name}
         <div className={`h-2 w-2 rounded-full ${
-          skill.level === "advanced" ? "bg-primary-accent" :
-          skill.level === "intermediate" ? "bg-primary-icon" :
+          skill.level === "advanced" ? "bg-[#8073ec]" :
+          skill.level === "intermediate" ? "bg-[#ff8256]" :
           "bg-[#008000]"
         }`} />
       </Badge>
@@ -107,7 +107,7 @@ export const SkillsSummary = () => {
                 onClick={() => toggleSection('specialized')}
               >
                 {expandedSections.specialized ? 'Show Less' : 'See More'} 
-                <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
+                <span className="bg-primary-accent/10 rounded-full px-2 py-0.5 text-foreground text-xs">
                   {specializedSkills.length - visibleSpecializedCount}
                 </span>
               </Button>
@@ -128,7 +128,7 @@ export const SkillsSummary = () => {
                 onClick={() => toggleSection('common')}
               >
                 {expandedSections.common ? 'Show Less' : 'See More'} 
-                <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
+                <span className="bg-primary-accent/10 rounded-full px-2 py-0.5 text-foreground text-xs">
                   {commonSkills.length - 7}
                 </span>
               </Button>
@@ -140,7 +140,7 @@ export const SkillsSummary = () => {
           <div className="flex flex-wrap gap-2">
             <Badge 
               variant="outline" 
-              className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
+              className="rounded-full px-4 py-1.5 border border-border bg-white hover:bg-background/80 transition-colors"
             >
               Cybersecurity License
             </Badge>
