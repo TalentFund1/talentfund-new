@@ -15,9 +15,8 @@ export const SkillLevelIcon = ({ level }: SkillLevelIconProps) => {
       case "beginner":
         return "bg-[#008000]/10 text-[#008000]";
       case "unspecified":
-        return "bg-[#F7F9FF] text-[#6B7280]";
       default:
-        return "bg-gray-100 text-gray-400";
+        return "bg-[#F7F9FF] text-[#6B7280]";
     }
   };
 
@@ -30,9 +29,8 @@ export const SkillLevelIcon = ({ level }: SkillLevelIconProps) => {
       case "beginner":
         return <Target className="w-5 h-5" strokeWidth={2} />;
       case "unspecified":
-        return <CircleDashed className="w-5 h-5" strokeWidth={2} />;
       default:
-        return null;
+        return <CircleDashed className="w-5 h-5" strokeWidth={2} />;
     }
   };
 
