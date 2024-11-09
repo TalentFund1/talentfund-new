@@ -95,7 +95,7 @@ export const EmployeeFilters = () => {
         <Button 
           variant="outline" 
           onClick={handleClearAll}
-          className="h-[36px] mt-3.25"
+          className="h-[36px] mt-3.5"
         >
           Clear All
         </Button>
