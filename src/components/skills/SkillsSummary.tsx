@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { useState, useRef, useEffect } from "react";
 import { SkillSection } from "./SkillSection";
 import { SkillsHeader } from "./SkillsHeader";
-import { useState, useRef, useEffect } from "react";
-import { Heart } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { DetailedSkill, Certification } from "./types";
+import { SkillBadge } from "./SkillBadge";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -68,7 +68,7 @@ export const SkillsSummary = () => {
     return levelOrder[a.level as keyof typeof levelOrder] - levelOrder[b.level as keyof typeof levelOrder];
   });
 
-  const certifications = [
+  const certifications: Certification[] = [
     { name: "Cybersecurity License" }
   ];
 
@@ -90,7 +90,7 @@ export const SkillsSummary = () => {
     }
   }, []);
 
-  const filterSkills = (skills: Array<{ name: string }>) => {
+  const filterSkills = <T extends { name: string }>(skills: T[]) => {
     if (!searchQuery) return skills;
     return skills.filter(skill => 
       skill.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -101,30 +101,19 @@ export const SkillsSummary = () => {
   const filteredCommonSkills = filterSkills(commonSkills);
   const filteredCertifications = filterSkills(certifications);
 
-  const renderSkills = (skills: typeof specializedSkills, isExpanded: boolean, isSpecialized: boolean = false) => {
+  const renderDetailedSkills = (skills: DetailedSkill[], isExpanded: boolean, isSpecialized: boolean = false) => {
     const displaySkills = isSpecialized 
       ? (isExpanded ? skills : skills.slice(0, visibleSpecializedCount))
       : (isExpanded ? skills : skills.slice(0, 7));
 
     return displaySkills.map((skill) => (
-      <Badge 
-        key={skill.name} 
-        variant="outline" 
-        className="rounded-md px-4 py-2 border border-border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
-      >
-        {skill.name}
-        <div className="flex items-center gap-1.5">
-          <div className={`h-2 w-2 rounded-full ${
-            skill.level === "advanced" ? "bg-primary-accent" :
-            skill.level === "intermediate" ? "bg-primary-icon" :
-            skill.level === "beginner" ? "bg-[#008000]" :
-            "bg-gray-300"
-          }`} />
-          {skill.isSkillGoal && (
-            <Heart className="w-3 h-3 text-[#1f2144]" />
-          )}
-        </div>
-      </Badge>
+      <SkillBadge 
+        key={skill.name}
+        skill={skill}
+        showLevel={true}
+        level={skill.level}
+        isSkillGoal={skill.isSkillGoal}
+      />
     ));
   };
 
@@ -146,7 +135,7 @@ export const SkillsSummary = () => {
       <div className="space-y-6">
         <SkillSection title="Specialized Skills" count={filteredSpecializedSkills.length}>
           <div ref={containerRef} className="flex flex-wrap gap-2 mb-4">
-            {renderSkills(filteredSpecializedSkills, expandedSections.specialized, true)}
+            {renderDetailedSkills(filteredSpecializedSkills, expandedSections.specialized, true)}
           </div>
           {filteredSpecializedSkills.length > visibleSpecializedCount && (
             <div className="flex justify-start">
@@ -167,7 +156,7 @@ export const SkillsSummary = () => {
 
         <SkillSection title="Common Skills" count={filteredCommonSkills.length}>
           <div className="flex flex-wrap gap-2">
-            {renderSkills(filteredCommonSkills, expandedSections.common)}
+            {renderDetailedSkills(filteredCommonSkills, expandedSections.common)}
           </div>
           {filteredCommonSkills.length > 7 && (
             <div className="flex justify-start mt-4">
@@ -189,13 +178,7 @@ export const SkillsSummary = () => {
         <SkillSection title="Certifications" count={filteredCertifications.length}>
           <div className="flex flex-wrap gap-2">
             {filteredCertifications.map((cert) => (
-              <Badge 
-                key={cert.name} 
-                variant="outline" 
-                className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
-              >
-                {cert.name}
-              </Badge>
+              <SkillBadge key={cert.name} skill={cert} />
             ))}
           </div>
         </SkillSection>
