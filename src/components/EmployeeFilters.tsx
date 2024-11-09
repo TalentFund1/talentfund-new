@@ -1,4 +1,5 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
+import { Button } from '@/components/ui/button';
 import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 
@@ -12,17 +13,35 @@ export const EmployeeFilters = () => {
 
   const allSkills = [...technicalSkills, ...softSkills];
 
+  const handleClearAll = () => {
+    setSelectedSkills([]);
+    setSelectedJobTitle([]);
+    setSelectedLevel([]);
+    setSelectedOffice([]);
+    setSelectedDepartment([]);
+    setSelectedEmploymentType([]);
+  };
+
   return (
     <div className="space-y-1">
-      <div className="w-full">
-        <SearchFilter
-          label=""
-          placeholder="Search skills..."
-          items={allSkills}
-          selectedItems={selectedSkills}
-          onItemsChange={setSelectedSkills}
-          singleSelect={false}
-        />
+      <div className="flex items-center justify-between w-full">
+        <div className="w-full max-w-md">
+          <SearchFilter
+            label=""
+            placeholder="Search skills..."
+            items={allSkills}
+            selectedItems={selectedSkills}
+            onItemsChange={setSelectedSkills}
+            singleSelect={false}
+          />
+        </div>
+        <Button 
+          variant="outline" 
+          onClick={handleClearAll}
+          className="ml-4"
+        >
+          Clear All
+        </Button>
       </div>
 
       <div className="flex flex-wrap items-start gap-3">
