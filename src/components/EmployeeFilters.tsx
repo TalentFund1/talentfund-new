@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
@@ -73,33 +72,15 @@ export const EmployeeFilters = () => {
           className="w-[180px]"
         />
 
-        <div className="flex items-center gap-2">
-          <SearchFilter
-            label=""
-            placeholder="Employment Type"
-            items={["Full Time", "Part Time", "Contract", "Internship"]}
-            selectedItems={selectedEmploymentType}
-            onItemsChange={setSelectedEmploymentType}
-            singleSelect={false}
-            className="w-[180px]"
-          />
-
-          <Button 
-            variant="outline" 
-            onClick={() => {
-              setSelectedSkills([]);
-              setSelectedJobTitle([]);
-              setSelectedLevel([]);
-              setSelectedOffice([]);
-              setSelectedDepartment([]);
-              setSelectedEmploymentType([]);
-            }}
-            size="sm"
-            className="h-9"
-          >
-            Clear All
-          </Button>
-        </div>
+        <SearchFilter
+          label=""
+          placeholder="Employment Type"
+          items={["Full Time", "Part Time", "Contract", "Internship"]}
+          selectedItems={selectedEmploymentType}
+          onItemsChange={setSelectedEmploymentType}
+          singleSelect={false}
+          className="w-[180px]"
+        />
       </div>
     </div>
   );
