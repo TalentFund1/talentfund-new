@@ -23,7 +23,7 @@ export const EmployeeFilters = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-0.5">
       <div className="w-full">
         <SearchFilter
           label=""
@@ -32,7 +32,6 @@ export const EmployeeFilters = () => {
           selectedItems={selectedSkills}
           onItemsChange={setSelectedSkills}
           singleSelect={false}
-          className="w-full"
         />
       </div>
 
