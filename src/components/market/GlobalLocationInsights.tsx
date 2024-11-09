@@ -9,23 +9,6 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { CompanyRankings } from "./CompanyRankings";
-
-const topCompanies = [
-  { name: "United Services Automobile Ass...", profiles: 418 },
-  { name: "Capital One Financial Corporation", profiles: 357 },
-  { name: "JPMorgan Chase & Co.", profiles: 312 },
-  { name: "Lockheed Martin Corporation", profiles: 306 },
-  { name: "Verizon Communications Inc.", profiles: 281 }
-];
-
-const moreCompanies = [
-  { name: "Oracle Corporation", profiles: 275 },
-  { name: "IBM Corporation", profiles: 268 },
-  { name: "Cisco Systems Inc.", profiles: 254 },
-  { name: "Intel Corporation", profiles: 243 },
-  { name: "Salesforce.com Inc.", profiles: 235 }
-];
 
 const locations: Location[] = [
   { 
@@ -259,19 +242,6 @@ export const GlobalLocationInsights = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CompanyRankings 
-            title="Top Companies" 
-            companies={topCompanies}
-            maxProfiles={418}
-          />
-          <CompanyRankings 
-            title="More Companies" 
-            companies={moreCompanies}
-            maxProfiles={418}
-          />
         </div>
 
         <div>
