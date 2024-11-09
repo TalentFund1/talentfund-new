@@ -24,7 +24,7 @@ export const BenchmarkAnalysis = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
           Benchmark Analysis
-          <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-2.5 py-1 text-sm font-medium">
+          <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-2.5 py-1.5 text-sm font-medium">
             89%
           </span>
         </h2>
