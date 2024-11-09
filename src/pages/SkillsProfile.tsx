@@ -43,7 +43,7 @@ const SkillsProfile = () => {
                 onItemsChange={setSelectedSkills}
               />
               
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-2">
                 <Select>
                   <SelectTrigger className="w-[180px] bg-white">
                     <SelectValue placeholder="Job Title" />
