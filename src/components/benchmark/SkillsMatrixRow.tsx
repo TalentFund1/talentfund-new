@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check, X } from "lucide-react";
+import { Check, X, Heart } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 
 interface SkillsMatrixRowProps {
@@ -32,9 +32,22 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
     return !nonCompanySkills.includes(skillTitle);
   };
 
+  // Function to determine if a skill is a skill goal
+  const isSkillGoal = (skillTitle: string) => {
+    const skillGoals = ["Amazon Web Services", "Artificial Intelligence", "Deep Learning", "Machine Learning", "Docker (Software)"];
+    return skillGoals.includes(skillTitle);
+  };
+
   return (
     <TableRow className="group hover:bg-muted/50 border-b border-gray-200 transition-colors">
-      <TableCell className="font-medium border-r border-blue-200 py-2 group-hover:bg-muted/30">{skill.title}</TableCell>
+      <TableCell className="font-medium border-r border-blue-200 py-2 group-hover:bg-muted/30">
+        <div className="flex items-center gap-2">
+          {isSkillGoal(skill.title) && (
+            <Heart className="h-4 w-4 text-red-500 fill-current" />
+          )}
+          {skill.title}
+        </div>
+      </TableCell>
       <TableCell className="border-r border-blue-200 py-2 group-hover:bg-muted/30">{skill.subcategory}</TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2 group-hover:bg-muted/30">
         <div className="flex justify-center">
