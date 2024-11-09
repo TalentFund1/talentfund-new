@@ -4,19 +4,40 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 
-const requiredSkills = [
+interface Skill {
+  name: string;
+  level: "advanced" | "intermediate" | "beginner" | "unspecified";
+}
+
+const requiredSkills: Skill[] = [
   { name: "React", level: "advanced" },
   { name: "JavaScript", level: "advanced" },
   { name: "GraphQL", level: "intermediate" },
   { name: "HTML and CSS3", level: "advanced" },
-  { name: "IPA Integrations", level: "intermediate" },
-];
+  { name: "IPA Integrations", level: "intermediate" }
+].sort((a, b) => {
+  const levelOrder = {
+    advanced: 0,
+    intermediate: 1,
+    beginner: 2,
+    unspecified: 3
+  };
+  return levelOrder[a.level] - levelOrder[b.level];
+});
 
-const preferredSkills = [
+const preferredSkills: Skill[] = [
   { name: "UI/UX Design Principles", level: "intermediate" },
   { name: "Communication", level: "intermediate" },
-  { name: "Angular", level: "beginner" },
-];
+  { name: "Angular", level: "beginner" }
+].sort((a, b) => {
+  const levelOrder = {
+    advanced: 0,
+    intermediate: 1,
+    beginner: 2,
+    unspecified: 3
+  };
+  return levelOrder[a.level] - levelOrder[b.level];
+});
 
 const certifications = [
   { name: "Cybersecurity License" }
@@ -24,6 +45,32 @@ const certifications = [
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
+
+  const getLevelStyles = (level: string) => {
+    switch (level) {
+      case "advanced":
+        return "bg-primary-accent/10 border-primary-accent";
+      case "intermediate":
+        return "bg-primary-icon/10 border-primary-icon";
+      case "beginner":
+        return "bg-[#008000]/10 border-[#008000]";
+      default:
+        return "bg-gray-100/50 border-gray-300";
+    }
+  };
+
+  const getLevelDot = (level: string) => {
+    switch (level) {
+      case "advanced":
+        return "bg-primary-accent";
+      case "intermediate":
+        return "bg-primary-icon";
+      case "beginner":
+        return "bg-[#008000]";
+      default:
+        return "bg-gray-300";
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -69,9 +116,9 @@ export const RoleBenchmark = () => {
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
-                  className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white"
+                  className={`rounded-md px-4 py-2 border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
                 >
-                  {skill.name} <div className="h-2 w-2 rounded-full bg-primary-accent" />
+                  {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
                 </Badge>
               ))}
             </div>
@@ -91,9 +138,9 @@ export const RoleBenchmark = () => {
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
-                  className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white"
+                  className={`rounded-md px-4 py-2 border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
                 >
-                  {skill.name} <div className="h-2 w-2 rounded-full bg-primary-icon" />
+                  {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
                 </Badge>
               ))}
             </div>
@@ -113,7 +160,7 @@ export const RoleBenchmark = () => {
                 <Badge 
                   key={cert.name}
                   variant="outline" 
-                  className="rounded-full px-4 py-2 border border-border bg-white"
+                  className="rounded-md px-4 py-2 border border-border bg-white"
                 >
                   {cert.name}
                 </Badge>
