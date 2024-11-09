@@ -103,7 +103,7 @@ export const SkillsSummary = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="rounded-md px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
+                className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
                 onClick={() => toggleSection('specialized')}
               >
                 {expandedSections.specialized ? 'Show Less' : 'See More'} 
@@ -124,7 +124,7 @@ export const SkillsSummary = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="rounded-md px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
+                className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
                 onClick={() => toggleSection('common')}
               >
                 {expandedSections.common ? 'Show Less' : 'See More'} 
