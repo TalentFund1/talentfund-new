@@ -57,11 +57,12 @@ const TalentMarketplace = () => {
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-b border-border">
-                  <TableHead className="w-[20%] py-3 font-medium">Project Title</TableHead>
+                  <TableHead className="w-[25%] py-3 font-medium">Project Title</TableHead>
                   <TableHead className="w-[20%] py-3 font-medium">Function</TableHead>
-                  <TableHead className="w-[20%] py-3 font-medium">Source</TableHead>
-                  <TableHead className="w-[20%] text-center py-3 font-medium">Skill Count</TableHead>
-                  <TableHead className="w-[20%] text-center py-3 font-medium">Skill Benchmark</TableHead>
+                  <TableHead className="w-[15%] py-3 font-medium">Source</TableHead>
+                  <TableHead className="w-[15%] text-center py-3 font-medium">Skill Count</TableHead>
+                  <TableHead className="w-[15%] text-center py-3 font-medium">Skill Benchmark</TableHead>
+                  <TableHead className="w-[10%] text-right py-3 font-medium">See Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -73,6 +74,11 @@ const TalentMarketplace = () => {
                   <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">89%</span>
                   </TableCell>
+                  <TableCell className="text-right py-3">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                      Click here
+                    </Button>
+                  </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-muted/50">
                   <TableCell className="py-3">UX/UI Project</TableCell>
@@ -81,6 +87,11 @@ const TalentMarketplace = () => {
                   <TableCell className="text-center py-3">12</TableCell>
                   <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">100%</span>
+                  </TableCell>
+                  <TableCell className="text-right py-3">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                      Click here
+                    </Button>
                   </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-muted/50">
@@ -91,6 +102,11 @@ const TalentMarketplace = () => {
                   <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">95%</span>
                   </TableCell>
+                  <TableCell className="text-right py-3">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                      Click here
+                    </Button>
+                  </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-muted/50">
                   <TableCell className="py-3">Mobile App Development</TableCell>
@@ -100,6 +116,11 @@ const TalentMarketplace = () => {
                   <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">92%</span>
                   </TableCell>
+                  <TableCell className="text-right py-3">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                      Click here
+                    </Button>
+                  </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-muted/50">
                   <TableCell className="py-3">Cloud Migration</TableCell>
@@ -108,6 +129,11 @@ const TalentMarketplace = () => {
                   <TableCell className="text-center py-3">18</TableCell>
                   <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">87%</span>
+                  </TableCell>
+                  <TableCell className="text-right py-3">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                      Click here
+                    </Button>
                   </TableCell>
                 </TableRow>
               </TableBody>
