@@ -15,6 +15,10 @@ const skills: Skill[] = [
 ];
 
 export const BenchmarkAnalysis = () => {
+  const getLevelStyles = () => {
+    return "border-[#CCDBFF]";
+  };
+
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <div className="flex items-center justify-between">
@@ -63,7 +67,7 @@ export const BenchmarkAnalysis = () => {
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-medium">Missing Skills / Seniority or Certifications</span>
             <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              6
+              {skills.length}
             </span>
           </div>
           
@@ -72,7 +76,7 @@ export const BenchmarkAnalysis = () => {
               <Badge 
                 key={`${skill.name}-${index}`}
                 variant="outline" 
-                className="rounded-full px-4 py-2 border border-border flex items-center gap-2 bg-white"
+                className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles()}`}
               >
                 {skill.name} <div className="h-2 w-2 rounded-full bg-primary-icon" />
               </Badge>
