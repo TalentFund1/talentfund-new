@@ -14,7 +14,7 @@ export const EmployeeFilters = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <div className="w-full">
         <SearchFilter
           label=""
@@ -23,11 +23,10 @@ export const EmployeeFilters = () => {
           selectedItems={selectedSkills}
           onItemsChange={setSelectedSkills}
           singleSelect={false}
-          className="bg-white"
         />
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         <SearchFilter
           label=""
           placeholder="Job Title"
@@ -41,7 +40,6 @@ export const EmployeeFilters = () => {
           selectedItems={selectedJobTitle}
           onItemsChange={setSelectedJobTitle}
           singleSelect={true}
-          className="min-w-[180px]"
         />
         
         <SearchFilter
@@ -51,7 +49,6 @@ export const EmployeeFilters = () => {
           selectedItems={selectedLevel}
           onItemsChange={setSelectedLevel}
           singleSelect={false}
-          className="min-w-[180px]"
         />
         
         <SearchFilter
@@ -61,7 +58,6 @@ export const EmployeeFilters = () => {
           selectedItems={selectedOffice}
           onItemsChange={setSelectedOffice}
           singleSelect={false}
-          className="min-w-[180px]"
         />
 
         <SearchFilter
@@ -71,7 +67,6 @@ export const EmployeeFilters = () => {
           selectedItems={selectedDepartment}
           onItemsChange={setSelectedDepartment}
           singleSelect={false}
-          className="min-w-[180px]"
         />
 
         <SearchFilter
@@ -81,11 +76,10 @@ export const EmployeeFilters = () => {
           selectedItems={selectedEmploymentType}
           onItemsChange={setSelectedEmploymentType}
           singleSelect={false}
-          className="min-w-[180px]"
         />
 
         <Button 
-          variant="ghost" 
+          variant="outline" 
           onClick={() => {
             setSelectedSkills([]);
             setSelectedJobTitle([]);
@@ -95,7 +89,7 @@ export const EmployeeFilters = () => {
             setSelectedEmploymentType([]);
           }}
           size="sm"
-          className="ml-auto text-sm font-medium text-primary hover:bg-transparent hover:text-primary/80"
+          className="ml-auto whitespace-nowrap"
         >
           Clear All
         </Button>
