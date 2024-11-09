@@ -10,11 +10,11 @@ interface Skill {
 }
 
 const requiredSkills: Skill[] = [
-  { name: "React", level: "advanced" },
-  { name: "JavaScript", level: "advanced" },
-  { name: "GraphQL", level: "intermediate" },
-  { name: "HTML and CSS3", level: "advanced" },
-  { name: "IPA Integrations", level: "intermediate" }
+  { name: "React", level: "advanced" as const },
+  { name: "JavaScript", level: "advanced" as const },
+  { name: "GraphQL", level: "intermediate" as const },
+  { name: "HTML and CSS3", level: "advanced" as const },
+  { name: "IPA Integrations", level: "intermediate" as const }
 ].sort((a, b) => {
   const levelOrder = {
     advanced: 0,
@@ -26,9 +26,9 @@ const requiredSkills: Skill[] = [
 });
 
 const preferredSkills: Skill[] = [
-  { name: "UI/UX Design Principles", level: "intermediate" },
-  { name: "Communication", level: "intermediate" },
-  { name: "Angular", level: "beginner" }
+  { name: "UI/UX Design Principles", level: "intermediate" as const },
+  { name: "Communication", level: "intermediate" as const },
+  { name: "Angular", level: "beginner" as const }
 ].sort((a, b) => {
   const levelOrder = {
     advanced: 0,
