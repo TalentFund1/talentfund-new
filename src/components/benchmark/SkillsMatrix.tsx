@@ -87,12 +87,12 @@ const skills = [
 ];
 
 export const SkillsMatrix = () => {
-  const [selectedSkill, setSelectedSkill] = useState<string>("");
+  const [selectedSkill, setSelectedSkill] = useState<string>("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const filteredSkills = selectedSkill
-    ? skills.filter(skill => skill.title.toLowerCase() === selectedSkill.toLowerCase())
-    : skills;
+  const filteredSkills = selectedSkill === "all"
+    ? skills
+    : skills.filter(skill => skill.title.toLowerCase() === selectedSkill.toLowerCase());
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
@@ -142,7 +142,7 @@ export const SkillsMatrix = () => {
                 <SelectValue placeholder="Select Skill" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Skills</SelectItem>
+                <SelectItem value="all">All Skills</SelectItem>
                 {skills.map((skill) => (
                   <SelectItem key={skill.title} value={skill.title}>
                     {skill.title}
