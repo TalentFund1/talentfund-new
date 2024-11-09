@@ -65,7 +65,7 @@ export const SkillProfileTable = () => {
     <Table>
       <TableHeader>
         <TableRow className="hover:bg-transparent border-y border-border">
-          <TableHead className="w-[5%] h-12">
+          <TableHead className="w-[5%]">
             <input 
               type="checkbox" 
               className="rounded border-gray-300"
@@ -73,21 +73,21 @@ export const SkillProfileTable = () => {
               onChange={(e) => handleSelectAll(e.target.checked)}
             />
           </TableHead>
-          <TableHead className="w-[22%] h-12">
+          <TableHead className="w-[22%]">
             <div className="flex items-center gap-1">
               Role Name <ChevronDown className="h-4 w-4" />
             </div>
           </TableHead>
-          <TableHead className="w-[18%] h-12">Function</TableHead>
-          <TableHead className="w-[15%] text-center h-12">Skill Count</TableHead>
-          <TableHead className="w-[15%] text-center h-12">Employees</TableHead>
-          <TableHead className="w-[15%] text-center h-12">Profile Matches</TableHead>
-          <TableHead className="w-[10%] text-right whitespace-nowrap h-12">Last Updated</TableHead>
+          <TableHead className="w-[18%]">Function</TableHead>
+          <TableHead className="w-[15%] text-center">Skill Count</TableHead>
+          <TableHead className="w-[15%] text-center">Employees</TableHead>
+          <TableHead className="w-[15%] text-center">Profile Matches</TableHead>
+          <TableHead className="w-[10%] text-right whitespace-nowrap">Last Updated</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {profiles.map((profile) => (
-          <TableRow key={profile.id} className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+          <TableRow key={profile.id} className="hover:bg-muted/50 transition-colors border-b border-border">
             <TableCell className="align-middle">
               <input 
                 type="checkbox" 
