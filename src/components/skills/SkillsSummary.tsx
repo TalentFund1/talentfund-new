@@ -122,13 +122,13 @@ export const SkillsSummary = () => {
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       <SkillsHeader />
       
-      <div className="mb-4 w-full">
+      <div className="mb-4">
         <Input
           type="text"
           placeholder="Search skills..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full"
+          className="max-w-sm"
         />
       </div>
       
