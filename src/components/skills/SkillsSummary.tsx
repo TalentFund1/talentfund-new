@@ -83,7 +83,7 @@ export const SkillsSummary = () => {
           skill.level === "advanced" ? "bg-primary-accent" :
           skill.level === "intermediate" ? "bg-primary-icon" :
           skill.level === "beginner" ? "bg-[#008000]" :
-          "bg-gray-300"
+          "bg-[#6B7280]"
         }`} />
       </Badge>
     ));
