@@ -21,30 +21,30 @@ export const SkillsSummary = () => {
   const specializedSkills = [
     { name: "React", level: "advanced" },
     { name: "JavaScript", level: "advanced" },
-    { name: "GraphQL", level: "advanced" },
+    { name: "GraphQL", level: "unspecified" },
     { name: "TypeScript", level: "advanced" },
     { name: "Node.js", level: "advanced" },
     { name: "Computer Architecture", level: "intermediate" },
-    { name: "Internet of Things", level: "intermediate" },
+    { name: "Internet of Things", level: "unspecified" },
     { name: "SystemVerilog", level: "intermediate" },
     { name: "Docker", level: "intermediate" },
-    { name: "Kubernetes", level: "intermediate" },
+    { name: "Kubernetes", level: "unspecified" },
     { name: "Static Timing Analysis", level: "beginner" },
     { name: "Cadence Encounter", level: "beginner" },
     { name: "Synopsys Primetime", level: "beginner" },
-    { name: "AWS Lambda", level: "beginner" },
+    { name: "AWS Lambda", level: "unspecified" },
     { name: "Azure Functions", level: "beginner" }
   ];
 
   const commonSkills = [
     { name: "UI/UX Design Principles", level: "advanced" },
-    { name: "Team Leadership", level: "advanced" },
+    { name: "Team Leadership", level: "unspecified" },
     { name: "Agile Methodologies", level: "advanced" },
     { name: "Project Management", level: "intermediate" },
-    { name: "Communication", level: "intermediate" },
+    { name: "Communication", level: "unspecified" },
     { name: "Problem Solving", level: "intermediate" },
     { name: "Scrum", level: "intermediate" },
-    { name: "Technical Writing", level: "beginner" },
+    { name: "Technical Writing", level: "unspecified" },
     { name: "Time Management", level: "beginner" },
     { name: "Microsoft Excel", level: "beginner" }
   ];
@@ -82,7 +82,8 @@ export const SkillsSummary = () => {
         <div className={`h-2 w-2 rounded-full ${
           skill.level === "advanced" ? "bg-primary-accent" :
           skill.level === "intermediate" ? "bg-primary-icon" :
-          "bg-[#008000]"
+          skill.level === "beginner" ? "bg-[#008000]" :
+          "bg-gray-300"
         }`} />
       </Badge>
     ));
