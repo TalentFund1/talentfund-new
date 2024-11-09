@@ -14,7 +14,7 @@ export const EmployeeFilters = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       <div className="w-full">
         <SearchFilter
           label=""
@@ -73,31 +73,33 @@ export const EmployeeFilters = () => {
           className="w-[180px]"
         />
 
-        <SearchFilter
-          label=""
-          placeholder="Employment Type"
-          items={["Full Time", "Part Time", "Contract", "Internship"]}
-          selectedItems={selectedEmploymentType}
-          onItemsChange={setSelectedEmploymentType}
-          singleSelect={false}
-          className="w-[180px]"
-        />
+        <div className="flex items-center gap-2">
+          <SearchFilter
+            label=""
+            placeholder="Employment Type"
+            items={["Full Time", "Part Time", "Contract", "Internship"]}
+            selectedItems={selectedEmploymentType}
+            onItemsChange={setSelectedEmploymentType}
+            singleSelect={false}
+            className="w-[180px]"
+          />
 
-        <Button 
-          variant="outline" 
-          onClick={() => {
-            setSelectedSkills([]);
-            setSelectedJobTitle([]);
-            setSelectedLevel([]);
-            setSelectedOffice([]);
-            setSelectedDepartment([]);
-            setSelectedEmploymentType([]);
-          }}
-          size="sm"
-          className="h-9"
-        >
-          Clear All
-        </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              setSelectedSkills([]);
+              setSelectedJobTitle([]);
+              setSelectedLevel([]);
+              setSelectedOffice([]);
+              setSelectedDepartment([]);
+              setSelectedEmploymentType([]);
+            }}
+            size="sm"
+            className="h-9"
+          >
+            Clear All
+          </Button>
+        </div>
       </div>
     </div>
   );
