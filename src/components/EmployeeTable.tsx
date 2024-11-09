@@ -1,89 +1,131 @@
-import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const EMPLOYEE_IMAGES = [
-  "photo-1488590528505-98d2b5aba04b",
-  "photo-1518770660439-4636190af475",
-  "photo-1461749280684-dccba630e2f6",
-  "photo-1486312338219-ce68d2c6f44d"
-];
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Employee {
+  id: number;
   name: string;
+  avatar: string;
   role: string;
   department: string;
   skillCount: number;
   benchmark: number;
-  lastUpdated: string;
 }
 
 const employees: Employee[] = [
   {
-    name: "Victor Smith",
-    role: "AI Engineer: P4",
-    department: "Engineering",
-    skillCount: 16,
-    benchmark: 89,
-    lastUpdated: "10/20/24"
-  },
-  {
-    name: "Jennie Richards",
-    role: "Backend Engineer: P4",
+    id: 1,
+    name: "Sarah Thompson",
+    avatar: "https://i.pravatar.cc/150?img=1",
+    role: "Senior Frontend Engineer",
     department: "Engineering",
     skillCount: 12,
+    benchmark: 89,
+  },
+  {
+    id: 2,
+    name: "Michael Chen",
+    avatar: "https://i.pravatar.cc/150?img=2",
+    role: "Product Manager",
+    department: "Product",
+    skillCount: 8,
+    benchmark: 76,
+  },
+  {
+    id: 3,
+    name: "Emily Davis",
+    avatar: "https://i.pravatar.cc/150?img=3",
+    role: "UX Designer",
+    department: "Design",
+    skillCount: 10,
     benchmark: 85,
-    lastUpdated: "10/20/24"
   },
   {
-    name: "Anna Vyselva",
-    role: "Frontend Developer: P4",
-    department: "Engineering",
-    skillCount: 17,
-    benchmark: 74,
-    lastUpdated: "10/20/24"
+    id: 4,
+    name: "David Smith",
+    avatar: "https://i.pravatar.cc/150?img=4",
+    role: "Data Scientist",
+    department: "Analytics",
+    skillCount: 7,
+    benchmark: 73,
   },
   {
-    name: "Suz Manu",
-    role: "Engineering Manager: M3",
+    id: 5,
+    name: "Linda Johnson",
+    avatar: "https://i.pravatar.cc/150?img=5",
+    role: "Product Owner",
+    department: "Product",
+    skillCount: 9,
+    benchmark: 80,
+  },
+  {
+    id: 6,
+    name: "James Brown",
+    avatar: "https://i.pravatar.cc/150?img=6",
+    role: "Software Engineer",
     department: "Engineering",
     skillCount: 11,
-    benchmark: 68,
-    lastUpdated: "10/20/24"
-  }
+    benchmark: 78,
+  },
+  {
+    id: 7,
+    name: "Patricia White",
+    avatar: "https://i.pravatar.cc/150?img=7",
+    role: "Marketing Specialist",
+    department: "Marketing",
+    skillCount: 6,
+    benchmark: 70,
+  },
+  {
+    id: 8,
+    name: "Robert Green",
+    avatar: "https://i.pravatar.cc/150?img=8",
+    role: "Business Analyst",
+    department: "Business",
+    skillCount: 8,
+    benchmark: 75,
+  },
+  {
+    id: 9,
+    name: "Elizabeth Taylor",
+    avatar: "https://i.pravatar.cc/150?img=9",
+    role: "Frontend Engineer",
+    department: "Engineering",
+    skillCount: 10,
+    benchmark: 82,
+  },
+  {
+    id: 10,
+    name: "Michael Anderson",
+    avatar: "https://i.pravatar.cc/150?img=10",
+    role: "Content Writer",
+    department: "Content",
+    skillCount: 5,
+    benchmark: 72,
+  },
 ];
 
 export const EmployeeTable = () => {
   return (
-    <div className="bg-white rounded-lg">
-      <div className="relative">
-        <table className="w-full">
+    <div className="bg-white rounded-lg border border-border">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-border">
           <thead>
-            <tr className="border-b border-border">
-              <th className="h-12 px-4 text-left">
-                <input type="checkbox" className="rounded border-gray-300" />
-              </th>
-              <th className="h-12 px-4 text-left">
-                <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
-                  Employee Name <ChevronDown className="h-4 w-4" />
-                </div>
-              </th>
-              <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Current Role</th>
-              <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Department</th>
-              <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Count</th>
-              <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Benchmark</th>
-              <th className="h-12 px-4 text-right text-sm font-medium text-muted-foreground">Last Updated</th>
+            <tr className="bg-background/80">
+              <th className="px-4 py-4 text-left text-sm font-semibold">Employee</th>
+              <th className="px-4 py-4 text-left text-sm font-semibold">Role</th>
+              <th className="px-4 py-4 text-left text-sm font-semibold">Department</th>
+              <th className="px-4 py-4 text-center text-sm font-semibold">Skills</th>
+              <th className="px-4 py-4 text-center text-sm font-semibold">Benchmark</th>
             </tr>
           </thead>
-          <tbody>
-            {employees.map((employee, index) => (
-              <tr key={employee.name} className="border-t border-border hover:bg-muted/50 transition-colors">
+          <tbody className="divide-y divide-border">
+            {employees.map((employee) => (
+              <tr key={employee.id} className="hover:bg-background/40 transition-colors">
                 <td className="px-4 py-4">
-                  <input type="checkbox" className="rounded border-gray-300" />
-                </td>
-                <td className="px-4 py-4">
-                  <div className="flex items-center gap-2">
-                    <img 
-                      src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=24&h=24`}
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={employee.avatar}
                       alt={employee.name}
                       className="w-6 h-6 rounded-full object-cover"
                     />
@@ -97,7 +139,7 @@ export const EmployeeTable = () => {
                 <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
                 <td className="px-4 py-4">
                   <div className="flex justify-center">
-                    <span className={`px-2.5 py-1 rounded-full text-sm ${
+                    <span className={`px-2.5 py-1 rounded-2xl text-sm ${
                       employee.benchmark >= 80 
                         ? 'bg-green-100 text-green-800' 
                         : 'bg-orange-100 text-orange-800'
@@ -106,13 +148,25 @@ export const EmployeeTable = () => {
                     </span>
                   </div>
                 </td>
-                <td className="px-4 py-4 text-right text-sm text-muted-foreground">
-                  {employee.lastUpdated}
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex items-center justify-between px-4 py-4 border-t border-border">
+        <div className="text-sm text-muted-foreground">
+          Showing <span className="font-medium">1</span> to{" "}
+          <span className="font-medium">10</span> of{" "}
+          <span className="font-medium">20</span> results
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="icon">
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon">
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );
