@@ -1,11 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
-import { SkillSection } from "./SkillSection";
 import { DetailedSkill, Certification } from "./types";
-import { SkillBadge } from "./SkillBadge";
-import { SearchFilter } from "@/components/market/SearchFilter";
-import { technicalSkills, softSkills } from '@/components/skillsData';
-import { Separator } from "@/components/ui/separator";
+import { SkillSearchSection } from "./search/SkillSearchSection";
+import { SkillsContainer } from "./sections/SkillsContainer";
+import { useToast } from "@/components/ui/use-toast";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -21,7 +18,7 @@ export const SkillsSummary = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
-  const allSkills = [...technicalSkills, ...softSkills];
+  const { toast } = useToast();
 
   const specializedSkills = [
     { name: "React", level: "advanced", isSkillGoal: true },
@@ -101,111 +98,59 @@ export const SkillsSummary = () => {
     );
   };
 
-  const filteredSpecializedSkills = filterSkills(specializedSkills);
-  const filteredCommonSkills = filterSkills(commonSkills);
-  const filteredCertifications = filterSkills(certifications);
+  const handleSkillsChange = (skills: string[]) => {
+    setSelectedSkills(skills);
+    
+    // Check if any selected skill is not in the existing skills lists
+    const allExistingSkills = [
+      ...specializedSkills.map(s => s.name),
+      ...commonSkills.map(s => s.name),
+      ...certifications.map(s => s.name)
+    ];
 
-  const renderDetailedSkills = (skills: DetailedSkill[], isExpanded: boolean, isSpecialized: boolean = false) => {
-    const displaySkills = isSpecialized 
-      ? (isExpanded ? skills : skills.slice(0, visibleSpecializedCount))
-      : (isExpanded ? skills : skills.slice(0, 7));
+    const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
+    
+    if (newSkills.length > 0) {
+      // Add new skills to specialized skills with default values
+      newSkills.forEach(skillName => {
+        specializedSkills.push({
+          name: skillName,
+          level: "unspecified",
+          isSkillGoal: false
+        });
+      });
 
-    return displaySkills.map((skill) => (
-      <SkillBadge 
-        key={skill.name}
-        skill={skill}
-        showLevel={true}
-        level={skill.level}
-        isSkillGoal={skill.isSkillGoal}
-      />
-    ));
+      toast({
+        title: "Skills Added",
+        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
+      });
+    }
   };
 
   const handleClearAll = () => {
     setSelectedSkills([]);
   };
 
+  const filteredSpecializedSkills = filterSkills(specializedSkills);
+  const filteredCommonSkills = filterSkills(commonSkills);
+  const filteredCertifications = filterSkills(certifications);
+
   return (
-    <div className="space-y-4 w-full">
-      <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
+    <div className="space-y-4 w-full" ref={containerRef}>
+      <SkillSearchSection
+        selectedSkills={selectedSkills}
+        onSkillsChange={handleSkillsChange}
+        onClearAll={handleClearAll}
+      />
       
-      <div className="mb-4">
-        <div className="space-y-2">
-          <SearchFilter
-            label=""
-            placeholder="Search skills..."
-            items={allSkills}
-            selectedItems={selectedSkills}
-            onItemsChange={setSelectedSkills}
-            singleSelect={false}
-          />
-        </div>
-        {selectedSkills.length > 0 && (
-          <div className="flex justify-end mt-2">
-            <Button 
-              variant="outline" 
-              onClick={handleClearAll}
-              size="sm"
-            >
-              Clear All
-            </Button>
-          </div>
-        )}
-      </div>
-
-      <Separator className="my-6" />
-      
-      <div className="space-y-6">
-        <SkillSection title="Specialized Skills" count={filteredSpecializedSkills.length}>
-          <div ref={containerRef} className="flex flex-wrap gap-2 mb-4">
-            {renderDetailedSkills(filteredSpecializedSkills, expandedSections.specialized, true)}
-          </div>
-          {filteredSpecializedSkills.length > visibleSpecializedCount && (
-            <div className="flex justify-start">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
-                onClick={() => toggleSection('specialized')}
-              >
-                {expandedSections.specialized ? 'Show Less' : 'See More'} 
-                <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                  {filteredSpecializedSkills.length - visibleSpecializedCount}
-                </span>
-              </Button>
-            </div>
-          )}
-        </SkillSection>
-
-        <SkillSection title="Common Skills" count={filteredCommonSkills.length}>
-          <div className="flex flex-wrap gap-2">
-            {renderDetailedSkills(filteredCommonSkills, expandedSections.common)}
-          </div>
-          {filteredCommonSkills.length > 7 && (
-            <div className="flex justify-start mt-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
-                onClick={() => toggleSection('common')}
-              >
-                {expandedSections.common ? 'Show Less' : 'See More'} 
-                <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                  {filteredCommonSkills.length - 7}
-                </span>
-              </Button>
-            </div>
-          )}
-        </SkillSection>
-
-        <SkillSection title="Certifications" count={filteredCertifications.length}>
-          <div className="flex flex-wrap gap-2">
-            {filteredCertifications.map((cert) => (
-              <SkillBadge key={cert.name} skill={cert} />
-            ))}
-          </div>
-        </SkillSection>
-      </div>
+      <SkillsContainer
+        specializedSkills={filteredSpecializedSkills}
+        commonSkills={filteredCommonSkills}
+        certifications={filteredCertifications}
+        expandedSections={expandedSections}
+        visibleSpecializedCount={visibleSpecializedCount}
+        onToggleSection={toggleSection}
+      />
     </div>
   );
 };
