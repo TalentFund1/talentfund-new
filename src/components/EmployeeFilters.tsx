@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 export const EmployeeFilters = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
-  const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
@@ -16,7 +15,6 @@ export const EmployeeFilters = () => {
   const handleClearAll = () => {
     setSelectedSkills([]);
     setSelectedJobTitle([]);
-    setSelectedLevel([]);
     setSelectedOffice([]);
     setSelectedDepartment([]);
     setSelectedEmploymentType([]);
@@ -49,16 +47,6 @@ export const EmployeeFilters = () => {
           selectedItems={selectedJobTitle}
           onItemsChange={setSelectedJobTitle}
           singleSelect={true}
-          className="w-[180px]"
-        />
-        
-        <SearchFilter
-          label=""
-          placeholder="Level"
-          items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
-          selectedItems={selectedLevel}
-          onItemsChange={setSelectedLevel}
-          singleSelect={false}
           className="w-[180px]"
         />
         
