@@ -23,8 +23,8 @@ export const EmployeeFilters = () => {
   };
 
   return (
-    <div className="space-y-0.5">
-      <div className="w-full">
+    <div className="space-y-0">
+      <div className="w-full mb-3">
         <SearchFilter
           label=""
           placeholder="Search skills..."
@@ -35,70 +35,74 @@ export const EmployeeFilters = () => {
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <SearchFilter
-          label=""
-          placeholder="Job Title"
-          items={[
-            "Software Engineer",
-            "Product Manager",
-            "Designer",
-            "Data Scientist",
-            "DevOps Engineer"
-          ]}
-          selectedItems={selectedJobTitle}
-          onItemsChange={setSelectedJobTitle}
-          singleSelect={true}
-          className="w-[180px]"
-        />
-        
-        <SearchFilter
-          label=""
-          placeholder="Level"
-          items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
-          selectedItems={selectedLevel}
-          onItemsChange={setSelectedLevel}
-          singleSelect={false}
-          className="w-[180px]"
-        />
-        
-        <SearchFilter
-          label=""
-          placeholder="Office"
-          items={["New York", "San Francisco", "London", "Toronto", "Berlin"]}
-          selectedItems={selectedOffice}
-          onItemsChange={setSelectedOffice}
-          singleSelect={false}
-          className="w-[180px]"
-        />
+      <div className="flex flex-wrap items-start gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <SearchFilter
+            label=""
+            placeholder="Job Title"
+            items={[
+              "Software Engineer",
+              "Product Manager",
+              "Designer",
+              "Data Scientist",
+              "DevOps Engineer"
+            ]}
+            selectedItems={selectedJobTitle}
+            onItemsChange={setSelectedJobTitle}
+            singleSelect={true}
+            className="w-[180px]"
+          />
+          
+          <SearchFilter
+            label=""
+            placeholder="Level"
+            items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
+            selectedItems={selectedLevel}
+            onItemsChange={setSelectedLevel}
+            singleSelect={false}
+            className="w-[180px]"
+          />
+          
+          <SearchFilter
+            label=""
+            placeholder="Office"
+            items={["New York", "San Francisco", "London", "Toronto", "Berlin"]}
+            selectedItems={selectedOffice}
+            onItemsChange={setSelectedOffice}
+            singleSelect={false}
+            className="w-[180px]"
+          />
 
-        <SearchFilter
-          label=""
-          placeholder="Department"
-          items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
-          selectedItems={selectedDepartment}
-          onItemsChange={setSelectedDepartment}
-          singleSelect={false}
-          className="w-[180px]"
-        />
+          <SearchFilter
+            label=""
+            placeholder="Department"
+            items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
+            selectedItems={selectedDepartment}
+            onItemsChange={setSelectedDepartment}
+            singleSelect={false}
+            className="w-[180px]"
+          />
 
-        <SearchFilter
-          label=""
-          placeholder="Employment Type"
-          items={["Full Time", "Part Time", "Contract", "Internship"]}
-          selectedItems={selectedEmploymentType}
-          onItemsChange={setSelectedEmploymentType}
-          singleSelect={false}
-          className="w-[180px]"
-        />
+          <div className="flex items-center gap-3">
+            <SearchFilter
+              label=""
+              placeholder="Employment Type"
+              items={["Full Time", "Part Time", "Contract", "Internship"]}
+              selectedItems={selectedEmploymentType}
+              onItemsChange={setSelectedEmploymentType}
+              singleSelect={false}
+              className="w-[180px]"
+            />
 
-        <Button 
-          variant="outline" 
-          onClick={handleClearAll}
-          className="h-[36px]"
-        >
-          Clear All
-        </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleClearAll}
+              className="h-[36px] mt-0"
+            >
+              Clear All
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
