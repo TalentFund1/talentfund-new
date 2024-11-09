@@ -1,5 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Checkbox } from "./ui/checkbox";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -53,6 +55,24 @@ const employees: Employee[] = [
 ];
 
 export const EmployeeTable = () => {
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedEmployees(employees.map(emp => emp.name));
+    } else {
+      setSelectedEmployees([]);
+    }
+  };
+
+  const handleSelectEmployee = (checked: boolean, employeeName: string) => {
+    if (checked) {
+      setSelectedEmployees(prev => [...prev, employeeName]);
+    } else {
+      setSelectedEmployees(prev => prev.filter(name => name !== employeeName));
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg">
       <div className="relative">
@@ -60,7 +80,11 @@ export const EmployeeTable = () => {
           <thead>
             <tr className="border-b border-border">
               <th className="h-12 px-4 text-left">
-                <input type="checkbox" className="rounded border-gray-300" />
+                <Checkbox 
+                  checked={selectedEmployees.length === employees.length}
+                  onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
+                  className="rounded border-gray-300"
+                />
               </th>
               <th className="h-12 px-4 text-left">
                 <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
@@ -78,7 +102,11 @@ export const EmployeeTable = () => {
             {employees.map((employee, index) => (
               <tr key={employee.name} className="border-t border-border hover:bg-muted/50 transition-colors">
                 <td className="px-4 py-4">
-                  <input type="checkbox" className="rounded border-gray-300" />
+                  <Checkbox 
+                    checked={selectedEmployees.includes(employee.name)}
+                    onCheckedChange={(checked) => handleSelectEmployee(checked as boolean, employee.name)}
+                    className="rounded border-gray-300"
+                  />
                 </td>
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-2">
