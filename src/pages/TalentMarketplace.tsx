@@ -57,39 +57,39 @@ const TalentMarketplace = () => {
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-b border-border">
-                  <TableHead className="w-[25%] py-4 font-medium">Project Title</TableHead>
-                  <TableHead className="w-[20%] py-4 font-medium">Function</TableHead>
-                  <TableHead className="w-[15%] py-4 font-medium">Source</TableHead>
-                  <TableHead className="w-[15%] text-center py-4 font-medium">Skill Count</TableHead>
-                  <TableHead className="w-[15%] text-center py-4 font-medium">Skill Benchmark</TableHead>
-                  <TableHead className="w-[10%] text-right py-4 font-medium">See Details</TableHead>
+                  <TableHead className="w-[20%]">Project Title</TableHead>
+                  <TableHead className="w-[15%]">Function</TableHead>
+                  <TableHead className="w-[15%]">Source</TableHead>
+                  <TableHead className="w-[15%] text-center">Skill Count</TableHead>
+                  <TableHead className="w-[20%] text-center">Skill Benchmark</TableHead>
+                  <TableHead className="w-[15%] text-right">See Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow className="hover:bg-muted/50">
-                  <TableCell className="py-4">RnD</TableCell>
-                  <TableCell className="py-4">Engineering</TableCell>
-                  <TableCell className="py-4">Riipen</TableCell>
-                  <TableCell className="text-center py-4">16</TableCell>
-                  <TableCell className="text-center py-4">
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">89%</span>
+                  <TableCell>RnD</TableCell>
+                  <TableCell>Engineering</TableCell>
+                  <TableCell>Riipen</TableCell>
+                  <TableCell className="text-center">16</TableCell>
+                  <TableCell className="text-center">
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded">89%</span>
                   </TableCell>
-                  <TableCell className="text-right py-4">
-                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                  <TableCell className="text-right">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700">
                       Click here
                     </Button>
                   </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-muted/50">
-                  <TableCell className="py-4">UX/UI Project</TableCell>
-                  <TableCell className="py-4">Engineering</TableCell>
-                  <TableCell className="py-4">Riipen</TableCell>
-                  <TableCell className="text-center py-4">12</TableCell>
-                  <TableCell className="text-center py-4">
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">100%</span>
+                  <TableCell>UX/UI Project</TableCell>
+                  <TableCell>Engineering</TableCell>
+                  <TableCell>Riipen</TableCell>
+                  <TableCell className="text-center">12</TableCell>
+                  <TableCell className="text-center">
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded">100%</span>
                   </TableCell>
-                  <TableCell className="text-right py-4">
-                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                  <TableCell className="text-right">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700">
                       Click here
                     </Button>
                   </TableCell>
@@ -97,7 +97,7 @@ const TalentMarketplace = () => {
               </TableBody>
             </Table>
 
-            <div className="flex justify-between items-center mt-4 pt-4 border-t border-border">
+            <div className="flex justify-between items-center mt-4">
               <Select defaultValue="10">
                 <SelectTrigger className="w-[100px]">
                   <SelectValue placeholder="10 rows" />
