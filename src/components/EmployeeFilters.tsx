@@ -14,7 +14,7 @@ export const EmployeeFilters = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <div className="flex flex-wrap gap-4 items-start">
         <div className="flex-1">
           <SearchFilter
