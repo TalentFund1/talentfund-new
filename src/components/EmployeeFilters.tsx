@@ -1,7 +1,6 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
-import { Button } from "@/components/ui/button";
 
 export const EmployeeFilters = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -12,15 +11,6 @@ export const EmployeeFilters = () => {
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
 
   const allSkills = [...technicalSkills, ...softSkills];
-
-  const handleClearAll = () => {
-    setSelectedSkills([]);
-    setSelectedJobTitle([]);
-    setSelectedLevel([]);
-    setSelectedOffice([]);
-    setSelectedDepartment([]);
-    setSelectedEmploymentType([]);
-  };
 
   return (
     <div className="space-y-1">
@@ -91,14 +81,6 @@ export const EmployeeFilters = () => {
           singleSelect={false}
           className="w-[180px]"
         />
-
-        <Button 
-          variant="outline" 
-          onClick={handleClearAll}
-          className="h-10"
-        >
-          Clear All
-        </Button>
       </div>
     </div>
   );
