@@ -59,10 +59,10 @@ const TalentMarketplace = () => {
                 <TableRow className="hover:bg-transparent border-b border-border">
                   <TableHead className="w-[25%] py-3 font-medium">Project Title</TableHead>
                   <TableHead className="w-[20%] py-3 font-medium">Function</TableHead>
-                  <TableHead className="w-[15%] py-3 font-medium">Source</TableHead>
-                  <TableHead className="w-[15%] text-center py-3 font-medium">Skill Count</TableHead>
+                  <TableHead className="w-[12%] py-3 font-medium">Source</TableHead>
+                  <TableHead className="w-[12%] text-center py-3 font-medium">Skill Count</TableHead>
                   <TableHead className="w-[15%] text-center py-3 font-medium">Skill Benchmark</TableHead>
-                  <TableHead className="w-[10%] text-right py-3 font-medium">See Details</TableHead>
+                  <TableHead className="w-[16%] text-right py-3 font-medium">See Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
