@@ -122,15 +122,13 @@ export const SkillsSummary = () => {
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       <SkillsHeader />
       
-      <div className="mb-4">
-        <Input
-          type="text"
-          placeholder="Search skills..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-sm"
-        />
-      </div>
+      <Input
+        type="text"
+        placeholder="Search skills..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full"
+      />
       
       <div className="space-y-6">
         <SkillSection title="Specialized Skills" count={filteredSpecializedSkills.length}>
