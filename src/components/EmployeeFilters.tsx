@@ -13,7 +13,7 @@ export const EmployeeFilters = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <div className="w-full">
         <SearchFilter
           label=""
