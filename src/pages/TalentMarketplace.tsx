@@ -94,6 +94,48 @@ const TalentMarketplace = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
+                <TableRow className="hover:bg-muted/50">
+                  <TableCell className="py-4">AI Implementation</TableCell>
+                  <TableCell className="py-4">Data Science</TableCell>
+                  <TableCell className="py-4">Internal</TableCell>
+                  <TableCell className="text-center py-4">20</TableCell>
+                  <TableCell className="text-center py-4">
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">95%</span>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                      Click here
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow className="hover:bg-muted/50">
+                  <TableCell className="py-4">Mobile App Development</TableCell>
+                  <TableCell className="py-4">Engineering</TableCell>
+                  <TableCell className="py-4">External</TableCell>
+                  <TableCell className="text-center py-4">15</TableCell>
+                  <TableCell className="text-center py-4">
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">92%</span>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                      Click here
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow className="hover:bg-muted/50">
+                  <TableCell className="py-4">Cloud Migration</TableCell>
+                  <TableCell className="py-4">Infrastructure</TableCell>
+                  <TableCell className="py-4">Internal</TableCell>
+                  <TableCell className="text-center py-4">18</TableCell>
+                  <TableCell className="text-center py-4">
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">87%</span>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <Button variant="link" className="text-blue-500 hover:text-blue-700 px-0">
+                      Click here
+                    </Button>
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
 
@@ -110,7 +152,7 @@ const TalentMarketplace = () => {
               </Select>
               
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">1-4 of 4</span>
+                <span className="text-sm text-muted-foreground">1-5 of 5</span>
                 <Button variant="outline" size="icon" className="w-8 h-8">
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
