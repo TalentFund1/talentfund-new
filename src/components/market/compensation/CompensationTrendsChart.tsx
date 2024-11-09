@@ -70,7 +70,7 @@ export const CompensationTrendsChart = () => {
           <div className="flex flex-col">
             <div className="flex items-baseline gap-2">
               <div className="flex items-center gap-1">
-                <span className="text-green-500">▲</span>
+                <span className="text-primary-accent">▲</span>
                 <span className="text-3xl font-bold text-primary">{getGrowthRate()}%</span>
               </div>
               <span className="text-sm text-muted-foreground">Growth</span>
