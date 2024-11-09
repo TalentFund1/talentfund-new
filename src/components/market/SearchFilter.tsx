@@ -66,7 +66,7 @@ export const SearchFilter = ({
   );
 
   return (
-    <div className="space-y-2 w-40" ref={dropdownRef}>
+    <div className="space-y-2" ref={dropdownRef}>
       <label className="text-sm text-muted-foreground">
         {label}
         {required && <span className="text-destructive ml-1">*</span>}
