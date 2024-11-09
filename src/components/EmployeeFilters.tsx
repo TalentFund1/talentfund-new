@@ -35,7 +35,7 @@ export const EmployeeFilters = () => {
         />
       </div>
 
-      <div className="flex flex-wrap items-start gap-3">
+      <div className="flex flex-wrap items-start gap-3 mt-3">
         <SearchFilter
           label=""
           placeholder="Job Title"
