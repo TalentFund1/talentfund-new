@@ -97,7 +97,7 @@ const TalentMarketplace = () => {
                 <TableRow className="hover:bg-muted/50">
                   <TableCell className="py-3">AI Implementation</TableCell>
                   <TableCell className="py-3">Data Science</TableCell>
-                  <TableCell className="py-3">Internal</TableCell>
+                  <TableCell className="py-3">Riipen</TableCell>
                   <TableCell className="text-center py-3">20</TableCell>
                   <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">95%</span>
@@ -111,7 +111,7 @@ const TalentMarketplace = () => {
                 <TableRow className="hover:bg-muted/50">
                   <TableCell className="py-3">Mobile App Development</TableCell>
                   <TableCell className="py-3">Engineering</TableCell>
-                  <TableCell className="py-3">External</TableCell>
+                  <TableCell className="py-3">Riipen</TableCell>
                   <TableCell className="text-center py-3">15</TableCell>
                   <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">92%</span>
@@ -125,7 +125,7 @@ const TalentMarketplace = () => {
                 <TableRow className="hover:bg-muted/50">
                   <TableCell className="py-3">Cloud Migration</TableCell>
                   <TableCell className="py-3">Infrastructure</TableCell>
-                  <TableCell className="py-3">Internal</TableCell>
+                  <TableCell className="py-3">Riipen</TableCell>
                   <TableCell className="text-center py-3">18</TableCell>
                   <TableCell className="text-center py-3">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-2xl text-sm">87%</span>
