@@ -23,8 +23,8 @@ export const EmployeeFilters = () => {
   };
 
   return (
-    <div className="space-y-0">
-      <div className="w-full mb-2">
+    <div className="space-y-0.5">
+      <div className="w-full">
         <SearchFilter
           label=""
           placeholder="Search skills..."
