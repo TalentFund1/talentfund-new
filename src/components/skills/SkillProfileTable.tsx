@@ -1,14 +1,77 @@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export const SkillProfileTable = () => {
+  const [selectedProfiles, setSelectedProfiles] = useState<string[]>([]);
+  
+  const profiles = [
+    {
+      id: "1",
+      name: "AI Engineer",
+      function: "Engineering",
+      skillCount: 16,
+      employees: 2,
+      profileMatches: 0,
+      lastUpdated: "10/20/24"
+    },
+    {
+      id: "2",
+      name: "Backend Engineer",
+      function: "Engineering",
+      skillCount: 12,
+      employees: 3,
+      profileMatches: 4,
+      lastUpdated: "10/20/24"
+    },
+    {
+      id: "3",
+      name: "Frontend Engineer",
+      function: "Engineering",
+      skillCount: 17,
+      employees: 0,
+      profileMatches: 5,
+      lastUpdated: "10/20/24"
+    },
+    {
+      id: "4",
+      name: "Engineering Manager",
+      function: "Engineering",
+      skillCount: 11,
+      employees: 2,
+      profileMatches: 5,
+      lastUpdated: "10/20/24"
+    }
+  ];
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedProfiles(profiles.map(profile => profile.id));
+    } else {
+      setSelectedProfiles([]);
+    }
+  };
+
+  const handleSelectProfile = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedProfiles([...selectedProfiles, id]);
+    } else {
+      setSelectedProfiles(selectedProfiles.filter(profileId => profileId !== id));
+    }
+  };
+
   return (
     <Table>
       <TableHeader>
-        <TableRow className="hover:bg-transparent border-b border-border">
+        <TableRow className="hover:bg-transparent border-y border-border">
           <TableHead className="w-[5%] h-12">
-            <input type="checkbox" className="rounded border-gray-300" />
+            <input 
+              type="checkbox" 
+              className="rounded border-gray-300"
+              checked={selectedProfiles.length === profiles.length}
+              onChange={(e) => handleSelectAll(e.target.checked)}
+            />
           </TableHead>
           <TableHead className="w-[22%] h-12">
             <div className="flex items-center gap-1">
@@ -23,66 +86,28 @@ export const SkillProfileTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
-          <TableCell className="align-middle">
-            <input type="checkbox" className="rounded border-gray-300" />
-          </TableCell>
-          <TableCell className="align-middle font-medium">
-            <Link to="/skills/ai-engineer" className="text-primary hover:underline">
-              AI Engineer
-            </Link>
-          </TableCell>
-          <TableCell className="align-middle">Engineering</TableCell>
-          <TableCell className="text-center align-middle">16</TableCell>
-          <TableCell className="text-center align-middle">2</TableCell>
-          <TableCell className="text-center align-middle">0</TableCell>
-          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
-        </TableRow>
-        <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
-          <TableCell className="align-middle">
-            <input type="checkbox" className="rounded border-gray-300" />
-          </TableCell>
-          <TableCell className="align-middle font-medium">
-            <Link to="/skills/backend-engineer" className="text-primary hover:underline">
-              Backend Engineer
-            </Link>
-          </TableCell>
-          <TableCell className="align-middle">Engineering</TableCell>
-          <TableCell className="text-center align-middle">12</TableCell>
-          <TableCell className="text-center align-middle">3</TableCell>
-          <TableCell className="text-center align-middle">4</TableCell>
-          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
-        </TableRow>
-        <TableRow className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
-          <TableCell className="align-middle">
-            <input type="checkbox" className="rounded border-gray-300" />
-          </TableCell>
-          <TableCell className="align-middle font-medium">
-            <Link to="/skills/frontend-engineer" className="text-primary hover:underline">
-              Frontend Engineer
-            </Link>
-          </TableCell>
-          <TableCell className="align-middle">Engineering</TableCell>
-          <TableCell className="text-center align-middle">17</TableCell>
-          <TableCell className="text-center align-middle">0</TableCell>
-          <TableCell className="text-center align-middle">5</TableCell>
-          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
-        </TableRow>
-        <TableRow className="h-16 hover:bg-muted/50 transition-colors">
-          <TableCell className="align-middle">
-            <input type="checkbox" className="rounded border-gray-300" />
-          </TableCell>
-          <TableCell className="align-middle font-medium">
-            <Link to="/skills/engineering-manager" className="text-primary hover:underline">
-              Engineering Manager
-            </Link>
-          </TableCell>
-          <TableCell className="align-middle">Engineering</TableCell>
-          <TableCell className="text-center align-middle">11</TableCell>
-          <TableCell className="text-center align-middle">2</TableCell>
-          <TableCell className="text-center align-middle">5</TableCell>
-          <TableCell className="text-right align-middle text-muted-foreground">10/20/24</TableCell>
-        </TableRow>
+        {profiles.map((profile) => (
+          <TableRow key={profile.id} className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+            <TableCell className="align-middle">
+              <input 
+                type="checkbox" 
+                className="rounded border-gray-300"
+                checked={selectedProfiles.includes(profile.id)}
+                onChange={(e) => handleSelectProfile(profile.id, e.target.checked)}
+              />
+            </TableCell>
+            <TableCell className="align-middle font-medium">
+              <Link to="/skills/ai-engineer" className="text-primary hover:underline">
+                {profile.name}
+              </Link>
+            </TableCell>
+            <TableCell className="align-middle">{profile.function}</TableCell>
+            <TableCell className="text-center align-middle">{profile.skillCount}</TableCell>
+            <TableCell className="text-center align-middle">{profile.employees}</TableCell>
+            <TableCell className="text-center align-middle">{profile.profileMatches}</TableCell>
+            <TableCell className="text-right align-middle text-muted-foreground">{profile.lastUpdated}</TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );
