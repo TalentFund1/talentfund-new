@@ -49,13 +49,13 @@ export const RoleBenchmark = () => {
   const getLevelStyles = (level: string) => {
     switch (level) {
       case "advanced":
-        return "bg-primary-accent/10 border-primary-accent";
+        return "border-primary-accent";
       case "intermediate":
-        return "bg-primary-icon/10 border-primary-icon";
+        return "border-primary-icon";
       case "beginner":
-        return "bg-[#008000]/10 border-[#008000]";
+        return "border-[#008000]";
       default:
-        return "bg-gray-100/50 border-gray-300";
+        return "border-gray-300";
     }
   };
 
@@ -116,7 +116,7 @@ export const RoleBenchmark = () => {
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
-                  className={`rounded-md px-4 py-2 border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
+                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
                 >
                   {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
                 </Badge>
@@ -138,7 +138,7 @@ export const RoleBenchmark = () => {
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
-                  className={`rounded-md px-4 py-2 border flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
+                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
                 >
                   {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
                 </Badge>
