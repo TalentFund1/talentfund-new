@@ -94,11 +94,6 @@ export const SkillsMatrix = () => {
     ? skills
     : skills.filter(skill => skill.title.toLowerCase() === selectedSkill.toLowerCase());
 
-  // Filter available skills for the dropdown based on the selected skill
-  const availableSkills = selectedSkill === "all"
-    ? skills
-    : skills.filter(skill => skill.title.toLowerCase() === selectedSkill.toLowerCase());
-
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <div className="flex justify-between items-center mb-6">
@@ -148,7 +143,7 @@ export const SkillsMatrix = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Skills</SelectItem>
-                {availableSkills.map((skill) => (
+                {skills.map((skill) => (
                   <SelectItem key={skill.title} value={skill.title}>
                     {skill.title}
                   </SelectItem>
