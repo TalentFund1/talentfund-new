@@ -14,32 +14,30 @@ export const EmployeeFilters = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <SearchFilter
-          placeholder="Search job titles..."
-          items={[
-            "Software Engineer",
-            "Product Manager",
-            "Designer",
-            "Data Scientist",
-            "DevOps Engineer"
-          ]}
-          selectedItems={selectedJobTitle}
-          onItemsChange={setSelectedJobTitle}
-          singleSelect={true}
-        />
-        
-        <SearchFilter
-          placeholder="Search skills..."
-          items={allSkills}
-          selectedItems={selectedSkills}
-          onItemsChange={setSelectedSkills}
-          singleSelect={false}
-        />
-      </div>
+    <div className="space-y-4">
+      <SearchFilter
+        placeholder="Search job titles..."
+        items={[
+          "Software Engineer",
+          "Product Manager",
+          "Designer",
+          "Data Scientist",
+          "DevOps Engineer"
+        ]}
+        selectedItems={selectedJobTitle}
+        onItemsChange={setSelectedJobTitle}
+        singleSelect={true}
+      />
       
-      <div className="flex items-center gap-4">
+      <SearchFilter
+        placeholder="Search skills..."
+        items={allSkills}
+        selectedItems={selectedSkills}
+        onItemsChange={setSelectedSkills}
+        singleSelect={false}
+      />
+      
+      <div className="flex flex-wrap gap-4">
         <SearchFilter
           placeholder="Search levels..."
           items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
