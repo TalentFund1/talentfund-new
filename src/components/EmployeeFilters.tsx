@@ -35,7 +35,7 @@ export const EmployeeFilters = () => {
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-start gap-3">
         <SearchFilter
           label=""
           placeholder="Job Title"
@@ -49,7 +49,7 @@ export const EmployeeFilters = () => {
           selectedItems={selectedJobTitle}
           onItemsChange={setSelectedJobTitle}
           singleSelect={true}
-          className="w-[180px] h-[36px]"
+          className="w-[180px]"
         />
         
         <SearchFilter
@@ -59,7 +59,7 @@ export const EmployeeFilters = () => {
           selectedItems={selectedLevel}
           onItemsChange={setSelectedLevel}
           singleSelect={false}
-          className="w-[180px] h-[36px]"
+          className="w-[180px]"
         />
         
         <SearchFilter
@@ -69,7 +69,7 @@ export const EmployeeFilters = () => {
           selectedItems={selectedOffice}
           onItemsChange={setSelectedOffice}
           singleSelect={false}
-          className="w-[180px] h-[36px]"
+          className="w-[180px]"
         />
 
         <SearchFilter
@@ -79,7 +79,7 @@ export const EmployeeFilters = () => {
           selectedItems={selectedDepartment}
           onItemsChange={setSelectedDepartment}
           singleSelect={false}
-          className="w-[180px] h-[36px]"
+          className="w-[180px]"
         />
 
         <div className="flex items-center gap-3">
@@ -90,13 +90,13 @@ export const EmployeeFilters = () => {
             selectedItems={selectedEmploymentType}
             onItemsChange={setSelectedEmploymentType}
             singleSelect={false}
-            className="w-[180px] h-[36px]"
+            className="w-[180px]"
           />
 
           <Button 
             variant="outline" 
             onClick={handleClearAll}
-            className="h-[36px]"
+            className="h-[36px] mt-[1px]"
           >
             Clear All
           </Button>
