@@ -61,8 +61,8 @@ const TalentMarketplace = () => {
                   <TableHead className="w-[20%] py-3 font-medium">Function</TableHead>
                   <TableHead className="w-[12%] py-3 font-medium">Source</TableHead>
                   <TableHead className="w-[10%] text-center py-3 font-medium">Skill Count</TableHead>
-                  <TableHead className="w-[16%] text-center py-3 font-medium">Skill Benchmark</TableHead>
-                  <TableHead className="w-[17%] text-right py-3 font-medium">See Details</TableHead>
+                  <TableHead className="w-[18%] text-center py-3 font-medium">Skill Benchmark</TableHead>
+                  <TableHead className="w-[15%] text-right py-3 font-medium">See Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
