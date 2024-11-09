@@ -1,6 +1,6 @@
+import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
-import { SearchFilter } from '@/components/market/SearchFilter';
 import { Button } from '@/components/ui/button';
 
 export const EmployeeFilters = () => {
@@ -23,8 +23,8 @@ export const EmployeeFilters = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="w-full">
+    <div className="space-y-0">
+      <div className="w-full mb-4">
         <SearchFilter
           label=""
           placeholder="Search skills..."
@@ -95,7 +95,7 @@ export const EmployeeFilters = () => {
         <Button 
           variant="outline" 
           onClick={handleClearAll}
-          className="h-[36px] bg-white"
+          className="h-[36px]"
         >
           Clear All
         </Button>
