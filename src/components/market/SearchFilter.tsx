@@ -12,7 +12,6 @@ interface SearchFilterProps {
   onItemsChange: (items: string[]) => void;
   singleSelect?: boolean;
   required?: boolean;
-  className?: string;
 }
 
 export const SearchFilter = ({ 
@@ -22,8 +21,7 @@ export const SearchFilter = ({
   selectedItems, 
   onItemsChange,
   singleSelect = false,
-  required = false,
-  className
+  required = false
 }: SearchFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,7 +66,7 @@ export const SearchFilter = ({
   );
 
   return (
-    <div className={cn("space-y-2", className)} ref={dropdownRef}>
+    <div className="space-y-2" ref={dropdownRef}>
       <label className="text-sm text-muted-foreground">
         {label}
         {required && <span className="text-destructive ml-1">*</span>}
@@ -100,7 +98,7 @@ export const SearchFilter = ({
               e.stopPropagation();
               setIsOpen(true);
             }}
-            className="bg-white pr-8 placeholder:text-foreground/90"
+            className="bg-white pr-8"
           />
           <ChevronDown className={cn(
             "absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 transition-transform",

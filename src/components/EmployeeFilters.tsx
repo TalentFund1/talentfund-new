@@ -1,7 +1,14 @@
+import { Button } from "@/components/ui/button";
 import { SearchFilter } from '@/components/market/SearchFilter';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
-import { Button } from '@/components/ui/button';
 
 export const EmployeeFilters = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -13,89 +20,79 @@ export const EmployeeFilters = () => {
 
   const allSkills = [...technicalSkills, ...softSkills];
 
-  const handleClearAll = () => {
-    setSelectedSkills([]);
-    setSelectedJobTitle([]);
-    setSelectedLevel([]);
-    setSelectedOffice([]);
-    setSelectedDepartment([]);
-    setSelectedEmploymentType([]);
-  };
-
   return (
-    <div className="space-y-0.5">
-      <div className="w-full">
+    <div className="space-y-4">
+      <SearchFilter
+        label="Job Title"
+        placeholder="Search job titles..."
+        items={[
+          "Software Engineer",
+          "Product Manager",
+          "Designer",
+          "Data Scientist",
+          "DevOps Engineer"
+        ]}
+        selectedItems={selectedJobTitle}
+        onItemsChange={setSelectedJobTitle}
+        singleSelect={true}
+      />
+      
+      <SearchFilter
+        label="Skills"
+        placeholder="Search skills..."
+        items={allSkills}
+        selectedItems={selectedSkills}
+        onItemsChange={setSelectedSkills}
+        singleSelect={false}
+      />
+      
+      <div className="flex flex-wrap gap-4">
         <SearchFilter
-          label=""
-          placeholder="Search skills..."
-          items={allSkills}
-          selectedItems={selectedSkills}
-          onItemsChange={setSelectedSkills}
-          singleSelect={false}
-        />
-      </div>
-
-      <div className="flex flex-wrap items-center gap-3">
-        <SearchFilter
-          label=""
-          placeholder="Job Title"
-          items={[
-            "Software Engineer",
-            "Product Manager",
-            "Designer",
-            "Data Scientist",
-            "DevOps Engineer"
-          ]}
-          selectedItems={selectedJobTitle}
-          onItemsChange={setSelectedJobTitle}
-          singleSelect={true}
-          className="w-[180px]"
-        />
-        
-        <SearchFilter
-          label=""
-          placeholder="Level"
+          label="Level"
+          placeholder="Search levels..."
           items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
           selectedItems={selectedLevel}
           onItemsChange={setSelectedLevel}
           singleSelect={false}
-          className="w-[180px]"
         />
         
         <SearchFilter
-          label=""
-          placeholder="Office"
+          label="Office"
+          placeholder="Search offices..."
           items={["New York", "San Francisco", "London", "Toronto", "Berlin"]}
           selectedItems={selectedOffice}
           onItemsChange={setSelectedOffice}
           singleSelect={false}
-          className="w-[180px]"
         />
 
         <SearchFilter
-          label=""
-          placeholder="Department"
+          label="Department"
+          placeholder="Search departments..."
           items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
           selectedItems={selectedDepartment}
           onItemsChange={setSelectedDepartment}
           singleSelect={false}
-          className="w-[180px]"
         />
 
         <SearchFilter
-          label=""
-          placeholder="Employment Type"
+          label="Employment Type"
+          placeholder="Search employment types..."
           items={["Full Time", "Part Time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
           onItemsChange={setSelectedEmploymentType}
           singleSelect={false}
-          className="w-[180px]"
         />
 
         <Button 
           variant="outline" 
-          onClick={handleClearAll}
-          className="h-[36px]"
+          onClick={() => {
+            setSelectedSkills([]);
+            setSelectedJobTitle([]);
+            setSelectedLevel([]);
+            setSelectedOffice([]);
+            setSelectedDepartment([]);
+            setSelectedEmploymentType([]);
+          }}
         >
           Clear All
         </Button>
