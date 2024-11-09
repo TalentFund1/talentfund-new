@@ -124,7 +124,7 @@ export const SkillsMatrix = () => {
                 <SelectItem value="sort">Sort by All</SelectItem>
                 <SelectItem value="reports">Sort by Reports</SelectItem>
                 <SelectItem value="enrich">Sort by Enrich</SelectItem>
-                <SelectItem value="leader">Sort by Leader</SelectItem>
+                <SelectItem value="manager">Sort by Manager</SelectItem>
                 <SelectItem value="self">Sort by Self</SelectItem>
               </SelectContent>
             </Select>
