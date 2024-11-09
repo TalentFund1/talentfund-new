@@ -23,7 +23,7 @@ export const EmployeeFilters = () => {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div className="w-full">
         <SearchFilter
           label=""
@@ -35,7 +35,7 @@ export const EmployeeFilters = () => {
         />
       </div>
 
-      <div className="flex flex-wrap items-start gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <SearchFilter
           label=""
           placeholder="Job Title"
@@ -82,25 +82,23 @@ export const EmployeeFilters = () => {
           className="w-[180px]"
         />
 
-        <div className="flex items-center gap-3">
-          <SearchFilter
-            label=""
-            placeholder="Employment Type"
-            items={["Full Time", "Part Time", "Contract", "Internship"]}
-            selectedItems={selectedEmploymentType}
-            onItemsChange={setSelectedEmploymentType}
-            singleSelect={false}
-            className="w-[180px]"
-          />
+        <SearchFilter
+          label=""
+          placeholder="Employment Type"
+          items={["Full Time", "Part Time", "Contract", "Internship"]}
+          selectedItems={selectedEmploymentType}
+          onItemsChange={setSelectedEmploymentType}
+          singleSelect={false}
+          className="w-[180px]"
+        />
 
-          <Button 
-            variant="outline" 
-            onClick={handleClearAll}
-            className="h-[36px] mt-[1px]"
-          >
-            Clear All
-          </Button>
-        </div>
+        <Button 
+          variant="outline" 
+          onClick={handleClearAll}
+          className="h-[36px]"
+        >
+          Clear All
+        </Button>
       </div>
     </div>
   );
