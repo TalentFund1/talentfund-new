@@ -53,15 +53,15 @@ export const SkillProfileHeader = () => {
 
       <Separator />
 
-      <div className="space-y-1">
-        <span className="text-sm text-muted-foreground">Job Description</span>
+      <div className="bg-background/50 rounded-lg p-4">
+        <h3 className="text-lg font-semibold text-foreground mb-3">Job Description</h3>
         <div className="space-y-2">
-          <p className={`text-sm text-foreground/80 transition-all duration-300 ${isExpanded ? '' : 'line-clamp-2'}`}>
+          <p className={`text-sm text-foreground/80 leading-relaxed transition-all duration-300 ${isExpanded ? '' : 'line-clamp-2'}`}>
             {fullDescription}
           </p>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors"
+            className="text-sm text-primary-accent hover:text-primary-accent/80 transition-colors font-medium"
           >
             {isExpanded ? 'See less' : 'See more'}
           </button>
