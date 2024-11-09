@@ -98,7 +98,7 @@ export const SearchFilter = ({
               e.stopPropagation();
               setIsOpen(true);
             }}
-            className="bg-white pr-8"
+            className="bg-white pr-8 placeholder:text-foreground/90"
           />
           <ChevronDown className={cn(
             "absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 transition-transform",
