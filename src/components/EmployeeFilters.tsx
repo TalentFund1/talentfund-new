@@ -82,23 +82,25 @@ export const EmployeeFilters = () => {
           className="w-[180px]"
         />
 
-        <SearchFilter
-          label=""
-          placeholder="Employment Type"
-          items={["Full Time", "Part Time", "Contract", "Internship"]}
-          selectedItems={selectedEmploymentType}
-          onItemsChange={setSelectedEmploymentType}
-          singleSelect={false}
-          className="w-[180px]"
-        />
+        <div className="flex items-center gap-3">
+          <SearchFilter
+            label=""
+            placeholder="Employment Type"
+            items={["Full Time", "Part Time", "Contract", "Internship"]}
+            selectedItems={selectedEmploymentType}
+            onItemsChange={setSelectedEmploymentType}
+            singleSelect={false}
+            className="w-[180px]"
+          />
 
-        <Button 
-          variant="outline" 
-          onClick={handleClearAll}
-          className="h-10"
-        >
-          Clear All
-        </Button>
+          <Button 
+            variant="outline" 
+            onClick={handleClearAll}
+            className="h-10"
+          >
+            Clear All
+          </Button>
+        </div>
       </div>
     </div>
   );
