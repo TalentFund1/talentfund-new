@@ -127,7 +127,7 @@ export const SkillsSummary = () => {
           placeholder="Search skills..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full"
+          className="w-full bg-white"
         />
       </div>
       
