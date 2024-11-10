@@ -1,43 +1,21 @@
-import { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { RoleSelect } from "./RoleSelect";
 import { SkillSection } from "./SkillSection";
-import { technicalLevels, managerialLevels, requiredSkills, preferredSkills, certifications } from "./constants";
+import { requiredSkills, preferredSkills, certifications } from "./data/skillsData";
+import { roleProfiles } from "./data/roleProfiles";
 
 const RoleBenchmark = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [roleType, setRoleType] = useState<"technical" | "managerial">("technical");
-  const [selectedRole, setSelectedRole] = useState("senior-frontend");
+  const [selectedRole, setSelectedRole] = useState("ai-engineer-p4");
 
-  const getLevelStyles = (level: string) => {
-    return "border-[#CCDBFF]";
-  };
-
-  const getLevelDot = (level: string) => {
-    switch (level) {
-      case "advanced":
-        return "bg-primary-accent";
-      case "intermediate":
-        return "bg-primary-icon";
-      case "beginner":
-        return "bg-[#008000]";
-      default:
-        return "bg-gray-300";
-    }
-  };
-
-  const handleRoleTypeChange = (value: "technical" | "managerial") => {
-    setRoleType(value);
-    setSelectedRole(value === "technical" ? "senior-frontend" : "engineering-manager");
-    
-    toast({
-      title: "Role Type Updated",
-      description: `Switched to ${value === "technical" ? "Technical" : "Managerial"} track`,
-    });
+  const handleRoleChange = (value: string) => {
+    setSelectedRole(value);
+    const [role, level] = value.split("-");
+    const profileId = roleProfiles[role as keyof typeof roleProfiles][level].id;
+    navigate(`/skills/${profileId}`);
   };
 
   return (
@@ -54,60 +32,30 @@ const RoleBenchmark = () => {
           </Button>
         </div>
         
-        <div className="flex items-center gap-4 w-full max-w-[800px]">
-          <Select value={roleType} onValueChange={handleRoleTypeChange}>
-            <SelectTrigger className="w-[200px] bg-white">
-              <SelectValue placeholder="Select Role Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="technical">Technical Track</SelectItem>
-              <SelectItem value="managerial">Managerial Track</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={selectedRole} onValueChange={setSelectedRole}>
-            <SelectTrigger className="w-full bg-white">
-              <SelectValue placeholder="Select Role" />
-            </SelectTrigger>
-            <SelectContent>
-              {roleType === "technical" ? (
-                <>
-                  <SelectItem value="senior-frontend">Senior Frontend Engineer: P4</SelectItem>
-                  <SelectItem value="lead-frontend">Lead Frontend Engineer: P5</SelectItem>
-                  <SelectItem value="principal">Principal Engineer: P6</SelectItem>
-                </>
-              ) : (
-                <>
-                  <SelectItem value="engineering-manager">Engineering Manager: M3</SelectItem>
-                  <SelectItem value="senior-manager">Senior Engineering Manager: M4</SelectItem>
-                  <SelectItem value="director">Engineering Director: M5</SelectItem>
-                  <SelectItem value="vp">VP of Engineering: M6</SelectItem>
-                </>
-              )}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Separator className="my-6" />
-
-        <div className="space-y-6">
-          <SkillSection 
-            title="Required Skills"
-            items={requiredSkills}
-            getLevelStyles={getLevelStyles}
-            getLevelDot={getLevelDot}
-          />
-          <SkillSection 
-            title="Preferred Skills"
-            items={preferredSkills}
-            getLevelStyles={getLevelStyles}
-            getLevelDot={getLevelDot}
-          />
-          <SkillSection 
-            title="Certifications"
-            items={certifications}
-            getLevelStyles={getLevelStyles}
-          />
+        <RoleSelect selectedRole={selectedRole} onRoleChange={handleRoleChange} />
+        <SkillSection title="Required Skills" skills={requiredSkills} />
+        <SkillSection title="Preferred Skills" skills={preferredSkills} />
+        
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Certifications</span>
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                {certifications.length}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {certifications.map((cert) => (
+              <Badge 
+                key={cert.name}
+                variant="outline" 
+                className="rounded-md px-4 py-2 border border-border bg-white"
+              >
+                {cert.name}
+              </Badge>
+            ))}
+          </div>
         </div>
       </div>
     </div>
