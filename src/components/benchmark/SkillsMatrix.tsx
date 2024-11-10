@@ -4,18 +4,10 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
-import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
+import { SkillsMatrixTableContainer } from "./skills-matrix/SkillsMatrixTableContainer";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
-import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
-
-interface Skill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: string;
-}
+import { useSkills } from "../skills/context/SkillsContext";
+import { CategoryCards } from "../skills/competency/CategoryCards";
 
 const initialSkills = [
   {
@@ -98,44 +90,15 @@ const initialSkills = [
 ];
 
 export const SkillsMatrix = () => {
-  const [skills, setSkills] = useState<Skill[]>(initialSkills);
-  const [originalSkills, setOriginalSkills] = useState<Skill[]>(initialSkills);
+  const [skills, setSkills] = useState(initialSkills);
+  const [originalSkills, setOriginalSkills] = useState(initialSkills);
   const [hasChanges, setHasChanges] = useState(false);
-  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
-
-  const allSkillTitles = skills.map(skill => skill.title);
-
-  const handleSkillsChange = (newSelectedSkills: string[]) => {
-    setSelectedSkills(newSelectedSkills);
-    
-    const newSkills = newSelectedSkills.filter(
-      skill => !allSkillTitles.includes(skill)
-    );
-    
-    if (newSkills.length > 0) {
-      const skillsToAdd = newSkills.map(skillName => ({
-        title: skillName,
-        subcategory: "Unspecified",
-        level: "unspecified",
-        growth: "0%",
-        confidence: "n/a"
-      }));
-      
-      setSkills(prev => [...prev, ...skillsToAdd]);
-      
-      toast({
-        title: "Skills Added",
-        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
-      });
-    }
-  };
+  const { savedSkills, setSavedSkills, selectedCategory, setSelectedCategory } = useSkills();
 
   const handleSkillLevelChange = (skillTitle: string, newLevel: string, requirement: string) => {
     const updatedSkills = skills.map(skill => 
@@ -165,22 +128,7 @@ export const SkillsMatrix = () => {
     });
   };
 
-  const filteredSkills = selectedSkills.length === 0
-    ? skills
-    : skills.filter(skill => 
-        selectedSkills.some(selected => 
-          skill.title.toLowerCase().includes(selected.toLowerCase())
-        )
-      );
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (value: string) => {
-    setRowsPerPage(Number(value));
-    setPage(1);
-  };
+  const filteredSkills = skills.filter(skill => savedSkills.has(skill.title));
 
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -197,25 +145,30 @@ export const SkillsMatrix = () => {
         />
         <Separator className="my-4" />
         
+        <CategoryCards 
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
+
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
         />
 
-        <SkillsMatrixTable 
+        <SkillsMatrixTableContainer 
           filteredSkills={paginatedSkills} 
           onSkillLevelChange={handleSkillLevelChange}
         />
         
         <SkillsMatrixPagination 
           rowsPerPage={rowsPerPage}
-          handleRowsPerPageChange={handleRowsPerPageChange}
+          handleRowsPerPageChange={setRowsPerPage}
           startIndex={startIndex}
           endIndex={endIndex}
           totalSkills={filteredSkills.length}
           currentPage={page}
           totalPages={totalPages}
-          handlePageChange={handlePageChange}
+          handlePageChange={setPage}
         />
       </Card>
     </div>
