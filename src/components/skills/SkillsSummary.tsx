@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { DetailedSkill, Certification } from "./types";
+import { DetailedSkill, Certification, EmployeeSkill } from "./types";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
@@ -28,7 +28,7 @@ export const SkillsSummary = () => {
   const { currentStates } = useSkillsMatrixStore();
 
   // Get skills for the current employee only
-  const employeeSkills = getEmployeeSkills(id || "");
+  const employeeSkills = getEmployeeSkills(id || "") as EmployeeSkill[];
 
   // Transform employee skills into the required format and sort by level
   const transformedSkills: DetailedSkill[] = employeeSkills
@@ -52,7 +52,6 @@ export const SkillsSummary = () => {
       return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
     });
 
-  // Categorize skills using the same categorization logic as the matrix
   const specializedSkills: DetailedSkill[] = transformedSkills.filter(
     skill => categorizeSkill(skill.name) === 'specialized'
   );

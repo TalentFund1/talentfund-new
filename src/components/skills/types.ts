@@ -22,3 +22,12 @@ export interface SkillProfileRow {
   matches: string;
   lastUpdated: string;
 }
+
+export interface EmployeeSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: 'required' | 'skill_goal';
+}
