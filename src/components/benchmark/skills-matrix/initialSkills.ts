@@ -1,175 +1,155 @@
-export const initialSkills = [
-  // Certifications
-  {
-    title: "CompTIA Security+ Certification",
-    subcategory: "Security Certifications",
-    level: "advanced",
-    growth: "30%",
-    confidence: "high"
-  },
-  {
-    title: "Project Management Professional (PMP)",
-    subcategory: "Project Management Certifications",
-    level: "advanced",
-    growth: "25%",
-    confidence: "high"
-  },
-  {
-    title: "Certified Scrum Master (CSM)",
-    subcategory: "Agile Certifications",
-    level: "intermediate",
-    growth: "20%",
-    confidence: "medium"
-  },
-  {
-    title: "AWS Certified Solutions Architect",
-    subcategory: "Cloud Certifications",
-    level: "advanced",
-    growth: "22%",
-    confidence: "high"
-  },
-  
-  // Common skills (non-technical, transferable skills)
-  {
-    title: "Technical Writing",
-    subcategory: "Documentation",
-    level: "advanced",
-    growth: "15%",
-    confidence: "high"
-  },
-  {
-    title: "Agile Project Management",
-    subcategory: "Project Management",
-    level: "advanced",
-    growth: "20%",
-    confidence: "high"
-  },
-  {
-    title: "Business Analysis",
-    subcategory: "Business Skills",
-    level: "intermediate",
-    growth: "18%",
-    confidence: "medium"
-  },
-  {
-    title: "Risk Management",
-    subcategory: "Management",
-    level: "intermediate",
-    growth: "22%",
-    confidence: "medium"
-  },
-  {
-    title: "Strategic Planning",
-    subcategory: "Business Skills",
-    level: "intermediate",
-    growth: "17%",
-    confidence: "medium"
-  },
+export const initialSkills = {
+  "123": [ // Victor Smith - AI Engineer
+    {
+      title: "Machine Learning",
+      subcategory: "Artificial Intelligence",
+      level: "advanced",
+      growth: "30%",
+      confidence: "high"
+    },
+    {
+      title: "Deep Learning",
+      subcategory: "Artificial Intelligence",
+      level: "advanced",
+      growth: "25%",
+      confidence: "high"
+    },
+    {
+      title: "Python",
+      subcategory: "Programming Languages",
+      level: "advanced",
+      growth: "15%",
+      confidence: "high"
+    },
+    {
+      title: "TensorFlow",
+      subcategory: "Machine Learning Frameworks",
+      level: "advanced",
+      growth: "20%",
+      confidence: "high"
+    },
+    {
+      title: "Natural Language Processing",
+      subcategory: "AI Applications",
+      level: "advanced",
+      growth: "28%",
+      confidence: "high"
+    }
+  ],
+  "124": [ // Jennie Richards - Backend Engineer
+    {
+      title: "Node.js",
+      subcategory: "Backend Development",
+      level: "advanced",
+      growth: "20%",
+      confidence: "high"
+    },
+    {
+      title: "Database Design",
+      subcategory: "Data Management",
+      level: "advanced",
+      growth: "15%",
+      confidence: "high"
+    },
+    {
+      title: "API Development",
+      subcategory: "Backend Development",
+      level: "advanced",
+      growth: "25%",
+      confidence: "high"
+    },
+    {
+      title: "System Architecture",
+      subcategory: "Software Architecture",
+      level: "intermediate",
+      growth: "30%",
+      confidence: "medium"
+    },
+    {
+      title: "Cloud Computing",
+      subcategory: "Infrastructure",
+      level: "intermediate",
+      growth: "35%",
+      confidence: "medium"
+    }
+  ],
+  "125": [ // Anna Vyselva - Frontend Developer
+    {
+      title: "React",
+      subcategory: "Frontend Frameworks",
+      level: "advanced",
+      growth: "20%",
+      confidence: "high"
+    },
+    {
+      title: "TypeScript",
+      subcategory: "Programming Languages",
+      level: "advanced",
+      growth: "25%",
+      confidence: "high"
+    },
+    {
+      title: "UI/UX Design",
+      subcategory: "Design",
+      level: "intermediate",
+      growth: "30%",
+      confidence: "medium"
+    },
+    {
+      title: "CSS/SASS",
+      subcategory: "Styling",
+      level: "advanced",
+      growth: "15%",
+      confidence: "high"
+    },
+    {
+      title: "Web Performance",
+      subcategory: "Frontend Development",
+      level: "intermediate",
+      growth: "35%",
+      confidence: "medium"
+    }
+  ],
+  "126": [ // Suz Manu - Engineering Manager
+    {
+      title: "Team Leadership",
+      subcategory: "Management",
+      level: "advanced",
+      growth: "20%",
+      confidence: "high"
+    },
+    {
+      title: "Project Management",
+      subcategory: "Management",
+      level: "advanced",
+      growth: "25%",
+      confidence: "high"
+    },
+    {
+      title: "Technical Architecture",
+      subcategory: "Software Architecture",
+      level: "advanced",
+      growth: "15%",
+      confidence: "high"
+    },
+    {
+      title: "Agile Methodologies",
+      subcategory: "Process",
+      level: "advanced",
+      growth: "20%",
+      confidence: "high"
+    },
+    {
+      title: "Strategic Planning",
+      subcategory: "Management",
+      level: "intermediate",
+      growth: "30%",
+      confidence: "medium"
+    }
+  ]
+};
 
-  // Specialized skills (technical skills)
-  {
-    title: "Quantum Computing",
-    subcategory: "Advanced Computing",
-    level: "advanced",
-    growth: "35%",
-    confidence: "high"
-  },
-  {
-    title: "Robotics Programming",
-    subcategory: "Robotics",
-    level: "advanced",
-    growth: "28%",
-    confidence: "high"
-  },
-  {
-    title: "5G Network Architecture",
-    subcategory: "Telecommunications",
-    level: "intermediate",
-    growth: "25%",
-    confidence: "medium"
-  },
-  {
-    title: "Edge Computing",
-    subcategory: "Cloud Technologies",
-    level: "intermediate",
-    growth: "18%",
-    confidence: "medium"
-  },
-  {
-    title: "Blockchain Development",
-    subcategory: "Distributed Systems",
-    level: "advanced",
-    growth: "20%",
-    confidence: "high"
-  },
-  {
-    title: "DevSecOps",
-    subcategory: "Security",
-    level: "advanced",
-    growth: "22%",
-    confidence: "high"
-  },
-  {
-    title: "System Architecture",
-    subcategory: "Software Architecture",
-    level: "advanced",
-    growth: "16%",
-    confidence: "high"
-  },
-  {
-    title: "Data Engineering",
-    subcategory: "Data Management",
-    level: "intermediate",
-    growth: "20%",
-    confidence: "medium"
-  },
-  {
-    title: "IoT Development",
-    subcategory: "Emerging Technologies",
-    level: "intermediate",
-    growth: "17%",
-    confidence: "medium"
-  },
-  {
-    title: "Artificial Intelligence",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "advanced",
-    growth: "19%",
-    confidence: "high"
-  },
-  {
-    title: "Machine Learning",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
-    growth: "10%",
-    confidence: "low"
-  },
-  {
-    title: "Deep Learning",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
-    growth: "19%",
-    confidence: "medium"
-  },
-  {
-    title: "Natural Language Processing",
-    subcategory: "AI Applications",
-    level: "advanced",
-    growth: "20%",
-    confidence: "high"
-  },
-  {
-    title: "Computer Vision",
-    subcategory: "AI Applications",
-    level: "intermediate",
-    growth: "22%",
-    confidence: "medium"
-  },
-  {
-    title: "Docker",
-    subcategory: "Software Development Tools",
-    level: "intermediate",
-    growth: "0%",
-    confidence: "n/a"
-  }
-];
+// Helper function to get skills for a specific employee
+export const getEmployeeSkills = (employeeId: string) => {
+  return initialSkills[employeeId as keyof typeof initialSkills] || [];
+};

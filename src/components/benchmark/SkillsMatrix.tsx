@@ -9,7 +9,8 @@ import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
-import { initialSkills } from "./skills-matrix/initialSkills";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { useParams } from "react-router-dom";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -21,6 +22,7 @@ export const SkillsMatrix = () => {
   const { toast } = useToast();
   const { selectedSkills } = useSelectedSkills();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
+  const { id } = useParams<{ id: string }>();
 
   const handleSave = () => {
     saveChanges();
@@ -38,11 +40,14 @@ export const SkillsMatrix = () => {
     });
   };
 
+  // Get employee-specific skills
+  const employeeSkills = getEmployeeSkills(id || "");
+
   // Filter skills based on search and category
   const filteredSkills = selectedSkills.length === 0
-    ? filterSkillsByCategory(initialSkills, selectedCategory)
+    ? filterSkillsByCategory(employeeSkills, selectedCategory)
     : filterSkillsByCategory(
-        initialSkills.filter(skill => 
+        employeeSkills.filter(skill => 
           selectedSkills.some(selected => 
             skill.title.toLowerCase().includes(selected.toLowerCase())
           )
