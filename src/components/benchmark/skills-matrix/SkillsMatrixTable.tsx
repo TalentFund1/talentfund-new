@@ -9,11 +9,17 @@ interface SkillsMatrixTableProps {
     level: string;
     growth: string;
     confidence: string;
+    isToggled?: boolean;
   }>;
   onSkillLevelChange: (skillTitle: string, newLevel: string, requirement: string) => void;
+  onToggleSkill: (skillTitle: string) => void;
 }
 
-export const SkillsMatrixTable = ({ filteredSkills, onSkillLevelChange }: SkillsMatrixTableProps) => {
+export const SkillsMatrixTable = ({ 
+  filteredSkills, 
+  onSkillLevelChange,
+  onToggleSkill 
+}: SkillsMatrixTableProps) => {
   return (
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden">
       <Table>
@@ -24,6 +30,7 @@ export const SkillsMatrixTable = ({ filteredSkills, onSkillLevelChange }: Skills
               key={skill.title} 
               skill={skill}
               onLevelChange={onSkillLevelChange}
+              onToggleSkill={onToggleSkill}
             />
           ))}
         </TableBody>

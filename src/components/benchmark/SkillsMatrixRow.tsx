@@ -1,6 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
+import { Switch } from "@/components/ui/switch";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -9,11 +10,13 @@ interface SkillsMatrixRowProps {
     level: string;
     growth: string;
     confidence: string;
+    isToggled?: boolean;
   };
   onLevelChange?: (skillTitle: string, newLevel: string, requirement: string) => void;
+  onToggleSkill?: (skillTitle: string) => void;
 }
 
-export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill, onLevelChange, onToggleSkill }: SkillsMatrixRowProps) => {
   const getConfidenceStyles = (confidence: string) => {
     switch (confidence) {
       case 'high':
@@ -38,7 +41,15 @@ export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) 
 
   return (
     <TableRow className="group border-b border-gray-200">
-      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
+      <TableCell className="font-medium border-r border-blue-200 py-2">
+        <div className="flex items-center justify-between gap-2">
+          <span>{skill.title}</span>
+          <Switch
+            checked={skill.isToggled}
+            onCheckedChange={() => onToggleSkill?.(skill.title)}
+          />
+        </div>
+      </TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
         <div className="flex justify-center">
