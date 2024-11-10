@@ -8,6 +8,7 @@ import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 
 const initialSkills = [
   {
@@ -90,7 +91,6 @@ const initialSkills = [
 ];
 
 export const SkillsMatrix = () => {
-  const [skills, setSkills] = useState(initialSkills);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -101,26 +101,15 @@ export const SkillsMatrix = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
 
-  const allSkillTitles = skills.map(skill => skill.title);
-
   const handleSkillsChange = (newSelectedSkills: string[]) => {
     setSelectedSkills(newSelectedSkills);
     
+    const allSkillTitles = initialSkills.map(skill => skill.title);
     const newSkills = newSelectedSkills.filter(
       skill => !allSkillTitles.includes(skill)
     );
     
     if (newSkills.length > 0) {
-      const skillsToAdd = newSkills.map(skillName => ({
-        title: skillName,
-        subcategory: "Unspecified",
-        level: "unspecified",
-        growth: "0%",
-        confidence: "n/a"
-      }));
-      
-      setSkills(prev => [...prev, ...skillsToAdd]);
-      
       toast({
         title: "Skills Added",
         description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
@@ -145,11 +134,14 @@ export const SkillsMatrix = () => {
   };
 
   const filteredSkills = selectedSkills.length === 0
-    ? skills
-    : skills.filter(skill => 
-        selectedSkills.some(selected => 
-          skill.title.toLowerCase().includes(selected.toLowerCase())
-        )
+    ? filterSkillsByCategory(initialSkills, selectedCategory)
+    : filterSkillsByCategory(
+        initialSkills.filter(skill => 
+          selectedSkills.some(selected => 
+            skill.title.toLowerCase().includes(selected.toLowerCase())
+          )
+        ),
+        selectedCategory
       );
 
   const handlePageChange = (newPage: number) => {

@@ -1,14 +1,13 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 
 interface SkillsMatrixFiltersProps {
   selectedCategory: string;
-  setSelectedCategory: (value: string) => void;
+  setSelectedCategory: (category: string) => void;
 }
 
-export const SkillsMatrixFilters = ({
-  selectedCategory,
-  setSelectedCategory,
+export const SkillsMatrixFilters = ({ 
+  selectedCategory, 
+  setSelectedCategory 
 }: SkillsMatrixFiltersProps) => {
   return (
     <div className="flex justify-between items-start gap-4 mb-4">
@@ -26,8 +25,6 @@ export const SkillsMatrixFilters = ({
           <SelectItem value="certification">Certifications</SelectItem>
         </SelectContent>
       </Select>
-      
-      <Button>Add Skill</Button>
     </div>
   );
 };
