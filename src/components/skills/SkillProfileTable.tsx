@@ -1,16 +1,11 @@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
 import type { SkillProfileRow } from "./types";
 
 export const SkillProfileTable = () => {
-  const { toast } = useToast();
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [originalSelection, setOriginalSelection] = useState<string[]>([]);
-  const [hasChanges, setHasChanges] = useState(false);
   
   const rows: SkillProfileRow[] = [
     { id: "1", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: "2", matches: "0", lastUpdated: "10/20/24" },
@@ -22,7 +17,6 @@ export const SkillProfileTable = () => {
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSelection = e.target.checked ? rows.map(row => row.id) : [];
     setSelectedRows(newSelection);
-    setHasChanges(true);
   };
 
   const handleSelectRow = (id: string) => {
@@ -30,47 +24,12 @@ export const SkillProfileTable = () => {
       const newSelection = prev.includes(id) 
         ? prev.filter(rowId => rowId !== id)
         : [...prev, id];
-      setHasChanges(true);
       return newSelection;
-    });
-  };
-
-  const handleSave = () => {
-    setOriginalSelection(selectedRows);
-    setHasChanges(false);
-    toast({
-      title: "Changes saved",
-      description: "Your skill profile selections have been saved.",
-    });
-  };
-
-  const handleCancel = () => {
-    setSelectedRows(originalSelection);
-    setHasChanges(false);
-    toast({
-      title: "Changes cancelled",
-      description: "Your skill profile selections have been reset.",
     });
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end gap-2">
-        <Button 
-          variant="outline" 
-          onClick={handleCancel}
-          disabled={!hasChanges}
-        >
-          Cancel
-        </Button>
-        <Button 
-          onClick={handleSave}
-          disabled={!hasChanges}
-        >
-          Save
-        </Button>
-      </div>
-
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent border-b border-border">
