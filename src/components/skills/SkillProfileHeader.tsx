@@ -6,6 +6,16 @@ import { Separator } from "@/components/ui/separator";
 export const SkillProfileHeader = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const formatTitle = (title: string) => {
+    // Split by spaces and capitalize each word
+    return title.split(' ').map(word => {
+      // Special handling for 'AI' to stay uppercase
+      if (word.toLowerCase() === 'ai') return 'AI';
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join(' ');
+  };
+
+  const jobTitle = "AI Engineer"; // This would come from props/context in a real app
   const fullDescription = "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation. As an AI Engineer, you will be responsible for developing and implementing AI models and solutions that solve complex business problems. You will work closely with cross-functional teams to understand requirements, design solutions, and deploy AI systems at scale. Your expertise in machine learning, deep learning, and other AI technologies will be crucial in driving innovation and delivering value to our clients.";
 
   return (
@@ -13,7 +23,7 @@ export const SkillProfileHeader = () => {
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold text-foreground">AI Engineer</h1>
+            <h1 className="text-2xl font-semibold text-foreground">{formatTitle(jobTitle)}</h1>
             <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: 123</span>
           </div>
         </div>
