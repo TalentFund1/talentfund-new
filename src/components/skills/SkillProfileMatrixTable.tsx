@@ -29,11 +29,8 @@ export const SkillProfileMatrixTable = ({
   toggledSkills,
   onToggleSkill
 }: SkillProfileMatrixTableProps) => {
-  // Partition skills into toggled and non-toggled while preserving original order
   const toggledSkillsList = paginatedSkills.filter(skill => toggledSkills.has(skill.title));
   const nonToggledSkillsList = paginatedSkills.filter(skill => !toggledSkills.has(skill.title));
-  
-  // Combine the lists while preserving order within each group
   const orderedSkills = [...toggledSkillsList, ...nonToggledSkillsList];
 
   return (
@@ -41,7 +38,7 @@ export const SkillProfileMatrixTable = ({
       <thead>
         <tr className="bg-background text-left">
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Subcategory</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
               Projected Growth
@@ -62,7 +59,7 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </div>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[20%]">
             <div className="flex items-center justify-center gap-1">
               Salary With Skill
               <TooltipProvider>
