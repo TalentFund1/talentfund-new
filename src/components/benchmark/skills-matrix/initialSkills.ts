@@ -121,5 +121,63 @@ export const initialSkills = [
     level: "intermediate",
     growth: "17%",
     confidence: "medium"
+  },
+  
+  // Adding Certifications
+  {
+    title: "AWS Certified Solutions Architect",
+    subcategory: "Cloud Certifications",
+    level: "advanced",
+    growth: "20%",
+    confidence: "high"
+  },
+  {
+    title: "Google Cloud Professional",
+    subcategory: "Cloud Certifications",
+    level: "advanced",
+    growth: "18%",
+    confidence: "high"
+  },
+  {
+    title: "Microsoft Azure Administrator",
+    subcategory: "Cloud Certifications",
+    level: "intermediate",
+    growth: "15%",
+    confidence: "medium"
+  },
+  {
+    title: "Certified Kubernetes Administrator",
+    subcategory: "Container Orchestration",
+    level: "advanced",
+    growth: "22%",
+    confidence: "high"
+  },
+  {
+    title: "Certified Information Systems Security Professional",
+    subcategory: "Security Certifications",
+    level: "advanced",
+    growth: "25%",
+    confidence: "high"
+  },
+  {
+    title: "Project Management Professional (PMP)",
+    subcategory: "Management Certifications",
+    level: "intermediate",
+    growth: "12%",
+    confidence: "medium"
+  },
+  {
+    title: "Agile Certified Practitioner",
+    subcategory: "Agile Certifications",
+    level: "intermediate",
+    growth: "14%",
+    confidence: "medium"
+  },
+  {
+    title: "Certified Ethical Hacker",
+    subcategory: "Security Certifications",
+    level: "advanced",
+    growth: "28%",
+    confidence: "high"
   }
 ];
