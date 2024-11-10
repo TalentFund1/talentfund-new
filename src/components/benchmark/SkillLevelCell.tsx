@@ -22,16 +22,6 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
     onLevelChange?.(level, newRequired);
   };
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleSelectClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
@@ -90,16 +80,10 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col items-center" onClick={handleClick}>
-        <Select value={level} onValueChange={handleLevelChange} onOpenChange={(open) => {
-          if (open) {
-            // Prevent event bubbling when opening the select
-            event?.stopPropagation();
-          }
-        }}>
+      <div className="flex flex-col items-center">
+        <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
-            onClick={handleSelectClick}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
@@ -108,7 +92,7 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
               </span>
             </SelectValue>
           </SelectTrigger>
-          <SelectContent onClick={handleSelectClick}>
+          <SelectContent>
             <SelectItem value="unspecified">
               <span className="flex items-center gap-1.5">
                 <CircleDashed className="w-3.5 h-3.5 text-gray-400" />
@@ -136,15 +120,9 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
           </SelectContent>
         </Select>
 
-        <Select value={required} onValueChange={handleRequirementChange} onOpenChange={(open) => {
-          if (open) {
-            // Prevent event bubbling when opening the select
-            event?.stopPropagation();
-          }
-        }}>
+        <Select value={required} onValueChange={handleRequirementChange}>
           <SelectTrigger 
             className={`text-xs px-2 py-1 font-normal w-full flex items-center justify-center min-h-[24px] border-x-2 border-b-2 rounded-b-md ${getRequirementStyles(required)}`}
-            onClick={handleSelectClick}
           >
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">
@@ -161,7 +139,7 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
               </span>
             </SelectValue>
           </SelectTrigger>
-          <SelectContent onClick={handleSelectClick}>
+          <SelectContent>
             <SelectItem value="required">
               <span className="flex items-center gap-1.5">
                 <Heart className="w-3.5 h-3.5" /> Skill Goal

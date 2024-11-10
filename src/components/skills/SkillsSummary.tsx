@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { DetailedSkill, Certification } from "./types";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
+import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
 
 export const SkillsSummary = () => {
@@ -18,6 +19,7 @@ export const SkillsSummary = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const specializedSkills = [
     { name: "React", level: "advanced", isSkillGoal: true },
@@ -116,6 +118,11 @@ export const SkillsSummary = () => {
           isSkillGoal: false
         });
       });
+
+      toast({
+        title: "Skills Added",
+        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
+      });
     }
   };
 
@@ -146,3 +153,4 @@ export const SkillsSummary = () => {
     </div>
   );
 };
+
