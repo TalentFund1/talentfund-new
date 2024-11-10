@@ -30,13 +30,15 @@ export const SkillsSummary = () => {
   // Get skills for the current employee only
   const employeeSkills = getEmployeeSkills(id || "") as EmployeeSkill[];
 
-  // Updated transformation to properly handle skill goals
+  // Transform employee skills into the required format and sort by level
   const transformedSkills: DetailedSkill[] = employeeSkills
     .map(skill => ({
       name: skill.title,
       level: currentStates[skill.title]?.level || skill.level,
-      isSkillGoal: skill.requirement === 'skill_goal' || 
-                   currentStates[skill.title]?.requirement === 'skill_goal'
+      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                   currentStates[skill.title]?.requirement === 'skill_goal' ||
+                   skill.requirement === 'required' ||
+                   skill.requirement === 'skill_goal'
     }))
     .sort((a, b) => {
       const levelOrder = {

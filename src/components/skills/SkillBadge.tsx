@@ -27,10 +27,7 @@ export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: Ski
     }
   };
 
-  // Updated logic to properly check for skill goals
-  const shouldShowHeart = isSkillGoal || 
-    skillState?.requirement === 'required' || 
-    skillState?.requirement === 'skill_goal';
+  const shouldShowHeart = isSkillGoal || skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
 
   return (
     <Badge 
@@ -45,7 +42,7 @@ export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: Ski
             getLevelColor(skillState?.level || level || "unspecified")
           }`} />
           {shouldShowHeart && (
-            <Heart className="w-3 h-3 text-[#1f2144]" fill="currentColor" />
+            <Heart className="w-3 h-3 text-[#1f2144]" />
           )}
         </div>
       )}
