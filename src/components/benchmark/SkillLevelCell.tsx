@@ -54,7 +54,7 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
     switch (requirement) {
       case 'required':
         return `${baseStyles} bg-gray-100/90 ${getLevelBorderColor(level)}`;
-      case 'preferred':
+      case 'interested':
         return `${baseStyles} bg-gray-50/90 border-gray-300`;
       case 'not-interested':
         return `${baseStyles} bg-white border-gray-50 text-gray-400`;
@@ -128,26 +128,21 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
               <span className="flex items-center gap-1.5 justify-center text-xs">
                 {required === 'required' ? (
                   <Heart className="w-3.5 h-3.5" />
-                ) : required === 'preferred' ? (
-                  <Heart className="w-3.5 h-3.5" />
+                ) : required === 'not-interested' ? (
+                  <HeartOff className="w-3.5 h-3.5" />
                 ) : required === 'unknown' ? (
                   <HelpCircle className="w-3.5 h-3.5" />
                 ) : (
-                  <HeartOff className="w-3.5 h-3.5" />
+                  <Heart className="w-3.5 h-3.5" />
                 )}
-                {required === 'required' ? 'Required' : required === 'preferred' ? 'Preferred' : required === 'unknown' ? 'Unknown' : 'Not Interested'}
+                {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : required === 'unknown' ? 'Unknown' : 'Skill Goal'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
               <span className="flex items-center gap-1.5">
-                <Heart className="w-3.5 h-3.5" /> Required
-              </span>
-            </SelectItem>
-            <SelectItem value="preferred">
-              <span className="flex items-center gap-1.5">
-                <Heart className="w-3.5 h-3.5" /> Preferred
+                <Heart className="w-3.5 h-3.5" /> Skill Goal
               </span>
             </SelectItem>
             <SelectItem value="not-interested">
