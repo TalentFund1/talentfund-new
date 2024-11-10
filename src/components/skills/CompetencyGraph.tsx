@@ -11,10 +11,18 @@ import { useCompetencyStore } from "./competency/CompetencyState";
 import { useToast } from "@/components/ui/use-toast";
 import { TrackSelection } from "./TrackSelection";
 import { useTrack } from "./context/TrackContext";
+import { useParams } from "react-router-dom";
 
 interface CompetencyGraphProps {
   track?: "Technical" | "Managerial";
 }
+
+const jobTitles: { [key: string]: string } = {
+  "123": "AI Engineer",
+  "124": "Backend Engineer",
+  "125": "Frontend Engineer",
+  "126": "Engineering Manager"
+};
 
 export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) => {
   const { toggledSkills } = useToggledSkills();
@@ -25,6 +33,9 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
   const { track } = useTrack();
   const { hasChanges, saveChanges, cancelChanges } = useCompetencyStore();
   const { toast } = useToast();
+  const { id } = useParams<{ id: string }>();
+
+  const jobTitle = jobTitles[id || "123"] || "AI Engineer";
 
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
@@ -114,7 +125,7 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
       <Separator className="my-6" />
       
       <div className="mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-6">Backend Engineer</h3>
+        <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitle}</h3>
         <TrackSelection />
       </div>
 
