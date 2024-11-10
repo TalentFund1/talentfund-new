@@ -1,4 +1,3 @@
-import React, { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { useRef, useState, useEffect } from "react";
 
 const PAGE_SIZE = 10;
 
@@ -112,7 +112,12 @@ export const SkillProfileMatrix = () => {
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
+            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+              {toggledSkills.size}
+            </span>
+          </div>
           <Button>Add Skill</Button>
         </div>
 
