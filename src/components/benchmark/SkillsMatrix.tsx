@@ -164,6 +164,13 @@ const initialSkills = [
     level: "intermediate",
     growth: "3%",
     confidence: "medium"
+  },
+  {
+    title: "Cybersecurity License",
+    subcategory: "Certifications",
+    level: "advanced",
+    growth: "20%",
+    confidence: "high"
   }
 ];
 
