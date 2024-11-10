@@ -3,7 +3,6 @@ export interface Skill {
   subcategory: string;
   level: string;
   growth: string;
-  confidence: string;
 }
 
 export interface SkillsTableProps {

@@ -1,16 +1,14 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AddSkillDialog } from "./AddSkillDialog";
+import { Button } from "@/components/ui/button";
 
 interface SkillsMatrixFiltersProps {
   selectedCategory: string;
   setSelectedCategory: (value: string) => void;
-  onSkillAdd: (skill: { title: string; subcategory: string; level: string; growth: string; confidence: string; }) => void;
 }
 
 export const SkillsMatrixFilters = ({
   selectedCategory,
   setSelectedCategory,
-  onSkillAdd,
 }: SkillsMatrixFiltersProps) => {
   return (
     <div className="flex justify-between items-start gap-4 mb-4">
@@ -29,7 +27,7 @@ export const SkillsMatrixFilters = ({
         </SelectContent>
       </Select>
       
-      <AddSkillDialog onSkillAdd={onSkillAdd} />
+      <Button>Add Skill</Button>
     </div>
   );
 };

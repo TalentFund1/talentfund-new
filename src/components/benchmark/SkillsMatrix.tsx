@@ -8,10 +8,8 @@ import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { useSkillsManagement } from "./skills-matrix/useSkillsManagement";
-import { Skill } from "@/components/skills/types/SkillTypes";
 
-const initialSkills: Skill[] = [
+const initialSkills = [
   {
     title: "JavaScript",
     subcategory: "Programming Languages",
@@ -92,6 +90,7 @@ const initialSkills: Skill[] = [
 ];
 
 export const SkillsMatrix = () => {
+  const [skills, setSkills] = useState(initialSkills);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -101,7 +100,33 @@ export const SkillsMatrix = () => {
   const { toast } = useToast();
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
-  const { skills, handleSkillsChange, handleSkillAdd } = useSkillsManagement(initialSkills);
+
+  const allSkillTitles = skills.map(skill => skill.title);
+
+  const handleSkillsChange = (newSelectedSkills: string[]) => {
+    setSelectedSkills(newSelectedSkills);
+    
+    const newSkills = newSelectedSkills.filter(
+      skill => !allSkillTitles.includes(skill)
+    );
+    
+    if (newSkills.length > 0) {
+      const skillsToAdd = newSkills.map(skillName => ({
+        title: skillName,
+        subcategory: "Unspecified",
+        level: "unspecified",
+        growth: "0%",
+        confidence: "n/a"
+      }));
+      
+      setSkills(prev => [...prev, ...skillsToAdd]);
+      
+      toast({
+        title: "Skills Added",
+        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
+      });
+    }
+  };
 
   const handleSave = () => {
     saveChanges();
@@ -154,7 +179,6 @@ export const SkillsMatrix = () => {
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
-          onSkillAdd={handleSkillAdd}
         />
 
         <SkillsMatrixTable 
