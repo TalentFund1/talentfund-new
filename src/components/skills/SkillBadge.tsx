@@ -30,8 +30,7 @@ export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: Ski
   const isGoal = isSkillGoal || 
                  skillState?.requirement === 'required' || 
                  skillState?.requirement === 'skill_goal' ||
-                 level === 'advanced' ||
-                 (skillState?.level === 'intermediate' && skillState?.requirement === 'required'); // Include intermediate skills marked as required
+                 level === 'advanced'; // Advanced skills are automatically considered goals
 
   return (
     <Badge 
