@@ -1,47 +1,10 @@
-import React, { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { CompetencyMatrixHeader } from "./CompetencyMatrixHeader";
 import { CompetencyLevels } from "./CompetencyLevels";
 import { SkillsGrid } from "./SkillsGrid";
-
-const skillsData = {
-  all: [
-    ...Object.values({
-      specialized: [
-        { name: "Amazon Web Services", level: "Advanced", required: "Required" },
-        { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
-        { name: "Deep Learning", level: "Intermediate", required: "Required" },
-        { name: "Machine Learning", level: "Advanced", required: "Required" },
-        { name: "Data Science", level: "Advanced", required: "Required" },
-      ],
-      common: [
-        { name: "Communication", level: "Intermediate", required: "Required" },
-        { name: "Problem Solving", level: "Advanced", required: "Required" },
-        { name: "Team Collaboration", level: "Intermediate", required: "Preferred" },
-      ],
-      certification: [
-        { name: "AWS Certified Solutions Architect", level: "Advanced", required: "Required" },
-        { name: "Google Cloud Professional", level: "Intermediate", required: "Preferred" },
-      ]
-    }).flat(),
-  ],
-  specialized: [
-    { name: "Amazon Web Services", level: "Advanced", required: "Required" },
-    { name: "Artificial Intelligence", level: "Advanced", required: "Required" },
-    { name: "Deep Learning", level: "Intermediate", required: "Required" },
-    { name: "Machine Learning", level: "Advanced", required: "Required" },
-    { name: "Data Science", level: "Advanced", required: "Required" },
-  ],
-  common: [
-    { name: "Communication", level: "Intermediate", required: "Required" },
-    { name: "Problem Solving", level: "Advanced", required: "Required" },
-    { name: "Team Collaboration", level: "Intermediate", required: "Preferred" },
-  ],
-  certification: [
-    { name: "AWS Certified Solutions Architect", level: "Advanced", required: "Required" },
-    { name: "Google Cloud Professional", level: "Intermediate", required: "Preferred" },
-  ]
-};
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 
 const skillCategories = [
   { id: "all", name: "All Skills", count: 28 },
@@ -50,15 +13,11 @@ const skillCategories = [
   { id: "certification", name: "Certification", count: 3 }
 ];
 
-interface CompetencyMatrixProps {
-  onTrackChange: (track: "Professional" | "Managerial") => void;
-}
-
-export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
+export const CompetencyMatrix = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
-  const { toast } = useToast();
+  const { toggledSkills } = useToggledSkills();
 
   const handleLevelSelect = (level: string) => {
     setSelectedLevels(prev => 
@@ -70,18 +29,11 @@ export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
 
   const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
     setTrack(newTrack);
-    onTrackChange(newTrack);
   };
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
-    toast({
-      title: `Viewing ${skillCategories.find(cat => cat.id === categoryId)?.name}`,
-      duration: 2000
-    });
   };
-
-  const currentSkills = skillsData[selectedCategory as keyof typeof skillsData] || [];
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
@@ -114,15 +66,31 @@ export const CompetencyMatrix = ({ onTrackChange }: CompetencyMatrixProps) => {
                   {category.name}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {category.count} skills
+                  {Array.from(toggledSkills).filter(skill => 
+                    category.id === 'all' || getSkillCategory(skill) === category.id
+                  ).length} skills
                 </span>
               </div>
             </button>
           ))}
         </div>
 
-        <SkillsGrid currentSkills={currentSkills} />
+        <SkillsGrid 
+          skills={Array.from(toggledSkills)}
+          selectedCategory={selectedCategory}
+        />
       </div>
     </div>
   );
+};
+
+const getSkillCategory = (skill: string): string => {
+  const specializedSkills = ['Amazon Web Services', 'Machine Learning', 'Artificial Intelligence'];
+  const commonSkills = ['Python', 'JavaScript', 'Communication'];
+  const certifications = ['AWS Certified', 'Google Cloud', 'Azure'];
+
+  if (specializedSkills.some(s => skill.includes(s))) return 'specialized';
+  if (commonSkills.some(s => skill.includes(s))) return 'common';
+  if (certifications.some(s => skill.includes(s))) return 'certification';
+  return 'all';
 };

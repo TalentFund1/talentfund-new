@@ -5,14 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
-  // Initialize toggledSkills with savedToggledSkills
-  const [savedToggledSkills, setSavedToggledSkills] = useState<Set<string>>(new Set());
-  const [toggledSkills, setToggledSkills] = useState<Set<string>>(savedToggledSkills);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [page, setPage] = useState(1);
@@ -21,7 +19,6 @@ export const SkillProfileMatrix = () => {
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
-  // Simulated skills data - in a real app, this would come from an API
   const allSkills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
     { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
@@ -33,63 +30,21 @@ export const SkillProfileMatrix = () => {
   ];
 
   const handleToggleSkill = (skillTitle: string) => {
-    setToggledSkills(prev => {
-      const newToggledSkills = new Set(prev);
-      if (newToggledSkills.has(skillTitle)) {
-        newToggledSkills.delete(skillTitle);
-      } else {
-        newToggledSkills.add(skillTitle);
-      }
-      setHasUnsavedChanges(true);
-      return newToggledSkills;
-    });
-  };
-
-  const handleSave = () => {
-    // In a real application, you would make an API call here
-    console.log("Saving toggled skills:", Array.from(toggledSkills));
-    setSavedToggledSkills(new Set(toggledSkills));
-    setHasUnsavedChanges(false);
+    const newToggledSkills = new Set(toggledSkills);
+    if (newToggledSkills.has(skillTitle)) {
+      newToggledSkills.delete(skillTitle);
+    } else {
+      newToggledSkills.add(skillTitle);
+    }
+    setToggledSkills(newToggledSkills);
+    
     toast({
-      title: "Changes saved",
-      description: "Your skill selections have been saved successfully.",
-    });
-  };
-
-  const handleCancel = () => {
-    setToggledSkills(new Set(savedToggledSkills));
-    setHasUnsavedChanges(false);
-    toast({
-      title: "Changes cancelled",
-      description: "Your skill selections have been reset.",
+      title: "Skill Updated",
+      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
     });
   };
 
   const paginatedSkills = allSkills.slice(0, page * PAGE_SIZE);
-
-  const lastSkillElementRef = useCallback((node: HTMLElement | null) => {
-    if (loading) return;
-    
-    if (observer.current) observer.current.disconnect();
-    
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        setPage(prevPage => {
-          const nextPage = prevPage + 1;
-          if (nextPage * PAGE_SIZE >= allSkills.length) {
-            setHasMore(false);
-            toast({
-              title: "End of list",
-              description: "You've reached the end of the skills list.",
-            });
-          }
-          return nextPage;
-        });
-      }
-    });
-    
-    if (node) observer.current.observe(node);
-  }, [loading, hasMore]);
 
   return (
     <div className="space-y-6">
@@ -99,13 +54,11 @@ export const SkillProfileMatrix = () => {
           <div className="flex gap-2">
             <Button 
               variant="outline" 
-              onClick={handleCancel}
               disabled={!hasUnsavedChanges}
             >
               Cancel
             </Button>
             <Button
-              onClick={handleSave}
               disabled={!hasUnsavedChanges}
             >
               Save
