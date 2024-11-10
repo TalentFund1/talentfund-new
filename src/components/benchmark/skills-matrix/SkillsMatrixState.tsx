@@ -7,6 +7,7 @@ export interface Skill {
   growth: string;
   confidence: string;
   selected?: boolean;
+  requirement?: string;
 }
 
 interface SkillsState {
@@ -26,7 +27,10 @@ export const useSkillsStore = create<SkillsState>((set) => ({
   hasChanges: false,
   setSkills: (skills) => set((state) => {
     const newSkills = typeof skills === 'function' ? skills(state.skills) : skills;
-    return { skills: newSkills, originalSkills: state.originalSkills };
+    return { 
+      skills: newSkills, 
+      originalSkills: state.originalSkills.length === 0 ? newSkills : state.originalSkills 
+    };
   }),
   toggleSkill: (skillTitle) => set((state) => {
     const updatedSkills = state.skills.map(skill => 
@@ -40,11 +44,11 @@ export const useSkillsStore = create<SkillsState>((set) => ({
     };
   }),
   saveChanges: () => set((state) => ({
-    originalSkills: state.skills,
+    originalSkills: [...state.skills],
     hasChanges: false
   })),
   cancelChanges: () => set((state) => ({
-    skills: state.originalSkills,
+    skills: [...state.originalSkills],
     hasChanges: false
   })),
   setHasChanges: (value) => set({ hasChanges: value })
