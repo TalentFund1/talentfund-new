@@ -9,6 +9,7 @@ import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
+import { technicalSkills, softSkills, certificationSkills } from "@/components/skillsData";
 
 const initialSkills = [
   {
@@ -164,6 +165,13 @@ const initialSkills = [
     level: "intermediate",
     growth: "3%",
     confidence: "medium"
+  },
+  {
+    title: "Cybersecurity License",
+    subcategory: "Certifications",
+    level: "advanced",
+    growth: "20%",
+    confidence: "high"
   }
 ];
 
@@ -181,9 +189,9 @@ export const SkillsMatrix = () => {
   const handleSkillsChange = (newSelectedSkills: string[]) => {
     setSelectedSkills(newSelectedSkills);
     
-    const allSkillTitles = initialSkills.map(skill => skill.title);
+    const allSkills = [...technicalSkills, ...softSkills, ...certificationSkills];
     const newSkills = newSelectedSkills.filter(
-      skill => !allSkillTitles.includes(skill)
+      skill => !allSkills.includes(skill)
     );
     
     if (newSkills.length > 0) {
@@ -192,22 +200,6 @@ export const SkillsMatrix = () => {
         description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
       });
     }
-  };
-
-  const handleSave = () => {
-    saveChanges();
-    toast({
-      title: "Changes Saved",
-      description: "Your changes have been saved successfully.",
-    });
-  };
-
-  const handleCancel = () => {
-    cancelChanges();
-    toast({
-      title: "Changes Cancelled",
-      description: "Your changes have been discarded.",
-    });
   };
 
   const filteredSkills = selectedSkills.length === 0
@@ -220,15 +212,6 @@ export const SkillsMatrix = () => {
         ),
         selectedCategory
       );
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (value: string) => {
-    setRowsPerPage(Number(value));
-    setPage(1);
-  };
 
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;

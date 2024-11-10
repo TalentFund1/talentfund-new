@@ -35,6 +35,7 @@ export const isCommonSkill = (skill: string): boolean => {
 
 export const isCertificationSkill = (skill: string): boolean => {
   const certifications = [
+    "Cybersecurity License",
     "AWS Certified Solutions Architect",
     "AWS Certified Developer",
     "Professional Scrum Master",
@@ -49,10 +50,10 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
   if (category === "all") return skills;
   
   const filterFn = {
-    specialized: isSpecializedSkill,
-    common: isCommonSkill,
-    certification: isCertificationSkill
+    specialized: (skill: any) => !isCommonSkill(skill.title) && !isCertificationSkill(skill.title),
+    common: (skill: any) => isCommonSkill(skill.title),
+    certification: (skill: any) => isCertificationSkill(skill.title)
   }[category];
   
-  return filterFn ? skills.filter(skill => filterFn(skill.title)) : skills;
+  return filterFn ? skills.filter(filterFn) : skills;
 };

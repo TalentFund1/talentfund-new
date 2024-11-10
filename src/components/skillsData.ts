@@ -55,7 +55,8 @@ export const technicalSkills = [
   "GitHub",
   "Bitbucket",
   "GitLab",
-  "Version Control Best Practices"
+  "Version Control Best Practices",
+  "Cybersecurity License"
 ];
 
 export const softSkills = [
@@ -95,4 +96,12 @@ export const softSkills = [
   "Active Listening",
   "Interpersonal Communication",
   "Cross-cultural Communication"
+];
+
+export const certificationSkills = [
+  "Cybersecurity License",
+  "AWS Certified Solutions Architect",
+  "Kubernetes Administrator (CKA)",
+  "Professional Agile Leadership",
+  "Azure Solutions Architect"
 ];
