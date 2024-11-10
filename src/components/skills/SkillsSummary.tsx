@@ -37,8 +37,7 @@ export const SkillsSummary = () => {
       level: currentStates[skill.title]?.level || skill.level,
       isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
                    currentStates[skill.title]?.requirement === 'skill_goal' ||
-                   skill.requirement === 'required' ||
-                   skill.requirement === 'skill_goal'
+                   skill.level === 'advanced' // Advanced skills are automatically considered goals
     }))
     .sort((a, b) => {
       const levelOrder = {
@@ -113,9 +112,7 @@ export const SkillsSummary = () => {
     setSelectedSkills(skills);
     
     const allExistingSkills = [
-      ...specializedSkills.map(s => s.name),
-      ...commonSkills.map(s => s.name),
-      ...certifications.map(s => s.name)
+      ...transformedSkills.map(s => s.name)
     ];
 
     const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
@@ -132,9 +129,17 @@ export const SkillsSummary = () => {
     setSelectedSkills([]);
   };
 
-  const filteredSpecializedSkills = filterSkills(specializedSkills);
-  const filteredCommonSkills = filterSkills(commonSkills);
-  const filteredCertifications = filterSkills(certifications);
+  const filteredSpecializedSkills = filterSkills(
+    transformedSkills.filter(skill => categorizeSkill(skill.name) === 'specialized')
+  );
+  
+  const filteredCommonSkills = filterSkills(
+    transformedSkills.filter(skill => categorizeSkill(skill.name) === 'common')
+  );
+  
+  const filteredCertifications = filterSkills(
+    transformedSkills.filter(skill => categorizeSkill(skill.name) === 'certification')
+  );
 
   return (
     <div className="space-y-4 w-full" ref={containerRef}>
