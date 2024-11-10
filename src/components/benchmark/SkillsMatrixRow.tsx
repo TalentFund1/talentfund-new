@@ -11,9 +11,11 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
   };
+  isToggled?: boolean;
+  onToggle?: () => void;
 }
 
-export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill, isToggled, onToggle }: SkillsMatrixRowProps) => {
   const { currentStates, setSkillState } = useSkillsMatrixStore();
   const currentState = currentStates[skill.title] || {
     level: skill.level,
