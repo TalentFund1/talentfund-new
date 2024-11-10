@@ -10,22 +10,16 @@ interface SkillCellProps {
   };
   isLastColumn: boolean;
   onChange?: (newValue: { level: string; required: string }) => void;
-  savedState?: {
-    level: string;
-    required: string;
-  };
 }
 
-export const SkillCell = ({ details, isLastColumn, onChange, savedState }: SkillCellProps) => {
+export const SkillCell = ({ details, isLastColumn, onChange }: SkillCellProps) => {
   const [level, setLevel] = useState(details.level === "-" ? "unspecified" : details.level.toLowerCase());
   const [required, setRequired] = useState(details.required === "-" ? "preferred" : details.required.toLowerCase());
 
   useEffect(() => {
-    if (savedState) {
-      setLevel(savedState.level);
-      setRequired(savedState.required);
-    }
-  }, [savedState]);
+    setLevel(details.level === "-" ? "unspecified" : details.level.toLowerCase());
+    setRequired(details.required === "-" ? "preferred" : details.required.toLowerCase());
+  }, [details]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
