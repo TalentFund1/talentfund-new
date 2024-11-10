@@ -18,9 +18,9 @@ export const SkillsMatrixFilters = ({
   handleSkillsChange,
 }: SkillsMatrixFiltersProps) => {
   return (
-    <div className="sticky top-0 z-10 bg-white py-4 border-b border-border">
-      <div className="flex justify-between items-center gap-4">
-        <div className="flex gap-4 flex-1">
+    <div className="flex justify-between items-start gap-4 mb-4">
+      <div className="flex gap-4 flex-1">
+        <div className="-mt-1">
           <Select 
             value={selectedCategory} 
             onValueChange={setSelectedCategory}
@@ -35,19 +35,21 @@ export const SkillsMatrixFilters = ({
               <SelectItem value="certification">Certification</SelectItem>
             </SelectContent>
           </Select>
-
-          <div className="flex-1">
-            <SearchFilter
-              label=""
-              placeholder="Search skills..."
-              items={allSkillTitles}
-              selectedItems={selectedSkills}
-              onItemsChange={handleSkillsChange}
-              singleSelect={false}
-            />
-          </div>
         </div>
-        
+
+        <div className="flex-1 -mt-1">
+          <SearchFilter
+            label=""
+            placeholder="Search skills..."
+            items={allSkillTitles}
+            selectedItems={selectedSkills}
+            onItemsChange={handleSkillsChange}
+            singleSelect={false}
+          />
+        </div>
+      </div>
+      
+      <div className="-mt-1">
         <Button>Add Skill</Button>
       </div>
     </div>
