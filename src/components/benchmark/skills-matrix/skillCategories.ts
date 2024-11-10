@@ -13,7 +13,7 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Certified'
   ];
 
-  // Specialized skills list
+  // Specialized skills list (technical skills)
   const specializedSkills = [
     'Artificial Intelligence',
     'Machine Learning',
@@ -27,7 +27,6 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'System Architecture',
     'Data Engineering',
     'IoT Development',
-    'JavaScript',
     'Python',
     'TensorFlow',
     'PyTorch',
@@ -35,22 +34,20 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Edge Computing',
     '5G Network Architecture',
     'Quantum Computing',
-    'Robotics Programming',
-    'Conversational AI'
+    'Robotics Programming'
   ];
 
-  // Common skills list
+  // Common skills list (non-technical, transferable skills)
   const commonSkills = [
     'Technical Writing',
     'Agile Project Management',
     'Business Analysis',
     'Risk Management',
-    'Problem Solving',
-    'Cross-cultural Communication',
-    'Team Management',
     'Strategic Planning',
-    'Project Management',
     'Documentation',
+    'Project Management',
+    'Team Management',
+    'Problem Solving',
     'Communication',
     'Leadership'
   ];
@@ -89,7 +86,6 @@ export const filterSkillsByCategory = (
   }
 
   return skills.filter(skill => 
-    categorizeSkill(skill.title) === category || 
-    (category === 'certification' && skill.subcategory.toLowerCase().includes('certification'))
+    categorizeSkill(skill.title) === category
   );
 };

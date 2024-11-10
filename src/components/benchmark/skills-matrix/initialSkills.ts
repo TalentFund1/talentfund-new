@@ -21,8 +21,15 @@ export const initialSkills = [
     growth: "20%",
     confidence: "medium"
   },
+  {
+    title: "AWS Certified Solutions Architect",
+    subcategory: "Cloud Certifications",
+    level: "advanced",
+    growth: "22%",
+    confidence: "high"
+  },
   
-  // Common skills
+  // Common skills (non-technical, transferable skills)
   {
     title: "Technical Writing",
     subcategory: "Documentation",
@@ -37,8 +44,29 @@ export const initialSkills = [
     growth: "20%",
     confidence: "high"
   },
+  {
+    title: "Business Analysis",
+    subcategory: "Business Skills",
+    level: "intermediate",
+    growth: "18%",
+    confidence: "medium"
+  },
+  {
+    title: "Risk Management",
+    subcategory: "Management",
+    level: "intermediate",
+    growth: "22%",
+    confidence: "medium"
+  },
+  {
+    title: "Strategic Planning",
+    subcategory: "Business Skills",
+    level: "intermediate",
+    growth: "17%",
+    confidence: "medium"
+  },
 
-  // Specialized skills
+  // Specialized skills (technical skills)
   {
     title: "Quantum Computing",
     subcategory: "Advanced Computing",
@@ -110,11 +138,11 @@ export const initialSkills = [
     confidence: "high"
   },
   {
-    title: "Conversational AI",
-    subcategory: "Natural Language Processing (NLP)",
-    level: "advanced",
-    growth: "12%",
-    confidence: "medium"
+    title: "Machine Learning",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "intermediate",
+    growth: "10%",
+    confidence: "low"
   },
   {
     title: "Deep Learning",
@@ -124,59 +152,24 @@ export const initialSkills = [
     confidence: "medium"
   },
   {
-    title: "Machine Learning",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
-    growth: "10%",
-    confidence: "low"
-  },
-  {
-    title: "Docker (Software)",
-    subcategory: "Software Development Tools",
-    level: "intermediate",
-    growth: "0%",
-    confidence: "n/a"
-  },
-  {
-    title: "JavaScript",
-    subcategory: "Programming Languages",
-    level: "advanced",
-    growth: "15%",
-    confidence: "high"
-  },
-  {
-    title: "Amazon Web Services",
-    subcategory: "Web Services",
-    level: "advanced",
-    growth: "12%",
-    confidence: "high"
-  },
-  {
-    title: "Technical Writing",
-    subcategory: "Documentation",
-    level: "advanced",
-    growth: "15%",
-    confidence: "high"
-  },
-  {
-    title: "Agile Project Management",
-    subcategory: "Project Management",
+    title: "Natural Language Processing",
+    subcategory: "AI Applications",
     level: "advanced",
     growth: "20%",
     confidence: "high"
   },
   {
-    title: "Business Analysis",
-    subcategory: "Business Skills",
-    level: "intermediate",
-    growth: "18%",
-    confidence: "medium"
-  },
-  {
-    title: "Risk Management",
-    subcategory: "Management",
+    title: "Computer Vision",
+    subcategory: "AI Applications",
     level: "intermediate",
     growth: "22%",
     confidence: "medium"
+  },
+  {
+    title: "Docker",
+    subcategory: "Software Development Tools",
+    level: "intermediate",
+    growth: "0%",
+    confidence: "n/a"
   }
 ];
