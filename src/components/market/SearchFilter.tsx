@@ -107,27 +107,21 @@ export const SearchFilter = ({
             isOpen && "transform rotate-180"
           )} />
         </div>
-        {isOpen && (
+        {isOpen && filteredItems.length > 0 && (
           <div className="absolute z-50 w-full mt-1 bg-white rounded-md border shadow-lg max-h-60 overflow-auto">
             <div className="p-1">
-              {filteredItems.length === 0 ? (
-                <div className="py-2 px-3 text-sm text-gray-500">
-                  No {label.toLowerCase()} found.
+              {filteredItems.map((item) => (
+                <div
+                  key={item}
+                  onClick={() => handleSelect(item)}
+                  className="flex items-center justify-between px-3 py-2 text-sm rounded hover:bg-gray-100 cursor-pointer"
+                >
+                  <span>{item}</span>
+                  {selectedItems.includes(item) && (
+                    <Check className="h-4 w-4 text-primary-accent" />
+                  )}
                 </div>
-              ) : (
-                filteredItems.map((item) => (
-                  <div
-                    key={item}
-                    onClick={() => handleSelect(item)}
-                    className="flex items-center justify-between px-3 py-2 text-sm rounded hover:bg-gray-100 cursor-pointer"
-                  >
-                    <span>{item}</span>
-                    {selectedItems.includes(item) && (
-                      <Check className="h-4 w-4 text-primary-accent" />
-                    )}
-                  </div>
-                ))
-              )}
+              ))}
             </div>
           </div>
         )}
