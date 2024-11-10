@@ -85,11 +85,13 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
         <form onSubmit={handleSubmit} className="space-y-6 py-6">
           <div className="space-y-2">
             <Label className="text-sm font-medium">Skill Name</Label>
-            <ComboboxDemo 
-              skills={skills.map(s => s.title)}
-              selected={selectedSkill}
-              onSelect={setSelectedSkill}
-            />
+            <div className="bg-white">
+              <ComboboxDemo 
+                skills={skills.map(s => s.title)}
+                selected={selectedSkill}
+                onSelect={setSelectedSkill}
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="skillType" className="text-sm font-medium">Skill Type</Label>
@@ -131,7 +133,7 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
           <div className="pt-4 flex justify-end">
             <Button 
               type="submit" 
-              className="bg-primary-accent hover:bg-primary-accent/90 text-white"
+              className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white"
             >
               Add Skill
             </Button>
