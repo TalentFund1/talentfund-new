@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { Avatar } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
