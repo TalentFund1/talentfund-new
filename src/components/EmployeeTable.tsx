@@ -10,46 +10,56 @@ const EMPLOYEE_IMAGES = [
 ];
 
 interface Employee {
+  id: string;
   name: string;
   role: string;
   department: string;
   skillCount: number;
   benchmark: number;
   lastUpdated: string;
+  location: string;
 }
 
 const employees: Employee[] = [
   {
+    id: "123",
     name: "Victor Smith",
     role: "AI Engineer: P4",
     department: "Engineering",
     skillCount: 16,
     benchmark: 89,
-    lastUpdated: "10/20/24"
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON"
   },
   {
+    id: "124",
     name: "Jennie Richards",
     role: "Backend Engineer: P4",
     department: "Engineering",
     skillCount: 12,
     benchmark: 85,
-    lastUpdated: "10/20/24"
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON"
   },
   {
+    id: "125",
     name: "Anna Vyselva",
     role: "Frontend Developer: P4",
     department: "Engineering",
     skillCount: 17,
     benchmark: 74,
-    lastUpdated: "10/20/24"
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON"
   },
   {
+    id: "126",
     name: "Suz Manu",
     role: "Engineering Manager: M3",
     department: "Engineering",
     skillCount: 11,
     benchmark: 68,
-    lastUpdated: "10/20/24"
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON"
   }
 ];
 
@@ -101,7 +111,7 @@ export const EmployeeTable = () => {
           </thead>
           <tbody>
             {employees.map((employee, index) => (
-              <tr key={employee.name} className="border-t border-border hover:bg-muted/50 transition-colors">
+              <tr key={employee.id} className="border-t border-border hover:bg-muted/50 transition-colors">
                 <td className="px-4 py-4">
                   <input 
                     type="checkbox" 
@@ -117,7 +127,7 @@ export const EmployeeTable = () => {
                       alt={employee.name}
                       className="w-6 h-6 rounded-full object-cover"
                     />
-                    <Link to="/employee-profile" className="text-primary hover:text-primary-accent transition-colors text-sm">
+                    <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
                       {employee.name}
                     </Link>
                   </div>
