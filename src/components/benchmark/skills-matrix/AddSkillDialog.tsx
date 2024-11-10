@@ -73,14 +73,14 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
       <DialogTrigger asChild>
         <Button>Add Skill</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="bg-white sm:max-w-[425px]">
+        <DialogHeader className="space-y-3">
           <DialogTitle>Add New Skill</DialogTitle>
           <DialogDescription>
             Add a new skill to your skills matrix. Select from available skills.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+        <form onSubmit={handleSubmit} className="space-y-6 py-4">
           <div className="space-y-2">
             <Label>Skill Name</Label>
             <ComboboxDemo 
@@ -89,20 +89,10 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
               onSelect={setSelectedSkill}
             />
           </div>
-          {selectedSkill && (
-            <div className="space-y-2">
-              <Label>Subcategory</Label>
-              <Input
-                value={skills.find(s => s.title === selectedSkill)?.subcategory || ""}
-                disabled
-                className="bg-gray-100"
-              />
-            </div>
-          )}
           <div className="space-y-2">
             <Label htmlFor="skillType">Skill Type</Label>
             <Select value={skillType} onValueChange={setSkillType}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full bg-white">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent>
@@ -115,7 +105,7 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
           <div className="space-y-2">
             <Label htmlFor="level">Initial Level</Label>
             <Select value={level} onValueChange={setLevel}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full bg-white">
                 <SelectValue placeholder="Select level" />
               </SelectTrigger>
               <SelectContent>
@@ -126,6 +116,16 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
               </SelectContent>
             </Select>
           </div>
+          {selectedSkill && (
+            <div className="space-y-2">
+              <Label>Subcategory</Label>
+              <Input
+                value={skills.find(s => s.title === selectedSkill)?.subcategory || ""}
+                disabled
+                className="bg-gray-100"
+              />
+            </div>
+          )}
           <div className="pt-4 flex justify-end">
             <Button type="submit">Add Skill</Button>
           </div>
