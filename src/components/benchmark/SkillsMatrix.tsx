@@ -6,7 +6,7 @@ import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
-import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
+import { useMatrixSkills } from "./context/MatrixSkillsContext";
 
 interface Skill {
   title: string;
@@ -101,7 +101,7 @@ export const SkillsMatrix = () => {
   const [skills, setSkills] = useState<Skill[]>(initialSkills);
   const [originalSkills, setOriginalSkills] = useState<Skill[]>(initialSkills);
   const [hasChanges, setHasChanges] = useState(false);
-  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
+  const { matrixSkills, setMatrixSkills } = useMatrixSkills();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -112,10 +112,10 @@ export const SkillsMatrix = () => {
 
   const allSkillTitles = skills.map(skill => skill.title);
 
-  const handleSkillsChange = (newSelectedSkills: string[]) => {
-    setSelectedSkills(newSelectedSkills);
+  const handleSkillsChange = (newMatrixSkills: string[]) => {
+    setMatrixSkills(newMatrixSkills);
     
-    const newSkills = newSelectedSkills.filter(
+    const newSkills = newMatrixSkills.filter(
       skill => !allSkillTitles.includes(skill)
     );
     
@@ -165,10 +165,10 @@ export const SkillsMatrix = () => {
     });
   };
 
-  const filteredSkills = selectedSkills.length === 0
+  const filteredSkills = matrixSkills.length === 0
     ? skills
     : skills.filter(skill => 
-        selectedSkills.some(selected => 
+        matrixSkills.some(selected => 
           skill.title.toLowerCase().includes(selected.toLowerCase())
         )
       );
