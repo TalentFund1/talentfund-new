@@ -35,7 +35,7 @@ export const SkillsMatrixFilters = ({
           </SelectContent>
         </Select>
 
-        <div className="flex-1 -mt-4">
+        <div className="flex-1 -mt-1">
           <SearchFilter
             label=""
             placeholder="Search skills..."
