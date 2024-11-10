@@ -55,7 +55,10 @@ export const technicalSkills = [
   "GitHub",
   "Bitbucket",
   "GitLab",
-  "Version Control Best Practices"
+  "Version Control Best Practices",
+
+  // Certifications
+  "Cybersecurity License"
 ];
 
 export const softSkills = [
