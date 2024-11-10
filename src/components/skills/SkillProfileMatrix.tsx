@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -21,36 +21,32 @@ export const SkillProfileMatrix = () => {
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
-  // Updated skills data with more entries and proper categorization
+  // Updated skills data with proper categorization
   const allSkills = {
     specialized: [
-      { title: "Amazon Web Services", subcategory: "Cloud Computing", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
-      { title: "Artificial Intelligence", subcategory: "AI/ML", level: "advanced", growth: "25%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Machine Learning", subcategory: "AI/ML", level: "advanced", growth: "24%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Deep Learning", subcategory: "AI/ML", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "26%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Computer Vision", subcategory: "AI Applications", level: "advanced", growth: "25%", salary: "$187,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "MLOps", subcategory: "AI/ML Operations", level: "intermediate", growth: "22%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "TensorFlow", subcategory: "ML Frameworks", level: "intermediate", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "PyTorch", subcategory: "ML Frameworks", level: "intermediate", growth: "21%", salary: "$176,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
+      { title: "JavaScript", subcategory: "Programming Languages", level: "advanced", growth: "22%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Machine Learning", subcategory: "AI/ML", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Deep Learning", subcategory: "AI/ML", level: "advanced", growth: "26%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "AWS", subcategory: "Cloud Computing", level: "advanced", growth: "23%", salary: "$180,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Docker", subcategory: "DevOps", level: "intermediate", growth: "22%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Kubernetes", subcategory: "DevOps", level: "intermediate", growth: "21%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } }
     ],
     common: [
-      { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
-      { title: "Git", subcategory: "Version Control", level: "advanced", growth: "18%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "SQL", subcategory: "Database", level: "advanced", growth: "19%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Docker", subcategory: "DevOps Tools", level: "intermediate", growth: "22%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Linux", subcategory: "Operating Systems", level: "intermediate", growth: "20%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "REST APIs", subcategory: "Web Development", level: "intermediate", growth: "21%", salary: "$176,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Agile Methodologies", subcategory: "Project Management", level: "intermediate", growth: "17%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Agile Methodologies", subcategory: "Project Management", level: "advanced", growth: "17%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "UI/UX Design Principles", subcategory: "Design", level: "intermediate", growth: "19%", salary: "$160,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$160,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Communication", subcategory: "Soft Skills", level: "intermediate", growth: "16%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "Communication", subcategory: "Soft Skills", level: "advanced", growth: "16%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Team Leadership", subcategory: "Management", level: "intermediate", growth: "18%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Project Management", subcategory: "Management", level: "intermediate", growth: "17%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Strategic Thinking", subcategory: "Soft Skills", level: "intermediate", growth: "16%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Stakeholder Management", subcategory: "Management", level: "intermediate", growth: "15%", salary: "$163,000", benchmarks: { J: true, B: true, O: true } }
     ],
     certification: [
-      { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud", level: "advanced", growth: "24%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Google Cloud Professional Machine Learning Engineer", subcategory: "Cloud", level: "advanced", growth: "23%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "TensorFlow Developer Certificate", subcategory: "ML Frameworks", level: "intermediate", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Microsoft Azure AI Engineer Associate", subcategory: "Cloud", level: "advanced", growth: "22%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Certified Information Systems Security Professional (CISSP)", subcategory: "Security", level: "advanced", growth: "21%", salary: "$180,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "AWS Certified Solutions Architect", subcategory: "Cloud", level: "advanced", growth: "24%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Google Cloud Professional", subcategory: "Cloud", level: "advanced", growth: "23%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Project Management Professional (PMP)", subcategory: "Management", level: "advanced", growth: "18%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Scrum Master Certification", subcategory: "Agile", level: "intermediate", growth: "17%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } }
     ]
   };
 
@@ -151,9 +147,9 @@ export const SkillProfileMatrix = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="specialized">Specialized Skills</SelectItem>
-                <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certification</SelectItem>
+                <SelectItem value="specialized">Technical Skills</SelectItem>
+                <SelectItem value="common">Soft Skills & Competencies</SelectItem>
+                <SelectItem value="certification">Certifications</SelectItem>
               </SelectContent>
             </Select>
 
@@ -162,10 +158,9 @@ export const SkillProfileMatrix = () => {
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Sort by All</SelectItem>
-                <SelectItem value="jobDescription">Sort by Job Description</SelectItem>
                 <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
-                <SelectItem value="occupation">Sort by Occupation</SelectItem>
+                <SelectItem value="growth">Sort by Growth</SelectItem>
+                <SelectItem value="salary">Sort by Salary</SelectItem>
               </SelectContent>
             </Select>
           </div>
