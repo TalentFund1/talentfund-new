@@ -121,3 +121,4 @@ export const SkillProfileMatrix = () => {
       </Card>
     </div>
   );
+};
