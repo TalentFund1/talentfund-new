@@ -153,6 +153,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
                     skillName={skillName}
                     details={getSkillDetails(skillName, level)}
                     isLastColumn={index === levels.length - 1}
+                    levelKey={level}
                   />
                 ))}
               </TableRow>
