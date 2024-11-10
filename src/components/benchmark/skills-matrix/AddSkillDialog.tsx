@@ -26,6 +26,9 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
   const [skillType, setSkillType] = useState("unknown");
   const { toast } = useToast();
 
+  // Ensure skills array is defined and has data
+  const skillTitles = skills?.map(s => s.title) || [];
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -87,7 +90,7 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
             <Label className="text-sm font-medium">Skill Name</Label>
             <div className="bg-white">
               <ComboboxDemo 
-                skills={skills.map(s => s.title)}
+                skills={skillTitles}
                 selected={selectedSkill}
                 onSelect={setSelectedSkill}
               />
