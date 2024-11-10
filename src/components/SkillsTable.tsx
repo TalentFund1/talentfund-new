@@ -44,16 +44,82 @@ const skills = [
     growth: "10%"
   },
   {
-    title: "Docker (Software)",
+    title: "Docker",
     subcategory: "Software Development Tools",
     level: "Intermediate",
-    growth: "0%"
+    growth: "15%"
   },
   {
     title: "MLflow",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "Beginner",
     growth: "11%"
+  },
+  {
+    title: "TensorFlow",
+    subcategory: "Machine Learning Frameworks",
+    level: "Advanced",
+    growth: "16%"
+  },
+  {
+    title: "PyTorch",
+    subcategory: "Machine Learning Frameworks",
+    level: "Intermediate",
+    growth: "18%"
+  },
+  {
+    title: "Natural Language Processing",
+    subcategory: "AI Applications",
+    level: "Advanced",
+    growth: "20%"
+  },
+  {
+    title: "Computer Vision",
+    subcategory: "AI Applications",
+    level: "Intermediate",
+    growth: "22%"
+  },
+  {
+    title: "Kubernetes",
+    subcategory: "Container Orchestration",
+    level: "Advanced",
+    growth: "17%"
+  },
+  {
+    title: "Git",
+    subcategory: "Version Control",
+    level: "Advanced",
+    growth: "8%"
+  },
+  {
+    title: "SQL",
+    subcategory: "Databases",
+    level: "Advanced",
+    growth: "9%"
+  },
+  {
+    title: "MongoDB",
+    subcategory: "Databases",
+    level: "Intermediate",
+    growth: "14%"
+  },
+  {
+    title: "REST APIs",
+    subcategory: "Web Development",
+    level: "Advanced",
+    growth: "11%"
+  },
+  {
+    title: "Python",
+    subcategory: "Programming Languages",
+    level: "Advanced",
+    growth: "15%"
+  },
+  {
+    title: "Data Science",
+    subcategory: "Analytics",
+    level: "Intermediate",
+    growth: "21%"
   }
 ];
 
