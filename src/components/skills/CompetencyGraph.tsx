@@ -32,10 +32,10 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
 
   const getSkillsForCategory = () => {
     const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
-    return currentTrack === "Professional" ? categoryData.professional : categoryData.managerial;
+    return currentTrack === "Professional" ? categoryData?.professional : categoryData?.managerial;
   };
 
-  const skills = getSkillsForCategory();
+  const skills = getSkillsForCategory() || {};
   const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
   // Filter and categorize skills
@@ -49,7 +49,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     if (selectedCategory === "specialized") {
       return skillsArray.filter(skill => 
         technicalSkills.includes(skill) && 
-        ["Machine Learning", "Artificial Intelligence", "Deep Learning", "Computer Vision", "Natural Language Processing"].some(
+        ["Machine Learning", "Artificial Intelligence", "Deep Learning", "Computer Vision", "Natural Language Processing", "AWS", "Cloud Computing", "TensorFlow", "PyTorch"].some(
           specialization => skill.includes(specialization)
         )
       );
@@ -58,7 +58,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     if (selectedCategory === "common") {
       return skillsArray.filter(skill => 
         softSkills.includes(skill) || 
-        ["JavaScript", "Python", "Java", "SQL"].some(common => skill.includes(common))
+        ["JavaScript", "Python", "Java", "SQL", "Git", "Agile", "Communication"].some(common => skill.includes(common))
       );
     }
     
@@ -66,7 +66,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
       return skillsArray.filter(skill => 
         skill.includes("Certified") || 
         skill.includes("Certificate") || 
-        skill.includes("Certification")
+        skill.includes("Certification") ||
+        ["AWS Certified", "Professional Scrum", "PMP", "CISSP"].some(cert => skill.includes(cert))
       );
     }
     
@@ -76,14 +77,49 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const uniqueSkills = getSkillsByCategory().sort();
 
   const getSkillDetails = (skillName: string, level: string) => {
-    const skillLevel = skills[level];
-    return skillLevel?.find((s) => s.name === skillName) || { level: "-", required: "-" };
+    if (!skills || !skills[level]) return { level: "-", required: "-" };
+    return skills[level]?.find((s: { name: string; level: string; required: string; }) => s.name === skillName) || { level: "-", required: "-" };
   };
 
   const handleTrackChange = (value: string) => {
     if (value === "Professional" || value === "Managerial") {
       setCurrentTrack(value);
     }
+  };
+
+  const getCategoryCount = (category: string) => {
+    const skillsArray = Array.from(toggledSkills);
+    
+    if (category === "all") {
+      return skillsArray.length;
+    }
+    
+    if (category === "specialized") {
+      return skillsArray.filter(skill => 
+        technicalSkills.includes(skill) && 
+        ["Machine Learning", "Artificial Intelligence", "Deep Learning", "Computer Vision", "Natural Language Processing", "AWS", "Cloud Computing", "TensorFlow", "PyTorch"].some(
+          specialization => skill.includes(specialization)
+        )
+      ).length;
+    }
+    
+    if (category === "common") {
+      return skillsArray.filter(skill => 
+        softSkills.includes(skill) || 
+        ["JavaScript", "Python", "Java", "SQL", "Git", "Agile", "Communication"].some(common => skill.includes(common))
+      ).length;
+    }
+    
+    if (category === "certification") {
+      return skillsArray.filter(skill => 
+        skill.includes("Certified") || 
+        skill.includes("Certificate") || 
+        skill.includes("Certification") ||
+        ["AWS Certified", "Professional Scrum", "PMP", "CISSP"].some(cert => skill.includes(cert))
+      ).length;
+    }
+    
+    return 0;
   };
 
   return (
@@ -117,10 +153,37 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
         <h3 className="text-lg font-medium text-foreground">AI Engineer</h3>
       </div>
 
-      <CategoryCards 
-        selectedCategory={selectedCategory} 
-        onCategoryChange={setSelectedCategory}
-      />
+      <div className="grid grid-cols-4 gap-4 mb-6">
+        {[
+          { id: "all", name: "All Categories", count: getCategoryCount("all") },
+          { id: "specialized", name: "Specialized Skills", count: getCategoryCount("specialized") },
+          { id: "common", name: "Common Skills", count: getCategoryCount("common") },
+          { id: "certification", name: "Certification", count: getCategoryCount("certification") }
+        ].map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setSelectedCategory(category.id)}
+            className={`rounded-lg p-4 transition-colors ${
+              selectedCategory === category.id
+                ? 'bg-primary-accent/5 border border-primary-accent'
+                : 'bg-background border border-border hover:border-primary-accent/50'
+            }`}
+          >
+            <div className="flex flex-col items-start">
+              <span className={`text-sm font-semibold mb-1 ${
+                selectedCategory === category.id
+                  ? 'text-primary-accent'
+                  : 'text-foreground group-hover:text-primary-accent'
+              }`}>
+                {category.name}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {category.count} skills
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
         <Table>
