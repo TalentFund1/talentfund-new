@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
 import { initialSkills } from "../benchmark/skills-matrix/initialSkills";
 import { categorizeSkill } from "../benchmark/skills-matrix/skillCategories";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -22,42 +23,52 @@ export const SkillsSummary = () => {
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { currentStates } = useSkillsMatrixStore();
 
-  // Transform initialSkills into the required format
+  // Transform initialSkills into the required format and sort by level
   const transformedSkills = initialSkills.map(skill => ({
     name: skill.title,
-    level: skill.level,
-    isSkillGoal: true
-  }));
+    level: currentStates[skill.title]?.level || skill.level,
+    isSkillGoal: currentStates[skill.title]?.requirement === 'required'
+  })).sort((a, b) => {
+    const levelOrder = {
+      advanced: 0,
+      intermediate: 1,
+      beginner: 2,
+      unspecified: 3
+    };
+    const levelA = (a.level || 'unspecified').toLowerCase();
+    const levelB = (b.level || 'unspecified').toLowerCase();
+    return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
+  });
 
   // Categorize skills using the same categorization logic as the matrix
   const specializedSkills = transformedSkills.filter(
     skill => categorizeSkill(skill.name) === 'specialized'
-  ).sort((a, b) => {
-    const levelOrder = {
-      advanced: 0,
-      intermediate: 1,
-      beginner: 2,
-      unspecified: 3
-    };
-    return levelOrder[a.level as keyof typeof levelOrder] - levelOrder[b.level as keyof typeof levelOrder];
-  });
+  );
 
   const commonSkills = transformedSkills.filter(
     skill => categorizeSkill(skill.name) === 'common'
-  ).sort((a, b) => {
-    const levelOrder = {
-      advanced: 0,
-      intermediate: 1,
-      beginner: 2,
-      unspecified: 3
-    };
-    return levelOrder[a.level as keyof typeof levelOrder] - levelOrder[b.level as keyof typeof levelOrder];
-  });
+  );
 
   const certifications = initialSkills
     .filter(skill => categorizeSkill(skill.title) === 'certification')
-    .map(skill => ({ name: skill.title }));
+    .map(skill => ({ 
+      name: skill.title,
+      level: currentStates[skill.title]?.level || skill.level,
+      isSkillGoal: currentStates[skill.title]?.requirement === 'required'
+    }))
+    .sort((a, b) => {
+      const levelOrder = {
+        advanced: 0,
+        intermediate: 1,
+        beginner: 2,
+        unspecified: 3
+      };
+      const levelA = (a.level || 'unspecified').toLowerCase();
+      const levelB = (b.level || 'unspecified').toLowerCase();
+      return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
+    });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
