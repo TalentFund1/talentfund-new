@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -8,7 +8,14 @@ interface ToggledSkillsContextType {
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
-  const [toggledSkills, setToggledSkills] = useState<Set<string>>(new Set());
+  const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
+    const savedSkills = localStorage.getItem('toggledSkills');
+    return savedSkills ? new Set(JSON.parse(savedSkills)) : new Set();
+  });
+
+  useEffect(() => {
+    localStorage.setItem('toggledSkills', JSON.stringify(Array.from(toggledSkills)));
+  }, [toggledSkills]);
 
   return (
     <ToggledSkillsContext.Provider value={{ toggledSkills, setToggledSkills }}>
