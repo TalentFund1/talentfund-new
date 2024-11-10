@@ -42,17 +42,17 @@ const EmployeeProfile = () => {
                   <Avatar className="h-28 w-28 rounded-full border-4 border-border">
                     <img 
                       src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=96&h=96" 
-                      alt="Kate Smith"
+                      alt="Anna Vyselva"
                       className="object-cover"
                     />
                   </Avatar>
                   <div className="space-y-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-3">
-                        <h1 className="text-2xl font-bold text-foreground">Kate Smith</h1>
+                        <h1 className="text-2xl font-bold text-foreground">Anna Vyselva</h1>
                         <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: 123</span>
                       </div>
-                      <h2 className="text-lg font-medium text-foreground/90">Senior Frontend Engineer: P4</h2>
+                      <h2 className="text-lg font-medium text-foreground/90">Frontend Developer: P4</h2>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <MapPin className="h-4 w-4" />
