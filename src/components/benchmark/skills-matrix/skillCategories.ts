@@ -8,7 +8,8 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Azure Solutions Architect',
     'Google Cloud Professional',
     'CompTIA Security+',
-    'PMP Certification',
+    'Security+ Certification',
+    'PMP',
     'Project Management Professional',
     'Certified Scrum Master',
     'CSM',
@@ -18,7 +19,9 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Red Hat Certified Engineer',
     'HashiCorp Certified',
     'Certified Ethical Hacker',
-    'ITIL Foundation'
+    'ITIL Foundation',
+    'Certification',
+    'Certificate'
   ];
 
   const specializedSkills = [
