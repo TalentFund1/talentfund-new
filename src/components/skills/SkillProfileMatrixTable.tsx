@@ -6,7 +6,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { SelectAllToggle } from "./SelectAllToggle";
 
 interface Skill {
   title: string;
@@ -28,34 +27,8 @@ export const SkillProfileMatrixTable = ({
   toggledSkills,
   onToggleSkill
 }: SkillProfileMatrixTableProps) => {
-  const isAllSelected = paginatedSkills.length > 0 && 
-    paginatedSkills.every(skill => toggledSkills.has(skill.title));
-
-  const handleToggleAll = () => {
-    if (isAllSelected) {
-      // Deselect all skills
-      paginatedSkills.forEach(skill => {
-        if (toggledSkills.has(skill.title)) {
-          onToggleSkill(skill.title);
-        }
-      });
-    } else {
-      // Select all skills
-      paginatedSkills.forEach(skill => {
-        if (!toggledSkills.has(skill.title)) {
-          onToggleSkill(skill.title);
-        }
-      });
-    }
-  };
-
   return (
-    <>
-      <SelectAllToggle 
-        isAllSelected={isAllSelected}
-        onToggleAll={handleToggleAll}
-      />
-      <table className="w-full">
+    <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
@@ -144,7 +117,6 @@ export const SkillProfileMatrixTable = ({
           </tr>
         ))}
       </tbody>
-      </table>
-    </>
+    </table>
   );
 };

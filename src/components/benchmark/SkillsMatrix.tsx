@@ -18,24 +18,11 @@ export const SkillsMatrix = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [toggledSkills, setToggledSkills] = useState(new Set<string>());
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
   const { selectedSkills } = useSelectedSkills();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { id } = useParams<{ id: string }>();
-
-  const handleToggleSkill = (skillTitle: string) => {
-    setToggledSkills(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(skillTitle)) {
-        newSet.delete(skillTitle);
-      } else {
-        newSet.add(skillTitle);
-      }
-      return newSet;
-    });
-  };
 
   const handleSave = () => {
     saveChanges();
@@ -95,8 +82,6 @@ export const SkillsMatrix = () => {
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
-          toggledSkills={toggledSkills}
-          onToggleSkill={handleToggleSkill}
         />
         
         <SkillsMatrixPagination 
