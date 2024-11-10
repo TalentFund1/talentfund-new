@@ -1,5 +1,5 @@
-export const technicalSkills = [
-  // Programming Languages
+export const specializedSkills = [
+  // Programming Languages & Frameworks
   "JavaScript",
   "TypeScript",
   "Python",
@@ -11,23 +11,11 @@ export const technicalSkills = [
   "PHP",
   "Swift",
   "SystemVerilog",
-  
-  // Web Development
   "React",
   "Angular",
   "Vue.js",
   "Next.js",
   "Node.js",
-  "Express.js",
-  "Django",
-  "Flask",
-  "HTML5",
-  "CSS3",
-  "Sass",
-  "Tailwind CSS",
-  "Bootstrap",
-  "Material UI",
-  "GraphQL",
   
   // Cloud & DevOps
   "AWS Lambda",
@@ -37,10 +25,6 @@ export const technicalSkills = [
   "Jenkins",
   "GitLab CI",
   "Terraform",
-  "Ansible",
-  "Linux",
-  "Nginx",
-  "Apache",
   
   // Hardware & Systems
   "Computer Architecture",
@@ -48,6 +32,17 @@ export const technicalSkills = [
   "Cadence Encounter",
   "Synopsys Primetime",
   "Internet of Things",
+  "GraphQL"
+];
+
+export const commonSkills = [
+  // Web Development Basics
+  "HTML5",
+  "CSS3",
+  "Sass",
+  "Tailwind CSS",
+  "Bootstrap",
+  "Material UI",
   
   // Tools & Software
   "Microsoft Excel",
@@ -55,10 +50,16 @@ export const technicalSkills = [
   "GitHub",
   "Bitbucket",
   "GitLab",
-  "Version Control Best Practices"
-];
-
-export const softSkills = [
+  "Version Control Best Practices",
+  
+  // Infrastructure
+  "Linux",
+  "Nginx",
+  "Apache",
+  "Express.js",
+  "Django",
+  "Flask",
+  
   // Project Management
   "Agile Methodologies",
   "Project Management",
@@ -76,10 +77,8 @@ export const softSkills = [
   "Innovation",
   "Design Thinking",
   
-  // Design
+  // Design & Communication
   "UI/UX Design Principles",
-  
-  // Other Skills
   "Team Leadership",
   "Strategic Planning",
   "Decision Making",
@@ -96,3 +95,25 @@ export const softSkills = [
   "Interpersonal Communication",
   "Cross-cultural Communication"
 ];
+
+export const certificationSkills = [
+  "AWS Certified Solutions Architect",
+  "AWS Certified Developer",
+  "Professional Scrum Master",
+  "Kubernetes Administrator (CKA)",
+  "Azure Solutions Architect",
+  "Cybersecurity License"
+];
+
+export const allSkills = [
+  ...specializedSkills,
+  ...commonSkills,
+  ...certificationSkills
+];
+
+export const categorizeSkill = (skill: string) => {
+  if (specializedSkills.includes(skill)) return "specialized";
+  if (commonSkills.includes(skill)) return "common";
+  if (certificationSkills.includes(skill)) return "certification";
+  return "common"; // Default category
+};

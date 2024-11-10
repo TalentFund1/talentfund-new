@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
-import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
+import { SkillsList } from "./skills-matrix/SkillsList";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
@@ -221,15 +221,6 @@ export const SkillsMatrix = () => {
         selectedCategory
       );
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (value: string) => {
-    setRowsPerPage(Number(value));
-    setPage(1);
-  };
-
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const paginatedSkills = filteredSkills.slice(startIndex, endIndex);
@@ -250,20 +241,23 @@ export const SkillsMatrix = () => {
           setSelectedCategory={setSelectedCategory}
         />
 
-        <SkillsMatrixTable 
-          filteredSkills={paginatedSkills}
+        <SkillsList 
+          skills={paginatedSkills}
           onSkillLevelChange={handleSkillsChange}
         />
         
         <SkillsMatrixPagination 
           rowsPerPage={rowsPerPage}
-          handleRowsPerPageChange={handleRowsPerPageChange}
+          handleRowsPerPageChange={(value: string) => {
+            setRowsPerPage(Number(value));
+            setPage(1);
+          }}
           startIndex={startIndex}
           endIndex={endIndex}
           totalSkills={filteredSkills.length}
           currentPage={page}
           totalPages={totalPages}
-          handlePageChange={handlePageChange}
+          handlePageChange={setPage}
         />
       </Card>
     </div>
