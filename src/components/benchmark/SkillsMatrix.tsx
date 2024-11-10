@@ -8,8 +8,10 @@ import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useSkillsManagement } from "./skills-matrix/useSkillsManagement";
+import { Skill } from "@/components/skills/types/SkillTypes";
 
-const initialSkills = [
+const initialSkills: Skill[] = [
   {
     title: "JavaScript",
     subcategory: "Programming Languages",
@@ -90,7 +92,6 @@ const initialSkills = [
 ];
 
 export const SkillsMatrix = () => {
-  const [skills, setSkills] = useState(initialSkills);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -100,51 +101,7 @@ export const SkillsMatrix = () => {
   const { toast } = useToast();
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
-
-  const handleSkillsChange = (newSelectedSkills: string[]) => {
-    setSelectedSkills(newSelectedSkills);
-    
-    const newSkills = newSelectedSkills.filter(
-      skill => !skills.some(s => s.title === skill)
-    );
-    
-    if (newSkills.length > 0) {
-      const skillsToAdd = newSkills.map(skillName => ({
-        title: skillName,
-        subcategory: "Unspecified",
-        level: "unspecified",
-        growth: "0%",
-        confidence: "n/a"
-      }));
-      
-      setSkills(prev => [...prev, ...skillsToAdd]);
-      
-      toast({
-        title: "Skills Added",
-        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
-      });
-    }
-  };
-
-  const handleSkillAdd = (newSkill: { 
-    title: string; 
-    subcategory: string; 
-    level: string; 
-    growth: string; 
-    confidence: string; 
-  }) => {
-    if (skills.some(skill => skill.title === newSkill.title)) {
-      toast({
-        title: "Error",
-        description: "This skill already exists in the matrix.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setSkills(prev => [...prev, newSkill]);
-    setSelectedSkills(prev => [...prev, newSkill.title]);
-  };
+  const { skills, handleSkillsChange, handleSkillAdd } = useSkillsManagement(initialSkills);
 
   const handleSave = () => {
     saveChanges();
