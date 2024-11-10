@@ -3,7 +3,6 @@ import { DetailedSkill, Certification } from "./types";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
-import { useSelectedSkills } from "./context/SelectedSkillsContext";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -16,7 +15,7 @@ export const SkillsSummary = () => {
     certifications: false,
   });
 
-  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -111,14 +110,6 @@ export const SkillsSummary = () => {
     const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
     
     if (newSkills.length > 0) {
-      newSkills.forEach(skillName => {
-        specializedSkills.push({
-          name: skillName,
-          level: "unspecified",
-          isSkillGoal: false
-        });
-      });
-
       toast({
         title: "Skills Added",
         description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
@@ -153,4 +144,3 @@ export const SkillsSummary = () => {
     </div>
   );
 };
-
