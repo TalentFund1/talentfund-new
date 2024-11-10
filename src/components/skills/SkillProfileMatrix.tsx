@@ -1,11 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useRef, useState, useEffect } from "react";
+import { SavedSkillsBadges } from "./SavedSkillsBadges";
 
 const PAGE_SIZE = 10;
 
@@ -69,6 +69,18 @@ export const SkillProfileMatrix = () => {
     });
   };
 
+  const handleRemoveSkill = (skill: string) => {
+    const newToggledSkills = new Set(toggledSkills);
+    newToggledSkills.delete(skill);
+    setToggledSkills(newToggledSkills);
+    setIsDirty(true);
+    
+    toast({
+      title: "Skill Removed",
+      description: `${skill} has been removed from your skills.`,
+    });
+  };
+
   const filteredSkills = (() => {
     let skills = [];
     if (skillType === "all") {
@@ -121,7 +133,10 @@ export const SkillProfileMatrix = () => {
           <Button>Add Skill</Button>
         </div>
 
-        <Separator className="my-4" />
+        <SavedSkillsBadges 
+          toggledSkills={toggledSkills} 
+          onRemoveSkill={handleRemoveSkill}
+        />
 
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
