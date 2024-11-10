@@ -40,7 +40,9 @@ export const SkillProfileMatrixTable = ({
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">
+            Skill Title ({toggledSkills.size} selected)
+          </th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
