@@ -12,6 +12,16 @@ interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
 }
 
+type Skill = {
+  name: string;
+  level: string;
+  required: string;
+};
+
+type SkillLevels = {
+  [key: string]: Skill[];
+};
+
 export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     const savedCategory = localStorage.getItem('selectedCategory');
@@ -25,11 +35,11 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
 
   // Get skills based on selected category
   const getFilteredSkills = () => {
-    const categorySkills = skillsByCategory[selectedCategory as keyof typeof skillsByCategory]?.[currentTrack.toLowerCase()];
+    const categorySkills = skillsByCategory[selectedCategory as keyof typeof skillsByCategory]?.[currentTrack.toLowerCase()] as SkillLevels | undefined;
     if (!categorySkills) return [];
 
     const skills = new Set<string>();
-    Object.values(categorySkills).forEach(levelSkills => {
+    Object.values(categorySkills).forEach((levelSkills: Skill[]) => {
       levelSkills.forEach(skill => skills.add(skill.name));
     });
     return Array.from(skills);
@@ -38,7 +48,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const filteredSkills = getFilteredSkills();
 
   const getSkillLevelForTrack = (level: string, skillName: string) => {
-    const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory]?.[currentTrack.toLowerCase()];
+    const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory]?.[currentTrack.toLowerCase()] as SkillLevels | undefined;
     const levelData = categoryData?.[level];
     const skillData = levelData?.find(skill => skill.name === skillName);
     
