@@ -7,7 +7,6 @@ import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
-import { usePagination } from "./skills-matrix/usePagination";
 
 interface Skill {
   title: string;
@@ -104,6 +103,8 @@ export const SkillsMatrix = () => {
   const [hasChanges, setHasChanges] = useState(false);
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const { toast } = useToast();
 
   const handleSkillToggle = (skillTitle: string) => {
@@ -179,17 +180,10 @@ export const SkillsMatrix = () => {
         )
       );
 
-  const {
-    page,
-    rowsPerPage,
-    startIndex,
-    endIndex,
-    totalPages,
-    handlePageChange,
-    handleRowsPerPageChange
-  } = usePagination(filteredSkills.length);
-
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
   const paginatedSkills = filteredSkills.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredSkills.length / rowsPerPage);
 
   return (
     <div className="space-y-6">
