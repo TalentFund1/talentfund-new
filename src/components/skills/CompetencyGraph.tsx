@@ -5,12 +5,17 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
 import { CategoryCards } from "./competency/CategoryCards";
-import { skillsByCategory } from "./competency/skillsData";
+import { skillsByCategory, professionalSkills, managerialSkills } from "./competency/skillsData";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { technicalSkills, softSkills } from "../skillsData";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
+}
+
+interface SkillDetail {
+  level: string;
+  required: string;
 }
 
 export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
@@ -32,7 +37,32 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
 
   const getSkillsForCategory = () => {
     const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
-    return currentTrack === "Professional" ? categoryData.professional : categoryData.managerial;
+    if (!categoryData) return [];
+    
+    const trackData = currentTrack === "Professional" ? categoryData.professional : categoryData.managerial;
+    if (!trackData) return [];
+
+    // Get unique skill names across all levels
+    const skillNames = new Set<string>();
+    Object.values(trackData).forEach(levelSkills => {
+      levelSkills.forEach(skill => skillNames.add(skill.name));
+    });
+    
+    return Array.from(skillNames);
+  };
+
+  const getSkillDetails = (skillName: string, level: string): SkillDetail => {
+    const skillsData = currentTrack === "Professional" ? professionalSkills : managerialSkills;
+    const levelSkills = skillsData[level as keyof typeof skillsData];
+    
+    if (!levelSkills) {
+      return { level: "unspecified", required: "unspecified" };
+    }
+
+    const skillDetail = levelSkills.find(skill => skill.name === skillName);
+    return skillDetail 
+      ? { level: skillDetail.level, required: skillDetail.required }
+      : { level: "unspecified", required: "unspecified" };
   };
 
   const skills = getSkillsForCategory();
