@@ -5,14 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
-import { useSelectedSkills } from "./context/SelectedSkillsContext";
 
+// Initial page size
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
-  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
-  const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => new Set(selectedSkills));
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [page, setPage] = useState(1);
@@ -21,74 +18,19 @@ export const SkillProfileMatrix = () => {
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
-  // Updated skills data with proper categorization
-  const allSkills = {
-    specialized: [
-      { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
-      { title: "JavaScript", subcategory: "Programming Languages", level: "advanced", growth: "22%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Machine Learning", subcategory: "AI/ML", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Deep Learning", subcategory: "AI/ML", level: "advanced", growth: "26%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "AWS", subcategory: "Cloud Computing", level: "advanced", growth: "23%", salary: "$180,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Docker", subcategory: "DevOps", level: "intermediate", growth: "22%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Kubernetes", subcategory: "DevOps", level: "intermediate", growth: "21%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } }
-    ],
-    common: [
-      { title: "Agile Methodologies", subcategory: "Project Management", level: "advanced", growth: "17%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "UI/UX Design Principles", subcategory: "Design", level: "intermediate", growth: "19%", salary: "$160,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$160,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Communication", subcategory: "Soft Skills", level: "advanced", growth: "16%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Team Leadership", subcategory: "Management", level: "intermediate", growth: "18%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Project Management", subcategory: "Management", level: "intermediate", growth: "17%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Strategic Thinking", subcategory: "Soft Skills", level: "intermediate", growth: "16%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Stakeholder Management", subcategory: "Management", level: "intermediate", growth: "15%", salary: "$163,000", benchmarks: { J: true, B: true, O: true } }
-    ],
-    certification: [
-      { title: "AWS Certified Solutions Architect", subcategory: "Cloud", level: "advanced", growth: "24%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Google Cloud Professional", subcategory: "Cloud", level: "advanced", growth: "23%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Project Management Professional (PMP)", subcategory: "Management", level: "advanced", growth: "18%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Scrum Master Certification", subcategory: "Agile", level: "intermediate", growth: "17%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } }
-    ]
-  };
+  // Simulated skills data - in a real app, this would come from an API
+  const allSkills = [
+    { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
+    { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
+    { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
+    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$181,536", benchmarks: { J: true, B: true, O: true } },
+    { title: "Scalability", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
+    { title: "Software Engineering", subcategory: "Software Development Tools", level: "advanced", growth: "23%", salary: "$180,512", benchmarks: { J: true, B: true, O: true } },
+    { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
+  ];
 
-  const getSkillsByCategory = (category: string) => {
-    if (category === 'all') {
-      return [...allSkills.specialized, ...allSkills.common, ...allSkills.certification];
-    }
-    return allSkills[category as keyof typeof allSkills] || [];
-  };
-
-  const handleToggleSkill = (skillTitle: string) => {
-    setHasUnsavedChanges(true);
-    setToggledSkills(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(skillTitle)) {
-        newSet.delete(skillTitle);
-      } else {
-        newSet.add(skillTitle);
-      }
-      return newSet;
-    });
-  };
-
-  const handleSave = () => {
-    setSelectedSkills(Array.from(toggledSkills));
-    setHasUnsavedChanges(false);
-    toast({
-      title: "Changes saved",
-      description: "Your skill selections have been updated.",
-    });
-  };
-
-  const handleCancel = () => {
-    setToggledSkills(new Set(selectedSkills));
-    setHasUnsavedChanges(false);
-    toast({
-      title: "Changes cancelled",
-      description: "Your skill selections have been reset.",
-    });
-  };
-
-  const paginatedSkills = getSkillsByCategory(skillType).slice(0, page * PAGE_SIZE);
+  // Calculate the current page of skills
+  const paginatedSkills = allSkills.slice(0, page * PAGE_SIZE);
 
   const lastSkillElementRef = useCallback((node: HTMLElement | null) => {
     if (loading) return;
@@ -99,8 +41,7 @@ export const SkillProfileMatrix = () => {
       if (entries[0].isIntersecting && hasMore) {
         setPage(prevPage => {
           const nextPage = prevPage + 1;
-          const totalSkills = getSkillsByCategory(skillType).length;
-          if (nextPage * PAGE_SIZE >= totalSkills) {
+          if (nextPage * PAGE_SIZE >= allSkills.length) {
             setHasMore(false);
             toast({
               title: "End of list",
@@ -113,32 +54,16 @@ export const SkillProfileMatrix = () => {
     });
     
     if (node) observer.current.observe(node);
-  }, [loading, hasMore, skillType]);
+  }, [loading, hasMore]);
 
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
-            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">
-              {selectedSkills.length} saved
-            </span>
-          </div>
+          <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={handleCancel}
-              disabled={!hasUnsavedChanges}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={!hasUnsavedChanges}
-            >
-              Save
-            </Button>
+            <Button variant="outline">Cancel</Button>
+            <Button>Save</Button>
           </div>
         </div>
 
@@ -152,9 +77,21 @@ export const SkillProfileMatrix = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="specialized">Technical Skills</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
                 <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certifications</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={skillType} onValueChange={setSkillType}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="All Skill Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Skill Types</SelectItem>
+                <SelectItem value="defining">Defining Skills</SelectItem>
+                <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
+                <SelectItem value="necessary">Necessary Skills</SelectItem>
               </SelectContent>
             </Select>
 
@@ -163,9 +100,10 @@ export const SkillProfileMatrix = () => {
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="all">Sort by All</SelectItem>
+                <SelectItem value="jobDescription">Sort by Job Description</SelectItem>
                 <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
-                <SelectItem value="growth">Sort by Growth</SelectItem>
-                <SelectItem value="salary">Sort by Salary</SelectItem>
+                <SelectItem value="occupation">Sort by Occupation</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -176,8 +114,6 @@ export const SkillProfileMatrix = () => {
           <SkillProfileMatrixTable 
             paginatedSkills={paginatedSkills} 
             lastSkillElementRef={lastSkillElementRef}
-            toggledSkills={toggledSkills}
-            onToggleSkill={handleToggleSkill}
           />
         </div>
       </Card>

@@ -19,26 +19,15 @@ interface Skill {
 interface SkillProfileMatrixTableProps {
   paginatedSkills: Skill[];
   lastSkillElementRef: (node: HTMLElement | null) => void;
-  toggledSkills: Set<string>;
-  onToggleSkill: (skillTitle: string) => void;
 }
 
-export const SkillProfileMatrixTable = ({ 
-  paginatedSkills, 
-  lastSkillElementRef,
-  toggledSkills,
-  onToggleSkill
-}: SkillProfileMatrixTableProps) => {
-  const toggledSkillsList = paginatedSkills.filter(skill => toggledSkills.has(skill.title));
-  const nonToggledSkillsList = paginatedSkills.filter(skill => !toggledSkills.has(skill.title));
-  const orderedSkills = [...toggledSkillsList, ...nonToggledSkillsList];
-
+export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }: SkillProfileMatrixTableProps) => {
   return (
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Subcategory</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
               Projected Growth
@@ -59,7 +48,7 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </div>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[20%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
               Salary With Skill
               <TooltipProvider>
@@ -88,7 +77,7 @@ export const SkillProfileMatrixTable = ({
         </tr>
       </thead>
       <tbody>
-        {orderedSkills.map((skill, index) => (
+        {paginatedSkills.map((skill, index) => (
           <tr 
             key={skill.title} 
             ref={index === paginatedSkills.length - 1 ? lastSkillElementRef : null}
@@ -96,10 +85,7 @@ export const SkillProfileMatrixTable = ({
           >
             <td className="py-3 px-4">
               <div className="flex items-center gap-2">
-                <Switch 
-                  checked={toggledSkills.has(skill.title)}
-                  onCheckedChange={() => onToggleSkill(skill.title)}
-                />
+                <Switch />
                 <span className="text-sm">{skill.title}</span>
               </div>
             </td>
