@@ -3,6 +3,7 @@ import { DetailedSkill, Certification } from "./types";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
+import { useSkillsSearch } from "@/contexts/SkillsSearchContext";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -15,7 +16,7 @@ export const SkillsSummary = () => {
     certifications: false,
   });
 
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const { selectedSkills, setSelectedSkills } = useSkillsSearch();
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
