@@ -29,6 +29,14 @@ export const SkillProfileMatrixTable = ({
   toggledSkills,
   onToggleSkill
 }: SkillProfileMatrixTableProps) => {
+  // Sort skills to show toggled ones first
+  const sortedSkills = [...paginatedSkills].sort((a, b) => {
+    const aIsToggled = toggledSkills.has(a.title);
+    const bIsToggled = toggledSkills.has(b.title);
+    if (aIsToggled === bIsToggled) return 0;
+    return aIsToggled ? -1 : 1;
+  });
+
   return (
     <table className="w-full">
       <thead>
@@ -84,7 +92,7 @@ export const SkillProfileMatrixTable = ({
         </tr>
       </thead>
       <tbody>
-        {paginatedSkills.map((skill, index) => (
+        {sortedSkills.map((skill, index) => (
           <tr 
             key={skill.title} 
             ref={index === paginatedSkills.length - 1 ? lastSkillElementRef : null}
