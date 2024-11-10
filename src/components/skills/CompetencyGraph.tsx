@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
 import { CategoryCards } from "./competency/CategoryCards";
 import { skillsByCategory } from "./competency/skillsData";
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
 }
 
 export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
+  const { toggledSkills } = useToggledSkills();
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     const savedCategory = localStorage.getItem('selectedCategory');
     return savedCategory || "all";
@@ -35,13 +37,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const skills = getSkillsForCategory();
   const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
-  const uniqueSkills = Array.from(
-    new Set(
-      Object.values(skills)
-        .flat()
-        .map((skill) => skill.name)
-    )
-  );
+  // Filter skills based on toggledSkills
+  const uniqueSkills = Array.from(toggledSkills).sort();
 
   const getSkillDetails = (skillName: string, level: string) => {
     const skillLevel = skills[level];
