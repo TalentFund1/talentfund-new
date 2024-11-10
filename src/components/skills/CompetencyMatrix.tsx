@@ -16,7 +16,7 @@ const skillCategories = [
 export const CompetencyMatrix = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
+  const [track, setTrack] = useState<"Technical" | "Managerial">("Technical");
   const { toggledSkills } = useToggledSkills();
 
   const handleLevelSelect = (level: string) => {
@@ -27,7 +27,7 @@ export const CompetencyMatrix = () => {
     );
   };
 
-  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
+  const handleTrackChange = (newTrack: "Technical" | "Managerial") => {
     setTrack(newTrack);
   };
 
