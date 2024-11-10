@@ -5,17 +5,12 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
 import { CategoryCards } from "./competency/CategoryCards";
-import { skillsByCategory, professionalSkills, managerialSkills } from "./competency/skillsData";
+import { skillsByCategory } from "./competency/skillsData";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { technicalSkills, softSkills } from "../skillsData";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
-}
-
-interface SkillDetail {
-  level: string;
-  required: string;
 }
 
 export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
@@ -37,44 +32,74 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
 
   const getSkillsForCategory = () => {
     const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
-    if (!categoryData) return [];
-    
-    const trackData = currentTrack === "Professional" ? categoryData.professional : categoryData.managerial;
-    if (!trackData) return [];
-
-    // Get unique skill names across all levels
-    const skillNames = new Set<string>();
-    Object.values(trackData).forEach(levelSkills => {
-      levelSkills.forEach(skill => skillNames.add(skill.name));
-    });
-    
-    return Array.from(skillNames);
-  };
-
-  const getSkillDetails = (skillName: string, level: string): SkillDetail => {
-    const skillsData = currentTrack === "Professional" ? professionalSkills : managerialSkills;
-    const levelSkills = skillsData[level as keyof typeof skillsData];
-    
-    if (!levelSkills) {
-      return { level: "unspecified", required: "unspecified" };
-    }
-
-    const skillDetail = levelSkills.find(skill => skill.name === skillName);
-    return skillDetail 
-      ? { level: skillDetail.level, required: skillDetail.required }
-      : { level: "unspecified", required: "unspecified" };
+    return currentTrack === "Professional" ? categoryData.professional : categoryData.managerial;
   };
 
   const skills = getSkillsForCategory();
   const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
-  const skillsArray = Array.from(toggledSkills);
+
+  // Filter and categorize skills
+  const getSkillsByCategory = () => {
+    const skillsArray = Array.from(toggledSkills);
+    
+    if (selectedCategory === "all") {
+      return skillsArray;
+    }
+    
+    if (selectedCategory === "specialized") {
+      return skillsArray.filter(skill => 
+        technicalSkills.includes(skill) && 
+        ["Machine Learning", "Artificial Intelligence", "Deep Learning", "Computer Vision", "Natural Language Processing"].some(
+          specialization => skill.includes(specialization)
+        )
+      );
+    }
+    
+    if (selectedCategory === "common") {
+      return skillsArray.filter(skill => 
+        softSkills.includes(skill) || 
+        ["JavaScript", "Python", "Java", "SQL"].some(common => skill.includes(common))
+      );
+    }
+    
+    if (selectedCategory === "certification") {
+      return skillsArray.filter(skill => 
+        skill.includes("Certified") || 
+        skill.includes("Certificate") || 
+        skill.includes("Certification")
+      );
+    }
+    
+    return [];
+  };
+
+  const uniqueSkills = getSkillsByCategory().sort();
+
+  const getSkillDetails = (skillName: string, level: string) => {
+    const skillLevel = skills[level];
+    return skillLevel?.find((s) => s.name === skillName) || { level: "-", required: "-" };
+  };
+
+  const handleTrackChange = (value: string) => {
+    if (value === "Professional" || value === "Managerial") {
+      setCurrentTrack(value);
+    }
+  };
 
   return (
     <div className="space-y-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
+        <div className="flex items-center gap-2">
+          <Button variant="outline">Cancel</Button>
+          <Button>Save</Button>
+        </div>
+      </div>
+      
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-center gap-2">
           <div className="text-sm text-muted-foreground">Track:</div>
-          <Select value={currentTrack} onValueChange={(value: "Professional" | "Managerial") => setCurrentTrack(value)}>
+          <Select value={currentTrack} onValueChange={handleTrackChange}>
             <SelectTrigger className="w-[180px] bg-white border-border">
               <SelectValue placeholder="Select track" />
             </SelectTrigger>
@@ -95,7 +120,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
       <CategoryCards 
         selectedCategory={selectedCategory} 
         onCategoryChange={setSelectedCategory}
-        skills={skills}
       />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
@@ -116,7 +140,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {skills.map((skillName) => (
+            {uniqueSkills.map((skillName) => (
               <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
                 <TableCell className="font-medium border-r border-border">
                   {skillName}
