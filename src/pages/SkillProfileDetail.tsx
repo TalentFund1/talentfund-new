@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SkillProfileHeader } from "@/components/skills/SkillProfileHeader";
 import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
@@ -15,7 +15,18 @@ import { Sidebar } from "@/components/Sidebar";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
+
+  // Map IDs to job titles
+  const jobTitles: { [key: string]: string } = {
+    "123": "AI Engineer",
+    "124": "Backend Engineer",
+    "125": "Frontend Engineer",
+    "126": "Engineering Manager"
+  };
+
+  const jobTitle = jobTitles[id || ""] || "AI Engineer"; // Default to AI Engineer if ID not found
 
   const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
     setTrack(newTrack);
@@ -44,7 +55,7 @@ const SkillProfileDetail = () => {
               </div>
 
               <Card className="p-8 bg-white">
-                <SkillProfileHeader />
+                <SkillProfileHeader id={id} jobTitle={jobTitle} />
               </Card>
 
               <EmployeeOverview />
