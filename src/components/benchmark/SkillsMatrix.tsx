@@ -1,12 +1,15 @@
+import { useState, useRef, useCallback } from "react";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Table, TableBody } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SkillsMatrixTableHeader } from "./SkillsMatrixTableHeader";
 import { SkillsMatrixRow } from "./SkillsMatrixRow";
-import { useState } from "react";
-import { SearchFilter } from "@/components/market/SearchFilter";
 import { useToast } from "@/components/ui/use-toast";
+import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
+import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 
 const initialSkills = [
   {
@@ -92,6 +95,10 @@ export const SkillsMatrix = () => {
   const [skills, setSkills] = useState(initialSkills);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
   const allSkillTitles = skills.map(skill => skill.title);
@@ -99,7 +106,6 @@ export const SkillsMatrix = () => {
   const handleSkillsChange = (newSelectedSkills: string[]) => {
     setSelectedSkills(newSelectedSkills);
     
-    // Check for new skills that need to be added
     const newSkills = newSelectedSkills.filter(
       skill => !allSkillTitles.includes(skill)
     );
@@ -130,97 +136,79 @@ export const SkillsMatrix = () => {
         )
       );
 
+  const lastSkillElementRef = useCallback((node: HTMLElement | null) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => {
+          const nextPage = prevPage + 1;
+          if (nextPage * 10 >= skills.length) {
+            setHasMore(false);
+            toast({
+              title: "End of list",
+              description: "You've reached the end of the skills list.",
+            });
+          }
+          return nextPage;
+        });
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
+
   return (
-    <div className="space-y-6 bg-white rounded-lg border border-border p-6">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
-          <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
-          <Select defaultValue="modify">
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="Modify As" />
+    <div className="space-y-6">
+      <Card className="p-6 space-y-6 animate-fade-in bg-white">
+        <SkillsMatrixHeader />
+        <Separator className="my-4" />
+        
+        <SkillsMatrixFilters 
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          allSkillTitles={allSkillTitles}
+          selectedSkills={selectedSkills}
+          handleSkillsChange={handleSkillsChange}
+        />
+
+        <div className="rounded-lg border border-blue-200 overflow-x-auto">
+          <Table>
+            <SkillsMatrixTableHeader />
+            <TableBody>
+              {filteredSkills.map((skill) => (
+                <SkillsMatrixRow key={skill.title} skill={skill} />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <Select defaultValue="10">
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="10 rows" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="modify">Modify As</SelectItem>
-              <SelectItem value="employee">Employee</SelectItem>
-              <SelectItem value="manager">Manager</SelectItem>
+              <SelectItem value="10">10 rows</SelectItem>
+              <SelectItem value="20">20 rows</SelectItem>
+              <SelectItem value="50">50 rows</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-white">Cancel</Button>
-          <Button>Save</Button>
-        </div>
-      </div>
-
-      <div className="border-t border-blue-200 pt-6">
-        <div className="flex gap-4 mb-6 items-center justify-between">
-          <div className="flex gap-2 flex-1">
-            <Select 
-              value={selectedCategory} 
-              onValueChange={setSelectedCategory}
-            >
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="specialized">Specialized Skills</SelectItem>
-                <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certification</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <div className="flex-1">
-              <SearchFilter
-                label=""
-                placeholder="Search skills..."
-                items={allSkillTitles}
-                selectedItems={selectedSkills}
-                onItemsChange={handleSkillsChange}
-                singleSelect={false}
-              />
-            </div>
-          </div>
           
-          <Button>Add Skill</Button>
+          <div className="flex items-center gap-2 ml-auto">
+            <span className="text-sm text-muted-foreground">
+              1-{filteredSkills.length} of {filteredSkills.length}
+            </span>
+            <Button variant="outline" size="icon" className="w-8 h-8">
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" className="w-8 h-8">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-      </div>
-
-      <div className="rounded-lg border border-blue-200 overflow-x-auto">
-        <Table>
-          <SkillsMatrixTableHeader />
-          <TableBody>
-            {filteredSkills.map((skill) => (
-              <SkillsMatrixRow key={skill.title} skill={skill} />
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="flex justify-between items-center">
-        <Select defaultValue="10">
-          <SelectTrigger className="w-[100px]">
-            <SelectValue placeholder="10 rows" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="10">10 rows</SelectItem>
-            <SelectItem value="20">20 rows</SelectItem>
-            <SelectItem value="50">50 rows</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        <div className="flex items-center gap-2 ml-auto">
-          <span className="text-sm text-muted-foreground">
-            1-{filteredSkills.length} of {filteredSkills.length}
-          </span>
-          <Button variant="outline" size="icon" className="w-8 h-8">
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" className="w-8 h-8">
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      </Card>
     </div>
   );
 };
