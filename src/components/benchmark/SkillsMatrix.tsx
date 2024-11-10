@@ -93,6 +93,7 @@ export const SkillsMatrix = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver>();
@@ -133,28 +134,19 @@ export const SkillsMatrix = () => {
         )
       );
 
-  const lastSkillElementRef = useCallback((node: HTMLElement | null) => {
-    if (loading) return;
-    if (observer.current) observer.current.disconnect();
-    
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        setPage(prevPage => {
-          const nextPage = prevPage + 1;
-          if (nextPage * 10 >= skills.length) {
-            setHasMore(false);
-            toast({
-              title: "End of list",
-              description: "You've reached the end of the skills list.",
-            });
-          }
-          return nextPage;
-        });
-      }
-    });
-    
-    if (node) observer.current.observe(node);
-  }, [loading, hasMore]);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
+    setPage(1);
+  };
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedSkills = filteredSkills.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredSkills.length / rowsPerPage);
 
   return (
     <div className="space-y-6">
@@ -167,8 +159,18 @@ export const SkillsMatrix = () => {
           setSelectedCategory={setSelectedCategory}
         />
 
-        <SkillsMatrixTable filteredSkills={filteredSkills} />
-        <SkillsMatrixPagination filteredSkills={filteredSkills} />
+        <SkillsMatrixTable filteredSkills={paginatedSkills} />
+        
+        <SkillsMatrixPagination 
+          rowsPerPage={rowsPerPage}
+          handleRowsPerPageChange={handleRowsPerPageChange}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          totalSkills={filteredSkills.length}
+          currentPage={page}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
       </Card>
     </div>
   );
