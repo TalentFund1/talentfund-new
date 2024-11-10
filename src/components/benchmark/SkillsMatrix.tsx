@@ -1,15 +1,12 @@
 import { useState, useRef, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableBody } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SkillsMatrixTableHeader } from "./SkillsMatrixTableHeader";
-import { SkillsMatrixRow } from "./SkillsMatrixRow";
 import { useToast } from "@/components/ui/use-toast";
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
+import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
+import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
+import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 
 const initialSkills = [
   {
@@ -93,7 +90,7 @@ const initialSkills = [
 
 export const SkillsMatrix = () => {
   const [skills, setSkills] = useState(initialSkills);
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -173,41 +170,8 @@ export const SkillsMatrix = () => {
           handleSkillsChange={handleSkillsChange}
         />
 
-        <div className="rounded-lg border border-blue-200 overflow-x-auto">
-          <Table>
-            <SkillsMatrixTableHeader />
-            <TableBody>
-              {filteredSkills.map((skill) => (
-                <SkillsMatrixRow key={skill.title} skill={skill} />
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-
-        <div className="flex justify-between items-center">
-          <Select defaultValue="10">
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="10 rows" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10 rows</SelectItem>
-              <SelectItem value="20">20 rows</SelectItem>
-              <SelectItem value="50">50 rows</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <div className="flex items-center gap-2 ml-auto">
-            <span className="text-sm text-muted-foreground">
-              1-{filteredSkills.length} of {filteredSkills.length}
-            </span>
-            <Button variant="outline" size="icon" className="w-8 h-8">
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="w-8 h-8">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+        <SkillsMatrixTable filteredSkills={filteredSkills} />
+        <SkillsMatrixPagination filteredSkills={filteredSkills} />
       </Card>
     </div>
   );

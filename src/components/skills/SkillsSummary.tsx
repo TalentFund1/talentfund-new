@@ -3,6 +3,7 @@ import { DetailedSkill, Certification } from "./types";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
+import { useSelectedSkills } from "./context/SelectedSkillsContext";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -15,7 +16,7 @@ export const SkillsSummary = () => {
     certifications: false,
   });
 
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -101,7 +102,6 @@ export const SkillsSummary = () => {
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
     
-    // Check if any selected skill is not in the existing skills lists
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
       ...commonSkills.map(s => s.name),
@@ -111,7 +111,6 @@ export const SkillsSummary = () => {
     const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
     
     if (newSkills.length > 0) {
-      // Add new skills to specialized skills with default values
       newSkills.forEach(skillName => {
         specializedSkills.push({
           name: skillName,
@@ -154,3 +153,4 @@ export const SkillsSummary = () => {
     </div>
   );
 };
+
