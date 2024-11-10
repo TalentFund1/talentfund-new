@@ -103,7 +103,8 @@ export const SkillsMatrix = () => {
     setOriginalSkills,
     toggleSkill,
     saveChanges,
-    cancelChanges
+    cancelChanges,
+    updateSkillLevel
   } = useSkillsStore();
 
   // Initialize skills on component mount
@@ -158,8 +159,8 @@ export const SkillsMatrix = () => {
     setPage(newPage);
   };
 
-  const handleRowsPerPageChange = (newRowsPerPage: number) => {
-    setRowsPerPage(newRowsPerPage);
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
     setPage(1);
   };
 
@@ -194,10 +195,11 @@ export const SkillsMatrix = () => {
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills} 
           onToggleSkill={toggleSkill}
+          onSkillLevelChange={updateSkillLevel}
         />
         
         <SkillsMatrixPagination 
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={String(rowsPerPage)}
           handleRowsPerPageChange={handleRowsPerPageChange}
           startIndex={startIndex}
           endIndex={endIndex}
