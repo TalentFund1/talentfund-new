@@ -46,7 +46,8 @@ export const SkillProfileMatrix = () => {
   };
 
   const handleSave = () => {
-    setSelectedSkills(Array.from(toggledSkills));
+    const newSelectedSkills = Array.from(toggledSkills);
+    setSelectedSkills(newSelectedSkills);
     setHasUnsavedChanges(false);
     toast({
       title: "Changes saved",
