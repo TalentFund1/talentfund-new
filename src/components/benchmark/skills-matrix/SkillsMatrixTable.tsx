@@ -1,5 +1,6 @@
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
+import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 
 interface SkillsMatrixTableProps {
   filteredSkills: Array<{
@@ -14,27 +15,19 @@ interface SkillsMatrixTableProps {
 
 export const SkillsMatrixTable = ({ filteredSkills, onSkillLevelChange }: SkillsMatrixTableProps) => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Skill Title</TableHead>
-          <TableHead>Subcategory</TableHead>
-          <TableHead>Company Skill</TableHead>
-          <TableHead>Skill Level</TableHead>
-          <TableHead>Confidence</TableHead>
-          <TableHead>Growth</TableHead>
-          <TableHead>Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {filteredSkills.map((skill) => (
-          <SkillsMatrixRow 
-            key={skill.title} 
-            skill={skill}
-            onLevelChange={(newLevel) => onSkillLevelChange(skill.title, newLevel)}
-          />
-        ))}
-      </TableBody>
-    </Table>
+    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden">
+      <Table>
+        <SkillsMatrixTableHeader />
+        <TableBody>
+          {filteredSkills.map((skill) => (
+            <SkillsMatrixRow 
+              key={skill.title} 
+              skill={skill}
+              onLevelChange={(newLevel) => onSkillLevelChange(skill.title, newLevel)}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };

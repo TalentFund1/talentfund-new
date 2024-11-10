@@ -10,12 +10,12 @@ import {
 export const SkillsMatrixTableHeader = () => {
   return (
     <TableHeader>
-      <TableRow className="hover:bg-transparent border-b border-gray-200 bg-[#F7F9FF]">
-        <TableHead className="w-[180px] border-r border-blue-200 py-2">Skill Title</TableHead>
-        <TableHead className="w-[220px] border-r border-blue-200 py-2">Subcategory</TableHead>
-        <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">Company Skill</TableHead>
-        <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">Skill Level</TableHead>
-        <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">
+      <TableRow className="hover:bg-transparent border-b border-[#CCDBFF] bg-[#F7F9FF]">
+        <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
+        <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
+        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Company Skill</TableHead>
+        <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Skill Level</TableHead>
+        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
             Confidence Score
             <TooltipProvider>
@@ -35,8 +35,8 @@ export const SkillsMatrixTableHeader = () => {
             </TooltipProvider>
           </div>
         </TableHead>
-        <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">
-          <div className="flex items-center justify-center gap-1 text-sm">
+        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
+          <div className="flex items-center justify-center gap-1">
             Projected Growth
             <TooltipProvider>
               <Tooltip>
@@ -55,8 +55,8 @@ export const SkillsMatrixTableHeader = () => {
             </TooltipProvider>
           </div>
         </TableHead>
-        <TableHead className="w-[100px] text-center py-2">
-          <div className="flex items-center justify-center gap-1 text-sm">
+        <TableHead className="w-[100px] text-center py-3 font-medium">
+          <div className="flex items-center justify-center gap-1">
             Appears In
             <ArrowUp className="h-4 w-4" />
           </div>
