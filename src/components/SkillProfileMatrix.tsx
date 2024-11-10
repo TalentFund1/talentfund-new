@@ -3,9 +3,9 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
+import { SkillProfileMatrixTable } from "@/components/skills/SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
-import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 
 const PAGE_SIZE = 10;
 
