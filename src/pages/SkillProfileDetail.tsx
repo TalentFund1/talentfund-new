@@ -12,14 +12,13 @@ import { CompetencyGraph } from "@/components/skills/CompetencyGraph";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
 import { Sidebar } from "@/components/Sidebar";
-import { TrackProvider } from "@/components/skills/context/TrackContext"; // Importing TrackProvider
+import { TrackProvider } from "@/components/skills/context/TrackContext";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
+  const [track, setTrack] = useState<"Technical" | "Managerial">("Technical");
 
-  // Map IDs to job titles
   const jobTitles: { [key: string]: string } = {
     "123": "AI Engineer",
     "124": "Backend Engineer",
@@ -27,9 +26,9 @@ const SkillProfileDetail = () => {
     "126": "Engineering Manager"
   };
 
-  const jobTitle = jobTitles[id || ""] || "AI Engineer"; // Default to AI Engineer if ID not found
+  const jobTitle = jobTitles[id || ""] || "AI Engineer";
 
-  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
+  const handleTrackChange = (newTrack: "Technical" | "Managerial") => {
     setTrack(newTrack);
   };
 

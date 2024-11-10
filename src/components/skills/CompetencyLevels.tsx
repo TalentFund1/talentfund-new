@@ -7,18 +7,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface CompetencyLevelsProps {
   selectedLevels: string[];
   onLevelSelect: (level: string) => void;
-  onTrackChange: (track: "Professional" | "Managerial") => void;
+  onTrackChange: (track: "Technical" | "Managerial") => void;
 }
 
 export const CompetencyLevels = ({ selectedLevels, onLevelSelect, onTrackChange }: CompetencyLevelsProps) => {
-  const [track, setTrack] = React.useState<"Professional" | "Managerial">(() => {
+  const [track, setTrack] = React.useState<"Technical" | "Managerial">(() => {
     const savedTrack = localStorage.getItem('selectedTrack');
-    return (savedTrack as "Professional" | "Managerial") || "Professional";
+    return (savedTrack as "Technical" | "Managerial") || "Technical";
   });
   
   const [selectedLevel, setSelectedLevel] = React.useState<string>(() => {
     const savedLevel = localStorage.getItem('selectedLevel');
-    return savedLevel || `AI Engineer: ${track === "Professional" ? "P1" : "M3"}`;
+    return savedLevel || `AI Engineer: ${track === "Technical" ? "P1" : "M3"}`;
   });
 
   useEffect(() => {
@@ -26,15 +26,15 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect, onTrackChange 
     localStorage.setItem('selectedLevel', selectedLevel);
   }, [track, selectedLevel]);
 
-  const levelPairs = track === "Professional" 
+  const levelPairs = track === "Technical" 
     ? [["P1", "P2"], ["P3", "P4"], ["P5", "P6"]]
     : [["M3", "M4"], ["M5", "M6"]];
 
-  const handleTrackChange = (value: "Professional" | "Managerial") => {
+  const handleTrackChange = (value: "Technical" | "Managerial") => {
     setTrack(value);
     onTrackChange(value);
     // Set default selection based on track
-    const defaultLevel = value === "Professional" ? "P1" : "M3";
+    const defaultLevel = value === "Technical" ? "P1" : "M3";
     setSelectedLevel(`AI Engineer: ${defaultLevel}`);
     handleLevelSelect(`AI Engineer: ${defaultLevel}`);
   };
@@ -54,7 +54,7 @@ export const CompetencyLevels = ({ selectedLevels, onLevelSelect, onTrackChange 
               <SelectValue placeholder="Select track" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Professional">Professional</SelectItem>
+              <SelectItem value="Technical">Technical</SelectItem>
               <SelectItem value="Managerial">Managerial</SelectItem>
             </SelectContent>
           </Select>
