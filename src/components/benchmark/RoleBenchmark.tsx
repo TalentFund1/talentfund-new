@@ -1,20 +1,25 @@
+import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Skill {
   name: string;
   level: "advanced" | "intermediate" | "beginner" | "unspecified";
 }
 
+const technicalLevels = ["P1", "P2", "P3", "P4", "P5", "P6"];
+const managerialLevels = ["M3", "M4", "M5", "M6"];
+
 const requiredSkills: Skill[] = [
-  { name: "React", level: "advanced" as const },
-  { name: "JavaScript", level: "advanced" as const },
-  { name: "GraphQL", level: "intermediate" as const },
-  { name: "HTML and CSS3", level: "advanced" as const },
-  { name: "IPA Integrations", level: "intermediate" as const }
+  { name: "React", level: "advanced" },
+  { name: "JavaScript", level: "advanced" },
+  { name: "GraphQL", level: "intermediate" },
+  { name: "HTML and CSS3", level: "advanced" },
+  { name: "IPA Integrations", level: "intermediate" }
 ].sort((a, b) => {
   const levelOrder = {
     advanced: 0,
@@ -26,9 +31,9 @@ const requiredSkills: Skill[] = [
 });
 
 const preferredSkills: Skill[] = [
-  { name: "UI/UX Design Principles", level: "intermediate" as const },
-  { name: "Communication", level: "intermediate" as const },
-  { name: "Angular", level: "beginner" as const }
+  { name: "UI/UX Design Principles", level: "intermediate" },
+  { name: "Communication", level: "intermediate" },
+  { name: "Angular", level: "beginner" }
 ].sort((a, b) => {
   const levelOrder = {
     advanced: 0,
@@ -43,8 +48,11 @@ const certifications = [
   { name: "Cybersecurity License" }
 ];
 
-export const RoleBenchmark = () => {
+const RoleBenchmark = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [roleType, setRoleType] = useState<"technical" | "managerial">("technical");
+  const [selectedRole, setSelectedRole] = useState("senior-frontend");
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -63,6 +71,17 @@ export const RoleBenchmark = () => {
     }
   };
 
+  const handleRoleTypeChange = (value: "technical" | "managerial") => {
+    setRoleType(value);
+    // Reset selected role when changing type
+    setSelectedRole(value === "technical" ? "senior-frontend" : "engineering-manager");
+    
+    toast({
+      title: "Role Type Updated",
+      description: `Switched to ${value === "technical" ? "Technical" : "Managerial"} track`,
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -77,15 +96,36 @@ export const RoleBenchmark = () => {
           </Button>
         </div>
         
-        <div className="w-full max-w-[800px]">
-          <Select defaultValue="senior-frontend">
+        <div className="flex items-center gap-4 w-full max-w-[800px]">
+          <Select value={roleType} onValueChange={handleRoleTypeChange}>
+            <SelectTrigger className="w-[200px] bg-white">
+              <SelectValue placeholder="Select Role Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="technical">Technical Track</SelectItem>
+              <SelectItem value="managerial">Managerial Track</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedRole} onValueChange={setSelectedRole}>
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Select Role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="senior-frontend">Senior Frontend Engineer: P4</SelectItem>
-              <SelectItem value="lead-frontend">Lead Frontend Engineer: P5</SelectItem>
-              <SelectItem value="principal">Principal Engineer: P6</SelectItem>
+              {roleType === "technical" ? (
+                <>
+                  <SelectItem value="senior-frontend">Senior Frontend Engineer: P4</SelectItem>
+                  <SelectItem value="lead-frontend">Lead Frontend Engineer: P5</SelectItem>
+                  <SelectItem value="principal">Principal Engineer: P6</SelectItem>
+                </>
+              ) : (
+                <>
+                  <SelectItem value="engineering-manager">Engineering Manager: M3</SelectItem>
+                  <SelectItem value="senior-manager">Senior Engineering Manager: M4</SelectItem>
+                  <SelectItem value="director">Engineering Director: M5</SelectItem>
+                  <SelectItem value="vp">VP of Engineering: M6</SelectItem>
+                </>
+              )}
             </SelectContent>
           </Select>
         </div>
@@ -163,3 +203,5 @@ export const RoleBenchmark = () => {
     </div>
   );
 };
+
+export default RoleBenchmark;
