@@ -1,15 +1,21 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Heart, HeartOff, HelpCircle } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
 import { useState } from "react";
 
 interface SkillLevelCellProps {
   initialLevel: string;
+  onLevelChange?: (newLevel: string) => void;
 }
 
-export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellProps) => {
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
+
+  const handleLevelChange = (newLevel: string) => {
+    setLevel(newLevel);
+    onLevelChange?.(newLevel);
+  };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -70,7 +76,7 @@ export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={level} onValueChange={setLevel}>
+        <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
