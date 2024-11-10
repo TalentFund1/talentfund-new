@@ -22,9 +22,14 @@ export const isCommonSkill = (skill: string): boolean => {
     "Java",
     "SQL",
     "Agile",
+    "Agile Leadership",
     "Communication",
     "Leadership",
     "Project Management",
+    "Team Management",
+    "Problem Solving",
+    "Strategic Planning",
+    "Cross-cultural Communication",
     "Team Management"
   ];
   
