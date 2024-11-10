@@ -1,31 +1,26 @@
 export const isSpecializedSkill = (skill: string): boolean => {
-  const specializations = [
+  const specializedSkills = [
     "Amazon Web Services",
-    "Machine Learning",
-    "Artificial Intelligence",
-    "Deep Learning",
-    "Computer Vision",
-    "Natural Language Processing",
+    "Python",
     "TensorFlow",
-    "PyTorch",
-    "Data Science",
-    "Neural Networks",
     "MongoDB",
-    "Kubernetes"
+    "Kubernetes",
+    "PyTorch",
+    "Natural Language Processing",
+    "Computer Vision"
   ];
   
-  return specializations.some(spec => 
-    skill.toLowerCase().includes(spec.toLowerCase())
+  return specializedSkills.some(spec => 
+    skill.toLowerCase() === spec.toLowerCase()
   );
 };
 
 export const isCommonSkill = (skill: string): boolean => {
   const commonSkills = [
-    "Python",
+    "Git",
     "JavaScript",
     "Java",
     "SQL",
-    "Git",
     "Agile",
     "Communication",
     "Leadership",
@@ -34,7 +29,7 @@ export const isCommonSkill = (skill: string): boolean => {
   ];
   
   return commonSkills.some(common => 
-    skill.toLowerCase().includes(common.toLowerCase())
+    skill.toLowerCase() === common.toLowerCase()
   ) && !isCertificationSkill(skill);
 };
 
