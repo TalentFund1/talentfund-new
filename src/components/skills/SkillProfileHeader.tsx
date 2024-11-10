@@ -53,7 +53,7 @@ export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: Ski
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <p className="font-medium">{jobTitle}</p>
+            <p className="font-medium">Artificial Engineer</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
