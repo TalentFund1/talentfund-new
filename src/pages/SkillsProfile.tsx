@@ -15,39 +15,10 @@ import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { technicalSkills, softSkills } from '@/components/skillsData';
-import { SkillProfileItem } from "@/components/skills/types";
 
 const SkillsProfile = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const allSkills = [...technicalSkills, ...softSkills];
-
-  // Sample skills data for the table
-  const skillsData: SkillProfileItem[] = [
-    {
-      title: "Software Development",
-      subcategory: "Engineering",
-      level: "advanced",
-      growth: "23%",
-      salary: "$180,000",
-      benchmarks: { J: true, B: true, O: true }
-    },
-    {
-      title: "Python",
-      subcategory: "Programming",
-      level: "intermediate",
-      growth: "25%",
-      salary: "$150,000",
-      benchmarks: { J: true, B: true, O: false }
-    }
-  ];
-
-  const handleSkillToggle = (skillTitle: string) => {
-    setSelectedSkills(prev => 
-      prev.includes(skillTitle) 
-        ? prev.filter(title => title !== skillTitle)
-        : [...prev, skillTitle]
-    );
-  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -127,11 +98,7 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
-            <SkillProfileTable 
-              skills={skillsData}
-              selectedSkills={selectedSkills}
-              onSkillToggle={handleSkillToggle}
-            />
+            <SkillProfileTable />
 
             <Separator className="my-4" />
             
