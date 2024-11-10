@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
@@ -11,6 +10,7 @@ import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
 import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { Sidebar } from "@/components/Sidebar";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
+import { MatrixSkillsProvider } from "@/components/benchmark/context/MatrixSkillsContext";
 
 const EmployeeProfile = () => {
   const navigate = useNavigate();
@@ -120,7 +120,9 @@ const EmployeeProfile = () => {
                 <Card className="p-8 bg-white">
                   <SkillsSummary />
                 </Card>
-                <SkillsMatrix />
+                <MatrixSkillsProvider>
+                  <SkillsMatrix />
+                </MatrixSkillsProvider>
               </TabsContent>
 
               <TabsContent value="benchmark" className="space-y-6">
@@ -128,7 +130,9 @@ const EmployeeProfile = () => {
                   <RoleBenchmark />
                 </Card>
                 <BenchmarkAnalysis />
-                <SkillsMatrix />
+                <MatrixSkillsProvider>
+                  <SkillsMatrix />
+                </MatrixSkillsProvider>
               </TabsContent>
             </Tabs>
           </SelectedSkillsProvider>
