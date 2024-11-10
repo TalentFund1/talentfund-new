@@ -21,15 +21,22 @@ export const SkillProfileMatrix = () => {
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
-  // Simulated skills data - in a real app, this would come from an API
+  // Updated skills data with more entries
   const allSkills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
-    { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
+    { title: "Software Development", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
     { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
-    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$181,536", benchmarks: { J: true, B: true, O: true } },
-    { title: "Scalability", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
+    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine Learning", level: "intermediate", growth: "26%", salary: "$181,536", benchmarks: { J: true, B: true, O: true } },
+    { title: "Scalability", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
     { title: "Software Engineering", subcategory: "Software Development Tools", level: "advanced", growth: "23%", salary: "$180,512", benchmarks: { J: true, B: true, O: true } },
-    { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
+    { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine Learning", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } },
+    { title: "Deep Learning", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "TensorFlow", subcategory: "Machine Learning Frameworks", level: "intermediate", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "26%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Docker", subcategory: "DevOps Tools", level: "intermediate", growth: "22%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Git", subcategory: "Version Control", level: "advanced", growth: "18%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "SQL", subcategory: "Database Management", level: "advanced", growth: "19%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "REST APIs", subcategory: "Web Development", level: "advanced", growth: "21%", salary: "$176,000", benchmarks: { J: true, B: true, O: true } }
   ];
 
   const handleToggleSkill = (skillTitle: string) => {
