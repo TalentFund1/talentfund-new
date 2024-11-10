@@ -4,21 +4,16 @@ import { SkillsMatrixRow } from "../SkillsMatrixRow";
 
 interface SkillsMatrixTableProps {
   filteredSkills: any[];
-  onStateChange?: (hasChanges: boolean) => void;
 }
 
-export const SkillsMatrixTable = ({ filteredSkills, onStateChange }: SkillsMatrixTableProps) => {
+export const SkillsMatrixTable = ({ filteredSkills }: SkillsMatrixTableProps) => {
   return (
     <div className="rounded-lg border border-blue-200 overflow-x-auto">
       <Table>
         <SkillsMatrixTableHeader />
         <TableBody>
           {filteredSkills.map((skill) => (
-            <SkillsMatrixRow 
-              key={skill.title} 
-              skill={skill}
-              onStateChange={onStateChange}
-            />
+            <SkillsMatrixRow key={skill.title} skill={skill} />
           ))}
         </TableBody>
       </Table>

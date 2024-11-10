@@ -1,44 +1,15 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, CircleDashed, Heart, HeartOff, HelpCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface SkillLevelCellProps {
   initialLevel: string;
-  onStateChange?: (hasChanges: boolean) => void;
 }
 
-export const SkillLevelCell = ({ initialLevel, onStateChange }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
-  const [originalLevel, setOriginalLevel] = useState(initialLevel.toLowerCase());
-  const [originalRequired, setOriginalRequired] = useState("required");
-
-  // Notify parent component of changes immediately when values change
-  useEffect(() => {
-    const hasChanges = level !== originalLevel || required !== originalRequired;
-    if (onStateChange) {
-      onStateChange(hasChanges);
-    }
-  }, [level, required, originalLevel, originalRequired, onStateChange]);
-
-  const handleLevelChange = (newLevel: string) => {
-    setLevel(newLevel);
-  };
-
-  const handleRequiredChange = (newRequired: string) => {
-    setRequired(newRequired);
-  };
-
-  const resetToOriginal = () => {
-    setLevel(originalLevel);
-    setRequired(originalRequired);
-  };
-
-  const updateOriginalValues = () => {
-    setOriginalLevel(level);
-    setOriginalRequired(required);
-  };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -99,7 +70,7 @@ export const SkillLevelCell = ({ initialLevel, onStateChange }: SkillLevelCellPr
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={level} onValueChange={handleLevelChange}>
+        <Select value={level} onValueChange={setLevel}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
@@ -138,7 +109,7 @@ export const SkillLevelCell = ({ initialLevel, onStateChange }: SkillLevelCellPr
           </SelectContent>
         </Select>
 
-        <Select value={required} onValueChange={handleRequiredChange}>
+        <Select value={required} onValueChange={setRequired}>
           <SelectTrigger 
             className={`text-xs px-2 py-1 font-normal w-full flex items-center justify-center min-h-[24px] border-x-2 border-b-2 rounded-b-md ${getRequirementStyles(required)}`}
           >
