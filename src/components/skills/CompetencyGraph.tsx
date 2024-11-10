@@ -1,6 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
@@ -10,24 +9,22 @@ import { CategorySection } from "./competency/CategorySection";
 import { categorizeSkills, isSpecializedSkill, isCommonSkill, isCertificationSkill } from "./competency/skillCategories";
 import { useCompetencyStore } from "./competency/CompetencyState";
 import { useToast } from "@/components/ui/use-toast";
+import { TrackSelection } from "./TrackSelection";
+import { useTrack } from "./context/TrackContext";
 
 interface CompetencyGraphProps {
-  track: "Professional" | "Managerial";
+  track?: "Technical" | "Managerial";
 }
 
-export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
+export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) => {
   const { toggledSkills } = useToggledSkills();
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     const savedCategory = localStorage.getItem('selectedCategory');
     return savedCategory || "all";
   });
-  const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
+  const { track } = useTrack();
   const { hasChanges, saveChanges, cancelChanges } = useCompetencyStore();
   const { toast } = useToast();
-
-  useEffect(() => {
-    setCurrentTrack(track);
-  }, [track]);
 
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
@@ -49,13 +46,19 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     });
   };
 
+  const getLevelsForTrack = () => {
+    return track === "Technical" 
+      ? ["P1", "P2", "P3", "P4", "P5", "P6"] 
+      : ["M3", "M4", "M5", "M6"];
+  };
+
   const getSkillsForCategory = () => {
     const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
-    return currentTrack === "Professional" ? categoryData?.professional : categoryData?.managerial;
+    return categoryData?.[track.toLowerCase()];
   };
 
   const skills = getSkillsForCategory() || {};
-  const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
+  const levels = getLevelsForTrack();
 
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
@@ -87,12 +90,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     return skills[level]?.find((s: { name: string; level: string; required: string; }) => s.name === skillName) || { level: "-", required: "-" };
   };
 
-  const handleTrackChange = (value: string) => {
-    if (value === "Professional" || value === "Managerial") {
-      setCurrentTrack(value);
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-4">
@@ -116,6 +113,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
       
       <div className="mb-6">
         <h3 className="text-lg font-medium text-foreground">AI Engineer</h3>
+        <TrackSelection />
       </div>
 
       <CategorySection 
