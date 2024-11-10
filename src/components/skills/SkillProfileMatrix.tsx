@@ -3,10 +3,10 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
+import { SkillProfileTable } from "./SkillProfileTable";
 import { useToast } from "@/components/ui/use-toast";
+import { SkillProfileItem } from "./types";
 
-// Initial page size
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
@@ -15,11 +15,12 @@ export const SkillProfileMatrix = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [originalSelectedSkills, setOriginalSelectedSkills] = useState<string[]>([]);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
-  // Simulated skills data - in a real app, this would come from an API
-  const allSkills = [
+  const allSkills: SkillProfileItem[] = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
     { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
     { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
@@ -29,8 +30,33 @@ export const SkillProfileMatrix = () => {
     { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
   ];
 
-  // Calculate the current page of skills
   const paginatedSkills = allSkills.slice(0, page * PAGE_SIZE);
+
+  const handleSkillToggle = (skillTitle: string) => {
+    setSelectedSkills(prev => 
+      prev.includes(skillTitle) 
+        ? prev.filter(title => title !== skillTitle)
+        : [...prev, skillTitle]
+    );
+  };
+
+  const handleSave = () => {
+    setOriginalSelectedSkills([...selectedSkills]);
+    toast({
+      title: "Changes saved",
+      description: "Your skill profile has been updated.",
+    });
+  };
+
+  const handleCancel = () => {
+    setSelectedSkills([...originalSelectedSkills]);
+    toast({
+      title: "Changes cancelled",
+      description: "Your changes have been reverted.",
+    });
+  };
+
+  const hasChanges = JSON.stringify(selectedSkills) !== JSON.stringify(originalSelectedSkills);
 
   const lastSkillElementRef = useCallback((node: HTMLElement | null) => {
     if (loading) return;
@@ -62,8 +88,19 @@ export const SkillProfileMatrix = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
-            <Button variant="outline">Cancel</Button>
-            <Button>Save</Button>
+            <Button 
+              variant="outline" 
+              onClick={handleCancel}
+              disabled={!hasChanges}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleSave}
+              disabled={!hasChanges}
+            >
+              Save
+            </Button>
           </div>
         </div>
 
@@ -111,9 +148,10 @@ export const SkillProfileMatrix = () => {
         </div>
 
         <div className="rounded-lg border border-border overflow-hidden">
-          <SkillProfileMatrixTable 
-            paginatedSkills={paginatedSkills} 
-            lastSkillElementRef={lastSkillElementRef}
+          <SkillProfileTable 
+            skills={paginatedSkills}
+            onSkillToggle={handleSkillToggle}
+            selectedSkills={selectedSkills}
           />
         </div>
       </Card>

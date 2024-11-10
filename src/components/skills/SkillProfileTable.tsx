@@ -1,79 +1,58 @@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
-import { ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Switch } from "@/components/ui/switch";
+import { SkillProfileItem } from "./types";
+import { useState, useEffect } from "react";
 
-export const SkillProfileTable = () => {
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  
-  const rows = [
-    { id: "1", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: "2", matches: "0", lastUpdated: "10/20/24" },
-    { id: "2", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: "3", matches: "4", lastUpdated: "10/20/24" },
-    { id: "3", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: "0", matches: "5", lastUpdated: "10/20/24" },
-    { id: "4", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: "2", matches: "5", lastUpdated: "10/20/24" }
-  ];
+interface SkillProfileTableProps {
+  skills: SkillProfileItem[];
+  onSkillToggle: (skillTitle: string) => void;
+  selectedSkills: string[];
+}
 
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedRows(rows.map(row => row.id));
-    } else {
-      setSelectedRows([]);
-    }
-  };
-
-  const handleSelectRow = (id: string) => {
-    setSelectedRows(prev => 
-      prev.includes(id) 
-        ? prev.filter(rowId => rowId !== id)
-        : [...prev, id]
-    );
-  };
-
+export const SkillProfileTable = ({ skills, onSkillToggle, selectedSkills }: SkillProfileTableProps) => {
   return (
     <Table>
       <TableHeader>
-        <TableRow className="hover:bg-transparent border-b border-border">
-          <TableHead className="w-[5%] h-12">
-            <input 
-              type="checkbox" 
-              className="rounded border-gray-300"
-              onChange={handleSelectAll}
-              checked={selectedRows.length === rows.length && rows.length > 0}
-            />
-          </TableHead>
-          <TableHead className="w-[22%] h-12">
-            <div className="flex items-center gap-1">
-              Role Name <ChevronDown className="h-4 w-4" />
-            </div>
-          </TableHead>
-          <TableHead className="w-[18%] h-12">Function</TableHead>
-          <TableHead className="w-[15%] text-center h-12">Skill Count</TableHead>
-          <TableHead className="w-[15%] text-center h-12">Employees</TableHead>
-          <TableHead className="w-[15%] text-center h-12">Profile Matches</TableHead>
-          <TableHead className="w-[10%] text-right whitespace-nowrap h-12">Last Updated</TableHead>
+        <TableRow className="hover:bg-transparent border-b border-border bg-[#F7F9FF]">
+          <TableHead className="w-[25%] h-12">Skill Title</TableHead>
+          <TableHead className="w-[25%] h-12">Subcategory</TableHead>
+          <TableHead className="w-[15%] text-center h-12">Projected Growth</TableHead>
+          <TableHead className="w-[15%] text-center h-12">Salary With Skill</TableHead>
+          <TableHead className="w-[20%] text-center h-12">Appears In</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {rows.map((row) => (
-          <TableRow key={row.id} className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+        {skills.map((skill) => (
+          <TableRow key={skill.title} className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
             <TableCell className="align-middle">
-              <input 
-                type="checkbox" 
-                className="rounded border-gray-300"
-                checked={selectedRows.includes(row.id)}
-                onChange={() => handleSelectRow(row.id)}
-              />
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={selectedSkills.includes(skill.title)}
+                  onCheckedChange={() => onSkillToggle(skill.title)}
+                />
+                <span>{skill.title}</span>
+              </div>
             </TableCell>
-            <TableCell className="align-middle font-medium">
-              <Link to={`/skills/${row.name.toLowerCase().replace(' ', '-')}`} className="text-primary hover:underline">
-                {row.name}
-              </Link>
+            <TableCell className="align-middle">{skill.subcategory}</TableCell>
+            <TableCell className="text-center align-middle">
+              <span className="inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                ↗ {skill.growth}
+              </span>
             </TableCell>
-            <TableCell className="align-middle">{row.function}</TableCell>
-            <TableCell className="text-center align-middle">{row.skillCount}</TableCell>
-            <TableCell className="text-center align-middle">{row.employees}</TableCell>
-            <TableCell className="text-center align-middle">{row.matches}</TableCell>
-            <TableCell className="text-right align-middle text-muted-foreground">{row.lastUpdated}</TableCell>
+            <TableCell className="text-center align-middle">{skill.salary}</TableCell>
+            <TableCell className="text-center align-middle">
+              <div className="flex justify-center gap-2">
+                {skill.benchmarks.J && (
+                  <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-800">J</span>
+                )}
+                {skill.benchmarks.B && (
+                  <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-800">B</span>
+                )}
+                {skill.benchmarks.O && (
+                  <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-800">O</span>
+                )}
+              </div>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
