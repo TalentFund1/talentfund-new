@@ -156,6 +156,11 @@ export const SkillsMatrix = () => {
         selectedCategory
       );
 
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
+    setPage(1);
+  };
+
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const paginatedSkills = filteredSkills.slice(startIndex, endIndex);
@@ -178,12 +183,11 @@ export const SkillsMatrix = () => {
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
-          onSkillLevelChange={handleSkillsChange}
         />
         
         <SkillsMatrixPagination 
           rowsPerPage={rowsPerPage}
-          handleRowsPerPageChange={setRowsPerPage}
+          handleRowsPerPageChange={handleRowsPerPageChange}
           startIndex={startIndex}
           endIndex={endIndex}
           totalSkills={filteredSkills.length}

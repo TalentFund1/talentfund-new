@@ -10,10 +10,9 @@ interface SkillsMatrixTableProps {
     growth: string;
     confidence: string;
   }>;
-  onSkillLevelChange: (newSelectedSkills: string[]) => void;
 }
 
-export const SkillsMatrixTable = ({ filteredSkills, onSkillLevelChange }: SkillsMatrixTableProps) => {
+export const SkillsMatrixTable = ({ filteredSkills }: SkillsMatrixTableProps) => {
   return (
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden">
       <Table>
@@ -23,7 +22,6 @@ export const SkillsMatrixTable = ({ filteredSkills, onSkillLevelChange }: Skills
             <SkillsMatrixRow 
               key={skill.title} 
               skill={skill}
-              onLevelChange={onSkillLevelChange}
             />
           ))}
         </TableBody>
