@@ -202,6 +202,31 @@ export const SkillsMatrix = () => {
     }
   };
 
+  const handleSave = () => {
+    saveChanges();
+    toast({
+      title: "Changes Saved",
+      description: "Your changes have been saved successfully.",
+    });
+  };
+
+  const handleCancel = () => {
+    cancelChanges();
+    toast({
+      title: "Changes Cancelled",
+      description: "Your changes have been discarded.",
+    });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
+    setPage(1);
+  };
+
   const filteredSkills = selectedSkills.length === 0
     ? filterSkillsByCategory(initialSkills, selectedCategory)
     : filterSkillsByCategory(
