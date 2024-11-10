@@ -11,7 +11,6 @@ import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
 import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { Sidebar } from "@/components/Sidebar";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
-import { MatrixSkillsProvider } from "@/components/benchmark/context/MatrixSkillsContext";
 
 const EmployeeProfile = () => {
   const navigate = useNavigate();
@@ -21,22 +20,23 @@ const EmployeeProfile = () => {
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex justify-between items-center mb-4">
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2 bg-white border-border hover:bg-background"
-              onClick={() => navigate('/employees')}
-            >
-              <ChevronLeft className="h-4 w-4" /> Back
-            </Button>
-            <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
-              <ChevronLeft className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
-              <span className="text-sm text-foreground">2/7</span>
-              <ChevronRight className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
+          <SelectedSkillsProvider>
+            <div className="flex justify-between items-center mb-4">
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2 bg-white border-border hover:bg-background"
+                onClick={() => navigate('/employees')}
+              >
+                <ChevronLeft className="h-4 w-4" /> Back
+              </Button>
+              <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
+                <ChevronLeft className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
+                <span className="text-sm text-foreground">2/7</span>
+                <ChevronRight className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
+              </div>
             </div>
-          </div>
 
-          <Card className="p-8 bg-white">
+            <Card className="p-8 bg-white">
               <div className="flex items-start justify-between mb-8">
                 <div className="flex gap-8">
                   <Avatar className="h-28 w-28 rounded-full border-4 border-border">
@@ -98,45 +98,40 @@ const EmployeeProfile = () => {
                   <p className="font-medium">1.9</p>
                 </div>
               </div>
-          </Card>
+            </Card>
 
-          <Tabs defaultValue="experience" className="w-full space-y-6">
-            <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
-              <TabsTrigger 
-                value="experience" 
-                className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-              >
-                Skills Summary
-              </TabsTrigger>
-              <TabsTrigger 
-                value="benchmark"
-                className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-              >
-                Role Benchmark
-              </TabsTrigger>
-            </TabsList>
+            <Tabs defaultValue="experience" className="w-full space-y-6">
+              <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
+                <TabsTrigger 
+                  value="experience" 
+                  className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                >
+                  Skills Summary
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="benchmark"
+                  className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                >
+                  Role Benchmark
+                </TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="experience" className="space-y-6">
-              <Card className="p-8 bg-white">
-                <SelectedSkillsProvider>
+              <TabsContent value="experience" className="space-y-6">
+                <Card className="p-8 bg-white">
                   <SkillsSummary />
-                </SelectedSkillsProvider>
-              </Card>
-              <MatrixSkillsProvider>
+                </Card>
                 <SkillsMatrix />
-              </MatrixSkillsProvider>
-            </TabsContent>
+              </TabsContent>
 
-            <TabsContent value="benchmark" className="space-y-6">
-              <Card className="p-8 bg-white">
-                <RoleBenchmark />
-              </Card>
-              <BenchmarkAnalysis />
-              <MatrixSkillsProvider>
+              <TabsContent value="benchmark" className="space-y-6">
+                <Card className="p-8 bg-white">
+                  <RoleBenchmark />
+                </Card>
+                <BenchmarkAnalysis />
                 <SkillsMatrix />
-              </MatrixSkillsProvider>
-            </TabsContent>
-          </Tabs>
+              </TabsContent>
+            </Tabs>
+          </SelectedSkillsProvider>
         </div>
       </div>
     </div>
