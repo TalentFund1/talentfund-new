@@ -73,67 +73,61 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
       <DialogTrigger asChild>
         <Button>Add Skill</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">Add New Skill</DialogTitle>
-          <DialogDescription className="text-gray-500">
+          <DialogTitle>Add New Skill</DialogTitle>
+          <DialogDescription>
             Add a new skill to your skills matrix. Select from available skills.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
-          <div className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label>Skill Name</Label>
+            <ComboboxDemo 
+              skills={skills.map(s => s.title)}
+              selected={selectedSkill}
+              onSelect={setSelectedSkill}
+            />
+          </div>
+          {selectedSkill && (
             <div className="space-y-2">
-              <Label htmlFor="level" className="text-sm font-medium">Initial Level</Label>
-              <Select value={level} onValueChange={setLevel}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="unspecified">Unspecified</SelectItem>
-                  <SelectItem value="beginner">Beginner</SelectItem>
-                  <SelectItem value="intermediate">Intermediate</SelectItem>
-                  <SelectItem value="advanced">Advanced</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Skill Name</Label>
-              <ComboboxDemo 
-                skills={skills.map(s => s.title)}
-                selected={selectedSkill}
-                onSelect={setSelectedSkill}
+              <Label>Subcategory</Label>
+              <Input
+                value={skills.find(s => s.title === selectedSkill)?.subcategory || ""}
+                disabled
+                className="bg-gray-100"
               />
             </div>
-
-            {selectedSkill && (
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Subcategory</Label>
-                <Input
-                  value={skills.find(s => s.title === selectedSkill)?.subcategory || ""}
-                  disabled
-                  className="bg-gray-50 border-gray-200"
-                />
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="skillType" className="text-sm font-medium">Skill Type</Label>
-              <Select value={skillType} onValueChange={setSkillType}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="unknown">Unknown</SelectItem>
-                  <SelectItem value="skill goal">Skill Goal</SelectItem>
-                  <SelectItem value="not interested">Not Interested</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          )}
+          <div className="space-y-2">
+            <Label htmlFor="skillType">Skill Type</Label>
+            <Select value={skillType} onValueChange={setSkillType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="unknown">Unknown</SelectItem>
+                <SelectItem value="skill goal">Skill Goal</SelectItem>
+                <SelectItem value="not interested">Not Interested</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          
-          <div className="flex justify-end">
-            <Button type="submit" className="bg-primary hover:bg-primary/90">Add Skill</Button>
+          <div className="space-y-2">
+            <Label htmlFor="level">Initial Level</Label>
+            <Select value={level} onValueChange={setLevel}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="unspecified">Unspecified</SelectItem>
+                <SelectItem value="beginner">Beginner</SelectItem>
+                <SelectItem value="intermediate">Intermediate</SelectItem>
+                <SelectItem value="advanced">Advanced</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="pt-4 flex justify-end">
+            <Button type="submit">Add Skill</Button>
           </div>
         </form>
       </DialogContent>
