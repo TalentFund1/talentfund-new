@@ -17,12 +17,9 @@ type SkillLevels = {
   [key: string]: Skill[];
 };
 
-export const CategoryCards = ({ selectedCategory, onCategoryChange, currentTrack = "Professional" }: CategoryCardsProps) => {
+export const CategoryCards = ({ selectedCategory, onCategoryChange, currentTrack }: CategoryCardsProps) => {
   const getSkillCount = (category: string) => {
-    if (!currentTrack) return 0;
-    
-    const trackKey = currentTrack.toLowerCase();
-    const categoryData = skillsByCategory[category]?.[trackKey] as SkillLevels | undefined;
+    const categoryData = skillsByCategory[category]?.[currentTrack.toLowerCase()] as SkillLevels | undefined;
     if (!categoryData) return 0;
 
     const uniqueSkills = new Set<string>();
@@ -36,7 +33,7 @@ export const CategoryCards = ({ selectedCategory, onCategoryChange, currentTrack
     { id: "all", name: "All Categories", count: getSkillCount("all") },
     { id: "specialized", name: "Specialized Skills", count: getSkillCount("specialized") },
     { id: "common", name: "Common Skills", count: getSkillCount("common") },
-    { id: "certification", name: "Certifications", count: getSkillCount("certification") } // Updated here
+    { id: "certification", name: "Certification", count: getSkillCount("certification") }
   ];
 
   return (
