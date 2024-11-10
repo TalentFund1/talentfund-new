@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -32,17 +32,10 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
   const { selectedSkills } = useSelectedSkills();
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [skillChanges, setSkillChanges] = useState<{ [key: string]: { level: string; required: string } }>(() => {
-    const savedChanges = localStorage.getItem('skillChanges');
-    return savedChanges ? JSON.parse(savedChanges) : {};
-  });
+  const [skillChanges, setSkillChanges] = useState<{ [key: string]: { level: string; required: string } }>({});
   const { toast } = useToast();
 
   const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
-
-  useEffect(() => {
-    localStorage.setItem('selectedCategory', selectedCategory);
-  }, [selectedCategory]);
 
   const getFilteredSkills = () => {
     const categorySkills = skillsByCategory[selectedCategory as keyof typeof skillsByCategory]?.[currentTrack.toLowerCase()] as SkillLevels | undefined;
@@ -58,11 +51,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const filteredSkills = getFilteredSkills();
 
   const getSkillLevelForTrack = (level: string, skillName: string) => {
-    // First check if there are saved changes for this skill
-    if (skillChanges[skillName]) {
-      return skillChanges[skillName];
-    }
-
     const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory]?.[currentTrack.toLowerCase()] as SkillLevels | undefined;
     const levelData = categoryData?.[level];
     const skillData = levelData?.find(skill => skill.name === skillName);
@@ -73,10 +61,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const handleTrackChange = (value: string) => {
     if (value === "Professional" || value === "Managerial") {
       setCurrentTrack(value);
-      // Clear skill changes when changing tracks
-      setSkillChanges({});
-      localStorage.removeItem('skillChanges');
-      setHasUnsavedChanges(false);
     }
   };
 
@@ -89,8 +73,9 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   };
 
   const handleSave = () => {
-    localStorage.setItem('skillChanges', JSON.stringify(skillChanges));
+    // Here you would typically save the changes to your backend
     setHasUnsavedChanges(false);
+    setSkillChanges({});
     toast({
       title: "Changes saved",
       description: "Your skill level changes have been saved successfully.",
@@ -98,9 +83,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   };
 
   const handleCancel = () => {
-    const savedChanges = localStorage.getItem('skillChanges');
-    setSkillChanges(savedChanges ? JSON.parse(savedChanges) : {});
     setHasUnsavedChanges(false);
+    setSkillChanges({});
     toast({
       title: "Changes cancelled",
       description: "Your skill level changes have been cancelled.",
