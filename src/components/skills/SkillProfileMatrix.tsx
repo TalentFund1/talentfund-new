@@ -80,7 +80,14 @@ export const SkillProfileMatrix = () => {
     } else if (skillType === "certification") {
       skills = allSkills.certifications;
     }
-    return skills;
+
+    // Sort skills to show saved ones first
+    return skills.sort((a, b) => {
+      const aIsSaved = toggledSkills.has(a.title);
+      const bIsSaved = toggledSkills.has(b.title);
+      if (aIsSaved === bIsSaved) return 0;
+      return aIsSaved ? -1 : 1;
+    });
   })();
 
   const paginatedSkills = filteredSkills.slice(0, page * PAGE_SIZE);
