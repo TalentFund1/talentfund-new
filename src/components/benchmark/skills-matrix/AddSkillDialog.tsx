@@ -23,7 +23,7 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
   const [open, setOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState("");
   const [level, setLevel] = useState("unspecified");
-  const [skillType, setSkillType] = useState("current"); // New state for skill type
+  const [skillType, setSkillType] = useState("unknown");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -54,7 +54,7 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
       subcategory: skillData.subcategory,
       level,
       growth: "0%",
-      confidence: skillType === "goal" ? "goal" : "n/a"
+      confidence: skillType
     });
 
     toast({
@@ -65,7 +65,7 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
     setOpen(false);
     setSelectedSkill("");
     setLevel("unspecified");
-    setSkillType("current");
+    setSkillType("unknown");
   };
 
   return (
@@ -106,8 +106,9 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="current">Current Skill</SelectItem>
-                <SelectItem value="goal">Skill Goal/Interest</SelectItem>
+                <SelectItem value="unknown">Unknown</SelectItem>
+                <SelectItem value="skill goal">Skill Goal</SelectItem>
+                <SelectItem value="not interested">Not Interested</SelectItem>
               </SelectContent>
             </Select>
           </div>
