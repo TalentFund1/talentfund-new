@@ -1,13 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface SkillsMatrixHeaderProps {
-  hasChanges: boolean;
-  onSave: () => void;
-  onCancel: () => void;
-}
-
-export const SkillsMatrixHeader = ({ hasChanges, onSave, onCancel }: SkillsMatrixHeaderProps) => {
+export const SkillsMatrixHeader = () => {
   return (
     <div className="flex justify-between items-center mb-6">
       <div className="flex items-center gap-4">
@@ -24,20 +18,8 @@ export const SkillsMatrixHeader = ({ hasChanges, onSave, onCancel }: SkillsMatri
         </Select>
       </div>
       <div className="flex items-center gap-3">
-        <Button 
-          variant="outline" 
-          className="bg-white"
-          onClick={onCancel}
-          disabled={!hasChanges}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={onSave}
-          disabled={!hasChanges}
-        >
-          Save
-        </Button>
+        <Button variant="outline" className="bg-white">Cancel</Button>
+        <Button>Save</Button>
       </div>
     </div>
   );

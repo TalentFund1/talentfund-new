@@ -11,7 +11,7 @@ export const SkillsMatrixTableHeader = () => {
   return (
     <TableHeader>
       <TableRow className="hover:bg-transparent border-b border-gray-200 bg-[#F7F9FF]">
-        <TableHead className="w-[180px] border-r border-blue-200 py-2 font-semibold text-[#1f2144]">Skill Title</TableHead>
+        <TableHead className="w-[180px] border-r border-blue-200 py-2">Skill Title</TableHead>
         <TableHead className="w-[220px] border-r border-blue-200 py-2">Subcategory</TableHead>
         <TableHead className="w-[120px] text-center border-r border-blue-200 py-2">Company Skill</TableHead>
         <TableHead className="w-[150px] text-center border-r border-blue-200 py-2">Skill Level</TableHead>
