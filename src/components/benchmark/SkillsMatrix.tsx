@@ -183,6 +183,7 @@ export const SkillsMatrix = () => {
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
+          onSkillLevelChange={handleSkillsChange}
         />
         
         <SkillsMatrixPagination 
