@@ -1,30 +1,16 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, Heart, CircleDashed, HeartOff, HelpCircle } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useState } from "react";
 
 interface SkillLevelCellProps {
   initialLevel: string;
-  skillTitle: string;
   onLevelChange?: (newLevel: string, requirement: string) => void;
 }
 
-export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellProps) => {
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
-  const { currentStates, originalStates } = useSkillsMatrixStore();
-
-  // Effect to handle state restoration on cancel
-  useEffect(() => {
-    const currentState = currentStates[skillTitle];
-    const originalState = originalStates[skillTitle];
-    
-    if (originalState) {
-      setLevel(originalState.level);
-      setRequired(originalState.requirement);
-    }
-  }, [currentStates, originalStates, skillTitle]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
