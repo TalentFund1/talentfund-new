@@ -1,8 +1,15 @@
 export const initialSkills = [
-  // Specialized Technical Skills
+  // Certifications
   {
-    title: "Quantum Computing",
-    subcategory: "Emerging Technologies",
+    title: "Certified Information Systems Security Professional (CISSP)",
+    subcategory: "Cybersecurity Certifications",
+    level: "advanced",
+    growth: "28%",
+    confidence: "high"
+  },
+  {
+    title: "AWS Certified Solutions Architect",
+    subcategory: "Cloud Certifications",
     level: "advanced",
     growth: "25%",
     confidence: "high"

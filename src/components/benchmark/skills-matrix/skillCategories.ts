@@ -11,8 +11,8 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'TensorFlow',
     'PyTorch',
     'Docker',
-    'JavaScript', // Added JavaScript
-    'Docker (Software)', // Added Docker with full name
+    'JavaScript',
+    'Docker (Software)',
     'Kubernetes',
     'Cloud Architecture',
     'Data Engineering',
@@ -33,6 +33,7 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Azure Solutions Architect',
     'Professional Scrum',
     'CISSP',
+    'Certified Information Systems Security Professional',
     'CKA',
     'Google Cloud Professional',
     'CompTIA Security+',
