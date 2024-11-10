@@ -20,24 +20,22 @@ export const SkillsMatrixFilters = ({
   return (
     <div className="flex justify-between items-start gap-4 mb-4">
       <div className="flex gap-4 flex-1">
-        <div className="-mt-1">
-          <Select 
-            value={selectedCategory} 
-            onValueChange={setSelectedCategory}
-          >
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="specialized">Specialized Skills</SelectItem>
-              <SelectItem value="common">Common Skills</SelectItem>
-              <SelectItem value="certification">Certification</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <Select 
+          value={selectedCategory} 
+          onValueChange={setSelectedCategory}
+        >
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="specialized">Specialized Skills</SelectItem>
+            <SelectItem value="common">Common Skills</SelectItem>
+            <SelectItem value="certification">Certification</SelectItem>
+          </SelectContent>
+        </Select>
 
-        <div className="flex-1 -mt-1">
+        <div className="flex-1 -mt-4">
           <SearchFilter
             label=""
             placeholder="Search skills..."
@@ -49,9 +47,7 @@ export const SkillsMatrixFilters = ({
         </div>
       </div>
       
-      <div className="-mt-1">
-        <Button>Add Skill</Button>
-      </div>
+      <Button>Add Skill</Button>
     </div>
   );
 };
