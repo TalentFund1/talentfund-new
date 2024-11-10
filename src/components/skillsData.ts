@@ -1,3 +1,4 @@
+// Specialized skills for technical roles
 export const specializedSkills = [
   // Programming Languages & Frameworks
   "JavaScript",
@@ -35,6 +36,7 @@ export const specializedSkills = [
   "GraphQL"
 ];
 
+// Common skills that apply across roles
 export const commonSkills = [
   // Web Development Basics
   "HTML5",
@@ -96,6 +98,7 @@ export const commonSkills = [
   "Cross-cultural Communication"
 ];
 
+// Certification skills
 export const certificationSkills = [
   "AWS Certified Solutions Architect",
   "AWS Certified Developer",
@@ -105,12 +108,20 @@ export const certificationSkills = [
   "Cybersecurity License"
 ];
 
+// All skills combined
 export const allSkills = [
   ...specializedSkills,
   ...commonSkills,
   ...certificationSkills
 ];
 
+// Technical skills (for backward compatibility)
+export const technicalSkills = specializedSkills;
+
+// Soft skills (for backward compatibility)
+export const softSkills = commonSkills;
+
+// Categorize skills
 export const categorizeSkill = (skill: string) => {
   if (specializedSkills.includes(skill)) return "specialized";
   if (commonSkills.includes(skill)) return "common";
