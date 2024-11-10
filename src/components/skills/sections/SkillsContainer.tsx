@@ -39,7 +39,7 @@ export const SkillsContainer = ({
     ));
   };
 
-  const renderSeeMoreButton = (skillCount: number, sectionType: keyof typeof expandedSections, isExpanded: boolean) => {
+  const renderSeeMoreButton = (skillCount: number, sectionType: string, isExpanded: boolean) => {
     if (skillCount > INITIAL_VISIBLE_COUNT) {
       return (
         <div className="flex justify-start mt-4">
@@ -63,7 +63,7 @@ export const SkillsContainer = ({
   return (
     <div className="space-y-6">
       <SkillSection title="Specialized Skills" count={specializedSkills.length}>
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2">
           {renderDetailedSkills(specializedSkills, expandedSections.specialized)}
         </div>
         {renderSeeMoreButton(specializedSkills.length, 'specialized', expandedSections.specialized)}
