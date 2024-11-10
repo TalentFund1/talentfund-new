@@ -1,7 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
-import { SkillLevelCell } from "./SkillLevelCell";
 import { Switch } from "@/components/ui/switch";
+import { SkillLevelCell } from "./SkillLevelCell";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -10,7 +10,7 @@ interface SkillsMatrixRowProps {
     level: string;
     growth: string;
     confidence: string;
-    isToggled?: boolean;
+    selected?: boolean;
   };
   onLevelChange?: (skillTitle: string, newLevel: string, requirement: string) => void;
   onToggleSkill?: (skillTitle: string) => void;
@@ -42,12 +42,12 @@ export const SkillsMatrixRow = ({ skill, onLevelChange, onToggleSkill }: SkillsM
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">
-        <div className="flex items-center justify-between gap-2">
-          <span>{skill.title}</span>
-          <Switch
-            checked={skill.isToggled}
+        <div className="flex items-center gap-2">
+          <Switch 
+            checked={skill.selected} 
             onCheckedChange={() => onToggleSkill?.(skill.title)}
           />
+          {skill.title}
         </div>
       </TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
