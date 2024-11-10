@@ -6,24 +6,25 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillLevelCellProps {
   initialLevel: string;
+  skillTitle: string;
   onLevelChange?: (newLevel: string, requirement: string) => void;
 }
 
-export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
   const { currentStates, originalStates } = useSkillsMatrixStore();
 
   // Effect to handle state restoration on cancel
   useEffect(() => {
-    const currentState = currentStates[initialLevel];
-    const originalState = originalStates[initialLevel];
+    const currentState = currentStates[skillTitle];
+    const originalState = originalStates[skillTitle];
     
     if (originalState) {
       setLevel(originalState.level);
       setRequired(originalState.requirement);
     }
-  }, [currentStates, originalStates, initialLevel]);
+  }, [currentStates, originalStates, skillTitle]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);

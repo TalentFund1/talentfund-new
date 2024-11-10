@@ -61,6 +61,7 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
       </TableCell>
       <SkillLevelCell 
         initialLevel={currentState.level} 
+        skillTitle={skill.title}
         onLevelChange={handleLevelChange}
       />
       <TableCell className="text-center border-r border-blue-200 py-2">
