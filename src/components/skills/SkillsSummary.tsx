@@ -23,7 +23,21 @@ export const SkillsSummary = () => {
 
   const specializedSkills = [
     { name: "Quantum Computing", level: "advanced", isSkillGoal: true },
-    { name: "Robotics Programming", level: "advanced", isSkillGoal: true }
+    { name: "Robotics Programming", level: "advanced", isSkillGoal: true },
+    { name: "5G Network Architecture", level: "intermediate", isSkillGoal: false },
+    { name: "Edge Computing", level: "intermediate", isSkillGoal: true },
+    { name: "Blockchain Development", level: "advanced", isSkillGoal: true },
+    { name: "DevSecOps", level: "advanced", isSkillGoal: true },
+    { name: "System Architecture", level: "advanced", isSkillGoal: true },
+    { name: "Data Engineering", level: "intermediate", isSkillGoal: false },
+    { name: "IoT Development", level: "intermediate", isSkillGoal: true },
+    { name: "Artificial Intelligence", level: "advanced", isSkillGoal: true },
+    { name: "Conversational AI", level: "advanced", isSkillGoal: true },
+    { name: "Deep Learning", level: "intermediate", isSkillGoal: false },
+    { name: "Machine Learning", level: "intermediate", isSkillGoal: true },
+    { name: "Docker (Software)", level: "intermediate", isSkillGoal: true },
+    { name: "JavaScript", level: "advanced", isSkillGoal: true },
+    { name: "Amazon Web Services", level: "advanced", isSkillGoal: true }
   ].sort((a, b) => {
     const levelOrder = {
       advanced: 0,
@@ -36,7 +50,13 @@ export const SkillsSummary = () => {
 
   const commonSkills = [
     { name: "Technical Writing", level: "advanced", isSkillGoal: true },
-    { name: "Agile Project Management", level: "advanced", isSkillGoal: true }
+    { name: "Agile Project Management", level: "advanced", isSkillGoal: true },
+    { name: "Business Analysis", level: "intermediate", isSkillGoal: true },
+    { name: "Risk Management", level: "intermediate", isSkillGoal: false },
+    { name: "Problem Solving", level: "advanced", isSkillGoal: true },
+    { name: "Cross-cultural Communication", level: "intermediate", isSkillGoal: true },
+    { name: "Team Management", level: "advanced", isSkillGoal: true },
+    { name: "Strategic Planning", level: "intermediate", isSkillGoal: true }
   ].sort((a, b) => {
     const levelOrder = {
       advanced: 0,
