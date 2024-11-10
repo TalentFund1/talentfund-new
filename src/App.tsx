@@ -8,6 +8,9 @@ import Index from "./pages/Index";
 import SkillsProfile from "./pages/SkillsProfile";
 import Employees from "./pages/Employees";
 import EmployeeProfile from "./pages/EmployeeProfile";
+import VictorProfile from "./pages/VictorProfile";
+import JennieProfile from "./pages/JennieProfile";
+import SuzProfile from "./pages/SuzProfile";
 import SkillProfileDetail from "./pages/SkillProfileDetail";
 import MarketData from "./pages/MarketData";
 import TalentMarketplace from "./pages/TalentMarketplace";
@@ -26,7 +29,10 @@ const App = () => (
             <Route path="/skills" element={<SkillsProfile />} />
             <Route path="/skills/:id" element={<SkillProfileDetail />} />
             <Route path="/employees" element={<Employees />} />
-            <Route path="/employee-profile" element={<EmployeeProfile />} />
+            <Route path="/employee/anna-vyselva-123" element={<EmployeeProfile />} />
+            <Route path="/employee/victor-smith-124" element={<VictorProfile />} />
+            <Route path="/employee/jennie-richards-125" element={<JennieProfile />} />
+            <Route path="/employee/suz-manu-126" element={<SuzProfile />} />
             <Route path="/market" element={<MarketData />} />
             <Route path="/marketplace" element={<TalentMarketplace />} />
           </Routes>
