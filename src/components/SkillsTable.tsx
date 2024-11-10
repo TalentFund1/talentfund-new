@@ -120,6 +120,66 @@ const skills = [
     subcategory: "Analytics",
     level: "Intermediate",
     growth: "21%"
+  },
+  {
+    title: "React Native",
+    subcategory: "Mobile Development",
+    level: "Advanced",
+    growth: "25%"
+  },
+  {
+    title: "System Design",
+    subcategory: "Software Architecture",
+    level: "Advanced",
+    growth: "21%"
+  },
+  {
+    title: "GraphQL",
+    subcategory: "API Development",
+    level: "Intermediate",
+    growth: "24%"
+  },
+  {
+    title: "DevOps",
+    subcategory: "Development Operations",
+    level: "Advanced",
+    growth: "28%"
+  },
+  {
+    title: "Cybersecurity",
+    subcategory: "Security",
+    level: "Advanced",
+    growth: "30%"
+  },
+  {
+    title: "Data Engineering",
+    subcategory: "Data Management",
+    level: "Intermediate",
+    growth: "26%"
+  },
+  {
+    title: "UI/UX Design",
+    subcategory: "Design",
+    level: "Intermediate",
+    growth: "22%"
+  },
+  {
+    title: "Microservices",
+    subcategory: "Software Architecture",
+    level: "Advanced",
+    growth: "27%"
+  },
+  {
+    title: "Flutter",
+    subcategory: "Mobile Development",
+    level: "Beginner",
+    growth: "23%"
+  },
+  {
+    title: "Blockchain",
+    subcategory: "Distributed Systems",
+    level: "Intermediate",
+    growth: "29%"
   }
 ];
 
