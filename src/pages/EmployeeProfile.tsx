@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
 import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
@@ -12,8 +12,32 @@ import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { Sidebar } from "@/components/Sidebar";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
 
+// Mock data - in a real app this would come from an API
+const employeeData = {
+  "123": {
+    name: "Anna Vyselva",
+    role: "Frontend Developer: P4",
+    location: "Toronto, ON",
+    department: "Engineering",
+    office: "Toronto",
+    category: "Full-time",
+    manager: "Sarah Chen",
+    startDate: "2024-01-01",
+    termDate: "-",
+    tenure: "1.9",
+    imageUrl: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=96&h=96"
+  }
+};
+
 const EmployeeProfile = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  
+  const employee = employeeData[id as keyof typeof employeeData];
+
+  if (!employee) {
+    return <div>Employee not found</div>;
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -41,22 +65,22 @@ const EmployeeProfile = () => {
                 <div className="flex gap-8">
                   <Avatar className="h-28 w-28 rounded-full border-4 border-border">
                     <img 
-                      src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=96&h=96" 
-                      alt="Anna Vyselva"
+                      src={employee.imageUrl}
+                      alt={employee.name}
                       className="object-cover"
                     />
                   </Avatar>
                   <div className="space-y-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-3">
-                        <h1 className="text-2xl font-bold text-foreground">Anna Vyselva</h1>
-                        <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: 123</span>
+                        <h1 className="text-2xl font-bold text-foreground">{employee.name}</h1>
+                        <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: {id}</span>
                       </div>
-                      <h2 className="text-lg font-medium text-foreground/90">Frontend Developer: P4</h2>
+                      <h2 className="text-lg font-medium text-foreground/90">{employee.role}</h2>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <MapPin className="h-4 w-4" />
-                      <span>Toronto, ON</span>
+                      <span>{employee.location}</span>
                     </div>
                   </div>
                 </div>
@@ -71,31 +95,31 @@ const EmployeeProfile = () => {
               <div className="grid grid-cols-4 gap-8">
                 <div className="space-y-1.5">
                   <span className="text-sm text-muted-foreground">Department</span>
-                  <p className="font-medium">Engineering</p>
+                  <p className="font-medium">{employee.department}</p>
                 </div>
                 <div className="space-y-1.5">
                   <span className="text-sm text-muted-foreground">Office</span>
-                  <p className="font-medium">Toronto</p>
+                  <p className="font-medium">{employee.office}</p>
                 </div>
                 <div className="space-y-1.5">
                   <span className="text-sm text-muted-foreground">Category</span>
-                  <p className="font-medium">Full-time</p>
+                  <p className="font-medium">{employee.category}</p>
                 </div>
                 <div className="space-y-1.5">
                   <span className="text-sm text-muted-foreground">Manager</span>
-                  <p className="font-medium">Sarah Chen</p>
+                  <p className="font-medium">{employee.manager}</p>
                 </div>
                 <div className="space-y-1.5">
                   <span className="text-sm text-muted-foreground">Start Date</span>
-                  <p className="font-medium">2024-01-01</p>
+                  <p className="font-medium">{employee.startDate}</p>
                 </div>
                 <div className="space-y-1.5">
                   <span className="text-sm text-muted-foreground">Term Date</span>
-                  <p className="font-medium">-</p>
+                  <p className="font-medium">{employee.termDate}</p>
                 </div>
                 <div className="space-y-1.5">
                   <span className="text-sm text-muted-foreground">Tenure (Years)</span>
-                  <p className="font-medium">1.9</p>
+                  <p className="font-medium">{employee.tenure}</p>
                 </div>
               </div>
             </Card>
