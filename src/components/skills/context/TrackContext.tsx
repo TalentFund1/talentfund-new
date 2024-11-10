@@ -11,10 +11,10 @@ interface TrackContextType {
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
 
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
-  const [tracks, setTracks] = useState<Record<string, "Professional" | "Managerial">(() => {
+  const [tracks, setTracks] = useState<Record<string, "Professional" | "Managerial">>(() => {
     const savedTracks = localStorage.getItem('roleTracks');
     return savedTracks ? JSON.parse(savedTracks) : {};
-  }));
+  });
   
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
