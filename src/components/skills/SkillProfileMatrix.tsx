@@ -4,15 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
-import { useSkills } from "./context/SkillsContext";
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useRef, useState, useEffect } from "react";
-import { CategoryCards } from "./competency/CategoryCards";
 
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
-  const { savedSkills, setSavedSkills, selectedCategory, setSelectedCategory } = useSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const [sortBy, setSortBy] = useState("benchmark");
+  const [skillType, setSkillType] = useState("all");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -54,36 +54,37 @@ export const SkillProfileMatrix = () => {
   };
 
   const handleToggleSkill = (skillTitle: string) => {
-    const newSavedSkills = new Set(savedSkills);
-    if (newSavedSkills.has(skillTitle)) {
-      newSavedSkills.delete(skillTitle);
+    const newToggledSkills = new Set(toggledSkills);
+    if (newToggledSkills.has(skillTitle)) {
+      newToggledSkills.delete(skillTitle);
     } else {
-      newSavedSkills.add(skillTitle);
+      newToggledSkills.add(skillTitle);
     }
-    setSavedSkills(newSavedSkills);
+    setToggledSkills(newToggledSkills);
     setIsDirty(true);
     
     toast({
       title: "Skill Updated",
-      description: `${skillTitle} has been ${newSavedSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
+      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
     });
   };
 
   const filteredSkills = (() => {
     let skills = [];
-    if (selectedCategory === "specialized") {
-      skills = allSkills.specialized;
-    } else if (selectedCategory === "common") {
-      skills = allSkills.common;
-    } else if (selectedCategory === "certification") {
-      skills = allSkills.certifications;
-    } else {
+    if (skillType === "all") {
       skills = [...allSkills.specialized, ...allSkills.common, ...allSkills.certifications];
+    } else if (skillType === "specialized") {
+      skills = allSkills.specialized;
+    } else if (skillType === "common") {
+      skills = allSkills.common;
+    } else if (skillType === "certification") {
+      skills = allSkills.certifications;
     }
 
+    // Sort skills to show saved ones first
     return skills.sort((a, b) => {
-      const aIsSaved = savedSkills.has(a.title);
-      const bIsSaved = savedSkills.has(b.title);
+      const aIsSaved = toggledSkills.has(a.title);
+      const bIsSaved = toggledSkills.has(b.title);
       if (aIsSaved === bIsSaved) return 0;
       return aIsSaved ? -1 : 1;
     });
@@ -121,7 +122,7 @@ export const SkillProfileMatrix = () => {
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
             <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {savedSkills.size}
+              {toggledSkills.size}
             </span>
           </div>
           <Button>Add Skill</Button>
@@ -129,22 +130,17 @@ export const SkillProfileMatrix = () => {
 
         <Separator className="my-4" />
 
-        <CategoryCards 
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-        />
-
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <Select value={skillType} onValueChange={setSkillType}>
               <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="Categories" />
+                <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="specialized">Specialized Skills</SelectItem>
                 <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certifications</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
               </SelectContent>
             </Select>
 
@@ -165,7 +161,7 @@ export const SkillProfileMatrix = () => {
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
             paginatedSkills={paginatedSkills}
-            toggledSkills={savedSkills}
+            toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
           />
         </div>
