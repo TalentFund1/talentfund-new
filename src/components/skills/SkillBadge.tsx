@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { BaseSkill, DetailedSkill } from "./types";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 interface SkillBadgeProps {
   skill: BaseSkill;
@@ -10,6 +11,22 @@ interface SkillBadgeProps {
 }
 
 export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: SkillBadgeProps) => {
+  const { currentStates } = useSkillsMatrixStore();
+  const skillState = currentStates[skill.name];
+
+  const getLevelColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case "advanced":
+        return "bg-primary-accent";
+      case "intermediate":
+        return "bg-primary-icon";
+      case "beginner":
+        return "bg-[#008000]";
+      default:
+        return "bg-gray-300";
+    }
+  };
+
   return (
     <Badge 
       key={skill.name} 
@@ -17,15 +34,12 @@ export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: Ski
       className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
     >
       {skill.name}
-      {showLevel && (
+      {(showLevel || skillState) && (
         <div className="flex items-center gap-1.5">
           <div className={`h-2 w-2 rounded-full ${
-            level === "advanced" ? "bg-primary-accent" :
-            level === "intermediate" ? "bg-primary-icon" :
-            level === "beginner" ? "bg-[#008000]" :
-            "bg-gray-300"
+            getLevelColor(skillState?.level || level || "unspecified")
           }`} />
-          {isSkillGoal && (
+          {(isSkillGoal || skillState?.requirement === 'required') && (
             <Heart className="w-3 h-3 text-[#1f2144]" />
           )}
         </div>
