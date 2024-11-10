@@ -165,9 +165,6 @@ export const SkillsMatrix = () => {
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
-          allSkillTitles={allSkillTitles}
-          selectedSkills={selectedSkills}
-          handleSkillsChange={handleSkillsChange}
         />
 
         <SkillsMatrixTable filteredSkills={filteredSkills} />
