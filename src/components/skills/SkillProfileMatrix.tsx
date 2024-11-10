@@ -39,20 +39,20 @@ export const SkillProfileMatrix = () => {
     { title: "Data Science", subcategory: "Analytics", level: "intermediate", growth: "21%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
     
     // New Technical Skills
-    { title: "GraphQL", subcategory: "API Development", level: "intermediate", growth: "25%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } },
-    { title: "Rust", subcategory: "Programming Languages", level: "intermediate", growth: "30%", salary: "$195,000", benchmarks: { J: true, B: true, O: true } },
-    { title: "Blockchain", subcategory: "Distributed Systems", level: "beginner", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
-    { title: "Cybersecurity", subcategory: "Security", level: "advanced", growth: "27%", salary: "$198,000", benchmarks: { J: true, B: true, O: true } },
-    
-    // Soft Skills
-    { title: "Project Management", subcategory: "Leadership", level: "advanced", growth: "15%", salary: "$160,000", benchmarks: { J: true, B: true, O: true } },
-    { title: "Team Leadership", subcategory: "Leadership", level: "intermediate", growth: "18%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
-    { title: "Communication", subcategory: "Interpersonal Skills", level: "advanced", growth: "12%", salary: "$155,000", benchmarks: { J: true, B: true, O: true } },
-    
-    // Certifications
-    { title: "AWS Solutions Architect", subcategory: "Cloud Certifications", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
-    { title: "Google Cloud Professional", subcategory: "Cloud Certifications", level: "intermediate", growth: "22%", salary: "$180,000", benchmarks: { J: true, B: true, O: true } },
-    { title: "Certified Scrum Master", subcategory: "Agile Certifications", level: "intermediate", growth: "15%", salary: "$150,000", benchmarks: { J: true, B: true, O: true } }
+    { title: "Docker Compose", subcategory: "Container Orchestration", level: "intermediate", growth: "19%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "FastAPI", subcategory: "Web Frameworks", level: "intermediate", growth: "28%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Apache Spark", subcategory: "Big Data", level: "advanced", growth: "24%", salary: "$192,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Vue.js", subcategory: "Frontend Frameworks", level: "intermediate", growth: "20%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } },
+
+    // New Soft Skills
+    { title: "Problem Solving", subcategory: "Critical Thinking", level: "advanced", growth: "14%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Agile Leadership", subcategory: "Project Management", level: "advanced", growth: "16%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Cross-cultural Communication", subcategory: "Interpersonal Skills", level: "intermediate", growth: "13%", salary: "$156,000", benchmarks: { J: true, B: true, O: true } },
+
+    // New Certifications
+    { title: "Azure Solutions Architect", subcategory: "Cloud Certifications", level: "advanced", growth: "21%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Kubernetes Administrator (CKA)", subcategory: "Container Certifications", level: "advanced", growth: "23%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Professional Agile Leadership", subcategory: "Agile Certifications", level: "intermediate", growth: "17%", salary: "$155,000", benchmarks: { J: true, B: true, O: true } }
   ];
 
   const handleToggleSkill = (skillTitle: string) => {
@@ -113,7 +113,7 @@ export const SkillProfileMatrix = () => {
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
-            paginatedSkills={allSkills.slice(0, page * PAGE_SIZE)}
+            paginatedSkills={paginatedSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
           />
