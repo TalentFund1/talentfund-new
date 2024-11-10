@@ -96,8 +96,30 @@ export const SkillsMatrix = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
+
+  const handleStateChange = (hasChanges: boolean) => {
+    setHasUnsavedChanges(hasChanges);
+  };
+
+  const handleSave = () => {
+    // Here you would typically save changes to your backend
+    setHasUnsavedChanges(false);
+    toast({
+      title: "Changes saved",
+      description: "Your changes have been successfully saved.",
+    });
+  };
+
+  const handleCancel = () => {
+    setHasUnsavedChanges(false);
+    toast({
+      title: "Changes cancelled",
+      description: "Your changes have been discarded.",
+    });
+  };
 
   const allSkillTitles = skills.map(skill => skill.title);
 
@@ -151,7 +173,11 @@ export const SkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <SkillsMatrixHeader />
+        <SkillsMatrixHeader 
+          hasChanges={hasUnsavedChanges}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
         <Separator className="my-4" />
         
         <SkillsMatrixFilters 
@@ -159,7 +185,10 @@ export const SkillsMatrix = () => {
           setSelectedCategory={setSelectedCategory}
         />
 
-        <SkillsMatrixTable filteredSkills={paginatedSkills} />
+        <SkillsMatrixTable 
+          filteredSkills={paginatedSkills} 
+          onStateChange={handleStateChange}
+        />
         
         <SkillsMatrixPagination 
           rowsPerPage={rowsPerPage}

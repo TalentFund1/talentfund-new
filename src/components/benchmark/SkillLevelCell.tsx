@@ -1,15 +1,42 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, CircleDashed, Heart, HeartOff, HelpCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface SkillLevelCellProps {
   initialLevel: string;
+  onStateChange?: (hasChanges: boolean) => void;
 }
 
-export const SkillLevelCell = ({ initialLevel }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ initialLevel, onStateChange }: SkillLevelCellProps) => {
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
+  const [originalLevel, setOriginalLevel] = useState(initialLevel.toLowerCase());
+  const [originalRequired, setOriginalRequired] = useState("required");
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  useEffect(() => {
+    if (onStateChange) {
+      onStateChange(hasUnsavedChanges);
+    }
+  }, [hasUnsavedChanges, onStateChange]);
+
+  useEffect(() => {
+    const hasChanges = level !== originalLevel || required !== originalRequired;
+    setHasUnsavedChanges(hasChanges);
+  }, [level, required, originalLevel, originalRequired]);
+
+  const handleSave = () => {
+    setOriginalLevel(level);
+    setOriginalRequired(required);
+    setHasUnsavedChanges(false);
+  };
+
+  const handleCancel = () => {
+    setLevel(originalLevel);
+    setRequired(originalRequired);
+    setHasUnsavedChanges(false);
+  };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
