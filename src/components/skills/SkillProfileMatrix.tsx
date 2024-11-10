@@ -52,7 +52,6 @@ export const SkillProfileMatrix = () => {
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
-          <Button>Add Skill</Button>
         </div>
 
         <Separator className="my-4" />
@@ -95,6 +94,7 @@ export const SkillProfileMatrix = () => {
               </SelectContent>
             </Select>
           </div>
+          <Button>Add Skill</Button>
         </div>
 
         <div className="rounded-lg border border-border overflow-hidden">
