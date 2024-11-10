@@ -10,7 +10,7 @@ export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCa
     { id: "all", name: "All Categories", count: 28 },
     { id: "specialized", name: "Specialized Skills", count: 15 },
     { id: "common", name: "Common Skills", count: 10 },
-    { id: "certification", name: "Certification", count: 3 }
+    { id: "certification", name: "Certifications", count: 3 }
   ];
 
   return (
