@@ -61,6 +61,37 @@ export const SkillProfileMatrix = () => {
     return allSkills[category as keyof typeof allSkills] || [];
   };
 
+  const handleToggleSkill = (skillTitle: string) => {
+    setHasUnsavedChanges(true);
+    setToggledSkills(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(skillTitle)) {
+        newSet.delete(skillTitle);
+      } else {
+        newSet.add(skillTitle);
+      }
+      return newSet;
+    });
+  };
+
+  const handleSave = () => {
+    setSelectedSkills(Array.from(toggledSkills));
+    setHasUnsavedChanges(false);
+    toast({
+      title: "Changes saved",
+      description: "Your skill selections have been updated.",
+    });
+  };
+
+  const handleCancel = () => {
+    setToggledSkills(new Set(selectedSkills));
+    setHasUnsavedChanges(false);
+    toast({
+      title: "Changes cancelled",
+      description: "Your skill selections have been reset.",
+    });
+  };
+
   const paginatedSkills = getSkillsByCategory(skillType).slice(0, page * PAGE_SIZE);
 
   const lastSkillElementRef = useCallback((node: HTMLElement | null) => {
@@ -72,7 +103,8 @@ export const SkillProfileMatrix = () => {
       if (entries[0].isIntersecting && hasMore) {
         setPage(prevPage => {
           const nextPage = prevPage + 1;
-          if (nextPage * PAGE_SIZE >= allSkills.length) {
+          const totalSkills = getSkillsByCategory(skillType).length;
+          if (nextPage * PAGE_SIZE >= totalSkills) {
             setHasMore(false);
             toast({
               title: "End of list",
@@ -85,7 +117,7 @@ export const SkillProfileMatrix = () => {
     });
     
     if (node) observer.current.observe(node);
-  }, [loading, hasMore]);
+  }, [loading, hasMore, skillType]);
 
   return (
     <div className="space-y-6">
@@ -122,18 +154,6 @@ export const SkillProfileMatrix = () => {
                 <SelectItem value="specialized">Specialized Skills</SelectItem>
                 <SelectItem value="common">Common Skills</SelectItem>
                 <SelectItem value="certification">Certification</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={skillType} onValueChange={setSkillType}>
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Skill Types" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Skill Types</SelectItem>
-                <SelectItem value="defining">Defining Skills</SelectItem>
-                <SelectItem value="distinguishing">Distinguishing Skills</SelectItem>
-                <SelectItem value="necessary">Necessary Skills</SelectItem>
               </SelectContent>
             </Select>
 
