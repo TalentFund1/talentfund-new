@@ -1,170 +1,134 @@
 export const skills = [
   {
-    title: "Amazon Web Services",
-    subcategory: "Web Services",
+    title: "React",
+    subcategory: "Web Development",
+    level: "Advanced",
+    growth: "15%"
+  },
+  {
+    title: "JavaScript",
+    subcategory: "Programming Languages",
     level: "Advanced",
     growth: "12%"
   },
   {
-    title: "Artificial Intelligence",
-    subcategory: "Artificial Intelligence and Machine Learning",
+    title: "TypeScript",
+    subcategory: "Programming Languages",
     level: "Advanced",
-    growth: "19%"
+    growth: "14%"
   },
   {
-    title: "Conversational AI",
-    subcategory: "Natural Language Processing (NLP)",
-    level: "Advanced",
-    growth: "12%"
-  },
-  {
-    title: "Deep Learning",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "Intermediate",
-    growth: "19%"
-  },
-  {
-    title: "Machine Learning",
-    subcategory: "Artificial Intelligence and Machine Learning",
+    title: "Node.js",
+    subcategory: "Backend Development",
     level: "Intermediate",
     growth: "10%"
   },
   {
-    title: "Docker",
-    subcategory: "Software Development Tools",
+    title: "Computer Architecture",
+    subcategory: "Systems",
     level: "Intermediate",
-    growth: "15%"
-  },
-  {
-    title: "MLflow",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "Beginner",
-    growth: "11%"
-  },
-  {
-    title: "TensorFlow",
-    subcategory: "Machine Learning Frameworks",
-    level: "Advanced",
-    growth: "16%"
-  },
-  {
-    title: "PyTorch",
-    subcategory: "Machine Learning Frameworks",
-    level: "Intermediate",
-    growth: "18%"
-  },
-  {
-    title: "Natural Language Processing",
-    subcategory: "AI Applications",
-    level: "Advanced",
-    growth: "20%"
-  },
-  {
-    title: "Computer Vision",
-    subcategory: "AI Applications",
-    level: "Intermediate",
-    growth: "22%"
-  },
-  {
-    title: "Kubernetes",
-    subcategory: "Container Orchestration",
-    level: "Advanced",
-    growth: "17%"
-  },
-  {
-    title: "Git",
-    subcategory: "Version Control",
-    level: "Advanced",
     growth: "8%"
   },
   {
-    title: "SQL",
-    subcategory: "Databases",
-    level: "Advanced",
-    growth: "9%"
+    title: "SystemVerilog",
+    subcategory: "Hardware Description",
+    level: "Beginner",
+    growth: "5%"
   },
   {
-    title: "MongoDB",
-    subcategory: "Databases",
+    title: "Docker",
+    subcategory: "DevOps",
     level: "Intermediate",
-    growth: "14%"
-  },
-  {
-    title: "REST APIs",
-    subcategory: "Web Development",
-    level: "Advanced",
-    growth: "11%"
-  },
-  {
-    title: "Python",
-    subcategory: "Programming Languages",
-    level: "Advanced",
     growth: "15%"
   },
   {
-    title: "Data Science",
-    subcategory: "Analytics",
-    level: "Intermediate",
-    growth: "21%"
+    title: "Static Timing Analysis",
+    subcategory: "Hardware Verification",
+    level: "Beginner",
+    growth: "4%"
   },
   {
-    title: "React Native",
-    subcategory: "Mobile Development",
-    level: "Advanced",
-    growth: "25%"
+    title: "Cadence Encounter",
+    subcategory: "EDA Tools",
+    level: "Beginner",
+    growth: "3%"
   },
   {
-    title: "System Design",
-    subcategory: "Software Architecture",
-    level: "Advanced",
-    growth: "21%"
+    title: "Synopsys Primetime",
+    subcategory: "EDA Tools",
+    level: "Beginner",
+    growth: "4%"
   },
   {
     title: "GraphQL",
     subcategory: "API Development",
     level: "Intermediate",
-    growth: "24%"
+    growth: "12%"
   },
   {
-    title: "DevOps",
-    subcategory: "Development Operations",
-    level: "Advanced",
-    growth: "28%"
-  },
-  {
-    title: "Cybersecurity",
-    subcategory: "Security",
-    level: "Advanced",
-    growth: "30%"
-  },
-  {
-    title: "Data Engineering",
-    subcategory: "Data Management",
-    level: "Intermediate",
-    growth: "26%"
-  },
-  {
-    title: "UI/UX Design",
-    subcategory: "Design",
-    level: "Intermediate",
-    growth: "22%"
-  },
-  {
-    title: "Microservices",
-    subcategory: "Software Architecture",
-    level: "Advanced",
-    growth: "27%"
-  },
-  {
-    title: "Flutter",
-    subcategory: "Mobile Development",
+    title: "Internet of Things",
+    subcategory: "Embedded Systems",
     level: "Beginner",
-    growth: "23%"
+    growth: "8%"
   },
   {
-    title: "Blockchain",
-    subcategory: "Distributed Systems",
+    title: "Kubernetes",
+    subcategory: "DevOps",
     level: "Intermediate",
-    growth: "29%"
+    growth: "18%"
+  },
+  {
+    title: "AWS Lambda",
+    subcategory: "Cloud Computing",
+    level: "Intermediate",
+    growth: "16%"
+  },
+  {
+    title: "Azure Functions",
+    subcategory: "Cloud Computing",
+    level: "Beginner",
+    growth: "14%"
+  },
+  {
+    title: "UI/UX Design Principles",
+    subcategory: "Design",
+    level: "Advanced",
+    growth: "10%"
+  },
+  {
+    title: "Agile Methodologies",
+    subcategory: "Project Management",
+    level: "Advanced",
+    growth: "8%"
+  },
+  {
+    title: "Project Management",
+    subcategory: "Management",
+    level: "Intermediate",
+    growth: "7%"
+  },
+  {
+    title: "Problem Solving",
+    subcategory: "Soft Skills",
+    level: "Advanced",
+    growth: "5%"
+  },
+  {
+    title: "Scrum",
+    subcategory: "Agile",
+    level: "Intermediate",
+    growth: "6%"
+  },
+  {
+    title: "Time Management",
+    subcategory: "Soft Skills",
+    level: "Intermediate",
+    growth: "4%"
+  },
+  {
+    title: "Microsoft Excel",
+    subcategory: "Office Tools",
+    level: "Intermediate",
+    growth: "3%"
   }
 ];
