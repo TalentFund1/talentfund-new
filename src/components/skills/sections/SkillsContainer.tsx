@@ -21,13 +21,12 @@ export const SkillsContainer = ({
   commonSkills,
   certifications,
   expandedSections,
-  visibleSpecializedCount,
   onToggleSection
 }: SkillsContainerProps) => {
-  const renderDetailedSkills = (skills: DetailedSkill[], isExpanded: boolean, isSpecialized: boolean = false) => {
-    const displaySkills = isSpecialized 
-      ? (isExpanded ? skills : skills.slice(0, visibleSpecializedCount))
-      : (isExpanded ? skills : skills.slice(0, 7));
+  const INITIAL_VISIBLE_COUNT = 12;
+
+  const renderDetailedSkills = (skills: DetailedSkill[], isExpanded: boolean) => {
+    const displaySkills = isExpanded ? skills : skills.slice(0, INITIAL_VISIBLE_COUNT);
 
     return displaySkills.map((skill) => (
       <SkillBadge 
@@ -40,56 +39,50 @@ export const SkillsContainer = ({
     ));
   };
 
+  const renderSeeMoreButton = (skillCount: number, sectionType: keyof typeof expandedSections, isExpanded: boolean) => {
+    if (skillCount > INITIAL_VISIBLE_COUNT) {
+      return (
+        <div className="flex justify-start mt-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
+            onClick={() => onToggleSection(sectionType)}
+          >
+            {isExpanded ? 'Show Less' : 'See More'} 
+            <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
+              {skillCount - INITIAL_VISIBLE_COUNT}
+            </span>
+          </Button>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="space-y-6">
       <SkillSection title="Specialized Skills" count={specializedSkills.length}>
         <div className="flex flex-wrap gap-2 mb-4">
-          {renderDetailedSkills(specializedSkills, expandedSections.specialized, true)}
+          {renderDetailedSkills(specializedSkills, expandedSections.specialized)}
         </div>
-        {specializedSkills.length > visibleSpecializedCount && (
-          <div className="flex justify-start">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
-              onClick={() => onToggleSection('specialized')}
-            >
-              {expandedSections.specialized ? 'Show Less' : 'See More'} 
-              <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                {specializedSkills.length - visibleSpecializedCount}
-              </span>
-            </Button>
-          </div>
-        )}
+        {renderSeeMoreButton(specializedSkills.length, 'specialized', expandedSections.specialized)}
       </SkillSection>
 
       <SkillSection title="Common Skills" count={commonSkills.length}>
         <div className="flex flex-wrap gap-2">
           {renderDetailedSkills(commonSkills, expandedSections.common)}
         </div>
-        {commonSkills.length > 7 && (
-          <div className="flex justify-start mt-4">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="rounded-full px-3 py-1.5 border-2 bg-background hover:bg-background/80 flex items-center gap-1"
-              onClick={() => onToggleSection('common')}
-            >
-              {expandedSections.common ? 'Show Less' : 'See More'} 
-              <span className="bg-primary-accent/10 rounded-md px-1.5 py-0.5 text-foreground">
-                {commonSkills.length - 7}
-              </span>
-            </Button>
-          </div>
-        )}
+        {renderSeeMoreButton(commonSkills.length, 'common', expandedSections.common)}
       </SkillSection>
 
       <SkillSection title="Certifications" count={certifications.length}>
         <div className="flex flex-wrap gap-2">
-          {certifications.map((cert) => (
+          {certifications.slice(0, expandedSections.certifications ? undefined : INITIAL_VISIBLE_COUNT).map((cert) => (
             <SkillBadge key={cert.name} skill={cert} />
           ))}
         </div>
+        {renderSeeMoreButton(certifications.length, 'certifications', expandedSections.certifications)}
       </SkillSection>
     </div>
   );
