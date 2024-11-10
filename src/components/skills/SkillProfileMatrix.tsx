@@ -148,7 +148,7 @@ export const SkillProfileMatrix = () => {
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="specialized">Technical Skills</SelectItem>
-                <SelectItem value="common">Soft Skills & Competencies</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
                 <SelectItem value="certification">Certifications</SelectItem>
               </SelectContent>
             </Select>
