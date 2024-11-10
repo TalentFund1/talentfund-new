@@ -13,7 +13,7 @@ const TrackContext = createContext<TrackContextType | undefined>(undefined);
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
   const [track, setTrack] = useState<"Technical" | "Managerial">(() => {
     const savedTrack = localStorage.getItem('selectedTrack');
-    return (savedTrack as "Technical" | "Managerial") || "Managerial";
+    return (savedTrack as "Technical" | "Managerial") || "Technical";
   });
   
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
