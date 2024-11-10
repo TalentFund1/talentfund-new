@@ -7,7 +7,6 @@ import { SkillCell } from "./competency/SkillCell";
 import { CategoryCards } from "./competency/CategoryCards";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
 import { skillsByCategory } from "./competency/skillsData";
-import { useToast } from "@/components/ui/use-toast";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
@@ -31,12 +30,10 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
 
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
   const { selectedSkills } = useSelectedSkills();
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [skillChanges, setSkillChanges] = useState<{ [key: string]: { level: string; required: string } }>({});
-  const { toast } = useToast();
 
   const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
+  // Get skills based on selected category
   const getFilteredSkills = () => {
     const categorySkills = skillsByCategory[selectedCategory as keyof typeof skillsByCategory]?.[currentTrack.toLowerCase()] as SkillLevels | undefined;
     if (!categorySkills) return [];
@@ -64,51 +61,13 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     }
   };
 
-  const handleLevelChange = (skillName: string, level: string, requirement: string) => {
-    setSkillChanges(prev => ({
-      ...prev,
-      [skillName]: { level, required: requirement }
-    }));
-    setHasUnsavedChanges(true);
-  };
-
-  const handleSave = () => {
-    // Here you would typically save the changes to your backend
-    setHasUnsavedChanges(false);
-    setSkillChanges({});
-    toast({
-      title: "Changes saved",
-      description: "Your skill level changes have been saved successfully.",
-    });
-  };
-
-  const handleCancel = () => {
-    setHasUnsavedChanges(false);
-    setSkillChanges({});
-    toast({
-      title: "Changes cancelled",
-      description: "Your skill level changes have been cancelled.",
-    });
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            onClick={handleCancel}
-            disabled={!hasUnsavedChanges}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSave}
-            disabled={!hasUnsavedChanges}
-          >
-            Save
-          </Button>
+          <Button variant="outline">Cancel</Button>
+          <Button>Save</Button>
         </div>
       </div>
       
@@ -162,19 +121,13 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
                 <TableCell className="font-medium border-r border-border">
                   {skillName}
                 </TableCell>
-                {levels.map((level, index) => {
-                  const skillDetails = getSkillLevelForTrack(level, skillName);
-                  return (
-                    <SkillCell 
-                      key={level}
-                      details={skillDetails}
-                      isLastColumn={index === levels.length - 1}
-                      onLevelChange={(newLevel) => handleLevelChange(skillName, newLevel, skillDetails.required)}
-                      onRequirementChange={(newRequired) => handleLevelChange(skillName, skillDetails.level, newRequired)}
-                      hasUnsavedChanges={hasUnsavedChanges}
-                    />
-                  );
-                })}
+                {levels.map((level, index) => (
+                  <SkillCell 
+                    key={level}
+                    details={getSkillLevelForTrack(level, skillName)}
+                    isLastColumn={index === levels.length - 1}
+                  />
+                ))}
               </TableRow>
             ))}
           </TableBody>
