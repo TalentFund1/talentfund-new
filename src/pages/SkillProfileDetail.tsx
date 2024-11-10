@@ -12,7 +12,7 @@ import { CompetencyGraph } from "@/components/skills/CompetencyGraph";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
 import { Sidebar } from "@/components/Sidebar";
-import { IndependentSkillsProvider } from "@/components/skills/context/IndependentSkillsContext";
+import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
@@ -68,14 +68,16 @@ const SkillProfileDetail = () => {
 
                 <TabsContent value="skills">
                   <SelectBenchmark />
-                  <IndependentSkillsProvider>
+                  <SelectedSkillsProvider>
                     <SkillProfileMatrix />
-                  </IndependentSkillsProvider>
+                  </SelectedSkillsProvider>
                 </TabsContent>
 
                 <TabsContent value="graph">
                   <Card className="p-6 bg-white">
-                    <CompetencyGraph track={track} />
+                    <SelectedSkillsProvider>
+                      <CompetencyGraph track={track} />
+                    </SelectedSkillsProvider>
                   </Card>
                 </TabsContent>
               </Tabs>
