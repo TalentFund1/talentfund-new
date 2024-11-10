@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface SkillsMatrixHeaderProps {
@@ -21,6 +22,21 @@ export const SkillsMatrixHeader = ({ hasChanges, onSave, onCancel }: SkillsMatri
             <SelectItem value="manager">Manager</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+      <div className="flex items-center gap-2">
+        <Button 
+          variant="outline" 
+          onClick={onCancel}
+          disabled={!hasChanges}
+        >
+          Cancel
+        </Button>
+        <Button 
+          onClick={onSave}
+          disabled={!hasChanges}
+        >
+          Save
+        </Button>
       </div>
     </div>
   );

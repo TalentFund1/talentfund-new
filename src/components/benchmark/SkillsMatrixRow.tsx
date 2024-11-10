@@ -1,6 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -10,10 +11,15 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
   };
-  onLevelChange?: (skillTitle: string, newLevel: string, requirement: string) => void;
 }
 
-export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
+  const { currentStates, setSkillState } = useSkillsMatrixStore();
+  const currentState = currentStates[skill.title] || {
+    level: skill.level,
+    requirement: 'preferred'
+  };
+
   const getConfidenceStyles = (confidence: string) => {
     switch (confidence) {
       case 'high':
@@ -33,7 +39,7 @@ export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) 
   };
 
   const handleLevelChange = (newLevel: string, requirement: string) => {
-    onLevelChange?.(skill.title, newLevel, requirement);
+    setSkillState(skill.title, newLevel, requirement);
   };
 
   return (
@@ -53,7 +59,10 @@ export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) 
           )}
         </div>
       </TableCell>
-      <SkillLevelCell initialLevel={skill.level} onLevelChange={handleLevelChange} />
+      <SkillLevelCell 
+        initialLevel={currentState.level} 
+        onLevelChange={handleLevelChange}
+      />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>

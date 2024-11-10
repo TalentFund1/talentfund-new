@@ -7,15 +7,7 @@ import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
-
-interface Skill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: string;
-}
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 const initialSkills = [
   {
@@ -98,10 +90,7 @@ const initialSkills = [
 ];
 
 export const SkillsMatrix = () => {
-  const [skills, setSkills] = useState<Skill[]>(initialSkills);
-  const [originalSkills, setOriginalSkills] = useState<Skill[]>(initialSkills);
-  const [hasChanges, setHasChanges] = useState(false);
-  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
+  const [skills, setSkills] = useState(initialSkills);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -109,6 +98,8 @@ export const SkillsMatrix = () => {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
+  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
+  const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
 
   const allSkillTitles = skills.map(skill => skill.title);
 
@@ -137,19 +128,8 @@ export const SkillsMatrix = () => {
     }
   };
 
-  const handleSkillLevelChange = (skillTitle: string, newLevel: string, requirement: string) => {
-    const updatedSkills = skills.map(skill => 
-      skill.title === skillTitle 
-        ? { ...skill, level: newLevel, requirement: requirement }
-        : skill
-    );
-    setSkills(updatedSkills);
-    setHasChanges(true);
-  };
-
   const handleSave = () => {
-    setOriginalSkills(skills);
-    setHasChanges(false);
+    saveChanges();
     toast({
       title: "Changes Saved",
       description: "Your changes have been saved successfully.",
@@ -157,8 +137,7 @@ export const SkillsMatrix = () => {
   };
 
   const handleCancel = () => {
-    setSkills(originalSkills);
-    setHasChanges(false);
+    cancelChanges();
     toast({
       title: "Changes Cancelled",
       description: "Your changes have been discarded.",
@@ -203,8 +182,7 @@ export const SkillsMatrix = () => {
         />
 
         <SkillsMatrixTable 
-          filteredSkills={paginatedSkills} 
-          onSkillLevelChange={handleSkillLevelChange}
+          filteredSkills={paginatedSkills}
         />
         
         <SkillsMatrixPagination 
