@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface Skill {
+export interface Skill {
   title: string;
   subcategory: string;
   level: string;
@@ -13,17 +13,21 @@ interface SkillsState {
   skills: Skill[];
   originalSkills: Skill[];
   hasChanges: boolean;
-  setSkills: (skills: Skill[]) => void;
+  setSkills: (skills: Skill[] | ((prev: Skill[]) => Skill[])) => void;
   toggleSkill: (skillTitle: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
+  setHasChanges: (value: boolean) => void;
 }
 
 export const useSkillsStore = create<SkillsState>((set) => ({
   skills: [],
   originalSkills: [],
   hasChanges: false,
-  setSkills: (skills) => set({ skills, originalSkills: skills }),
+  setSkills: (skills) => set((state) => {
+    const newSkills = typeof skills === 'function' ? skills(state.skills) : skills;
+    return { skills: newSkills, originalSkills: state.originalSkills };
+  }),
   toggleSkill: (skillTitle) => set((state) => {
     const updatedSkills = state.skills.map(skill => 
       skill.title === skillTitle 
@@ -42,5 +46,6 @@ export const useSkillsStore = create<SkillsState>((set) => ({
   cancelChanges: () => set((state) => ({
     skills: state.originalSkills,
     hasChanges: false
-  }))
+  })),
+  setHasChanges: (value) => set({ hasChanges: value })
 }));

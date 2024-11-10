@@ -7,7 +7,7 @@ import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
-import { useSkillsStore } from "./skills-matrix/SkillsMatrixState";
+import { useSkillsStore, Skill } from "./skills-matrix/SkillsMatrixState";
 
 export const SkillsMatrix = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
@@ -19,7 +19,7 @@ export const SkillsMatrix = () => {
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
   
-  const { skills, hasChanges, setSkills, toggleSkill, saveChanges, cancelChanges } = useSkillsStore();
+  const { skills, hasChanges, setSkills, toggleSkill, saveChanges, cancelChanges, setHasChanges } = useSkillsStore();
 
   const allSkillTitles = skills.map(skill => skill.title);
 
