@@ -18,7 +18,7 @@ export const SkillsTableFilter = ({ selectedFilter, onFilterChange }: SkillsTabl
             <SelectItem value="all">All Skills</SelectItem>
             <SelectItem value="specialized">Specialized Skills</SelectItem>
             <SelectItem value="common">Common Skills</SelectItem>
-            <SelectItem value="certification">Certification</SelectItem>
+            <SelectItem value="certification">Certifications</SelectItem>
           </SelectContent>
         </Select>
       </div>

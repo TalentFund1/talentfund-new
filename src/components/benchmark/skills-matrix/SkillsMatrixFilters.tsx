@@ -23,7 +23,7 @@ export const SkillsMatrixFilters = ({
           <SelectItem value="all">All Categories</SelectItem>
           <SelectItem value="specialized">Specialized Skills</SelectItem>
           <SelectItem value="common">Common Skills</SelectItem>
-          <SelectItem value="certification">Certification</SelectItem>
+          <SelectItem value="certification">Certifications</SelectItem>
         </SelectContent>
       </Select>
       
