@@ -17,7 +17,7 @@ import { TrackProvider } from "@/components/skills/context/TrackContext";
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [track, setTrack] = useState<"Technical" | "Managerial">("Technical");
+  const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
 
   const jobTitles: { [key: string]: string } = {
     "123": "AI Engineer",
@@ -28,7 +28,7 @@ const SkillProfileDetail = () => {
 
   const jobTitle = jobTitles[id || ""] || "AI Engineer";
 
-  const handleTrackChange = (newTrack: "Technical" | "Managerial") => {
+  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
     setTrack(newTrack);
   };
 
