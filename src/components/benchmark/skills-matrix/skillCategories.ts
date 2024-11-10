@@ -13,48 +13,71 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Certified'
   ];
 
-  // Check if the skill title or subcategory contains certification keywords
-  const isCertification = (skill: string, subcategory?: string): boolean => {
-    const normalizedSkill = skill.toLowerCase();
-    const normalizedSubcategory = subcategory?.toLowerCase() || '';
-    
-    return certificationKeywords.some(cert => 
-      normalizedSkill.includes(cert.toLowerCase()) || 
-      normalizedSubcategory.includes('certification')
-    );
-  };
-
+  // Specialized skills list
   const specializedSkills = [
-    'Quantum Computing',
-    'Robotics Programming',
-    '5G Network Architecture',
-    'Edge Computing',
-    'Blockchain Development',
+    'Artificial Intelligence',
+    'Machine Learning',
+    'Deep Learning',
+    'Natural Language Processing',
+    'Computer Vision',
+    'Amazon Web Services',
+    'Docker',
+    'Kubernetes',
     'DevSecOps',
     'System Architecture',
     'Data Engineering',
-    'IoT Development'
+    'IoT Development',
+    'JavaScript',
+    'Python',
+    'TensorFlow',
+    'PyTorch',
+    'Blockchain Development',
+    'Edge Computing',
+    '5G Network Architecture',
+    'Quantum Computing',
+    'Robotics Programming',
+    'Conversational AI'
   ];
 
+  // Common skills list
   const commonSkills = [
     'Technical Writing',
     'Agile Project Management',
     'Business Analysis',
     'Risk Management',
-    'Strategic Leadership',
-    'Change Management',
-    'Cross-cultural Communication'
+    'Problem Solving',
+    'Cross-cultural Communication',
+    'Team Management',
+    'Strategic Planning',
+    'Project Management',
+    'Documentation',
+    'Communication',
+    'Leadership'
   ];
 
-  if (isCertification(skill)) {
+  // Check if it's a certification
+  if (certificationKeywords.some(cert => 
+    skill.toLowerCase().includes(cert.toLowerCase())
+  )) {
     return 'certification';
   }
   
-  if (specializedSkills.includes(skill)) {
+  // Check if it's a specialized skill
+  if (specializedSkills.some(spec => 
+    skill.toLowerCase().includes(spec.toLowerCase())
+  )) {
     return 'specialized';
   }
   
-  return 'common';
+  // Check if it's a common skill
+  if (commonSkills.some(common => 
+    skill.toLowerCase().includes(common.toLowerCase())
+  )) {
+    return 'common';
+  }
+  
+  // Default to specialized if no match is found
+  return 'specialized';
 };
 
 export const filterSkillsByCategory = (
