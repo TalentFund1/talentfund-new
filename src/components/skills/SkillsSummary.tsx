@@ -22,21 +22,8 @@ export const SkillsSummary = () => {
   const { toast } = useToast();
 
   const specializedSkills = [
-    { name: "React", level: "advanced", isSkillGoal: true },
-    { name: "JavaScript", level: "advanced", isSkillGoal: true },
-    { name: "TypeScript", level: "advanced", isSkillGoal: true },
-    { name: "Node.js", level: "advanced", isSkillGoal: false },
-    { name: "Computer Architecture", level: "intermediate", isSkillGoal: true },
-    { name: "SystemVerilog", level: "intermediate", isSkillGoal: false },
-    { name: "Docker", level: "intermediate", isSkillGoal: true },
-    { name: "Static Timing Analysis", level: "beginner", isSkillGoal: false },
-    { name: "Cadence Encounter", level: "beginner", isSkillGoal: false },
-    { name: "Synopsys Primetime", level: "beginner", isSkillGoal: true },
-    { name: "GraphQL", level: "unspecified", isSkillGoal: false },
-    { name: "Internet of Things", level: "unspecified", isSkillGoal: false },
-    { name: "Kubernetes", level: "unspecified", isSkillGoal: false },
-    { name: "AWS Lambda", level: "unspecified", isSkillGoal: false },
-    { name: "Azure Functions", level: "beginner", isSkillGoal: true }
+    { name: "Quantum Computing", level: "advanced", isSkillGoal: true },
+    { name: "Robotics Programming", level: "advanced", isSkillGoal: true }
   ].sort((a, b) => {
     const levelOrder = {
       advanced: 0,
@@ -48,16 +35,8 @@ export const SkillsSummary = () => {
   });
 
   const commonSkills = [
-    { name: "UI/UX Design Principles", level: "advanced", isSkillGoal: true },
-    { name: "Agile Methodologies", level: "advanced", isSkillGoal: true },
-    { name: "Project Management", level: "intermediate", isSkillGoal: false },
-    { name: "Problem Solving", level: "intermediate", isSkillGoal: true },
-    { name: "Scrum", level: "intermediate", isSkillGoal: false },
-    { name: "Time Management", level: "beginner", isSkillGoal: true },
-    { name: "Microsoft Excel", level: "beginner", isSkillGoal: false },
-    { name: "Team Leadership", level: "unspecified", isSkillGoal: false },
-    { name: "Communication", level: "unspecified", isSkillGoal: true },
-    { name: "Technical Writing", level: "unspecified", isSkillGoal: false }
+    { name: "Technical Writing", level: "advanced", isSkillGoal: true },
+    { name: "Agile Project Management", level: "advanced", isSkillGoal: true }
   ].sort((a, b) => {
     const levelOrder = {
       advanced: 0,
@@ -69,7 +48,9 @@ export const SkillsSummary = () => {
   });
 
   const certifications: Certification[] = [
-    { name: "Cybersecurity License" }
+    { name: "CompTIA Security+ Certification" },
+    { name: "Project Management Professional (PMP)" },
+    { name: "Certified Scrum Master (CSM)" }
   ];
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -153,4 +134,3 @@ export const SkillsSummary = () => {
     </div>
   );
 };
-
