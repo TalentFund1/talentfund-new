@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface TrackContextType {
-  track: "Professional" | "Managerial";
-  setTrack: (track: "Professional" | "Managerial") => void;
+  getTrackForRole: (roleId: string) => "Professional" | "Managerial";
+  setTrackForRole: (roleId: string, track: "Professional" | "Managerial") => void;
   hasUnsavedChanges: boolean;
   setHasUnsavedChanges: (value: boolean) => void;
   saveTrackSelection: () => void;
@@ -11,22 +11,34 @@ interface TrackContextType {
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
 
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
-  const [track, setTrack] = useState<"Professional" | "Managerial">(() => {
-    const savedTrack = localStorage.getItem('selectedTrack');
-    return (savedTrack as "Professional" | "Managerial") || "Professional";
-  });
+  const [tracks, setTracks] = useState<Record<string, "Professional" | "Managerial">(() => {
+    const savedTracks = localStorage.getItem('roleTracks');
+    return savedTracks ? JSON.parse(savedTracks) : {};
+  }));
   
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+  const getTrackForRole = (roleId: string): "Professional" | "Managerial" => {
+    return tracks[roleId] || "Professional";
+  };
+
+  const setTrackForRole = (roleId: string, track: "Professional" | "Managerial") => {
+    setTracks(prev => ({
+      ...prev,
+      [roleId]: track
+    }));
+    setHasUnsavedChanges(true);
+  };
+
   const saveTrackSelection = () => {
-    localStorage.setItem('selectedTrack', track);
+    localStorage.setItem('roleTracks', JSON.stringify(tracks));
     setHasUnsavedChanges(false);
   };
 
   return (
     <TrackContext.Provider value={{ 
-      track, 
-      setTrack, 
+      getTrackForRole, 
+      setTrackForRole, 
       hasUnsavedChanges, 
       setHasUnsavedChanges,
       saveTrackSelection 

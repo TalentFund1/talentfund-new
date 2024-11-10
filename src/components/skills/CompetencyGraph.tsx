@@ -30,11 +30,12 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
     const savedCategory = localStorage.getItem('selectedCategory');
     return savedCategory || "all";
   });
-  const { track } = useTrack();
+  const { id } = useParams<{ id: string }>();
+  const { getTrackForRole } = useTrack();
   const { hasChanges, saveChanges, cancelChanges } = useCompetencyStore();
   const { toast } = useToast();
-  const { id } = useParams<{ id: string }>();
 
+  const track = getTrackForRole(id || "");
   const jobTitle = jobTitles[id || "123"] || "AI Engineer";
 
   useEffect(() => {

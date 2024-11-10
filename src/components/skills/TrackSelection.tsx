@@ -3,14 +3,17 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useTrack } from "./context/TrackContext";
 import { useToast } from "@/components/ui/use-toast";
+import { useParams } from "react-router-dom";
 
 export const TrackSelection = () => {
-  const { track, setTrack, hasUnsavedChanges, setHasUnsavedChanges, saveTrackSelection } = useTrack();
+  const { id } = useParams<{ id: string }>();
+  const { getTrackForRole, setTrackForRole, hasUnsavedChanges, saveTrackSelection } = useTrack();
   const { toast } = useToast();
 
+  const track = getTrackForRole(id || "");
+
   const handleTrackChange = (value: "Professional" | "Managerial") => {
-    setTrack(value);
-    setHasUnsavedChanges(true);
+    setTrackForRole(id || "", value);
   };
 
   const handleSave = () => {
