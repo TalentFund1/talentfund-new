@@ -8,7 +8,7 @@ export const TrackSelection = () => {
   const { track, setTrack, hasUnsavedChanges, setHasUnsavedChanges, saveTrackSelection } = useTrack();
   const { toast } = useToast();
 
-  const handleTrackChange = (value: "Technical" | "Managerial") => {
+  const handleTrackChange = (value: "Professional" | "Managerial") => {
     setTrack(value);
     setHasUnsavedChanges(true);
   };
@@ -30,8 +30,8 @@ export const TrackSelection = () => {
           className="flex items-center space-x-4"
         >
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="Technical" id="technical" />
-            <Label htmlFor="technical">Technical</Label>
+            <RadioGroupItem value="Professional" id="professional" />
+            <Label htmlFor="professional">Professional</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="Managerial" id="managerial" />

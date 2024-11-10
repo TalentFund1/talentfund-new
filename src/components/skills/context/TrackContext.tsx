@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface TrackContextType {
-  track: "Technical" | "Managerial";
-  setTrack: (track: "Technical" | "Managerial") => void;
+  track: "Professional" | "Managerial";
+  setTrack: (track: "Professional" | "Managerial") => void;
   hasUnsavedChanges: boolean;
   setHasUnsavedChanges: (value: boolean) => void;
   saveTrackSelection: () => void;
@@ -11,9 +11,9 @@ interface TrackContextType {
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
 
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
-  const [track, setTrack] = useState<"Technical" | "Managerial">(() => {
+  const [track, setTrack] = useState<"Professional" | "Managerial">(() => {
     const savedTrack = localStorage.getItem('selectedTrack');
-    return (savedTrack as "Technical" | "Managerial") || "Technical";
+    return (savedTrack as "Professional" | "Managerial") || "Professional";
   });
   
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);

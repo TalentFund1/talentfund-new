@@ -14,7 +14,7 @@ import { useTrack } from "./context/TrackContext";
 import { useParams } from "react-router-dom";
 
 interface CompetencyGraphProps {
-  track?: "Technical" | "Managerial";
+  track?: "Professional" | "Managerial";
 }
 
 const jobTitles: { [key: string]: string } = {
@@ -58,7 +58,7 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
   };
 
   const getLevelsForTrack = () => {
-    return track === "Technical" 
+    return track === "Professional" 
       ? ["P1", "P2", "P3", "P4", "P5", "P6"] 
       : ["M3", "M4", "M5", "M6"];
   };
