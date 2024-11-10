@@ -122,7 +122,7 @@ export const SkillProfileMatrix = () => {
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
             <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">
-              {selectedSkills.length} selected
+              {selectedSkills.length} saved
             </span>
           </div>
           <div className="flex gap-2">
