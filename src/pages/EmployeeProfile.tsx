@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { useNavigate, useParams } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
-import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
+import RoleBenchmark from "@/components/benchmark/RoleBenchmark";
 import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
 import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { Sidebar } from "@/components/Sidebar";

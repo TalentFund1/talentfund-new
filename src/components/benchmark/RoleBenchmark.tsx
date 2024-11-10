@@ -1,52 +1,11 @@
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-
-interface Skill {
-  name: string;
-  level: "advanced" | "intermediate" | "beginner" | "unspecified";
-}
-
-const technicalLevels = ["P1", "P2", "P3", "P4", "P5", "P6"];
-const managerialLevels = ["M3", "M4", "M5", "M6"];
-
-const requiredSkills: Skill[] = [
-  { name: "React", level: "advanced" },
-  { name: "JavaScript", level: "advanced" },
-  { name: "GraphQL", level: "intermediate" },
-  { name: "HTML and CSS3", level: "advanced" },
-  { name: "IPA Integrations", level: "intermediate" }
-].sort((a, b) => {
-  const levelOrder = {
-    advanced: 0,
-    intermediate: 1,
-    beginner: 2,
-    unspecified: 3
-  };
-  return levelOrder[a.level] - levelOrder[b.level];
-});
-
-const preferredSkills: Skill[] = [
-  { name: "UI/UX Design Principles", level: "intermediate" },
-  { name: "Communication", level: "intermediate" },
-  { name: "Angular", level: "beginner" }
-].sort((a, b) => {
-  const levelOrder = {
-    advanced: 0,
-    intermediate: 1,
-    beginner: 2,
-    unspecified: 3
-  };
-  return levelOrder[a.level] - levelOrder[b.level];
-});
-
-const certifications = [
-  { name: "Cybersecurity License" }
-];
+import { SkillSection } from "./SkillSection";
+import { technicalLevels, managerialLevels, requiredSkills, preferredSkills, certifications } from "./constants";
 
 const RoleBenchmark = () => {
   const navigate = useNavigate();
@@ -73,7 +32,6 @@ const RoleBenchmark = () => {
 
   const handleRoleTypeChange = (value: "technical" | "managerial") => {
     setRoleType(value);
-    // Reset selected role when changing type
     setSelectedRole(value === "technical" ? "senior-frontend" : "engineering-manager");
     
     toast({
@@ -133,71 +91,23 @@ const RoleBenchmark = () => {
         <Separator className="my-6" />
 
         <div className="space-y-6">
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Required Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {requiredSkills.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {requiredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Preferred Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {preferredSkills.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {preferredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Certifications</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {certifications.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {certifications.map((cert) => (
-                <Badge 
-                  key={cert.name}
-                  variant="outline" 
-                  className="rounded-md px-4 py-2 border border-border bg-white"
-                >
-                  {cert.name}
-                </Badge>
-              ))}
-            </div>
-          </div>
+          <SkillSection 
+            title="Required Skills"
+            items={requiredSkills}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
+          <SkillSection 
+            title="Preferred Skills"
+            items={preferredSkills}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
+          <SkillSection 
+            title="Certifications"
+            items={certifications}
+            getLevelStyles={getLevelStyles}
+          />
         </div>
       </div>
     </div>
