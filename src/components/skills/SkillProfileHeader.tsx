@@ -3,20 +3,29 @@ import { Building2, DollarSign } from "lucide-react";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 
-export const SkillProfileHeader = () => {
+interface SkillProfileHeaderProps {
+  id?: string;
+  jobTitle: string;
+}
+
+export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const formatTitle = (title: string) => {
-    // Split by spaces and capitalize each word
     return title.split(' ').map(word => {
-      // Special handling for 'AI' to stay uppercase
       if (word.toLowerCase() === 'ai') return 'AI';
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     }).join(' ');
   };
 
-  const jobTitle = "AI Engineer"; // This would come from props/context in a real app
-  const fullDescription = "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation. As an AI Engineer, you will be responsible for developing and implementing AI models and solutions that solve complex business problems. You will work closely with cross-functional teams to understand requirements, design solutions, and deploy AI systems at scale. Your expertise in machine learning, deep learning, and other AI technologies will be crucial in driving innovation and delivering value to our clients.";
+  const roleDescriptions = {
+    "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
+    "Backend Engineer": "We are seeking a skilled Backend Engineer to design and implement scalable server-side solutions. You will work with various databases, APIs, and server architectures to support our growing platform.",
+    "Frontend Engineer": "Join our team as a Frontend Engineer to create responsive and intuitive user interfaces. You will collaborate with designers and backend engineers to deliver seamless web applications.",
+    "Engineering Manager": "We're looking for an Engineering Manager to lead and mentor our technical teams. You will drive technical decisions, manage project deliverables, and foster a culture of innovation and growth."
+  };
+
+  const fullDescription = roleDescriptions[jobTitle as keyof typeof roleDescriptions] || roleDescriptions["AI Engineer"];
 
   return (
     <div className="space-y-6">
@@ -24,7 +33,7 @@ export const SkillProfileHeader = () => {
         <div className="space-y-1">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-semibold text-foreground">{formatTitle(jobTitle)}</h1>
-            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: 123</span>
+            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: {id}</span>
           </div>
         </div>
 
@@ -44,7 +53,7 @@ export const SkillProfileHeader = () => {
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <p className="font-medium">Artificial Engineer</p>
+            <p className="font-medium">{jobTitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">

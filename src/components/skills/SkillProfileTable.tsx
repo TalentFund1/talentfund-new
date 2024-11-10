@@ -8,10 +8,10 @@ export const SkillProfileTable = () => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   
   const rows: SkillProfileRow[] = [
-    { id: "1", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: "2", matches: "0", lastUpdated: "10/20/24" },
-    { id: "2", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: "3", matches: "4", lastUpdated: "10/20/24" },
-    { id: "3", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: "0", matches: "5", lastUpdated: "10/20/24" },
-    { id: "4", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: "2", matches: "5", lastUpdated: "10/20/24" }
+    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: "2", matches: "0", lastUpdated: "10/20/24" },
+    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: "3", matches: "4", lastUpdated: "10/20/24" },
+    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: "0", matches: "5", lastUpdated: "10/20/24" },
+    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: "2", matches: "5", lastUpdated: "10/20/24" }
   ];
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +65,7 @@ export const SkillProfileTable = () => {
                 />
               </TableCell>
               <TableCell className="align-middle font-medium">
-                <Link to={`/skills/${row.name.toLowerCase().replace(' ', '-')}`} className="text-primary hover:underline">
+                <Link to={`/skills/${row.id}`} className="text-primary hover:underline">
                   {row.name}
                 </Link>
               </TableCell>
