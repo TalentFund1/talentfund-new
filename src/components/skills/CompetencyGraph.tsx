@@ -4,10 +4,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
-import { CategoryCards } from "./competency/CategoryCards";
-import { skillsByCategory } from "./competency/skillsData";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { technicalSkills, softSkills } from "../skillsData";
+import { skillsByCategory } from "./competency/skillsData";
+import { CategorySection } from "./competency/CategorySection";
+import { categorizeSkills, isSpecializedSkill, isCommonSkill, isCertificationSkill } from "./competency/skillCategories";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
@@ -19,7 +19,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     const savedCategory = localStorage.getItem('selectedCategory');
     return savedCategory || "all";
   });
-
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
 
   useEffect(() => {
@@ -38,7 +37,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const skills = getSkillsForCategory() || {};
   const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
-  // Filter and categorize skills
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
     
@@ -47,34 +45,22 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     }
     
     if (selectedCategory === "specialized") {
-      return skillsArray.filter(skill => 
-        technicalSkills.includes(skill) && 
-        ["Machine Learning", "Artificial Intelligence", "Deep Learning", "Computer Vision", "Natural Language Processing", "AWS", "Cloud Computing", "TensorFlow", "PyTorch"].some(
-          specialization => skill.includes(specialization)
-        )
-      );
+      return skillsArray.filter(isSpecializedSkill);
     }
     
     if (selectedCategory === "common") {
-      return skillsArray.filter(skill => 
-        softSkills.includes(skill) || 
-        ["JavaScript", "Python", "Java", "SQL", "Git", "Agile", "Communication"].some(common => skill.includes(common))
-      );
+      return skillsArray.filter(isCommonSkill);
     }
     
     if (selectedCategory === "certification") {
-      return skillsArray.filter(skill => 
-        skill.includes("Certified") || 
-        skill.includes("Certification") ||
-        skill.includes("Architect") ||
-        ["AWS Certified", "Professional Scrum", "PMP", "CISSP", "CKA", "Solutions Architect", "Azure Solutions", "Professional Agile"].some(cert => skill.includes(cert))
-      );
+      return skillsArray.filter(isCertificationSkill);
     }
     
     return [];
   };
 
   const uniqueSkills = getSkillsByCategory().sort();
+  const skillCounts = categorizeSkills(Array.from(toggledSkills));
 
   const getSkillDetails = (skillName: string, level: string) => {
     if (!skills || !skills[level]) return { level: "-", required: "-" };
@@ -85,44 +71,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     if (value === "Professional" || value === "Managerial") {
       setCurrentTrack(value);
     }
-  };
-
-  const getCategoryCount = (category: string) => {
-    const skillsArray = Array.from(toggledSkills);
-    
-    if (category === "all") {
-      return skillsArray.length;
-    }
-    
-    if (category === "specialized") {
-      return skillsArray.filter(skill => 
-        technicalSkills.includes(skill) && 
-        ["Machine Learning", "Artificial Intelligence", "Deep Learning", "Computer Vision", 
-         "Natural Language Processing", "AWS", "Cloud Computing", "TensorFlow", "PyTorch"]
-        .some(specialization => skill.toLowerCase().includes(specialization.toLowerCase()))
-      ).length;
-    }
-    
-    if (category === "common") {
-      return skillsArray.filter(skill => 
-        softSkills.includes(skill) || 
-        ["JavaScript", "Python", "Java", "SQL", "Git", "Agile", "Communication"]
-        .some(common => skill.toLowerCase().includes(common.toLowerCase()))
-      ).length;
-    }
-    
-    if (category === "certification") {
-      return skillsArray.filter(skill => 
-        skill.toLowerCase().includes("certified") || 
-        skill.toLowerCase().includes("certification") ||
-        skill.toLowerCase().includes("architect") ||
-        ["AWS Certified", "Professional Scrum", "PMP", "CISSP", "CKA", 
-         "Solutions Architect", "Azure Solutions", "Professional Agile"]
-        .some(cert => skill.toLowerCase().includes(cert.toLowerCase()))
-      ).length;
-    }
-    
-    return 0;
   };
 
   return (
@@ -156,37 +104,11 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
         <h3 className="text-lg font-medium text-foreground">AI Engineer</h3>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        {[
-          { id: "all", name: "All Categories", count: getCategoryCount("all") },
-          { id: "specialized", name: "Specialized Skills", count: getCategoryCount("specialized") },
-          { id: "common", name: "Common Skills", count: getCategoryCount("common") },
-          { id: "certification", name: "Certification", count: getCategoryCount("certification") }
-        ].map((category) => (
-          <button
-            key={category.id}
-            onClick={() => setSelectedCategory(category.id)}
-            className={`rounded-lg p-4 transition-colors ${
-              selectedCategory === category.id
-                ? 'bg-primary-accent/5 border border-primary-accent'
-                : 'bg-background border border-border hover:border-primary-accent/50'
-            }`}
-          >
-            <div className="flex flex-col items-start">
-              <span className={`text-sm font-semibold mb-1 ${
-                selectedCategory === category.id
-                  ? 'text-primary-accent'
-                  : 'text-foreground group-hover:text-primary-accent'
-              }`}>
-                {category.name}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {category.count} skills
-              </span>
-            </div>
-          </button>
-        ))}
-      </div>
+      <CategorySection 
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        skillCounts={skillCounts}
+      />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
         <Table>
