@@ -4,6 +4,8 @@ import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
+import { initialSkills } from "../benchmark/skills-matrix/initialSkills";
+import { categorizeSkill } from "../benchmark/skills-matrix/skillCategories";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -21,24 +23,17 @@ export const SkillsSummary = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  const specializedSkills = [
-    { name: "Quantum Computing", level: "advanced", isSkillGoal: true },
-    { name: "Robotics Programming", level: "advanced", isSkillGoal: true },
-    { name: "5G Network Architecture", level: "intermediate", isSkillGoal: false },
-    { name: "Edge Computing", level: "intermediate", isSkillGoal: true },
-    { name: "Blockchain Development", level: "advanced", isSkillGoal: true },
-    { name: "DevSecOps", level: "advanced", isSkillGoal: true },
-    { name: "System Architecture", level: "advanced", isSkillGoal: true },
-    { name: "Data Engineering", level: "intermediate", isSkillGoal: false },
-    { name: "IoT Development", level: "intermediate", isSkillGoal: true },
-    { name: "Artificial Intelligence", level: "advanced", isSkillGoal: true },
-    { name: "Conversational AI", level: "advanced", isSkillGoal: true },
-    { name: "Deep Learning", level: "intermediate", isSkillGoal: false },
-    { name: "Machine Learning", level: "intermediate", isSkillGoal: true },
-    { name: "Docker (Software)", level: "intermediate", isSkillGoal: true },
-    { name: "JavaScript", level: "advanced", isSkillGoal: true },
-    { name: "Amazon Web Services", level: "advanced", isSkillGoal: true }
-  ].sort((a, b) => {
+  // Transform initialSkills into the required format
+  const transformedSkills = initialSkills.map(skill => ({
+    name: skill.title,
+    level: skill.level,
+    isSkillGoal: true
+  }));
+
+  // Categorize skills using the same categorization logic as the matrix
+  const specializedSkills = transformedSkills.filter(
+    skill => categorizeSkill(skill.name) === 'specialized'
+  ).sort((a, b) => {
     const levelOrder = {
       advanced: 0,
       intermediate: 1,
@@ -48,16 +43,9 @@ export const SkillsSummary = () => {
     return levelOrder[a.level as keyof typeof levelOrder] - levelOrder[b.level as keyof typeof levelOrder];
   });
 
-  const commonSkills = [
-    { name: "Technical Writing", level: "advanced", isSkillGoal: true },
-    { name: "Agile Project Management", level: "advanced", isSkillGoal: true },
-    { name: "Business Analysis", level: "intermediate", isSkillGoal: true },
-    { name: "Risk Management", level: "intermediate", isSkillGoal: false },
-    { name: "Problem Solving", level: "advanced", isSkillGoal: true },
-    { name: "Cross-cultural Communication", level: "intermediate", isSkillGoal: true },
-    { name: "Team Management", level: "advanced", isSkillGoal: true },
-    { name: "Strategic Planning", level: "intermediate", isSkillGoal: true }
-  ].sort((a, b) => {
+  const commonSkills = transformedSkills.filter(
+    skill => categorizeSkill(skill.name) === 'common'
+  ).sort((a, b) => {
     const levelOrder = {
       advanced: 0,
       intermediate: 1,
@@ -67,11 +55,9 @@ export const SkillsSummary = () => {
     return levelOrder[a.level as keyof typeof levelOrder] - levelOrder[b.level as keyof typeof levelOrder];
   });
 
-  const certifications: Certification[] = [
-    { name: "CompTIA Security+ Certification" },
-    { name: "Project Management Professional (PMP)" },
-    { name: "Certified Scrum Master (CSM)" }
-  ];
+  const certifications = initialSkills
+    .filter(skill => categorizeSkill(skill.title) === 'certification')
+    .map(skill => ({ name: skill.title }));
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
@@ -112,14 +98,6 @@ export const SkillsSummary = () => {
     const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
     
     if (newSkills.length > 0) {
-      newSkills.forEach(skillName => {
-        specializedSkills.push({
-          name: skillName,
-          level: "unspecified",
-          isSkillGoal: false
-        });
-      });
-
       toast({
         title: "Skills Added",
         description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
