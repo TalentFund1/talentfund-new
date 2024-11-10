@@ -27,10 +27,21 @@ export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: Ski
     }
   };
 
-  const isGoal = isSkillGoal || 
-                 skillState?.requirement === 'required' || 
-                 skillState?.requirement === 'skill_goal' ||
-                 level === 'advanced'; // Advanced skills are automatically considered goals
+  // Determine if this skill should show a goal indicator
+  const shouldShowGoal = () => {
+    // If explicitly passed as a prop
+    if (isSkillGoal) return true;
+    
+    // If it's in the current states
+    if (skillState) {
+      return skillState.requirement === 'required' || 
+             skillState.requirement === 'skill_goal';
+    }
+    
+    // For all skill levels, show goal by default
+    const currentLevel = (skillState?.level || level || '').toLowerCase();
+    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
+  };
 
   return (
     <Badge 
@@ -44,7 +55,7 @@ export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: Ski
           <div className={`h-2 w-2 rounded-full ${
             getLevelColor(skillState?.level || level || "unspecified")
           }`} />
-          {isGoal && (
+          {shouldShowGoal() && (
             <Heart className="w-3 h-3 text-[#1f2144]" />
           )}
         </div>
