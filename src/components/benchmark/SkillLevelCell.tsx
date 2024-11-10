@@ -14,6 +14,7 @@ export const SkillLevelCell = ({ initialLevel, onStateChange }: SkillLevelCellPr
   const [originalLevel, setOriginalLevel] = useState(initialLevel.toLowerCase());
   const [originalRequired, setOriginalRequired] = useState("required");
 
+  // Notify parent component of changes immediately when values change
   useEffect(() => {
     const hasChanges = level !== originalLevel || required !== originalRequired;
     if (onStateChange) {
