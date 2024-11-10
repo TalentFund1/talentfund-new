@@ -95,7 +95,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
       <CategoryCards 
         selectedCategory={selectedCategory} 
         onCategoryChange={setSelectedCategory}
-        skills={skillsArray}
+        skills={skills}
       />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">

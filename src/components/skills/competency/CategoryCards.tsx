@@ -10,15 +10,10 @@ interface CategoryCardsProps {
 const getSkillCategory = (skill: string): string => {
   // Specialized skills are technical skills related to AI/ML, Cloud, or specialized domains
   const specializedKeywords = [
-    'Machine Learning', 'Artificial Intelligence', 'Deep Learning', 
+    'Machine Learning', 'AI', 'Deep Learning', 
     'Neural Networks', 'Cloud', 'AWS', 'Azure', 'Computer Vision',
-    'Natural Language Processing', 'Data Science'
-  ];
-  
-  // Common skills are general programming languages and soft skills
-  const commonKeywords = [
-    'Python', 'JavaScript', 'Java', 'SQL', 'Communication',
-    'Leadership', 'Project Management', 'Problem Solving'
+    'Natural Language Processing', 'Data Science', 'Amazon Web Services',
+    'System Design', 'Technical Architecture'
   ];
   
   // Certification related skills
@@ -27,16 +22,13 @@ const getSkillCategory = (skill: string): string => {
     'Professional Certification', 'Licensed'
   ];
 
-  if (specializedKeywords.some(keyword => skill.includes(keyword))) {
+  if (specializedKeywords.some(keyword => skill.toLowerCase().includes(keyword.toLowerCase()))) {
     return 'specialized';
   }
-  if (certificationKeywords.some(keyword => skill.includes(keyword))) {
+  if (certificationKeywords.some(keyword => skill.toLowerCase().includes(keyword.toLowerCase()))) {
     return 'certification';
   }
-  if (commonKeywords.some(keyword => skill.includes(keyword))) {
-    return 'common';
-  }
-  return 'common'; // Default to common if no specific category is matched
+  return 'common';
 };
 
 export const CategoryCards = ({ selectedCategory, onCategoryChange, skills }: CategoryCardsProps) => {
