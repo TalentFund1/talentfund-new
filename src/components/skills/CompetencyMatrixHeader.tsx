@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 
 interface CompetencyMatrixHeaderProps {
   selectedLevels: string[];
@@ -9,10 +8,6 @@ export const CompetencyMatrixHeader = ({ selectedLevels }: CompetencyMatrixHeade
   return (
     <div className="flex items-center justify-between">
       <h2 className="text-xl font-semibold text-foreground">Competency Levels</h2>
-      <div className="flex items-center gap-2">
-        <Button variant="outline">Cancel</Button>
-        <Button>Save</Button>
-      </div>
     </div>
   );
 };

@@ -52,21 +52,6 @@ export const SkillProfileMatrix = () => {
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              disabled={!isDirty}
-              onClick={() => setIsDirty(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              disabled={!isDirty}
-              onClick={() => setIsDirty(false)}
-            >
-              Save
-            </Button>
-          </div>
         </div>
 
         <Separator className="my-4" />
