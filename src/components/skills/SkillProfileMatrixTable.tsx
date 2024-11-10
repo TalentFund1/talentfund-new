@@ -6,7 +6,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useState } from "react";
 
 interface Skill {
   title: string;
@@ -23,15 +22,6 @@ interface SkillProfileMatrixTableProps {
 }
 
 export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }: SkillProfileMatrixTableProps) => {
-  const [toggledSkills, setToggledSkills] = useState<{ [key: string]: boolean }>({});
-
-  const handleToggle = (skillTitle: string) => {
-    setToggledSkills(prev => ({
-      ...prev,
-      [skillTitle]: !prev[skillTitle]
-    }));
-  };
-
   return (
     <table className="w-full">
       <thead>
@@ -95,10 +85,7 @@ export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }
           >
             <td className="py-3 px-4">
               <div className="flex items-center gap-2">
-                <Switch 
-                  checked={toggledSkills[skill.title] || false}
-                  onCheckedChange={() => handleToggle(skill.title)}
-                />
+                <Switch />
                 <span className="text-sm">{skill.title}</span>
               </div>
             </td>
