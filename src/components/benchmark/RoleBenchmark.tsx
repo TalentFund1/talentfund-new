@@ -43,8 +43,49 @@ const certifications = [
   { name: "Cybersecurity License" }
 ];
 
+const roleProfiles = {
+  "ai-engineer": {
+    p1: { id: "123", title: "AI Engineer: P1" },
+    p2: { id: "123", title: "AI Engineer: P2" },
+    p3: { id: "123", title: "AI Engineer: P3" },
+    p4: { id: "123", title: "AI Engineer: P4" },
+    p5: { id: "123", title: "AI Engineer: P5" },
+    m1: { id: "123", title: "AI Engineering Manager: M1" },
+    m2: { id: "123", title: "AI Engineering Manager: M2" },
+    m3: { id: "123", title: "AI Engineering Manager: M3" }
+  },
+  "backend-engineer": {
+    p1: { id: "124", title: "Backend Engineer: P1" },
+    p2: { id: "124", title: "Backend Engineer: P2" },
+    p3: { id: "124", title: "Backend Engineer: P3" },
+    p4: { id: "124", title: "Backend Engineer: P4" },
+    p5: { id: "124", title: "Backend Engineer: P5" },
+    m1: { id: "124", title: "Backend Engineering Manager: M1" },
+    m2: { id: "124", title: "Backend Engineering Manager: M2" },
+    m3: { id: "124", title: "Backend Engineering Manager: M3" }
+  },
+  "frontend-developer": {
+    p1: { id: "125", title: "Frontend Developer: P1" },
+    p2: { id: "125", title: "Frontend Developer: P2" },
+    p3: { id: "125", title: "Frontend Developer: P3" },
+    p4: { id: "125", title: "Frontend Developer: P4" },
+    p5: { id: "125", title: "Frontend Developer: P5" },
+    m1: { id: "125", title: "Frontend Engineering Manager: M1" },
+    m2: { id: "125", title: "Frontend Engineering Manager: M2" },
+    m3: { id: "125", title: "Frontend Engineering Manager: M3" }
+  }
+};
+
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState("ai-engineer-p4");
+
+  const handleRoleChange = (value: string) => {
+    setSelectedRole(value);
+    const [role, level] = value.split("-");
+    const profileId = roleProfiles[role as keyof typeof roleProfiles][level].id;
+    navigate(`/skills/${profileId}`);
+  };
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -78,85 +119,104 @@ export const RoleBenchmark = () => {
         </div>
         
         <div className="w-full max-w-[800px]">
-          <Select defaultValue="senior-frontend">
+          <Select value={selectedRole} onValueChange={handleRoleChange}>
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Select Role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="senior-frontend">Senior Frontend Engineer: P4</SelectItem>
-              <SelectItem value="lead-frontend">Lead Frontend Engineer: P5</SelectItem>
-              <SelectItem value="principal">Principal Engineer: P6</SelectItem>
+              <SelectItem value="ai-engineer-p1">AI Engineer: P1</SelectItem>
+              <SelectItem value="ai-engineer-p2">AI Engineer: P2</SelectItem>
+              <SelectItem value="ai-engineer-p3">AI Engineer: P3</SelectItem>
+              <SelectItem value="ai-engineer-p4">AI Engineer: P4</SelectItem>
+              <SelectItem value="ai-engineer-p5">AI Engineer: P5</SelectItem>
+              <SelectItem value="ai-engineer-m1">AI Engineering Manager: M1</SelectItem>
+              <SelectItem value="ai-engineer-m2">AI Engineering Manager: M2</SelectItem>
+              <SelectItem value="ai-engineer-m3">AI Engineering Manager: M3</SelectItem>
+              
+              <SelectItem value="backend-engineer-p1">Backend Engineer: P1</SelectItem>
+              <SelectItem value="backend-engineer-p2">Backend Engineer: P2</SelectItem>
+              <SelectItem value="backend-engineer-p3">Backend Engineer: P3</SelectItem>
+              <SelectItem value="backend-engineer-p4">Backend Engineer: P4</SelectItem>
+              <SelectItem value="backend-engineer-p5">Backend Engineer: P5</SelectItem>
+              <SelectItem value="backend-engineer-m1">Backend Engineering Manager: M1</SelectItem>
+              <SelectItem value="backend-engineer-m2">Backend Engineering Manager: M2</SelectItem>
+              <SelectItem value="backend-engineer-m3">Backend Engineering Manager: M3</SelectItem>
+              
+              <SelectItem value="frontend-developer-p1">Frontend Developer: P1</SelectItem>
+              <SelectItem value="frontend-developer-p2">Frontend Developer: P2</SelectItem>
+              <SelectItem value="frontend-developer-p3">Frontend Developer: P3</SelectItem>
+              <SelectItem value="frontend-developer-p4">Frontend Developer: P4</SelectItem>
+              <SelectItem value="frontend-developer-p5">Frontend Developer: P5</SelectItem>
+              <SelectItem value="frontend-developer-m1">Frontend Engineering Manager: M1</SelectItem>
+              <SelectItem value="frontend-developer-m2">Frontend Engineering Manager: M2</SelectItem>
+              <SelectItem value="frontend-developer-m3">Frontend Engineering Manager: M3</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        <Separator className="my-6" />
-
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Required Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {requiredSkills.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {requiredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Required Skills</span>
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                {requiredSkills.length}
+              </span>
             </div>
           </div>
+          <div className="flex flex-wrap gap-2">
+            {requiredSkills.map((skill) => (
+              <Badge 
+                key={skill.name} 
+                variant="outline" 
+                className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
+              >
+                {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
+              </Badge>
+            ))}
+          </div>
+        </div>
 
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Preferred Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {preferredSkills.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {preferredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Preferred Skills</span>
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                {preferredSkills.length}
+              </span>
             </div>
           </div>
+          <div className="flex flex-wrap gap-2">
+            {preferredSkills.map((skill) => (
+              <Badge 
+                key={skill.name} 
+                variant="outline" 
+                className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
+              >
+                {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
+              </Badge>
+            ))}
+          </div>
+        </div>
 
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Certifications</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {certifications.length}
-                </span>
-              </div>
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Certifications</span>
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                {certifications.length}
+              </span>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {certifications.map((cert) => (
-                <Badge 
-                  key={cert.name}
-                  variant="outline" 
-                  className="rounded-md px-4 py-2 border border-border bg-white"
-                >
-                  {cert.name}
-                </Badge>
-              ))}
-            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {certifications.map((cert) => (
+              <Badge 
+                key={cert.name}
+                variant="outline" 
+                className="rounded-md px-4 py-2 border border-border bg-white"
+              >
+                {cert.name}
+              </Badge>
+            ))}
           </div>
         </div>
       </div>
