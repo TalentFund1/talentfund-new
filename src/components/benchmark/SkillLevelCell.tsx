@@ -134,7 +134,7 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
               </span>
             </SelectValue>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="min-w-[140px]">
             <SelectItem value="required">
               <span className="flex items-center gap-1.5">
                 <Heart className="w-3.5 h-3.5" /> Skill Goal
