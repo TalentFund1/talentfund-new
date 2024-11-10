@@ -19,9 +19,23 @@ interface Skill {
 interface SkillProfileMatrixTableProps {
   paginatedSkills: Skill[];
   lastSkillElementRef: (node: HTMLElement | null) => void;
+  toggledSkills: Set<string>;
+  onToggleSkill: (skillTitle: string) => void;
 }
 
-export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }: SkillProfileMatrixTableProps) => {
+export const SkillProfileMatrixTable = ({ 
+  paginatedSkills, 
+  lastSkillElementRef,
+  toggledSkills,
+  onToggleSkill
+}: SkillProfileMatrixTableProps) => {
+  // Partition skills into toggled and non-toggled while preserving original order
+  const toggledSkillsList = paginatedSkills.filter(skill => toggledSkills.has(skill.title));
+  const nonToggledSkillsList = paginatedSkills.filter(skill => !toggledSkills.has(skill.title));
+  
+  // Combine the lists while preserving order within each group
+  const orderedSkills = [...toggledSkillsList, ...nonToggledSkillsList];
+
   return (
     <table className="w-full">
       <thead>
@@ -77,7 +91,7 @@ export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }
         </tr>
       </thead>
       <tbody>
-        {paginatedSkills.map((skill, index) => (
+        {orderedSkills.map((skill, index) => (
           <tr 
             key={skill.title} 
             ref={index === paginatedSkills.length - 1 ? lastSkillElementRef : null}
@@ -85,7 +99,10 @@ export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }
           >
             <td className="py-3 px-4">
               <div className="flex items-center gap-2">
-                <Switch />
+                <Switch 
+                  checked={toggledSkills.has(skill.title)}
+                  onCheckedChange={() => onToggleSkill(skill.title)}
+                />
                 <span className="text-sm">{skill.title}</span>
               </div>
             </td>

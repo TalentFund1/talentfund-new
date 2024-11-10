@@ -1,15 +1,18 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
+import { useSelectedSkills } from "./context/SelectedSkillsContext";
 
-// Initial page size
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
+  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
+  const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => new Set(selectedSkills));
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [page, setPage] = useState(1);
@@ -18,18 +21,56 @@ export const SkillProfileMatrix = () => {
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
-  // Simulated skills data - in a real app, this would come from an API
+  // Updated skills data with more entries
   const allSkills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
-    { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
+    { title: "Software Development", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
     { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
-    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$181,536", benchmarks: { J: true, B: true, O: true } },
-    { title: "Scalability", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
+    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine Learning", level: "intermediate", growth: "26%", salary: "$181,536", benchmarks: { J: true, B: true, O: true } },
+    { title: "Scalability", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
     { title: "Software Engineering", subcategory: "Software Development Tools", level: "advanced", growth: "23%", salary: "$180,512", benchmarks: { J: true, B: true, O: true } },
-    { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
+    { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine Learning", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } },
+    { title: "Deep Learning", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "TensorFlow", subcategory: "Machine Learning Frameworks", level: "intermediate", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "26%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Docker", subcategory: "DevOps Tools", level: "intermediate", growth: "22%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Git", subcategory: "Version Control", level: "advanced", growth: "18%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "SQL", subcategory: "Database Management", level: "advanced", growth: "19%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "REST APIs", subcategory: "Web Development", level: "advanced", growth: "21%", salary: "$176,000", benchmarks: { J: true, B: true, O: true } }
   ];
 
-  // Calculate the current page of skills
+  const handleToggleSkill = (skillTitle: string) => {
+    setToggledSkills(prev => {
+      const newToggledSkills = new Set(prev);
+      if (newToggledSkills.has(skillTitle)) {
+        newToggledSkills.delete(skillTitle);
+      } else {
+        newToggledSkills.add(skillTitle);
+      }
+      setHasUnsavedChanges(true);
+      return newToggledSkills;
+    });
+  };
+
+  const handleSave = () => {
+    const newSelectedSkills = Array.from(toggledSkills);
+    setSelectedSkills(newSelectedSkills);
+    setHasUnsavedChanges(false);
+    toast({
+      title: "Changes saved",
+      description: "Your skill selections have been saved successfully.",
+    });
+  };
+
+  const handleCancel = () => {
+    setToggledSkills(new Set(selectedSkills));
+    setHasUnsavedChanges(false);
+    toast({
+      title: "Changes cancelled",
+      description: "Your skill selections have been reset.",
+    });
+  };
+
   const paginatedSkills = allSkills.slice(0, page * PAGE_SIZE);
 
   const lastSkillElementRef = useCallback((node: HTMLElement | null) => {
@@ -62,8 +103,19 @@ export const SkillProfileMatrix = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
-            <Button variant="outline">Cancel</Button>
-            <Button>Save</Button>
+            <Button 
+              variant="outline" 
+              onClick={handleCancel}
+              disabled={!hasUnsavedChanges}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={!hasUnsavedChanges}
+            >
+              Save
+            </Button>
           </div>
         </div>
 
@@ -114,6 +166,8 @@ export const SkillProfileMatrix = () => {
           <SkillProfileMatrixTable 
             paginatedSkills={paginatedSkills} 
             lastSkillElementRef={lastSkillElementRef}
+            toggledSkills={toggledSkills}
+            onToggleSkill={handleToggleSkill}
           />
         </div>
       </Card>
