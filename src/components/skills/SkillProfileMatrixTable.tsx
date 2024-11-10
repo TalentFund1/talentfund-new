@@ -27,40 +27,11 @@ export const SkillProfileMatrixTable = ({
   toggledSkills,
   onToggleSkill
 }: SkillProfileMatrixTableProps) => {
-  const allSelected = paginatedSkills.length > 0 && 
-    paginatedSkills.every(skill => toggledSkills.has(skill.title));
-
-  const handleSelectAll = () => {
-    if (allSelected) {
-      // If all are selected, unselect all
-      paginatedSkills.forEach(skill => {
-        if (toggledSkills.has(skill.title)) {
-          onToggleSkill(skill.title);
-        }
-      });
-    } else {
-      // If not all are selected, select all
-      paginatedSkills.forEach(skill => {
-        if (!toggledSkills.has(skill.title)) {
-          onToggleSkill(skill.title);
-        }
-      });
-    }
-  };
-
   return (
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">
-            <div className="flex items-center gap-2">
-              <Switch 
-                checked={allSelected}
-                onCheckedChange={handleSelectAll}
-              />
-              <span>Skill Title</span>
-            </div>
-          </th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
@@ -138,15 +109,9 @@ export const SkillProfileMatrixTable = ({
             <td className="py-3 px-4 text-center text-sm">{skill.salary}</td>
             <td className="py-3 px-4">
               <div className="flex justify-center gap-1">
-                {skill.benchmarks.J && (
-                  <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
-                )}
-                {skill.benchmarks.B && (
-                  <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
-                )}
-                {skill.benchmarks.O && (
-                  <span className="w-6 h-6 rounded-full bg-primary-icon/10 text-primary-icon flex items-center justify-center text-sm font-medium">O</span>
-                )}
+                <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
+                <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
+                <span className="w-6 h-6 rounded-full bg-primary-icon/10 text-primary-icon flex items-center justify-center text-sm font-medium">O</span>
               </div>
             </td>
           </tr>
