@@ -24,7 +24,7 @@ export const SkillProfileHeader = () => {
         <div className="space-y-1">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-semibold text-foreground">{formatTitle(jobTitle)}</h1>
-            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: 123 saved</span>
+            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: 123</span>
           </div>
         </div>
 
