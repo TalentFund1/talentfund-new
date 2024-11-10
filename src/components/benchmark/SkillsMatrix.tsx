@@ -101,13 +101,11 @@ export const SkillsMatrix = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
 
-  const allSkillTitles = skills.map(skill => skill.title);
-
   const handleSkillsChange = (newSelectedSkills: string[]) => {
     setSelectedSkills(newSelectedSkills);
     
     const newSkills = newSelectedSkills.filter(
-      skill => !allSkillTitles.includes(skill)
+      skill => !skills.some(s => s.title === skill)
     );
     
     if (newSkills.length > 0) {
@@ -126,6 +124,26 @@ export const SkillsMatrix = () => {
         description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
       });
     }
+  };
+
+  const handleSkillAdd = (newSkill: { 
+    title: string; 
+    subcategory: string; 
+    level: string; 
+    growth: string; 
+    confidence: string; 
+  }) => {
+    if (skills.some(skill => skill.title === newSkill.title)) {
+      toast({
+        title: "Error",
+        description: "This skill already exists in the matrix.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSkills(prev => [...prev, newSkill]);
+    setSelectedSkills(prev => [...prev, newSkill.title]);
   };
 
   const handleSave = () => {
@@ -179,6 +197,7 @@ export const SkillsMatrix = () => {
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
+          onSkillAdd={handleSkillAdd}
         />
 
         <SkillsMatrixTable 
