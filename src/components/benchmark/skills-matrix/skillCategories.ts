@@ -1,87 +1,52 @@
 export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
+  // Certification keywords that should trigger certification categorization
   const certificationKeywords = [
     'CISSP',
     'AWS Certified',
-    'Certified Information Systems Security Professional',
-    'Solutions Architect',
-    'Professional Scrum',
-    'Azure Solutions Architect',
-    'Google Cloud Professional',
-    'CompTIA Security+',
-    'Security+ Certification',
+    'CompTIA',
+    'Security+',
     'PMP',
     'Project Management Professional',
     'Certified Scrum Master',
     'CSM',
-    'Cisco CCNA',
-    'Oracle Certified Professional',
-    'Salesforce Certified Developer',
-    'Red Hat Certified Engineer',
-    'HashiCorp Certified',
-    'Certified Ethical Hacker',
-    'ITIL Foundation',
-    'Certification',
-    'Certificate'
+    'Professional Certification',
+    'Certified'
   ];
 
+  // Check if the skill title or subcategory contains certification keywords
+  const isCertification = (skill: string, subcategory?: string): boolean => {
+    const normalizedSkill = skill.toLowerCase();
+    const normalizedSubcategory = subcategory?.toLowerCase() || '';
+    
+    return certificationKeywords.some(cert => 
+      normalizedSkill.includes(cert.toLowerCase()) || 
+      normalizedSubcategory.includes('certification')
+    );
+  };
+
   const specializedSkills = [
-    'Amazon Web Services',
-    'Artificial Intelligence',
-    'Conversational AI',
-    'Deep Learning',
-    'Machine Learning',
-    'MLflow',
-    'Natural Language Understanding',
-    'Computer Vision',
-    'TensorFlow',
-    'PyTorch',
-    'Docker',
-    'JavaScript',
-    'Docker (Software)',
-    'Kubernetes',
-    'Cloud Architecture',
-    'Data Engineering',
     'Quantum Computing',
     'Robotics Programming',
     '5G Network Architecture',
+    'Edge Computing',
+    'Blockchain Development',
+    'DevSecOps',
     'System Architecture',
-    'Microservices Design'
+    'Data Engineering',
+    'IoT Development'
   ];
 
   const commonSkills = [
-    'Python',
-    'Git',
-    'SQL',
-    'REST APIs',
-    'System Design',
-    'DevOps',
-    'UI/UX Design',
-    'Problem Solving',
-    'Critical Thinking',
-    'Team Leadership',
-    'Project Management',
-    'Communication Skills',
-    'Agile Methodologies',
-    'Time Management',
-    'Conflict Resolution',
-    'Strategic Planning',
-    'Mentoring',
-    'Cross-functional Collaboration',
-    'Stakeholder Management',
-    'Change Management',
-    'Decision Making',
-    'Innovation',
-    'Analytical Skills',
     'Technical Writing',
     'Agile Project Management',
     'Business Analysis',
-    'Risk Management'
+    'Risk Management',
+    'Strategic Leadership',
+    'Change Management',
+    'Cross-cultural Communication'
   ];
 
-  // Check if the skill contains any certification keywords
-  if (certificationKeywords.some(cert => 
-    skill.toLowerCase().includes(cert.toLowerCase())
-  )) {
+  if (isCertification(skill)) {
     return 'certification';
   }
   
@@ -101,6 +66,7 @@ export const filterSkillsByCategory = (
   }
 
   return skills.filter(skill => 
-    categorizeSkill(skill.title) === category
+    categorizeSkill(skill.title) === category || 
+    (category === 'certification' && skill.subcategory.toLowerCase().includes('certification'))
   );
 };
