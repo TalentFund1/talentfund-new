@@ -21,12 +21,21 @@ export const SkillProfileMatrix = () => {
 
   const allSkills = [
     { title: "Amazon Web Services", subcategory: "Web Services", level: "advanced", growth: "23%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
-    { title: "Software Development", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
-    { title: "Python", subcategory: "Natural Language Processing (NLP)", level: "intermediate", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
-    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "26%", salary: "$181,536", benchmarks: { J: true, B: true, O: true } },
-    { title: "Scalability", subcategory: "Artificial Intelligence and Machine...", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
+    { title: "Software Development", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "23%", salary: "$184,608", benchmarks: { J: true, B: true, O: true } },
+    { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "24%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
+    { title: "Computer Science", subcategory: "Artificial Intelligence and Machine Learning", level: "intermediate", growth: "26%", salary: "$181,536", benchmarks: { J: true, B: true, O: true } },
+    { title: "Scalability", subcategory: "Artificial Intelligence and Machine Learning", level: "advanced", growth: "25%", salary: "$195,616", benchmarks: { J: true, B: true, O: true } },
     { title: "Software Engineering", subcategory: "Software Development Tools", level: "advanced", growth: "23%", salary: "$180,512", benchmarks: { J: true, B: true, O: true } },
-    { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
+    { title: "Kubernetes", subcategory: "Container Orchestration", level: "advanced", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } },
+    { title: "TensorFlow", subcategory: "Machine Learning Frameworks", level: "advanced", growth: "16%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "PyTorch", subcategory: "Machine Learning Frameworks", level: "intermediate", growth: "18%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "20%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Computer Vision", subcategory: "AI Applications", level: "intermediate", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Git", subcategory: "Version Control", level: "advanced", growth: "8%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "SQL", subcategory: "Databases", level: "advanced", growth: "9%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "MongoDB", subcategory: "Databases", level: "intermediate", growth: "14%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "REST APIs", subcategory: "Web Development", level: "advanced", growth: "11%", salary: "$176,000", benchmarks: { J: true, B: true, O: true } },
+    { title: "Data Science", subcategory: "Analytics", level: "intermediate", growth: "21%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } }
   ];
 
   const handleToggleSkill = (skillTitle: string) => {
@@ -87,7 +96,7 @@ export const SkillProfileMatrix = () => {
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
-            paginatedSkills={paginatedSkills}
+            paginatedSkills={allSkills.slice(0, page * PAGE_SIZE)}
             toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
           />
