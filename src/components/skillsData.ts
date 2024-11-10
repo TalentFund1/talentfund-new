@@ -1,94 +1,130 @@
-// Technical Skills
-const webDevelopment = [
-  "React", "Angular", "Vue.js", "Next.js", "Node.js", "Express.js",
-  "Django", "Flask", "HTML5", "CSS3", "Sass", "Tailwind CSS",
-  "Bootstrap", "Material UI", "GraphQL"
+// Specialized skills for technical roles
+export const specializedSkills = [
+  // Programming Languages & Frameworks
+  "JavaScript",
+  "TypeScript",
+  "Python",
+  "Java",
+  "C++",
+  "Ruby",
+  "Go",
+  "Rust",
+  "PHP",
+  "Swift",
+  "SystemVerilog",
+  "React",
+  "Angular",
+  "Vue.js",
+  "Next.js",
+  "Node.js",
+  
+  // Cloud & DevOps
+  "AWS Lambda",
+  "Azure Functions",
+  "Docker",
+  "Kubernetes",
+  "Jenkins",
+  "GitLab CI",
+  "Terraform",
+  
+  // Hardware & Systems
+  "Computer Architecture",
+  "Static Timing Analysis",
+  "Cadence Encounter",
+  "Synopsys Primetime",
+  "Internet of Things",
+  "GraphQL"
 ];
 
-const programmingLanguages = [
-  "JavaScript", "TypeScript", "Python", "Java", "C++", "Ruby",
-  "Go", "Rust", "PHP", "Swift", "SystemVerilog"
+// Common skills that apply across roles
+export const commonSkills = [
+  // Web Development Basics
+  "HTML5",
+  "CSS3",
+  "Sass",
+  "Tailwind CSS",
+  "Bootstrap",
+  "Material UI",
+  
+  // Tools & Software
+  "Microsoft Excel",
+  "Git",
+  "GitHub",
+  "Bitbucket",
+  "GitLab",
+  "Version Control Best Practices",
+  
+  // Infrastructure
+  "Linux",
+  "Nginx",
+  "Apache",
+  "Express.js",
+  "Django",
+  "Flask",
+  
+  // Project Management
+  "Agile Methodologies",
+  "Project Management",
+  "Scrum",
+  "Time Management",
+  
+  // Problem Solving
+  "Problem Solving",
+  "Critical Thinking",
+  "Analytical Skills",
+  "Problem Analysis",
+  "Creative Problem Solving",
+  "Research Skills",
+  "Logical Reasoning",
+  "Innovation",
+  "Design Thinking",
+  
+  // Design & Communication
+  "UI/UX Design Principles",
+  "Team Leadership",
+  "Strategic Planning",
+  "Decision Making",
+  "Conflict Resolution",
+  "Change Management",
+  "Performance Management",
+  "Mentoring",
+  "Coaching",
+  "Team Building",
+  "Communication",
+  "Presentation Skills",
+  "Technical Writing",
+  "Active Listening",
+  "Interpersonal Communication",
+  "Cross-cultural Communication"
 ];
 
-const cloudAndDevOps = [
-  "AWS Lambda", "Azure Functions", "Docker", "Kubernetes", "Jenkins",
-  "GitLab CI", "Terraform", "Ansible", "Linux", "Nginx", "Apache"
-];
-
-const hardwareAndSystems = [
-  "Computer Architecture", "Static Timing Analysis", "Cadence Encounter",
-  "Synopsys Primetime", "Internet of Things"
-];
-
-const toolsAndSoftware = [
-  "Microsoft Excel", "Git", "GitHub", "Bitbucket", "GitLab",
-  "Version Control Best Practices"
-];
-
-export const technicalSkills = [
-  ...programmingLanguages,
-  ...webDevelopment,
-  ...cloudAndDevOps,
-  ...hardwareAndSystems,
-  ...toolsAndSoftware
-];
-
-// Soft Skills
-const projectManagement = [
-  "Agile Methodologies", "Project Management", "Scrum", "Time Management"
-];
-
-const problemSolving = [
-  "Problem Solving", "Critical Thinking", "Analytical Skills",
-  "Problem Analysis", "Creative Problem Solving", "Research Skills",
-  "Logical Reasoning", "Innovation", "Design Thinking"
-];
-
-const design = ["UI/UX Design Principles"];
-
-const otherSkills = [
-  "Team Leadership", "Strategic Planning", "Decision Making",
-  "Conflict Resolution", "Change Management", "Performance Management",
-  "Mentoring", "Coaching", "Team Building", "Communication",
-  "Presentation Skills", "Technical Writing", "Active Listening",
-  "Interpersonal Communication", "Cross-cultural Communication"
-];
-
-export const softSkills = [
-  ...projectManagement,
-  ...problemSolving,
-  ...design,
-  ...otherSkills
-];
-
+// Certification skills
 export const certificationSkills = [
-  "Cybersecurity License",
   "AWS Certified Solutions Architect",
+  "AWS Certified Developer",
+  "Professional Scrum Master",
   "Kubernetes Administrator (CKA)",
-  "Professional Agile Leadership",
-  "Azure Solutions Architect"
+  "Azure Solutions Architect",
+  "Cybersecurity License"
 ];
 
-// Skill categorization helpers
-export const isSpecializedSkill = (skill: string) => {
-  const specializedSkills = [
-    ...hardwareAndSystems,
-    ...cloudAndDevOps.filter(s => ["Kubernetes", "Docker", "AWS Lambda", "Azure Functions"].includes(s))
-  ];
-  return specializedSkills.includes(skill);
-};
+// All skills combined
+export const allSkills = [
+  ...specializedSkills,
+  ...commonSkills,
+  ...certificationSkills
+];
 
-export const isCommonSkill = (skill: string) => {
-  const commonSkills = [
-    ...projectManagement,
-    ...problemSolving,
-    ...otherSkills,
-    ...toolsAndSoftware,
-    "JavaScript", "Python", "HTML5", "CSS3"
-  ];
-  return commonSkills.includes(skill);
-};
+// Technical skills (for backward compatibility)
+export const technicalSkills = specializedSkills;
 
-export const isCertificationSkill = (skill: string) => {
-  return certificationSkills.includes(skill);
+// Soft skills (for backward compatibility)
+export const softSkills = commonSkills;
+
+// Categorize skills
+export const categorizeSkill = (skill: string) => {
+  if (specializedSkills.includes(skill)) return "specialized";
+  if (commonSkills.includes(skill)) return "common";
+  if (certificationSkills.includes(skill)) return "certification";
+  return "common"; // Default category
 };

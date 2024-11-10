@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { technicalSkills, softSkills } from '@/components/skillsData';
 
 interface SkillState {
   level: string;
