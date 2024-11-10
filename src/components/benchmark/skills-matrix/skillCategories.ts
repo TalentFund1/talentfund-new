@@ -73,10 +73,15 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Analytical Skills'
   ];
 
-  if (certifications.some(cert => skill.includes(cert))) {
+  // Check for certifications first using partial matches
+  if (certifications.some(cert => 
+    skill.toLowerCase().includes(cert.toLowerCase()) || 
+    cert.toLowerCase().includes(skill.toLowerCase())
+  )) {
     return 'certification';
   }
   
+  // Then check for exact matches for specialized skills
   if (specializedSkills.includes(skill)) {
     return 'specialized';
   }
