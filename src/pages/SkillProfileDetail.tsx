@@ -12,11 +12,14 @@ import { CompetencyGraph } from "@/components/skills/CompetencyGraph";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
 import { Sidebar } from "@/components/Sidebar";
-import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
+
+  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
+    setTrack(newTrack);
+  };
 
   return (
     <ToastProvider>
@@ -64,9 +67,7 @@ const SkillProfileDetail = () => {
 
                 <TabsContent value="skills">
                   <SelectBenchmark />
-                  <Card className="p-6 bg-white">
-                    <SkillProfileTable />
-                  </Card>
+                  <SkillProfileMatrix />
                 </TabsContent>
 
                 <TabsContent value="graph">
