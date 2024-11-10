@@ -1,4 +1,5 @@
 export const initialSkills = [
+  // Specialized Technical Skills
   {
     title: "Quantum Computing",
     subcategory: "Emerging Technologies",
@@ -119,29 +120,6 @@ export const initialSkills = [
     subcategory: "Emerging Technologies",
     level: "intermediate",
     growth: "17%",
-    confidence: "medium"
-  },
-  
-  // Certifications (3 key ones)
-  {
-    title: "AWS Certified Solutions Architect",
-    subcategory: "Cloud Certifications",
-    level: "advanced",
-    growth: "20%",
-    confidence: "high"
-  },
-  {
-    title: "Certified Information Systems Security Professional",
-    subcategory: "Security Certifications",
-    level: "advanced",
-    growth: "25%",
-    confidence: "high"
-  },
-  {
-    title: "Project Management Professional (PMP)",
-    subcategory: "Management Certifications",
-    level: "intermediate",
-    growth: "12%",
     confidence: "medium"
   }
 ];

@@ -38,26 +38,13 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const isCertification = (subcategory: string) => {
-    return subcategory.toLowerCase().includes('certification');
-  };
-
   const handleLevelChange = (newLevel: string, requirement: string) => {
     setSkillState(skill.title, newLevel, requirement);
   };
 
   return (
     <TableRow className="group border-b border-gray-200">
-      <TableCell className="font-medium border-r border-blue-200 py-2">
-        {isCertification(skill.subcategory) ? (
-          <div className="flex items-center gap-2">
-            <span className="bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full text-xs">CERT</span>
-            {skill.title}
-          </div>
-        ) : (
-          skill.title
-        )}
-      </TableCell>
+      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
         <div className="flex justify-center">
