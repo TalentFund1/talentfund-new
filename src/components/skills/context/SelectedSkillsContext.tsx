@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface SelectedSkillsContextType {
   selectedSkills: string[];
@@ -8,16 +8,7 @@ interface SelectedSkillsContextType {
 const SelectedSkillsContext = createContext<SelectedSkillsContextType | undefined>(undefined);
 
 export const SelectedSkillsProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedSkills, setSelectedSkills] = useState<string[]>(() => {
-    // Load initial state from localStorage
-    const saved = localStorage.getItem('selectedSkills');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // Save to localStorage whenever selectedSkills changes
-  useEffect(() => {
-    localStorage.setItem('selectedSkills', JSON.stringify(selectedSkills));
-  }, [selectedSkills]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
 
   return (
     <SelectedSkillsContext.Provider value={{ selectedSkills, setSelectedSkills }}>

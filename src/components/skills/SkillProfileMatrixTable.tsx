@@ -6,6 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useState } from "react";
 
 interface Skill {
   title: string;
@@ -19,22 +20,17 @@ interface Skill {
 interface SkillProfileMatrixTableProps {
   paginatedSkills: Skill[];
   lastSkillElementRef: (node: HTMLElement | null) => void;
-  toggledSkills: Set<string>;
-  onToggleSkill: (skillTitle: string) => void;
 }
 
-export const SkillProfileMatrixTable = ({ 
-  paginatedSkills, 
-  lastSkillElementRef,
-  toggledSkills,
-  onToggleSkill
-}: SkillProfileMatrixTableProps) => {
-  // Partition skills into toggled and non-toggled while preserving original order
-  const toggledSkillsList = paginatedSkills.filter(skill => toggledSkills.has(skill.title));
-  const nonToggledSkillsList = paginatedSkills.filter(skill => !toggledSkills.has(skill.title));
-  
-  // Combine the lists while preserving order within each group
-  const orderedSkills = [...toggledSkillsList, ...nonToggledSkillsList];
+export const SkillProfileMatrixTable = ({ paginatedSkills, lastSkillElementRef }: SkillProfileMatrixTableProps) => {
+  const [toggledSkills, setToggledSkills] = useState<{ [key: string]: boolean }>({});
+
+  const handleToggle = (skillTitle: string) => {
+    setToggledSkills(prev => ({
+      ...prev,
+      [skillTitle]: !prev[skillTitle]
+    }));
+  };
 
   return (
     <table className="w-full">
@@ -91,7 +87,7 @@ export const SkillProfileMatrixTable = ({
         </tr>
       </thead>
       <tbody>
-        {orderedSkills.map((skill, index) => (
+        {paginatedSkills.map((skill, index) => (
           <tr 
             key={skill.title} 
             ref={index === paginatedSkills.length - 1 ? lastSkillElementRef : null}
@@ -100,8 +96,8 @@ export const SkillProfileMatrixTable = ({
             <td className="py-3 px-4">
               <div className="flex items-center gap-2">
                 <Switch 
-                  checked={toggledSkills.has(skill.title)}
-                  onCheckedChange={() => onToggleSkill(skill.title)}
+                  checked={toggledSkills[skill.title] || false}
+                  onCheckedChange={() => handleToggle(skill.title)}
                 />
                 <span className="text-sm">{skill.title}</span>
               </div>
