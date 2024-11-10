@@ -11,7 +11,19 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'TensorFlow',
     'PyTorch',
     'Docker',
-    'Kubernetes'
+    'Kubernetes',
+    'Cloud Architecture',
+    'Data Engineering',
+    'Quantum Computing',
+    'Blockchain Development',
+    'IoT Development',
+    'Cybersecurity',
+    'DevSecOps',
+    'Big Data Analytics',
+    'Robotics Programming',
+    'Edge Computing',
+    'System Architecture',
+    'Microservices Design'
   ];
 
   const certifications = [
@@ -19,7 +31,17 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Azure Solutions Architect',
     'Professional Scrum',
     'CISSP',
-    'CKA'
+    'CKA',
+    'Google Cloud Professional',
+    'CompTIA Security+',
+    'PMP Certification',
+    'Cisco CCNA',
+    'Oracle Certified Professional',
+    'Salesforce Certified Developer',
+    'Red Hat Certified Engineer',
+    'HashiCorp Certified',
+    'Certified Ethical Hacker',
+    'ITIL Foundation'
   ];
 
   const commonSkills = [
@@ -30,7 +52,23 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'REST APIs',
     'System Design',
     'DevOps',
-    'UI/UX Design'
+    'UI/UX Design',
+    'Problem Solving',
+    'Critical Thinking',
+    'Team Leadership',
+    'Project Management',
+    'Communication Skills',
+    'Agile Methodologies',
+    'Time Management',
+    'Conflict Resolution',
+    'Strategic Planning',
+    'Mentoring',
+    'Cross-functional Collaboration',
+    'Stakeholder Management',
+    'Change Management',
+    'Decision Making',
+    'Innovation',
+    'Analytical Skills'
   ];
 
   if (certifications.some(cert => skill.includes(cert))) {
