@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
-  const [toggledSkills, setToggledSkills] = useState<Set<string>>(new Set(selectedSkills));
+  const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => new Set(selectedSkills));
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
