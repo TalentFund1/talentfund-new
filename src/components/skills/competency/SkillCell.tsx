@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
 import { useEffect } from "react";
 import { useCompetencyStore } from "./CompetencyState";
 
@@ -141,18 +141,29 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center">
-                {currentState.required === 'required' ? '✓' : <Heart className="w-3 h-3" />}
-                {currentState.required.charAt(0).toUpperCase() + currentState.required.slice(1)}
+                {currentState.required === 'required' ? (
+                  <>
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Required</span>
+                  </>
+                ) : (
+                  <>
+                    <Heart className="w-3.5 h-3.5" />
+                    <span>Preferred</span>
+                  </>
+                )}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
-              <span className="flex items-center gap-2">✓ Required</span>
+              <span className="flex items-center gap-2">
+                <Check className="w-3.5 h-3.5" /> Required
+              </span>
             </SelectItem>
             <SelectItem value="preferred">
               <span className="flex items-center gap-2">
-                <Heart className="w-3 h-3" /> Preferred
+                <Heart className="w-3.5 h-3.5" /> Preferred
               </span>
             </SelectItem>
           </SelectContent>
