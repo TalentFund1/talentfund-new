@@ -34,65 +34,6 @@ export const initialSkills = {
       level: "advanced",
       growth: "28%",
       confidence: "high"
-    },
-    // Additional specialized skills
-    {
-      title: "Computer Vision",
-      subcategory: "AI Applications",
-      level: "advanced",
-      growth: "22%",
-      confidence: "high"
-    },
-    {
-      title: "PyTorch",
-      subcategory: "Machine Learning Frameworks",
-      level: "advanced",
-      growth: "24%",
-      confidence: "high"
-    },
-    {
-      title: "Data Engineering",
-      subcategory: "Data Management",
-      level: "intermediate",
-      growth: "20%",
-      confidence: "medium"
-    },
-    // Common skills
-    {
-      title: "Problem Solving",
-      subcategory: "Soft Skills",
-      level: "advanced",
-      growth: "15%",
-      confidence: "high"
-    },
-    {
-      title: "Technical Writing",
-      subcategory: "Communication",
-      level: "intermediate",
-      growth: "12%",
-      confidence: "medium"
-    },
-    // Certifications
-    {
-      title: "AWS Certified Machine Learning - Specialty",
-      subcategory: "Cloud Certification",
-      level: "advanced",
-      growth: "25%",
-      confidence: "high"
-    },
-    {
-      title: "TensorFlow Developer Certificate",
-      subcategory: "AI Certification",
-      level: "advanced",
-      growth: "20%",
-      confidence: "high"
-    },
-    {
-      title: "Google Cloud Professional Machine Learning Engineer",
-      subcategory: "Cloud Certification",
-      level: "advanced",
-      growth: "28%",
-      confidence: "high"
     }
   ],
   "124": [ // Jennie Richards - Backend Engineer
@@ -130,65 +71,6 @@ export const initialSkills = {
       level: "intermediate",
       growth: "35%",
       confidence: "medium"
-    },
-    // Additional specialized skills
-    {
-      title: "Kubernetes",
-      subcategory: "Container Orchestration",
-      level: "advanced",
-      growth: "28%",
-      confidence: "high"
-    },
-    {
-      title: "GraphQL",
-      subcategory: "API Development",
-      level: "advanced",
-      growth: "22%",
-      confidence: "high"
-    },
-    {
-      title: "MongoDB",
-      subcategory: "Databases",
-      level: "advanced",
-      growth: "20%",
-      confidence: "high"
-    },
-    // Common skills
-    {
-      title: "Agile Methodologies",
-      subcategory: "Project Management",
-      level: "advanced",
-      growth: "15%",
-      confidence: "high"
-    },
-    {
-      title: "Code Review",
-      subcategory: "Development Practices",
-      level: "advanced",
-      growth: "12%",
-      confidence: "high"
-    },
-    // Certifications
-    {
-      title: "AWS Certified Solutions Architect",
-      subcategory: "Cloud Certification",
-      level: "advanced",
-      growth: "30%",
-      confidence: "high"
-    },
-    {
-      title: "Kubernetes Administrator (CKA)",
-      subcategory: "Container Certification",
-      level: "advanced",
-      growth: "25%",
-      confidence: "high"
-    },
-    {
-      title: "MongoDB Professional Developer",
-      subcategory: "Database Certification",
-      level: "advanced",
-      growth: "20%",
-      confidence: "high"
     }
   ],
   "125": [ // Anna Vyselva - Frontend Developer
@@ -226,65 +108,6 @@ export const initialSkills = {
       level: "intermediate",
       growth: "35%",
       confidence: "medium"
-    },
-    // Additional specialized skills
-    {
-      title: "Next.js",
-      subcategory: "Frontend Frameworks",
-      level: "advanced",
-      growth: "28%",
-      confidence: "high"
-    },
-    {
-      title: "Vue.js",
-      subcategory: "Frontend Frameworks",
-      level: "intermediate",
-      growth: "20%",
-      confidence: "medium"
-    },
-    {
-      title: "Webpack",
-      subcategory: "Build Tools",
-      level: "advanced",
-      growth: "15%",
-      confidence: "high"
-    },
-    // Common skills
-    {
-      title: "Cross-browser Compatibility",
-      subcategory: "Frontend Development",
-      level: "advanced",
-      growth: "12%",
-      confidence: "high"
-    },
-    {
-      title: "Responsive Design",
-      subcategory: "Web Development",
-      level: "advanced",
-      growth: "18%",
-      confidence: "high"
-    },
-    // Certifications
-    {
-      title: "AWS Certified Developer - Associate",
-      subcategory: "Cloud Certification",
-      level: "intermediate",
-      growth: "25%",
-      confidence: "medium"
-    },
-    {
-      title: "Google Mobile Web Specialist",
-      subcategory: "Web Development Certification",
-      level: "advanced",
-      growth: "20%",
-      confidence: "high"
-    },
-    {
-      title: "Professional Scrum Developer",
-      subcategory: "Development Certification",
-      level: "intermediate",
-      growth: "15%",
-      confidence: "medium"
     }
   ],
   "126": [ // Suz Manu - Engineering Manager
@@ -321,65 +144,6 @@ export const initialSkills = {
       subcategory: "Management",
       level: "intermediate",
       growth: "30%",
-      confidence: "medium"
-    },
-    // Additional specialized skills
-    {
-      title: "System Design",
-      subcategory: "Architecture",
-      level: "advanced",
-      growth: "25%",
-      confidence: "high"
-    },
-    {
-      title: "Risk Management",
-      subcategory: "Management",
-      level: "advanced",
-      growth: "20%",
-      confidence: "high"
-    },
-    {
-      title: "DevOps Practices",
-      subcategory: "Development Operations",
-      level: "intermediate",
-      growth: "28%",
-      confidence: "medium"
-    },
-    // Common skills
-    {
-      title: "Stakeholder Management",
-      subcategory: "Leadership",
-      level: "advanced",
-      growth: "22%",
-      confidence: "high"
-    },
-    {
-      title: "Conflict Resolution",
-      subcategory: "Management",
-      level: "advanced",
-      growth: "18%",
-      confidence: "high"
-    },
-    // Certifications
-    {
-      title: "Project Management Professional (PMP)",
-      subcategory: "Management Certification",
-      level: "advanced",
-      growth: "25%",
-      confidence: "high"
-    },
-    {
-      title: "Certified Scrum Master (CSM)",
-      subcategory: "Agile Certification",
-      level: "advanced",
-      growth: "20%",
-      confidence: "high"
-    },
-    {
-      title: "ITIL Foundation",
-      subcategory: "IT Service Management",
-      level: "intermediate",
-      growth: "15%",
       confidence: "medium"
     }
   ]
