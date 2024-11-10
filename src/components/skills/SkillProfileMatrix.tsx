@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
-import { useSelectedSkills } from "./context/SelectedSkillsContext";
+import { useIndependentSkills } from "./context/IndependentSkillsContext";
 
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
-  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
-  const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => new Set(selectedSkills));
+  const { independentSkills, setIndependentSkills } = useIndependentSkills();
+  const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => new Set(independentSkills));
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
@@ -71,7 +71,7 @@ export const SkillProfileMatrix = () => {
   };
 
   const handleSave = () => {
-    setSelectedSkills(Array.from(toggledSkills));
+    setIndependentSkills(Array.from(toggledSkills));
     setHasUnsavedChanges(false);
     toast({
       title: "Changes saved",
@@ -80,7 +80,7 @@ export const SkillProfileMatrix = () => {
   };
 
   const handleCancel = () => {
-    setToggledSkills(new Set(selectedSkills));
+    setToggledSkills(new Set(independentSkills));
     setHasUnsavedChanges(false);
     toast({
       title: "Changes cancelled",
@@ -122,7 +122,7 @@ export const SkillProfileMatrix = () => {
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
             <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">
-              {selectedSkills.length} saved
+              {independentSkills.length} saved
             </span>
           </div>
           <div className="flex gap-2">
