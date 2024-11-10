@@ -50,6 +50,42 @@ const skills = [
     growth: "0%"
   },
   {
+    title: "Kubernetes",
+    subcategory: "Container Orchestration",
+    level: "Advanced",
+    growth: "15%"
+  },
+  {
+    title: "Kubernetes Operators",
+    subcategory: "Container Orchestration",
+    level: "Intermediate",
+    growth: "13%"
+  },
+  {
+    title: "Kubernetes Helm",
+    subcategory: "Container Orchestration",
+    level: "Intermediate",
+    growth: "12%"
+  },
+  {
+    title: "Kubernetes Service Mesh",
+    subcategory: "Container Orchestration",
+    level: "Beginner",
+    growth: "14%"
+  },
+  {
+    title: "Kubernetes Security",
+    subcategory: "Container Orchestration",
+    level: "Intermediate",
+    growth: "16%"
+  },
+  {
+    title: "Kubernetes Monitoring",
+    subcategory: "Container Orchestration",
+    level: "Beginner",
+    growth: "11%"
+  },
+  {
     title: "MLflow",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "Beginner",
