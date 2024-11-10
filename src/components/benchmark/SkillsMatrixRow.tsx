@@ -10,9 +10,14 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
   };
+  onSkillChange: (skillTitle: string, newLevel: string, newRequired: string) => void;
 }
 
-export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill, onSkillChange }: SkillsMatrixRowProps) => {
+  const handleSkillChange = (newLevel: string, newRequired: string) => {
+    onSkillChange(skill.title, newLevel, newRequired);
+  };
+
   const getConfidenceStyles = (confidence: string) => {
     switch (confidence) {
       case 'high':
@@ -48,7 +53,10 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
           )}
         </div>
       </TableCell>
-      <SkillLevelCell initialLevel={skill.level} />
+      <SkillLevelCell 
+        initialLevel={skill.level} 
+        onSkillChange={handleSkillChange}
+      />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>

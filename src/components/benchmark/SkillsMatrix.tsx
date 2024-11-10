@@ -90,16 +90,47 @@ const initialSkills = [
 
 export const SkillsMatrix = () => {
   const [skills, setSkills] = useState(initialSkills);
+  const [originalSkills, setOriginalSkills] = useState(initialSkills);
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [hasChanges, setHasChanges] = useState(false);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
-  const allSkillTitles = skills.map(skill => skill.title);
+  const handleSkillChange = (skillTitle: string, newLevel: string, newRequired: string) => {
+    setSkills(prevSkills => {
+      const updatedSkills = prevSkills.map(skill => {
+        if (skill.title === skillTitle) {
+          return { ...skill, level: newLevel };
+        }
+        return skill;
+      });
+      setHasChanges(true);
+      return updatedSkills;
+    });
+  };
+
+  const handleSave = () => {
+    setOriginalSkills(skills);
+    setHasChanges(false);
+    toast({
+      title: "Changes saved successfully",
+      description: "Your skill matrix has been updated.",
+    });
+  };
+
+  const handleCancel = () => {
+    setSkills(originalSkills);
+    setHasChanges(false);
+    toast({
+      title: "Changes cancelled",
+      description: "Your changes have been discarded.",
+    });
+  };
 
   const handleSkillsChange = (newSelectedSkills: string[]) => {
     setSelectedSkills(newSelectedSkills);
@@ -151,7 +182,11 @@ export const SkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <SkillsMatrixHeader />
+        <SkillsMatrixHeader 
+          onSave={handleSave}
+          onCancel={handleCancel}
+          hasChanges={hasChanges}
+        />
         <Separator className="my-4" />
         
         <SkillsMatrixFilters 
@@ -159,7 +194,10 @@ export const SkillsMatrix = () => {
           setSelectedCategory={setSelectedCategory}
         />
 
-        <SkillsMatrixTable filteredSkills={paginatedSkills} />
+        <SkillsMatrixTable 
+          filteredSkills={paginatedSkills} 
+          onSkillChange={handleSkillChange}
+        />
         
         <SkillsMatrixPagination 
           rowsPerPage={rowsPerPage}
