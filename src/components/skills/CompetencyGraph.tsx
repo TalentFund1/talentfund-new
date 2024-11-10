@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
 import { CategoryCards } from "./competency/CategoryCards";
-import { skillsByCategory } from "./competency/skillsData";
+import { useSelectedSkills } from "./context/SelectedSkillsContext";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
@@ -18,6 +18,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   });
 
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
+  const { selectedSkills } = useSelectedSkills();
 
   useEffect(() => {
     setCurrentTrack(track);
@@ -27,25 +28,25 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     localStorage.setItem('selectedCategory', selectedCategory);
   }, [selectedCategory]);
 
-  const getSkillsForCategory = () => {
-    const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
-    return currentTrack === "Professional" ? categoryData.professional : categoryData.managerial;
-  };
-
-  const skills = getSkillsForCategory();
   const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
-  const uniqueSkills = Array.from(
-    new Set(
-      Object.values(skills)
-        .flat()
-        .map((skill) => skill.name)
-    )
-  );
+  // Generate skill progression based on level
+  const getSkillLevelForTrack = (level: string, skillName: string) => {
+    const levelIndex = levels.indexOf(level);
+    const totalLevels = levels.length;
+    
+    // Progressive skill development pattern
+    if (levelIndex < Math.floor(totalLevels / 3)) {
+      return { level: "beginner", required: "preferred" };
+    } else if (levelIndex < Math.floor(2 * totalLevels / 3)) {
+      return { level: "intermediate", required: "required" };
+    } else {
+      return { level: "advanced", required: "required" };
+    }
+  };
 
   const getSkillDetails = (skillName: string, level: string) => {
-    const skillLevel = skills[level];
-    return skillLevel?.find((s) => s.name === skillName) || { level: "-", required: "-" };
+    return getSkillLevelForTrack(level, skillName);
   };
 
   const handleTrackChange = (value: string) => {
@@ -108,7 +109,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {uniqueSkills.map((skillName) => (
+            {selectedSkills.map((skillName) => (
               <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
                 <TableCell className="font-medium border-r border-border">
                   {skillName}
