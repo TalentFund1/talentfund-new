@@ -11,8 +11,8 @@ export const categories = {
     'TensorFlow',
     'PyTorch',
     'Docker',
-    'JavaScript', // Added JavaScript
-    'Docker (Software)', // Added Docker with full name
+    'JavaScript',
+    'Docker (Software)',
     'Kubernetes',
     'Cloud Architecture',
     'Data Engineering',
@@ -54,7 +54,7 @@ export const categories = {
     'Analytical Skills'
   ],
 
-  certifications: [
+  certification: [
     'Cybersecurity License',
     'AWS Certified Solutions Architect'
   ]
@@ -69,8 +69,8 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
     if (category === 'common') {
       return categories.common.includes(skill.title);
     }
-    if (category === 'certifications') {
-      return categories.certifications.includes(skill.title);
+    if (category === 'certification') {
+      return categories.certification.includes(skill.title);
     }
     return false;
   });
