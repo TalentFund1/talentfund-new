@@ -1,24 +1,17 @@
-import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { SkillCell } from "./competency/SkillCell";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { skillsByCategory } from "./competency/skillsData";
 import { CategorySection } from "./competency/CategorySection";
 import { categorizeSkills, isSpecializedSkill, isCommonSkill, isCertificationSkill } from "./competency/skillCategories";
-import { SkillCell } from "./competency/SkillCell";
-import { CompetencyHeader } from "./competency/CompetencyHeader";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
 }
-
-const getSkillDetails = (skillName: string, level: string) => {
-  return {
-    level: "unspecified",
-    required: "preferred"
-  };
-};
 
 export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const { toggledSkills } = useToggledSkills();
@@ -27,6 +20,14 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     return savedCategory || "all";
   });
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
+
+  useEffect(() => {
+    setCurrentTrack(track);
+  }, [track]);
+
+  useEffect(() => {
+    localStorage.setItem('selectedCategory', selectedCategory);
+  }, [selectedCategory]);
 
   const getSkillsForCategory = () => {
     const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
@@ -58,6 +59,14 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     return [];
   };
 
+  const uniqueSkills = getSkillsByCategory().sort();
+  const skillCounts = categorizeSkills(Array.from(toggledSkills));
+
+  const getSkillDetails = (skillName: string, level: string) => {
+    if (!skills || !skills[level]) return { level: "-", required: "-" };
+    return skills[level]?.find((s: { name: string; level: string; required: string; }) => s.name === skillName) || { level: "-", required: "-" };
+  };
+
   const handleTrackChange = (value: string) => {
     if (value === "Professional" || value === "Managerial") {
       setCurrentTrack(value);
@@ -66,7 +75,13 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
 
   return (
     <div className="space-y-6">
-      <CompetencyHeader />
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
+        <div className="flex items-center gap-2">
+          <Button variant="outline">Cancel</Button>
+          <Button>Save</Button>
+        </div>
+      </div>
       
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-center gap-2">
@@ -92,7 +107,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
       <CategorySection 
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        skillCounts={categorizeSkills(Array.from(toggledSkills))}
+        skillCounts={skillCounts}
       />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
@@ -113,7 +128,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {getSkillsByCategory().sort().map((skillName) => (
+            {uniqueSkills.map((skillName) => (
               <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
                 <TableCell className="font-medium border-r border-border">
                   {skillName}
@@ -121,9 +136,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
                 {levels.map((level, index) => (
                   <SkillCell 
                     key={level}
-                    skillName={skillName}
-                    level={level}
                     details={getSkillDetails(skillName, level)}
+                    isLastColumn={index === levels.length - 1}
                   />
                 ))}
               </TableRow>

@@ -1,46 +1,19 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart, CircleDashed, HeartOff, HelpCircle } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useCompetencyState } from "./CompetencyState";
+import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
+import { useState } from "react";
 
 interface SkillCellProps {
-  skillName: string;
-  level: string;
   details: {
     level: string;
     required: string;
   };
+  isLastColumn: boolean;
 }
 
-export const SkillCell = ({ skillName, level, details }: SkillCellProps) => {
-  const { skillStates, setSkillState, hasChanges } = useCompetencyState();
-  const [currentLevel, setCurrentLevel] = useState(details.level.toLowerCase());
-  const [currentRequired, setCurrentRequired] = useState(details.required.toLowerCase());
-
-  useEffect(() => {
-    if (skillStates[skillName]?.[level]) {
-      const state = skillStates[skillName][level];
-      setCurrentLevel(state.level);
-      setCurrentRequired(state.required);
-    }
-  }, [skillStates, skillName, level]);
-
-  const handleLevelChange = (newLevel: string) => {
-    setCurrentLevel(newLevel);
-    setSkillState(skillName, level, {
-      level: newLevel,
-      required: currentRequired,
-    });
-  };
-
-  const handleRequiredChange = (newRequired: string) => {
-    setCurrentRequired(newRequired);
-    setSkillState(skillName, level, {
-      level: currentLevel,
-      required: newRequired,
-    });
-  };
+export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
+  const [level, setLevel] = useState(details.level === "-" ? "unspecified" : details.level.toLowerCase());
+  const [required, setRequired] = useState(details.required === "-" ? "preferred" : details.required.toLowerCase());
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -95,17 +68,33 @@ export const SkillCell = ({ skillName, level, details }: SkillCellProps) => {
     }
   };
 
+  const getRequirementIcon = (requirement: string) => {
+    switch (requirement.toLowerCase()) {
+      case 'required':
+        return '✓ ';
+      case 'preferred':
+        return <Heart className="w-3 h-3" />;
+      default:
+        return <Heart className="w-3 h-3" />;
+    }
+  };
+
   return (
-    <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col items-center">
-        <Select value={currentLevel} onValueChange={handleLevelChange}>
+    <TableCell 
+      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
+    >
+      <div className="flex flex-col items-center gap-0">
+        <Select 
+          value={level} 
+          onValueChange={(value) => setLevel(value)}
+        >
           <SelectTrigger 
-            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(currentLevel)}`}
+            className={`${getLevelStyles(level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
-                {getLevelIcon(currentLevel)}
-                {currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)}
+                {getLevelIcon(level)}
+                {level.charAt(0).toUpperCase() + level.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -137,22 +126,17 @@ export const SkillCell = ({ skillName, level, details }: SkillCellProps) => {
           </SelectContent>
         </Select>
 
-        <Select value={currentRequired} onValueChange={handleRequiredChange}>
+        <Select 
+          value={required} 
+          onValueChange={(value) => setRequired(value)}
+        >
           <SelectTrigger 
-            className={`text-xs px-2 py-1 font-normal w-full flex items-center justify-center min-h-[24px] border-x-2 border-b-2 rounded-b-md ${getRequirementStyles(currentRequired, currentLevel)}`}
+            className={`${getRequirementStyles(required, level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
-              <span className="flex items-center gap-1.5 justify-center text-xs">
-                {currentRequired === 'required' ? (
-                  <Heart className="w-3.5 h-3.5" />
-                ) : currentRequired === 'not-interested' ? (
-                  <HeartOff className="w-3.5 h-3.5" />
-                ) : currentRequired === 'unknown' ? (
-                  <HelpCircle className="w-3.5 h-3.5" />
-                ) : (
-                  <Heart className="w-3.5 h-3.5" />
-                )}
-                {currentRequired === 'required' ? 'Skill Goal' : currentRequired === 'not-interested' ? 'Not Interested' : currentRequired === 'unknown' ? 'Unknown' : 'Skill Goal'}
+              <span className="flex items-center gap-2 justify-center">
+                {getRequirementIcon(required)}
+                {required.charAt(0).toUpperCase() + required.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
