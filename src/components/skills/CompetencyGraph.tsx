@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -32,7 +32,10 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
   const { selectedSkills } = useSelectedSkills();
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [skillChanges, setSkillChanges] = useState<{ [key: string]: { level: string; required: string } }>({});
+  const [skillChanges, setSkillChanges] = useState<{ [key: string]: { level: string; required: string } }>(() => {
+    const savedChanges = localStorage.getItem('skillChanges');
+    return savedChanges ? JSON.parse(savedChanges) : {};
+  });
   const { toast } = useToast();
 
   const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
@@ -79,7 +82,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   };
 
   const handleSave = () => {
-    // Save the changes to localStorage
     localStorage.setItem('skillChanges', JSON.stringify(skillChanges));
     setHasUnsavedChanges(false);
     toast({
@@ -89,7 +91,6 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   };
 
   const handleCancel = () => {
-    // Restore from localStorage or clear changes if none saved
     const savedChanges = localStorage.getItem('skillChanges');
     setSkillChanges(savedChanges ? JSON.parse(savedChanges) : {});
     setHasUnsavedChanges(false);
