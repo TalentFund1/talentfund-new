@@ -20,7 +20,7 @@ export const skillsData: Skill[] = [
   { name: "Synopsys Primetime", level: "beginner", isSkillGoal: true, category: "specialized", subcategory: "EDA Tools" },
   { name: "GraphQL", level: "unspecified", isSkillGoal: false, category: "specialized", subcategory: "API Development" },
   { name: "Internet of Things", level: "unspecified", isSkillGoal: false, category: "specialized", subcategory: "Embedded Systems" },
-  { name: "Kubernetes", level: "advanced", isSkillGoal: true, category: "specialized", subcategory: "DevOps" },
+  { name: "Kubernetes", level: "unspecified", isSkillGoal: false, category: "specialized", subcategory: "DevOps" },
   { name: "AWS Lambda", level: "unspecified", isSkillGoal: false, category: "specialized", subcategory: "Cloud Computing" },
   { name: "Azure Functions", level: "beginner", isSkillGoal: true, category: "specialized", subcategory: "Cloud Computing" },
 
