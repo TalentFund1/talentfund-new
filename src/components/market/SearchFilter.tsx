@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface SearchFilterProps {
   label: string;
@@ -18,6 +19,8 @@ interface SearchFilterProps {
   selectedItems: string[];
   onItemsChange: (items: string[]) => void;
   singleSelect?: boolean;
+  className?: string;
+  required?: boolean;
 }
 
 export function SearchFilter({
@@ -27,6 +30,8 @@ export function SearchFilter({
   selectedItems,
   onItemsChange,
   singleSelect = false,
+  className,
+  required = false,
 }: SearchFilterProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,8 +73,13 @@ export function SearchFilter({
   }, []);
 
   return (
-    <div className="flex flex-col gap-2">
-      {label && <p className="text-sm text-muted-foreground">{label}</p>}
+    <div className={cn("flex flex-col gap-2", className)}>
+      {label && (
+        <p className="text-sm text-muted-foreground">
+          {label}
+          {required && <span className="text-destructive ml-1">*</span>}
+        </p>
+      )}
       <div className="flex flex-wrap gap-2">
         {selectedItems.map((item) => (
           <Badge
