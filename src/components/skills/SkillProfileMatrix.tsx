@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
+import { useSelectedSkills } from "./context/SelectedSkillsContext";
 
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
-  // Initialize toggledSkills with savedToggledSkills
-  const [savedToggledSkills, setSavedToggledSkills] = useState<Set<string>>(new Set());
-  const [toggledSkills, setToggledSkills] = useState<Set<string>>(savedToggledSkills);
+  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
+  const [toggledSkills, setToggledSkills] = useState<Set<string>>(new Set(selectedSkills));
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
@@ -46,9 +46,7 @@ export const SkillProfileMatrix = () => {
   };
 
   const handleSave = () => {
-    // In a real application, you would make an API call here
-    console.log("Saving toggled skills:", Array.from(toggledSkills));
-    setSavedToggledSkills(new Set(toggledSkills));
+    setSelectedSkills(Array.from(toggledSkills));
     setHasUnsavedChanges(false);
     toast({
       title: "Changes saved",
@@ -57,7 +55,7 @@ export const SkillProfileMatrix = () => {
   };
 
   const handleCancel = () => {
-    setToggledSkills(new Set(savedToggledSkills));
+    setToggledSkills(new Set(selectedSkills));
     setHasUnsavedChanges(false);
     toast({
       title: "Changes cancelled",
