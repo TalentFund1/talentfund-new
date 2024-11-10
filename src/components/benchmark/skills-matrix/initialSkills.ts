@@ -121,5 +121,20 @@ export const initialSkills = [
     level: "intermediate",
     growth: "17%",
     confidence: "medium"
+  },
+  // Adding Certifications
+  {
+    title: "Cybersecurity License",
+    subcategory: "Security Certifications",
+    level: "advanced",
+    growth: "28%",
+    confidence: "high"
+  },
+  {
+    title: "AWS Certified Solutions Architect",
+    subcategory: "Cloud Certifications",
+    level: "advanced",
+    growth: "25%",
+    confidence: "high"
   }
 ];

@@ -1,5 +1,5 @@
-export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
-  const specializedSkills = [
+export const categories = {
+  specialized: [
     'Amazon Web Services',
     'Artificial Intelligence',
     'Conversational AI',
@@ -26,27 +26,9 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Edge Computing',
     'System Architecture',
     'Microservices Design'
-  ];
+  ],
 
-  const certifications = [
-    'AWS Certified',
-    'Azure Solutions Architect',
-    'Professional Scrum',
-    'CISSP',
-    'CKA',
-    'Google Cloud Professional',
-    'CompTIA Security+',
-    'PMP Certification',
-    'Cisco CCNA',
-    'Oracle Certified Professional',
-    'Salesforce Certified Developer',
-    'Red Hat Certified Engineer',
-    'HashiCorp Certified',
-    'Certified Ethical Hacker',
-    'ITIL Foundation'
-  ];
-
-  const commonSkills = [
+  common: [
     'Python',
     'Git',
     'SQL',
@@ -70,28 +52,26 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Decision Making',
     'Innovation',
     'Analytical Skills'
-  ];
+  ],
 
-  if (certifications.some(cert => skill.includes(cert))) {
-    return 'certification';
-  }
-  
-  if (specializedSkills.includes(skill)) {
-    return 'specialized';
-  }
-  
-  return 'common';
+  certifications: [
+    'Cybersecurity License',
+    'AWS Certified Solutions Architect'
+  ]
 };
 
-export const filterSkillsByCategory = (
-  skills: Array<any>,
-  category: string
-): Array<any> => {
-  if (category === 'all') {
-    return skills;
-  }
-
-  return skills.filter(skill => 
-    categorizeSkill(skill.title) === category
-  );
+export const filterSkillsByCategory = (skills: any[], category: string) => {
+  if (category === 'all') return skills;
+  return skills.filter(skill => {
+    if (category === 'specialized') {
+      return categories.specialized.includes(skill.title);
+    }
+    if (category === 'common') {
+      return categories.common.includes(skill.title);
+    }
+    if (category === 'certifications') {
+      return categories.certifications.includes(skill.title);
+    }
+    return false;
+  });
 };
