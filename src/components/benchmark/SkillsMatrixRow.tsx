@@ -11,10 +11,9 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
   };
-  onLevelChange: (newSelectedSkills: string[]) => void;
 }
 
-export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
   const { currentStates, setSkillState } = useSkillsMatrixStore();
   const currentState = currentStates[skill.title] || {
     level: skill.level,
@@ -41,7 +40,6 @@ export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) 
 
   const handleLevelChange = (newLevel: string, requirement: string) => {
     setSkillState(skill.title, newLevel, requirement);
-    onLevelChange([skill.title]); // Pass the updated skill title to parent
   };
 
   return (
