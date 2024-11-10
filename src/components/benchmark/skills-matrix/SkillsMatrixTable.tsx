@@ -10,9 +10,15 @@ interface SkillsMatrixTableProps {
     growth: string;
     confidence: string;
   }>;
+  toggledSkills: Set<string>;
+  onToggleSkill: (skillTitle: string) => void;
 }
 
-export const SkillsMatrixTable = ({ filteredSkills }: SkillsMatrixTableProps) => {
+export const SkillsMatrixTable = ({ 
+  filteredSkills,
+  toggledSkills,
+  onToggleSkill 
+}: SkillsMatrixTableProps) => {
   return (
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden">
       <Table>
@@ -22,6 +28,8 @@ export const SkillsMatrixTable = ({ filteredSkills }: SkillsMatrixTableProps) =>
             <SkillsMatrixRow 
               key={skill.title} 
               skill={skill}
+              isToggled={toggledSkills.has(skill.title)}
+              onToggle={() => onToggleSkill(skill.title)}
             />
           ))}
         </TableBody>
