@@ -65,9 +65,9 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     if (selectedCategory === "certification") {
       return skillsArray.filter(skill => 
         skill.includes("Certified") || 
-        skill.includes("Certificate") || 
         skill.includes("Certification") ||
-        ["AWS Certified", "Professional Scrum", "PMP", "CISSP"].some(cert => skill.includes(cert))
+        skill.includes("Architect") ||
+        ["AWS Certified", "Professional Scrum", "PMP", "CISSP", "CKA", "Solutions Architect", "Azure Solutions", "Professional Agile"].some(cert => skill.includes(cert))
       );
     }
     
@@ -97,25 +97,28 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     if (category === "specialized") {
       return skillsArray.filter(skill => 
         technicalSkills.includes(skill) && 
-        ["Machine Learning", "Artificial Intelligence", "Deep Learning", "Computer Vision", "Natural Language Processing", "AWS", "Cloud Computing", "TensorFlow", "PyTorch"].some(
-          specialization => skill.includes(specialization)
-        )
+        ["Machine Learning", "Artificial Intelligence", "Deep Learning", "Computer Vision", 
+         "Natural Language Processing", "AWS", "Cloud Computing", "TensorFlow", "PyTorch"]
+        .some(specialization => skill.toLowerCase().includes(specialization.toLowerCase()))
       ).length;
     }
     
     if (category === "common") {
       return skillsArray.filter(skill => 
         softSkills.includes(skill) || 
-        ["JavaScript", "Python", "Java", "SQL", "Git", "Agile", "Communication"].some(common => skill.includes(common))
+        ["JavaScript", "Python", "Java", "SQL", "Git", "Agile", "Communication"]
+        .some(common => skill.toLowerCase().includes(common.toLowerCase()))
       ).length;
     }
     
     if (category === "certification") {
       return skillsArray.filter(skill => 
-        skill.includes("Certified") || 
-        skill.includes("Certificate") || 
-        skill.includes("Certification") ||
-        ["AWS Certified", "Professional Scrum", "PMP", "CISSP"].some(cert => skill.includes(cert))
+        skill.toLowerCase().includes("certified") || 
+        skill.toLowerCase().includes("certification") ||
+        skill.toLowerCase().includes("architect") ||
+        ["AWS Certified", "Professional Scrum", "PMP", "CISSP", "CKA", 
+         "Solutions Architect", "Azure Solutions", "Professional Agile"]
+        .some(cert => skill.toLowerCase().includes(cert.toLowerCase()))
       ).length;
     }
     
