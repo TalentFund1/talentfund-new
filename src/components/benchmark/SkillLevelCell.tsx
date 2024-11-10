@@ -3,7 +3,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, Shield, Target, Heart, CircleDashed, HeartOff, HelpCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { useToast } from "@/components/ui/use-toast";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -12,11 +11,11 @@ interface SkillLevelCellProps {
 }
 
 export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
-  const { currentStates, originalStates, setSkillState } = useSkillsMatrixStore();
+  const { currentStates, originalStates } = useSkillsMatrixStore();
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
-  const { toast } = useToast();
 
+  // Effect to sync with store states and handle cancellation
   useEffect(() => {
     const currentState = currentStates[skillTitle];
     const originalState = originalStates[skillTitle];
@@ -32,27 +31,20 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
-    setSkillState(skillTitle, newLevel, required);
     onLevelChange?.(newLevel, required);
-    
-    toast({
-      title: "Skill Level Updated",
-      description: `${skillTitle} level has been updated to ${newLevel}`,
-    });
   };
 
   const handleRequirementChange = (newRequired: string) => {
     setRequired(newRequired);
-    setSkillState(skillTitle, level, newRequired);
     onLevelChange?.(level, newRequired);
   };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return <Star className="w-3.5 h-3.5 text-[#8073ec]" />;
+        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
       case 'intermediate':
-        return <Shield className="w-3.5 h-3.5 text-[#ff9800]" />;
+        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
       case 'beginner':
         return <Target className="w-3.5 h-3.5 text-[#008000]" />;
       default:
@@ -63,9 +55,9 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
   const getLevelStyles = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return "border-2 border-[#8073ec] bg-[#8073ec]/10";
+        return "border-2 border-primary-accent bg-primary-accent/10";
       case 'intermediate':
-        return "border-2 border-[#ff9800] bg-[#ff9800]/10";
+        return "border-2 border-primary-icon bg-primary-icon/10";
       case 'beginner':
         return "border-2 border-[#008000] bg-[#008000]/10";
       default:
@@ -132,13 +124,13 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
             </SelectItem>
             <SelectItem value="intermediate">
               <span className="flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-[#ff9800]" />
+                <Shield className="w-3.5 h-3.5 text-primary-icon" />
                 Intermediate
               </span>
             </SelectItem>
             <SelectItem value="advanced">
               <span className="flex items-center gap-1.5">
-                <Star className="w-3.5 h-3.5 text-[#8073ec]" />
+                <Star className="w-3.5 h-3.5 text-primary-accent" />
                 Advanced
               </span>
             </SelectItem>
