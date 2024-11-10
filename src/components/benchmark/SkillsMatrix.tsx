@@ -7,9 +7,100 @@ import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
-import { useSkillsStore, Skill } from "./skills-matrix/SkillsMatrixState";
+
+interface Skill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: string;
+}
+
+const initialSkills = [
+  {
+    title: "JavaScript",
+    subcategory: "Programming Languages",
+    level: "advanced",
+    growth: "15%",
+    confidence: "high"
+  },
+  {
+    title: "Amazon Web Services",
+    subcategory: "Web Services",
+    level: "advanced",
+    growth: "12%",
+    confidence: "high"
+  },
+  {
+    title: "Artificial Intelligence",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "advanced",
+    growth: "19%",
+    confidence: "high"
+  },
+  {
+    title: "Conversational AI",
+    subcategory: "Natural Language Processing (NLP)",
+    level: "advanced",
+    growth: "12%",
+    confidence: "medium"
+  },
+  {
+    title: "Deep Learning",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "intermediate",
+    growth: "19%",
+    confidence: "medium"
+  },
+  {
+    title: "Machine Learning",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "intermediate",
+    growth: "10%",
+    confidence: "low"
+  },
+  {
+    title: "Docker (Software)",
+    subcategory: "Software Development Tools",
+    level: "intermediate",
+    growth: "0%",
+    confidence: "n/a"
+  },
+  {
+    title: "MLflow",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "beginner",
+    growth: "11%",
+    confidence: "n/a"
+  },
+  {
+    title: "Natural Language Understanding",
+    subcategory: "Natural Language Processing (NLP)",
+    level: "unspecified",
+    growth: "15%",
+    confidence: "n/a"
+  },
+  {
+    title: "Computer Vision",
+    subcategory: "Artificial Intelligence and Machine Learning",
+    level: "unspecified",
+    growth: "18%",
+    confidence: "n/a"
+  },
+  {
+    title: "Kubernetes",
+    subcategory: "Software Development Tools",
+    level: "unspecified",
+    growth: "14%",
+    confidence: "n/a"
+  }
+];
 
 export const SkillsMatrix = () => {
+  const [skills, setSkills] = useState<Skill[]>(initialSkills);
+  const [originalSkills, setOriginalSkills] = useState<Skill[]>(initialSkills);
+  const [hasChanges, setHasChanges] = useState(false);
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
@@ -18,8 +109,6 @@ export const SkillsMatrix = () => {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
-  
-  const { skills, hasChanges, setSkills, toggleSkill, saveChanges, cancelChanges, setHasChanges } = useSkillsStore();
 
   const allSkillTitles = skills.map(skill => skill.title);
 
@@ -36,8 +125,7 @@ export const SkillsMatrix = () => {
         subcategory: "Unspecified",
         level: "unspecified",
         growth: "0%",
-        confidence: "n/a",
-        selected: false
+        confidence: "n/a"
       }));
       
       setSkills(prev => [...prev, ...skillsToAdd]);
@@ -60,7 +148,8 @@ export const SkillsMatrix = () => {
   };
 
   const handleSave = () => {
-    saveChanges();
+    setOriginalSkills(skills);
+    setHasChanges(false);
     toast({
       title: "Changes Saved",
       description: "Your changes have been saved successfully.",
@@ -68,7 +157,8 @@ export const SkillsMatrix = () => {
   };
 
   const handleCancel = () => {
-    cancelChanges();
+    setSkills(originalSkills);
+    setHasChanges(false);
     toast({
       title: "Changes Cancelled",
       description: "Your changes have been discarded.",
@@ -115,7 +205,6 @@ export const SkillsMatrix = () => {
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills} 
           onSkillLevelChange={handleSkillLevelChange}
-          onToggleSkill={toggleSkill}
         />
         
         <SkillsMatrixPagination 

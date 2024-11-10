@@ -10,7 +10,7 @@ import {
 export const SkillsMatrixTableHeader = () => {
   return (
     <TableHeader>
-      <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
+      <TableRow className="hover:bg-transparent border-b border-[#CCDBFF] bg-[#F7F9FF]">
         <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
         <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
         <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Company Skill</TableHead>
