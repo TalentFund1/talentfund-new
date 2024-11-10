@@ -1,9 +1,11 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useCompetencyStore } from "./CompetencyState";
 
 interface SkillCellProps {
+  skillName: string;
   details: {
     level: string;
     required: string;
@@ -11,9 +13,22 @@ interface SkillCellProps {
   isLastColumn: boolean;
 }
 
-export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
-  const [level, setLevel] = useState(details.level === "-" ? "unspecified" : details.level.toLowerCase());
-  const [required, setRequired] = useState(details.required === "-" ? "preferred" : details.required.toLowerCase());
+export const SkillCell = ({ skillName, details, isLastColumn }: SkillCellProps) => {
+  const { currentStates, setSkillState } = useCompetencyStore();
+  const currentState = currentStates[skillName] || {
+    level: details.level === "-" ? "unspecified" : details.level.toLowerCase(),
+    required: details.required === "-" ? "preferred" : details.required.toLowerCase(),
+  };
+
+  useEffect(() => {
+    if (!currentStates[skillName]) {
+      setSkillState(
+        skillName,
+        details.level === "-" ? "unspecified" : details.level.toLowerCase(),
+        details.required === "-" ? "preferred" : details.required.toLowerCase()
+      );
+    }
+  }, [skillName, details, currentStates, setSkillState]);
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -85,16 +100,16 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
     >
       <div className="flex flex-col items-center gap-0">
         <Select 
-          value={level} 
-          onValueChange={(value) => setLevel(value)}
+          value={currentState.level}
+          onValueChange={(value) => setSkillState(skillName, value, currentState.required)}
         >
           <SelectTrigger 
-            className={`${getLevelStyles(level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+            className={`${getLevelStyles(currentState.level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
-                {getLevelIcon(level)}
-                {level.charAt(0).toUpperCase() + level.slice(1)}
+                {getLevelIcon(currentState.level)}
+                {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -127,22 +142,22 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
         </Select>
 
         <Select 
-          value={required} 
-          onValueChange={(value) => setRequired(value)}
+          value={currentState.required}
+          onValueChange={(value) => setSkillState(skillName, currentState.level, value)}
         >
           <SelectTrigger 
-            className={`${getRequirementStyles(required, level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+            className={`${getRequirementStyles(currentState.required, currentState.level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center">
-                {getRequirementIcon(required)}
-                {required.charAt(0).toUpperCase() + required.slice(1)}
+                {getRequirementIcon(currentState.required)}
+                {currentState.required.charAt(0).toUpperCase() + currentState.required.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
-              <span className="flex items-center gap-2">✓  Required</span>
+              <span className="flex items-center gap-2">✓ Required</span>
             </SelectItem>
             <SelectItem value="preferred">
               <span className="flex items-center gap-2">

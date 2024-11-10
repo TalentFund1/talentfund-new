@@ -8,6 +8,8 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { skillsByCategory } from "./competency/skillsData";
 import { CategorySection } from "./competency/CategorySection";
 import { categorizeSkills, isSpecializedSkill, isCommonSkill, isCertificationSkill } from "./competency/skillCategories";
+import { useCompetencyStore } from "./competency/CompetencyState";
+import { useToast } from "@/components/ui/use-toast";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
@@ -20,6 +22,8 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     return savedCategory || "all";
   });
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
+  const { hasChanges, saveChanges, cancelChanges } = useCompetencyStore();
+  const { toast } = useToast();
 
   useEffect(() => {
     setCurrentTrack(track);
@@ -28,6 +32,22 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
   }, [selectedCategory]);
+
+  const handleSave = () => {
+    saveChanges();
+    toast({
+      title: "Changes saved",
+      description: "Your changes have been saved successfully.",
+    });
+  };
+
+  const handleCancel = () => {
+    cancelChanges();
+    toast({
+      title: "Changes cancelled",
+      description: "Your changes have been discarded.",
+    });
+  };
 
   const getSkillsForCategory = () => {
     const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
@@ -78,27 +98,21 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
         <div className="flex items-center gap-2">
-          <Button variant="outline">Cancel</Button>
-          <Button>Save</Button>
+          <Button 
+            variant="outline" 
+            onClick={handleCancel}
+            disabled={!hasChanges}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSave}
+            disabled={!hasChanges}
+          >
+            Save
+          </Button>
         </div>
       </div>
-      
-      <div className="flex items-center gap-4 mb-4">
-        <div className="flex items-center gap-2">
-          <div className="text-sm text-muted-foreground">Track:</div>
-          <Select value={currentTrack} onValueChange={handleTrackChange}>
-            <SelectTrigger className="w-[180px] bg-white border-border">
-              <SelectValue placeholder="Select track" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Professional">Professional</SelectItem>
-              <SelectItem value="Managerial">Managerial</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <Separator className="my-4" />
       
       <div className="mb-6">
         <h3 className="text-lg font-medium text-foreground">AI Engineer</h3>
@@ -136,6 +150,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
                 {levels.map((level, index) => (
                   <SkillCell 
                     key={level}
+                    skillName={skillName}
                     details={getSkillDetails(skillName, level)}
                     isLastColumn={index === levels.length - 1}
                   />
