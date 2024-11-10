@@ -70,7 +70,7 @@ export const RoleBenchmark = () => {
           <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
           <Button 
             variant="outline" 
-            className="bg-primary text-white hover:bg-primary/90"
+            className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
             onClick={() => navigate('/skills')}
           >
             See Skill Profile
