@@ -128,5 +128,81 @@ export const initialSkills = [
     level: "intermediate",
     growth: "17%",
     confidence: "medium"
+  },
+
+  // Adding new Specialized Skills
+  {
+    title: "Quantum Computing",
+    subcategory: "Advanced Computing",
+    level: "advanced",
+    growth: "35%",
+    confidence: "high"
+  },
+  {
+    title: "Robotics Programming",
+    subcategory: "Robotics",
+    level: "advanced",
+    growth: "28%",
+    confidence: "high"
+  },
+  {
+    title: "5G Network Architecture",
+    subcategory: "Telecommunications",
+    level: "intermediate",
+    growth: "25%",
+    confidence: "medium"
+  },
+
+  // Adding new Common Skills
+  {
+    title: "Technical Writing",
+    subcategory: "Documentation",
+    level: "advanced",
+    growth: "15%",
+    confidence: "high"
+  },
+  {
+    title: "Agile Project Management",
+    subcategory: "Project Management",
+    level: "advanced",
+    growth: "20%",
+    confidence: "high"
+  },
+  {
+    title: "Business Analysis",
+    subcategory: "Business Skills",
+    level: "intermediate",
+    growth: "18%",
+    confidence: "medium"
+  },
+  {
+    title: "Risk Management",
+    subcategory: "Management",
+    level: "intermediate",
+    growth: "22%",
+    confidence: "medium"
+  },
+
+  // Adding new Certifications
+  {
+    title: "CompTIA Security+ Certification",
+    subcategory: "Security Certifications",
+    level: "advanced",
+    growth: "30%",
+    confidence: "high"
+  },
+  {
+    title: "Project Management Professional (PMP)",
+    subcategory: "Project Management Certifications",
+    level: "advanced",
+    growth: "25%",
+    confidence: "high"
+  },
+  {
+    title: "Certified Scrum Master (CSM)",
+    subcategory: "Agile Certifications",
+    level: "intermediate",
+    growth: "20%",
+    confidence: "medium"
   }
 ];

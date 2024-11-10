@@ -9,6 +9,9 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Google Cloud Professional',
     'CompTIA Security+',
     'PMP Certification',
+    'Project Management Professional',
+    'Certified Scrum Master',
+    'CSM',
     'Cisco CCNA',
     'Oracle Certified Professional',
     'Salesforce Certified Developer',
@@ -36,13 +39,8 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Cloud Architecture',
     'Data Engineering',
     'Quantum Computing',
-    'Blockchain Development',
-    'IoT Development',
-    'Cybersecurity',
-    'DevSecOps',
-    'Big Data Analytics',
     'Robotics Programming',
-    'Edge Computing',
+    '5G Network Architecture',
     'System Architecture',
     'Microservices Design'
   ];
@@ -70,7 +68,11 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Change Management',
     'Decision Making',
     'Innovation',
-    'Analytical Skills'
+    'Analytical Skills',
+    'Technical Writing',
+    'Agile Project Management',
+    'Business Analysis',
+    'Risk Management'
   ];
 
   // Check if the skill contains any certification keywords
