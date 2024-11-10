@@ -51,6 +51,12 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const filteredSkills = getFilteredSkills();
 
   const getSkillLevelForTrack = (level: string, skillName: string) => {
+    // First check if there's a saved change
+    if (skillChanges[skillName]) {
+      return skillChanges[skillName];
+    }
+
+    // If no saved change, get from the original data
     const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory]?.[currentTrack.toLowerCase()] as SkillLevels | undefined;
     const levelData = categoryData?.[level];
     const skillData = levelData?.find(skill => skill.name === skillName);
@@ -73,9 +79,9 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   };
 
   const handleSave = () => {
-    // Here you would typically save the changes to your backend
+    // Save the changes to localStorage
+    localStorage.setItem('skillChanges', JSON.stringify(skillChanges));
     setHasUnsavedChanges(false);
-    setSkillChanges({});
     toast({
       title: "Changes saved",
       description: "Your skill level changes have been saved successfully.",
@@ -83,8 +89,10 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   };
 
   const handleCancel = () => {
+    // Restore from localStorage or clear changes if none saved
+    const savedChanges = localStorage.getItem('skillChanges');
+    setSkillChanges(savedChanges ? JSON.parse(savedChanges) : {});
     setHasUnsavedChanges(false);
-    setSkillChanges({});
     toast({
       title: "Changes cancelled",
       description: "Your skill level changes have been cancelled.",
