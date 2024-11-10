@@ -10,85 +10,8 @@ import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 
-const initialSkills = [
-  {
-    title: "JavaScript",
-    subcategory: "Programming Languages",
-    level: "advanced",
-    growth: "15%",
-    confidence: "high"
-  },
-  {
-    title: "Amazon Web Services",
-    subcategory: "Web Services",
-    level: "advanced",
-    growth: "12%",
-    confidence: "high"
-  },
-  {
-    title: "Artificial Intelligence",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "advanced",
-    growth: "19%",
-    confidence: "high"
-  },
-  {
-    title: "Conversational AI",
-    subcategory: "Natural Language Processing (NLP)",
-    level: "advanced",
-    growth: "12%",
-    confidence: "medium"
-  },
-  {
-    title: "Deep Learning",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
-    growth: "19%",
-    confidence: "medium"
-  },
-  {
-    title: "Machine Learning",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "intermediate",
-    growth: "10%",
-    confidence: "low"
-  },
-  {
-    title: "Docker (Software)",
-    subcategory: "Software Development Tools",
-    level: "intermediate",
-    growth: "0%",
-    confidence: "n/a"
-  },
-  {
-    title: "MLflow",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "beginner",
-    growth: "11%",
-    confidence: "n/a"
-  },
-  {
-    title: "Natural Language Understanding",
-    subcategory: "Natural Language Processing (NLP)",
-    level: "unspecified",
-    growth: "15%",
-    confidence: "n/a"
-  },
-  {
-    title: "Computer Vision",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "unspecified",
-    growth: "18%",
-    confidence: "n/a"
-  },
-  {
-    title: "Kubernetes",
-    subcategory: "Software Development Tools",
-    level: "unspecified",
-    growth: "14%",
-    confidence: "n/a"
-  }
-];
+// Move initial skills to a separate file for better organization
+import { initialSkills } from "./skills-matrix/initialSkills";
 
 export const SkillsMatrix = () => {
   const [skills, setSkills] = useState(initialSkills);
