@@ -1,6 +1,5 @@
 import { Table, TableBody } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SkillsMatrixTableHeader } from "./SkillsMatrixTableHeader";
 import { SkillsMatrixRow } from "./SkillsMatrixRow";
