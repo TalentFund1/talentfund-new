@@ -36,7 +36,7 @@ export const CategoryCards = ({ selectedCategory, onCategoryChange, currentTrack
     { id: "all", name: "All Categories", count: getSkillCount("all") },
     { id: "specialized", name: "Specialized Skills", count: getSkillCount("specialized") },
     { id: "common", name: "Common Skills", count: getSkillCount("common") },
-    { id: "certification", name: "Certification", count: getSkillCount("certification") }
+    { id: "certification", name: "Certifications", count: getSkillCount("certification") } // Updated here
   ];
 
   return (
