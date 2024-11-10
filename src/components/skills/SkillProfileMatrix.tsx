@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ export const SkillProfileMatrix = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
   const { toast } = useToast();
+  const observerTarget = useRef(null);
 
   const allSkills = [
     // Existing Technical Skills
@@ -71,10 +72,6 @@ export const SkillProfileMatrix = () => {
     });
   };
 
-  const handleLoadMore = () => {
-    setPage(prev => prev + 1);
-  };
-
   const filteredSkills = allSkills.filter(skill => {
     if (skillType === "all") return true;
     return skill.subcategory.toLowerCase().includes(skillType.toLowerCase());
@@ -82,6 +79,28 @@ export const SkillProfileMatrix = () => {
 
   const paginatedSkills = filteredSkills.slice(0, page * PAGE_SIZE);
   const hasMoreSkills = paginatedSkills.length < filteredSkills.length;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && hasMoreSkills && !loading) {
+          setPage(prev => prev + 1);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [hasMoreSkills, loading]);
 
   return (
     <div className="space-y-6">
@@ -130,15 +149,7 @@ export const SkillProfileMatrix = () => {
         </div>
 
         {hasMoreSkills && (
-          <div className="flex justify-center mt-4">
-            <Button 
-              variant="outline" 
-              onClick={handleLoadMore}
-              className="w-full max-w-xs"
-            >
-              Load More Skills
-            </Button>
-          </div>
+          <div ref={observerTarget} className="h-10" />
         )}
       </Card>
     </div>
