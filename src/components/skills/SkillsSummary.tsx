@@ -35,7 +35,10 @@ export const SkillsSummary = () => {
     .map(skill => ({
       name: skill.title,
       level: currentStates[skill.title]?.level || skill.level,
-      isSkillGoal: currentStates[skill.title]?.requirement === 'required'
+      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                   currentStates[skill.title]?.requirement === 'skill_goal' ||
+                   skill.requirement === 'required' ||
+                   skill.requirement === 'skill_goal'
     }))
     .sort((a, b) => {
       const levelOrder = {
@@ -63,7 +66,10 @@ export const SkillsSummary = () => {
     .map(skill => ({ 
       name: skill.title,
       level: currentStates[skill.title]?.level || skill.level,
-      isSkillGoal: currentStates[skill.title]?.requirement === 'required'
+      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                   currentStates[skill.title]?.requirement === 'skill_goal' ||
+                   skill.requirement === 'required' ||
+                   skill.requirement === 'skill_goal'
     }))
     .sort((a, b) => {
       const levelOrder = {

@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
-import { BaseSkill, DetailedSkill } from "./types";
+import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 interface SkillBadgeProps {
@@ -27,6 +27,8 @@ export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: Ski
     }
   };
 
+  const shouldShowHeart = isSkillGoal || skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
+
   return (
     <Badge 
       key={skill.name} 
@@ -39,7 +41,7 @@ export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: Ski
           <div className={`h-2 w-2 rounded-full ${
             getLevelColor(skillState?.level || level || "unspecified")
           }`} />
-          {(isSkillGoal || skillState?.requirement === 'required') && (
+          {shouldShowHeart && (
             <Heart className="w-3 h-3 text-[#1f2144]" />
           )}
         </div>
