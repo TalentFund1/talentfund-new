@@ -7,58 +7,37 @@ interface CategoryCardsProps {
 
 export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCardsProps) => {
   const categories = [
-    {
-      id: "all",
-      title: "All Categories",
-      count: 28,
-      description: "skills"
-    },
-    {
-      id: "specialized",
-      title: "Specialized Skills",
-      count: 15,
-      description: "skills"
-    },
-    {
-      id: "common",
-      title: "Common Skills",
-      count: 10,
-      description: "skills"
-    },
-    {
-      id: "certification",
-      title: "Certification",
-      count: 3,
-      description: "skills"
-    }
+    { id: "all", name: "All Categories", count: 28 },
+    { id: "specialized", name: "Specialized Skills", count: 15 },
+    { id: "common", name: "Common Skills", count: 10 },
+    { id: "certification", name: "Certification", count: 3 }
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-4 gap-4 mb-6">
       {categories.map((category) => (
-        <Card
+        <button
           key={category.id}
-          className={`p-4 cursor-pointer transition-all duration-200 hover:border-primary-accent ${
-            selectedCategory === category.id
-              ? "border-2 border-primary-accent bg-primary-accent/5"
-              : "border border-border hover:bg-background/80"
-          }`}
           onClick={() => onCategoryChange(category.id)}
+          className={`rounded-lg p-4 transition-colors ${
+            selectedCategory === category.id
+              ? 'bg-primary-accent/5 border border-primary-accent'
+              : 'bg-background border border-border hover:border-primary-accent/50'
+          }`}
         >
-          <div className="flex flex-col">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-foreground">
-                {category.title}
-              </h3>
-              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                {category.count}
-              </span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {category.description}
-            </p>
+          <div className="flex flex-col items-start">
+            <span className={`text-sm font-semibold mb-1 ${
+              selectedCategory === category.id
+                ? 'text-primary-accent'
+                : 'text-foreground group-hover:text-primary-accent'
+            }`}>
+              {category.name}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {category.count} skills
+            </span>
           </div>
-        </Card>
+        </button>
       ))}
     </div>
   );
