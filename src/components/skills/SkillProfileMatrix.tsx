@@ -71,7 +71,17 @@ export const SkillProfileMatrix = () => {
     });
   };
 
-  const paginatedSkills = allSkills.slice(0, page * PAGE_SIZE);
+  const handleLoadMore = () => {
+    setPage(prev => prev + 1);
+  };
+
+  const filteredSkills = allSkills.filter(skill => {
+    if (skillType === "all") return true;
+    return skill.subcategory.toLowerCase().includes(skillType.toLowerCase());
+  });
+
+  const paginatedSkills = filteredSkills.slice(0, page * PAGE_SIZE);
+  const hasMoreSkills = paginatedSkills.length < filteredSkills.length;
 
   return (
     <div className="space-y-6">
@@ -118,6 +128,18 @@ export const SkillProfileMatrix = () => {
             onToggleSkill={handleToggleSkill}
           />
         </div>
+
+        {hasMoreSkills && (
+          <div className="flex justify-center mt-4">
+            <Button 
+              variant="outline" 
+              onClick={handleLoadMore}
+              className="w-full max-w-xs"
+            >
+              Load More Skills
+            </Button>
+          </div>
+        )}
       </Card>
     </div>
   );
