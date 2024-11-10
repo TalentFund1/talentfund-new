@@ -75,7 +75,9 @@ const SkillProfileDetail = () => {
 
                 <TabsContent value="graph">
                   <Card className="p-6 bg-white">
-                    <CompetencyGraph track={track} />
+                    <SelectedSkillsProvider>
+                      <CompetencyGraph track={track} />
+                    </SelectedSkillsProvider>
                   </Card>
                 </TabsContent>
               </Tabs>
