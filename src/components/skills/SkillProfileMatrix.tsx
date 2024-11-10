@@ -119,12 +119,7 @@ export const SkillProfileMatrix = () => {
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
-            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">
-              {selectedSkills.length} saved
-            </span>
-          </div>
+          <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
             <Button 
               variant="outline" 
