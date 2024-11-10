@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface MatrixSkillsContextType {
   matrixSkills: string[];
@@ -8,14 +8,7 @@ interface MatrixSkillsContextType {
 const MatrixSkillsContext = createContext<MatrixSkillsContextType | undefined>(undefined);
 
 export const MatrixSkillsProvider = ({ children }: { children: ReactNode }) => {
-  const [matrixSkills, setMatrixSkills] = useState<string[]>(() => {
-    const saved = localStorage.getItem('matrixSkills');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem('matrixSkills', JSON.stringify(matrixSkills));
-  }, [matrixSkills]);
+  const [matrixSkills, setMatrixSkills] = useState<string[]>([]);
 
   return (
     <MatrixSkillsContext.Provider value={{ matrixSkills, setMatrixSkills }}>
