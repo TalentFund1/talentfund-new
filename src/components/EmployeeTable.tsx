@@ -63,6 +63,19 @@ const employees: Employee[] = [
   }
 ];
 
+// Helper function to get skill profile ID from role
+const getSkillProfileId = (role: string) => {
+  const roleMap: { [key: string]: string } = {
+    "AI Engineer": "123",
+    "Backend Engineer": "124",
+    "Frontend Developer": "125",
+    "Engineering Manager": "126"
+  };
+  
+  const baseRole = role.split(":")[0].trim();
+  return roleMap[baseRole] || "123"; // Default to AI Engineer if not found
+};
+
 export const EmployeeTable = () => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
 
@@ -132,7 +145,14 @@ export const EmployeeTable = () => {
                     </Link>
                   </div>
                 </td>
-                <td className="px-4 py-4 text-sm">{employee.role}</td>
+                <td className="px-4 py-4">
+                  <Link 
+                    to={`/skills/${getSkillProfileId(employee.role)}`} 
+                    className="text-sm text-primary hover:text-primary-accent transition-colors"
+                  >
+                    {employee.role}
+                  </Link>
+                </td>
                 <td className="px-4 py-4 text-sm">{employee.department}</td>
                 <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
                 <td className="px-4 py-4">
