@@ -1,4 +1,23 @@
 export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
+  const certificationKeywords = [
+    'CISSP',
+    'AWS Certified',
+    'Certified Information Systems Security Professional',
+    'Solutions Architect',
+    'Professional Scrum',
+    'Azure Solutions Architect',
+    'Google Cloud Professional',
+    'CompTIA Security+',
+    'PMP Certification',
+    'Cisco CCNA',
+    'Oracle Certified Professional',
+    'Salesforce Certified Developer',
+    'Red Hat Certified Engineer',
+    'HashiCorp Certified',
+    'Certified Ethical Hacker',
+    'ITIL Foundation'
+  ];
+
   const specializedSkills = [
     'Amazon Web Services',
     'Artificial Intelligence',
@@ -28,25 +47,6 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Microservices Design'
   ];
 
-  const certifications = [
-    'AWS Certified',
-    'Azure Solutions Architect',
-    'Professional Scrum',
-    'CISSP',
-    'Certified Information Systems Security Professional',
-    'CKA',
-    'Google Cloud Professional',
-    'CompTIA Security+',
-    'PMP Certification',
-    'Cisco CCNA',
-    'Oracle Certified Professional',
-    'Salesforce Certified Developer',
-    'Red Hat Certified Engineer',
-    'HashiCorp Certified',
-    'Certified Ethical Hacker',
-    'ITIL Foundation'
-  ];
-
   const commonSkills = [
     'Python',
     'Git',
@@ -73,15 +73,13 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Analytical Skills'
   ];
 
-  // Check for certifications first using partial matches
-  if (certifications.some(cert => 
-    skill.toLowerCase().includes(cert.toLowerCase()) || 
-    cert.toLowerCase().includes(skill.toLowerCase())
+  // Check if the skill contains any certification keywords
+  if (certificationKeywords.some(cert => 
+    skill.toLowerCase().includes(cert.toLowerCase())
   )) {
     return 'certification';
   }
   
-  // Then check for exact matches for specialized skills
   if (specializedSkills.includes(skill)) {
     return 'specialized';
   }
