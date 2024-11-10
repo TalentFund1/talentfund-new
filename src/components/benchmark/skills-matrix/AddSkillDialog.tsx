@@ -71,18 +71,20 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Add Skill</Button>
+        <Button variant="outline" className="bg-white hover:bg-gray-50">
+          Add Skill
+        </Button>
       </DialogTrigger>
-      <DialogContent className="bg-white sm:max-w-[425px]">
+      <DialogContent className="bg-white sm:max-w-[425px] shadow-lg border-border">
         <DialogHeader className="space-y-3">
-          <DialogTitle>Add New Skill</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-xl font-semibold text-primary">Add New Skill</DialogTitle>
+          <DialogDescription className="text-sm text-gray-600">
             Add a new skill to your skills matrix. Select from available skills.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
+        <form onSubmit={handleSubmit} className="space-y-6 py-6">
           <div className="space-y-2">
-            <Label>Skill Name</Label>
+            <Label className="text-sm font-medium">Skill Name</Label>
             <ComboboxDemo 
               skills={skills.map(s => s.title)}
               selected={selectedSkill}
@@ -90,12 +92,12 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="skillType">Skill Type</Label>
+            <Label htmlFor="skillType" className="text-sm font-medium">Skill Type</Label>
             <Select value={skillType} onValueChange={setSkillType}>
-              <SelectTrigger className="w-full bg-white">
+              <SelectTrigger className="w-full bg-white border-input hover:bg-gray-50">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="unknown">Unknown</SelectItem>
                 <SelectItem value="skill goal">Skill Goal</SelectItem>
                 <SelectItem value="not interested">Not Interested</SelectItem>
@@ -103,12 +105,12 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="level">Initial Level</Label>
+            <Label htmlFor="level" className="text-sm font-medium">Initial Level</Label>
             <Select value={level} onValueChange={setLevel}>
-              <SelectTrigger className="w-full bg-white">
+              <SelectTrigger className="w-full bg-white border-input hover:bg-gray-50">
                 <SelectValue placeholder="Select level" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="unspecified">Unspecified</SelectItem>
                 <SelectItem value="beginner">Beginner</SelectItem>
                 <SelectItem value="intermediate">Intermediate</SelectItem>
@@ -118,16 +120,21 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
           </div>
           {selectedSkill && (
             <div className="space-y-2">
-              <Label>Subcategory</Label>
+              <Label className="text-sm font-medium">Subcategory</Label>
               <Input
                 value={skills.find(s => s.title === selectedSkill)?.subcategory || ""}
                 disabled
-                className="bg-gray-100"
+                className="bg-gray-50 text-gray-500 border-input"
               />
             </div>
           )}
           <div className="pt-4 flex justify-end">
-            <Button type="submit">Add Skill</Button>
+            <Button 
+              type="submit" 
+              className="bg-primary-accent hover:bg-primary-accent/90 text-white"
+            >
+              Add Skill
+            </Button>
           </div>
         </form>
       </DialogContent>
