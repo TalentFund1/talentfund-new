@@ -26,17 +26,16 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
     }
   };
 
-  // Function to determine if a skill is a company skill
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
   };
 
   return (
-    <TableRow className="group hover:bg-muted/50 border-b border-gray-200 transition-colors">
-      <TableCell className="font-medium border-r border-blue-200 py-2 group-hover:bg-muted/30">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2 group-hover:bg-muted/30">{skill.subcategory}</TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2 group-hover:bg-muted/30">
+    <TableRow className="group border-b border-gray-200">
+      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
+      <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
+      <TableCell className="text-center border-r border-blue-200 py-2">
         <div className="flex justify-center">
           {isCompanySkill(skill.title) ? (
             <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
@@ -50,7 +49,7 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
         </div>
       </TableCell>
       <SkillLevelCell initialLevel={skill.level} />
-      <TableCell className="text-center border-r border-blue-200 py-2 group-hover:bg-muted/30">
+      <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
         ) : (
@@ -59,14 +58,14 @@ export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
           </span>
         )}
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2 group-hover:bg-muted/30">
+      <TableCell className="text-center border-r border-blue-200 py-2">
         <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
           skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
         }`}>
           ↗ {skill.growth}
         </span>
       </TableCell>
-      <TableCell className="text-center py-2 group-hover:bg-muted/30">
+      <TableCell className="text-center py-2">
         <div className="flex items-center justify-center space-x-1">
           <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
           <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
