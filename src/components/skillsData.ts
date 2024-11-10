@@ -1,101 +1,66 @@
 export const technicalSkills = [
-  // Programming Languages & Core Skills
-  "Python", "R", "Julia", "MATLAB", "C++", "Java", "Scala",
-  "SQL", "NoSQL", "GraphQL", "REST APIs",
+  // Programming Languages
+  "JavaScript", "TypeScript", "Python", "Java", "C++", "Ruby", "Go", "Rust", "PHP", "Swift",
   
-  // AI/ML Frameworks & Libraries
-  "TensorFlow", "PyTorch", "Keras", "scikit-learn", "XGBoost", "LightGBM",
-  "Hugging Face", "OpenAI API", "JAX", "FastAI", "Stable Diffusion",
-  "NLTK", "spaCy", "Transformers", "Ray", "MLflow",
+  // Web Development
+  "React", "Angular", "Vue.js", "Next.js", "Node.js", "Express.js", "Django", "Flask",
+  "HTML5", "CSS3", "Sass", "Tailwind CSS", "Bootstrap", "Material UI",
   
-  // Big Data & Cloud
-  "Apache Spark", "Hadoop", "Kafka", "Airflow",
-  "AWS SageMaker", "Azure ML", "Google Cloud AI",
-  "Databricks", "Snowflake", "Kubernetes", "Docker",
+  // Database
+  "SQL", "PostgreSQL", "MongoDB", "Redis", "Elasticsearch", "Oracle", "MySQL",
   
-  // Deep Learning Areas
-  "Computer Vision", "Natural Language Processing",
-  "Reinforcement Learning", "Generative AI",
-  "Large Language Models", "Neural Networks",
-  "Transfer Learning", "Few-shot Learning",
+  // Cloud & DevOps
+  "AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Jenkins", "GitLab CI",
+  "Terraform", "Ansible", "Linux", "Nginx", "Apache",
   
-  // Math & Statistics
-  "Linear Algebra", "Calculus", "Statistics",
-  "Probability Theory", "Optimization",
-  "Time Series Analysis", "Bayesian Methods",
+  // AI & ML
+  "TensorFlow", "PyTorch", "Scikit-learn", "Natural Language Processing",
+  "Computer Vision", "Machine Learning", "Deep Learning", "Data Science",
   
-  // MLOps & Tools
-  "Git", "DVC", "Weight & Biases", "Neptune.ai",
-  "Model Monitoring", "Feature Stores", "CI/CD for ML",
-  "Model Versioning", "Experiment Tracking",
+  // Mobile Development
+  "React Native", "Flutter", "iOS Development", "Android Development",
+  "Kotlin", "SwiftUI", "Mobile App Architecture",
   
-  // Data Processing
-  "Pandas", "NumPy", "SciPy", "Dask",
-  "Data Cleaning", "Feature Engineering",
-  "ETL Pipelines", "Data Validation",
+  // Testing
+  "Jest", "Cypress", "Selenium", "JUnit", "TestNG", "Mocha", "Testing Methodologies",
   
-  // Visualization
-  "Matplotlib", "Seaborn", "Plotly",
-  "Tableau", "Power BI", "D3.js",
-  
-  // Development Tools
-  "Jupyter", "VSCode", "PyCharm",
-  "Linux/Unix", "Shell Scripting"
+  // Version Control
+  "Git", "GitHub", "Bitbucket", "GitLab", "Version Control Best Practices"
 ];
 
 export const softSkills = [
+  // Leadership & Management
+  "Team Leadership", "Project Management", "Strategic Planning", "Decision Making",
+  "Conflict Resolution", "Change Management", "Performance Management",
+  "Mentoring", "Coaching", "Team Building",
+  
   // Communication
-  "Technical Writing", "Documentation",
-  "Presentation Skills", "Data Storytelling",
-  "Cross-functional Collaboration",
-  "Stakeholder Management",
+  "Verbal Communication", "Written Communication", "Public Speaking",
+  "Presentation Skills", "Technical Writing", "Active Listening",
+  "Interpersonal Communication", "Cross-cultural Communication",
   
   // Problem Solving
-  "Analytical Thinking", "Critical Thinking",
-  "Research Skills", "Experimental Design",
-  "Algorithm Design", "System Architecture",
+  "Critical Thinking", "Analytical Skills", "Problem Analysis",
+  "Creative Problem Solving", "Research Skills", "Logical Reasoning",
+  "Innovation", "Design Thinking",
   
-  // Project Management
-  "Agile Methodologies", "Scrum",
-  "Project Planning", "Risk Management",
-  "Time Management", "Resource Allocation",
+  // Collaboration
+  "Team Collaboration", "Cross-functional Collaboration", "Remote Collaboration",
+  "Stakeholder Management", "Client Relations", "Partnership Building",
   
-  // Leadership
-  "Team Leadership", "Mentoring",
-  "Decision Making", "Strategic Thinking",
-  "Innovation Management",
-  
-  // Business Skills
-  "Business Acumen", "Domain Knowledge",
-  "Requirements Gathering", "Cost-Benefit Analysis",
-  "ROI Assessment", "Ethics in AI",
+  // Work Management
+  "Time Management", "Task Prioritization", "Organization Skills",
+  "Meeting Management", "Deadline Management", "Multitasking",
   
   // Personal Development
-  "Continuous Learning", "Adaptability",
-  "Attention to Detail", "Problem-Solving",
-  "Initiative", "Creativity"
-];
-
-export const certifications = [
-  // Cloud & ML Certifications
-  "AWS Machine Learning Specialty",
-  "Google Cloud Professional ML Engineer",
-  "Azure AI Engineer Associate",
-  "TensorFlow Developer Certificate",
-  "IBM AI Engineering Professional Certificate",
+  "Adaptability", "Learning Agility", "Growth Mindset", "Self-motivation",
+  "Emotional Intelligence", "Resilience", "Work Ethics", "Initiative",
   
-  // Data Science Certifications
-  "Databricks Certified Associate ML Engineer",
-  "Cloudera Certified Professional: CCP Data Engineer",
-  "Deep Learning Specialization (Coursera)",
+  // Business Skills
+  "Business Acumen", "Strategic Thinking", "Requirements Gathering",
+  "Process Improvement", "Risk Management", "Quality Assurance",
   
-  // Specialized AI Certifications
-  "NVIDIA Deep Learning Institute Certification",
-  "OpenAI Safety Standards Certification",
-  "Hugging Face NLP Certification",
-  
-  // Professional Certifications
-  "Professional Machine Learning Engineer (PMLE)",
-  "Certified AI Professional (CAIP)",
-  "MLOps Engineering Certification"
+  // Customer Focus
+  "Customer Service", "User Experience", "Client Communication",
+  "Needs Assessment", "Customer Feedback Management"
 ];
