@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { skills } from "@/components/skills/data/skillsData";
+import { ComboboxDemo } from "./SkillCombobox";
 
 interface AddSkillDialogProps {
   onSkillAdd: (skill: { title: string; subcategory: string; level: string; growth: string; confidence: string; }) => void;
@@ -20,26 +21,36 @@ interface AddSkillDialogProps {
 
 export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
   const [open, setOpen] = useState(false);
-  const [skillName, setSkillName] = useState("");
-  const [subcategory, setSubcategory] = useState("");
+  const [selectedSkill, setSelectedSkill] = useState("");
   const [level, setLevel] = useState("unspecified");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!skillName.trim() || !subcategory.trim()) {
+    if (!selectedSkill) {
       toast({
         title: "Error",
-        description: "Please fill in all required fields",
+        description: "Please select a skill",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const skillData = skills.find(s => s.title === selectedSkill);
+    
+    if (!skillData) {
+      toast({
+        title: "Error",
+        description: "Selected skill not found in database",
         variant: "destructive",
       });
       return;
     }
 
     onSkillAdd({
-      title: skillName,
-      subcategory,
+      title: selectedSkill,
+      subcategory: skillData.subcategory,
       level,
       growth: "0%",
       confidence: "n/a"
@@ -51,8 +62,7 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
     });
 
     setOpen(false);
-    setSkillName("");
-    setSubcategory("");
+    setSelectedSkill("");
     setLevel("unspecified");
   };
 
@@ -65,28 +75,28 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
         <DialogHeader>
           <DialogTitle>Add New Skill</DialogTitle>
           <DialogDescription>
-            Add a new skill to your skills matrix. Fill in the details below.
+            Add a new skill to your skills matrix. Select from available skills.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="skillName">Skill Name</Label>
-            <Input
-              id="skillName"
-              value={skillName}
-              onChange={(e) => setSkillName(e.target.value)}
-              placeholder="Enter skill name"
+            <Label>Skill Name</Label>
+            <ComboboxDemo 
+              skills={skills.map(s => s.title)}
+              selected={selectedSkill}
+              onSelect={setSelectedSkill}
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="subcategory">Subcategory</Label>
-            <Input
-              id="subcategory"
-              value={subcategory}
-              onChange={(e) => setSubcategory(e.target.value)}
-              placeholder="Enter subcategory"
-            />
-          </div>
+          {selectedSkill && (
+            <div className="space-y-2">
+              <Label>Subcategory</Label>
+              <Input
+                value={skills.find(s => s.title === selectedSkill)?.subcategory || ""}
+                disabled
+                className="bg-gray-100"
+              />
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="level">Initial Level</Label>
             <Select value={level} onValueChange={setLevel}>
@@ -101,9 +111,9 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
               </SelectContent>
             </Select>
           </div>
-          <DialogFooter>
+          <div className="pt-4 flex justify-end">
             <Button type="submit">Add Skill</Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
