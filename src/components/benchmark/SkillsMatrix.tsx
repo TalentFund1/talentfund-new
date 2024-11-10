@@ -1,14 +1,12 @@
 import { Table, TableBody } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SkillsMatrixTableHeader } from "./SkillsMatrixTableHeader";
 import { SkillsMatrixRow } from "./SkillsMatrixRow";
 import { useState } from "react";
+import { SearchFilter } from "@/components/market/SearchFilter";
 import { useToast } from "@/components/ui/use-toast";
-import { useSkillsSearch } from "@/contexts/SkillsSearchContext";
-import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
-import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 
 const initialSkills = [
   {
@@ -92,38 +90,37 @@ const initialSkills = [
 
 export const SkillsMatrix = () => {
   const [skills, setSkills] = useState(initialSkills);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const { selectedSkills } = useSkillsSearch();
   const { toast } = useToast();
 
   const allSkillTitles = skills.map(skill => skill.title);
 
-  // Check for new skills that need to be added
-  const addNewSkills = (newSkills: string[]) => {
-    const skillsToAdd = newSkills.map(skillName => ({
-      title: skillName,
-      subcategory: "Unspecified",
-      level: "unspecified",
-      growth: "0%",
-      confidence: "n/a"
-    }));
+  const handleSkillsChange = (newSelectedSkills: string[]) => {
+    setSelectedSkills(newSelectedSkills);
     
-    setSkills(prev => [...prev, ...skillsToAdd]);
+    // Check for new skills that need to be added
+    const newSkills = newSelectedSkills.filter(
+      skill => !allSkillTitles.includes(skill)
+    );
     
-    toast({
-      title: "Skills Added",
-      description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
-    });
+    if (newSkills.length > 0) {
+      const skillsToAdd = newSkills.map(skillName => ({
+        title: skillName,
+        subcategory: "Unspecified",
+        level: "unspecified",
+        growth: "0%",
+        confidence: "n/a"
+      }));
+      
+      setSkills(prev => [...prev, ...skillsToAdd]);
+      
+      toast({
+        title: "Skills Added",
+        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
+      });
+    }
   };
-
-  // Check for new skills whenever selectedSkills changes
-  const newSkills = selectedSkills.filter(
-    skill => !allSkillTitles.includes(skill)
-  );
-  
-  if (newSkills.length > 0) {
-    addNewSkills(newSkills);
-  }
 
   const filteredSkills = selectedSkills.length === 0
     ? skills
@@ -135,13 +132,58 @@ export const SkillsMatrix = () => {
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
-      <SkillsMatrixHeader />
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+          <Select defaultValue="modify">
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Modify As" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="modify">Modify As</SelectItem>
+              <SelectItem value="employee">Employee</SelectItem>
+              <SelectItem value="manager">Manager</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="bg-white">Cancel</Button>
+          <Button>Save</Button>
+        </div>
+      </div>
 
       <div className="border-t border-blue-200 pt-6">
-        <SkillsMatrixFilters
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-        />
+        <div className="flex gap-4 mb-6 items-center justify-between">
+          <div className="flex gap-2 flex-1">
+            <Select 
+              value={selectedCategory} 
+              onValueChange={setSelectedCategory}
+            >
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="flex-1">
+              <SearchFilter
+                label=""
+                placeholder="Search skills..."
+                items={allSkillTitles}
+                selectedItems={selectedSkills}
+                onItemsChange={handleSkillsChange}
+                singleSelect={false}
+              />
+            </div>
+          </div>
+          
+          <Button>Add Skill</Button>
+        </div>
       </div>
 
       <div className="rounded-lg border border-blue-200 overflow-x-auto">
