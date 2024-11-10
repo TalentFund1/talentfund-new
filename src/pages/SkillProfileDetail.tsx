@@ -17,14 +17,9 @@ import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkil
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
-  const [selectedCategory, setSelectedCategory] = useState("all");
 
   const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
     setTrack(newTrack);
-  };
-
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
   };
 
   return (
@@ -74,14 +69,14 @@ const SkillProfileDetail = () => {
                 <TabsContent value="skills">
                   <SelectBenchmark />
                   <SelectedSkillsProvider>
-                    <SkillProfileMatrix onCategoryChange={handleCategoryChange} />
+                    <SkillProfileMatrix />
                   </SelectedSkillsProvider>
                 </TabsContent>
 
                 <TabsContent value="graph">
                   <Card className="p-6 bg-white">
                     <SelectedSkillsProvider>
-                      <CompetencyGraph track={track} initialCategory={selectedCategory} />
+                      <CompetencyGraph track={track} />
                     </SelectedSkillsProvider>
                   </Card>
                 </TabsContent>

@@ -9,13 +9,12 @@ import { useSelectedSkills } from "./context/SelectedSkillsContext";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
-  initialCategory?: string;
 }
 
-export const CompetencyGraph = ({ track, initialCategory = "all" }: CompetencyGraphProps) => {
+export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     const savedCategory = localStorage.getItem('selectedCategory');
-    return initialCategory || savedCategory || "all";
+    return savedCategory || "all";
   });
 
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);

@@ -9,11 +9,7 @@ import { useSelectedSkills } from "./context/SelectedSkillsContext";
 
 const PAGE_SIZE = 10;
 
-interface SkillProfileMatrixProps {
-  onCategoryChange: (category: string) => void;
-}
-
-export const SkillProfileMatrix = ({ onCategoryChange }: SkillProfileMatrixProps) => {
+export const SkillProfileMatrix = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => new Set(selectedSkills));
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -145,10 +141,7 @@ export const SkillProfileMatrix = ({ onCategoryChange }: SkillProfileMatrixProps
 
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
-            <Select value={skillType} onValueChange={value => {
-              setSkillType(value);
-              onCategoryChange(value); // notify parent of category change
-            }}>
+            <Select value={skillType} onValueChange={setSkillType}>
               <SelectTrigger className="w-[180px] bg-white">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
@@ -157,6 +150,17 @@ export const SkillProfileMatrix = ({ onCategoryChange }: SkillProfileMatrixProps
                 <SelectItem value="specialized">Technical Skills</SelectItem>
                 <SelectItem value="common">Common Skills</SelectItem>
                 <SelectItem value="certification">Certifications</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
+                <SelectItem value="growth">Sort by Growth</SelectItem>
+                <SelectItem value="salary">Sort by Salary</SelectItem>
               </SelectContent>
             </Select>
           </div>
