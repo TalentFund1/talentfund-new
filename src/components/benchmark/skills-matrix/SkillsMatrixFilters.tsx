@@ -18,7 +18,7 @@ export const SkillsMatrixFilters = ({
   handleSkillsChange,
 }: SkillsMatrixFiltersProps) => {
   return (
-    <div className="flex justify-between items-center gap-4 mb-4">
+    <div className="flex justify-between items-start gap-4 mb-4">
       <div className="flex gap-4 flex-1">
         <Select 
           value={selectedCategory} 
@@ -35,7 +35,7 @@ export const SkillsMatrixFilters = ({
           </SelectContent>
         </Select>
 
-        <div className="flex-1">
+        <div className="flex-1 -mt-1">
           <SearchFilter
             label=""
             placeholder="Search skills..."
