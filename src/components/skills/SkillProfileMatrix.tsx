@@ -6,7 +6,6 @@ import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 
-// Initial page size
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
@@ -15,6 +14,8 @@ export const SkillProfileMatrix = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [toggledSkills, setToggledSkills] = useState<Set<string>>(new Set());
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
@@ -29,7 +30,38 @@ export const SkillProfileMatrix = () => {
     { title: "Kubernetes", subcategory: "Artificial Intelligence and Machine...", level: "intermediate", growth: "21%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
   ];
 
-  // Calculate the current page of skills
+  const handleToggleSkill = (skillTitle: string) => {
+    setToggledSkills(prev => {
+      const newToggledSkills = new Set(prev);
+      if (newToggledSkills.has(skillTitle)) {
+        newToggledSkills.delete(skillTitle);
+      } else {
+        newToggledSkills.add(skillTitle);
+      }
+      setHasUnsavedChanges(true);
+      return newToggledSkills;
+    });
+  };
+
+  const handleSave = () => {
+    // In a real application, you would make an API call here
+    console.log("Saving toggled skills:", Array.from(toggledSkills));
+    setHasUnsavedChanges(false);
+    toast({
+      title: "Changes saved",
+      description: "Your skill selections have been saved successfully.",
+    });
+  };
+
+  const handleCancel = () => {
+    setToggledSkills(new Set());
+    setHasUnsavedChanges(false);
+    toast({
+      title: "Changes cancelled",
+      description: "Your skill selections have been reset.",
+    });
+  };
+
   const paginatedSkills = allSkills.slice(0, page * PAGE_SIZE);
 
   const lastSkillElementRef = useCallback((node: HTMLElement | null) => {
@@ -62,8 +94,19 @@ export const SkillProfileMatrix = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
           <div className="flex gap-2">
-            <Button variant="outline">Cancel</Button>
-            <Button>Save</Button>
+            <Button 
+              variant="outline" 
+              onClick={handleCancel}
+              disabled={!hasUnsavedChanges}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={!hasUnsavedChanges}
+            >
+              Save
+            </Button>
           </div>
         </div>
 
@@ -114,6 +157,8 @@ export const SkillProfileMatrix = () => {
           <SkillProfileMatrixTable 
             paginatedSkills={paginatedSkills} 
             lastSkillElementRef={lastSkillElementRef}
+            toggledSkills={toggledSkills}
+            onToggleSkill={handleToggleSkill}
           />
         </div>
       </Card>
