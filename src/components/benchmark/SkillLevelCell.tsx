@@ -13,29 +13,30 @@ export const SkillLevelCell = ({ initialLevel, onStateChange }: SkillLevelCellPr
   const [required, setRequired] = useState<string>("required");
   const [originalLevel, setOriginalLevel] = useState(initialLevel.toLowerCase());
   const [originalRequired, setOriginalRequired] = useState("required");
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-  useEffect(() => {
-    if (onStateChange) {
-      onStateChange(hasUnsavedChanges);
-    }
-  }, [hasUnsavedChanges, onStateChange]);
 
   useEffect(() => {
     const hasChanges = level !== originalLevel || required !== originalRequired;
-    setHasUnsavedChanges(hasChanges);
-  }, [level, required, originalLevel, originalRequired]);
+    if (onStateChange) {
+      onStateChange(hasChanges);
+    }
+  }, [level, required, originalLevel, originalRequired, onStateChange]);
 
-  const handleSave = () => {
-    setOriginalLevel(level);
-    setOriginalRequired(required);
-    setHasUnsavedChanges(false);
+  const handleLevelChange = (newLevel: string) => {
+    setLevel(newLevel);
   };
 
-  const handleCancel = () => {
+  const handleRequiredChange = (newRequired: string) => {
+    setRequired(newRequired);
+  };
+
+  const resetToOriginal = () => {
     setLevel(originalLevel);
     setRequired(originalRequired);
-    setHasUnsavedChanges(false);
+  };
+
+  const updateOriginalValues = () => {
+    setOriginalLevel(level);
+    setOriginalRequired(required);
   };
 
   const getLevelIcon = (level: string) => {
@@ -97,7 +98,7 @@ export const SkillLevelCell = ({ initialLevel, onStateChange }: SkillLevelCellPr
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={level} onValueChange={setLevel}>
+        <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
@@ -136,7 +137,7 @@ export const SkillLevelCell = ({ initialLevel, onStateChange }: SkillLevelCellPr
           </SelectContent>
         </Select>
 
-        <Select value={required} onValueChange={setRequired}>
+        <Select value={required} onValueChange={handleRequiredChange}>
           <SelectTrigger 
             className={`text-xs px-2 py-1 font-normal w-full flex items-center justify-center min-h-[24px] border-x-2 border-b-2 rounded-b-md ${getRequirementStyles(required)}`}
           >

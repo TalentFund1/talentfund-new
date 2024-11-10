@@ -14,6 +14,12 @@ interface SkillsMatrixRowProps {
 }
 
 export const SkillsMatrixRow = ({ skill, onStateChange }: SkillsMatrixRowProps) => {
+  const handleSkillLevelChange = (hasChanges: boolean) => {
+    if (onStateChange) {
+      onStateChange(hasChanges);
+    }
+  };
+
   const getConfidenceStyles = (confidence: string) => {
     switch (confidence) {
       case 'high':
@@ -49,7 +55,10 @@ export const SkillsMatrixRow = ({ skill, onStateChange }: SkillsMatrixRowProps) 
           )}
         </div>
       </TableCell>
-      <SkillLevelCell initialLevel={skill.level} onStateChange={onStateChange} />
+      <SkillLevelCell 
+        initialLevel={skill.level} 
+        onStateChange={handleSkillLevelChange}
+      />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
