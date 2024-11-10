@@ -27,11 +27,38 @@ export const SkillProfileMatrixTable = ({
   toggledSkills,
   onToggleSkill
 }: SkillProfileMatrixTableProps) => {
+  const allSelected = paginatedSkills.length > 0 && 
+    paginatedSkills.every(skill => toggledSkills.has(skill.title));
+
+  const handleSelectAll = () => {
+    if (allSelected) {
+      paginatedSkills.forEach(skill => {
+        if (toggledSkills.has(skill.title)) {
+          onToggleSkill(skill.title);
+        }
+      });
+    } else {
+      paginatedSkills.forEach(skill => {
+        if (!toggledSkills.has(skill.title)) {
+          onToggleSkill(skill.title);
+        }
+      });
+    }
+  };
+
   return (
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">
+            <div className="flex items-center gap-2">
+              <Switch 
+                checked={allSelected}
+                onCheckedChange={handleSelectAll}
+              />
+              <span>Skill Title</span>
+            </div>
+          </th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
