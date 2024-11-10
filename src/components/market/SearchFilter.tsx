@@ -49,8 +49,9 @@ export const SearchFilter = ({
         onItemsChange([...selectedItems, item]);
       }
     }
-    setSearchQuery("");
+    // Don't clear search query or close dropdown when editing
     if (singleSelect) {
+      setSearchQuery("");
       setIsOpen(false);
     }
   };
@@ -91,10 +92,11 @@ export const SearchFilter = ({
         >
           <Input
             placeholder={selectedItems.length === 0 ? placeholder : ""}
-            value={isOpen ? searchQuery : ""}
+            value={searchQuery}
             onChange={(e) => {
               e.stopPropagation();
               setSearchQuery(e.target.value);
+              setIsOpen(true);
             }}
             onClick={(e) => {
               e.stopPropagation();
