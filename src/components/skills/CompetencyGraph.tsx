@@ -114,7 +114,7 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
       <Separator className="my-6" />
       
       <div className="mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-6">AI Engineer</h3>
+        <h3 className="text-2xl font-bold text-foreground mb-6">Backend Engineer</h3>
         <TrackSelection />
       </div>
 
