@@ -112,7 +112,10 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-center gap-2">
           <div className="text-sm text-muted-foreground">Track:</div>
-          <Select value={currentTrack} onValueChange={(value) => setCurrentTrack(value)}>
+          <Select 
+            value={currentTrack} 
+            onValueChange={(value: "Professional" | "Managerial") => setCurrentTrack(value)}
+          >
             <SelectTrigger className="w-[180px] bg-white border-border">
               <SelectValue placeholder="Select track" />
             </SelectTrigger>
