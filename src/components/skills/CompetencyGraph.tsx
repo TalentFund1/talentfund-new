@@ -7,6 +7,7 @@ import { SkillCell } from "./competency/SkillCell";
 import { CategoryCards } from "./competency/CategoryCards";
 import { skillsByCategory } from "./competency/skillsData";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { technicalSkills, softSkills } from "../skillsData";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
@@ -37,8 +38,42 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const skills = getSkillsForCategory();
   const levels = currentTrack === "Professional" ? ["P1", "P2", "P3", "P4", "P5", "P6"] : ["M3", "M4", "M5", "M6"];
 
-  // Filter skills based on toggledSkills
-  const uniqueSkills = Array.from(toggledSkills).sort();
+  // Filter and categorize skills
+  const getSkillsByCategory = () => {
+    const skillsArray = Array.from(toggledSkills);
+    
+    if (selectedCategory === "all") {
+      return skillsArray;
+    }
+    
+    if (selectedCategory === "specialized") {
+      return skillsArray.filter(skill => 
+        technicalSkills.includes(skill) && 
+        ["Machine Learning", "Artificial Intelligence", "Deep Learning", "Computer Vision", "Natural Language Processing"].some(
+          specialization => skill.includes(specialization)
+        )
+      );
+    }
+    
+    if (selectedCategory === "common") {
+      return skillsArray.filter(skill => 
+        softSkills.includes(skill) || 
+        ["JavaScript", "Python", "Java", "SQL"].some(common => skill.includes(common))
+      );
+    }
+    
+    if (selectedCategory === "certification") {
+      return skillsArray.filter(skill => 
+        skill.includes("Certified") || 
+        skill.includes("Certificate") || 
+        skill.includes("Certification")
+      );
+    }
+    
+    return [];
+  };
+
+  const uniqueSkills = getSkillsByCategory().sort();
 
   const getSkillDetails = (skillName: string, level: string) => {
     const skillLevel = skills[level];
