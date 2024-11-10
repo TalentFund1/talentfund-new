@@ -22,6 +22,11 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
     onLevelChange?.(level, newRequired);
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
@@ -80,7 +85,7 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center" onClick={handleClick}>
         <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
