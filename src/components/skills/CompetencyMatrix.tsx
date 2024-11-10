@@ -35,6 +35,8 @@ export const CompetencyMatrix = () => {
     setSelectedCategory(categoryId);
   };
 
+  const skillsArray = Array.from(toggledSkills);
+
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <CompetencyMatrixHeader selectedLevels={selectedLevels} />
@@ -66,7 +68,7 @@ export const CompetencyMatrix = () => {
                   {category.name}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {Array.from(toggledSkills).filter(skill => 
+                  {skillsArray.filter(skill => 
                     category.id === 'all' || getSkillCategory(skill) === category.id
                   ).length} skills
                 </span>
@@ -76,7 +78,7 @@ export const CompetencyMatrix = () => {
         </div>
 
         <SkillsGrid 
-          skills={Array.from(toggledSkills)}
+          skillsArray={skillsArray}
           selectedCategory={selectedCategory}
         />
       </div>

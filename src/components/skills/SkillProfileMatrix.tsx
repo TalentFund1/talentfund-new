@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ export const SkillProfileMatrix = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const observer = useRef<IntersectionObserver>();
+  const [isDirty, setIsDirty] = useState(false);
   const { toast } = useToast();
 
   const allSkills = [
@@ -37,6 +37,7 @@ export const SkillProfileMatrix = () => {
       newToggledSkills.add(skillTitle);
     }
     setToggledSkills(newToggledSkills);
+    setIsDirty(true);
     
     toast({
       title: "Skill Updated",
@@ -54,12 +55,14 @@ export const SkillProfileMatrix = () => {
           <div className="flex gap-2">
             <Button 
               variant="outline" 
-              disabled={!hasUnsavedChanges}
+              disabled={!isDirty}
+              onClick={() => setIsDirty(false)}
             >
               Cancel
             </Button>
             <Button
-              disabled={!hasUnsavedChanges}
+              disabled={!isDirty}
+              onClick={() => setIsDirty(false)}
             >
               Save
             </Button>
@@ -111,8 +114,7 @@ export const SkillProfileMatrix = () => {
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
-            paginatedSkills={paginatedSkills} 
-            lastSkillElementRef={lastSkillElementRef}
+            paginatedSkills={paginatedSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
           />
