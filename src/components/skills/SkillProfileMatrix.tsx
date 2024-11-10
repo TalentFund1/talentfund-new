@@ -6,11 +6,12 @@ import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useSkills } from "./context/SkillsContext";
 import { useRef, useState, useEffect } from "react";
+import { CategoryCards } from "./competency/CategoryCards";
 
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
-  const { savedSkills, setSavedSkills, selectedCategory } = useSkills();
+  const { savedSkills, setSavedSkills, selectedCategory, setSelectedCategory } = useSkills();
   const [sortBy, setSortBy] = useState("benchmark");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -127,6 +128,11 @@ export const SkillProfileMatrix = () => {
         </div>
 
         <Separator className="my-4" />
+
+        <CategoryCards 
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
 
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">

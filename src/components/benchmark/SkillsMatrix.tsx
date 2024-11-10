@@ -135,6 +135,11 @@ export const SkillsMatrix = () => {
   const paginatedSkills = filteredSkills.slice(startIndex, endIndex);
   const totalPages = Math.ceil(filteredSkills.length / rowsPerPage);
 
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
+    setPage(1);
+  };
+
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
@@ -162,7 +167,7 @@ export const SkillsMatrix = () => {
         
         <SkillsMatrixPagination 
           rowsPerPage={rowsPerPage}
-          handleRowsPerPageChange={setRowsPerPage}
+          handleRowsPerPageChange={handleRowsPerPageChange}
           startIndex={startIndex}
           endIndex={endIndex}
           totalSkills={filteredSkills.length}
