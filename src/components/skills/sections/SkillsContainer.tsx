@@ -78,15 +78,16 @@ export const SkillsContainer = ({
 
       <SkillSection title="Certifications" count={certifications.length}>
         <div className="flex flex-wrap gap-2">
-          {certifications.slice(0, expandedSections.certifications ? undefined : INITIAL_VISIBLE_COUNT).map((cert) => (
-            <SkillBadge 
-              key={cert.name}
-              skill={cert}
-              showLevel={true}
-              level={cert.level}
-              isSkillGoal={cert.isSkillGoal}
-            />
-          ))}
+          {(expandedSections.certifications ? certifications : certifications.slice(0, INITIAL_VISIBLE_COUNT))
+            .map((cert) => (
+              <SkillBadge 
+                key={cert.name}
+                skill={cert}
+                showLevel={true}
+                level={cert.level}
+                isSkillGoal={cert.isSkillGoal}
+              />
+            ))}
         </div>
         {renderSeeMoreButton(certifications.length, 'certifications', expandedSections.certifications)}
       </SkillSection>
