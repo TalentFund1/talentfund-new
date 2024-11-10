@@ -26,32 +26,36 @@ export const SkillsSummary = () => {
   const { currentStates } = useSkillsMatrixStore();
 
   // Transform initialSkills into the required format and sort by level
-  const transformedSkills = initialSkills.map(skill => ({
-    name: skill.title,
-    level: currentStates[skill.title]?.level || skill.level,
-    isSkillGoal: currentStates[skill.title]?.requirement === 'required'
-  })).sort((a, b) => {
-    const levelOrder = {
-      advanced: 0,
-      intermediate: 1,
-      beginner: 2,
-      unspecified: 3
-    };
-    const levelA = (a.level || 'unspecified').toLowerCase();
-    const levelB = (b.level || 'unspecified').toLowerCase();
-    return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
-  });
+  const transformedSkills: DetailedSkill[] = Object.values(initialSkills)
+    .flatMap(skills => skills)
+    .map(skill => ({
+      name: skill.title,
+      level: currentStates[skill.title]?.level || skill.level,
+      isSkillGoal: currentStates[skill.title]?.requirement === 'required'
+    }))
+    .sort((a, b) => {
+      const levelOrder = {
+        advanced: 0,
+        intermediate: 1,
+        beginner: 2,
+        unspecified: 3
+      };
+      const levelA = (a.level || 'unspecified').toLowerCase();
+      const levelB = (b.level || 'unspecified').toLowerCase();
+      return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
+    });
 
   // Categorize skills using the same categorization logic as the matrix
-  const specializedSkills = transformedSkills.filter(
+  const specializedSkills: DetailedSkill[] = transformedSkills.filter(
     skill => categorizeSkill(skill.name) === 'specialized'
   );
 
-  const commonSkills = transformedSkills.filter(
+  const commonSkills: DetailedSkill[] = transformedSkills.filter(
     skill => categorizeSkill(skill.name) === 'common'
   );
 
-  const certifications = initialSkills
+  const certifications: DetailedSkill[] = Object.values(initialSkills)
+    .flatMap(skills => skills)
     .filter(skill => categorizeSkill(skill.title) === 'certification')
     .map(skill => ({ 
       name: skill.title,
@@ -88,7 +92,7 @@ export const SkillsSummary = () => {
     }
   }, []);
 
-  const filterSkills = <T extends { name: string }>(skills: T[]) => {
+  const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
     if (selectedSkills.length === 0) return skills;
     return skills.filter(skill => 
       selectedSkills.some(selectedSkill => 

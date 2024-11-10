@@ -1,7 +1,8 @@
 import { initialSkills } from "./benchmark/skills-matrix/initialSkills";
 
-// Extract unique skills from initialSkills
-const matrixSkills = initialSkills.map(skill => skill.title);
+// Extract unique skills from initialSkills by combining all employee skills
+const matrixSkills = Object.values(initialSkills)
+  .flatMap(skills => skills.map(skill => skill.title));
 
 export const technicalSkills = [
   ...new Set([
