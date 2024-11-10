@@ -26,8 +26,9 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
   const [skillType, setSkillType] = useState("unknown");
   const { toast } = useToast();
 
-  // Initialize skillTitles with an empty array if skills is undefined
-  const skillTitles = (skills || []).map(s => s.title);
+  // Ensure we have a valid array of skill titles
+  const skillsArray = Array.isArray(skills) ? skills : [];
+  const skillTitles = skillsArray.map(s => s.title);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +42,7 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
       return;
     }
 
-    const skillData = (skills || []).find(s => s.title === selectedSkill);
+    const skillData = skillsArray.find(s => s.title === selectedSkill);
     
     if (!skillData) {
       toast({
@@ -123,11 +124,11 @@ export const AddSkillDialog = ({ onSkillAdd }: AddSkillDialogProps) => {
               </SelectContent>
             </Select>
           </div>
-          {selectedSkill && skills && (
+          {selectedSkill && skillsArray.length > 0 && (
             <div className="space-y-2">
               <Label className="text-sm font-medium">Subcategory</Label>
               <Input
-                value={skills.find(s => s.title === selectedSkill)?.subcategory || ""}
+                value={skillsArray.find(s => s.title === selectedSkill)?.subcategory || ""}
                 disabled
                 className="bg-gray-50 text-gray-500 border-input"
               />

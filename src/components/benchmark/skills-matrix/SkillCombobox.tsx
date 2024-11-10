@@ -21,8 +21,10 @@ interface ComboboxDemoProps {
   onSelect: (value: string) => void;
 }
 
-export function ComboboxDemo({ skills = [], selected, onSelect }: ComboboxDemoProps) {
+export function ComboboxDemo({ skills, selected, onSelect }: ComboboxDemoProps) {
   const [open, setOpen] = React.useState(false);
+  
+  // Ensure we always have a valid array to work with
   const safeSkills = Array.isArray(skills) ? skills : [];
 
   return (
@@ -32,7 +34,7 @@ export function ComboboxDemo({ skills = [], selected, onSelect }: ComboboxDemoPr
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className="w-full justify-between bg-white"
         >
           {selected || "Select skill..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
