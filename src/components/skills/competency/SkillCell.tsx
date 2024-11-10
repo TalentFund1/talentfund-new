@@ -1,7 +1,7 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface SkillCellProps {
   details: {
@@ -9,11 +9,39 @@ interface SkillCellProps {
     required: string;
   };
   isLastColumn: boolean;
+  onLevelChange?: (level: string) => void;
+  onRequirementChange?: (requirement: string) => void;
+  hasUnsavedChanges?: boolean;
 }
 
-export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
-  const [level, setLevel] = useState(details.level === "-" ? "unspecified" : details.level.toLowerCase());
-  const [required, setRequired] = useState(details.required === "-" ? "preferred" : details.required.toLowerCase());
+export const SkillCell = ({ 
+  details, 
+  isLastColumn, 
+  onLevelChange,
+  onRequirementChange,
+  hasUnsavedChanges 
+}: SkillCellProps) => {
+  const [tempLevel, setTempLevel] = useState(details.level === "-" ? "unspecified" : details.level.toLowerCase());
+  const [tempRequired, setTempRequired] = useState(details.required === "-" ? "preferred" : details.required.toLowerCase());
+  const [originalLevel, setOriginalLevel] = useState(tempLevel);
+  const [originalRequired, setOriginalRequired] = useState(tempRequired);
+
+  useEffect(() => {
+    if (!hasUnsavedChanges) {
+      setTempLevel(originalLevel);
+      setTempRequired(originalRequired);
+    }
+  }, [hasUnsavedChanges, originalLevel, originalRequired]);
+
+  const handleLevelChange = (value: string) => {
+    setTempLevel(value);
+    onLevelChange?.(value);
+  };
+
+  const handleRequirementChange = (value: string) => {
+    setTempRequired(value);
+    onRequirementChange?.(value);
+  };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -85,16 +113,16 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
     >
       <div className="flex flex-col items-center gap-0">
         <Select 
-          value={level} 
-          onValueChange={(value) => setLevel(value)}
+          value={tempLevel} 
+          onValueChange={handleLevelChange}
         >
           <SelectTrigger 
-            className={`${getLevelStyles(level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+            className={`${getLevelStyles(tempLevel)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
-                {getLevelIcon(level)}
-                {level.charAt(0).toUpperCase() + level.slice(1)}
+                {getLevelIcon(tempLevel)}
+                {tempLevel.charAt(0).toUpperCase() + tempLevel.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -127,16 +155,16 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
         </Select>
 
         <Select 
-          value={required} 
-          onValueChange={(value) => setRequired(value)}
+          value={tempRequired} 
+          onValueChange={handleRequirementChange}
         >
           <SelectTrigger 
-            className={`${getRequirementStyles(required, level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+            className={`${getRequirementStyles(tempRequired, tempLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center">
-                {getRequirementIcon(required)}
-                {required.charAt(0).toUpperCase() + required.slice(1)}
+                {getRequirementIcon(tempRequired)}
+                {tempRequired.charAt(0).toUpperCase() + tempRequired.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
