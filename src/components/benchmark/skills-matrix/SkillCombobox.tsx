@@ -21,8 +21,9 @@ interface ComboboxDemoProps {
   onSelect: (value: string) => void;
 }
 
-export function ComboboxDemo({ skills, selected, onSelect }: ComboboxDemoProps) {
+export function ComboboxDemo({ skills = [], selected, onSelect }: ComboboxDemoProps) {
   const [open, setOpen] = React.useState(false);
+  const safeSkills = Array.isArray(skills) ? skills : [];
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -42,7 +43,7 @@ export function ComboboxDemo({ skills, selected, onSelect }: ComboboxDemoProps) 
           <CommandInput placeholder="Search skills..." />
           <CommandEmpty>No skill found.</CommandEmpty>
           <CommandGroup className="max-h-[300px] overflow-y-auto">
-            {skills.map((skill) => (
+            {safeSkills.map((skill) => (
               <CommandItem
                 key={skill}
                 value={skill}
