@@ -24,8 +24,11 @@ interface ComboboxDemoProps {
 export function ComboboxDemo({ skills, selected, onSelect }: ComboboxDemoProps) {
   const [open, setOpen] = React.useState(false);
   
-  // Ensure we always have a valid array to work with
-  const safeSkills = Array.isArray(skills) ? skills : [];
+  // Ensure we always have a valid array to work with and handle undefined/null cases
+  const safeSkills = React.useMemo(() => {
+    if (!Array.isArray(skills)) return [];
+    return skills.filter(skill => skill != null && typeof skill === 'string');
+  }, [skills]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
