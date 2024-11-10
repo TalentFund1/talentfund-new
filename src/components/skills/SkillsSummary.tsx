@@ -4,9 +4,10 @@ import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
-import { initialSkills } from "../benchmark/skills-matrix/initialSkills";
+import { initialSkills, getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { categorizeSkill } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useParams } from "react-router-dom";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -19,15 +20,18 @@ export const SkillsSummary = () => {
     certifications: false,
   });
 
+  const { id } = useParams<{ id: string }>();
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
 
-  // Transform initialSkills into the required format and sort by level
-  const transformedSkills: DetailedSkill[] = Object.values(initialSkills)
-    .flatMap(skills => skills)
+  // Get skills for the current employee only
+  const employeeSkills = getEmployeeSkills(id || "");
+
+  // Transform employee skills into the required format and sort by level
+  const transformedSkills: DetailedSkill[] = employeeSkills
     .map(skill => ({
       name: skill.title,
       level: currentStates[skill.title]?.level || skill.level,
@@ -54,8 +58,7 @@ export const SkillsSummary = () => {
     skill => categorizeSkill(skill.name) === 'common'
   );
 
-  const certifications: DetailedSkill[] = Object.values(initialSkills)
-    .flatMap(skills => skills)
+  const certifications: DetailedSkill[] = employeeSkills
     .filter(skill => categorizeSkill(skill.title) === 'certification')
     .map(skill => ({ 
       name: skill.title,
