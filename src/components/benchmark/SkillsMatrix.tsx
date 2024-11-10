@@ -8,6 +8,15 @@ import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 
+interface Skill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: string;
+}
+
 const initialSkills = [
   {
     title: "JavaScript",
@@ -89,8 +98,8 @@ const initialSkills = [
 ];
 
 export const SkillsMatrix = () => {
-  const [skills, setSkills] = useState(initialSkills);
-  const [originalSkills, setOriginalSkills] = useState(initialSkills);
+  const [skills, setSkills] = useState<Skill[]>(initialSkills);
+  const [originalSkills, setOriginalSkills] = useState<Skill[]>(initialSkills);
   const [hasChanges, setHasChanges] = useState(false);
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -128,9 +137,11 @@ export const SkillsMatrix = () => {
     }
   };
 
-  const handleSkillLevelChange = (skillTitle: string, newLevel: string) => {
+  const handleSkillLevelChange = (skillTitle: string, newLevel: string, requirement: string) => {
     const updatedSkills = skills.map(skill => 
-      skill.title === skillTitle ? { ...skill, level: newLevel } : skill
+      skill.title === skillTitle 
+        ? { ...skill, level: newLevel, requirement: requirement }
+        : skill
     );
     setSkills(updatedSkills);
     setHasChanges(true);

@@ -5,7 +5,7 @@ import { useState } from "react";
 
 interface SkillLevelCellProps {
   initialLevel: string;
-  onLevelChange?: (newLevel: string) => void;
+  onLevelChange?: (newLevel: string, requirement: string) => void;
 }
 
 export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellProps) => {
@@ -14,7 +14,12 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
-    onLevelChange?.(newLevel);
+    onLevelChange?.(newLevel, required);
+  };
+
+  const handleRequirementChange = (newRequired: string) => {
+    setRequired(newRequired);
+    onLevelChange?.(level, newRequired);
   };
 
   const getLevelIcon = (level: string) => {
@@ -115,7 +120,7 @@ export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellPr
           </SelectContent>
         </Select>
 
-        <Select value={required} onValueChange={setRequired}>
+        <Select value={required} onValueChange={handleRequirementChange}>
           <SelectTrigger 
             className={`text-xs px-2 py-1 font-normal w-full flex items-center justify-center min-h-[24px] border-x-2 border-b-2 rounded-b-md ${getRequirementStyles(required)}`}
           >
