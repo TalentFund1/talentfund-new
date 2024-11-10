@@ -88,6 +88,9 @@ const initialSkills = [
   }
 ];
 
+// Define allSkillTitles from initialSkills
+const allSkillTitles = initialSkills.map(skill => skill.title);
+
 export const SkillsMatrix = () => {
   const [skills, setSkills] = useState(initialSkills);
   const [originalSkills, setOriginalSkills] = useState(initialSkills);
