@@ -15,6 +15,7 @@ export const SkillProfileMatrix = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(new Set());
+  const [savedToggledSkills, setSavedToggledSkills] = useState<Set<string>>(new Set());
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
@@ -46,6 +47,7 @@ export const SkillProfileMatrix = () => {
   const handleSave = () => {
     // In a real application, you would make an API call here
     console.log("Saving toggled skills:", Array.from(toggledSkills));
+    setSavedToggledSkills(new Set(toggledSkills));
     setHasUnsavedChanges(false);
     toast({
       title: "Changes saved",
@@ -54,7 +56,7 @@ export const SkillProfileMatrix = () => {
   };
 
   const handleCancel = () => {
-    setToggledSkills(new Set());
+    setToggledSkills(new Set(savedToggledSkills));
     setHasUnsavedChanges(false);
     toast({
       title: "Changes cancelled",
