@@ -1,5 +1,5 @@
-export const categories = {
-  specialized: [
+export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
+  const specializedSkills = [
     'Amazon Web Services',
     'Artificial Intelligence',
     'Conversational AI',
@@ -11,8 +11,8 @@ export const categories = {
     'TensorFlow',
     'PyTorch',
     'Docker',
-    'JavaScript',
-    'Docker (Software)',
+    'JavaScript', // Added JavaScript
+    'Docker (Software)', // Added Docker with full name
     'Kubernetes',
     'Cloud Architecture',
     'Data Engineering',
@@ -26,9 +26,27 @@ export const categories = {
     'Edge Computing',
     'System Architecture',
     'Microservices Design'
-  ],
+  ];
 
-  common: [
+  const certifications = [
+    'AWS Certified',
+    'Azure Solutions Architect',
+    'Professional Scrum',
+    'CISSP',
+    'CKA',
+    'Google Cloud Professional',
+    'CompTIA Security+',
+    'PMP Certification',
+    'Cisco CCNA',
+    'Oracle Certified Professional',
+    'Salesforce Certified Developer',
+    'Red Hat Certified Engineer',
+    'HashiCorp Certified',
+    'Certified Ethical Hacker',
+    'ITIL Foundation'
+  ];
+
+  const commonSkills = [
     'Python',
     'Git',
     'SQL',
@@ -52,26 +70,28 @@ export const categories = {
     'Decision Making',
     'Innovation',
     'Analytical Skills'
-  ],
+  ];
 
-  certification: [
-    'Cybersecurity License',
-    'AWS Certified Solutions Architect'
-  ]
+  if (certifications.some(cert => skill.includes(cert))) {
+    return 'certification';
+  }
+  
+  if (specializedSkills.includes(skill)) {
+    return 'specialized';
+  }
+  
+  return 'common';
 };
 
-export const filterSkillsByCategory = (skills: any[], category: string) => {
-  if (category === 'all') return skills;
-  return skills.filter(skill => {
-    if (category === 'specialized') {
-      return categories.specialized.includes(skill.title);
-    }
-    if (category === 'common') {
-      return categories.common.includes(skill.title);
-    }
-    if (category === 'certification') {
-      return categories.certification.includes(skill.title);
-    }
-    return false;
-  });
+export const filterSkillsByCategory = (
+  skills: Array<any>,
+  category: string
+): Array<any> => {
+  if (category === 'all') {
+    return skills;
+  }
+
+  return skills.filter(skill => 
+    categorizeSkill(skill.title) === category
+  );
 };
