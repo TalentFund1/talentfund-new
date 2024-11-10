@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
@@ -7,7 +7,15 @@ import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
-import { useSkillsStore } from "./skills-matrix/SkillsMatrixState";
+
+interface Skill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  isToggled?: boolean;
+}
 
 const initialSkills = [
   {
@@ -90,31 +98,28 @@ const initialSkills = [
 ];
 
 export const SkillsMatrix = () => {
-  const { toast } = useToast();
+  const [skills, setSkills] = useState<Skill[]>(initialSkills);
+  const [originalSkills, setOriginalSkills] = useState<Skill[]>(initialSkills);
+  const [hasChanges, setHasChanges] = useState(false);
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  
-  const { 
-    skills, 
-    hasChanges,
-    setSkills, 
-    setOriginalSkills,
-    toggleSkill,
-    saveChanges,
-    cancelChanges,
-    updateSkillLevel
-  } = useSkillsStore();
+  const { toast } = useToast();
 
-  // Initialize skills on component mount
-  useState(() => {
-    setSkills(initialSkills);
-    setOriginalSkills(initialSkills);
-  });
+  const handleSkillToggle = (skillTitle: string) => {
+    const updatedSkills = skills.map(skill => 
+      skill.title === skillTitle 
+        ? { ...skill, isToggled: !skill.isToggled }
+        : skill
+    );
+    setSkills(updatedSkills);
+    setHasChanges(true);
+  };
 
   const handleSave = () => {
-    saveChanges();
+    setOriginalSkills(skills);
+    setHasChanges(false);
     toast({
       title: "Changes Saved",
       description: "Your skill selections have been saved successfully.",
@@ -122,16 +127,18 @@ export const SkillsMatrix = () => {
   };
 
   const handleCancel = () => {
-    cancelChanges();
+    setSkills(originalSkills);
+    setHasChanges(false);
     toast({
       title: "Changes Cancelled",
       description: "Your skill selections have been reverted.",
     });
   };
 
+  const allSkillTitles = skills.map(skill => skill.title);
+
   const handleSkillsChange = (newSelectedSkills: string[]) => {
     setSelectedSkills(newSelectedSkills);
-    const allSkillTitles = skills.map(skill => skill.title);
     
     const newSkills = newSelectedSkills.filter(
       skill => !allSkillTitles.includes(skill)
@@ -146,7 +153,7 @@ export const SkillsMatrix = () => {
         confidence: "n/a"
       }));
       
-      setSkills([...skills, ...skillsToAdd]);
+      setSkills(prev => [...prev, ...skillsToAdd]);
       
       toast({
         title: "Skills Added",
@@ -155,13 +162,14 @@ export const SkillsMatrix = () => {
     }
   };
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (value: string) => {
-    setRowsPerPage(Number(value));
-    setPage(1);
+  const handleSkillLevelChange = (skillTitle: string, newLevel: string, requirement: string) => {
+    const updatedSkills = skills.map(skill => 
+      skill.title === skillTitle 
+        ? { ...skill, level: newLevel, requirement: requirement }
+        : skill
+    );
+    setSkills(updatedSkills);
+    setHasChanges(true);
   };
 
   const filteredSkills = selectedSkills.length === 0
@@ -194,12 +202,12 @@ export const SkillsMatrix = () => {
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills} 
-          onToggleSkill={toggleSkill}
-          onSkillLevelChange={updateSkillLevel}
+          onSkillLevelChange={handleSkillLevelChange}
+          onToggleSkill={handleSkillToggle}
         />
         
         <SkillsMatrixPagination 
-          rowsPerPage={String(rowsPerPage)}
+          rowsPerPage={rowsPerPage}
           handleRowsPerPageChange={handleRowsPerPageChange}
           startIndex={startIndex}
           endIndex={endIndex}

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface SkillsMatrixPaginationProps {
-  rowsPerPage: string;
+  rowsPerPage: number;
   handleRowsPerPageChange: (value: string) => void;
   startIndex: number;
   endIndex: number;
@@ -25,7 +25,7 @@ export const SkillsMatrixPagination = ({
 }: SkillsMatrixPaginationProps) => {
   return (
     <div className="flex justify-between items-center">
-      <Select value={rowsPerPage} onValueChange={handleRowsPerPageChange}>
+      <Select value={String(rowsPerPage)} onValueChange={handleRowsPerPageChange}>
         <SelectTrigger className="w-[100px]">
           <SelectValue placeholder="10 rows" />
         </SelectTrigger>
