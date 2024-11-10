@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
@@ -88,52 +88,20 @@ const initialSkills = [
   }
 ];
 
-// Define allSkillTitles from initialSkills
-const allSkillTitles = initialSkills.map(skill => skill.title);
-
 export const SkillsMatrix = () => {
   const [skills, setSkills] = useState(initialSkills);
   const [originalSkills, setOriginalSkills] = useState(initialSkills);
+  const [hasChanges, setHasChanges] = useState(false);
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [hasChanges, setHasChanges] = useState(false);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
-  const handleSkillChange = (skillTitle: string, newLevel: string, newRequired: string) => {
-    setSkills(prevSkills => {
-      const updatedSkills = prevSkills.map(skill => {
-        if (skill.title === skillTitle) {
-          return { ...skill, level: newLevel };
-        }
-        return skill;
-      });
-      setHasChanges(true);
-      return updatedSkills;
-    });
-  };
-
-  const handleSave = () => {
-    setOriginalSkills(skills);
-    setHasChanges(false);
-    toast({
-      title: "Changes saved successfully",
-      description: "Your skill matrix has been updated.",
-    });
-  };
-
-  const handleCancel = () => {
-    setSkills(originalSkills);
-    setHasChanges(false);
-    toast({
-      title: "Changes cancelled",
-      description: "Your changes have been discarded.",
-    });
-  };
+  const allSkillTitles = skills.map(skill => skill.title);
 
   const handleSkillsChange = (newSelectedSkills: string[]) => {
     setSelectedSkills(newSelectedSkills);
@@ -158,6 +126,32 @@ export const SkillsMatrix = () => {
         description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
       });
     }
+  };
+
+  const handleSkillLevelChange = (skillTitle: string, newLevel: string) => {
+    const updatedSkills = skills.map(skill => 
+      skill.title === skillTitle ? { ...skill, level: newLevel } : skill
+    );
+    setSkills(updatedSkills);
+    setHasChanges(true);
+  };
+
+  const handleSave = () => {
+    setOriginalSkills(skills);
+    setHasChanges(false);
+    toast({
+      title: "Changes Saved",
+      description: "Your changes have been saved successfully.",
+    });
+  };
+
+  const handleCancel = () => {
+    setSkills(originalSkills);
+    setHasChanges(false);
+    toast({
+      title: "Changes Cancelled",
+      description: "Your changes have been discarded.",
+    });
   };
 
   const filteredSkills = selectedSkills.length === 0
@@ -186,9 +180,9 @@ export const SkillsMatrix = () => {
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <SkillsMatrixHeader 
+          hasChanges={hasChanges}
           onSave={handleSave}
           onCancel={handleCancel}
-          hasChanges={hasChanges}
         />
         <Separator className="my-4" />
         
@@ -199,7 +193,7 @@ export const SkillsMatrix = () => {
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills} 
-          onSkillChange={handleSkillChange}
+          onSkillLevelChange={handleSkillLevelChange}
         />
         
         <SkillsMatrixPagination 

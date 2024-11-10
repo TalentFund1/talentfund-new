@@ -10,14 +10,10 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
   };
-  onSkillChange: (skillTitle: string, newLevel: string, newRequired: string) => void;
+  onLevelChange?: (skillTitle: string, newLevel: string) => void;
 }
 
-export const SkillsMatrixRow = ({ skill, onSkillChange }: SkillsMatrixRowProps) => {
-  const handleSkillChange = (newLevel: string, newRequired: string) => {
-    onSkillChange(skill.title, newLevel, newRequired);
-  };
-
+export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) => {
   const getConfidenceStyles = (confidence: string) => {
     switch (confidence) {
       case 'high':
@@ -34,6 +30,10 @@ export const SkillsMatrixRow = ({ skill, onSkillChange }: SkillsMatrixRowProps) 
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
+  };
+
+  const handleLevelChange = (newLevel: string) => {
+    onLevelChange?.(skill.title, newLevel);
   };
 
   return (
@@ -53,10 +53,7 @@ export const SkillsMatrixRow = ({ skill, onSkillChange }: SkillsMatrixRowProps) 
           )}
         </div>
       </TableCell>
-      <SkillLevelCell 
-        initialLevel={skill.level} 
-        onSkillChange={handleSkillChange}
-      />
+      <SkillLevelCell initialLevel={skill.level} onLevelChange={handleLevelChange} />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>

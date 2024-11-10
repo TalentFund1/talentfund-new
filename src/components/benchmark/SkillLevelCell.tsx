@@ -1,36 +1,20 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Heart, HeartOff, HelpCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Star, Shield, Target, Heart, CircleDashed, HeartOff, HelpCircle } from "lucide-react";
+import { useState } from "react";
 
 interface SkillLevelCellProps {
   initialLevel: string;
-  onSkillChange?: (newLevel: string, newRequired: string) => void;
+  onLevelChange?: (newLevel: string) => void;
 }
 
-export const SkillLevelCell = ({ initialLevel, onSkillChange }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ initialLevel, onLevelChange }: SkillLevelCellProps) => {
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
-  const [originalLevel] = useState(initialLevel.toLowerCase());
-  const [originalRequired] = useState("required");
-
-  useEffect(() => {
-    if (onSkillChange) {
-      onSkillChange(level, required);
-    }
-  }, [level, required, onSkillChange]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
-  };
-
-  const handleRequiredChange = (newRequired: string) => {
-    setRequired(newRequired);
-  };
-
-  const resetToOriginal = () => {
-    setLevel(originalLevel);
-    setRequired(originalRequired);
+    onLevelChange?.(newLevel);
   };
 
   const getLevelIcon = (level: string) => {
@@ -131,7 +115,7 @@ export const SkillLevelCell = ({ initialLevel, onSkillChange }: SkillLevelCellPr
           </SelectContent>
         </Select>
 
-        <Select value={required} onValueChange={handleRequiredChange}>
+        <Select value={required} onValueChange={setRequired}>
           <SelectTrigger 
             className={`text-xs px-2 py-1 font-normal w-full flex items-center justify-center min-h-[24px] border-x-2 border-b-2 rounded-b-md ${getRequirementStyles(required)}`}
           >
