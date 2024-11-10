@@ -96,11 +96,41 @@ export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
-  const handleSkillLevelChange = (skillTitle: string, newLevel: string, requirement: string) => {
+  const allSkillTitles = skills.map(skill => skill.title);
+
+  const handleSkillsChange = (newSelectedSkills: string[]) => {
+    setSelectedSkills(newSelectedSkills);
+    
+    const newSkills = newSelectedSkills.filter(
+      skill => !allSkillTitles.includes(skill)
+    );
+    
+    if (newSkills.length > 0) {
+      const skillsToAdd = newSkills.map(skillName => ({
+        title: skillName,
+        subcategory: "Unspecified",
+        level: "unspecified",
+        growth: "0%",
+        confidence: "n/a"
+      }));
+      
+      setSkills(prev => [...prev, ...skillsToAdd]);
+      
+      toast({
+        title: "Skills Added",
+        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to the matrix.`,
+      });
+    }
+  };
+
+  const handleSkillLevelChange = (skillTitle: string, newLevel: string) => {
     const updatedSkills = skills.map(skill => 
-      skill.title === skillTitle ? { ...skill, level: newLevel, requirement } : skill
+      skill.title === skillTitle ? { ...skill, level: newLevel } : skill
     );
     setSkills(updatedSkills);
     setHasChanges(true);

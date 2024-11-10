@@ -10,7 +10,7 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
   };
-  onLevelChange?: (skillTitle: string, newLevel: string, requirement: string) => void;
+  onLevelChange?: (skillTitle: string, newLevel: string) => void;
 }
 
 export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) => {
@@ -32,8 +32,8 @@ export const SkillsMatrixRow = ({ skill, onLevelChange }: SkillsMatrixRowProps) 
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const handleLevelChange = (newLevel: string, requirement: string) => {
-    onLevelChange?.(skill.title, newLevel, requirement);
+  const handleLevelChange = (newLevel: string) => {
+    onLevelChange?.(skill.title, newLevel);
   };
 
   return (
