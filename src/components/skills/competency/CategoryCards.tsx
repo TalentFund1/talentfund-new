@@ -1,16 +1,57 @@
 import { Card } from "@/components/ui/card";
+import { technicalSkills, softSkills } from "../../skillsData";
 
 interface CategoryCardsProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
+  skills: string[];
 }
 
-export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCardsProps) => {
+const getSkillCategory = (skill: string): string => {
+  // Specialized skills are technical skills related to AI/ML, Cloud, or specialized domains
+  const specializedKeywords = [
+    'Machine Learning', 'Artificial Intelligence', 'Deep Learning', 
+    'Neural Networks', 'Cloud', 'AWS', 'Azure', 'Computer Vision',
+    'Natural Language Processing', 'Data Science'
+  ];
+  
+  // Common skills are general programming languages and soft skills
+  const commonKeywords = [
+    'Python', 'JavaScript', 'Java', 'SQL', 'Communication',
+    'Leadership', 'Project Management', 'Problem Solving'
+  ];
+  
+  // Certification related skills
+  const certificationKeywords = [
+    'Certified', 'Certificate', 'Certification', 'AWS Certified',
+    'Professional Certification', 'Licensed'
+  ];
+
+  if (specializedKeywords.some(keyword => skill.includes(keyword))) {
+    return 'specialized';
+  }
+  if (certificationKeywords.some(keyword => skill.includes(keyword))) {
+    return 'certification';
+  }
+  if (commonKeywords.some(keyword => skill.includes(keyword))) {
+    return 'common';
+  }
+  return 'common'; // Default to common if no specific category is matched
+};
+
+export const CategoryCards = ({ selectedCategory, onCategoryChange, skills }: CategoryCardsProps) => {
+  const categorizedSkills = {
+    all: skills.length,
+    specialized: skills.filter(skill => getSkillCategory(skill) === 'specialized').length,
+    common: skills.filter(skill => getSkillCategory(skill) === 'common').length,
+    certification: skills.filter(skill => getSkillCategory(skill) === 'certification').length
+  };
+
   const categories = [
-    { id: "all", name: "All Categories", count: 28 },
-    { id: "specialized", name: "Specialized Skills", count: 15 },
-    { id: "common", name: "Common Skills", count: 10 },
-    { id: "certification", name: "Certifications", count: 3 }
+    { id: "all", name: "All Categories", count: categorizedSkills.all },
+    { id: "specialized", name: "Specialized Skills", count: categorizedSkills.specialized },
+    { id: "common", name: "Common Skills", count: categorizedSkills.common },
+    { id: "certification", name: "Certifications", count: categorizedSkills.certification }
   ];
 
   return (
