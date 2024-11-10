@@ -9,6 +9,8 @@ export interface DetailedSkill extends BaseSkill {
 
 export interface Certification extends BaseSkill {
   name: string;
+  level: string;
+  isSkillGoal: boolean;
 }
 
 export interface SkillProfileRow {
