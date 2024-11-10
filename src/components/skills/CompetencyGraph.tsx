@@ -1,4 +1,4 @@
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
@@ -12,6 +12,13 @@ import { CompetencyHeader } from "./competency/CompetencyHeader";
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
 }
+
+const getSkillDetails = (skillName: string, level: string) => {
+  return {
+    level: "unspecified",
+    required: "preferred"
+  };
+};
 
 export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const { toggledSkills } = useToggledSkills();
