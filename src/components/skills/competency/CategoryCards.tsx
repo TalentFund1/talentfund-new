@@ -1,16 +1,39 @@
 import { Card } from "@/components/ui/card";
+import { skillsByCategory } from "./skillsData";
 
 interface CategoryCardsProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
+  currentTrack: "Professional" | "Managerial";
 }
 
-export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCardsProps) => {
+type Skill = {
+  name: string;
+  level: string;
+  required: string;
+};
+
+type SkillLevels = {
+  [key: string]: Skill[];
+};
+
+export const CategoryCards = ({ selectedCategory, onCategoryChange, currentTrack }: CategoryCardsProps) => {
+  const getSkillCount = (category: string) => {
+    const categoryData = skillsByCategory[category]?.[currentTrack.toLowerCase()] as SkillLevels | undefined;
+    if (!categoryData) return 0;
+
+    const uniqueSkills = new Set<string>();
+    Object.values(categoryData).forEach((levelSkills: Skill[]) => {
+      levelSkills.forEach(skill => uniqueSkills.add(skill.name));
+    });
+    return uniqueSkills.size;
+  };
+
   const categories = [
-    { id: "all", name: "All Categories", count: 7 },
-    { id: "specialized", name: "Specialized Skills", count: 3 },
-    { id: "common", name: "Common Skills", count: 2 },
-    { id: "certification", name: "Certification", count: 2 }
+    { id: "all", name: "All Categories", count: getSkillCount("all") },
+    { id: "specialized", name: "Specialized Skills", count: getSkillCount("specialized") },
+    { id: "common", name: "Common Skills", count: getSkillCount("common") },
+    { id: "certification", name: "Certification", count: getSkillCount("certification") }
   ];
 
   return (

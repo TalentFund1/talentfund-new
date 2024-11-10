@@ -95,6 +95,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
       <CategoryCards 
         selectedCategory={selectedCategory} 
         onCategoryChange={setSelectedCategory}
+        currentTrack={currentTrack}
       />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
