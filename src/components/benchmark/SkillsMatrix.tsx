@@ -101,6 +101,8 @@ export const SkillsMatrix = () => {
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
 
+  const allSkillTitles = skills.map(skill => skill.title);
+
   const handleSkillsChange = (newSelectedSkills: string[]) => {
     setSelectedSkills(newSelectedSkills);
     
