@@ -32,6 +32,23 @@ const SkillProfileDetail = () => {
     setTrack(newTrack);
   };
 
+  const handleNavigation = (direction: 'prev' | 'next') => {
+    const profileIds = Object.keys(jobTitles);
+    const currentIndex = profileIds.indexOf(id || "123");
+    
+    let newIndex;
+    if (direction === 'prev') {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : profileIds.length - 1;
+    } else {
+      newIndex = currentIndex < profileIds.length - 1 ? currentIndex + 1 : 0;
+    }
+    
+    navigate(`/skills/${profileIds[newIndex]}`);
+  };
+
+  const currentIndex = Object.keys(jobTitles).indexOf(id || "123") + 1;
+  const totalProfiles = Object.keys(jobTitles).length;
+
   return (
     <ToastProvider>
       <TooltipProvider>
@@ -49,9 +66,15 @@ const SkillProfileDetail = () => {
                     <ChevronLeft className="h-4 w-4" /> Back
                   </Button>
                   <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
-                    <ChevronLeft className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
-                    <span className="text-sm text-foreground">2/7</span>
-                    <ChevronRight className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
+                    <ChevronLeft 
+                      className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+                      onClick={() => handleNavigation('prev')}
+                    />
+                    <span className="text-sm text-foreground">{currentIndex}/{totalProfiles}</span>
+                    <ChevronRight 
+                      className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+                      onClick={() => handleNavigation('next')}
+                    />
                   </div>
                 </div>
 
