@@ -1,7 +1,7 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface SkillCellProps {
   details: {
@@ -9,11 +9,27 @@ interface SkillCellProps {
     required: string;
   };
   isLastColumn: boolean;
+  onChange?: (newValue: { level: string; required: string }) => void;
 }
 
-export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
+export const SkillCell = ({ details, isLastColumn, onChange }: SkillCellProps) => {
   const [level, setLevel] = useState(details.level === "-" ? "unspecified" : details.level.toLowerCase());
   const [required, setRequired] = useState(details.required === "-" ? "preferred" : details.required.toLowerCase());
+
+  useEffect(() => {
+    setLevel(details.level === "-" ? "unspecified" : details.level.toLowerCase());
+    setRequired(details.required === "-" ? "preferred" : details.required.toLowerCase());
+  }, [details]);
+
+  const handleLevelChange = (newLevel: string) => {
+    setLevel(newLevel);
+    onChange?.({ level: newLevel, required });
+  };
+
+  const handleRequiredChange = (newRequired: string) => {
+    setRequired(newRequired);
+    onChange?.({ level, required: newRequired });
+  };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -86,7 +102,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
       <div className="flex flex-col items-center gap-0">
         <Select 
           value={level} 
-          onValueChange={(value) => setLevel(value)}
+          onValueChange={handleLevelChange}
         >
           <SelectTrigger 
             className={`${getLevelStyles(level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
@@ -128,7 +144,7 @@ export const SkillCell = ({ details, isLastColumn }: SkillCellProps) => {
 
         <Select 
           value={required} 
-          onValueChange={(value) => setRequired(value)}
+          onValueChange={handleRequiredChange}
         >
           <SelectTrigger 
             className={`${getRequirementStyles(required, level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}

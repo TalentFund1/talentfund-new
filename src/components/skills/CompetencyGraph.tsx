@@ -8,9 +8,19 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { skillsByCategory } from "./competency/skillsData";
 import { CategorySection } from "./competency/CategorySection";
 import { categorizeSkills, isSpecializedSkill, isCommonSkill, isCertificationSkill } from "./competency/skillCategories";
+import { useToast } from "@/components/ui/use-toast";
 
 interface CompetencyGraphProps {
   track: "Professional" | "Managerial";
+}
+
+interface SkillState {
+  [skillName: string]: {
+    [level: string]: {
+      level: string;
+      required: string;
+    };
+  };
 }
 
 export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
@@ -20,6 +30,10 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     return savedCategory || "all";
   });
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">(track);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [skillStates, setSkillStates] = useState<SkillState>({});
+  const [savedSkillStates, setSavedSkillStates] = useState<SkillState>({});
+  const { toast } = useToast();
 
   useEffect(() => {
     setCurrentTrack(track);
@@ -63,8 +77,21 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
   const skillCounts = categorizeSkills(Array.from(toggledSkills));
 
   const getSkillDetails = (skillName: string, level: string) => {
-    if (!skills || !skills[level]) return { level: "-", required: "-" };
-    return skills[level]?.find((s: { name: string; level: string; required: string; }) => s.name === skillName) || { level: "-", required: "-" };
+    // Check if there are unsaved changes
+    if (hasChanges && skillStates[skillName]?.[level]) {
+      return skillStates[skillName][level];
+    }
+    
+    // Return saved state if it exists
+    if (savedSkillStates[skillName]?.[level]) {
+      return savedSkillStates[skillName][level];
+    }
+
+    // Fall back to default values from skills data
+    if (!skills || !skills[level]) return { level: "unspecified", required: "preferred" };
+    return skills[level]?.find((s: { name: string; level: string; required: string; }) => 
+      s.name === skillName
+    ) || { level: "unspecified", required: "preferred" };
   };
 
   const handleTrackChange = (value: string) => {
@@ -73,13 +100,53 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
     }
   };
 
+  const handleSkillChange = (skillName: string, level: string, newValue: { level: string; required: string; }) => {
+    setSkillStates(prev => ({
+      ...prev,
+      [skillName]: {
+        ...(prev[skillName] || {}),
+        [level]: newValue
+      }
+    }));
+    setHasChanges(true);
+  };
+
+  const handleSave = () => {
+    setSavedSkillStates(skillStates);
+    setHasChanges(false);
+    toast({
+      title: "Changes saved successfully",
+      description: "Your skill levels have been updated.",
+    });
+  };
+
+  const handleCancel = () => {
+    setSkillStates(savedSkillStates);
+    setHasChanges(false);
+    toast({
+      title: "Changes discarded",
+      description: "Your changes have been reverted.",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
         <div className="flex items-center gap-2">
-          <Button variant="outline">Cancel</Button>
-          <Button>Save</Button>
+          <Button 
+            variant="outline" 
+            onClick={handleCancel}
+            disabled={!hasChanges}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSave}
+            disabled={!hasChanges}
+          >
+            Save
+          </Button>
         </div>
       </div>
       
@@ -138,6 +205,7 @@ export const CompetencyGraph = ({ track }: CompetencyGraphProps) => {
                     key={level}
                     details={getSkillDetails(skillName, level)}
                     isLastColumn={index === levels.length - 1}
+                    onChange={(newValue) => handleSkillChange(skillName, level, newValue)}
                   />
                 ))}
               </TableRow>
