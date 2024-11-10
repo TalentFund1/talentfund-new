@@ -152,17 +152,29 @@ export const SkillCell = ({ skillName, level, details }: SkillCellProps) => {
                 ) : (
                   <Heart className="w-3.5 h-3.5" />
                 )}
-                {currentRequired === 'required' ? 'Skill Goal' : currentRequired === 'not-interested' ? 'Not Interested' : currentRequired === 'unknown' ? 'Unknown' : 'Skill Goal'}
+                {currentRequired === 'required' ? 'Required' : currentRequired === 'not-interested' ? 'Not Interested' : currentRequired === 'unknown' ? 'Unknown' : 'Preferred'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
-              <span className="flex items-center gap-2">✓  Required</span>
+              <span className="flex items-center gap-2">
+                <Heart className="w-3.5 h-3.5" /> Required
+              </span>
             </SelectItem>
             <SelectItem value="preferred">
               <span className="flex items-center gap-2">
-                <Heart className="w-3 h-3" /> Preferred
+                <Heart className="w-3.5 h-3.5" /> Preferred
+              </span>
+            </SelectItem>
+            <SelectItem value="not-interested">
+              <span className="flex items-center gap-2">
+                <HeartOff className="w-3.5 h-3.5" /> Not Interested
+              </span>
+            </SelectItem>
+            <SelectItem value="unknown">
+              <span className="flex items-center gap-2">
+                <HelpCircle className="w-3.5 h-3.5" /> Unknown
               </span>
             </SelectItem>
           </SelectContent>
