@@ -20,11 +20,12 @@ const roles = {
 };
 
 const levels = {
-  "p1": "P1 - Junior",
-  "p2": "P2 - Mid Level",
-  "p3": "P3 - Senior",
-  "p4": "P4 - Staff",
-  "p5": "P5 - Principal"
+  "p1": "P1",
+  "p2": "P2",
+  "p3": "P3",
+  "p4": "P4",
+  "p5": "P5",
+  "p6": "P6"
 };
 
 export const RoleBenchmark = () => {
