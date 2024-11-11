@@ -1,6 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { roleSkills } from "@/components/skills/data/roleSkills";
-import { RoleSkillsContainer } from "./skills-matrix/RoleSkillsContainer";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { SkillLevelCell } from "./SkillLevelCell";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface RoleDetailsProps {
   role: {
@@ -35,6 +37,8 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
     "M6": "Senior Director - Driving organizational transformation and strategy"
   };
 
+  const levels = ["P1", "P2", "P3", "P4", "P5", "P6"];
+
   return (
     <div className="space-y-6">
       <Card className="p-6">
@@ -49,31 +53,169 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
               {levelDescriptions[role.level as keyof typeof levelDescriptions]}
             </p>
           </div>
-          
-          <div>
-            <h4 className="font-medium mb-2">Required Skills</h4>
-            <p className="text-muted-foreground">
-              {skills?.specialized.length || 0} specialized skills required
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-medium mb-2">Common Skills</h4>
-            <p className="text-muted-foreground">
-              {skills?.common.length || 0} common skills required
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-medium mb-2">Certifications</h4>
-            <p className="text-muted-foreground">
-              {skills?.certifications.length || 0} certifications recommended
-            </p>
-          </div>
         </div>
       </Card>
 
-      <RoleSkillsContainer selectedRole={role} />
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="all">
+            All Categories
+            <span className="ml-2 bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+              {skills?.specialized.length + skills?.common.length + skills?.certifications.length || 0}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="specialized">
+            Specialized Skills
+            <span className="ml-2 bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+              {skills?.specialized.length || 0}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="common">
+            Common Skills
+            <span className="ml-2 bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+              {skills?.common.length || 0}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="certifications">
+            Certifications
+            <span className="ml-2 bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+              {skills?.certifications.length || 0}
+            </span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all">
+          <Card>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
+                  <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
+                  <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
+                  {levels.map((level) => (
+                    <TableHead key={level} className="text-center border-r border-[#CCDBFF] py-3 font-medium w-[150px]">
+                      {level}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[...skills?.specialized || [], ...skills?.common || [], ...skills?.certifications || []].map((skill) => (
+                  <TableRow key={skill.title}>
+                    <TableCell className="font-medium border-r border-[#CCDBFF]">{skill.title}</TableCell>
+                    <TableCell className="border-r border-[#CCDBFF]">{skill.subcategory}</TableCell>
+                    {levels.map((level) => (
+                      <SkillLevelCell
+                        key={`${skill.title}-${level}`}
+                        initialLevel={level === role.level ? skill.level : "unspecified"}
+                        skillTitle={skill.title}
+                      />
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="specialized">
+          <Card>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
+                  <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
+                  <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
+                  {levels.map((level) => (
+                    <TableHead key={level} className="text-center border-r border-[#CCDBFF] py-3 font-medium w-[150px]">
+                      {level}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {skills?.specialized.map((skill) => (
+                  <TableRow key={skill.title}>
+                    <TableCell className="font-medium border-r border-[#CCDBFF]">{skill.title}</TableCell>
+                    <TableCell className="border-r border-[#CCDBFF]">{skill.subcategory}</TableCell>
+                    {levels.map((level) => (
+                      <SkillLevelCell
+                        key={`${skill.title}-${level}`}
+                        initialLevel={level === role.level ? skill.level : "unspecified"}
+                        skillTitle={skill.title}
+                      />
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="common">
+          <Card>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
+                  <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
+                  <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
+                  {levels.map((level) => (
+                    <TableHead key={level} className="text-center border-r border-[#CCDBFF] py-3 font-medium w-[150px]">
+                      {level}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {skills?.common.map((skill) => (
+                  <TableRow key={skill.title}>
+                    <TableCell className="font-medium border-r border-[#CCDBFF]">{skill.title}</TableCell>
+                    <TableCell className="border-r border-[#CCDBFF]">{skill.subcategory}</TableCell>
+                    {levels.map((level) => (
+                      <SkillLevelCell
+                        key={`${skill.title}-${level}`}
+                        initialLevel={level === role.level ? skill.level : "unspecified"}
+                        skillTitle={skill.title}
+                      />
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="certifications">
+          <Card>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
+                  <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
+                  <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
+                  {levels.map((level) => (
+                    <TableHead key={level} className="text-center border-r border-[#CCDBFF] py-3 font-medium w-[150px]">
+                      {level}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {skills?.certifications.map((skill) => (
+                  <TableRow key={skill.title}>
+                    <TableCell className="font-medium border-r border-[#CCDBFF]">{skill.title}</TableCell>
+                    <TableCell className="border-r border-[#CCDBFF]">{skill.subcategory}</TableCell>
+                    {levels.map((level) => (
+                      <SkillLevelCell
+                        key={`${skill.title}-${level}`}
+                        initialLevel={level === role.level ? skill.level : "unspecified"}
+                        skillTitle={skill.title}
+                      />
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
