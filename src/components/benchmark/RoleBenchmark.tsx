@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { roles } from "./data/rolesData";
 import { useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Skill {
