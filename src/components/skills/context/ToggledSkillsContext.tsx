@@ -20,6 +20,19 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   });
 
+  useEffect(() => {
+    if (id) {
+      try {
+        const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
+        if (savedSkills) {
+          setToggledSkillsState(new Set(JSON.parse(savedSkills)));
+        }
+      } catch (error) {
+        console.error('Error loading saved skills:', error);
+      }
+    }
+  }, [id]);
+
   const setToggledSkills = (newSkills: Set<string>) => {
     setToggledSkillsState(newSkills);
     if (id) {
@@ -30,23 +43,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       }
     }
   };
-
-  // Effect to handle profile ID changes
-  useEffect(() => {
-    if (id) {
-      try {
-        const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
-        if (savedSkills) {
-          setToggledSkillsState(new Set(JSON.parse(savedSkills)));
-        } else {
-          setToggledSkillsState(new Set());
-        }
-      } catch (error) {
-        console.error('Error loading saved skills:', error);
-        setToggledSkillsState(new Set());
-      }
-    }
-  }, [id]);
 
   return (
     <ToggledSkillsContext.Provider value={{ toggledSkills, setToggledSkills }}>
