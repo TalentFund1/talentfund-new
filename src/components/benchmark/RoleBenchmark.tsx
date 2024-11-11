@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useState } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useTrack } from "../skills/context/TrackContext";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface Skill {
   name: string;
@@ -33,6 +36,7 @@ export const RoleBenchmark = () => {
   const [selectedRole, setSelectedRole] = useState<string>("125");
   const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
+  const { getTrackForRole, setTrackForRole } = useTrack();
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -52,6 +56,7 @@ export const RoleBenchmark = () => {
   };
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  const currentTrack = getTrackForRole(selectedRole);
 
   const filteredSpecializedSkills = selectedRoleSkills.specialized.filter(
     skill => toggledSkills.has(skill.title)
@@ -69,6 +74,10 @@ export const RoleBenchmark = () => {
     navigate(`/skills/${selectedRole}`);
   };
 
+  const handleTrackChange = (value: string) => {
+    setTrackForRole(selectedRole, value as "Professional" | "Managerial");
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -83,42 +92,59 @@ export const RoleBenchmark = () => {
           </Button>
         </div>
         
-        <div className="flex gap-4 w-full max-w-[800px]">
-          <Select 
-            value={selectedRole}
-            onValueChange={(value) => setSelectedRole(value)}
-          >
-            <SelectTrigger className="w-full bg-white">
-              <SelectValue placeholder="Select Role">
-                {roles[selectedRole as keyof typeof roles]}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(roles).map(([id, title]) => (
-                <SelectItem key={id} value={id}>
-                  {title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4 w-full max-w-[800px]">
+            <Select 
+              value={selectedRole}
+              onValueChange={(value) => setSelectedRole(value)}
+            >
+              <SelectTrigger className="w-full bg-white">
+                <SelectValue placeholder="Select Role">
+                  {roles[selectedRole as keyof typeof roles]}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(roles).map(([id, title]) => (
+                  <SelectItem key={id} value={id}>
+                    {title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          <Select
-            value={selectedLevel}
-            onValueChange={(value) => setSelectedLevel(value)}
+            <Select
+              value={selectedLevel}
+              onValueChange={(value) => setSelectedLevel(value)}
+            >
+              <SelectTrigger className="w-[200px] bg-white">
+                <SelectValue placeholder="Select Level">
+                  {levels[selectedLevel as keyof typeof levels]}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(levels).map(([id, title]) => (
+                  <SelectItem key={id} value={id}>
+                    {title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <RadioGroup
+            value={currentTrack}
+            onValueChange={handleTrackChange}
+            className="flex items-center space-x-4"
           >
-            <SelectTrigger className="w-[200px] bg-white">
-              <SelectValue placeholder="Select Level">
-                {levels[selectedLevel as keyof typeof levels]}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(levels).map(([id, title]) => (
-                <SelectItem key={id} value={id}>
-                  {title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="Professional" id="professional" />
+              <Label htmlFor="professional">Professional</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="Managerial" id="managerial" />
+              <Label htmlFor="managerial">Managerial</Label>
+            </div>
+          </RadioGroup>
         </div>
 
         <Separator className="my-6" />
