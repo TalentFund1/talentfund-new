@@ -37,8 +37,8 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     return 'certification';
   }
   
-  // If the skill is not found in any category, return 'common' as default
-  return 'common';
+  // If the skill is not found in any category, return 'specialized' as default
+  return 'specialized';
 };
 
 export const filterSkillsByCategory = (
@@ -61,7 +61,7 @@ export const getSkillCounts = (employeeId: string) => {
   const certification = skills.filter(skill => categorizeSkill(skill.title) === 'certification');
 
   return {
-    all: specialized.length + common.length + certification.length,
+    all: skills.length,
     specialized: specialized.length,
     common: common.length,
     certification: certification.length
