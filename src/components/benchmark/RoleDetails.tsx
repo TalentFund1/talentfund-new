@@ -37,7 +37,16 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
     "M6": "Senior Director - Driving organizational transformation and strategy"
   };
 
-  const levels = ["P1", "P2", "P3", "P4", "P5", "P6"];
+  const levels = role.track === "Professional" 
+    ? ["P1", "P2", "P3", "P4", "P5", "P6"]
+    : ["M3", "M4", "M5", "M6"];
+
+  const skillCounts = {
+    all: (skills?.specialized.length || 0) + (skills?.common.length || 0) + (skills?.certifications.length || 0),
+    specialized: skills?.specialized.length || 0,
+    common: skills?.common.length || 0,
+    certifications: skills?.certifications.length || 0
+  };
 
   return (
     <div className="space-y-6">
@@ -52,25 +61,25 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
           <TabsTrigger value="all">
             All Categories
             <span className="ml-2 bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {skills?.specialized.length + skills?.common.length + skills?.certifications.length || 0}
+              {skillCounts.all}
             </span>
           </TabsTrigger>
           <TabsTrigger value="specialized">
             Specialized Skills
             <span className="ml-2 bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {skills?.specialized.length || 0}
+              {skillCounts.specialized}
             </span>
           </TabsTrigger>
           <TabsTrigger value="common">
             Common Skills
             <span className="ml-2 bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {skills?.common.length || 0}
+              {skillCounts.common}
             </span>
           </TabsTrigger>
           <TabsTrigger value="certifications">
             Certifications
             <span className="ml-2 bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {skills?.certifications.length || 0}
+              {skillCounts.certifications}
             </span>
           </TabsTrigger>
         </TabsList>
@@ -78,7 +87,11 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
         <TabsContent value="all">
           <Card>
             <SkillsTable 
-              skills={[...skills?.specialized || [], ...skills?.common || [], ...skills?.certifications || []]}
+              skills={[
+                ...(skills?.specialized || []),
+                ...(skills?.common || []),
+                ...(skills?.certifications || [])
+              ]}
               roleLevel={role.level}
               levels={levels}
             />
