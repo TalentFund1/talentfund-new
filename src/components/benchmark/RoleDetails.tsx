@@ -3,7 +3,6 @@ import { roleSkills } from "@/components/skills/data/roleSkills";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RoleDescriptionCard } from "./role-details/RoleDescriptionCard";
 import { SkillsTable } from "./role-details/SkillsTable";
-import { initialSkills } from "./skills-matrix/initialSkills";
 
 interface RoleDetailsProps {
   role: {
@@ -20,21 +19,28 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
   
   // Get role-specific skills configuration
   const skills = roleSkills[roleId as keyof typeof roleSkills];
-  
-  // Get the actual skills data for this role
-  const matrixSkills = initialSkills[roleId as keyof typeof initialSkills] || [];
 
-  // Combine skills data with role configuration
-  const combinedSkills = matrixSkills.map(skill => ({
+  // Create the skills array directly from roleSkills
+  const specializedSkills = skills?.specialized.map(skill => ({
     ...skill,
-    category: skills?.specialized.some(s => s.title === skill.title) 
-      ? 'specialized'
-      : skills?.common.some(s => s.title === skill.title)
-      ? 'common'
-      : skills?.certifications.some(s => s.title === skill.title)
-      ? 'certifications'
-      : 'other'
-  }));
+    category: 'specialized',
+    subcategory: 'Specialized Skills'
+  })) || [];
+
+  const commonSkills = skills?.common.map(skill => ({
+    ...skill,
+    category: 'common',
+    subcategory: 'Common Skills'
+  })) || [];
+
+  const certificationSkills = skills?.certifications.map(skill => ({
+    ...skill,
+    category: 'certifications',
+    subcategory: 'Certifications'
+  })) || [];
+
+  // Combine all skills
+  const combinedSkills = [...specializedSkills, ...commonSkills, ...certificationSkills];
 
   const descriptions = {
     "AI Engineer": "An AI Engineer specializes in developing and implementing artificial intelligence and machine learning solutions. They work with various AI frameworks and tools to create intelligent systems.",
@@ -62,9 +68,9 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
 
   const skillCounts = {
     all: combinedSkills.length,
-    specialized: combinedSkills.filter(skill => skill.category === 'specialized').length,
-    common: combinedSkills.filter(skill => skill.category === 'common').length,
-    certifications: combinedSkills.filter(skill => skill.category === 'certifications').length
+    specialized: specializedSkills.length,
+    common: commonSkills.length,
+    certifications: certificationSkills.length
   };
 
   return (
@@ -116,7 +122,7 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
         <TabsContent value="specialized">
           <Card>
             <SkillsTable 
-              skills={combinedSkills.filter(skill => skill.category === 'specialized')}
+              skills={specializedSkills}
               roleLevel={role.level}
               levels={levels}
             />
@@ -126,7 +132,7 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
         <TabsContent value="common">
           <Card>
             <SkillsTable 
-              skills={combinedSkills.filter(skill => skill.category === 'common')}
+              skills={commonSkills}
               roleLevel={role.level}
               levels={levels}
             />
@@ -136,7 +142,7 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
         <TabsContent value="certifications">
           <Card>
             <SkillsTable 
-              skills={combinedSkills.filter(skill => skill.category === 'certifications')}
+              skills={certificationSkills}
               roleLevel={role.level}
               levels={levels}
             />
