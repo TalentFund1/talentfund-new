@@ -84,10 +84,10 @@ export const RoleBenchmark = () => {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0" align="start">
-              <Command>
+              <Command shouldFilter={false}>
                 <CommandInput placeholder="Search roles..." />
                 <CommandEmpty>No role found.</CommandEmpty>
-                <CommandGroup>
+                <CommandGroup heading="Roles">
                   {roles.map((role) => (
                     <CommandItem
                       key={role.id}
