@@ -11,6 +11,7 @@ export const CategorySection = ({
   setSelectedCategory, 
   employeeId = "123" 
 }: CategorySectionProps) => {
+  // Get the actual counts from the skills data
   const skillCounts = getSkillCounts(employeeId);
   
   const categories = [
