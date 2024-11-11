@@ -1,79 +1,73 @@
 export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
-  // Certification keywords that should trigger certification categorization
-  const certificationKeywords = [
-    'CISSP',
-    'AWS Certified',
-    'CompTIA',
-    'Security+',
-    'PMP',
-    'Project Management Professional',
-    'Certified Scrum Master',
-    'CSM',
-    'Professional Certification',
-    'Certified'
-  ];
-
-  // Specialized skills list (technical skills)
+  // Specialized skills (AI/ML focused)
   const specializedSkills = [
-    'Artificial Intelligence',
     'Machine Learning',
     'Deep Learning',
-    'Natural Language Processing',
-    'Computer Vision',
-    'Amazon Web Services',
-    'Docker',
-    'Kubernetes',
-    'DevSecOps',
-    'System Architecture',
-    'Data Engineering',
-    'IoT Development',
-    'Python',
     'TensorFlow',
     'PyTorch',
-    'Blockchain Development',
-    'Edge Computing',
-    '5G Network Architecture',
-    'Quantum Computing',
-    'Robotics Programming'
+    'Computer Vision',
+    'Natural Language Processing',
+    'Artificial Intelligence',
+    'Data Engineering',
+    'System Architecture',
+    'Cloud Computing',
+    'DevOps',
+    'GraphQL'
   ];
 
-  // Common skills list (non-technical, transferable skills)
+  // Common skills (general technical and soft skills)
   const commonSkills = [
-    'Technical Writing',
-    'Agile Project Management',
-    'Business Analysis',
-    'Risk Management',
-    'Strategic Planning',
-    'Documentation',
-    'Project Management',
-    'Team Management',
+    'Python',
+    'JavaScript',
+    'SQL',
+    'Git',
+    'Agile',
     'Problem Solving',
+    'Technical Writing',
     'Communication',
-    'Leadership'
+    'Team Leadership',
+    'Project Management'
   ];
 
-  // Check if it's a certification
+  // Certification keywords
+  const certificationKeywords = [
+    'AWS Certified',
+    'Certified',
+    'Certificate',
+    'Certification',
+    'Professional Scrum',
+    'PMP',
+    'CISSP',
+    'CKA',
+    'Google Cloud Professional',
+    'TensorFlow Developer Certificate',
+    'MongoDB Professional'
+  ];
+
+  // Check if it's a certification first
   if (certificationKeywords.some(cert => 
     skill.toLowerCase().includes(cert.toLowerCase())
   )) {
     return 'certification';
   }
   
-  // Check if it's a specialized skill
+  // Then check if it's a specialized skill
   if (specializedSkills.some(spec => 
-    skill.toLowerCase().includes(spec.toLowerCase())
+    skill.toLowerCase() === spec.toLowerCase()
   )) {
     return 'specialized';
   }
   
-  // Check if it's a common skill
+  // Then check if it's a common skill
   if (commonSkills.some(common => 
-    skill.toLowerCase().includes(common.toLowerCase())
+    skill.toLowerCase() === common.toLowerCase()
   )) {
     return 'common';
   }
   
   // Default to specialized if no match is found
+  // This ensures AI/ML related skills that might not be in the list
+  // are categorized as specialized
   return 'specialized';
 };
 
