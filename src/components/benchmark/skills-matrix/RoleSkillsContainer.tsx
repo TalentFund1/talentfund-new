@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { skillsByCategory } from "@/components/skills/competency/skillsData";
+import { roleSkills } from "@/components/skills/data/roleSkills";
 
 interface RoleSkillsContainerProps {
   selectedRole: {
@@ -14,19 +14,20 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
   const getSkillsForRole = () => {
     if (!selectedRole) return { required: [], preferred: [], certifications: [] };
 
-    // Extract level from role ID (e.g., "P4" from "professional-P4")
-    const level = selectedRole.id.split('-')[1];
-    const isManagerial = selectedRole.track === "Managerial";
+    // Get the role ID from the selected role (e.g., "123" for AI Engineer)
+    const roleId = selectedRole.id.split('-')[1];
     
-    // Get skills based on track and level
-    const track = isManagerial ? 'managerial' : 'professional';
-    const skillsData = skillsByCategory.all[track][level] || [];
-    const certifications = skillsByCategory.certification[track][level] || [];
+    // Get skills from roleSkills data
+    const skillsData = roleSkills[roleId as keyof typeof roleSkills] || {
+      specialized: [],
+      common: [],
+      certifications: []
+    };
 
     return {
-      required: skillsData.filter(skill => skill.required === "required"),
-      preferred: skillsData.filter(skill => skill.required === "preferred"),
-      certifications
+      required: skillsData.specialized || [],
+      preferred: skillsData.common || [],
+      certifications: skillsData.certifications || []
     };
   };
 
@@ -57,11 +58,11 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
         <div className="flex flex-wrap gap-2">
           {required.map((skill) => (
             <Badge 
-              key={skill.name}
+              key={skill.title}
               variant="outline" 
               className="rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors border-[#CCDBFF]"
             >
-              {skill.name}
+              {skill.title}
               <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
             </Badge>
           ))}
@@ -78,11 +79,11 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
         <div className="flex flex-wrap gap-2">
           {preferred.map((skill) => (
             <Badge 
-              key={skill.name}
+              key={skill.title}
               variant="outline" 
               className="rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors border-[#CCDBFF]"
             >
-              {skill.name}
+              {skill.title}
               <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
             </Badge>
           ))}
@@ -99,11 +100,11 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
         <div className="flex flex-wrap gap-2">
           {certifications.map((cert) => (
             <Badge 
-              key={cert.name}
+              key={cert.title}
               variant="outline" 
               className="rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors border-[#CCDBFF]"
             >
-              {cert.name}
+              {cert.title}
               <div className={`h-2 w-2 rounded-full ${getLevelColor(cert.level)}`} />
             </Badge>
           ))}
