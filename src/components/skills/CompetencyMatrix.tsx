@@ -5,44 +5,19 @@ import { CompetencyMatrixHeader } from "./CompetencyMatrixHeader";
 import { CompetencyLevels } from "./CompetencyLevels";
 import { SkillsGrid } from "./SkillsGrid";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { roleSkills } from './data/roleSkills';
-import { useParams } from "react-router-dom";
+
+const skillCategories = [
+  { id: "all", name: "All Skills", count: 28 },
+  { id: "specialized", name: "Specialized Skills", count: 15 },
+  { id: "common", name: "Common Skills", count: 10 },
+  { id: "certification", name: "Certification", count: 3 }
+];
 
 export const CompetencyMatrix = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [track, setTrack] = useState<"Technical" | "Managerial">("Technical");
   const { toggledSkills } = useToggledSkills();
-  const { id } = useParams<{ id: string }>();
-
-  const roleId = id || "123"; // Default to AI Engineer if no ID
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-
-  const skillCategories = [
-    { 
-      id: "all", 
-      name: "All Skills", 
-      count: currentRoleSkills ? 
-        currentRoleSkills.specialized.length + 
-        currentRoleSkills.common.length + 
-        currentRoleSkills.certifications.length : 0 
-    },
-    { 
-      id: "specialized", 
-      name: "Specialized Skills", 
-      count: currentRoleSkills?.specialized.length || 0 
-    },
-    { 
-      id: "common", 
-      name: "Common Skills", 
-      count: currentRoleSkills?.common.length || 0 
-    },
-    { 
-      id: "certification", 
-      name: "Certification", 
-      count: currentRoleSkills?.certifications.length || 0 
-    }
-  ];
 
   const handleLevelSelect = (level: string) => {
     setSelectedLevels(prev => 
@@ -60,26 +35,7 @@ export const CompetencyMatrix = () => {
     setSelectedCategory(categoryId);
   };
 
-  const getSkillsForCategory = () => {
-    if (!currentRoleSkills) return [];
-
-    switch (selectedCategory) {
-      case "specialized":
-        return currentRoleSkills.specialized.map(skill => skill.title);
-      case "common":
-        return currentRoleSkills.common.map(skill => skill.title);
-      case "certification":
-        return currentRoleSkills.certifications.map(skill => skill.title);
-      default:
-        return [
-          ...currentRoleSkills.specialized.map(skill => skill.title),
-          ...currentRoleSkills.common.map(skill => skill.title),
-          ...currentRoleSkills.certifications.map(skill => skill.title)
-        ];
-    }
-  };
-
-  const skillsArray = getSkillsForCategory();
+  const skillsArray = Array.from(toggledSkills);
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
@@ -112,7 +68,9 @@ export const CompetencyMatrix = () => {
                   {category.name}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {category.count} skills
+                  {skillsArray.filter(skill => 
+                    category.id === 'all' || getSkillCategory(skill) === category.id
+                  ).length} skills
                 </span>
               </div>
             </button>
@@ -126,4 +84,15 @@ export const CompetencyMatrix = () => {
       </div>
     </div>
   );
+};
+
+const getSkillCategory = (skill: string): string => {
+  const specializedSkills = ['Amazon Web Services', 'Machine Learning', 'Artificial Intelligence'];
+  const commonSkills = ['Python', 'JavaScript', 'Communication'];
+  const certifications = ['AWS Certified', 'Google Cloud', 'Azure'];
+
+  if (specializedSkills.some(s => skill.includes(s))) return 'specialized';
+  if (commonSkills.some(s => skill.includes(s))) return 'common';
+  if (certifications.some(s => skill.includes(s))) return 'certification';
+  return 'all';
 };
