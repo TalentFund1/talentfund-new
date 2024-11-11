@@ -19,9 +19,18 @@ const roles = {
   "126": "Engineering Manager"
 };
 
+const levels = {
+  "p1": "P1 - Junior",
+  "p2": "P2 - Mid Level",
+  "p3": "P3 - Senior",
+  "p4": "P4 - Staff",
+  "p5": "P5 - Principal"
+};
+
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string>("125");
+  const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
 
   const getLevelStyles = (level: string) => {
@@ -43,7 +52,6 @@ export const RoleBenchmark = () => {
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Filter skills based on toggledSkills
   const filteredSpecializedSkills = selectedRoleSkills.specialized.filter(
     skill => toggledSkills.has(skill.title)
   );
@@ -74,7 +82,7 @@ export const RoleBenchmark = () => {
           </Button>
         </div>
         
-        <div className="w-full max-w-[800px]">
+        <div className="flex gap-4 w-full max-w-[800px]">
           <Select 
             value={selectedRole}
             onValueChange={(value) => setSelectedRole(value)}
@@ -86,6 +94,24 @@ export const RoleBenchmark = () => {
             </SelectTrigger>
             <SelectContent>
               {Object.entries(roles).map(([id, title]) => (
+                <SelectItem key={id} value={id}>
+                  {title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={selectedLevel}
+            onValueChange={(value) => setSelectedLevel(value)}
+          >
+            <SelectTrigger className="w-[200px] bg-white">
+              <SelectValue placeholder="Select Level">
+                {levels[selectedLevel as keyof typeof levels]}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(levels).map(([id, title]) => (
                 <SelectItem key={id} value={id}>
                   {title}
                 </SelectItem>
