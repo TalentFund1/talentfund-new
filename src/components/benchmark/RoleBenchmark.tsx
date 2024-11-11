@@ -3,33 +3,55 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { roles } from "./data/rolesData";
 import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SkillSection } from "@/components/skills/SkillSection";
 import { skillsByCategory } from "@/components/skills/competency/skillsData";
+import { initialSkills } from "./skills-matrix/initialSkills";
 
 const RoleBenchmark = () => {
   const navigate = useNavigate();
+  const { employeeId } = useParams();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
   const selectedRole = value ? roles.find((role) => role.id === value) : null;
+  const employeeSkills = employeeId ? initialSkills[employeeId] : [];
 
-  // Get skills based on selected role
+  // Get skills based on selected role and employee skills
   const getSkillsForRole = () => {
-    if (!selectedRole) return { required: [], preferred: [], certifications: [] };
+    if (!selectedRole || !employeeId) return { required: [], preferred: [], certifications: [] };
 
     const [track, level] = selectedRole.id.split('-');
     const isManagerial = selectedRole.track === "Managerial";
     const skillsData = skillsByCategory.all[isManagerial ? 'managerial' : 'professional'][level] || [];
 
+    // Map employee skills to match the format
+    const mappedEmployeeSkills = employeeSkills.map(skill => ({
+      name: skill.title,
+      level: skill.level,
+      required: "required" // Default to required for demonstration
+    }));
+
     return {
-      required: skillsData.filter(skill => skill.required === "required"),
-      preferred: skillsData.filter(skill => skill.required === "preferred"),
-      certifications: skillsByCategory.certification[isManagerial ? 'managerial' : 'professional'][level] || []
+      required: skillsData.filter(skill => 
+        skill.required === "required" && 
+        mappedEmployeeSkills.some(empSkill => empSkill.name === skill.name)
+      ),
+      preferred: skillsData.filter(skill => 
+        skill.required === "preferred" && 
+        mappedEmployeeSkills.some(empSkill => empSkill.name === skill.name)
+      ),
+      certifications: employeeSkills
+        .filter(skill => skill.subcategory?.toLowerCase().includes('certification'))
+        .map(cert => ({
+          name: cert.title,
+          level: cert.level,
+          required: "certification"
+        }))
     };
   };
 
