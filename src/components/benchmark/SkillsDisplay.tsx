@@ -1,5 +1,7 @@
 import { RequirementSection } from "./RequirementSection";
 import { categorizeSkill } from "./skills-matrix/skillCategories";
+import { SkillBadge } from "../skills/SkillBadge";
+import { SkillSection } from "../skills/SkillSection";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -53,53 +55,33 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills }: SkillsDispl
       </div>
 
       <div className="space-y-6">
-        <div className="bg-white rounded-lg p-6 border border-border">
-          <div className="flex items-center gap-2 mb-4">
-            <h3 className="text-lg font-semibold">Required Skills</h3>
-            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {requiredAll.length} skills
-            </span>
-          </div>
+        <SkillSection title="Required Skills" count={requiredAll.length}>
           <div className="flex flex-wrap gap-2">
             {requiredAll.map((skill) => (
-              <div key={skill.title} className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-border rounded-md">
-                {skill.title}
-                <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-              </div>
+              <SkillBadge 
+                key={skill.title}
+                skill={{ name: skill.title }}
+                showLevel={true}
+                level={skill.level}
+                isSkillGoal={true}
+              />
             ))}
           </div>
-        </div>
+        </SkillSection>
 
-        <div className="bg-white rounded-lg p-6 border border-border">
-          <div className="flex items-center gap-2 mb-4">
-            <h3 className="text-lg font-semibold">Preferred Skills</h3>
-            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {preferredAll.length} skills
-            </span>
-          </div>
+        <SkillSection title="Preferred Skills" count={preferredAll.length}>
           <div className="flex flex-wrap gap-2">
             {preferredAll.map((skill) => (
-              <div key={skill.title} className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-border rounded-md">
-                {skill.title}
-                <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-              </div>
+              <SkillBadge 
+                key={skill.title}
+                skill={{ name: skill.title }}
+                showLevel={true}
+                level={skill.level}
+              />
             ))}
           </div>
-        </div>
+        </SkillSection>
       </div>
     </div>
   );
-};
-
-const getLevelDot = (level: string) => {
-  switch (level.toLowerCase()) {
-    case "advanced":
-      return "bg-primary-accent";
-    case "intermediate":
-      return "bg-primary-icon";
-    case "beginner":
-      return "bg-[#008000]";
-    default:
-      return "bg-gray-300";
-  }
 };
