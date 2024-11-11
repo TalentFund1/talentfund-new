@@ -8,31 +8,11 @@ import { roles } from "./data/rolesData";
 import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-interface Skill {
-  name: string;
-  level: "advanced" | "intermediate" | "beginner" | "unspecified";
-}
+import { aiEngineerSkills } from "./data/aiEngineerSkills";
 
 const getSkillsForRole = (roleId: string) => {
   if (roleId === "AI Engineer: P4") {
-    return {
-      required: [
-        { name: "Machine Learning", level: "advanced" },
-        { name: "Deep Learning", level: "advanced" },
-        { name: "Computer Vision", level: "advanced" },
-        { name: "Natural Language Processing", level: "advanced" }
-      ],
-      preferred: [
-        { name: "TensorFlow", level: "intermediate" },
-        { name: "PyTorch", level: "intermediate" }
-      ],
-      certifications: [
-        { name: "AWS Certified Machine Learning - Specialty" },
-        { name: "TensorFlow Developer Certificate" },
-        { name: "Google Cloud Professional Machine Learning Engineer" }
-      ]
-    };
+    return aiEngineerSkills;
   }
   
   // Default fallback skills
