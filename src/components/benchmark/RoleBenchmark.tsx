@@ -13,24 +13,45 @@ import { CertificationsSection } from "./sections/CertificationsSection";
 import { RoleSkills } from "./types";
 
 const getSkillsForRole = (roleId: string): RoleSkills => {
-  if (roleId === "AI Engineer: P4") {
-    return {
-      required: [
-        { name: "Machine Learning", level: "advanced" },
-        { name: "Deep Learning", level: "advanced" },
-        { name: "Computer Vision", level: "advanced" },
-        { name: "Natural Language Processing", level: "advanced" }
-      ],
-      preferred: [
-        { name: "TensorFlow", level: "intermediate" },
-        { name: "PyTorch", level: "intermediate" }
-      ],
-      certifications: [
-        { name: "AWS Certified Machine Learning - Specialty" },
-        { name: "TensorFlow Developer Certificate" },
-        { name: "Google Cloud Professional Machine Learning Engineer" }
-      ]
-    };
+  // Extract role level from roleId (e.g., "P4" from "AI Engineer: P4")
+  const roleLevel = roleId.split(": ")[1];
+  
+  if (roleId.includes("AI Engineer")) {
+    if (roleLevel === "P4") {
+      return {
+        required: [
+          { name: "Machine Learning", level: "advanced" },
+          { name: "Deep Learning", level: "advanced" },
+          { name: "Computer Vision", level: "advanced" },
+          { name: "Natural Language Processing", level: "advanced" }
+        ],
+        preferred: [
+          { name: "TensorFlow", level: "intermediate" },
+          { name: "PyTorch", level: "intermediate" }
+        ],
+        certifications: [
+          { name: "AWS Certified Machine Learning - Specialty" },
+          { name: "TensorFlow Developer Certificate" },
+          { name: "Google Cloud Professional Machine Learning Engineer" }
+        ]
+      };
+    } else if (roleLevel === "P3") {
+      return {
+        required: [
+          { name: "Machine Learning", level: "intermediate" },
+          { name: "Python", level: "advanced" },
+          { name: "Data Structures", level: "advanced" }
+        ],
+        preferred: [
+          { name: "Deep Learning", level: "intermediate" },
+          { name: "Cloud Computing", level: "intermediate" }
+        ],
+        certifications: [
+          { name: "AWS Certified Developer - Associate" },
+          { name: "Python Professional Certificate" }
+        ]
+      };
+    }
   }
   
   // Default fallback skills
