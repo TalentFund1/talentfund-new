@@ -2,7 +2,11 @@ import { Badge } from "@/components/ui/badge";
 
 interface Skill {
   title: string;
+  subcategory: string;
   level: "advanced" | "intermediate" | "beginner" | "unspecified";
+  growth: string;
+  salary?: string;
+  benchmarks?: { J: boolean; B: boolean; O: boolean; };
 }
 
 interface SkillSectionProps {

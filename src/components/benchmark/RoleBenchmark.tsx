@@ -37,7 +37,7 @@ export const RoleBenchmark = () => {
   };
 
   const getLevelDot = (level: string) => {
-    switch (level) {
+    switch (level.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
@@ -51,17 +51,26 @@ export const RoleBenchmark = () => {
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  const filteredSpecializedSkills = selectedRoleSkills.specialized.filter(
-    skill => toggledSkills.has(skill.title)
-  );
+  const filteredSpecializedSkills = selectedRoleSkills.specialized
+    .filter(skill => toggledSkills.has(skill.title))
+    .map(skill => ({
+      ...skill,
+      level: skill.level.toLowerCase() as "advanced" | "intermediate" | "beginner" | "unspecified"
+    }));
 
-  const filteredCommonSkills = selectedRoleSkills.common.filter(
-    skill => toggledSkills.has(skill.title)
-  );
+  const filteredCommonSkills = selectedRoleSkills.common
+    .filter(skill => toggledSkills.has(skill.title))
+    .map(skill => ({
+      ...skill,
+      level: skill.level.toLowerCase() as "advanced" | "intermediate" | "beginner" | "unspecified"
+    }));
 
-  const filteredCertifications = selectedRoleSkills.certifications.filter(
-    cert => toggledSkills.has(cert.title)
-  );
+  const filteredCertifications = selectedRoleSkills.certifications
+    .filter(cert => toggledSkills.has(cert.title))
+    .map(cert => ({
+      ...cert,
+      level: cert.level.toLowerCase() as "advanced" | "intermediate" | "beginner" | "unspecified"
+    }));
 
   return (
     <div className="space-y-6">
