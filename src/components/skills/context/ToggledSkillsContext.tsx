@@ -10,27 +10,44 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { id } = useParams<{ id: string }>();
+  
+  // Initialize with a function to ensure we only run this once
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     if (!id) return new Set<string>();
     
+    const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
+    if (!savedSkills) return new Set<string>();
+    
     try {
-      const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
-      if (savedSkills) {
-        const parsedSkills = JSON.parse(savedSkills);
-        return new Set<string>(parsedSkills);
+      const parsedSkills = JSON.parse(savedSkills);
+      if (!Array.isArray(parsedSkills)) {
+        console.warn('Saved skills were not in the expected format');
+        return new Set<string>();
       }
+      
+      // Filter out any non-string values just to be safe
+      const validSkills = parsedSkills.filter((skill): skill is string => 
+        typeof skill === 'string' && skill.length > 0
+      );
+      
+      return new Set<string>(validSkills);
     } catch (error) {
       console.error('Error loading saved skills:', error);
+      return new Set<string>();
     }
-    return new Set<string>();
   });
 
   // Save to localStorage whenever toggledSkills changes
   useEffect(() => {
     if (!id) return;
+    
+    const skillsArray = Array.from(toggledSkills);
+    if (skillsArray.length === 0) {
+      localStorage.removeItem(`toggledSkills_${id}`);
+      return;
+    }
 
     try {
-      const skillsArray = Array.from(toggledSkills);
       localStorage.setItem(`toggledSkills_${id}`, JSON.stringify(skillsArray));
     } catch (error) {
       console.error('Error saving skills:', error);
@@ -39,18 +56,33 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   // Load skills when id changes
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setToggledSkills(new Set<string>());
+      return;
+    }
+
+    const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
+    if (!savedSkills) {
+      setToggledSkills(new Set<string>());
+      return;
+    }
 
     try {
-      const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
-      if (savedSkills) {
-        const parsedSkills = JSON.parse(savedSkills);
-        if (Array.isArray(parsedSkills)) {
-          setToggledSkills(new Set<string>(parsedSkills));
-        }
+      const parsedSkills = JSON.parse(savedSkills);
+      if (!Array.isArray(parsedSkills)) {
+        console.warn('Saved skills were not in the expected format');
+        setToggledSkills(new Set<string>());
+        return;
       }
+
+      const validSkills = parsedSkills.filter((skill): skill is string => 
+        typeof skill === 'string' && skill.length > 0
+      );
+      
+      setToggledSkills(new Set<string>(validSkills));
     } catch (error) {
       console.error('Error loading saved skills for new id:', error);
+      setToggledSkills(new Set<string>());
     }
   }, [id]);
 
