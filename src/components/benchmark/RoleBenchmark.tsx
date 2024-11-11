@@ -19,39 +19,20 @@ const RoleBenchmark = () => {
   const [value, setValue] = useState("");
 
   const selectedRole = value ? roles.find((role) => role.id === value) : null;
-  const employeeSkills = employeeId ? initialSkills[employeeId] : [];
 
-  // Get skills based on selected role and employee skills
+  // Get skills based on selected role
   const getSkillsForRole = () => {
-    if (!selectedRole || !employeeId) return { required: [], preferred: [], certifications: [] };
+    if (!selectedRole) return { required: [], preferred: [], certifications: [] };
 
     const [track, level] = selectedRole.id.split('-');
     const isManagerial = selectedRole.track === "Managerial";
     const skillsData = skillsByCategory.all[isManagerial ? 'managerial' : 'professional'][level] || [];
-
-    // Map employee skills to match the format
-    const mappedEmployeeSkills = employeeSkills.map(skill => ({
-      name: skill.title,
-      level: skill.level,
-      required: "required" // Default to required for demonstration
-    }));
+    const certifications = skillsByCategory.certification[isManagerial ? 'managerial' : 'professional'][level] || [];
 
     return {
-      required: skillsData.filter(skill => 
-        skill.required === "required" && 
-        mappedEmployeeSkills.some(empSkill => empSkill.name === skill.name)
-      ),
-      preferred: skillsData.filter(skill => 
-        skill.required === "preferred" && 
-        mappedEmployeeSkills.some(empSkill => empSkill.name === skill.name)
-      ),
-      certifications: employeeSkills
-        .filter(skill => skill.subcategory?.toLowerCase().includes('certification'))
-        .map(cert => ({
-          name: cert.title,
-          level: cert.level,
-          required: "certification"
-        }))
+      required: skillsData.filter(skill => skill.required === "required"),
+      preferred: skillsData.filter(skill => skill.required === "preferred"),
+      certifications: certifications
     };
   };
 
