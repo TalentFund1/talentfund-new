@@ -39,7 +39,11 @@ export const RoleBenchmark = () => {
     }
   };
 
-  const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+
+  const handleSeeSkillProfile = () => {
+    navigate(`/skills/${selectedRole}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -49,7 +53,7 @@ export const RoleBenchmark = () => {
           <Button 
             variant="outline" 
             className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-            onClick={() => navigate('/skills')}
+            onClick={handleSeeSkillProfile}
           >
             See Skill Profile
           </Button>
