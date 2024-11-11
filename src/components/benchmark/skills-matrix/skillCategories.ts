@@ -2,43 +2,43 @@ import { getEmployeeSkills } from "./initialSkills";
 
 export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
   // Specialized skills for AI Engineer (exactly 6)
-  const specializedSkills = [
+  const specializedSkills = new Set([
     'Machine Learning',
     'Deep Learning',
     'TensorFlow',
     'Natural Language Processing',
     'Computer Vision',
     'PyTorch'
-  ];
+  ]);
 
   // Common skills for AI Engineer (exactly 3)
-  const commonSkills = [
+  const commonSkills = new Set([
     'Python',
     'Problem Solving',
     'Technical Writing'
-  ];
+  ]);
 
   // Certifications for AI Engineer (exactly 3)
-  const certifications = [
+  const certifications = new Set([
     'AWS Certified Machine Learning - Specialty',
     'TensorFlow Developer Certificate',
     'Google Cloud Professional Machine Learning Engineer'
-  ];
+  ]);
 
-  if (specializedSkills.includes(skill)) {
+  if (specializedSkills.has(skill)) {
     return 'specialized';
   }
   
-  if (commonSkills.includes(skill)) {
+  if (commonSkills.has(skill)) {
     return 'common';
   }
   
-  if (certifications.includes(skill)) {
+  if (certifications.has(skill)) {
     return 'certification';
   }
   
-  // If the skill is not found in any category, return 'specialized' as default
-  return 'specialized';
+  // If the skill is not found in any category, return 'common' as default
+  return 'common';
 };
 
 export const filterSkillsByCategory = (
