@@ -14,10 +14,7 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
   const getSkillsForRole = () => {
     if (!selectedRole) return { required: [], preferred: [], certifications: [] };
 
-    // Get the role ID from the selected role (e.g., "123" for AI Engineer)
     const roleId = selectedRole.id.split('-')[1];
-    
-    // Get skills from roleSkills data
     const skillsData = roleSkills[roleId as keyof typeof roleSkills] || {
       specialized: [],
       common: [],
@@ -71,7 +68,7 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
 
       <div className="rounded-2xl border border-border bg-white p-6 w-full">
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm font-medium">Preferred Skills</span>
+          <span className="text-sm font-medium">Common Skills</span>
           <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
             {preferred.length}
           </span>
