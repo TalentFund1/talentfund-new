@@ -1,70 +1,105 @@
-export const isSpecializedSkill = (skill: string): boolean => {
-  const specializedSkills = [
-    "Amazon Web Services",
-    "Python",
-    "TensorFlow",
-    "MongoDB",
-    "Kubernetes",
-    "PyTorch",
-    "Natural Language Processing",
-    "Computer Vision"
-  ];
+export const isSpecializedSkill = (skill: string, profileId: string): boolean => {
+  const specializedSkillsByProfile: { [key: string]: string[] } = {
+    "123": [ // AI Engineer
+      "Machine Learning",
+      "Deep Learning",
+      "TensorFlow",
+      "PyTorch",
+      "Natural Language Processing",
+      "Computer Vision"
+    ],
+    "124": [ // Backend Engineer
+      "Node.js",
+      "Database Design",
+      "API Development",
+      "System Architecture",
+      "Kubernetes"
+    ],
+    "125": [ // Frontend Engineer
+      "React",
+      "TypeScript",
+      "Next.js",
+      "Vue.js",
+      "Webpack"
+    ],
+    "126": [ // Engineering Manager
+      "System Design",
+      "Technical Architecture",
+      "Risk Management"
+    ]
+  };
   
-  return specializedSkills.some(spec => 
+  return specializedSkillsByProfile[profileId]?.some(spec => 
     skill.toLowerCase() === spec.toLowerCase()
-  );
+  ) || false;
 };
 
-export const isCommonSkill = (skill: string): boolean => {
-  const commonSkills = [
-    "Git",
-    "JavaScript",
-    "Java",
-    "SQL",
-    "Agile",
-    "Agile Leadership",
-    "Communication",
-    "Leadership",
-    "Project Management",
-    "Team Management",
-    "Problem Solving",
-    "Strategic Planning",
-    "Cross-cultural Communication",
-    "Team Management"
-  ];
+export const isCommonSkill = (skill: string, profileId: string): boolean => {
+  const commonSkillsByProfile: { [key: string]: string[] } = {
+    "123": [ // AI Engineer
+      "Python",
+      "Problem Solving",
+      "Technical Writing"
+    ],
+    "124": [ // Backend Engineer
+      "Problem Solving",
+      "Code Review",
+      "Agile Methodologies"
+    ],
+    "125": [ // Frontend Engineer
+      "Cross-browser Compatibility",
+      "Responsive Design",
+      "Problem Solving"
+    ],
+    "126": [ // Engineering Manager
+      "Team Leadership",
+      "Project Management",
+      "Strategic Planning",
+      "Stakeholder Management"
+    ]
+  };
   
-  return commonSkills.some(common => 
+  return commonSkillsByProfile[profileId]?.some(common => 
     skill.toLowerCase() === common.toLowerCase()
-  ) && !isCertificationSkill(skill);
+  ) || false;
 };
 
-export const isCertificationSkill = (skill: string): boolean => {
-  const certKeywords = [
-    "AWS Certified",
-    "Azure Solutions Architect",
-    "Solutions Architect",
-    "Professional Scrum",
-    "PMP",
-    "CISSP",
-    "CKA",
-    "Administrator (CKA)",
-    "Certified",
-    "Certification",
-    "Certificate"
-  ];
+export const isCertificationSkill = (skill: string, profileId: string): boolean => {
+  const certificationSkillsByProfile: { [key: string]: string[] } = {
+    "123": [ // AI Engineer
+      "AWS Certified Machine Learning - Specialty",
+      "TensorFlow Developer Certificate",
+      "Google Cloud Professional Machine Learning Engineer"
+    ],
+    "124": [ // Backend Engineer
+      "AWS Certified Solutions Architect",
+      "Kubernetes Administrator (CKA)",
+      "MongoDB Professional Developer"
+    ],
+    "125": [ // Frontend Engineer
+      "AWS Certified Developer - Associate",
+      "Google Mobile Web Specialist",
+      "Professional Scrum Developer"
+    ],
+    "126": [ // Engineering Manager
+      "Project Management Professional (PMP)",
+      "Certified Scrum Master (CSM)",
+      "ITIL Foundation"
+    ]
+  };
   
-  return certKeywords.some(cert => 
-    skill.toLowerCase().includes(cert.toLowerCase())
-  );
+  return certificationSkillsByProfile[profileId]?.some(cert => 
+    skill.toLowerCase() === cert.toLowerCase()
+  ) || false;
 };
 
-export const categorizeSkills = (skills: string[]) => {
-  const specialized = skills.filter(isSpecializedSkill);
-  const certifications = skills.filter(isCertificationSkill);
+export const categorizeSkills = (skills: string[], profileId: string) => {
+  const specialized = skills.filter(skill => isSpecializedSkill(skill, profileId));
+  const certifications = skills.filter(skill => isCertificationSkill(skill, profileId));
   const common = skills.filter(skill => 
-    !isSpecializedSkill(skill) && 
-    !isCertificationSkill(skill) && 
-    isCommonSkill(skill)
+    !isSpecializedSkill(skill, profileId) && 
+    !isCertificationSkill(skill, profileId) && 
+    isCommonSkill(skill, profileId)
   );
   
   return {
