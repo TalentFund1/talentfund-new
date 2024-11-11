@@ -1,3 +1,5 @@
+import { getEmployeeSkills } from "./initialSkills";
+
 export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
   // Specialized skills for AI Engineer (exactly 6)
   const specializedSkills = [
@@ -53,4 +55,18 @@ export const filterSkillsByCategory = (
   return skills.filter(skill => 
     categorizeSkill(skill.title) === category
   );
+};
+
+export const getSkillCounts = (employeeId: string) => {
+  const skills = getEmployeeSkills(employeeId);
+  const specialized = skills.filter(skill => categorizeSkill(skill.title) === 'specialized');
+  const common = skills.filter(skill => categorizeSkill(skill.title) === 'common');
+  const certification = skills.filter(skill => categorizeSkill(skill.title) === 'certification');
+
+  return {
+    all: skills.length,
+    specialized: specialized.length,
+    common: common.length,
+    certification: certification.length
+  };
 };

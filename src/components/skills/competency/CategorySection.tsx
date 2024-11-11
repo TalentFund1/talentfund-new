@@ -1,20 +1,23 @@
+import { getSkillCounts } from "@/components/benchmark/skills-matrix/skillCategories";
+
 interface CategorySectionProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-  skillCounts: {
-    all: number;
-    specialized: number;
-    common: number;
-    certification: number;
-  };
+  employeeId?: string;
 }
 
-export const CategorySection = ({ selectedCategory, setSelectedCategory, skillCounts }: CategorySectionProps) => {
+export const CategorySection = ({ 
+  selectedCategory, 
+  setSelectedCategory, 
+  employeeId = "123" 
+}: CategorySectionProps) => {
+  const skillCounts = getSkillCounts(employeeId);
+  
   const categories = [
-    { id: "all", name: "All Categories", count: 12 }, // 6 + 3 + 3 = 12 total skills
-    { id: "specialized", name: "Specialized Skills", count: 6 },
-    { id: "common", name: "Common Skills", count: 3 },
-    { id: "certification", name: "Certification", count: 3 }
+    { id: "all", name: "All Categories", count: skillCounts.all },
+    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
+    { id: "common", name: "Common Skills", count: skillCounts.common },
+    { id: "certification", name: "Certification", count: skillCounts.certification }
   ];
 
   return (
