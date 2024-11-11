@@ -14,28 +14,13 @@ interface Skill {
   level: "advanced" | "intermediate" | "beginner" | "unspecified";
 }
 
-const requiredSkills: Skill[] = [
-  { name: "React", level: "advanced" },
-  { name: "JavaScript", level: "advanced" },
-  { name: "GraphQL", level: "intermediate" },
-  { name: "HTML and CSS3", level: "advanced" },
-  { name: "IPA Integrations", level: "intermediate" }
-];
-
-const preferredSkills: Skill[] = [
-  { name: "UI/UX Design Principles", level: "intermediate" },
-  { name: "Communication", level: "intermediate" },
-  { name: "Angular", level: "beginner" }
-];
-
-const certifications = [
-  { name: "Cybersecurity License" }
-];
-
-export const RoleBenchmark = () => {
+const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const [requiredSkills, setRequiredSkills] = useState<Skill[]>([]);
+  const [preferredSkills, setPreferredSkills] = useState<Skill[]>([]);
+  const [certifications, setCertifications] = useState<{ name: string }[]>([]);
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -125,17 +110,19 @@ export const RoleBenchmark = () => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {requiredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
-            </div>
+            {selectedRole && requiredSkills.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {requiredSkills.map((skill) => (
+                  <Badge 
+                    key={skill.name} 
+                    variant="outline" 
+                    className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
+                  >
+                    {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
@@ -147,17 +134,19 @@ export const RoleBenchmark = () => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {preferredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
-            </div>
+            {selectedRole && preferredSkills.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {preferredSkills.map((skill) => (
+                  <Badge 
+                    key={skill.name} 
+                    variant="outline" 
+                    className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
+                  >
+                    {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
@@ -169,20 +158,24 @@ export const RoleBenchmark = () => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {certifications.map((cert) => (
-                <Badge 
-                  key={cert.name}
-                  variant="outline" 
-                  className="rounded-md px-4 py-2 border border-border bg-white"
-                >
-                  {cert.name}
-                </Badge>
-              ))}
-            </div>
+            {selectedRole && certifications.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {certifications.map((cert) => (
+                  <Badge 
+                    key={cert.name}
+                    variant="outline" 
+                    className="rounded-md px-4 py-2 border border-border bg-white"
+                  >
+                    {cert.name}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+export default RoleBenchmark;
