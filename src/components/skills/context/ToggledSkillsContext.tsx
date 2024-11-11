@@ -19,12 +19,13 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     try {
       const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
       if (savedSkills) {
-        return new Set(JSON.parse(savedSkills));
+        const parsedSkills = JSON.parse(savedSkills) as string[];
+        return new Set<string>(parsedSkills);
       }
-      return new Set();
+      return new Set<string>();
     } catch (error) {
       console.error('Error loading saved skills:', error);
-      return new Set();
+      return new Set<string>();
     }
   });
 
@@ -36,9 +37,10 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       try {
         const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
         if (savedSkills) {
-          const parsedSkills = new Set(JSON.parse(savedSkills));
-          setToggledSkills(parsedSkills);
-          setOriginalSkills(parsedSkills);
+          const parsedSkills = JSON.parse(savedSkills) as string[];
+          const skillsSet = new Set<string>(parsedSkills);
+          setToggledSkills(skillsSet);
+          setOriginalSkills(skillsSet);
         }
       } catch (error) {
         console.error('Error loading saved skills for new id:', error);
