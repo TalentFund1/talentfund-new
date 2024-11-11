@@ -1,54 +1,83 @@
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SkillProfileHeader } from "@/components/skills/SkillProfileHeader";
-import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
-import { EmployeeOverview } from "@/components/skills/EmployeeOverview";
-import { SelectBenchmark } from "@/components/benchmark/SelectBenchmark";
-import { CompetencyGraph } from "@/components/skills/CompetencyGraph";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ToastProvider } from "@/components/ui/toast";
+import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { Avatar } from "@/components/ui/avatar";
+import { useNavigate, useParams } from "react-router-dom";
+import { SkillsSummary } from "@/components/skills/SkillsSummary";
+import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
+import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
+import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { Sidebar } from "@/components/Sidebar";
+import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
+import { ToastProvider } from "@/components/ui/toast";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
-import { RoleBenchmarkWrapper } from "@/components/benchmark/RoleBenchmarkWrapper";
+
+const employees = {
+  "123": {
+    name: "Victor Smith",
+    role: "AI Engineer: P4",
+    location: "Toronto, ON",
+    department: "Engineering",
+    office: "Toronto",
+    category: "Full-time",
+    manager: "Sarah Chen",
+    startDate: "2024-01-01",
+    termDate: "-",
+    tenure: "1.9",
+    image: "photo-1488590528505-98d2b5aba04b"
+  },
+  "124": {
+    name: "Jennie Richards",
+    role: "Backend Engineer: P4",
+    location: "Toronto, ON",
+    department: "Engineering",
+    office: "Toronto",
+    category: "Full-time",
+    manager: "Sarah Chen",
+    startDate: "2024-01-01",
+    termDate: "-",
+    tenure: "1.9",
+    image: "photo-1518770660439-4636190af475"
+  },
+  "125": {
+    name: "Anna Vyselva",
+    role: "Frontend Developer: P4",
+    location: "Toronto, ON",
+    department: "Engineering",
+    office: "Toronto",
+    category: "Full-time",
+    manager: "Sarah Chen",
+    startDate: "2024-01-01",
+    termDate: "-",
+    tenure: "1.9",
+    image: "photo-1461749280684-dccba630e2f6"
+  },
+  "126": {
+    name: "Suz Manu",
+    role: "Engineering Manager: M3",
+    location: "Toronto, ON",
+    department: "Engineering",
+    office: "Toronto",
+    category: "Full-time",
+    manager: "Sarah Chen",
+    startDate: "2024-01-01",
+    termDate: "-",
+    tenure: "1.9",
+    image: "photo-1486312338219-ce68d2c6f44d"
+  }
+};
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
+  const { id } = useParams();
+  const employee = employees[id as keyof typeof employees];
 
-  const jobTitles: { [key: string]: string } = {
-    "123": "AI Engineer",
-    "124": "Backend Engineer",
-    "125": "Frontend Engineer",
-    "126": "Engineering Manager"
-  };
-
-  const jobTitle = jobTitles[id || ""] || "AI Engineer";
-
-  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
-    setTrack(newTrack);
-  };
-
-  const handleNavigation = (direction: 'prev' | 'next') => {
-    const profileIds = Object.keys(jobTitles);
-    const currentIndex = profileIds.indexOf(id || "123");
-    
-    let newIndex;
-    if (direction === 'prev') {
-      newIndex = currentIndex > 0 ? currentIndex - 1 : profileIds.length - 1;
-    } else {
-      newIndex = currentIndex < profileIds.length - 1 ? currentIndex + 1 : 0;
-    }
-    
-    navigate(`/skills/${profileIds[newIndex]}`);
-  };
-
-  const currentIndex = Object.keys(jobTitles).indexOf(id || "123") + 1;
-  const totalProfiles = Object.keys(jobTitles).length;
+  if (!employee) {
+    return <div>Employee not found</div>;
+  }
 
   return (
     <ToastProvider>
@@ -67,15 +96,9 @@ const SkillProfileDetail = () => {
                     <ChevronLeft className="h-4 w-4" /> Back
                   </Button>
                   <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
-                    <ChevronLeft 
-                      className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
-                      onClick={() => handleNavigation('prev')}
-                    />
-                    <span className="text-sm text-foreground">{currentIndex}/{totalProfiles}</span>
-                    <ChevronRight 
-                      className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
-                      onClick={() => handleNavigation('next')}
-                    />
+                    <ChevronLeft className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
+                    <span className="text-sm text-foreground">2/7</span>
+                    <ChevronRight className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
                   </div>
                 </div>
 
