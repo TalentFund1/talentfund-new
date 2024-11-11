@@ -2,6 +2,7 @@ import { RequirementSection } from "./RequirementSection";
 import { categorizeSkill } from "./skills-matrix/skillCategories";
 import { SkillBadge } from "../skills/SkillBadge";
 import { SkillSection } from "../skills/SkillSection";
+import { useState } from "react";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -9,6 +10,8 @@ interface SkillsDisplayProps {
 }
 
 export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills }: SkillsDisplayProps) => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
+
   const filterSkillsByRequirement = (skills: any[], requirement: string, category?: string) => {
     return skills.filter(skill => 
       toggledSkills.has(skill.title) && 
@@ -29,29 +32,42 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills }: SkillsDispl
   const preferredCertifications = filterSkillsByRequirement(selectedRoleSkills.certifications, "preferred", "certification");
   const preferredAll = [...preferredSpecialized, ...preferredCommon, ...preferredCertifications];
 
+  const categories = [
+    {
+      title: "All Categories",
+      count: requiredAll.length + preferredAll.length,
+      skills: [...requiredAll, ...preferredAll]
+    },
+    {
+      title: "Specialized Skills",
+      count: requiredSpecialized.length + preferredSpecialized.length,
+      skills: [...requiredSpecialized, ...preferredSpecialized]
+    },
+    {
+      title: "Common Skills",
+      count: requiredCommon.length + preferredCommon.length,
+      skills: [...requiredCommon, ...preferredCommon]
+    },
+    {
+      title: "Certification",
+      count: requiredCertifications.length + preferredCertifications.length,
+      skills: [...requiredCertifications, ...preferredCertifications]
+    }
+  ];
+
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-4 gap-4">
-        <RequirementSection 
-          title="All Categories"
-          count={requiredAll.length + preferredAll.length}
-          skills={[...requiredAll, ...preferredAll]}
-        />
-        <RequirementSection 
-          title="Specialized Skills"
-          count={requiredSpecialized.length + preferredSpecialized.length}
-          skills={[...requiredSpecialized, ...preferredSpecialized]}
-        />
-        <RequirementSection 
-          title="Common Skills"
-          count={requiredCommon.length + preferredCommon.length}
-          skills={[...requiredCommon, ...preferredCommon]}
-        />
-        <RequirementSection 
-          title="Certification"
-          count={requiredCertifications.length + preferredCertifications.length}
-          skills={[...requiredCertifications, ...preferredCertifications]}
-        />
+        {categories.map((category) => (
+          <RequirementSection 
+            key={category.title}
+            title={category.title}
+            count={category.count}
+            skills={category.skills}
+            isSelected={selectedCategory === category.title}
+            onClick={() => setSelectedCategory(category.title)}
+          />
+        ))}
       </div>
 
       <div className="space-y-6">
