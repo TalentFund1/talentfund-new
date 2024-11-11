@@ -14,23 +14,46 @@ interface Skill {
   level: "advanced" | "intermediate" | "beginner" | "unspecified";
 }
 
-const requiredSkills: Skill[] = [
-  { name: "React", level: "advanced" },
-  { name: "JavaScript", level: "advanced" },
-  { name: "GraphQL", level: "intermediate" },
-  { name: "HTML and CSS3", level: "advanced" },
-  { name: "IPA Integrations", level: "intermediate" }
-];
-
-const preferredSkills: Skill[] = [
-  { name: "UI/UX Design Principles", level: "intermediate" },
-  { name: "Communication", level: "intermediate" },
-  { name: "Angular", level: "beginner" }
-];
-
-const certifications = [
-  { name: "Cybersecurity License" }
-];
+const getSkillsForRole = (roleId: string) => {
+  if (roleId === "AI Engineer: P4") {
+    return {
+      required: [
+        { name: "Machine Learning", level: "advanced" },
+        { name: "Deep Learning", level: "advanced" },
+        { name: "Computer Vision", level: "advanced" },
+        { name: "Natural Language Processing", level: "advanced" }
+      ],
+      preferred: [
+        { name: "TensorFlow", level: "intermediate" },
+        { name: "PyTorch", level: "intermediate" }
+      ],
+      certifications: [
+        { name: "AWS Certified Machine Learning - Specialty" },
+        { name: "TensorFlow Developer Certificate" },
+        { name: "Google Cloud Professional Machine Learning Engineer" }
+      ]
+    };
+  }
+  
+  // Default fallback skills
+  return {
+    required: [
+      { name: "React", level: "advanced" },
+      { name: "JavaScript", level: "advanced" },
+      { name: "GraphQL", level: "intermediate" },
+      { name: "HTML and CSS3", level: "advanced" },
+      { name: "IPA Integrations", level: "intermediate" }
+    ],
+    preferred: [
+      { name: "UI/UX Design Principles", level: "intermediate" },
+      { name: "Communication", level: "intermediate" },
+      { name: "Angular", level: "beginner" }
+    ],
+    certifications: [
+      { name: "Cybersecurity License" }
+    ]
+  };
+};
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
@@ -55,6 +78,7 @@ export const RoleBenchmark = () => {
   };
 
   const selectedRole = value ? roles.find((role) => role.id === value) : null;
+  const skills = getSkillsForRole(selectedRole?.title || "");
 
   return (
     <div className="space-y-6">
@@ -121,18 +145,18 @@ export const RoleBenchmark = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Required Skills</span>
                 <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {requiredSkills.length}
+                  {skills.required.length}
                 </span>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              {requiredSkills.map((skill) => (
+              {skills.required.map((skill) => (
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
                   className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
                 >
-                  {skill.name} 
+                  {skill.name}
                   <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
                 </Badge>
               ))}
@@ -144,12 +168,12 @@ export const RoleBenchmark = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Preferred Skills</span>
                 <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {preferredSkills.length}
+                  {skills.preferred.length}
                 </span>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              {preferredSkills.map((skill) => (
+              {skills.preferred.map((skill) => (
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
@@ -167,12 +191,12 @@ export const RoleBenchmark = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Certifications</span>
                 <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {certifications.length}
+                  {skills.certifications.length}
                 </span>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              {certifications.map((cert) => (
+              {skills.certifications.map((cert) => (
                 <Badge 
                   key={cert.name}
                   variant="outline" 
