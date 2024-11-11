@@ -74,28 +74,29 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
 
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
+    const profileId = id || "123";
     
     if (selectedCategory === "all") {
       return skillsArray;
     }
     
     if (selectedCategory === "specialized") {
-      return skillsArray.filter(isSpecializedSkill);
+      return skillsArray.filter(skill => isSpecializedSkill(skill, profileId));
     }
     
     if (selectedCategory === "common") {
-      return skillsArray.filter(isCommonSkill);
+      return skillsArray.filter(skill => isCommonSkill(skill, profileId));
     }
     
     if (selectedCategory === "certification") {
-      return skillsArray.filter(isCertificationSkill);
+      return skillsArray.filter(skill => isCertificationSkill(skill, profileId));
     }
     
     return [];
   };
 
   const uniqueSkills = getSkillsByCategory().sort();
-  const skillCounts = categorizeSkills(Array.from(toggledSkills));
+  const skillCounts = categorizeSkills(Array.from(toggledSkills), id || "123");
 
   const getSkillDetails = (skillName: string, level: string) => {
     if (!skills || !skills[level]) return { level: "-", required: "-" };
