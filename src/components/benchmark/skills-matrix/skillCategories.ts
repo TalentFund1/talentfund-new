@@ -1,64 +1,123 @@
 import { getEmployeeSkills } from "./initialSkills";
 
-export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
-  // Specialized skills for AI Engineer (exactly 6)
-  const specializedSkills = new Set([
-    'Machine Learning',
-    'Deep Learning',
-    'TensorFlow',
-    'Natural Language Processing',
-    'Computer Vision',
-    'PyTorch'
-  ]);
+const skillSets = {
+  "123": { // AI Engineer
+    specialized: new Set([
+      'Machine Learning',
+      'Deep Learning',
+      'TensorFlow',
+      'Natural Language Processing', 
+      'Computer Vision',
+      'PyTorch'
+    ]),
+    common: new Set([
+      'Python',
+      'Problem Solving',
+      'Technical Writing'
+    ]),
+    certification: new Set([
+      'AWS Certified Machine Learning - Specialty',
+      'TensorFlow Developer Certificate',
+      'Google Cloud Professional Machine Learning Engineer'
+    ])
+  },
+  "124": { // Backend Engineer
+    specialized: new Set([
+      'Node.js',
+      'Database Design',
+      'API Development',
+      'System Architecture',
+      'Kubernetes',
+      'GraphQL'
+    ]),
+    common: new Set([
+      'Problem Solving',
+      'Code Review',
+      'Agile Methodologies'
+    ]),
+    certification: new Set([
+      'AWS Certified Solutions Architect',
+      'Kubernetes Administrator (CKA)',
+      'MongoDB Professional Developer'
+    ])
+  },
+  "125": { // Frontend Engineer
+    specialized: new Set([
+      'React',
+      'TypeScript',
+      'UI/UX Design',
+      'CSS/SASS',
+      'Next.js',
+      'Vue.js'
+    ]),
+    common: new Set([
+      'Cross-browser Compatibility',
+      'Responsive Design',
+      'Problem Solving'
+    ]),
+    certification: new Set([
+      'AWS Certified Developer - Associate',
+      'Google Mobile Web Specialist',
+      'Professional Scrum Developer'
+    ])
+  },
+  "126": { // Engineering Manager
+    specialized: new Set([
+      'System Design',
+      'Technical Architecture',
+      'Risk Management'
+    ]),
+    common: new Set([
+      'Team Leadership',
+      'Project Management',
+      'Strategic Planning',
+      'Stakeholder Management'
+    ]),
+    certification: new Set([
+      'Project Management Professional (PMP)',
+      'Certified Scrum Master (CSM)',
+      'ITIL Foundation'
+    ])
+  }
+};
 
-  // Common skills for AI Engineer (exactly 3)
-  const commonSkills = new Set([
-    'Python',
-    'Problem Solving',
-    'Technical Writing'
-  ]);
+export const categorizeSkill = (skill: string, profileId: string = "123"): 'specialized' | 'common' | 'certification' => {
+  const profileSkills = skillSets[profileId as keyof typeof skillSets] || skillSets["123"];
 
-  // Certifications for AI Engineer (exactly 3)
-  const certifications = new Set([
-    'AWS Certified Machine Learning - Specialty',
-    'TensorFlow Developer Certificate',
-    'Google Cloud Professional Machine Learning Engineer'
-  ]);
-
-  if (specializedSkills.has(skill)) {
+  if (profileSkills.specialized.has(skill)) {
     return 'specialized';
   }
   
-  if (commonSkills.has(skill)) {
+  if (profileSkills.common.has(skill)) {
     return 'common';
   }
   
-  if (certifications.has(skill)) {
+  if (profileSkills.certification.has(skill)) {
     return 'certification';
   }
   
-  // If the skill is not found in any category, return 'common' as default
   return 'common';
 };
 
 export const filterSkillsByCategory = (
   skills: Array<any>,
-  category: string
+  category: string,
+  profileId: string = "123"
 ): Array<any> => {
   if (category === 'all') {
     return skills;
   }
 
   return skills.filter(skill => 
-    categorizeSkill(skill.title) === category
+    categorizeSkill(skill.title, profileId) === category
   );
 };
 
-export const getSkillCounts = (employeeId: string) => {
-  const skills = getEmployeeSkills(employeeId);
-  const specialized = skills.filter(skill => categorizeSkill(skill.title) === 'specialized');
-  const common = skills.filter(skill => categorizeSkill(skill.title) === 'common');
-  const certification = skills.filter(skill => categorizeSkill(skill.title) === 'certification');
+export const getSkillCounts = (profileId: string = "123") => {
+  const skills = getEmployeeSkills(profileId);
+  const specialized = skills.filter(skill => categorizeSkill(skill.title, profileId) === 'specialized');
+  const common = skills.filter(skill => categorizeSkill(skill.title, profileId) === 'common');
+  const certification = skills.filter(skill => categorizeSkill(skill.title, profileId) === 'certification');
 
   return {
     all: skills.length,
