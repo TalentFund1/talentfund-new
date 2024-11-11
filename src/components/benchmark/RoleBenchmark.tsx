@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface Skill {
   name: string;
@@ -22,7 +23,23 @@ const roles = {
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string>("125");
+  const [selectedLevel, setSelectedLevel] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
+  const { getTrackForRole } = useTrack();
+
+  const track = getTrackForRole(selectedRole);
+  
+  const getLevels = () => {
+    return track === "Professional" 
+      ? ["P1", "P2", "P3", "P4", "P5", "P6"]
+      : ["M3", "M4", "M5", "M6"];
+  };
+
+  useEffect(() => {
+    // Set default level when track changes
+    const levels = getLevels();
+    setSelectedLevel(levels[0]);
+  }, [track]);
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -43,7 +60,6 @@ export const RoleBenchmark = () => {
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Filter skills based on toggledSkills
   const filteredSpecializedSkills = selectedRoleSkills.specialized.filter(
     skill => toggledSkills.has(skill.title)
   );
@@ -74,12 +90,12 @@ export const RoleBenchmark = () => {
           </Button>
         </div>
         
-        <div className="w-full max-w-[800px]">
+        <div className="flex items-center gap-4">
           <Select 
             value={selectedRole}
             onValueChange={(value) => setSelectedRole(value)}
           >
-            <SelectTrigger className="w-full bg-white">
+            <SelectTrigger className="w-[400px] bg-white">
               <SelectValue placeholder="Select Role">
                 {roles[selectedRole as keyof typeof roles]}
               </SelectValue>
@@ -88,6 +104,22 @@ export const RoleBenchmark = () => {
               {Object.entries(roles).map(([id, title]) => (
                 <SelectItem key={id} value={id}>
                   {title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select 
+            value={selectedLevel}
+            onValueChange={setSelectedLevel}
+          >
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Select Level" />
+            </SelectTrigger>
+            <SelectContent>
+              {getLevels().map((level) => (
+                <SelectItem key={level} value={level}>
+                  {level}
                 </SelectItem>
               ))}
             </SelectContent>
