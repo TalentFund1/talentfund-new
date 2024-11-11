@@ -1,46 +1,50 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useToast } from '@/components/ui/use-toast';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
   setToggledSkills: (skills: Set<string>) => void;
-  hasUnsavedChanges: boolean;
-  saveChanges: () => void;
-  cancelChanges: () => void;
 }
 
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { id } = useParams<{ id: string }>();
-  const { toast } = useToast();
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     try {
       const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
       if (savedSkills) {
-        const parsedSkills = JSON.parse(savedSkills) as string[];
-        return new Set<string>(parsedSkills);
+        const parsedSkills = JSON.parse(savedSkills);
+        // Ensure we're creating a Set from the parsed array
+        return new Set(Array.isArray(parsedSkills) ? parsedSkills : []);
       }
-      return new Set<string>();
+      return new Set();
     } catch (error) {
       console.error('Error loading saved skills:', error);
-      return new Set<string>();
+      return new Set();
     }
   });
 
-  const [originalSkills, setOriginalSkills] = useState<Set<string>>(new Set(toggledSkills));
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  // Save to localStorage whenever toggledSkills changes
+  useEffect(() => {
+    if (id) {
+      try {
+        const skillsArray = Array.from(toggledSkills);
+        localStorage.setItem(`toggledSkills_${id}`, JSON.stringify(skillsArray));
+      } catch (error) {
+        console.error('Error saving skills:', error);
+      }
+    }
+  }, [toggledSkills, id]);
 
+  // Update toggledSkills when id changes
   useEffect(() => {
     if (id) {
       try {
         const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
         if (savedSkills) {
-          const parsedSkills = JSON.parse(savedSkills) as string[];
-          const skillsSet = new Set<string>(parsedSkills);
-          setToggledSkills(skillsSet);
-          setOriginalSkills(skillsSet);
+          const parsedSkills = JSON.parse(savedSkills);
+          setToggledSkills(new Set(Array.isArray(parsedSkills) ? parsedSkills : []));
         }
       } catch (error) {
         console.error('Error loading saved skills for new id:', error);
@@ -48,50 +52,8 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   }, [id]);
 
-  const updateToggledSkills = (skills: Set<string>) => {
-    setToggledSkills(skills);
-    setHasUnsavedChanges(true);
-  };
-
-  const saveChanges = () => {
-    try {
-      const skillsArray = Array.from(toggledSkills);
-      localStorage.setItem(`toggledSkills_${id}`, JSON.stringify(skillsArray));
-      setOriginalSkills(new Set(toggledSkills));
-      setHasUnsavedChanges(false);
-      toast({
-        title: "Changes Saved",
-        description: "Your skill selections have been saved successfully.",
-      });
-    } catch (error) {
-      console.error('Error saving skills:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save your skill selections.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const cancelChanges = () => {
-    setToggledSkills(new Set(originalSkills));
-    setHasUnsavedChanges(false);
-    toast({
-      title: "Changes Cancelled",
-      description: "Your skill selections have been reset.",
-    });
-  };
-
   return (
-    <ToggledSkillsContext.Provider 
-      value={{ 
-        toggledSkills, 
-        setToggledSkills: updateToggledSkills,
-        hasUnsavedChanges,
-        saveChanges,
-        cancelChanges
-      }}
-    >
+    <ToggledSkillsContext.Provider value={{ toggledSkills, setToggledSkills }}>
       {children}
     </ToggledSkillsContext.Provider>
   );

@@ -22,7 +22,7 @@ const roles = {
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string>("125");
-  const { toggledSkills, hasUnsavedChanges, saveChanges, cancelChanges } = useToggledSkills();
+  const { toggledSkills } = useToggledSkills();
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -65,32 +65,13 @@ export const RoleBenchmark = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
-          <div className="flex items-center gap-2">
-            {hasUnsavedChanges && (
-              <>
-                <Button 
-                  variant="outline" 
-                  onClick={cancelChanges}
-                  className="bg-white text-[#1F2144] hover:bg-white/90 border border-[#CCDBFF]"
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={saveChanges}
-                  className="bg-[#4285f4] text-white hover:bg-[#4285f4]/90"
-                >
-                  Save Changes
-                </Button>
-              </>
-            )}
-            <Button 
-              variant="outline" 
-              className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-              onClick={handleSeeSkillProfile}
-            >
-              See Skill Profile
-            </Button>
-          </div>
+          <Button 
+            variant="outline" 
+            className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
+            onClick={handleSeeSkillProfile}
+          >
+            See Skill Profile
+          </Button>
         </div>
         
         <div className="w-full max-w-[800px]">
