@@ -6,18 +6,38 @@ import { CompetencyLevels } from "./CompetencyLevels";
 import { SkillsGrid } from "./SkillsGrid";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 
-const skillCategories = [
-  { id: "all", name: "All Skills", count: 28 },
-  { id: "specialized", name: "Specialized Skills", count: 15 },
-  { id: "common", name: "Common Skills", count: 10 },
-  { id: "certification", name: "Certification", count: 3 }
-];
+const getSkillCategory = (skill: string): string => {
+  const specializedSkills = ['Amazon Web Services', 'Machine Learning', 'Artificial Intelligence', 'Computer Vision', 'Deep Learning', 'Natural Language Processing'];
+  const commonSkills = ['Python', 'JavaScript', 'Communication', 'Problem Solving', 'Technical Writing'];
+  const certifications = ['AWS Certified', 'Google Cloud', 'Azure', 'Professional Certification'];
+
+  if (certifications.some(s => skill.includes(s))) return 'certification';
+  if (specializedSkills.some(s => skill.includes(s))) return 'specialized';
+  if (commonSkills.some(s => skill.includes(s))) return 'common';
+  return 'specialized'; // Default to specialized if no match found
+};
 
 export const CompetencyMatrix = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [track, setTrack] = useState<"Technical" | "Managerial">("Technical");
   const { toggledSkills } = useToggledSkills();
+
+  const skillsArray = Array.from(toggledSkills);
+  
+  // Calculate counts for each category
+  const categoryCounts = skillsArray.reduce((acc, skill) => {
+    const category = getSkillCategory(skill);
+    acc[category] = (acc[category] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const skillCategories = [
+    { id: "all", name: "All Skills", count: skillsArray.length },
+    { id: "specialized", name: "Specialized Skills", count: categoryCounts.specialized || 0 },
+    { id: "common", name: "Common Skills", count: categoryCounts.common || 0 },
+    { id: "certification", name: "Certification", count: categoryCounts.certification || 0 }
+  ];
 
   const handleLevelSelect = (level: string) => {
     setSelectedLevels(prev => 
@@ -34,8 +54,6 @@ export const CompetencyMatrix = () => {
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
   };
-
-  const skillsArray = Array.from(toggledSkills);
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
@@ -68,9 +86,7 @@ export const CompetencyMatrix = () => {
                   {category.name}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {skillsArray.filter(skill => 
-                    category.id === 'all' || getSkillCategory(skill) === category.id
-                  ).length} skills
+                  {category.count} skills
                 </span>
               </div>
             </button>
@@ -84,15 +100,4 @@ export const CompetencyMatrix = () => {
       </div>
     </div>
   );
-};
-
-const getSkillCategory = (skill: string): string => {
-  const specializedSkills = ['Amazon Web Services', 'Machine Learning', 'Artificial Intelligence'];
-  const commonSkills = ['Python', 'JavaScript', 'Communication'];
-  const certifications = ['AWS Certified', 'Google Cloud', 'Azure'];
-
-  if (specializedSkills.some(s => skill.includes(s))) return 'specialized';
-  if (commonSkills.some(s => skill.includes(s))) return 'common';
-  if (certifications.some(s => skill.includes(s))) return 'certification';
-  return 'all';
 };
