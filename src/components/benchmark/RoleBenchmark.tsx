@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { roles } from "./data/rolesData";
 import { useState } from "react";
-import { Check, ChevronsUpDown, Heart } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Skill {
@@ -133,10 +133,7 @@ export const RoleBenchmark = () => {
                   className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
                 >
                   {skill.name} 
-                  <div className="flex items-center gap-1.5">
-                    <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                    <Heart className="w-3 h-3 text-[#1f2144]" />
-                  </div>
+                  <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
                 </Badge>
               ))}
             </div>
