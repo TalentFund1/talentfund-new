@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { SkillSection } from "@/components/skills/SkillSection";
 import { skillsByCategory } from "@/components/skills/competency/skillsData";
 
 interface RoleSkillsContainerProps {
@@ -15,15 +14,19 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
   const getSkillsForRole = () => {
     if (!selectedRole) return { required: [], preferred: [], certifications: [] };
 
-    const [track, level] = selectedRole.id.split('-');
+    // Extract level from role ID (e.g., "P4" from "professional-P4")
+    const level = selectedRole.id.split('-')[1];
     const isManagerial = selectedRole.track === "Managerial";
-    const skillsData = skillsByCategory.all[isManagerial ? 'managerial' : 'professional'][level] || [];
-    const certifications = skillsByCategory.certification[isManagerial ? 'managerial' : 'professional'][level] || [];
+    
+    // Get skills based on track and level
+    const track = isManagerial ? 'managerial' : 'professional';
+    const skillsData = skillsByCategory.all[track][level] || [];
+    const certifications = skillsByCategory.certification[track][level] || [];
 
     return {
       required: skillsData.filter(skill => skill.required === "required"),
       preferred: skillsData.filter(skill => skill.required === "preferred"),
-      certifications: certifications
+      certifications
     };
   };
 
