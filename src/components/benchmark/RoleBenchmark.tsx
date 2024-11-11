@@ -20,35 +20,41 @@ const getSkillsForRole = (roleId: string): RoleSkills => {
     if (roleLevel === "P4") {
       return {
         required: [
-          { name: "Machine Learning", level: "advanced" },
-          { name: "Deep Learning", level: "advanced" },
           { name: "Computer Vision", level: "advanced" },
-          { name: "Natural Language Processing", level: "advanced" }
+          { name: "Machine Learning", level: "advanced" },
+          { name: "Natural Language Processing", level: "advanced" },
+          { name: "Python", level: "advanced" },
+          { name: "TensorFlow", level: "advanced" }
         ],
         preferred: [
-          { name: "TensorFlow", level: "intermediate" },
-          { name: "PyTorch", level: "intermediate" }
+          { name: "AWS", level: "intermediate" },
+          { name: "Deep Learning", level: "intermediate" },
+          { name: "Problem Solving", level: "intermediate" },
+          { name: "PyTorch", level: "intermediate" },
+          { name: "Technical Writing", level: "intermediate" },
+          { name: "TensorFlow", level: "intermediate" }
         ],
         certifications: [
           { name: "AWS Certified Machine Learning - Specialty" },
-          { name: "TensorFlow Developer Certificate" },
-          { name: "Google Cloud Professional Machine Learning Engineer" }
+          { name: "Google Cloud Professional Machine Learning Engineer" },
+          { name: "TensorFlow Developer Certificate" }
         ]
       };
     } else if (roleLevel === "P3") {
       return {
         required: [
-          { name: "Machine Learning", level: "intermediate" },
-          { name: "Python", level: "advanced" },
-          { name: "Data Structures", level: "advanced" }
+          { name: "Machine Learning", level: "advanced" },
+          { name: "Google Cloud Professional Machine Learning Engineer", level: "intermediate" },
+          { name: "Deep Learning", level: "intermediate" }
         ],
         preferred: [
-          { name: "Deep Learning", level: "intermediate" },
-          { name: "Cloud Computing", level: "intermediate" }
+          { name: "Python", level: "intermediate" },
+          { name: "TensorFlow", level: "intermediate" },
+          { name: "Problem Solving", level: "intermediate" }
         ],
         certifications: [
           { name: "AWS Certified Developer - Associate" },
-          { name: "Python Professional Certificate" }
+          { name: "Google Cloud Professional Machine Learning Engineer" }
         ]
       };
     }
