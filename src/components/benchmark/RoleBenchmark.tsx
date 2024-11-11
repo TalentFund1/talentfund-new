@@ -1,6 +1,5 @@
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
@@ -8,19 +7,78 @@ import { roles } from "./data/rolesData";
 import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { RequiredSkillsSection } from "./sections/RequiredSkillsSection";
+import { PreferredSkillsSection } from "./sections/PreferredSkillsSection";
+import { CertificationsSection } from "./sections/CertificationsSection";
+import { RoleSkills } from "./types";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
-interface Skill {
-  name: string;
-  level: "advanced" | "intermediate" | "beginner" | "unspecified";
-}
+const getSkillsForRole = (roleId: string): RoleSkills => {
+  const roleLevel = roleId.split(": ")[1];
+  
+  if (roleId.includes("AI Engineer")) {
+    if (roleLevel === "P4") {
+      return {
+        required: [
+          { name: "Machine Learning", level: "advanced" },
+          { name: "Deep Learning", level: "advanced" },
+          { name: "Python", level: "advanced" },
+          { name: "TensorFlow", level: "advanced" },
+          { name: "Natural Language Processing", level: "advanced" },
+          { name: "Computer Vision", level: "advanced" }
+        ],
+        preferred: [
+          { name: "AWS", level: "intermediate" },
+          { name: "PyTorch", level: "intermediate" },
+          { name: "Problem Solving", level: "intermediate" },
+          { name: "Technical Writing", level: "intermediate" },
+          { name: "Data Engineering", level: "intermediate" }
+        ],
+        certifications: [
+          { name: "AWS Certified Machine Learning - Specialty" },
+          { name: "TensorFlow Developer Certificate" },
+          { name: "Google Cloud Professional Machine Learning Engineer" }
+        ]
+      };
+    } else if (roleLevel === "P3") {
+      return {
+        required: [
+          { name: "Machine Learning", level: "intermediate" },
+          { name: "Python", level: "intermediate" },
+          { name: "Deep Learning", level: "intermediate" },
+          { name: "Natural Language Processing", level: "intermediate" }
+        ],
+        preferred: [
+          { name: "AWS", level: "beginner" },
+          { name: "TensorFlow", level: "beginner" },
+          { name: "Problem Solving", level: "intermediate" }
+        ],
+        certifications: [
+          { name: "AWS Certified Developer - Associate" },
+          { name: "Google Cloud Professional Machine Learning Engineer" }
+        ]
+      };
+    }
+  }
+  
+  return {
+    required: [],
+    preferred: [],
+    certifications: []
+  };
+};
 
-const RoleBenchmark = () => {
+export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const [requiredSkills, setRequiredSkills] = useState<Skill[]>([]);
-  const [preferredSkills, setPreferredSkills] = useState<Skill[]>([]);
-  const [certifications, setCertifications] = useState<{ name: string }[]>([]);
+  const { setCurrentRole } = useSkillsMatrixStore();
+
+  const handleRoleSelect = (roleId: string) => {
+    setValue(roleId);
+    setOpen(false);
+    setCurrentRole(roleId);
+  };
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -40,6 +98,11 @@ const RoleBenchmark = () => {
   };
 
   const selectedRole = value ? roles.find((role) => role.id === value) : null;
+  const skills = selectedRole ? getSkillsForRole(selectedRole?.title || "") : {
+    required: [],
+    preferred: [],
+    certifications: []
+  };
 
   return (
     <div className="space-y-6">
@@ -64,7 +127,7 @@ const RoleBenchmark = () => {
                 aria-expanded={open}
                 className="w-full justify-between bg-white"
               >
-                {selectedRole ? `${selectedRole.title}: ${selectedRole.level}` : "Select role..."}
+                {selectedRole ? selectedRole.title : "Select role..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -77,10 +140,7 @@ const RoleBenchmark = () => {
                     {roles.map((role) => (
                       <CommandItem
                         key={role.id}
-                        onSelect={() => {
-                          setValue(role.id === value ? "" : role.id);
-                          setOpen(false);
-                        }}
+                        onSelect={() => handleRoleSelect(role.id)}
                       >
                         <Check
                           className={cn(
@@ -88,7 +148,7 @@ const RoleBenchmark = () => {
                             value === role.id ? "opacity-100" : "opacity-0"
                           )}
                         />
-                        {role.title}: {role.level}
+                        {role.title}
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -101,81 +161,23 @@ const RoleBenchmark = () => {
         <Separator className="my-6" />
 
         <div className="space-y-6">
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Required Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {requiredSkills.length}
-                </span>
-              </div>
-            </div>
-            {selectedRole && requiredSkills.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {requiredSkills.map((skill) => (
-                  <Badge 
-                    key={skill.name} 
-                    variant="outline" 
-                    className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                  >
-                    {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Preferred Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {preferredSkills.length}
-                </span>
-              </div>
-            </div>
-            {selectedRole && preferredSkills.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {preferredSkills.map((skill) => (
-                  <Badge 
-                    key={skill.name} 
-                    variant="outline" 
-                    className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                  >
-                    {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Certifications</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {certifications.length}
-                </span>
-              </div>
-            </div>
-            {selectedRole && certifications.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {certifications.map((cert) => (
-                  <Badge 
-                    key={cert.name}
-                    variant="outline" 
-                    className="rounded-md px-4 py-2 border border-border bg-white"
-                  >
-                    {cert.name}
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
+          <RequiredSkillsSection 
+            skills={skills.required}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
+          <PreferredSkillsSection 
+            skills={skills.preferred}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
+          <CertificationsSection 
+            certifications={skills.certifications}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
         </div>
       </div>
     </div>
   );
 };
-
-export default RoleBenchmark;
