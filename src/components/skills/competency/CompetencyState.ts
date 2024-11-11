@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface SkillState {
   level: string;
@@ -15,36 +16,44 @@ interface CompetencyState {
   initializeStates: (states: Record<string, Record<string, SkillState>>) => void;
 }
 
-export const useCompetencyStore = create<CompetencyState>((set) => ({
-  originalStates: {},
-  currentStates: {},
-  hasChanges: false,
-  setSkillState: (skillName, level, levelKey, required) =>
-    set((state) => {
-      const newStates = {
-        ...state.currentStates,
-        [skillName]: {
-          ...(state.currentStates[skillName] || {}),
-          [levelKey]: { level, required },
-        },
-      };
-      const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
-      return { currentStates: newStates, hasChanges };
+export const useCompetencyStore = create<CompetencyState>()(
+  persist(
+    (set) => ({
+      originalStates: {},
+      currentStates: {},
+      hasChanges: false,
+      setSkillState: (skillName, level, levelKey, required) =>
+        set((state) => {
+          const newStates = {
+            ...state.currentStates,
+            [skillName]: {
+              ...(state.currentStates[skillName] || {}),
+              [levelKey]: { level, required },
+            },
+          };
+          const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
+          return { currentStates: newStates, hasChanges };
+        }),
+      saveChanges: () =>
+        set((state) => ({
+          originalStates: { ...state.currentStates },
+          hasChanges: false,
+        })),
+      cancelChanges: () =>
+        set((state) => ({
+          currentStates: { ...state.originalStates },
+          hasChanges: false,
+        })),
+      initializeStates: (states) =>
+        set(() => ({
+          originalStates: states,
+          currentStates: states,
+          hasChanges: false,
+        })),
     }),
-  saveChanges: () =>
-    set((state) => ({
-      originalStates: { ...state.currentStates },
-      hasChanges: false,
-    })),
-  cancelChanges: () =>
-    set((state) => ({
-      currentStates: { ...state.originalStates },
-      hasChanges: false,
-    })),
-  initializeStates: (states) =>
-    set(() => ({
-      originalStates: states,
-      currentStates: states,
-      hasChanges: false,
-    })),
-}));
+    {
+      name: 'competency-storage',
+      skipHydration: false,
+    }
+  )
+);
