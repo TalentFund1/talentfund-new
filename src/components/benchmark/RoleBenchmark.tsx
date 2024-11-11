@@ -1,4 +1,4 @@
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -86,27 +86,28 @@ export const RoleBenchmark = () => {
             <PopoverContent className="w-full p-0" align="start">
               <Command>
                 <CommandInput placeholder="Search roles..." />
-                <CommandEmpty>No roles found.</CommandEmpty>
-                <CommandGroup>
-                  {roles.map((role) => (
-                    <CommandItem
-                      key={role.id}
-                      value={role.id}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue);
-                        setOpen(false);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          value === role.id ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      {role.title}: {role.level}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                <CommandList>
+                  <CommandEmpty>No roles found.</CommandEmpty>
+                  <CommandGroup>
+                    {roles.map((role) => (
+                      <CommandItem
+                        key={role.id}
+                        onSelect={() => {
+                          setValue(role.id === value ? "" : role.id);
+                          setOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            value === role.id ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {role.title}: {role.level}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
               </Command>
             </PopoverContent>
           </Popover>
