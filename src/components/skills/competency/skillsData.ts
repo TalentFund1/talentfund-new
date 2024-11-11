@@ -31,15 +31,12 @@ export const professionalSkills: SkillLevels = {
     { name: "SQL", level: "advanced", required: "required" },
   ],
   "P4": [
-    { name: "Machine Learning", level: "advanced", required: "required" },
-    { name: "Deep Learning", level: "advanced", required: "required" },
-    { name: "Computer Vision", level: "advanced", required: "required" },
-    { name: "Natural Language Processing", level: "advanced", required: "required" },
+    { name: "Amazon Web Services", level: "advanced", required: "required" },
     { name: "Python", level: "advanced", required: "required" },
-    { name: "TensorFlow", level: "advanced", required: "required" },
-    { name: "PyTorch", level: "advanced", required: "preferred" },
-    { name: "Data Engineering", level: "advanced", required: "preferred" },
+    { name: "Machine Learning", level: "advanced", required: "required" },
     { name: "System Design", level: "advanced", required: "required" },
+    { name: "Data Visualization", level: "advanced", required: "required" },
+    { name: "SQL", level: "advanced", required: "required" },
   ],
   "P5": [
     { name: "Amazon Web Services", level: "advanced", required: "required" },
@@ -122,18 +119,6 @@ export const skillsByCategory = {
         { name: "Amazon Web Services", level: "advanced", required: "required" },
         { name: "Machine Learning", level: "advanced", required: "required" },
       ],
-      "P4": [
-        { name: "Machine Learning", level: "advanced", required: "required" },
-        { name: "Deep Learning", level: "advanced", required: "required" },
-        { name: "Computer Vision", level: "advanced", required: "required" },
-        { name: "Natural Language Processing", level: "advanced", required: "required" },
-        { name: "TensorFlow", level: "advanced", required: "required" },
-        { name: "PyTorch", level: "advanced", required: "preferred" },
-      ],
-      "P5": [
-        { name: "Amazon Web Services", level: "advanced", required: "required" },
-        { name: "Machine Learning", level: "advanced", required: "required" },
-      ],
     },
     managerial: {
       "M3": [
@@ -154,11 +139,6 @@ export const skillsByCategory = {
       ],
       "P3": [
         { name: "Python", level: "advanced", required: "required" },
-      ],
-      "P4": [
-        { name: "Python", level: "advanced", required: "required" },
-        { name: "System Design", level: "advanced", required: "required" },
-        { name: "Data Engineering", level: "advanced", required: "preferred" },
       ],
     },
     managerial: {
@@ -182,11 +162,6 @@ export const skillsByCategory = {
       ],
       "P3": [
         { name: "AWS Certified Solutions Architect", level: "advanced", required: "required" },
-      ],
-      "P4": [
-        { name: "AWS Certified Machine Learning - Specialty", level: "advanced", required: "certification" },
-        { name: "TensorFlow Developer Certificate", level: "advanced", required: "certification" },
-        { name: "Google Cloud Professional Machine Learning Engineer", level: "advanced", required: "certification" },
       ],
     },
     managerial: {
