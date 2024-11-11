@@ -11,12 +11,11 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'PyTorch'
   ];
 
-  // Common skills for AI Engineer (exactly 4)
+  // Common skills for AI Engineer (exactly 3)
   const commonSkills = [
     'Python',
     'Problem Solving',
-    'Technical Writing',
-    'Data Engineering'
+    'Technical Writing'
   ];
 
   // Certifications for AI Engineer (exactly 3)
@@ -38,6 +37,7 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     return 'common';
   }
   
+  // Default to common to avoid uncategorized skills
   return 'common';
 };
 
