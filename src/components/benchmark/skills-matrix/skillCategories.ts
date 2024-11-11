@@ -16,7 +16,7 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Python',
     'Problem Solving',
     'Technical Writing',
-    'Data Engineering' // Moved from specialized to common
+    'Data Engineering'
   ];
 
   // Certifications for AI Engineer (exactly 3)
@@ -38,7 +38,6 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     return 'common';
   }
   
-  // If no match is found, categorize as common instead of specialized
   return 'common';
 };
 
