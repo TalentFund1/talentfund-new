@@ -85,7 +85,7 @@ export const RoleBenchmark = () => {
             </PopoverTrigger>
             <PopoverContent className="w-full p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search roles..." className="h-9" />
+                <CommandInput placeholder="Search roles..." />
                 <CommandEmpty>No roles found.</CommandEmpty>
                 <CommandGroup>
                   {roles.map((role) => (
@@ -96,7 +96,6 @@ export const RoleBenchmark = () => {
                         setValue(currentValue === value ? "" : currentValue);
                         setOpen(false);
                       }}
-                      className="cursor-pointer"
                     >
                       <Check
                         className={cn(
