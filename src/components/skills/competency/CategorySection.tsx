@@ -11,10 +11,10 @@ interface CategorySectionProps {
 
 export const CategorySection = ({ selectedCategory, setSelectedCategory, skillCounts }: CategorySectionProps) => {
   const categories = [
-    { id: "all", name: "All Categories", count: skillCounts.all },
-    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
-    { id: "common", name: "Common Skills", count: skillCounts.common },
-    { id: "certification", name: "Certification", count: skillCounts.certification }
+    { id: "all", name: "All Categories", count: 12 }, // 6 + 3 + 3 = 12 total skills
+    { id: "specialized", name: "Specialized Skills", count: 6 },
+    { id: "common", name: "Common Skills", count: 3 },
+    { id: "certification", name: "Certification", count: 3 }
   ];
 
   return (

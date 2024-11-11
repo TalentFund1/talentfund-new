@@ -1,5 +1,5 @@
 export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
-  // Specialized skills for AI Engineer
+  // Specialized skills for AI Engineer (exactly 6)
   const specializedSkills = [
     'Machine Learning',
     'Deep Learning',
@@ -9,38 +9,32 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'PyTorch'
   ];
 
-  // Common skills for AI Engineer
+  // Common skills for AI Engineer (exactly 3)
   const commonSkills = [
     'Python',
     'Problem Solving',
     'Technical Writing'
   ];
 
-  // Certifications for AI Engineer
-  const certificationKeywords = [
+  // Certifications for AI Engineer (exactly 3)
+  const certifications = [
     'AWS Certified Machine Learning - Specialty',
     'TensorFlow Developer Certificate',
     'Google Cloud Professional Machine Learning Engineer'
   ];
 
-  // Check if it's a certification first (exact match needed)
-  if (certificationKeywords.some(cert => 
-    skill === cert
-  )) {
+  // Check if it's a certification (exact match)
+  if (certifications.includes(skill)) {
     return 'certification';
   }
   
-  // Then check if it's a specialized skill (exact match needed)
-  if (specializedSkills.some(spec => 
-    skill === spec
-  )) {
+  // Check if it's a specialized skill (exact match)
+  if (specializedSkills.includes(skill)) {
     return 'specialized';
   }
   
-  // Then check if it's a common skill (exact match needed)
-  if (commonSkills.some(common => 
-    skill === common
-  )) {
+  // Check if it's a common skill (exact match)
+  if (commonSkills.includes(skill)) {
     return 'common';
   }
   
