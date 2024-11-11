@@ -12,7 +12,7 @@ export const SkillsMatrixTableHeader = () => {
     <TableHeader>
       <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
         <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
-        <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
+        <TableHead className="w-[150px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
         <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Company Skill</TableHead>
         <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Skill Level</TableHead>
         <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
