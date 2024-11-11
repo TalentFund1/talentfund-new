@@ -3,20 +3,45 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
-import { roleSkills } from "../skills/data/roleSkills";
 
 interface Skill {
   name: string;
   level: "advanced" | "intermediate" | "beginner" | "unspecified";
 }
 
-// Map role IDs to display names
-const roleDisplayNames = {
-  "123": "AI Engineer: P4",
-  "124": "Backend Engineer: P4",
-  "125": "Frontend Engineer: P4",
-  "126": "Engineering Manager: M5"
-};
+const requiredSkills: Skill[] = [
+  { name: "React", level: "advanced" as const },
+  { name: "JavaScript", level: "advanced" as const },
+  { name: "GraphQL", level: "intermediate" as const },
+  { name: "HTML and CSS3", level: "advanced" as const },
+  { name: "IPA Integrations", level: "intermediate" as const }
+].sort((a, b) => {
+  const levelOrder = {
+    advanced: 0,
+    intermediate: 1,
+    beginner: 2,
+    unspecified: 3
+  };
+  return levelOrder[a.level] - levelOrder[b.level];
+});
+
+const preferredSkills: Skill[] = [
+  { name: "UI/UX Design Principles", level: "intermediate" as const },
+  { name: "Communication", level: "intermediate" as const },
+  { name: "Angular", level: "beginner" as const }
+].sort((a, b) => {
+  const levelOrder = {
+    advanced: 0,
+    intermediate: 1,
+    beginner: 2,
+    unspecified: 3
+  };
+  return levelOrder[a.level] - levelOrder[b.level];
+});
+
+const certifications = [
+  { name: "Cybersecurity License" }
+];
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
@@ -38,34 +63,6 @@ export const RoleBenchmark = () => {
     }
   };
 
-  // Convert roleSkills specialized and common skills to required format
-  const getRequiredSkills = (roleId: string) => {
-    const role = roleSkills[roleId as keyof typeof roleSkills];
-    if (!role) return [];
-
-    return [...role.specialized, ...role.common]
-      .map(skill => ({
-        name: skill.title,
-        level: skill.level as "advanced" | "intermediate" | "beginner" | "unspecified"
-      }))
-      .sort((a, b) => {
-        const levelOrder = {
-          advanced: 0,
-          intermediate: 1,
-          beginner: 2,
-          unspecified: 3
-        };
-        return levelOrder[a.level] - levelOrder[b.level];
-      });
-  };
-
-  // Get certifications for the selected role
-  const getCertifications = (roleId: string) => {
-    const role = roleSkills[roleId as keyof typeof roleSkills];
-    if (!role) return [];
-    return role.certifications.map(cert => ({ name: cert.title }));
-  };
-
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -81,14 +78,14 @@ export const RoleBenchmark = () => {
         </div>
         
         <div className="w-full max-w-[800px]">
-          <Select defaultValue="125">
+          <Select defaultValue="senior-frontend">
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Select Role" />
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(roleDisplayNames).map(([id, name]) => (
-                <SelectItem key={id} value={id}>{name}</SelectItem>
-              ))}
+              <SelectItem value="senior-frontend">Senior Frontend Engineer: P4</SelectItem>
+              <SelectItem value="lead-frontend">Lead Frontend Engineer: P5</SelectItem>
+              <SelectItem value="principal">Principal Engineer: P6</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -101,12 +98,34 @@ export const RoleBenchmark = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Required Skills</span>
                 <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {getRequiredSkills("125").length}
+                  {requiredSkills.length}
                 </span>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              {getRequiredSkills("125").map((skill) => (
+              {requiredSkills.map((skill) => (
+                <Badge 
+                  key={skill.name} 
+                  variant="outline" 
+                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
+                >
+                  {skill.name} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">Preferred Skills</span>
+                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                  {preferredSkills.length}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {preferredSkills.map((skill) => (
                 <Badge 
                   key={skill.name} 
                   variant="outline" 
@@ -123,12 +142,12 @@ export const RoleBenchmark = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Certifications</span>
                 <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {getCertifications("125").length}
+                  {certifications.length}
                 </span>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              {getCertifications("125").map((cert) => (
+              {certifications.map((cert) => (
                 <Badge 
                   key={cert.name}
                   variant="outline" 
