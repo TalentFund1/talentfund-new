@@ -19,6 +19,27 @@ const RoleBenchmark = () => {
 
   const selectedRole = value ? roles.find((role) => role.id === value) : null;
 
+  const handleSkillProfileClick = () => {
+    // Map role titles to their corresponding IDs in the skills data
+    const roleIdMap: { [key: string]: string } = {
+      "AI Engineer": "123",
+      "Backend Engineer": "124",
+      "Frontend Engineer": "125",
+      "Engineering Manager": "126"
+    };
+
+    if (selectedRole) {
+      const skillProfileId = roleIdMap[selectedRole.title];
+      if (skillProfileId) {
+        navigate(`/skills/${skillProfileId}`);
+      } else {
+        navigate('/skills');
+      }
+    } else {
+      navigate('/skills');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -27,7 +48,7 @@ const RoleBenchmark = () => {
           <Button 
             variant="outline" 
             className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-            onClick={() => navigate('/skills')}
+            onClick={handleSkillProfileClick}
           >
             See Skill Profile
           </Button>
