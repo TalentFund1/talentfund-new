@@ -7,8 +7,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
-// Move roleSkills to a separate file to reduce file size
 import { roleSkills } from './data/roleSkills';
 
 const PAGE_SIZE = 10;
@@ -24,11 +22,6 @@ export const SkillProfileMatrix = () => {
   const { toast } = useToast();
   const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
-
-  // Reset toggled skills when profile changes
-  useEffect(() => {
-    setToggledSkills(new Set());
-  }, [id, setToggledSkills]);
 
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
@@ -86,7 +79,7 @@ export const SkillProfileMatrix = () => {
 
     return () => {
       if (currentObserverTarget) {
-        observer.current.unobserve(currentObserverTarget);
+        observer.current?.unobserve(currentObserverTarget);
       }
     };
   }, [hasMoreSkills, loading]);
