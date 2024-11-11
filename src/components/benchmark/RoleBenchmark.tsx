@@ -3,6 +3,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
+import { roles } from "./data/rolesData";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useState } from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Skill {
   name: string;
@@ -10,34 +16,18 @@ interface Skill {
 }
 
 const requiredSkills: Skill[] = [
-  { name: "React", level: "advanced" as const },
-  { name: "JavaScript", level: "advanced" as const },
-  { name: "GraphQL", level: "intermediate" as const },
-  { name: "HTML and CSS3", level: "advanced" as const },
-  { name: "IPA Integrations", level: "intermediate" as const }
-].sort((a, b) => {
-  const levelOrder = {
-    advanced: 0,
-    intermediate: 1,
-    beginner: 2,
-    unspecified: 3
-  };
-  return levelOrder[a.level] - levelOrder[b.level];
-});
+  { name: "React", level: "advanced" },
+  { name: "JavaScript", level: "advanced" },
+  { name: "GraphQL", level: "intermediate" },
+  { name: "HTML and CSS3", level: "advanced" },
+  { name: "IPA Integrations", level: "intermediate" }
+];
 
 const preferredSkills: Skill[] = [
-  { name: "UI/UX Design Principles", level: "intermediate" as const },
-  { name: "Communication", level: "intermediate" as const },
-  { name: "Angular", level: "beginner" as const }
-].sort((a, b) => {
-  const levelOrder = {
-    advanced: 0,
-    intermediate: 1,
-    beginner: 2,
-    unspecified: 3
-  };
-  return levelOrder[a.level] - levelOrder[b.level];
-});
+  { name: "UI/UX Design Principles", level: "intermediate" },
+  { name: "Communication", level: "intermediate" },
+  { name: "Angular", level: "beginner" }
+];
 
 const certifications = [
   { name: "Cybersecurity License" }
@@ -45,6 +35,8 @@ const certifications = [
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -78,16 +70,47 @@ export const RoleBenchmark = () => {
         </div>
         
         <div className="w-full max-w-[800px]">
-          <Select defaultValue="senior-frontend">
-            <SelectTrigger className="w-full bg-white">
-              <SelectValue placeholder="Select Role" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="senior-frontend">Senior Frontend Engineer: P4</SelectItem>
-              <SelectItem value="lead-frontend">Lead Frontend Engineer: P5</SelectItem>
-              <SelectItem value="principal">Principal Engineer: P6</SelectItem>
-            </SelectContent>
-          </Select>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-full justify-between bg-white"
+              >
+                {value
+                  ? roles.find((role) => role.id === value)?.title + ": " + roles.find((role) => role.id === value)?.level
+                  : "Select role..."}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0">
+              <Command>
+                <CommandInput placeholder="Search roles..." />
+                <CommandEmpty>No role found.</CommandEmpty>
+                <CommandGroup>
+                  {roles.map((role) => (
+                    <CommandItem
+                      key={role.id}
+                      value={role.id}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? "" : currentValue);
+                        setOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === role.id ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {role.title}: {role.level}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <Separator className="my-6" />
