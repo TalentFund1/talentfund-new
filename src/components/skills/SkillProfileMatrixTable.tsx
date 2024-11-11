@@ -31,9 +31,9 @@ export const SkillProfileMatrixTable = ({
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">Skill Title</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[20%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
               Projected Growth
               <TooltipProvider>
@@ -53,7 +53,7 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </div>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[20%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
               Salary With Skill
               <TooltipProvider>
@@ -73,7 +73,7 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </div>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[20%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
               Appears In
               <ArrowUp className="h-4 w-4" />
