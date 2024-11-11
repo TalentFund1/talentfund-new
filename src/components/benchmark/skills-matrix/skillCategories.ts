@@ -10,10 +10,7 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Certified Scrum Master',
     'CSM',
     'Professional Certification',
-    'Certified',
-    'Certificate',
-    'TensorFlow Developer Certificate',
-    'Google Cloud Professional'
+    'Certified'
   ];
 
   // Specialized skills list (technical skills)
@@ -37,11 +34,7 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Edge Computing',
     '5G Network Architecture',
     'Quantum Computing',
-    'Robotics Programming',
-    'Data Engineering',
-    'Machine Learning',
-    'Deep Learning',
-    'Computer Vision'
+    'Robotics Programming'
   ];
 
   // Common skills list (non-technical, transferable skills)
@@ -56,8 +49,7 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Team Management',
     'Problem Solving',
     'Communication',
-    'Leadership',
-    'Data Visualization'
+    'Leadership'
   ];
 
   // Check if it's a certification
@@ -81,16 +73,8 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     return 'common';
   }
   
-  // If no match is found, categorize based on technical nature
-  if (skill.includes('Development') || 
-      skill.includes('Engineering') || 
-      skill.includes('Architecture') ||
-      skill.includes('Programming') ||
-      skill.includes('Framework')) {
-    return 'specialized';
-  }
-  
-  return 'common';
+  // Default to specialized if no match is found
+  return 'specialized';
 };
 
 export const filterSkillsByCategory = (
