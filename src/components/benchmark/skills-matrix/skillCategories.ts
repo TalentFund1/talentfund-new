@@ -25,10 +25,6 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Google Cloud Professional Machine Learning Engineer'
   ];
 
-  if (certifications.includes(skill)) {
-    return 'certification';
-  }
-  
   if (specializedSkills.includes(skill)) {
     return 'specialized';
   }
@@ -37,7 +33,11 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     return 'common';
   }
   
-  // Default to common to avoid uncategorized skills
+  if (certifications.includes(skill)) {
+    return 'certification';
+  }
+  
+  // If the skill is not found in any category, return 'common' as default
   return 'common';
 };
 
@@ -61,7 +61,7 @@ export const getSkillCounts = (employeeId: string) => {
   const certification = skills.filter(skill => categorizeSkill(skill.title) === 'certification');
 
   return {
-    all: skills.length,
+    all: specialized.length + common.length + certification.length,
     specialized: specialized.length,
     common: common.length,
     certification: certification.length
