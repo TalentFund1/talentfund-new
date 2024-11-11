@@ -1,76 +1,53 @@
 export const isSpecializedSkill = (skill: string): boolean => {
   const specializedSkills = [
-    "Amazon Web Services",
-    "Python",
+    "Machine Learning",
+    "Deep Learning",
     "TensorFlow",
-    "MongoDB",
-    "Kubernetes",
     "PyTorch",
-    "Natural Language Processing",
-    "Computer Vision"
+    "Computer Vision",
+    "Natural Language Processing"
   ];
   
-  return specializedSkills.some(spec => 
-    skill.toLowerCase() === spec.toLowerCase()
-  );
+  return specializedSkills.includes(skill);
 };
 
 export const isCommonSkill = (skill: string): boolean => {
   const commonSkills = [
-    "Git",
-    "JavaScript",
-    "Java",
-    "SQL",
-    "Agile",
-    "Agile Leadership",
-    "Communication",
-    "Leadership",
-    "Project Management",
-    "Team Management",
+    "Python",
     "Problem Solving",
-    "Strategic Planning",
-    "Cross-cultural Communication",
-    "Team Management"
+    "Technical Writing"
   ];
   
-  return commonSkills.some(common => 
-    skill.toLowerCase() === common.toLowerCase()
-  ) && !isCertificationSkill(skill);
+  return commonSkills.includes(skill);
 };
 
 export const isCertificationSkill = (skill: string): boolean => {
-  const certKeywords = [
-    "AWS Certified",
-    "Azure Solutions Architect",
-    "Solutions Architect",
-    "Professional Scrum",
-    "PMP",
-    "CISSP",
-    "CKA",
-    "Administrator (CKA)",
-    "Certified",
-    "Certification",
-    "Certificate"
+  const certifications = [
+    "AWS Certified Machine Learning - Specialty",
+    "TensorFlow Developer Certificate",
+    "Google Cloud Professional Machine Learning Engineer"
   ];
   
-  return certKeywords.some(cert => 
-    skill.toLowerCase().includes(cert.toLowerCase())
-  );
+  return certifications.includes(skill);
 };
 
 export const categorizeSkills = (skills: string[]) => {
   const specialized = skills.filter(isSpecializedSkill);
+  const common = skills.filter(isCommonSkill);
   const certifications = skills.filter(isCertificationSkill);
-  const common = skills.filter(skill => 
-    !isSpecializedSkill(skill) && 
-    !isCertificationSkill(skill) && 
-    isCommonSkill(skill)
-  );
   
   return {
     all: skills.length,
     specialized: specialized.length,
     common: common.length,
     certification: certifications.length
+  };
+};
+
+export const getSkillsByCategory = (skills: string[]) => {
+  return {
+    specialized: skills.filter(isSpecializedSkill),
+    common: skills.filter(isCommonSkill),
+    certification: skills.filter(isCertificationSkill)
   };
 };
