@@ -1,6 +1,5 @@
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
@@ -8,13 +7,12 @@ import { roles } from "./data/rolesData";
 import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { RequiredSkillsSection } from "./sections/RequiredSkillsSection";
+import { PreferredSkillsSection } from "./sections/PreferredSkillsSection";
+import { CertificationsSection } from "./sections/CertificationsSection";
+import { RoleSkills } from "./types";
 
-interface Skill {
-  name: string;
-  level: "advanced" | "intermediate" | "beginner" | "unspecified";
-}
-
-const getSkillsForRole = (roleId: string) => {
+const getSkillsForRole = (roleId: string): RoleSkills => {
   if (roleId === "AI Engineer: P4") {
     return {
       required: [
@@ -140,74 +138,21 @@ export const RoleBenchmark = () => {
         <Separator className="my-6" />
 
         <div className="space-y-6">
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Required Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {skills.required.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {skills.required.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name}
-                  <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Preferred Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {skills.preferred.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {skills.preferred.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name}
-                  <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Certifications</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {skills.certifications.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {skills.certifications.map((cert) => (
-                <Badge 
-                  key={cert.name}
-                  variant="outline" 
-                  className="rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
-                >
-                  {cert.name}
-                  <div className={`h-2 w-2 rounded-full ${getLevelDot("advanced")}`} />
-                </Badge>
-              ))}
-            </div>
-          </div>
+          <RequiredSkillsSection 
+            skills={skills.required}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
+          <PreferredSkillsSection 
+            skills={skills.preferred}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
+          <CertificationsSection 
+            certifications={skills.certifications}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
         </div>
       </div>
     </div>
