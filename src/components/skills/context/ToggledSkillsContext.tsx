@@ -11,13 +11,22 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { id } = useParams<{ id: string }>();
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
-    const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
-    return savedSkills ? new Set(JSON.parse(savedSkills)) : new Set();
+    try {
+      const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
+      return savedSkills ? new Set(JSON.parse(savedSkills)) : new Set();
+    } catch (error) {
+      console.error('Error loading saved skills:', error);
+      return new Set();
+    }
   });
 
   useEffect(() => {
     if (id) {
-      localStorage.setItem(`toggledSkills_${id}`, JSON.stringify(Array.from(toggledSkills)));
+      try {
+        localStorage.setItem(`toggledSkills_${id}`, JSON.stringify(Array.from(toggledSkills)));
+      } catch (error) {
+        console.error('Error saving skills:', error);
+      }
     }
   }, [toggledSkills, id]);
 
