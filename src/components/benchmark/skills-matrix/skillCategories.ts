@@ -11,11 +11,12 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'PyTorch'
   ];
 
-  // Common skills for AI Engineer (exactly 3)
+  // Common skills for AI Engineer (exactly 4)
   const commonSkills = [
     'Python',
     'Problem Solving',
-    'Technical Writing'
+    'Technical Writing',
+    'Data Engineering' // Moved from specialized to common
   ];
 
   // Certifications for AI Engineer (exactly 3)
@@ -25,23 +26,20 @@ export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'cert
     'Google Cloud Professional Machine Learning Engineer'
   ];
 
-  // Check if it's a certification (exact match)
   if (certifications.includes(skill)) {
     return 'certification';
   }
   
-  // Check if it's a specialized skill (exact match)
   if (specializedSkills.includes(skill)) {
     return 'specialized';
   }
   
-  // Check if it's a common skill (exact match)
   if (commonSkills.includes(skill)) {
     return 'common';
   }
   
-  // Default to specialized if no match is found
-  return 'specialized';
+  // If no match is found, categorize as common instead of specialized
+  return 'common';
 };
 
 export const filterSkillsByCategory = (
