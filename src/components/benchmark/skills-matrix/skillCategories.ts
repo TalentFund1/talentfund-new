@@ -1,128 +1,91 @@
-import { getEmployeeSkills } from "./initialSkills";
+export const categorizeSkill = (skill: string): 'specialized' | 'common' | 'certification' => {
+  // Certification keywords that should trigger certification categorization
+  const certificationKeywords = [
+    'CISSP',
+    'AWS Certified',
+    'CompTIA',
+    'Security+',
+    'PMP',
+    'Project Management Professional',
+    'Certified Scrum Master',
+    'CSM',
+    'Professional Certification',
+    'Certified'
+  ];
 
-const skillSets = {
-  "123": { // AI Engineer
-    specialized: new Set([
-      'Machine Learning',
-      'Deep Learning',
-      'TensorFlow',
-      'Natural Language Processing', 
-      'Computer Vision',
-      'PyTorch'
-    ]),
-    common: new Set([
-      'Python',
-      'Problem Solving',
-      'Technical Writing'
-    ]),
-    certification: new Set([
-      'AWS Certified Machine Learning - Specialty',
-      'TensorFlow Developer Certificate',
-      'Google Cloud Professional Machine Learning Engineer'
-    ])
-  },
-  "124": { // Backend Engineer
-    specialized: new Set([
-      'Node.js',
-      'Database Design',
-      'API Development',
-      'System Architecture',
-      'Kubernetes',
-      'GraphQL'
-    ]),
-    common: new Set([
-      'Problem Solving',
-      'Code Review',
-      'Agile Methodologies'
-    ]),
-    certification: new Set([
-      'AWS Certified Solutions Architect',
-      'Kubernetes Administrator (CKA)',
-      'MongoDB Professional Developer'
-    ])
-  },
-  "125": { // Frontend Engineer
-    specialized: new Set([
-      'React',
-      'TypeScript',
-      'UI/UX Design',
-      'CSS/SASS',
-      'Next.js',
-      'Vue.js'
-    ]),
-    common: new Set([
-      'Cross-browser Compatibility',
-      'Responsive Design',
-      'Problem Solving'
-    ]),
-    certification: new Set([
-      'AWS Certified Developer - Associate',
-      'Google Mobile Web Specialist',
-      'Professional Scrum Developer'
-    ])
-  },
-  "126": { // Engineering Manager
-    specialized: new Set([
-      'System Design',
-      'Technical Architecture',
-      'Risk Management'
-    ]),
-    common: new Set([
-      'Team Leadership',
-      'Project Management',
-      'Strategic Planning',
-      'Stakeholder Management'
-    ]),
-    certification: new Set([
-      'Project Management Professional (PMP)',
-      'Certified Scrum Master (CSM)',
-      'ITIL Foundation'
-    ])
-  }
-};
+  // Specialized skills list (technical skills)
+  const specializedSkills = [
+    'Artificial Intelligence',
+    'Machine Learning',
+    'Deep Learning',
+    'Natural Language Processing',
+    'Computer Vision',
+    'Amazon Web Services',
+    'Docker',
+    'Kubernetes',
+    'DevSecOps',
+    'System Architecture',
+    'Data Engineering',
+    'IoT Development',
+    'Python',
+    'TensorFlow',
+    'PyTorch',
+    'Blockchain Development',
+    'Edge Computing',
+    '5G Network Architecture',
+    'Quantum Computing',
+    'Robotics Programming'
+  ];
 
-export const categorizeSkill = (skill: string, profileId: string = "123"): 'specialized' | 'common' | 'certification' => {
-  const profileSkills = skillSets[profileId as keyof typeof skillSets] || skillSets["123"];
+  // Common skills list (non-technical, transferable skills)
+  const commonSkills = [
+    'Technical Writing',
+    'Agile Project Management',
+    'Business Analysis',
+    'Risk Management',
+    'Strategic Planning',
+    'Documentation',
+    'Project Management',
+    'Team Management',
+    'Problem Solving',
+    'Communication',
+    'Leadership'
+  ];
 
-  if (profileSkills.specialized.has(skill)) {
-    return 'specialized';
-  }
-  
-  if (profileSkills.common.has(skill)) {
-    return 'common';
-  }
-  
-  if (profileSkills.certification.has(skill)) {
+  // Check if it's a certification
+  if (certificationKeywords.some(cert => 
+    skill.toLowerCase().includes(cert.toLowerCase())
+  )) {
     return 'certification';
   }
   
-  return 'common';
+  // Check if it's a specialized skill
+  if (specializedSkills.some(spec => 
+    skill.toLowerCase().includes(spec.toLowerCase())
+  )) {
+    return 'specialized';
+  }
+  
+  // Check if it's a common skill
+  if (commonSkills.some(common => 
+    skill.toLowerCase().includes(common.toLowerCase())
+  )) {
+    return 'common';
+  }
+  
+  // Default to specialized if no match is found
+  return 'specialized';
 };
 
 export const filterSkillsByCategory = (
   skills: Array<any>,
-  category: string,
-  profileId: string = "123"
+  category: string
 ): Array<any> => {
   if (category === 'all') {
     return skills;
   }
 
   return skills.filter(skill => 
-    categorizeSkill(skill.title, profileId) === category
+    categorizeSkill(skill.title) === category
   );
-};
-
-export const getSkillCounts = (profileId: string = "123") => {
-  const skills = getEmployeeSkills(profileId);
-  const specialized = skills.filter(skill => categorizeSkill(skill.title, profileId) === 'specialized');
-  const common = skills.filter(skill => categorizeSkill(skill.title, profileId) === 'common');
-  const certification = skills.filter(skill => categorizeSkill(skill.title, profileId) === 'certification');
-
-  return {
-    all: skills.length,
-    specialized: specialized.length,
-    common: common.length,
-    certification: certification.length
-  };
 };

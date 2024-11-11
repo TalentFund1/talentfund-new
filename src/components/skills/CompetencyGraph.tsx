@@ -6,7 +6,7 @@ import { SkillCell } from "./competency/SkillCell";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { skillsByCategory } from "./competency/skillsData";
 import { CategorySection } from "./competency/CategorySection";
-import { getSkillsByCategory } from "./competency/skillCategories";
+import { categorizeSkills, isSpecializedSkill, isCommonSkill, isCertificationSkill } from "./competency/skillCategories";
 import { useCompetencyStore } from "./competency/CompetencyState";
 import { useToast } from "@/components/ui/use-toast";
 import { TrackSelection } from "./TrackSelection";
@@ -38,26 +38,9 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
   const track = getTrackForRole(id || "");
   const jobTitle = jobTitles[id || "123"] || "AI Engineer";
 
-  const getSkillsForCategory = () => {
-    const skillsArray = Array.from(toggledSkills);
-    if (selectedCategory === "all") {
-      return skillsArray;
-    }
-    
-    const categorizedSkills = getSkillsByCategory(skillsArray);
-    return categorizedSkills[selectedCategory as keyof ReturnType<typeof getSkillsByCategory>] || [];
-  };
-
-  const uniqueSkills = getSkillsForCategory().sort();
-
-  const getSkillDetails = (skillName: string, level: string) => {
-    if (!skillsByCategory[selectedCategory]?.[track.toLowerCase()]?.[level]) {
-      return { level: "-", required: "-" };
-    }
-    return skillsByCategory[selectedCategory][track.toLowerCase()][level]?.find(
-      (s: { name: string; level: string; required: string; }) => s.name === skillName
-    ) || { level: "-", required: "-" };
-  };
+  useEffect(() => {
+    localStorage.setItem('selectedCategory', selectedCategory);
+  }, [selectedCategory]);
 
   const handleSave = () => {
     saveChanges();
@@ -73,6 +56,50 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
       title: "Changes cancelled",
       description: "Your changes have been discarded.",
     });
+  };
+
+  const getLevelsForTrack = () => {
+    return track === "Professional" 
+      ? ["P1", "P2", "P3", "P4", "P5", "P6"] 
+      : ["M3", "M4", "M5", "M6"];
+  };
+
+  const getSkillsForCategory = () => {
+    const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
+    return categoryData?.[track.toLowerCase()];
+  };
+
+  const skills = getSkillsForCategory() || {};
+  const levels = getLevelsForTrack();
+
+  const getSkillsByCategory = () => {
+    const skillsArray = Array.from(toggledSkills);
+    
+    if (selectedCategory === "all") {
+      return skillsArray;
+    }
+    
+    if (selectedCategory === "specialized") {
+      return skillsArray.filter(isSpecializedSkill);
+    }
+    
+    if (selectedCategory === "common") {
+      return skillsArray.filter(isCommonSkill);
+    }
+    
+    if (selectedCategory === "certification") {
+      return skillsArray.filter(isCertificationSkill);
+    }
+    
+    return [];
+  };
+
+  const uniqueSkills = getSkillsByCategory().sort();
+  const skillCounts = categorizeSkills(Array.from(toggledSkills));
+
+  const getSkillDetails = (skillName: string, level: string) => {
+    if (!skills || !skills[level]) return { level: "-", required: "-" };
+    return skills[level]?.find((s: { name: string; level: string; required: string; }) => s.name === skillName) || { level: "-", required: "-" };
   };
 
   return (
@@ -106,7 +133,7 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
       <CategorySection 
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        employeeId={id}
+        skillCounts={skillCounts}
       />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
@@ -116,10 +143,10 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
               <TableHead className="w-[200px] font-semibold bg-background/80 border-r border-border">
                 Skill
               </TableHead>
-              {getLevelsForTrack().map((level, index) => (
+              {levels.map((level, index) => (
                 <TableHead 
                   key={level} 
-                  className={`text-center bg-background/80 ${index !== getLevelsForTrack().length - 1 ? 'border-r' : ''} border-border`}
+                  className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
                 >
                   <div className="font-semibold">{level}</div>
                 </TableHead>
@@ -132,12 +159,12 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
                 <TableCell className="font-medium border-r border-border">
                   {skillName}
                 </TableCell>
-                {getLevelsForTrack().map((level, index) => (
+                {levels.map((level, index) => (
                   <SkillCell 
                     key={level}
                     skillName={skillName}
                     details={getSkillDetails(skillName, level)}
-                    isLastColumn={index === getLevelsForTrack().length - 1}
+                    isLastColumn={index === levels.length - 1}
                     levelKey={level}
                   />
                 ))}
@@ -149,7 +176,3 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
     </div>
   );
 };
-
-function getLevelsForTrack() {
-  return ["P1", "P2", "P3", "P4", "P5", "P6"];
-}

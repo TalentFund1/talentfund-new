@@ -35,6 +35,7 @@ export const initialSkills = {
       growth: "28%",
       confidence: "high"
     },
+    // Additional specialized skills
     {
       title: "Computer Vision",
       subcategory: "AI Applications",
@@ -56,6 +57,7 @@ export const initialSkills = {
       growth: "20%",
       confidence: "medium"
     },
+    // Common skills
     {
       title: "Problem Solving",
       subcategory: "Soft Skills",
@@ -70,6 +72,7 @@ export const initialSkills = {
       growth: "12%",
       confidence: "medium"
     },
+    // Certifications
     {
       title: "AWS Certified Machine Learning - Specialty",
       subcategory: "Cloud Certification",
@@ -128,6 +131,7 @@ export const initialSkills = {
       growth: "35%",
       confidence: "medium"
     },
+    // Additional specialized skills
     {
       title: "Kubernetes",
       subcategory: "Container Orchestration",
@@ -149,6 +153,7 @@ export const initialSkills = {
       growth: "20%",
       confidence: "high"
     },
+    // Common skills
     {
       title: "Agile Methodologies",
       subcategory: "Project Management",
@@ -163,6 +168,7 @@ export const initialSkills = {
       growth: "12%",
       confidence: "high"
     },
+    // Certifications
     {
       title: "AWS Certified Solutions Architect",
       subcategory: "Cloud Certification",
@@ -221,6 +227,7 @@ export const initialSkills = {
       growth: "35%",
       confidence: "medium"
     },
+    // Additional specialized skills
     {
       title: "Next.js",
       subcategory: "Frontend Frameworks",
@@ -242,6 +249,7 @@ export const initialSkills = {
       growth: "15%",
       confidence: "high"
     },
+    // Common skills
     {
       title: "Cross-browser Compatibility",
       subcategory: "Frontend Development",
@@ -256,6 +264,7 @@ export const initialSkills = {
       growth: "18%",
       confidence: "high"
     },
+    // Certifications
     {
       title: "AWS Certified Developer - Associate",
       subcategory: "Cloud Certification",
@@ -314,6 +323,7 @@ export const initialSkills = {
       growth: "30%",
       confidence: "medium"
     },
+    // Additional specialized skills
     {
       title: "System Design",
       subcategory: "Architecture",
@@ -335,6 +345,7 @@ export const initialSkills = {
       growth: "28%",
       confidence: "medium"
     },
+    // Common skills
     {
       title: "Stakeholder Management",
       subcategory: "Leadership",
@@ -349,6 +360,7 @@ export const initialSkills = {
       growth: "18%",
       confidence: "high"
     },
+    // Certifications
     {
       title: "Project Management Professional (PMP)",
       subcategory: "Management Certification",
