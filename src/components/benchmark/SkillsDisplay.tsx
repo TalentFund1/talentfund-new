@@ -1,5 +1,4 @@
 import { RequirementSection } from "./RequirementSection";
-import { categorizeSkill } from "./skills-matrix/skillCategories";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -29,52 +28,56 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills }: SkillsDispl
 
   return (
     <div className="space-y-8">
-      <div className="space-y-6">
+      <div className="space-y-4">
         <h3 className="text-lg font-semibold">Required Skills ({requiredAll.length})</h3>
-        <RequirementSection 
-          title="All Required Skills"
-          count={requiredAll.length}
-          skills={requiredAll}
-        />
-        <RequirementSection 
-          title="Specialized Skills"
-          count={requiredSpecialized.length}
-          skills={requiredSpecialized}
-        />
-        <RequirementSection 
-          title="Common Skills"
-          count={requiredCommon.length}
-          skills={requiredCommon}
-        />
-        <RequirementSection 
-          title="Certifications"
-          count={requiredCertifications.length}
-          skills={requiredCertifications}
-        />
+        <div className="grid grid-cols-4 gap-4">
+          <RequirementSection 
+            title="All Categories"
+            count={requiredAll.length}
+            skills={requiredAll}
+          />
+          <RequirementSection 
+            title="Specialized Skills"
+            count={requiredSpecialized.length}
+            skills={requiredSpecialized}
+          />
+          <RequirementSection 
+            title="Common Skills"
+            count={requiredCommon.length}
+            skills={requiredCommon}
+          />
+          <RequirementSection 
+            title="Certification"
+            count={requiredCertifications.length}
+            skills={requiredCertifications}
+          />
+        </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         <h3 className="text-lg font-semibold">Preferred Skills ({preferredAll.length})</h3>
-        <RequirementSection 
-          title="All Preferred Skills"
-          count={preferredAll.length}
-          skills={preferredAll}
-        />
-        <RequirementSection 
-          title="Specialized Skills"
-          count={preferredSpecialized.length}
-          skills={preferredSpecialized}
-        />
-        <RequirementSection 
-          title="Common Skills"
-          count={preferredCommon.length}
-          skills={preferredCommon}
-        />
-        <RequirementSection 
-          title="Certifications"
-          count={preferredCertifications.length}
-          skills={preferredCertifications}
-        />
+        <div className="grid grid-cols-4 gap-4">
+          <RequirementSection 
+            title="All Categories"
+            count={preferredAll.length}
+            skills={preferredAll}
+          />
+          <RequirementSection 
+            title="Specialized Skills"
+            count={preferredSpecialized.length}
+            skills={preferredSpecialized}
+          />
+          <RequirementSection 
+            title="Common Skills"
+            count={preferredCommon.length}
+            skills={preferredCommon}
+          />
+          <RequirementSection 
+            title="Certification"
+            count={preferredCertifications.length}
+            skills={preferredCertifications}
+          />
+        </div>
       </div>
     </div>
   );
