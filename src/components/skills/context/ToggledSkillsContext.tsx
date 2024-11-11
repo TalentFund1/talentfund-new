@@ -11,44 +11,46 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { id } = useParams<{ id: string }>();
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
+    if (!id) return new Set<string>();
+    
     try {
       const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
       if (savedSkills) {
         const parsedSkills = JSON.parse(savedSkills);
-        // Ensure we're creating a Set from the parsed array
-        return new Set(Array.isArray(parsedSkills) ? parsedSkills : []);
+        return new Set<string>(parsedSkills);
       }
-      return new Set();
     } catch (error) {
       console.error('Error loading saved skills:', error);
-      return new Set();
     }
+    return new Set<string>();
   });
 
   // Save to localStorage whenever toggledSkills changes
   useEffect(() => {
-    if (id) {
-      try {
-        const skillsArray = Array.from(toggledSkills);
-        localStorage.setItem(`toggledSkills_${id}`, JSON.stringify(skillsArray));
-      } catch (error) {
-        console.error('Error saving skills:', error);
-      }
+    if (!id) return;
+
+    try {
+      const skillsArray = Array.from(toggledSkills);
+      localStorage.setItem(`toggledSkills_${id}`, JSON.stringify(skillsArray));
+    } catch (error) {
+      console.error('Error saving skills:', error);
     }
   }, [toggledSkills, id]);
 
-  // Update toggledSkills when id changes
+  // Load skills when id changes
   useEffect(() => {
-    if (id) {
-      try {
-        const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
-        if (savedSkills) {
-          const parsedSkills = JSON.parse(savedSkills);
-          setToggledSkills(new Set(Array.isArray(parsedSkills) ? parsedSkills : []));
+    if (!id) return;
+
+    try {
+      const savedSkills = localStorage.getItem(`toggledSkills_${id}`);
+      if (savedSkills) {
+        const parsedSkills = JSON.parse(savedSkills);
+        if (Array.isArray(parsedSkills)) {
+          setToggledSkills(new Set<string>(parsedSkills));
         }
-      } catch (error) {
-        console.error('Error loading saved skills for new id:', error);
       }
+    } catch (error) {
+      console.error('Error loading saved skills for new id:', error);
     }
   }, [id]);
 
