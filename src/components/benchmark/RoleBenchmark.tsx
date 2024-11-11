@@ -11,45 +11,46 @@ import { RequiredSkillsSection } from "./sections/RequiredSkillsSection";
 import { PreferredSkillsSection } from "./sections/PreferredSkillsSection";
 import { CertificationsSection } from "./sections/CertificationsSection";
 import { RoleSkills } from "./types";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 const getSkillsForRole = (roleId: string): RoleSkills => {
-  // Extract role level from roleId (e.g., "P4" from "AI Engineer: P4")
   const roleLevel = roleId.split(": ")[1];
   
   if (roleId.includes("AI Engineer")) {
     if (roleLevel === "P4") {
       return {
         required: [
-          { name: "Computer Vision", level: "advanced" },
           { name: "Machine Learning", level: "advanced" },
-          { name: "Natural Language Processing", level: "advanced" },
+          { name: "Deep Learning", level: "advanced" },
           { name: "Python", level: "advanced" },
-          { name: "TensorFlow", level: "advanced" }
+          { name: "TensorFlow", level: "advanced" },
+          { name: "Natural Language Processing", level: "advanced" },
+          { name: "Computer Vision", level: "advanced" }
         ],
         preferred: [
           { name: "AWS", level: "intermediate" },
-          { name: "Deep Learning", level: "intermediate" },
-          { name: "Problem Solving", level: "intermediate" },
           { name: "PyTorch", level: "intermediate" },
+          { name: "Problem Solving", level: "intermediate" },
           { name: "Technical Writing", level: "intermediate" },
-          { name: "TensorFlow", level: "intermediate" }
+          { name: "Data Engineering", level: "intermediate" }
         ],
         certifications: [
           { name: "AWS Certified Machine Learning - Specialty" },
-          { name: "Google Cloud Professional Machine Learning Engineer" },
-          { name: "TensorFlow Developer Certificate" }
+          { name: "TensorFlow Developer Certificate" },
+          { name: "Google Cloud Professional Machine Learning Engineer" }
         ]
       };
     } else if (roleLevel === "P3") {
       return {
         required: [
-          { name: "Machine Learning", level: "advanced" },
-          { name: "Google Cloud Professional Machine Learning Engineer", level: "intermediate" },
-          { name: "Deep Learning", level: "intermediate" }
+          { name: "Machine Learning", level: "intermediate" },
+          { name: "Python", level: "intermediate" },
+          { name: "Deep Learning", level: "intermediate" },
+          { name: "Natural Language Processing", level: "intermediate" }
         ],
         preferred: [
-          { name: "Python", level: "intermediate" },
-          { name: "TensorFlow", level: "intermediate" },
+          { name: "AWS", level: "beginner" },
+          { name: "TensorFlow", level: "beginner" },
           { name: "Problem Solving", level: "intermediate" }
         ],
         certifications: [
@@ -60,7 +61,6 @@ const getSkillsForRole = (roleId: string): RoleSkills => {
     }
   }
   
-  // Default fallback skills
   return {
     required: [
       { name: "React", level: "advanced" },
@@ -84,6 +84,14 @@ export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const { setCurrentRole } = useSkillsMatrixStore();
+
+  const handleRoleSelect = (roleId: string) => {
+    setValue(roleId);
+    setOpen(false);
+    // Update the skills matrix state when role changes
+    setCurrentRole(roleId);
+  };
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -141,10 +149,7 @@ export const RoleBenchmark = () => {
                     {roles.map((role) => (
                       <CommandItem
                         key={role.id}
-                        onSelect={() => {
-                          setValue(role.id === value ? "" : role.id);
-                          setOpen(false);
-                        }}
+                        onSelect={() => handleRoleSelect(role.id)}
                       >
                         <Check
                           className={cn(
