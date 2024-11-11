@@ -7,6 +7,7 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
+import { CompetencyGraph } from "../skills/CompetencyGraph";
 
 const roles = {
   "123": "AI Engineer",
@@ -25,7 +26,6 @@ export const RoleBenchmark = () => {
   const currentTrack = getTrackForRole(selectedRole);
 
   useEffect(() => {
-    // Update selected level when track changes
     if (currentTrack === "Professional" && selectedLevel.toLowerCase().startsWith("m")) {
       setSelectedLevel("p4");
     } else if (currentTrack === "Managerial" && selectedLevel.toLowerCase().startsWith("p")) {
@@ -73,6 +73,8 @@ export const RoleBenchmark = () => {
           selectedRoleSkills={selectedRoleSkills}
           toggledSkills={toggledSkills}
         />
+
+        <CompetencyGraph roleId={selectedRole} track={currentTrack} />
       </div>
     </div>
   );

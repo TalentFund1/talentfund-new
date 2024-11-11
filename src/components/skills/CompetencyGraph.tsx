@@ -11,10 +11,10 @@ import { useCompetencyStore } from "./competency/CompetencyState";
 import { useToast } from "@/components/ui/use-toast";
 import { TrackSelection } from "./TrackSelection";
 import { useTrack } from "./context/TrackContext";
-import { useParams } from "react-router-dom";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
+  roleId?: string;
 }
 
 const jobTitles: { [key: string]: string } = {
@@ -24,19 +24,18 @@ const jobTitles: { [key: string]: string } = {
   "126": "Engineering Manager"
 };
 
-export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) => {
+export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraphProps) => {
   const { toggledSkills } = useToggledSkills();
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     const savedCategory = localStorage.getItem('selectedCategory');
     return savedCategory || "all";
   });
-  const { id } = useParams<{ id: string }>();
   const { getTrackForRole } = useTrack();
   const { hasChanges, saveChanges, cancelChanges } = useCompetencyStore();
   const { toast } = useToast();
 
-  const track = getTrackForRole(id || "");
-  const jobTitle = jobTitles[id || "123"] || "AI Engineer";
+  const track = roleId ? getTrackForRole(roleId) : initialTrack || "Professional";
+  const jobTitle = roleId ? jobTitles[roleId] || "AI Engineer" : "AI Engineer";
 
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
@@ -74,7 +73,7 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
 
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
-    const profileId = id || "123";
+    const profileId = roleId || "123";
     
     if (selectedCategory === "all") {
       return skillsArray;
@@ -96,7 +95,7 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
   };
 
   const uniqueSkills = getSkillsByCategory().sort();
-  const skillCounts = categorizeSkills(Array.from(toggledSkills), id || "123");
+  const skillCounts = categorizeSkills(Array.from(toggledSkills), roleId || "123");
 
   const getSkillDetails = (skillName: string, level: string) => {
     if (!skills || !skills[level]) return { level: "-", required: "-" };
