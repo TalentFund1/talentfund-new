@@ -6,6 +6,7 @@ interface SkillsTableProps {
     title: string;
     subcategory: string;
     level: string;
+    category?: string;
   }>;
   roleLevel: string;
   levels: string[];

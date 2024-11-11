@@ -15,9 +15,26 @@ interface RoleDetailsProps {
 }
 
 export const RoleDetails = ({ role }: RoleDetailsProps) => {
+  // Extract the numeric part of the role ID (e.g., "role-123" -> "123")
   const roleId = role.id.split('-')[1];
+  
+  // Get role-specific skills configuration
   const skills = roleSkills[roleId as keyof typeof roleSkills];
+  
+  // Get the actual skills data for this role
   const matrixSkills = initialSkills[roleId as keyof typeof initialSkills] || [];
+
+  // Combine skills data with role configuration
+  const combinedSkills = matrixSkills.map(skill => ({
+    ...skill,
+    category: skills?.specialized.some(s => s.title === skill.title) 
+      ? 'specialized'
+      : skills?.common.some(s => s.title === skill.title)
+      ? 'common'
+      : skills?.certifications.some(s => s.title === skill.title)
+      ? 'certifications'
+      : 'other'
+  }));
 
   const descriptions = {
     "AI Engineer": "An AI Engineer specializes in developing and implementing artificial intelligence and machine learning solutions. They work with various AI frameworks and tools to create intelligent systems.",
@@ -44,10 +61,10 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
     : ["M3", "M4", "M5", "M6"];
 
   const skillCounts = {
-    all: matrixSkills.length,
-    specialized: matrixSkills.filter(skill => skills?.specialized.some(s => s.title === skill.title)).length,
-    common: matrixSkills.filter(skill => skills?.common.some(s => s.title === skill.title)).length,
-    certifications: matrixSkills.filter(skill => skills?.certifications.some(s => s.title === skill.title)).length
+    all: combinedSkills.length,
+    specialized: combinedSkills.filter(skill => skill.category === 'specialized').length,
+    common: combinedSkills.filter(skill => skill.category === 'common').length,
+    certifications: combinedSkills.filter(skill => skill.category === 'certifications').length
   };
 
   return (
@@ -89,7 +106,7 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
         <TabsContent value="all">
           <Card>
             <SkillsTable 
-              skills={matrixSkills}
+              skills={combinedSkills}
               roleLevel={role.level}
               levels={levels}
             />
@@ -99,9 +116,7 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
         <TabsContent value="specialized">
           <Card>
             <SkillsTable 
-              skills={matrixSkills.filter(skill => 
-                skills?.specialized.some(s => s.title === skill.title)
-              )}
+              skills={combinedSkills.filter(skill => skill.category === 'specialized')}
               roleLevel={role.level}
               levels={levels}
             />
@@ -111,9 +126,7 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
         <TabsContent value="common">
           <Card>
             <SkillsTable 
-              skills={matrixSkills.filter(skill => 
-                skills?.common.some(s => s.title === skill.title)
-              )}
+              skills={combinedSkills.filter(skill => skill.category === 'common')}
               roleLevel={role.level}
               levels={levels}
             />
@@ -123,9 +136,7 @@ export const RoleDetails = ({ role }: RoleDetailsProps) => {
         <TabsContent value="certifications">
           <Card>
             <SkillsTable 
-              skills={matrixSkills.filter(skill => 
-                skills?.certifications.some(s => s.title === skill.title)
-              )}
+              skills={combinedSkills.filter(skill => skill.category === 'certifications')}
               roleLevel={role.level}
               levels={levels}
             />
