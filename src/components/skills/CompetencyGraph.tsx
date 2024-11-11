@@ -95,7 +95,6 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
   };
 
   const uniqueSkills = getSkillsByCategory().sort();
-  const skillCounts = categorizeSkills(Array.from(toggledSkills));
 
   const getSkillDetails = (skillName: string, level: string) => {
     if (!skills || !skills[level]) return { level: "-", required: "-" };
@@ -133,7 +132,7 @@ export const CompetencyGraph = ({ track: initialTrack }: CompetencyGraphProps) =
       <CategorySection 
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        skillCounts={skillCounts}
+        employeeId={id}
       />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
