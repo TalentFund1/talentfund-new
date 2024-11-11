@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useState } from "react";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 interface Skill {
   name: string;
@@ -21,6 +22,7 @@ const roles = {
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string>("125");
+  const { toggledSkills } = useToggledSkills();
 
   const getLevelStyles = (level: string) => {
     return "border-[#CCDBFF]";
@@ -40,6 +42,19 @@ export const RoleBenchmark = () => {
   };
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+
+  // Filter skills based on toggledSkills
+  const filteredSpecializedSkills = selectedRoleSkills.specialized.filter(
+    skill => toggledSkills.has(skill.title)
+  );
+
+  const filteredCommonSkills = selectedRoleSkills.common.filter(
+    skill => toggledSkills.has(skill.title)
+  );
+
+  const filteredCertifications = selectedRoleSkills.certifications.filter(
+    cert => toggledSkills.has(cert.title)
+  );
 
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
@@ -88,12 +103,12 @@ export const RoleBenchmark = () => {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">Specialized Skills</span>
                   <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                    {selectedRoleSkills.specialized.length}
+                    {filteredSpecializedSkills.length}
                   </span>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                {selectedRoleSkills.specialized.map((skill) => (
+                {filteredSpecializedSkills.map((skill) => (
                   <Badge 
                     key={skill.title} 
                     variant="outline" 
@@ -110,12 +125,12 @@ export const RoleBenchmark = () => {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">Common Skills</span>
                   <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                    {selectedRoleSkills.common.length}
+                    {filteredCommonSkills.length}
                   </span>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                {selectedRoleSkills.common.map((skill) => (
+                {filteredCommonSkills.map((skill) => (
                   <Badge 
                     key={skill.title} 
                     variant="outline" 
@@ -132,12 +147,12 @@ export const RoleBenchmark = () => {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">Certifications</span>
                   <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                    {selectedRoleSkills.certifications.length}
+                    {filteredCertifications.length}
                   </span>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                {selectedRoleSkills.certifications.map((cert) => (
+                {filteredCertifications.map((cert) => (
                   <Badge 
                     key={cert.title}
                     variant="outline" 
