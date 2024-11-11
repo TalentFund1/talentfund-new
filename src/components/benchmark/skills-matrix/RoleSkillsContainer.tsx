@@ -44,7 +44,13 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
 
   return (
     <div className="space-y-6 mt-6">
-      <SkillSection title="Required Skills" count={required.length}>
+      <div className="rounded-2xl border border-border bg-white p-6 w-full">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-sm font-medium">Required Skills</span>
+          <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+            {required.length}
+          </span>
+        </div>
         <div className="flex flex-wrap gap-2">
           {required.map((skill) => (
             <Badge 
@@ -57,9 +63,15 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
             </Badge>
           ))}
         </div>
-      </SkillSection>
+      </div>
 
-      <SkillSection title="Preferred Skills" count={preferred.length}>
+      <div className="rounded-2xl border border-border bg-white p-6 w-full">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-sm font-medium">Preferred Skills</span>
+          <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+            {preferred.length}
+          </span>
+        </div>
         <div className="flex flex-wrap gap-2">
           {preferred.map((skill) => (
             <Badge 
@@ -72,9 +84,15 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
             </Badge>
           ))}
         </div>
-      </SkillSection>
+      </div>
 
-      <SkillSection title="Certifications" count={certifications.length}>
+      <div className="rounded-2xl border border-border bg-white p-6 w-full">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-sm font-medium">Certifications</span>
+          <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+            {certifications.length}
+          </span>
+        </div>
         <div className="flex flex-wrap gap-2">
           {certifications.map((cert) => (
             <Badge 
@@ -87,7 +105,7 @@ export const RoleSkillsContainer = ({ selectedRole }: RoleSkillsContainerProps) 
             </Badge>
           ))}
         </div>
-      </SkillSection>
+      </div>
     </div>
   );
 };
