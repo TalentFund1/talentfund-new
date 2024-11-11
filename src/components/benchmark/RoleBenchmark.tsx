@@ -62,21 +62,9 @@ const getSkillsForRole = (roleId: string): RoleSkills => {
   }
   
   return {
-    required: [
-      { name: "React", level: "advanced" },
-      { name: "JavaScript", level: "advanced" },
-      { name: "GraphQL", level: "intermediate" },
-      { name: "HTML and CSS3", level: "advanced" },
-      { name: "IPA Integrations", level: "intermediate" }
-    ],
-    preferred: [
-      { name: "UI/UX Design Principles", level: "intermediate" },
-      { name: "Communication", level: "intermediate" },
-      { name: "Angular", level: "beginner" }
-    ],
-    certifications: [
-      { name: "Cybersecurity License" }
-    ]
+    required: [],
+    preferred: [],
+    certifications: []
   };
 };
 
@@ -89,7 +77,6 @@ export const RoleBenchmark = () => {
   const handleRoleSelect = (roleId: string) => {
     setValue(roleId);
     setOpen(false);
-    // Update the skills matrix state when role changes
     setCurrentRole(roleId);
   };
 
@@ -111,7 +98,11 @@ export const RoleBenchmark = () => {
   };
 
   const selectedRole = value ? roles.find((role) => role.id === value) : null;
-  const skills = getSkillsForRole(selectedRole?.title || "");
+  const skills = selectedRole ? getSkillsForRole(selectedRole?.title || "") : {
+    required: [],
+    preferred: [],
+    certifications: []
+  };
 
   return (
     <div className="space-y-6">
@@ -136,7 +127,7 @@ export const RoleBenchmark = () => {
                 aria-expanded={open}
                 className="w-full justify-between bg-white"
               >
-                {selectedRole ? `${selectedRole.title}: ${selectedRole.level}` : "Select role..."}
+                {selectedRole ? selectedRole.title : "Select role..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -157,7 +148,7 @@ export const RoleBenchmark = () => {
                             value === role.id ? "opacity-100" : "opacity-0"
                           )}
                         />
-                        {role.title}: {role.level}
+                        {role.title}
                       </CommandItem>
                     ))}
                   </CommandGroup>

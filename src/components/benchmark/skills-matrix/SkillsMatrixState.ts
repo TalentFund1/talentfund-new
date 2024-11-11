@@ -8,8 +8,10 @@ interface SkillState {
 interface SkillsMatrixState {
   originalStates: Record<string, SkillState>;
   currentStates: Record<string, SkillState>;
+  currentRole: string;
   hasChanges: boolean;
   setSkillState: (skillTitle: string, level: string, requirement: string) => void;
+  setCurrentRole: (role: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -17,6 +19,7 @@ interface SkillsMatrixState {
 export const useSkillsMatrixStore = create<SkillsMatrixState>((set) => ({
   originalStates: {},
   currentStates: {},
+  currentRole: '',
   hasChanges: false,
   setSkillState: (skillTitle, level, requirement) =>
     set((state) => {
@@ -29,6 +32,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>((set) => ({
         hasChanges: JSON.stringify(newStates) !== JSON.stringify(state.originalStates)
       };
     }),
+  setCurrentRole: (role) => set({ currentRole: role }),
   saveChanges: () =>
     set((state) => ({
       originalStates: { ...state.currentStates },
