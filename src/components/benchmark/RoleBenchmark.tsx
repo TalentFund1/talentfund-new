@@ -18,21 +18,9 @@ const RoleBenchmark = () => {
   const selectedRole = value ? roles.find((role) => role.id === value) : null;
 
   const handleSkillProfileClick = () => {
-    // Map role titles to their corresponding IDs in the skills data
-    const roleIdMap: { [key: string]: string } = {
-      "AI Engineer": "123",
-      "Backend Engineer": "124",
-      "Frontend Engineer": "125",
-      "Engineering Manager": "126"
-    };
-
     if (selectedRole) {
-      const skillProfileId = roleIdMap[selectedRole.title];
-      if (skillProfileId) {
-        navigate(`/skills/${skillProfileId}`);
-      } else {
-        navigate('/skills');
-      }
+      const roleId = selectedRole.id.split('-')[1]; // Extract the numeric part
+      navigate(`/skills/${roleId}`);
     } else {
       navigate('/skills');
     }
