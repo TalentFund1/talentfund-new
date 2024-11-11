@@ -13,6 +13,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
 import { Sidebar } from "@/components/Sidebar";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
+import { RoleBenchmarkWrapper } from "@/components/benchmark/RoleBenchmarkWrapper";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
@@ -101,7 +102,7 @@ const SkillProfileDetail = () => {
                   </TabsList>
 
                   <TabsContent value="skills">
-                    <SelectBenchmark />
+                    <RoleBenchmarkWrapper />
                     <SkillProfileMatrix />
                   </TabsContent>
 

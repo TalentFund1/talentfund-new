@@ -1,17 +1,10 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useNavigate } from "react-router-dom";
-import { roleSkills } from "../skills/data/roleSkills";
 import { useState, useEffect } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
-
-interface Skill {
-  name: string;
-  level: "advanced" | "intermediate" | "beginner" | "unspecified";
-}
+import { roleSkills } from "../skills/data/roleSkills";
+import { RoleBenchmarkHeader } from "./components/RoleBenchmarkHeader";
+import { SkillSection } from "./components/SkillSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -21,7 +14,6 @@ const roles = {
 };
 
 export const RoleBenchmark = () => {
-  const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string>("125");
   const [selectedLevel, setSelectedLevel] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
@@ -36,7 +28,6 @@ export const RoleBenchmark = () => {
   };
 
   useEffect(() => {
-    // Set default level when track changes
     const levels = getLevels();
     setSelectedLevel(levels[0]);
   }, [track]);
@@ -72,132 +63,43 @@ export const RoleBenchmark = () => {
     cert => toggledSkills.has(cert.title)
   );
 
-  const handleSeeSkillProfile = () => {
-    navigate(`/skills/${selectedRole}`);
-  };
-
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
-          <Button 
-            variant="outline" 
-            className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-            onClick={handleSeeSkillProfile}
-          >
-            See Skill Profile
-          </Button>
+      <RoleBenchmarkHeader 
+        selectedRole={selectedRole}
+        selectedLevel={selectedLevel}
+        roles={roles}
+        levels={getLevels()}
+        onRoleChange={setSelectedRole}
+        onLevelChange={setSelectedLevel}
+      />
+
+      <Separator className="my-6" />
+
+      {selectedRoleSkills && (
+        <div className="space-y-6">
+          <SkillSection 
+            title="Specialized Skills"
+            skills={filteredSpecializedSkills}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
+
+          <SkillSection 
+            title="Common Skills"
+            skills={filteredCommonSkills}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
+
+          <SkillSection 
+            title="Certifications"
+            skills={filteredCertifications}
+            getLevelStyles={getLevelStyles}
+            getLevelDot={getLevelDot}
+          />
         </div>
-        
-        <div className="flex items-center gap-4">
-          <Select 
-            value={selectedRole}
-            onValueChange={(value) => setSelectedRole(value)}
-          >
-            <SelectTrigger className="w-[400px] bg-white">
-              <SelectValue placeholder="Select Role">
-                {roles[selectedRole as keyof typeof roles]}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(roles).map(([id, title]) => (
-                <SelectItem key={id} value={id}>
-                  {title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select 
-            value={selectedLevel}
-            onValueChange={setSelectedLevel}
-          >
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="Select Level" />
-            </SelectTrigger>
-            <SelectContent>
-              {getLevels().map((level) => (
-                <SelectItem key={level} value={level}>
-                  {level}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Separator className="my-6" />
-
-        {selectedRoleSkills && (
-          <div className="space-y-6">
-            <div className="rounded-2xl border border-border bg-white p-6 w-full">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">Specialized Skills</span>
-                  <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                    {filteredSpecializedSkills.length}
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {filteredSpecializedSkills.map((skill) => (
-                  <Badge 
-                    key={skill.title} 
-                    variant="outline" 
-                    className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                  >
-                    {skill.title} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-white p-6 w-full">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">Common Skills</span>
-                  <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                    {filteredCommonSkills.length}
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {filteredCommonSkills.map((skill) => (
-                  <Badge 
-                    key={skill.title} 
-                    variant="outline" 
-                    className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                  >
-                    {skill.title} <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-white p-6 w-full">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">Certifications</span>
-                  <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                    {filteredCertifications.length}
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {filteredCertifications.map((cert) => (
-                  <Badge 
-                    key={cert.title}
-                    variant="outline" 
-                    className="rounded-md px-4 py-2 border border-border bg-white"
-                  >
-                    {cert.title}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 };
