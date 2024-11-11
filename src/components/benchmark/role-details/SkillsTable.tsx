@@ -26,16 +26,20 @@ export const SkillsTable = ({ skills, roleLevel, levels }: SkillsTableProps) => 
         </TableRow>
       </TableHeader>
       <TableBody>
-        {skills.map((skill) => (
-          <TableRow key={skill.title}>
+        {skills.map((skill, index) => (
+          <TableRow key={`${skill.title}-${index}`}>
             <TableCell className="font-medium border-r border-[#CCDBFF]">{skill.title}</TableCell>
             <TableCell className="border-r border-[#CCDBFF]">{skill.subcategory}</TableCell>
             {levels.map((level) => (
-              <SkillLevelCell
-                key={`${skill.title}-${level}`}
-                initialLevel={level === roleLevel ? skill.level : "unspecified"}
-                skillTitle={skill.title}
-              />
+              <TableCell 
+                key={`${skill.title}-${level}`} 
+                className="text-center border-r border-[#CCDBFF]"
+              >
+                <SkillLevelCell
+                  initialLevel={level === roleLevel ? skill.level : "unspecified"}
+                  skillTitle={skill.title}
+                />
+              </TableCell>
             ))}
           </TableRow>
         ))}
