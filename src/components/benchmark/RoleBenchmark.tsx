@@ -8,6 +8,7 @@ import { roles } from "./data/rolesData";
 import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SkillSection } from "../skills/SkillSection";
 
 interface Skill {
   name: string;
@@ -32,7 +33,7 @@ const certifications = [
   { name: "Cybersecurity License" }
 ];
 
-export const RoleBenchmark = () => {
+const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -113,79 +114,85 @@ export const RoleBenchmark = () => {
           </Popover>
         </div>
 
-        <Separator className="my-6" />
+        {selectedRole && (
+          <>
+            <Separator className="my-6" />
 
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Required Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {requiredSkills.length}
-                </span>
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-border bg-white p-6 w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">Required Skills</span>
+                    <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                      {requiredSkills.length}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {requiredSkills.map((skill) => (
+                    <Badge 
+                      key={skill.name} 
+                      variant="outline" 
+                      className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
+                    >
+                      {skill.name} 
+                      <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-white p-6 w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">Preferred Skills</span>
+                    <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                      {preferredSkills.length}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {preferredSkills.map((skill) => (
+                    <Badge 
+                      key={skill.name} 
+                      variant="outline" 
+                      className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
+                    >
+                      {skill.name}
+                      <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-white p-6 w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">Certifications</span>
+                    <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                      {certifications.length}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {certifications.map((cert) => (
+                    <Badge 
+                      key={cert.name}
+                      variant="outline" 
+                      className="rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
+                    >
+                      {cert.name}
+                      <div className={`h-2 w-2 rounded-full ${getLevelDot("advanced")}`} />
+                    </Badge>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {requiredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name} 
-                  <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Preferred Skills</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {preferredSkills.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {preferredSkills.map((skill) => (
-                <Badge 
-                  key={skill.name} 
-                  variant="outline" 
-                  className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles(skill.level)}`}
-                >
-                  {skill.name}
-                  <div className={`h-2 w-2 rounded-full ${getLevelDot(skill.level)}`} />
-                </Badge>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Certifications</span>
-                <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                  {certifications.length}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {certifications.map((cert) => (
-                <Badge 
-                  key={cert.name}
-                  variant="outline" 
-                  className="rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
-                >
-                  {cert.name}
-                  <div className={`h-2 w-2 rounded-full ${getLevelDot("advanced")}`} />
-                </Badge>
-              ))}
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
 };
+
+export default RoleBenchmark;
