@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { roleSkills } from "@/components/skills/data/roleSkills";
+import { RoleSkillsContainer } from "./skills-matrix/RoleSkillsContainer";
 
 interface RoleDetailsProps {
   role: {
