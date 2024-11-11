@@ -54,6 +54,8 @@ export const RoleBenchmark = () => {
     }
   };
 
+  const selectedRole = value ? roles.find((role) => role.id === value) : null;
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -77,9 +79,7 @@ export const RoleBenchmark = () => {
                 aria-expanded={open}
                 className="w-full justify-between bg-white"
               >
-                {value
-                  ? roles.find((role) => role.id === value)?.title + ": " + roles.find((role) => role.id === value)?.level
-                  : "Select role..."}
+                {selectedRole ? `${selectedRole.title}: ${selectedRole.level}` : "Select role..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -88,7 +88,7 @@ export const RoleBenchmark = () => {
                 <CommandInput placeholder="Search roles..." />
                 <CommandEmpty>No role found.</CommandEmpty>
                 <CommandGroup>
-                  {(roles || []).map((role) => (
+                  {roles.map((role) => (
                     <CommandItem
                       key={role.id}
                       value={role.id}

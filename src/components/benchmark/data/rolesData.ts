@@ -32,13 +32,5 @@ export const roles: Role[] = [
   { id: "em-m3", title: "Engineering Manager", track: "Managerial", level: "M3" },
   { id: "em-m4", title: "Senior Engineering Manager", track: "Managerial", level: "M4" },
   { id: "em-m5", title: "Director of Engineering", track: "Managerial", level: "M5" },
-  { id: "em-m6", title: "Senior Director of Engineering", track: "Managerial", level: "M6" },
+  { id: "em-m6", title: "Senior Director of Engineering", track: "Managerial", level: "M6" }
 ];
-
-export const getRoleById = (id: string): Role | undefined => {
-  return roles.find(role => role.id === id);
-};
-
-export const getRoleByTitleAndLevel = (title: string, level: string): Role | undefined => {
-  return roles.find(role => role.title === title && role.level === level);
-};
