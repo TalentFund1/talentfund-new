@@ -19,7 +19,9 @@ export const RequirementSection = ({
   isSelected,
   onClick 
 }: RequirementSectionProps) => {
-  const isAllCategories = title === 'All Categories';
+  // Get unique count of skills by title
+  const uniqueCount = new Set(skills.map(skill => skill.title)).size;
+  const displayCount = title === 'All Categories' ? uniqueCount : count;
   
   return (
     <button
@@ -45,7 +47,7 @@ export const RequirementSection = ({
             {title}
           </span>
           <span className="text-xs text-muted-foreground">
-            {count} {count === 1 ? 'skill' : 'skills'}
+            {displayCount} {displayCount === 1 ? 'skill' : 'skills'}
           </span>
         </div>
       </Card>
