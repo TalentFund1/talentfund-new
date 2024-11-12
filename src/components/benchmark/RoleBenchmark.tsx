@@ -8,7 +8,6 @@ import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
-import { RoleBenchmarkMatrix } from "./RoleBenchmarkMatrix";
 
 const roles = {
   "123": "AI Engineer",
@@ -78,8 +77,6 @@ export const RoleBenchmark = () => {
         />
 
         <CompetencyGraph roleId={selectedRole} track={currentTrack} />
-
-        <RoleBenchmarkMatrix roleId={selectedRole} />
       </div>
     </div>
   );
