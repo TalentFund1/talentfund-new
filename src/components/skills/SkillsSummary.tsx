@@ -8,6 +8,7 @@ import { initialSkills, getEmployeeSkills } from "../benchmark/skills-matrix/ini
 import { categorizeSkill } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
+import { SkillsMatrix } from "../benchmark/SkillsMatrix";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -149,6 +150,8 @@ export const SkillsSummary = () => {
         visibleSpecializedCount={visibleSpecializedCount}
         onToggleSection={toggleSection}
       />
+
+      <SkillsMatrix searchSkills={selectedSkills} />
     </div>
   );
 };
