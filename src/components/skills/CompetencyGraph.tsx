@@ -7,6 +7,14 @@ import { SkillsGrid } from "./SkillsGrid";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useTrack } from "./context/TrackContext";
 import { useToast } from "@/components/ui/use-toast";
+import { 
+  isSpecializedSkill, 
+  isCommonSkill, 
+  isCertificationSkill,
+  categorizeSkills 
+} from "./competency/skillCategories";
+import { skillCategories } from "./data/skillsData";
+import { professionalSkills, managerialSkills } from "./competency/skillsData";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -27,7 +35,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
     return savedCategory || "all";
   });
   const { toggledSkills } = useToggledSkills();
-  const { getTrackForRole } = useTrack();
+  const { getTrackForRole, setTrackForRole } = useTrack();
   const { toast } = useToast();
 
   const track = roleId ? getTrackForRole(roleId) : initialTrack || "Professional";
@@ -50,8 +58,10 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
     );
   };
 
-  const handleTrackChange = (newTrack: "Technical" | "Managerial") => {
-    setTrack(newTrack);
+  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
+    if (roleId) {
+      setTrackForRole(roleId, newTrack);
+    }
   };
 
   const handleCategorySelect = (categoryId: string) => {
@@ -63,33 +73,37 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
     
     if (selectedCategory === "all") {
       return skillsArray.filter(skill => 
-        isSpecializedSkill(skill, roleId) || 
-        isCommonSkill(skill, roleId) || 
-        isCertificationSkill(skill, roleId)
+        isSpecializedSkill(skill, roleId || "") || 
+        isCommonSkill(skill, roleId || "") || 
+        isCertificationSkill(skill, roleId || "")
       );
     }
     
     if (selectedCategory === "specialized") {
-      return skillsArray.filter(skill => isSpecializedSkill(skill, roleId));
+      return skillsArray.filter(skill => isSpecializedSkill(skill, roleId || ""));
     }
     
     if (selectedCategory === "common") {
-      return skillsArray.filter(skill => isCommonSkill(skill, roleId));
+      return skillsArray.filter(skill => isCommonSkill(skill, roleId || ""));
     }
     
     if (selectedCategory === "certification") {
-      return skillsArray.filter(skill => isCertificationSkill(skill, roleId));
+      return skillsArray.filter(skill => isCertificationSkill(skill, roleId || ""));
     }
     
     return [];
   };
 
   const uniqueSkills = getSkillsByCategory().sort();
-  const skillCounts = categorizeSkills(Array.from(toggledSkills), roleId);
+  const skillCounts = categorizeSkills(Array.from(toggledSkills), roleId || "");
+
+  const skills = track === "Professional" ? professionalSkills : managerialSkills;
 
   const getSkillDetails = (skillName: string, level: string) => {
     if (!skills || !skills[level]) return { level: "-", required: "-" };
-    return skills[level]?.find((s: { name: string; level: string; required: string; }) => s.name === skillName) || { level: "-", required: "-" };
+    return skills[level]?.find((s: { name: string; level: string; required: string; }) => 
+      s.name === skillName
+    ) || { level: "-", required: "-" };
   };
 
   return (
@@ -123,8 +137,11 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
                   {category.name}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {skillsArray.filter(skill => 
-                    category.id === 'all' || getSkillCategory(skill) === category.id
+                  {Array.from(toggledSkills).filter(skill => 
+                    category.id === 'all' || 
+                    (category.id === 'specialized' && isSpecializedSkill(skill, roleId || "")) ||
+                    (category.id === 'common' && isCommonSkill(skill, roleId || "")) ||
+                    (category.id === 'certification' && isCertificationSkill(skill, roleId || ""))
                   ).length} skills
                 </span>
               </div>
@@ -133,7 +150,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
         </div>
 
         <SkillsGrid 
-          skillsArray={skillsArray}
+          skillsArray={Array.from(toggledSkills)}
           selectedCategory={selectedCategory}
         />
       </div>
