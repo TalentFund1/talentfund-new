@@ -14,7 +14,7 @@ import {
   categorizeSkills 
 } from "./competency/skillCategories";
 import { skillCategories } from "./data/skillsData";
-import { professionalSkills, managerialSkills } from "./competency/skillsData";
+import { professionalSkills, managerialSkills } from "./data/skillsData";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -58,9 +58,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
     );
   };
 
-  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
+  const handleTrackChange = (newTrack: "Technical" | "Managerial") => {
     if (roleId) {
-      setTrackForRole(roleId, newTrack);
+      setTrackForRole(roleId, newTrack === "Technical" ? "Professional" : "Managerial");
     }
   };
 
