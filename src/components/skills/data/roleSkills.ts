@@ -42,10 +42,20 @@ export const roleSkills = {
     specialized: [
       { title: "React", subcategory: "Frontend Frameworks", level: "advanced", growth: "20%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
       { title: "TypeScript", subcategory: "Programming Languages", level: "advanced", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "UI/UX Design", subcategory: "Design", level: "intermediate", growth: "30%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "UI/UX Design", subcategory: "Design", level: "intermediate", growth: "30%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "CSS/SASS", subcategory: "Styling", level: "advanced", growth: "15%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Next.js", subcategory: "Frontend Frameworks", level: "advanced", growth: "28%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } }
     ],
-    common: [],
-    certifications: []
+    common: [
+      { title: "Cross-browser Compatibility", subcategory: "Frontend Development", level: "advanced", growth: "12%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Responsive Design", subcategory: "Web Development", level: "advanced", growth: "18%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } }
+    ],
+    certifications: [
+      { title: "AWS Certified Developer - Associate", subcategory: "Cloud Certification", level: "intermediate", growth: "25%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Google Mobile Web Specialist", subcategory: "Web Development Certification", level: "advanced", growth: "20%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Professional Scrum Developer", subcategory: "Development Certification", level: "intermediate", growth: "15%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } }
+    ]
   },
   "126": { // Engineering Manager
     specialized: [
