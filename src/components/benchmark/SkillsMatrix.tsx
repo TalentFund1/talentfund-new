@@ -19,6 +19,7 @@ export const SkillsMatrix = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [matrixSearchSkills, setMatrixSearchSkills] = useState<string[]>([]);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
@@ -32,7 +33,7 @@ export const SkillsMatrix = () => {
 
   // Determine which selected skills to use based on the current tab
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
-  const currentSelectedSkills = isRoleBenchmarkTab ? benchmarkSearchSkills : selectedSkills;
+  const currentSelectedSkills = isRoleBenchmarkTab ? matrixSearchSkills : selectedSkills;
 
   // Filter skills based on category and search
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
@@ -63,7 +64,7 @@ export const SkillsMatrix = () => {
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           selectedSkills={currentSelectedSkills}
-          setSelectedSkills={() => {}}
+          setSelectedSkills={setMatrixSearchSkills}
           isRoleBenchmarkTab={isRoleBenchmarkTab}
         />
 

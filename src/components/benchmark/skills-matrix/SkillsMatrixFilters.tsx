@@ -30,7 +30,6 @@ export const SkillsMatrixFilters = ({
           selectedItems={selectedSkills}
           onItemsChange={setSelectedSkills}
           singleSelect={false}
-          disabled={isRoleBenchmarkTab && !setSelectedSkills}
         />
       </div>
 
