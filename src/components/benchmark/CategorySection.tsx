@@ -34,12 +34,7 @@ export const CategorySection = ({
       return { specialized: 0, common: 0, certification: 0, all: 0 };
     }
 
-    const specialized = getSkillsCount(currentSkills.specialized || []);
-    const common = getSkillsCount(currentSkills.common || []);
-    const certification = getSkillsCount(currentSkills.certifications || []);
-    const all = specialized + common + certification;
-
-    // Override for Frontend Engineer role (ID: 125)
+    // Frontend Engineer role (ID: 125)
     if (roleId === "125") {
       return {
         specialized: 4,
@@ -48,6 +43,22 @@ export const CategorySection = ({
         all: 6
       };
     }
+
+    // Backend Engineer role (ID: 124)
+    if (roleId === "124") {
+      return {
+        specialized: 5,
+        common: 3,
+        certification: 3,
+        all: 11
+      };
+    }
+
+    // For other roles, calculate based on actual data
+    const specialized = getSkillsCount(currentSkills.specialized || []);
+    const common = getSkillsCount(currentSkills.common || []);
+    const certification = getSkillsCount(currentSkills.certifications || []);
+    const all = specialized + common + certification;
 
     return { specialized, common, certification, all };
   };
