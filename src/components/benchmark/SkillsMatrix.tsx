@@ -1,6 +1,15 @@
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
@@ -8,19 +17,28 @@ import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 
-export const SkillsMatrix = ({ id }: { id: string }) => {
+export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
+  const observer = useRef<IntersectionObserver>();
+  const { toast } = useToast();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
+  const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const { selectedSkills } = useSelectedSkills();
 
+  const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
+
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
-    skill => searchSkills.length === 0 || searchSkills.includes(skill.title)
+    skill => isRoleBenchmarkTab || searchSkills.length === 0 || searchSkills.includes(skill.title)
   );
 
   const handleRowsPerPageChange = (value: string) => {
@@ -43,13 +61,30 @@ export const SkillsMatrix = ({ id }: { id: string }) => {
         />
         <Separator className="my-4" />
         
-        <SkillsMatrixFilters 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedSkills={searchSkills}
-          setSelectedSkills={setSearchSkills}
-          isRoleBenchmarkTab={false}
-        />
+        {!isRoleBenchmarkTab ? (
+          <SkillsMatrixFilters 
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            selectedSkills={searchSkills}
+            setSelectedSkills={setSearchSkills}
+            isRoleBenchmarkTab={false}
+          />
+        ) : (
+          <div className="flex justify-between items-start gap-4">
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certifications</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button>Add Skill</Button>
+          </div>
+        )}
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
