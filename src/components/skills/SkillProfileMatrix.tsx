@@ -1,4 +1,3 @@
-import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -6,21 +5,39 @@ import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
 
 const PAGE_SIZE = 10;
 
 export const SkillProfileMatrix = () => {
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const observer = useRef<IntersectionObserver>();
+  const [isDirty, setIsDirty] = useState(false);
   const { toast } = useToast();
+  const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
-  const { toggledSkills } = useToggledSkills();
+
+  const handleToggleSkill = (skillTitle: string) => {
+    const newToggledSkills = new Set(toggledSkills);
+    if (newToggledSkills.has(skillTitle)) {
+      newToggledSkills.delete(skillTitle);
+    } else {
+      newToggledSkills.add(skillTitle);
+    }
+    setToggledSkills(newToggledSkills);
+    setIsDirty(true);
+    
+    toast({
+      title: "Skill Updated",
+      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
+    });
+  };
 
   // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
@@ -41,12 +58,45 @@ export const SkillProfileMatrix = () => {
       skills = currentRoleSkills.certifications;
     }
 
-    // Only return skills that are toggled on
-    return skills.filter(skill => toggledSkills.has(skill.title));
+    // Filter skills to only include those that belong to the current role
+    return skills.filter(skill => {
+      const isInCurrentRole = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].some(roleSkill => roleSkill.title === skill.title);
+
+      return isInCurrentRole;
+    }).sort((a, b) => {
+      const aIsSaved = toggledSkills.has(a.title);
+      const bIsSaved = toggledSkills.has(b.title);
+      if (aIsSaved === bIsSaved) return 0;
+      return aIsSaved ? -1 : 1;
+    });
   })();
 
   const paginatedSkills = filteredSkills.slice(0, page * PAGE_SIZE);
   const hasMoreSkills = paginatedSkills.length < filteredSkills.length;
+
+  const observer = useRef<IntersectionObserver>();
+  useEffect(() => {
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMoreSkills && !loading) {
+        setPage((prev) => prev + 1);
+      }
+    }, { threshold: 0.1 });
+
+    const currentObserverTarget = observerTarget.current;
+    if (currentObserverTarget) {
+      observer.current.observe(currentObserverTarget);
+    }
+
+    return () => {
+      if (currentObserverTarget) {
+        observer.current?.unobserve(currentObserverTarget);
+      }
+    };
+  }, [hasMoreSkills, loading]);
 
   return (
     <div className="space-y-6">
@@ -95,18 +145,12 @@ export const SkillProfileMatrix = () => {
           <SkillProfileMatrixTable 
             paginatedSkills={paginatedSkills}
             toggledSkills={toggledSkills}
-            onToggleSkill={(skillTitle) => {
-              // This will be handled by the ToggledSkillsContext
-              toast({
-                title: "Skill Updated",
-                description: `${skillTitle} has been ${toggledSkills.has(skillTitle) ? 'removed from' : 'added to'} your skills.`,
-              });
-            }}
+            onToggleSkill={handleToggleSkill}
           />
         </div>
 
         {hasMoreSkills && (
-          <div ref={observer} className="h-10" />
+          <div ref={observerTarget} className="h-10" />
         )}
       </Card>
     </div>
