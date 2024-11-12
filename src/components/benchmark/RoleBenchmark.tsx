@@ -8,7 +8,6 @@ import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
-import { skillsDatabase } from "../skills/data/skillsDatabase";
 
 const roles = {
   "123": "AI Engineer",
@@ -21,7 +20,7 @@ export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string>("125");
   const [selectedLevel, setSelectedLevel] = useState<string>("p4");
-  const { toggledSkills, setToggledSkills } = useToggledSkills();
+  const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
 
   const currentTrack = getTrackForRole(selectedRole);
@@ -33,20 +32,6 @@ export const RoleBenchmark = () => {
       setSelectedLevel("m3");
     }
   }, [currentTrack]);
-
-  // Initialize toggled skills based on the selected role
-  useEffect(() => {
-    const roleSpecificSkills = skillsDatabase
-      .filter(skill => {
-        const trackData = currentTrack.toLowerCase() === 'professional' 
-          ? skill.professionalTrack 
-          : skill.managerialTrack;
-        return trackData && trackData[selectedLevel.toUpperCase()];
-      })
-      .map(skill => skill.title);
-    
-    setToggledSkills(new Set(roleSpecificSkills));
-  }, [selectedRole, selectedLevel, currentTrack, setToggledSkills]);
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
