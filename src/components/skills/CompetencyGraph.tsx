@@ -12,14 +12,15 @@ import { useToast } from "@/hooks/use-toast";
 import { TrackSelection } from "./TrackSelection";
 import { useTrack } from "./context/TrackContext";
 import { jobTitles } from "./competency/skillProfileData";
-import { isSpecializedSkill, isCommonSkill, isCertificationSkill } from "./competency/skillCategoryUtils";
+import { useParams } from "react-router-dom";
+import { roleSkills } from "./data/roleSkills";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
   roleId?: string;
 }
 
-export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraphProps) => {
+export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: CompetencyGraphProps) => {
   const { toggledSkills } = useToggledSkills();
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     const savedCategory = localStorage.getItem('selectedCategory');
@@ -28,9 +29,12 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
   const { getTrackForRole } = useTrack();
   const { hasChanges, saveChanges, cancelChanges } = useCompetencyStore();
   const { toast } = useToast();
+  const { id: urlRoleId } = useParams<{ id: string }>();
 
-  const track = roleId ? getTrackForRole(roleId) : initialTrack || "Professional";
-  const jobTitle = roleId ? jobTitles[roleId] : "AI Engineer";
+  // Use roleId from props if provided, otherwise use from URL params, fallback to "123"
+  const currentRoleId = propRoleId || urlRoleId || "123";
+  const track = initialTrack || getTrackForRole(currentRoleId) || "Professional";
+  const jobTitle = jobTitles[currentRoleId] || "AI Engineer";
 
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
@@ -65,26 +69,34 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
 
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
-    const profileId = roleId || "123";
+    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
     
+    if (!currentRoleSkills) return [];
+
     if (selectedCategory === "all") {
       return skillsArray.filter(skill => 
-        isSpecializedSkill(skill, profileId) || 
-        isCommonSkill(skill, profileId) || 
-        isCertificationSkill(skill, profileId)
+        currentRoleSkills.specialized.some(s => s.title === skill) ||
+        currentRoleSkills.common.some(s => s.title === skill) ||
+        currentRoleSkills.certifications.some(s => s.title === skill)
       );
     }
     
     if (selectedCategory === "specialized") {
-      return skillsArray.filter(skill => isSpecializedSkill(skill, profileId));
+      return skillsArray.filter(skill => 
+        currentRoleSkills.specialized.some(s => s.title === skill)
+      );
     }
     
     if (selectedCategory === "common") {
-      return skillsArray.filter(skill => isCommonSkill(skill, profileId));
+      return skillsArray.filter(skill => 
+        currentRoleSkills.common.some(s => s.title === skill)
+      );
     }
     
     if (selectedCategory === "certification") {
-      return skillsArray.filter(skill => isCertificationSkill(skill, profileId));
+      return skillsArray.filter(skill => 
+        currentRoleSkills.certifications.some(s => s.title === skill)
+      );
     }
     
     return [];
@@ -93,7 +105,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
   const skills = getSkillsForCategory() || {};
   const levels = getLevelsForTrack();
   const uniqueSkills = getSkillsByCategory().sort();
-  const skillCounts = categorizeSkills(Array.from(toggledSkills), roleId || "123");
+  const skillCounts = categorizeSkills(Array.from(toggledSkills), currentRoleId);
 
   const getSkillDetails = (skillName: string, level: string) => {
     if (!skills || !skills[level]) return { level: "-", required: "-" };
