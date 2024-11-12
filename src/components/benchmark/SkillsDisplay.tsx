@@ -60,6 +60,10 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     return [];
   };
 
+  const getCategoryCount = (category: string) => {
+    return getSkillsForCategory(category).length;
+  };
+
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
     return skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
       if (skill.requirement === 'required') {
@@ -69,10 +73,6 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
       }
       return acc;
     }, { required: [], preferred: [] });
-  };
-
-  const getCategoryCount = (category: string) => {
-    return getSkillsForCategory(category).length;
   };
 
   const skillsInCategory = getSkillsForCategory(selectedCategory);
