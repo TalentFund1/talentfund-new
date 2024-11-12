@@ -25,23 +25,7 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
-  const { benchmarkSearchSkills, setBenchmarkSearchSkills } = useBenchmarkSearch();
-
-  const handleSave = () => {
-    saveChanges();
-    toast({
-      title: "Changes Saved",
-      description: "Your changes have been saved successfully.",
-    });
-  };
-
-  const handleCancel = () => {
-    cancelChanges();
-    toast({
-      title: "Changes Cancelled",
-      description: "Your changes have been discarded.",
-    });
-  };
+  const { benchmarkSearchSkills } = useBenchmarkSearch();
 
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
@@ -49,9 +33,6 @@ export const SkillsMatrix = () => {
   // Determine which selected skills to use based on the current tab
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const currentSelectedSkills = isRoleBenchmarkTab ? benchmarkSearchSkills : selectedSkills;
-  const setCurrentSelectedSkills = isRoleBenchmarkTab 
-    ? setBenchmarkSearchSkills 
-    : () => {};
 
   // Filter skills based on category and search
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
@@ -73,8 +54,8 @@ export const SkillsMatrix = () => {
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <SkillsMatrixHeader 
           hasChanges={hasChanges}
-          onSave={handleSave}
-          onCancel={handleCancel}
+          onSave={saveChanges}
+          onCancel={cancelChanges}
         />
         <Separator className="my-4" />
         
@@ -82,7 +63,7 @@ export const SkillsMatrix = () => {
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           selectedSkills={currentSelectedSkills}
-          setSelectedSkills={setCurrentSelectedSkills}
+          setSelectedSkills={() => {}}
           isRoleBenchmarkTab={isRoleBenchmarkTab}
         />
 
