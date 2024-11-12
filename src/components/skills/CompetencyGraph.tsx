@@ -35,7 +35,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
   const { toast } = useToast();
 
   const track = roleId ? getTrackForRole(roleId) : initialTrack || "Professional";
-  const jobTitle = roleId ? jobTitles[roleId] || "Backend Engineer" : "Backend Engineer";
+  const jobTitle = roleId ? jobTitles[roleId] || "Frontend Engineer" : "Frontend Engineer";
 
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
@@ -73,7 +73,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
 
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
-    const profileId = roleId || "124"; // Default to Backend Engineer if no roleId
+    const profileId = roleId || "125"; // Default to Frontend Engineer if no roleId
     
     if (selectedCategory === "all") {
       return skillsArray.filter(skill => 
@@ -99,7 +99,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
   };
 
   const uniqueSkills = getSkillsByCategory().sort();
-  const skillCounts = categorizeSkills(Array.from(toggledSkills), roleId || "124");
+  const skillCounts = categorizeSkills(Array.from(toggledSkills), roleId || "125");
 
   const getSkillDetails = (skillName: string, level: string) => {
     if (!skills || !skills[level]) return { level: "-", required: "-" };
