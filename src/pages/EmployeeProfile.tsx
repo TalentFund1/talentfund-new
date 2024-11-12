@@ -2,13 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
+import { ChevronLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
 import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
-import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
+import { SkillsMatrixContainer } from "@/components/skills/SkillsMatrixContainer";
 import { Sidebar } from "@/components/Sidebar";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
@@ -68,6 +67,42 @@ const employees = {
   }
 };
 
+const EmployeeProfileContent = ({ employee, id }: { employee: any, id: string }) => {
+  return (
+    <Tabs defaultValue="experience" className="w-full space-y-6">
+      <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
+        <TabsTrigger 
+          value="experience" 
+          className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+        >
+          Skills Summary
+        </TabsTrigger>
+        <TabsTrigger 
+          value="benchmark"
+          className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+        >
+          Role Benchmark
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="experience" className="space-y-6">
+        <Card className="p-8 bg-white">
+          <SkillsSummary />
+        </Card>
+        <SkillsMatrixContainer />
+      </TabsContent>
+
+      <TabsContent value="benchmark" className="space-y-6">
+        <Card className="p-8 bg-white">
+          <RoleBenchmark />
+        </Card>
+        <BenchmarkAnalysis />
+        <SkillsMatrix />
+      </TabsContent>
+    </Tabs>
+  );
+};
+
 const EmployeeProfile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -93,9 +128,7 @@ const EmployeeProfile = () => {
                   <ChevronLeft className="h-4 w-4" /> Back
                 </Button>
                 <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
-                  <ChevronLeft className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
                   <span className="text-sm text-foreground">2/7</span>
-                  <ChevronRight className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
                 </div>
               </div>
 
@@ -113,7 +146,6 @@ const EmployeeProfile = () => {
                       <div className="space-y-1">
                         <div className="flex items-center gap-3">
                           <h1 className="text-2xl font-bold text-foreground">{employee.name}</h1>
-                          <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: {id}</span>
                         </div>
                         <h2 className="text-lg font-medium text-foreground/90">{employee.role}</h2>
                       </div>
@@ -163,37 +195,7 @@ const EmployeeProfile = () => {
                 </div>
               </Card>
 
-              <Tabs defaultValue="experience" className="w-full space-y-6">
-                <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
-                  <TabsTrigger 
-                    value="experience" 
-                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-                  >
-                    Skills Summary
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="benchmark"
-                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-                  >
-                    Role Benchmark
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="experience" className="space-y-6">
-                  <Card className="p-8 bg-white">
-                    <SkillsSummary />
-                  </Card>
-                  <SkillsMatrix />
-                </TabsContent>
-
-                <TabsContent value="benchmark" className="space-y-6">
-                  <Card className="p-8 bg-white">
-                    <RoleBenchmark />
-                  </Card>
-                  <BenchmarkAnalysis />
-                  <SkillsMatrix />
-                </TabsContent>
-              </Tabs>
+              <EmployeeProfileContent employee={employee} id={id || ""} />
             </TrackProvider>
           </SelectedSkillsProvider>
         </div>
