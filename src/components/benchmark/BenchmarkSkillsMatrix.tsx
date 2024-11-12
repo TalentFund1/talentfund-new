@@ -11,6 +11,7 @@ import { useParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { roleSkills } from '../skills/data/roleSkills';
+import { useToggledSkills } from '../skills/context/ToggledSkillsContext';
 
 export const BenchmarkSkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -19,11 +20,12 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const allSkills = [...technicalSkills, ...softSkills];
 
-  // Auto-populate search skills based on role
+  // Auto-populate search skills based on role and toggled skills
   useEffect(() => {
     if (id && roleSkills[id as keyof typeof roleSkills]) {
       const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
@@ -32,9 +34,12 @@ export const BenchmarkSkillsMatrix = () => {
         ...(currentRoleSkills.common?.map(skill => skill.title) || []),
         ...(currentRoleSkills.certifications?.map(skill => skill.title) || [])
       ];
-      setSelectedSearchSkills(allRoleSkills);
+      
+      // Only set search skills that are toggled
+      const toggledSearchSkills = allRoleSkills.filter(skill => toggledSkills.has(skill));
+      setSelectedSearchSkills(toggledSearchSkills);
     }
-  }, [id]);
+  }, [id, toggledSkills]);
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
