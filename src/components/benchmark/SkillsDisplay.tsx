@@ -85,7 +85,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     specialized: specializedSkills.length,
     common: commonSkills.length,
     certification: certificationSkills.length,
-    all: toggledSkills.size // Use the size of toggledSkills directly
+    all: specializedSkills.length + commonSkills.length + certificationSkills.length
   };
 
   return (
