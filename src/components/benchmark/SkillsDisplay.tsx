@@ -15,7 +15,8 @@ interface SkillsDisplayProps {
 export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selectedLevel }: SkillsDisplayProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const { getTrackForRole } = useTrack();
-  const currentTrack = getTrackForRole(roleId) as "Professional" | "Managerial";
+  const track = getTrackForRole(roleId);
+  const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
 
   const getSkillsForCategory = (category: string) => {
     const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
@@ -29,7 +30,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
       // Get the skill requirements for current level
       const requirements = getSkillRequirements(
         skill.title,
-        currentTrack.toLowerCase(),
+        currentTrack,
         selectedLevel.toUpperCase()
       );
 

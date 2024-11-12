@@ -1,4 +1,5 @@
-import { SkillData, SkillLevel, getSkillsByTrackAndLevel } from '../data/skillsDatabase';
+import { SkillLevel } from '../data/skillLevels';
+import { getSkillsByTrackAndLevel } from '../data/skillsDatabase';
 
 export const getSkillLevelColor = (level: SkillLevel['level']) => {
   switch (level) {
