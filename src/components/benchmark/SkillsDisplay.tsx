@@ -1,4 +1,3 @@
-import { RequirementSection } from "./RequirementSection";
 import { SkillBadge } from "../skills/SkillBadge";
 import { SkillSection } from "../skills/SkillSection";
 import { useState } from "react";
@@ -23,11 +22,20 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
       ...(selectedRoleSkills.specialized || []),
       ...(selectedRoleSkills.common || []),
       ...(selectedRoleSkills.certifications || [])
-    ].map((skill: any) => ({
-      title: skill.title,
-      level: skill.level || 'unspecified',
-      requirement: skill.requirement || 'preferred'
-    })).filter((skill: any) => toggledSkills.has(skill.title));
+    ].map((skill: any) => {
+      // Get the skill requirements for current level
+      const requirements = getSkillRequirements(
+        skill.title,
+        currentTrack.toLowerCase(),
+        selectedLevel.toLowerCase()
+      );
+
+      return {
+        title: skill.title,
+        level: requirements?.level || skill.level || 'unspecified',
+        requirement: requirements?.requirement || skill.requirement || 'preferred'
+      };
+    }).filter((skill: any) => toggledSkills.has(skill.title));
 
     return allSkills.filter((skill: any) => {
       if (category === "All Categories") return true;
@@ -60,41 +68,37 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const skillsInCategory = getSkillsForCategory(selectedCategory);
   const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skillsInCategory);
 
-  const categories = [
-    {
-      title: "All Categories",
-      count: skillsInCategory.length,
-      skills: skillsInCategory
-    },
-    {
-      title: "Specialized Skills",
-      count: getSkillsForCategory("Specialized Skills").length,
-      skills: getSkillsForCategory("Specialized Skills")
-    },
-    {
-      title: "Common Skills",
-      count: getSkillsForCategory("Common Skills").length,
-      skills: getSkillsForCategory("Common Skills")
-    },
-    {
-      title: "Certification",
-      count: getSkillsForCategory("Certification").length,
-      skills: getSkillsForCategory("Certification")
-    }
-  ];
-
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-4 gap-4">
-        {categories.map((category) => (
-          <RequirementSection 
+        {[
+          { title: "All Categories", count: skillsInCategory.length },
+          { title: "Specialized Skills", count: getSkillsForCategory("Specialized Skills").length },
+          { title: "Common Skills", count: getSkillsForCategory("Common Skills").length },
+          { title: "Certification", count: getSkillsForCategory("Certification").length }
+        ].map((category) => (
+          <button
             key={category.title}
-            title={category.title}
-            count={category.count}
-            skills={category.skills}
-            isSelected={selectedCategory === category.title}
             onClick={() => setSelectedCategory(category.title)}
-          />
+            className={`rounded-lg p-4 transition-colors ${
+              selectedCategory === category.title
+                ? 'bg-primary-accent/5 border border-primary-accent'
+                : 'bg-background border border-border hover:border-primary-accent/50'
+            }`}
+          >
+            <div className="flex flex-col items-start">
+              <span className={`text-sm font-semibold mb-1 ${
+                selectedCategory === category.title
+                  ? 'text-primary-accent'
+                  : 'text-foreground group-hover:text-primary-accent'
+              }`}>
+                {category.title}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {category.count} skills
+              </span>
+            </div>
+          </button>
         ))}
       </div>
 
