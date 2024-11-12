@@ -43,11 +43,18 @@ export const SkillsMatrix = () => {
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Filter skills based on search and category
+  // Create a Set of unique skill titles
+  const uniqueSkillTitles = new Set(employeeSkills.map(skill => skill.title));
+
+  // Filter skills based on search and category, ensuring uniqueness
   const filteredSkills = selectedSkills.length === 0
-    ? filterSkillsByCategory(employeeSkills, selectedCategory)
+    ? filterSkillsByCategory(
+        employeeSkills.filter(skill => uniqueSkillTitles.has(skill.title)),
+        selectedCategory
+      )
     : filterSkillsByCategory(
         employeeSkills.filter(skill => 
+          uniqueSkillTitles.has(skill.title) &&
           selectedSkills.some(selected => 
             skill.title.toLowerCase().includes(selected.toLowerCase())
           )
