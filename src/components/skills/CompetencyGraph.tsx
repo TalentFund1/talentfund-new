@@ -8,7 +8,7 @@ import { skillsByCategory } from "./competency/skillsData";
 import { CategorySection } from "./competency/CategorySection";
 import { categorizeSkills } from "./competency/skillCategories";
 import { useCompetencyStore } from "./competency/CompetencyState";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
 import { TrackSelection } from "./TrackSelection";
 import { useTrack } from "./context/TrackContext";
 import { jobTitles } from "./competency/skillProfileData";
