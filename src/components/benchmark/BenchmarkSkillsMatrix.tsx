@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { roleSkills } from '../skills/data/roleSkills';
 import { useToggledSkills } from '../skills/context/ToggledSkillsContext';
+import { useToast } from "@/hooks/use-toast";
 
 export const BenchmarkSkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -20,7 +21,8 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
-  const { toggledSkills, setToggledSkills } = useToggledSkills();
+  const { toggledSkills } = useToggledSkills();
+  const { toast } = useToast();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const allSkills = [...technicalSkills, ...softSkills];
@@ -38,6 +40,14 @@ export const BenchmarkSkillsMatrix = () => {
       // Only set search skills that are toggled
       const toggledSearchSkills = allRoleSkills.filter(skill => toggledSkills.has(skill));
       setSelectedSearchSkills(toggledSearchSkills);
+
+      // Show toast when skills are updated
+      if (toggledSearchSkills.length > 0) {
+        toast({
+          title: "Search Skills Updated",
+          description: `Updated search skills for ${currentRoleSkills.specialized?.[0]?.subcategory || "selected role"}`,
+        });
+      }
     }
   }, [id, toggledSkills]);
 
