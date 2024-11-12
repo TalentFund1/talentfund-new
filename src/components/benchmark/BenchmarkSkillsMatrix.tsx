@@ -27,7 +27,6 @@ export const BenchmarkSkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
   const allSkills = [...technicalSkills, ...softSkills];
 
-  // Auto-populate search skills based on role and toggled skills
   useEffect(() => {
     if (id && roleSkills[id as keyof typeof roleSkills]) {
       const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
@@ -36,16 +35,23 @@ export const BenchmarkSkillsMatrix = () => {
         ...(currentRoleSkills.common?.map(skill => skill.title) || []),
         ...(currentRoleSkills.certifications?.map(skill => skill.title) || [])
       ];
-      
-      // Only set search skills that are toggled
+
+      // Filter skills based on what's toggled
       const toggledSearchSkills = allRoleSkills.filter(skill => toggledSkills.has(skill));
+      
+      // Update search skills
       setSelectedSearchSkills(toggledSearchSkills);
 
       // Show toast when skills are updated
       if (toggledSearchSkills.length > 0) {
+        const roleName = id === "123" ? "AI Engineer" :
+                        id === "124" ? "Backend Engineer" :
+                        id === "125" ? "Frontend Engineer" :
+                        id === "126" ? "Engineering Manager" : "selected role";
+        
         toast({
           title: "Search Skills Updated",
-          description: `Updated search skills for ${currentRoleSkills.specialized?.[0]?.subcategory || "selected role"}`,
+          description: `Updated search skills for ${roleName}`,
         });
       }
     }
