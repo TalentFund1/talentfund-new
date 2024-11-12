@@ -21,7 +21,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams, useLocation } from "react-router-dom";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { Badge } from "../ui/badge";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -33,14 +32,12 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
-  const { toggledSkills } = useToggledSkills();
 
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
 
-  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
-    .filter(skill => toggledSkills.has(skill.title))  // Only show toggled skills
-    .filter(skill => {
+  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
+    skill => {
       if (isRoleBenchmarkTab) {
         if (selectedSearchSkills.length > 0) {
           return selectedSearchSkills.some(term => 
@@ -55,7 +52,8 @@ export const SkillsMatrix = () => {
       return selectedSkills.some(searchTerm => 
         skill.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
-    });
+    }
+  );
 
   const handleRowsPerPageChange = (value: string) => {
     setRowsPerPage(Number(value));
