@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getSkillsByTrackAndLevel, getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
+import { RequirementSection } from "./RequirementSection";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -27,7 +28,6 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
       ...(currentRoleSkills.common || []),
       ...(currentRoleSkills.certifications || [])
     ].map((skill: any) => {
-      // Get the skill requirements for current level
       const requirements = getSkillRequirements(
         skill.title,
         currentTrack,
@@ -87,28 +87,14 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
           { title: "Common Skills", count: getCategoryCount("Common Skills") },
           { title: "Certification", count: getCategoryCount("Certification") }
         ].map((category) => (
-          <button
+          <RequirementSection
             key={category.title}
+            title={category.title}
+            count={category.count}
+            skills={[]}
+            isSelected={selectedCategory === category.title}
             onClick={() => setSelectedCategory(category.title)}
-            className={`rounded-lg p-4 transition-colors ${
-              selectedCategory === category.title
-                ? 'bg-primary-accent/5 border border-primary-accent'
-                : 'bg-background border border-border hover:border-primary-accent/50'
-            }`}
-          >
-            <div className="flex flex-col items-start">
-              <span className={`text-sm font-semibold mb-1 ${
-                selectedCategory === category.title
-                  ? 'text-primary-accent'
-                  : 'text-foreground group-hover:text-primary-accent'
-              }`}>
-                {category.title}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {category.count} skills
-              </span>
-            </div>
-          </button>
+          />
         ))}
       </div>
 
