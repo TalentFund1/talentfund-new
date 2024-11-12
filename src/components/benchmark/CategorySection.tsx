@@ -28,7 +28,19 @@ export const CategorySection = ({
   };
 
   const getSkillCountsByRole = (roleId: string): SkillCounts => {
-    if (roleId === "125") { // Frontend Engineer
+    const currentSkills = roleSkills[roleId as keyof typeof roleSkills];
+    
+    if (!currentSkills) {
+      return { specialized: 0, common: 0, certification: 0, all: 0 };
+    }
+
+    const specialized = getSkillsCount(currentSkills.specialized || []);
+    const common = getSkillsCount(currentSkills.common || []);
+    const certification = getSkillsCount(currentSkills.certifications || []);
+    const all = specialized + common + certification;
+
+    // Override for Frontend Engineer role (ID: 125)
+    if (roleId === "125") {
       return {
         specialized: 4,
         common: 1,
@@ -37,17 +49,7 @@ export const CategorySection = ({
       };
     }
 
-    // For other roles, calculate based on actual data
-    const specialized = getSkillsCount(currentRoleSkills.specialized || []);
-    const common = getSkillsCount(currentRoleSkills.common || []);
-    const certification = getSkillsCount(currentRoleSkills.certifications || []);
-    
-    return {
-      specialized,
-      common,
-      certification,
-      all: specialized + common + certification
-    };
+    return { specialized, common, certification, all };
   };
 
   const skillCounts = getSkillCountsByRole(id || "123");
