@@ -23,19 +23,18 @@ export const CategorySection = ({
   const { id } = useParams<{ id: string }>();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
-    return skills.filter(skill => toggledSkills.has(skill.title)).length;
+  const getToggledSkillsCount = (skills: Array<{ title: string }> = []) => {
+    return skills.length;
   };
 
-  // Calculate counts based on toggled skills
   const skillCounts: SkillCounts = {
-    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
-    common: getToggledSkillsCount(currentRoleSkills.common || []),
-    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
+    specialized: getToggledSkillsCount(currentRoleSkills.specialized),
+    common: getToggledSkillsCount(currentRoleSkills.common),
+    certification: getToggledSkillsCount(currentRoleSkills.certifications),
     all: 0
   };
 
-  // Calculate total after individual counts
+  // Calculate total after individual counts are set
   skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
 
   const categories = [
