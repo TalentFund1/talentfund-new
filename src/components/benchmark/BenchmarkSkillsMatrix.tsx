@@ -20,18 +20,18 @@ export const BenchmarkSkillsMatrix = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
-  const location = useLocation();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { toast } = useToast();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const allSkills = [...technicalSkills, ...softSkills];
 
   useEffect(() => {
-    // Clear previous search skills when role changes
-    setSelectedSearchSkills([]);
-
     if (id && roleSkills[id as keyof typeof roleSkills]) {
+      // Clear previous search skills and toggled skills
+      setSelectedSearchSkills([]);
+      setToggledSkills(new Set());
+
       const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
       const allRoleSkills = [
         ...(currentRoleSkills.specialized?.map(skill => skill.title) || []),
@@ -39,8 +39,9 @@ export const BenchmarkSkillsMatrix = () => {
         ...(currentRoleSkills.certifications?.map(skill => skill.title) || [])
       ];
 
-      // Set all role skills regardless of toggle state
+      // Update both selected search skills and toggled skills
       setSelectedSearchSkills(allRoleSkills);
+      setToggledSkills(new Set(allRoleSkills));
 
       const roleName = id === "123" ? "AI Engineer" :
                       id === "124" ? "Backend Engineer" :
@@ -48,11 +49,11 @@ export const BenchmarkSkillsMatrix = () => {
                       id === "126" ? "Engineering Manager" : "selected role";
       
       toast({
-        title: "Search Skills Updated",
-        description: `Updated search skills for ${roleName}`,
+        title: "Skills Updated",
+        description: `Updated skills for ${roleName}`,
       });
     }
-  }, [id]); // Only depend on id change, not toggledSkills
+  }, [id, setToggledSkills]);
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
