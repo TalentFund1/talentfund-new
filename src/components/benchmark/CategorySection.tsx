@@ -34,6 +34,16 @@ export const CategorySection = ({
       return { specialized: 0, common: 0, certification: 0, all: 0 };
     }
 
+    // AI Engineer role (ID: 123)
+    if (roleId === "123") {
+      return {
+        specialized: 4,
+        common: 1,
+        certification: 1,
+        all: 6
+      };
+    }
+
     // Frontend Engineer role (ID: 125)
     if (roleId === "125") {
       return {
