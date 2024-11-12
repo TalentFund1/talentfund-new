@@ -17,7 +17,10 @@ export const isSpecializedSkill = (skill: string, profileId: string): boolean =>
     ],
     "125": [ // Frontend Engineer
       "React",
-      "TypeScript"
+      "TypeScript",
+      "Next.js",
+      "Vue.js",
+      "Webpack"
     ],
     "126": [ // Engineering Manager
       "System Design",
@@ -46,7 +49,7 @@ export const isCommonSkill = (skill: string, profileId: string): boolean => {
     "125": [ // Frontend Engineer
       "Cross-browser Compatibility",
       "Responsive Design",
-      "UI/UX Design"
+      "Problem Solving"
     ],
     "126": [ // Engineering Manager
       "Team Leadership",
