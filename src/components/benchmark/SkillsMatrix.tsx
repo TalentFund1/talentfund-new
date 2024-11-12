@@ -20,16 +20,13 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams, useLocation } from "react-router-dom";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 
-interface SkillsMatrixProps {
-  searchSkills?: string[];
-}
-
-export const SkillsMatrix = ({ searchSkills = [] }: SkillsMatrixProps) => {
+export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [searchSkills, setSearchSkills] = useState<string[]>([]);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
@@ -69,7 +66,7 @@ export const SkillsMatrix = ({ searchSkills = [] }: SkillsMatrixProps) => {
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             selectedSkills={searchSkills}
-            setSelectedSkills={() => {}}
+            setSelectedSkills={setSearchSkills}
           />
         ) : (
           <div className="flex justify-between items-start gap-4">
