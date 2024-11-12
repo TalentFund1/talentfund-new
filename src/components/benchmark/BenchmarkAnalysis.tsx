@@ -44,7 +44,7 @@ export const BenchmarkAnalysis = () => {
 
           <div className="space-y-4 mt-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-foreground">Seniority Match</span>
+              <span className="text-sm font-medium text-foreground">Competency Match</span>
               <span className="text-sm text-foreground">8 out of 12</span>
             </div>
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
