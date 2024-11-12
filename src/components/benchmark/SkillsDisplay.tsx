@@ -20,7 +20,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
 
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   
-  // Get filtered skills for each category
+  // Get filtered skills for each category, ensuring they belong to current role
   const specializedSkills = currentRoleSkills.specialized
     .map(s => s.title)
     .filter(title => toggledSkills.has(title));
@@ -76,12 +76,13 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const skillsInCategory = getSkillsForCategory(selectedCategory);
   const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skillsInCategory);
 
-  // Calculate total skills for each category
+  // Calculate total skills for each category based on current role only
   const totalSkills = {
-    all: [...specializedSkills, ...commonSkills, ...certificationSkills].length,
     specialized: specializedSkills.length,
     common: commonSkills.length,
-    certification: certificationSkills.length
+    certification: certificationSkills.length,
+    // Calculate all as the sum of unique skills across categories for this role
+    all: new Set([...specializedSkills, ...commonSkills, ...certificationSkills]).size
   };
 
   return (
