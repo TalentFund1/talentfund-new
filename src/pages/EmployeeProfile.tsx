@@ -1,18 +1,17 @@
+```tsx
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar } from "@/components/ui/avatar";
-import { MapPin } from "lucide-react";
+import { MapPin, ChevronLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
-import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
-import { SkillsMatrixContainer } from "@/components/skills/SkillsMatrixContainer";
+import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { Sidebar } from "@/components/Sidebar";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
-import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 
 const employees = {
   "123": {
@@ -91,7 +90,7 @@ const EmployeeProfileContent = ({ employee, id }: { employee: any, id: string })
         <Card className="p-8 bg-white">
           <SkillsSummary />
         </Card>
-        <SkillsMatrixContainer />
+        <SkillsMatrix />
       </TabsContent>
 
       <TabsContent value="benchmark" className="space-y-6">
@@ -207,3 +206,4 @@ const EmployeeProfile = () => {
 };
 
 export default EmployeeProfile;
+```
