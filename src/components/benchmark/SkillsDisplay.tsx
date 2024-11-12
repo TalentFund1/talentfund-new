@@ -21,27 +21,32 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const getSkillsForCategory = (category: string) => {
     const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
     
-    // Combine all skills from different sections
-    const allSkills = [
-      ...(currentRoleSkills.specialized || []),
-      ...(currentRoleSkills.common || []),
-      ...(currentRoleSkills.certifications || [])
-    ].map((skill: any) => {
-      // Get the skill requirements for current level
-      const requirements = getSkillRequirements(
-        skill.title,
-        currentTrack,
-        selectedLevel.toUpperCase()
-      );
+    // Get all unique skills from different sections
+    const allSkills = new Set([
+      ...(currentRoleSkills.specialized || []).map(s => s.title),
+      ...(currentRoleSkills.common || []).map(s => s.title),
+      ...(currentRoleSkills.certifications || []).map(s => s.title)
+    ]);
 
-      return {
-        title: skill.title,
-        level: requirements?.level || 'unspecified',
-        requirement: requirements?.requirement || 'preferred'
-      };
-    }).filter((skill: any) => toggledSkills.has(skill.title));
+    // Filter based on toggled skills
+    const filteredSkills = Array.from(allSkills)
+      .filter(skillTitle => toggledSkills.has(skillTitle))
+      .map(skillTitle => {
+        const requirements = getSkillRequirements(
+          skillTitle,
+          currentTrack,
+          selectedLevel
+        );
 
-    return allSkills.filter((skill: any) => {
+        return {
+          title: skillTitle,
+          level: requirements?.level || 'unspecified',
+          requirement: requirements?.requirement || 'preferred'
+        };
+      });
+
+    // Apply category filter
+    return filteredSkills.filter((skill: any) => {
       if (category === "All Categories") return true;
       if (category === "Specialized Skills") {
         return currentRoleSkills.specialized.some((s: any) => s.title === skill.title);
@@ -70,14 +75,22 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const skillsInCategory = getSkillsForCategory(selectedCategory);
   const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skillsInCategory);
 
+  // Calculate total skills for each category
+  const totalSkills = {
+    all: getSkillsForCategory("All Categories").length,
+    specialized: getSkillsForCategory("Specialized Skills").length,
+    common: getSkillsForCategory("Common Skills").length,
+    certification: getSkillsForCategory("Certification").length
+  };
+
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-4 gap-4">
         {[
-          { title: "All Categories", count: skillsInCategory.length },
-          { title: "Specialized Skills", count: getSkillsForCategory("Specialized Skills").length },
-          { title: "Common Skills", count: getSkillsForCategory("Common Skills").length },
-          { title: "Certification", count: getSkillsForCategory("Certification").length }
+          { title: "All Categories", count: totalSkills.all },
+          { title: "Specialized Skills", count: totalSkills.specialized },
+          { title: "Common Skills", count: totalSkills.common },
+          { title: "Certification", count: totalSkills.certification }
         ].map((category) => (
           <button
             key={category.title}
