@@ -19,8 +19,6 @@ export const RequirementSection = ({
   isSelected,
   onClick 
 }: RequirementSectionProps) => {
-  const isAllCategories = title === 'All Categories';
-  
   return (
     <button
       onClick={onClick}
@@ -29,18 +27,16 @@ export const RequirementSection = ({
       <Card 
         className={`
           p-4 
-          transition-all 
-          duration-200 
-          hover:border-primary-accent/50
+          transition-colors 
           ${isSelected
             ? 'bg-primary-accent/5 border border-primary-accent'
-            : 'bg-background border border-border'
+            : 'bg-background border border-border hover:border-primary-accent/50'
           }
         `}
       >
         <div className="flex flex-col gap-1">
           <span className={`text-sm font-semibold ${
-            isSelected ? 'text-primary-accent' : 'text-foreground group-hover:text-primary-accent'
+            isSelected ? 'text-primary-accent' : 'text-foreground'
           }`}>
             {title}
           </span>
