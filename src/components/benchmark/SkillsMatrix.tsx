@@ -10,10 +10,10 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
+import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -22,6 +22,7 @@ export const SkillsMatrix = () => {
   const { toast } = useToast();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { id } = useParams<{ id: string }>();
+  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
 
   const handleSave = () => {
     saveChanges();
