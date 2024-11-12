@@ -14,7 +14,7 @@ interface SkillsDisplayProps {
 }
 
 export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selectedLevel }: SkillsDisplayProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Specialized Skills");
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole(roleId);
   const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
@@ -40,13 +40,11 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const getSkillsForCategory = (category: string) => {
     // Get skills based on category
     let categorySkills: string[] = [];
-    if (category === "All Categories" || category === "Specialized Skills") {
+    if (category === "Specialized Skills") {
       categorySkills.push(...specializedSkills);
-    }
-    if (category === "All Categories" || category === "Common Skills") {
+    } else if (category === "Common Skills") {
       categorySkills.push(...commonSkills);
-    }
-    if (category === "All Categories" || category === "Certification") {
+    } else if (category === "Certification") {
       categorySkills.push(...certificationSkills);
     }
 
@@ -82,9 +80,8 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         {[
-          { title: "All Categories", count: currentRoleSkills.specialized.length + currentRoleSkills.common.length + currentRoleSkills.certifications.length },
           { title: "Specialized Skills", count: specializedSkills.length },
           { title: "Common Skills", count: commonSkills.length },
           { title: "Certification", count: certificationSkills.length }
