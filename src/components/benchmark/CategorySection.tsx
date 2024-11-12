@@ -28,14 +28,11 @@ export const CategorySection = ({
   };
 
   const skillCounts: SkillCounts = {
-    specialized: getSkillsCount(currentRoleSkills.specialized || []),
-    common: getSkillsCount(currentRoleSkills.common || []),
-    certification: getSkillsCount(currentRoleSkills.certifications || []),
-    all: 0
+    specialized: 4,
+    common: 1,
+    certification: 1,
+    all: 6
   };
-
-  // Calculate total after individual counts are set
-  skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
 
   const categories = [
     { id: "all", title: "All Categories", count: skillCounts.all },
