@@ -6,7 +6,6 @@ import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
-import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
@@ -14,6 +13,7 @@ import { useParams } from "react-router-dom";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -42,8 +42,10 @@ export const SkillsMatrix = () => {
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Filter skills based only on category, ignoring search
-  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory);
+  // Filter skills based on category and search
+  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
+    skill => selectedSkills.length === 0 || selectedSkills.includes(skill.title)
+  );
 
   const handleRowsPerPageChange = (value: string) => {
     setRowsPerPage(Number(value));
@@ -68,6 +70,8 @@ export const SkillsMatrix = () => {
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
+          selectedSkills={selectedSkills}
+          setSelectedSkills={setSelectedSkills}
         />
 
         <SkillsMatrixTable 
