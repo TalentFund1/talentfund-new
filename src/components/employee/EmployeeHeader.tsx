@@ -37,7 +37,7 @@ export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-8 border border-border">
+    <>
       <div className="flex justify-between items-center mb-4">
         <Button 
           variant="outline" 
@@ -46,7 +46,7 @@ export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
         >
           <ChevronLeft className="h-4 w-4" /> Back
         </Button>
-        <div className="flex items-center gap-2 bg-background rounded-lg border border-border px-3 py-1.5">
+        <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
           <ChevronLeft 
             className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
             onClick={() => handleNavigation('prev')}
@@ -61,7 +61,7 @@ export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
         </div>
       </div>
 
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between mb-8">
         <div className="flex gap-8">
           <Avatar className="h-28 w-28 rounded-full border-4 border-border">
             <img 
@@ -89,6 +89,6 @@ export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
           <Button>Edit</Button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
