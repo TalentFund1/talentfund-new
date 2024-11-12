@@ -3,6 +3,8 @@ import { aiSkills } from './skills/aiSkills';
 import { commonSkills } from './skills/commonSkills';
 import { certificationSkills } from './skills/certificationSkills';
 
+export type { SkillData, SkillLevel };
+
 export const skillsDatabase: SkillData[] = [
   ...aiSkills,
   ...commonSkills,
