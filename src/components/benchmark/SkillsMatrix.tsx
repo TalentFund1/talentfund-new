@@ -20,7 +20,6 @@ export const SkillsMatrix = () => {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
-  const { selectedSkills } = useSelectedSkills();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { id } = useParams<{ id: string }>();
 
@@ -43,17 +42,8 @@ export const SkillsMatrix = () => {
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Filter skills based on search and category
-  const filteredSkills = selectedSkills.length === 0
-    ? filterSkillsByCategory(employeeSkills, selectedCategory)
-    : filterSkillsByCategory(
-        employeeSkills.filter(skill => 
-          selectedSkills.some(selected => 
-            skill.title.toLowerCase().includes(selected.toLowerCase())
-          )
-        ),
-        selectedCategory
-      );
+  // Filter skills based only on category, ignoring search
+  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory);
 
   const handleRowsPerPageChange = (value: string) => {
     setRowsPerPage(Number(value));
