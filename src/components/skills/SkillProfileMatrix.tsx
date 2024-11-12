@@ -20,6 +20,7 @@ export const SkillProfileMatrix = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
   const { toast } = useToast();
+  const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
 
   const handleToggleSkill = (skillTitle: string) => {
@@ -38,17 +39,12 @@ export const SkillProfileMatrix = () => {
     });
   };
 
-  // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const filteredSkills = (() => {
     let skills = [];
     if (skillType === "all") {
-      skills = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ];
+      skills = [...currentRoleSkills.specialized, ...currentRoleSkills.common, ...currentRoleSkills.certifications];
     } else if (skillType === "specialized") {
       skills = currentRoleSkills.specialized;
     } else if (skillType === "common") {
@@ -57,16 +53,7 @@ export const SkillProfileMatrix = () => {
       skills = currentRoleSkills.certifications;
     }
 
-    // Filter skills to only include those that belong to the current role
-    return skills.filter(skill => {
-      const isInCurrentRole = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ].some(roleSkill => roleSkill.title === skill.title);
-
-      return isInCurrentRole && toggledSkills.has(skill.title);
-    }).sort((a, b) => {
+    return skills.sort((a, b) => {
       const aIsSaved = toggledSkills.has(a.title);
       const bIsSaved = toggledSkills.has(b.title);
       if (aIsSaved === bIsSaved) return 0;
@@ -77,9 +64,7 @@ export const SkillProfileMatrix = () => {
   const paginatedSkills = filteredSkills.slice(0, page * PAGE_SIZE);
   const hasMoreSkills = paginatedSkills.length < filteredSkills.length;
 
-  const observerTarget = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver>();
-
   useEffect(() => {
     observer.current = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMoreSkills && !loading) {
@@ -106,7 +91,7 @@ export const SkillProfileMatrix = () => {
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
             <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {filteredSkills.length}
+              {toggledSkills.size}
             </span>
           </div>
           <Button>Add Skill</Button>
