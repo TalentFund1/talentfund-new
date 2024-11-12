@@ -20,7 +20,6 @@ export const SkillProfileMatrix = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
   const { toast } = useToast();
-  const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
 
   const handleToggleSkill = (skillTitle: string) => {
@@ -66,7 +65,7 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
-      return isInCurrentRole;
+      return isInCurrentRole && toggledSkills.has(skill.title);
     }).sort((a, b) => {
       const aIsSaved = toggledSkills.has(a.title);
       const bIsSaved = toggledSkills.has(b.title);
@@ -78,7 +77,9 @@ export const SkillProfileMatrix = () => {
   const paginatedSkills = filteredSkills.slice(0, page * PAGE_SIZE);
   const hasMoreSkills = paginatedSkills.length < filteredSkills.length;
 
+  const observerTarget = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver>();
+
   useEffect(() => {
     observer.current = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMoreSkills && !loading) {
