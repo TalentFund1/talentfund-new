@@ -62,54 +62,42 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       : ["M3", "M4", "M5", "M6"];
   };
 
-  const getSkillsForCategory = () => {
-    const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
-    return categoryData?.[track.toLowerCase()];
-  };
-
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
-    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
+    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
     
-    if (!currentRoleSkills) return [];
+    // Helper function to check if a skill belongs to a specific category in the role
+    const isSkillInCategory = (skill: string, category: 'specialized' | 'common' | 'certifications') => {
+      return currentRoleSkills[category]?.some(s => s.title === skill) || false;
+    };
 
-    if (selectedCategory === "all") {
-      return skillsArray.filter(skill => 
-        currentRoleSkills.specialized.some(s => s.title === skill) ||
-        currentRoleSkills.common.some(s => s.title === skill) ||
-        currentRoleSkills.certifications.some(s => s.title === skill)
-      );
-    }
+    // Filter skills that are both toggled AND belong to the current role
+    const filteredSkills = skillsArray.filter(skill => {
+      if (selectedCategory === "all") {
+        return isSkillInCategory(skill, 'specialized') || 
+               isSkillInCategory(skill, 'common') || 
+               isSkillInCategory(skill, 'certifications');
+      }
+      
+      if (selectedCategory === "specialized") {
+        return isSkillInCategory(skill, 'specialized');
+      }
+      
+      if (selectedCategory === "common") {
+        return isSkillInCategory(skill, 'common');
+      }
+      
+      if (selectedCategory === "certification") {
+        return isSkillInCategory(skill, 'certifications');
+      }
+      
+      return false;
+    });
     
-    if (selectedCategory === "specialized") {
-      return skillsArray.filter(skill => 
-        currentRoleSkills.specialized.some(s => s.title === skill)
-      );
-    }
-    
-    if (selectedCategory === "common") {
-      return skillsArray.filter(skill => 
-        currentRoleSkills.common.some(s => s.title === skill)
-      );
-    }
-    
-    if (selectedCategory === "certification") {
-      return skillsArray.filter(skill => 
-        currentRoleSkills.certifications.some(s => s.title === skill)
-      );
-    }
-    
-    return [];
+    return filteredSkills.sort();
   };
 
-  const getSkillDetails = (skillName: string, level: string) => {
-    if (!skills || !skills[level]) return { level: "-", required: "-" };
-    return skills[level]?.find((s: { name: string; level: string; required: string; }) => 
-      s.name === skillName
-    ) || { level: "-", required: "-" };
-  };
-
-  const skills = getSkillsForCategory() || {};
+  const skills = getSkillsByCategory() || {};
   const levels = getLevelsForTrack();
   const uniqueSkills = getSkillsByCategory().sort();
 
