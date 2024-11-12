@@ -105,14 +105,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const skills = getSkillsForCategory() || {};
   const levels = getLevelsForTrack();
   const uniqueSkills = getSkillsByCategory().sort();
-  const skillCounts = categorizeSkills(Array.from(toggledSkills), currentRoleId);
-
-  const getSkillDetails = (skillName: string, level: string) => {
-    if (!skills || !skills[level]) return { level: "-", required: "-" };
-    return skills[level]?.find((s: { name: string; level: string; required: string; }) => 
-      s.name === skillName
-    ) || { level: "-", required: "-" };
-  };
 
   return (
     <div className="space-y-6">
@@ -145,7 +137,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       <CategorySection 
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        skillCounts={skillCounts}
       />
 
       <div className="rounded-lg border border-border bg-white overflow-hidden">
