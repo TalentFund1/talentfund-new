@@ -1,5 +1,6 @@
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
+import { useToggledSkills } from '../context/ToggledSkillsContext';
 
 interface CategorySectionProps {
   selectedCategory: string;
@@ -8,18 +9,20 @@ interface CategorySectionProps {
 
 export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
+  const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  const skillCounts = {
-    all: [
-      ...(currentRoleSkills.specialized || []),
-      ...(currentRoleSkills.common || []),
-      ...(currentRoleSkills.certifications || [])
-    ].length,
-    specialized: currentRoleSkills.specialized?.length || 0,
-    common: currentRoleSkills.common?.length || 0,
-    certification: currentRoleSkills.certifications?.length || 0
+  const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
+    return skills.filter(skill => toggledSkills.has(skill.title)).length;
   };
+
+  const skillCounts = {
+    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
+    common: getToggledSkillsCount(currentRoleSkills.common || []),
+    certification: getToggledSkillsCount(currentRoleSkills.certifications || [])
+  };
+
+  skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
 
   const categories = [
     { id: "all", name: "All Categories", count: skillCounts.all },
