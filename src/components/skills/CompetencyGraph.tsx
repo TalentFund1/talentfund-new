@@ -8,7 +8,7 @@ import { skillsByCategory } from "./competency/skillsData";
 import { CategorySection } from "./competency/CategorySection";
 import { categorizeSkills } from "./competency/skillCategories";
 import { useCompetencyStore } from "./competency/CompetencyState";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/toast";
 import { TrackSelection } from "./TrackSelection";
 import { useTrack } from "./context/TrackContext";
 import { jobTitles } from "./competency/skillProfileData";
@@ -30,7 +30,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
   const { toast } = useToast();
 
   const track = roleId ? getTrackForRole(roleId) : initialTrack || "Professional";
-  const jobTitle = roleId ? jobTitles[roleId] || "AI Engineer" : "AI Engineer";
+  const jobTitle = roleId ? jobTitles[roleId] : "AI Engineer";
 
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
@@ -63,12 +63,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
     return categoryData?.[track.toLowerCase()];
   };
 
-  const skills = getSkillsForCategory() || {};
-  const levels = getLevelsForTrack();
-
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
-    const profileId = roleId || "123"; // Default to AI Engineer if no roleId provided
+    const profileId = roleId || "123";
     
     if (selectedCategory === "all") {
       return skillsArray.filter(skill => 
@@ -93,6 +90,8 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
     return [];
   };
 
+  const skills = getSkillsForCategory() || {};
+  const levels = getLevelsForTrack();
   const uniqueSkills = getSkillsByCategory().sort();
   const skillCounts = categorizeSkills(Array.from(toggledSkills), roleId || "123");
 
