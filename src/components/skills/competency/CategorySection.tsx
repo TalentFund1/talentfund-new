@@ -7,6 +7,13 @@ interface CategorySectionProps {
   setSelectedCategory: (category: string) => void;
 }
 
+interface SkillCounts {
+  specialized: number;
+  common: number;
+  certification: number;
+  all: number;
+}
+
 export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
@@ -16,10 +23,11 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
     return skills.filter(skill => toggledSkills.has(skill.title)).length;
   };
 
-  const skillCounts = {
+  const skillCounts: SkillCounts = {
     specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
     common: getToggledSkillsCount(currentRoleSkills.common || []),
-    certification: getToggledSkillsCount(currentRoleSkills.certifications || [])
+    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
+    all: 0 // Will be updated below
   };
 
   skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
