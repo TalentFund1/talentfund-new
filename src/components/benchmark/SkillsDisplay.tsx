@@ -18,16 +18,18 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const currentTrack = getTrackForRole(roleId) as "Professional" | "Managerial";
 
   const getSkillsForCategory = (category: string) => {
+    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+    
     // Combine all skills from different sections
     const allSkills = [
-      ...(selectedRoleSkills.specialized || []),
-      ...(selectedRoleSkills.common || []),
-      ...(selectedRoleSkills.certifications || [])
+      ...(currentRoleSkills.specialized || []),
+      ...(currentRoleSkills.common || []),
+      ...(currentRoleSkills.certifications || [])
     ].map((skill: any) => {
       // Get the skill requirements for current level
       const requirements = getSkillRequirements(
         skill.title,
-        currentTrack === "Professional" ? "professional" : "managerial",
+        currentTrack.toLowerCase(),
         selectedLevel.toUpperCase()
       );
 
@@ -41,13 +43,13 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     return allSkills.filter((skill: any) => {
       if (category === "All Categories") return true;
       if (category === "Specialized Skills") {
-        return selectedRoleSkills.specialized.some((s: any) => s.title === skill.title);
+        return currentRoleSkills.specialized.some((s: any) => s.title === skill.title);
       }
       if (category === "Common Skills") {
-        return selectedRoleSkills.common.some((s: any) => s.title === skill.title);
+        return currentRoleSkills.common.some((s: any) => s.title === skill.title);
       }
       if (category === "Certification") {
-        return selectedRoleSkills.certifications.some((s: any) => s.title === skill.title);
+        return currentRoleSkills.certifications.some((s: any) => s.title === skill.title);
       }
       return false;
     });
