@@ -7,7 +7,6 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
-import { CompetencyGraph } from "../skills/CompetencyGraph";
 
 const roles = {
   "123": "AI Engineer",
@@ -75,8 +74,6 @@ export const RoleBenchmark = () => {
           roleId={selectedRole}
           selectedLevel={selectedLevel}
         />
-
-        <CompetencyGraph roleId={selectedRole} track={currentTrack} />
       </div>
     </div>
   );
