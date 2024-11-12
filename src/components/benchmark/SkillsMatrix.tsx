@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -30,6 +31,7 @@ export const SkillsMatrix = ({ searchSkills = [] }: SkillsMatrixProps) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
@@ -40,9 +42,13 @@ export const SkillsMatrix = ({ searchSkills = [] }: SkillsMatrixProps) => {
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
 
-  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
-    skill => isRoleBenchmarkTab || searchSkills.length === 0 || searchSkills.includes(skill.title)
-  );
+  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
+    .filter(skill => isRoleBenchmarkTab || searchSkills.length === 0 || searchSkills.includes(skill.title))
+    .filter(skill => 
+      searchQuery === "" || 
+      skill.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      skill.subcategory.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const handleRowsPerPageChange = (value: string) => {
     setRowsPerPage(Number(value));
@@ -64,29 +70,41 @@ export const SkillsMatrix = ({ searchSkills = [] }: SkillsMatrixProps) => {
         />
         <Separator className="my-4" />
         
-        {!isRoleBenchmarkTab ? (
-          <SkillsMatrixFilters 
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            selectedSkills={searchSkills}
-            setSelectedSkills={() => {}}
-          />
-        ) : (
-          <div className="flex justify-between items-start gap-4">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="specialized">Specialized Skills</SelectItem>
-                <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certifications</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button>Add Skill</Button>
+        <div className="flex flex-col space-y-4">
+          <div className="w-full max-w-sm">
+            <Input
+              type="search"
+              placeholder="Search skills..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full"
+            />
           </div>
-        )}
+
+          {!isRoleBenchmarkTab ? (
+            <SkillsMatrixFilters 
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              selectedSkills={searchSkills}
+              setSelectedSkills={() => {}}
+            />
+          ) : (
+            <div className="flex justify-between items-start gap-4">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-[180px] bg-white">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="specialized">Specialized Skills</SelectItem>
+                  <SelectItem value="common">Common Skills</SelectItem>
+                  <SelectItem value="certification">Certifications</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button>Add Skill</Button>
+            </div>
+          )}
+        </div>
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
