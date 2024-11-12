@@ -73,26 +73,6 @@ export const SkillsDisplay = ({
     }, { required: [], preferred: [] });
   };
 
-  const handleSkillClick = (skillTitle: string) => {
-    // Find the closest BenchmarkSkillsMatrix component's search input
-    const searchInput = document.querySelector('input[placeholder="Search skills..."]') as HTMLInputElement;
-    if (searchInput) {
-      // Trigger the Enter key event to add the skill as a search term
-      const enterEvent = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        code: 'Enter',
-        keyCode: 13,
-        which: 13,
-        bubbles: true
-      });
-      
-      // Set the value and dispatch events
-      searchInput.value = skillTitle;
-      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-      searchInput.dispatchEvent(enterEvent);
-    }
-  };
-
   const skills = getSkillsForCategory();
   const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skills);
 
@@ -108,19 +88,14 @@ export const SkillsDisplay = ({
         <SkillSection title="Required Skills" count={requiredSkills.length}>
           <div className="flex flex-wrap gap-2">
             {requiredSkills.map((skill) => (
-              <div
+              <SkillBadge 
                 key={skill.title}
-                onClick={() => handleSkillClick(skill.title)}
-                className="cursor-pointer hover:opacity-80 transition-opacity"
-              >
-                <SkillBadge 
-                  skill={{ name: skill.title }}
-                  showLevel={true}
-                  level={skill.level}
-                  isSkillGoal={true}
-                  isRoleBenchmark={true}
-                />
-              </div>
+                skill={{ name: skill.title }}
+                showLevel={true}
+                level={skill.level}
+                isSkillGoal={true}
+                isRoleBenchmark={true}
+              />
             ))}
           </div>
         </SkillSection>
@@ -128,18 +103,13 @@ export const SkillsDisplay = ({
         <SkillSection title="Preferred Skills" count={preferredSkills.length}>
           <div className="flex flex-wrap gap-2">
             {preferredSkills.map((skill) => (
-              <div
+              <SkillBadge 
                 key={skill.title}
-                onClick={() => handleSkillClick(skill.title)}
-                className="cursor-pointer hover:opacity-80 transition-opacity"
-              >
-                <SkillBadge 
-                  skill={{ name: skill.title }}
-                  showLevel={true}
-                  level={skill.level}
-                  isRoleBenchmark={true}
-                />
-              </div>
+                skill={{ name: skill.title }}
+                showLevel={true}
+                level={skill.level}
+                isRoleBenchmark={true}
+              />
             ))}
           </div>
         </SkillSection>
