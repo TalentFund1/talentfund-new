@@ -84,8 +84,8 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     specialized: specializedSkills.length,
     common: commonSkills.length,
     certification: certificationSkills.length,
-    // Use Set to get unique count of skills
-    all: new Set([...specializedSkills, ...commonSkills, ...certificationSkills]).size
+    // Calculate total unique skills for this role only
+    all: specializedSkills.length + commonSkills.length + certificationSkills.length
   };
 
   return (
