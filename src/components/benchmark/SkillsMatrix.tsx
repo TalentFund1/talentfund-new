@@ -11,10 +11,10 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams, useLocation } from "react-router-dom";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [benchmarkSearchSkills, setBenchmarkSearchSkills] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -25,6 +25,7 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
+  const { benchmarkSearchSkills, setBenchmarkSearchSkills } = useBenchmarkSearch();
 
   const handleSave = () => {
     saveChanges();
@@ -50,7 +51,7 @@ export const SkillsMatrix = () => {
   const currentSelectedSkills = isRoleBenchmarkTab ? benchmarkSearchSkills : selectedSkills;
   const setCurrentSelectedSkills = isRoleBenchmarkTab 
     ? setBenchmarkSearchSkills 
-    : (skills: string[]) => {};
+    : () => {};
 
   // Filter skills based on category and search
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
