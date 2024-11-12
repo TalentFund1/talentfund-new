@@ -39,9 +39,9 @@ export const CategorySection = ({
 
   const categories = [
     { id: "all", title: "All Categories", count: skillCounts.all },
-    { id: "specialized", title: "Specialized Skills", count: skillCounts.specialized },
-    { id: "common", title: "Common Skills", count: skillCounts.common },
-    { id: "certification", title: "Certification", count: skillCounts.certification }
+    { id: "specialized", title: "Specialized Skills", count: currentRoleSkills.specialized?.length || 0 },
+    { id: "common", title: "Common Skills", count: currentRoleSkills.common?.length || 0 },
+    { id: "certification", title: "Certification", count: currentRoleSkills.certifications?.length || 0 }
   ];
 
   return (
