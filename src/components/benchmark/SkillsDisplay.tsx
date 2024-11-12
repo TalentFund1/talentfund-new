@@ -2,7 +2,7 @@ import { RequirementSection } from "./RequirementSection";
 import { SkillBadge } from "../skills/SkillBadge";
 import { SkillSection } from "../skills/SkillSection";
 import { useState } from "react";
-import { getSkillsByTrackAndLevel, getSkillRequirements } from "../skills/data/skillsDatabase";
+import { getSkillsByTrackAndLevel, getSkillRequirements, SkillData } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
 
 interface SkillsDisplayProps {
@@ -30,23 +30,27 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
         (category === "Certification" && skill.category === "certification");
       
       return isInCategory && toggledSkills.has(skill.title);
-    });
-  };
-
-  const categorizeSkillsByRequirement = (skills: any[]) => {
-    return skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
+    }).map(skill => {
       const requirements = getSkillRequirements(
         skill.title,
         currentTrack.toLowerCase() as 'professional' | 'managerial',
         selectedLevel.toUpperCase()
       );
+      return {
+        title: skill.title,
+        level: requirements?.level || 'unspecified',
+        requirement: requirements?.requirement
+      };
+    });
+  };
 
-      if (requirements?.requirement === 'required') {
-        acc.required.push({ ...skill, level: requirements.level });
-      } else if (requirements?.requirement === 'preferred') {
-        acc.preferred.push({ ...skill, level: requirements.level });
+  const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
+    return skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
+      if (skill.requirement === 'required') {
+        acc.required.push(skill);
+      } else if (skill.requirement === 'preferred') {
+        acc.preferred.push(skill);
       }
-
       return acc;
     }, { required: [], preferred: [] });
   };
