@@ -4,7 +4,6 @@ import { useState } from "react";
 import { getSkillsByTrackAndLevel, getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
-import { RequirementSection } from "./RequirementSection";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -14,53 +13,46 @@ interface SkillsDisplayProps {
 }
 
 export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selectedLevel }: SkillsDisplayProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("Specialized Skills");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole(roleId);
   const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
 
-  // Get current role's skills
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-  
-  // Create sets of valid skills for this role
-  const validSpecializedSkills = new Set(currentRoleSkills.specialized.map(s => s.title));
-  const validCommonSkills = new Set(currentRoleSkills.common.map(s => s.title));
-  const validCertificationSkills = new Set(currentRoleSkills.certifications.map(s => s.title));
-  
-  // Filter toggled skills to only include those that belong to this role
-  const specializedSkills = Array.from(toggledSkills)
-    .filter(title => validSpecializedSkills.has(title));
-    
-  const commonSkills = Array.from(toggledSkills)
-    .filter(title => validCommonSkills.has(title));
-    
-  const certificationSkills = Array.from(toggledSkills)
-    .filter(title => validCertificationSkills.has(title));
-
   const getSkillsForCategory = (category: string) => {
-    // Get skills based on category
-    let categorySkills: string[] = [];
-    if (category === "Specialized Skills") {
-      categorySkills.push(...specializedSkills);
-    } else if (category === "Common Skills") {
-      categorySkills.push(...commonSkills);
-    } else if (category === "Certification") {
-      categorySkills.push(...certificationSkills);
-    }
-
-    // Convert to array and add requirements
-    return categorySkills.map(skillTitle => {
+    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+    
+    // Combine all skills from different sections
+    const allSkills = [
+      ...(currentRoleSkills.specialized || []),
+      ...(currentRoleSkills.common || []),
+      ...(currentRoleSkills.certifications || [])
+    ].map((skill: any) => {
+      // Get the skill requirements for current level
       const requirements = getSkillRequirements(
-        skillTitle,
+        skill.title,
         currentTrack,
-        selectedLevel
+        selectedLevel.toUpperCase()
       );
 
       return {
-        title: skillTitle,
+        title: skill.title,
         level: requirements?.level || 'unspecified',
         requirement: requirements?.requirement || 'preferred'
       };
+    }).filter((skill: any) => toggledSkills.has(skill.title));
+
+    return allSkills.filter((skill: any) => {
+      if (category === "All Categories") return true;
+      if (category === "Specialized Skills") {
+        return currentRoleSkills.specialized.some((s: any) => s.title === skill.title);
+      }
+      if (category === "Common Skills") {
+        return currentRoleSkills.common.some((s: any) => s.title === skill.title);
+      }
+      if (category === "Certification") {
+        return currentRoleSkills.certifications.some((s: any) => s.title === skill.title);
+      }
+      return false;
     });
   };
 
@@ -80,20 +72,35 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         {[
-          { title: "Specialized Skills", count: specializedSkills.length },
-          { title: "Common Skills", count: commonSkills.length },
-          { title: "Certification", count: certificationSkills.length }
+          { title: "All Categories", count: skillsInCategory.length },
+          { title: "Specialized Skills", count: getSkillsForCategory("Specialized Skills").length },
+          { title: "Common Skills", count: getSkillsForCategory("Common Skills").length },
+          { title: "Certification", count: getSkillsForCategory("Certification").length }
         ].map((category) => (
-          <RequirementSection
+          <button
             key={category.title}
-            title={category.title}
-            count={category.count}
-            skills={skillsInCategory}
-            isSelected={selectedCategory === category.title}
             onClick={() => setSelectedCategory(category.title)}
-          />
+            className={`rounded-lg p-4 transition-colors ${
+              selectedCategory === category.title
+                ? 'bg-primary-accent/5 border border-primary-accent'
+                : 'bg-background border border-border hover:border-primary-accent/50'
+            }`}
+          >
+            <div className="flex flex-col items-start">
+              <span className={`text-sm font-semibold mb-1 ${
+                selectedCategory === category.title
+                  ? 'text-primary-accent'
+                  : 'text-foreground group-hover:text-primary-accent'
+              }`}>
+                {category.title}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {category.count} skills
+              </span>
+            </div>
+          </button>
         ))}
       </div>
 

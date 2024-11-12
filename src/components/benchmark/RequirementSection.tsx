@@ -19,6 +19,8 @@ export const RequirementSection = ({
   isSelected,
   onClick 
 }: RequirementSectionProps) => {
+  const isAllCategories = title === 'All Categories';
+  
   return (
     <button
       onClick={onClick}
