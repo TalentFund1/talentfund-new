@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import { SkillCell } from "./competency/SkillCell";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { skillsByCategory } from "./competency/skillsData";
