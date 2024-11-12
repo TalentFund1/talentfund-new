@@ -25,14 +25,12 @@ export const roleSkills = {
       { title: "Database Design", subcategory: "Data Management", level: "advanced", growth: "15%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
       { title: "API Development", subcategory: "Backend Development", level: "advanced", growth: "25%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } },
       { title: "System Architecture", subcategory: "Software Architecture", level: "intermediate", growth: "30%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Kubernetes", subcategory: "Container Orchestration", level: "advanced", growth: "28%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } },
-      { title: "SQL", subcategory: "Database", level: "advanced", growth: "15%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "Kubernetes", subcategory: "Container Orchestration", level: "advanced", growth: "28%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
     ],
     common: [
       { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Code Review", subcategory: "Development Practices", level: "advanced", growth: "12%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Agile Methodologies", subcategory: "Project Management", level: "advanced", growth: "15%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "10%", salary: "$160,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "Agile Methodologies", subcategory: "Project Management", level: "advanced", growth: "15%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } }
     ],
     certifications: [
       { title: "AWS Certified Solutions Architect", subcategory: "Cloud Certification", level: "advanced", growth: "30%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },

@@ -1,109 +1,79 @@
+import { RequirementSection } from "./RequirementSection";
+import { categorizeSkill } from "./skills-matrix/skillCategories";
 import { SkillBadge } from "../skills/SkillBadge";
 import { SkillSection } from "../skills/SkillSection";
 import { useState } from "react";
-import { getSkillsByTrackAndLevel, getSkillRequirements } from "../skills/data/skillsDatabase";
-import { useTrack } from "../skills/context/TrackContext";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
   toggledSkills: Set<string>;
-  roleId: string;
-  selectedLevel: string;
 }
 
-export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selectedLevel }: SkillsDisplayProps) => {
+export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills }: SkillsDisplayProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
-  const { getTrackForRole } = useTrack();
-  const currentTrack = getTrackForRole(roleId) as "Professional" | "Managerial";
 
-  const getSkillsForCategory = (category: string) => {
-    // Combine all skills from different sections
-    const allSkills = [
-      ...(selectedRoleSkills.specialized || []),
-      ...(selectedRoleSkills.common || []),
-      ...(selectedRoleSkills.certifications || [])
-    ].map((skill: any) => {
-      // Get the skill requirements for current level
-      const requirements = getSkillRequirements(
-        skill.title,
-        currentTrack === "Professional" ? "professional" : "managerial",
-        selectedLevel.toUpperCase()
-      );
-
-      return {
-        title: skill.title,
-        level: requirements?.level || 'unspecified',
-        requirement: requirements?.requirement || 'preferred'
-      };
-    }).filter((skill: any) => toggledSkills.has(skill.title));
-
-    return allSkills.filter((skill: any) => {
-      if (category === "All Categories") return true;
-      if (category === "Specialized Skills") {
-        return selectedRoleSkills.specialized.some((s: any) => s.title === skill.title);
-      }
-      if (category === "Common Skills") {
-        return selectedRoleSkills.common.some((s: any) => s.title === skill.title);
-      }
-      if (category === "Certification") {
-        return selectedRoleSkills.certifications.some((s: any) => s.title === skill.title);
-      }
-      return false;
-    });
+  const filterSkillsByRequirement = (skills: any[], requirement: string, category?: string) => {
+    return skills.filter(skill => 
+      toggledSkills.has(skill.title) && 
+      skill.requirement?.toLowerCase() === requirement.toLowerCase() &&
+      (!category || categorizeSkill(skill.title) === category)
+    );
   };
 
-  const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
-    return skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
-      if (skill.requirement === 'required') {
-        acc.required.push(skill);
-      } else {
-        acc.preferred.push(skill);
-      }
-      return acc;
-    }, { required: [], preferred: [] });
-  };
+  // Required Skills
+  const requiredSpecialized = filterSkillsByRequirement(selectedRoleSkills.specialized, "required", "specialized");
+  const requiredCommon = filterSkillsByRequirement(selectedRoleSkills.common, "required", "common");
+  const requiredCertifications = filterSkillsByRequirement(selectedRoleSkills.certifications, "required", "certification");
+  const requiredAll = [...requiredSpecialized, ...requiredCommon, ...requiredCertifications];
 
-  const skillsInCategory = getSkillsForCategory(selectedCategory);
-  const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skillsInCategory);
+  // Preferred Skills
+  const preferredSpecialized = filterSkillsByRequirement(selectedRoleSkills.specialized, "preferred", "specialized");
+  const preferredCommon = filterSkillsByRequirement(selectedRoleSkills.common, "preferred", "common");
+  const preferredCertifications = filterSkillsByRequirement(selectedRoleSkills.certifications, "preferred", "certification");
+  const preferredAll = [...preferredSpecialized, ...preferredCommon, ...preferredCertifications];
+
+  const categories = [
+    {
+      title: "All Categories",
+      count: requiredAll.length + preferredAll.length,
+      skills: [...requiredAll, ...preferredAll]
+    },
+    {
+      title: "Specialized Skills",
+      count: requiredSpecialized.length + preferredSpecialized.length,
+      skills: [...requiredSpecialized, ...preferredSpecialized]
+    },
+    {
+      title: "Common Skills",
+      count: requiredCommon.length + preferredCommon.length,
+      skills: [...requiredCommon, ...preferredCommon]
+    },
+    {
+      title: "Certification",
+      count: requiredCertifications.length + preferredCertifications.length,
+      skills: [...requiredCertifications, ...preferredCertifications]
+    }
+  ];
 
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-4 gap-4">
-        {[
-          { title: "All Categories", count: skillsInCategory.length },
-          { title: "Specialized Skills", count: getSkillsForCategory("Specialized Skills").length },
-          { title: "Common Skills", count: getSkillsForCategory("Common Skills").length },
-          { title: "Certification", count: getSkillsForCategory("Certification").length }
-        ].map((category) => (
-          <button
+        {categories.map((category) => (
+          <RequirementSection 
             key={category.title}
+            title={category.title}
+            count={category.count}
+            skills={category.skills}
+            isSelected={selectedCategory === category.title}
             onClick={() => setSelectedCategory(category.title)}
-            className={`rounded-lg p-4 transition-colors ${
-              selectedCategory === category.title
-                ? 'bg-primary-accent/5 border border-primary-accent'
-                : 'bg-background border border-border hover:border-primary-accent/50'
-            }`}
-          >
-            <div className="flex flex-col items-start">
-              <span className={`text-sm font-semibold mb-1 ${
-                selectedCategory === category.title
-                  ? 'text-primary-accent'
-                  : 'text-foreground group-hover:text-primary-accent'
-              }`}>
-                {category.title}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {category.count} skills
-              </span>
-            </div>
-          </button>
+          />
         ))}
       </div>
 
       <div className="space-y-6">
-        <SkillSection title="Required Skills" count={requiredSkills.length}>
+        <SkillSection title="Required Skills" count={requiredAll.length}>
           <div className="flex flex-wrap gap-2">
-            {requiredSkills.map((skill) => (
+            {requiredAll.map((skill) => (
               <SkillBadge 
                 key={skill.title}
                 skill={{ name: skill.title }}
@@ -115,9 +85,9 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
           </div>
         </SkillSection>
 
-        <SkillSection title="Preferred Skills" count={preferredSkills.length}>
+        <SkillSection title="Preferred Skills" count={preferredAll.length}>
           <div className="flex flex-wrap gap-2">
-            {preferredSkills.map((skill) => (
+            {preferredAll.map((skill) => (
               <SkillBadge 
                 key={skill.title}
                 skill={{ name: skill.title }}

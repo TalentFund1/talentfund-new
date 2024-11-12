@@ -17,6 +17,19 @@ export interface SkillData {
 
 export const skillsDatabase: SkillData[] = [
   {
+    title: "Python",
+    category: "specialized",
+    subcategory: "Programming Languages",
+    professionalTrack: {
+      P1: { level: 'intermediate', requirement: 'required' },
+      P2: { level: 'intermediate', requirement: 'required' },
+      P3: { level: 'advanced', requirement: 'required' },
+      P4: { level: 'advanced', requirement: 'required' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
+  },
+  {
     title: "Machine Learning",
     category: "specialized",
     subcategory: "AI & ML",
@@ -43,29 +56,14 @@ export const skillsDatabase: SkillData[] = [
     }
   },
   {
-    title: "Natural Language Processing",
-    category: "specialized",
-    subcategory: "AI Applications",
-    professionalTrack: {
-      P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'unspecified', requirement: 'preferred' },
-      P3: { level: 'unspecified', requirement: 'preferred' },
-      P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'unspecified', requirement: 'preferred' },
-      P6: { level: 'unspecified', requirement: 'preferred' }
-    }
-  },
-  {
-    title: "Computer Vision",
-    category: "specialized",
-    subcategory: "AI Applications",
-    professionalTrack: {
-      P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'unspecified', requirement: 'preferred' },
-      P3: { level: 'unspecified', requirement: 'preferred' },
-      P4: { level: 'unspecified', requirement: 'required' },
-      P5: { level: 'unspecified', requirement: 'preferred' },
-      P6: { level: 'unspecified', requirement: 'preferred' }
+    title: "Team Leadership",
+    category: "common",
+    subcategory: "Leadership",
+    managerialTrack: {
+      M3: { level: 'intermediate', requirement: 'required' },
+      M4: { level: 'advanced', requirement: 'required' },
+      M5: { level: 'advanced', requirement: 'required' },
+      M6: { level: 'advanced', requirement: 'required' }
     }
   },
   {
@@ -80,11 +78,10 @@ export const skillsDatabase: SkillData[] = [
       P5: { level: 'advanced', requirement: 'required' },
       P6: { level: 'advanced', requirement: 'required' }
     }
-  },
-  // Other skills can be added here
+  }
 ];
 
-// Helper functions remain unchanged
+// Helper function to get skills by track and level
 export const getSkillsByTrackAndLevel = (
   track: 'professional' | 'managerial',
   level: string
@@ -95,12 +92,14 @@ export const getSkillsByTrackAndLevel = (
   });
 };
 
+// Helper function to get skills by category
 export const getSkillsByCategory = (
   category: 'specialized' | 'common' | 'certification'
 ): SkillData[] => {
   return skillsDatabase.filter(skill => skill.category === category);
 };
 
+// Helper function to get skill requirements for specific track and level
 export const getSkillRequirements = (
   skillTitle: string,
   track: 'professional' | 'managerial',
@@ -110,5 +109,5 @@ export const getSkillRequirements = (
   if (!skill) return undefined;
   
   const trackData = track === 'professional' ? skill.professionalTrack : skill.managerialTrack;
-  return trackData?.[level.toUpperCase()];
+  return trackData?.[level];
 };

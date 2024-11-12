@@ -72,8 +72,6 @@ export const RoleBenchmark = () => {
         <SkillsDisplay 
           selectedRoleSkills={selectedRoleSkills}
           toggledSkills={toggledSkills}
-          roleId={selectedRole}
-          selectedLevel={selectedLevel}
         />
 
         <CompetencyGraph roleId={selectedRole} track={currentTrack} />
