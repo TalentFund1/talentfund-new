@@ -18,29 +18,26 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const currentTrack = getTrackForRole(roleId);
 
   const getSkillsForCategory = (category: string) => {
-    const skills = getSkillsByTrackAndLevel(
-      currentTrack.toLowerCase() as 'professional' | 'managerial',
-      selectedLevel.toUpperCase()
-    );
+    const allSkills = selectedRoleSkills.map((skill: any) => ({
+      title: skill.title,
+      level: skill.level || 'unspecified',
+      requirement: skill.requirement || 'preferred'
+    })).filter((skill: any) => toggledSkills.has(skill.title));
 
-    return skills.filter(skill => {
-      const isInCategory = category === "All Categories" || 
-        (category === "Specialized Skills" && skill.category === "specialized") ||
-        (category === "Common Skills" && skill.category === "common") ||
-        (category === "Certification" && skill.category === "certification");
-      
-      return isInCategory && toggledSkills.has(skill.title);
-    }).map(skill => {
-      const requirements = getSkillRequirements(
-        skill.title,
-        currentTrack.toLowerCase() as 'professional' | 'managerial',
-        selectedLevel.toUpperCase()
-      );
-      return {
-        title: skill.title,
-        level: requirements?.level || 'unspecified',
-        requirement: requirements?.requirement
-      };
+    return allSkills.filter((skill: any) => {
+      if (category === "All Categories") return true;
+      if (category === "Specialized Skills") return skill.title.toLowerCase().includes('machine learning') || 
+        skill.title.toLowerCase().includes('deep learning') || 
+        skill.title.toLowerCase().includes('natural language') ||
+        skill.title.toLowerCase().includes('computer vision') ||
+        skill.title.toLowerCase().includes('pytorch') ||
+        skill.title.toLowerCase().includes('tensorflow');
+      if (category === "Common Skills") return skill.title === "Python" || 
+        skill.title === "Problem Solving" ||
+        skill.title === "Technical Writing";
+      if (category === "Certification") return skill.title.toLowerCase().includes('certified') ||
+        skill.title.toLowerCase().includes('certificate');
+      return false;
     });
   };
 
@@ -48,7 +45,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     return skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
       if (skill.requirement === 'required') {
         acc.required.push(skill);
-      } else if (skill.requirement === 'preferred') {
+      } else {
         acc.preferred.push(skill);
       }
       return acc;
