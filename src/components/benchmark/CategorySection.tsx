@@ -24,14 +24,13 @@ export const CategorySection = ({
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const getToggledSkillsCount = (skills: Array<{ title: string }> = []) => {
-    if (!skills) return 0;
-    return skills.filter(skill => toggledSkills.has(skill.title)).length;
+    return skills?.filter(skill => toggledSkills.has(skill.title)).length || 0;
   };
 
   const skillCounts: SkillCounts = {
-    specialized: getToggledSkillsCount(currentRoleSkills.specialized),
-    common: getToggledSkillsCount(currentRoleSkills.common),
-    certification: getToggledSkillsCount(currentRoleSkills.certifications),
+    specialized: getToggledSkillsCount(currentRoleSkills?.specialized),
+    common: getToggledSkillsCount(currentRoleSkills?.common),
+    certification: getToggledSkillsCount(currentRoleSkills?.certifications),
     all: 0
   };
 
