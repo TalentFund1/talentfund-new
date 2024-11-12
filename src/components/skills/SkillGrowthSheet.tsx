@@ -21,18 +21,18 @@ export const SkillGrowthSheet = ({ open, onOpenChange, skill }: SkillGrowthSheet
   
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent>
+      <SheetContent side="right" className="w-[400px] sm:w-[540px]">
         <SheetHeader className="space-y-6">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-primary-accent" />
-            <SheetTitle>Skill Growth Details</SheetTitle>
+            <SheetTitle className="text-xl">Skill Growth Details</SheetTitle>
           </div>
           
           <div className="space-y-4">
             <div>
               <h3 className="text-lg font-semibold">{skill.title}</h3>
               <div className="mt-2 flex items-center gap-2">
-                <span className={`px-2 py-1 rounded-full text-sm ${
+                <span className={`px-2.5 py-1 rounded-full text-sm font-medium ${
                   skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
                 }`}>
                   ↗ {skill.growth}
@@ -45,8 +45,8 @@ export const SkillGrowthSheet = ({ open, onOpenChange, skill }: SkillGrowthSheet
 
             <SheetDescription className="space-y-4">
               <div className="space-y-2">
-                <h4 className="font-medium">Growth Projection</h4>
-                <p className="text-sm">
+                <h4 className="font-medium text-foreground">Growth Projection</h4>
+                <p className="text-sm text-muted-foreground">
                   {growthValue > 15 
                     ? "High growth potential with significant demand increase expected."
                     : growthValue > 0
@@ -56,8 +56,8 @@ export const SkillGrowthSheet = ({ open, onOpenChange, skill }: SkillGrowthSheet
               </div>
 
               <div className="space-y-2">
-                <h4 className="font-medium">Market Insights</h4>
-                <p className="text-sm">
+                <h4 className="font-medium text-foreground">Market Insights</h4>
+                <p className="text-sm text-muted-foreground">
                   Based on industry trends and market analysis, this skill shows 
                   {growthValue > 10 ? " strong" : growthValue > 0 ? " positive" : " stable"} 
                   growth indicators for the next 12 months.
