@@ -68,7 +68,7 @@ const employees = {
 };
 
 const EmployeeProfile = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const employee = employees[id as keyof typeof employees];
 
   if (!employee) {
@@ -108,15 +108,15 @@ const EmployeeProfile = () => {
                     <Card className="p-8 bg-white">
                       <SkillsSummary />
                     </Card>
-                    <SkillsMatrix />
+                    <SkillsMatrix id={id || ""} />
                   </TabsContent>
 
                   <TabsContent value="benchmark" className="space-y-6">
                     <Card className="p-8 bg-white">
-                      <RoleBenchmark />
+                      <RoleBenchmark id={id || ""} />
                     </Card>
-                    <BenchmarkAnalysis />
-                    <SkillsMatrix />
+                    <BenchmarkAnalysis id={id || ""} />
+                    <SkillsMatrix id={id || ""} />
                   </TabsContent>
                 </Tabs>
               </BenchmarkSearchProvider>

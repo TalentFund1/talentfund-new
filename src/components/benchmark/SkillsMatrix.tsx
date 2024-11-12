@@ -48,6 +48,7 @@ export const SkillsMatrix = ({ id }: { id: string }) => {
           setSelectedCategory={setSelectedCategory}
           selectedSkills={searchSkills}
           setSelectedSkills={setSearchSkills}
+          isRoleBenchmarkTab={false}
         />
 
         <SkillsMatrixTable 
