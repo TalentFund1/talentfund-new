@@ -41,19 +41,23 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
       };
     }).filter((skill: any) => toggledSkills.has(skill.title));
 
-    return allSkills.filter((skill: any) => {
-      if (category === "All Categories") return true;
-      if (category === "Specialized Skills") {
-        return currentRoleSkills.specialized.some((s: any) => s.title === skill.title);
-      }
-      if (category === "Common Skills") {
-        return currentRoleSkills.common.some((s: any) => s.title === skill.title);
-      }
-      if (category === "Certification") {
-        return currentRoleSkills.certifications.some((s: any) => s.title === skill.title);
-      }
-      return false;
-    });
+    if (category === "All Categories") return allSkills;
+    if (category === "Specialized Skills") {
+      return allSkills.filter(skill => 
+        currentRoleSkills.specialized.some((s: any) => s.title === skill.title)
+      );
+    }
+    if (category === "Common Skills") {
+      return allSkills.filter(skill => 
+        currentRoleSkills.common.some((s: any) => s.title === skill.title)
+      );
+    }
+    if (category === "Certification") {
+      return allSkills.filter(skill => 
+        currentRoleSkills.certifications.some((s: any) => s.title === skill.title)
+      );
+    }
+    return [];
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
@@ -67,6 +71,10 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     }, { required: [], preferred: [] });
   };
 
+  const getCategoryCount = (category: string) => {
+    return getSkillsForCategory(category).length;
+  };
+
   const skillsInCategory = getSkillsForCategory(selectedCategory);
   const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skillsInCategory);
 
@@ -74,10 +82,10 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     <div className="space-y-8">
       <div className="grid grid-cols-4 gap-4">
         {[
-          { title: "All Categories", count: skillsInCategory.length },
-          { title: "Specialized Skills", count: getSkillsForCategory("Specialized Skills").length },
-          { title: "Common Skills", count: getSkillsForCategory("Common Skills").length },
-          { title: "Certification", count: getSkillsForCategory("Certification").length }
+          { title: "All Categories", count: getCategoryCount("All Categories") },
+          { title: "Specialized Skills", count: getCategoryCount("Specialized Skills") },
+          { title: "Common Skills", count: getCategoryCount("Common Skills") },
+          { title: "Certification", count: getCategoryCount("Certification") }
         ].map((category) => (
           <button
             key={category.title}
