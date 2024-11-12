@@ -25,7 +25,7 @@ export const SkillsMatrixFilters = ({
       <div className="w-full">
         <SearchFilter
           label=""
-          placeholder="Search skills..."
+          placeholder={`Search ${isRoleBenchmarkTab ? 'benchmark' : ''} skills...`}
           items={allSkills}
           selectedItems={selectedSkills}
           onItemsChange={setSelectedSkills}
