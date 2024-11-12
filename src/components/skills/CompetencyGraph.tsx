@@ -102,6 +102,13 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return [];
   };
 
+  const getSkillDetails = (skillName: string, level: string) => {
+    if (!skills || !skills[level]) return { level: "-", required: "-" };
+    return skills[level]?.find((s: { name: string; level: string; required: string; }) => 
+      s.name === skillName
+    ) || { level: "-", required: "-" };
+  };
+
   const skills = getSkillsForCategory() || {};
   const levels = getLevelsForTrack();
   const uniqueSkills = getSkillsByCategory().sort();
