@@ -3,14 +3,14 @@ import { persist } from 'zustand/middleware';
 
 interface SkillState {
   level: string;
-  required: string;
+  requirement: string;  // Changed from 'required' to 'requirement' to match usage
 }
 
 interface CompetencyState {
   originalStates: Record<string, Record<string, SkillState>>;
   currentStates: Record<string, Record<string, SkillState>>;
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
+  setSkillState: (skillName: string, level: string, levelKey: string, requirement: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
   initializeStates: (states: Record<string, Record<string, SkillState>>) => void;
@@ -22,13 +22,13 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       currentStates: {},
       hasChanges: false,
-      setSkillState: (skillName, level, levelKey, required) =>
+      setSkillState: (skillName, level, levelKey, requirement) =>
         set((state) => {
           const newStates = {
             ...state.currentStates,
             [skillName]: {
               ...(state.currentStates[skillName] || {}),
-              [levelKey]: { level, required },
+              [levelKey]: { level, requirement },
             },
           };
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
