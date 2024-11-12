@@ -13,7 +13,6 @@ interface SkillsDisplayProps {
   toggledSkills: Set<string>;
   roleId: string;
   selectedLevel: string;
-  onSkillSearch: (skills: string[]) => void;
 }
 
 export const SkillsDisplay = ({ 
@@ -21,7 +20,6 @@ export const SkillsDisplay = ({
   toggledSkills, 
   roleId, 
   selectedLevel,
-  onSkillSearch
 }: SkillsDisplayProps) => {
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole(roleId);
@@ -74,7 +72,6 @@ export const SkillsDisplay = ({
 
   const handleSkillSearch = (skills: string[]) => {
     setSearchSkills(skills);
-    onSkillSearch(skills);
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
