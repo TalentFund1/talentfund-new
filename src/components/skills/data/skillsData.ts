@@ -168,32 +168,3 @@ export const skills = [
     growth: "29%"
   }
 ];
-
-export const skillCategories = [
-  { id: "all", name: "All Skills", count: 28 },
-  { id: "specialized", name: "Specialized Skills", count: 15 },
-  { id: "common", name: "Common Skills", count: 10 },
-  { id: "certification", name: "Certification", count: 3 }
-];
-
-export const professionalSkills = {
-  "P1": [
-    { name: "Node.js", level: "beginner", required: "required" },
-    { name: "Database Design", level: "beginner", required: "required" }
-  ],
-  "P2": [
-    { name: "Node.js", level: "intermediate", required: "required" },
-    { name: "Database Design", level: "intermediate", required: "required" }
-  ]
-};
-
-export const managerialSkills = {
-  "M1": [
-    { name: "Team Leadership", level: "intermediate", required: "required" },
-    { name: "Project Management", level: "intermediate", required: "required" }
-  ],
-  "M2": [
-    { name: "Team Leadership", level: "advanced", required: "required" },
-    { name: "Project Management", level: "advanced", required: "required" }
-  ]
-};
