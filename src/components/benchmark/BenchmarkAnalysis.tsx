@@ -1,20 +1,33 @@
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { useParams } from "react-router-dom";
+import { roleSkills } from "../skills/data/roleSkills";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 interface Skill {
   name: string;
   status: "present" | "missing";
 }
 
-const skills: Skill[] = [
-  { name: "UI/UX Design Principles", status: "missing" },
-  { name: "Communication", status: "missing" },
-  { name: "Angular", status: "missing" },
-  { name: "Communication", status: "missing" },
-  { name: "Angular", status: "missing" }
-];
-
 export const BenchmarkAnalysis = () => {
+  const { id } = useParams<{ id: string }>();
+  const { toggledSkills } = useToggledSkills();
+  
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  
+  const allRequiredSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ].filter(skill => skill.level === "advanced");
+
+  const missingSkills = allRequiredSkills
+    .filter(skill => !toggledSkills.has(skill.title))
+    .map(skill => ({
+      name: skill.title,
+      status: "missing" as const
+    }));
+
   const getLevelStyles = () => {
     return "border-[#CCDBFF]";
   };
@@ -25,7 +38,7 @@ export const BenchmarkAnalysis = () => {
         <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
           Benchmark Analysis
           <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
-            89%
+            {Math.round((allRequiredSkills.length - missingSkills.length) / allRequiredSkills.length * 100)}%
           </span>
         </h2>
       </div>
@@ -35,10 +48,17 @@ export const BenchmarkAnalysis = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">Skill Match</span>
-              <span className="text-sm text-foreground">2 out of 6</span>
+              <span className="text-sm text-foreground">
+                {allRequiredSkills.length - missingSkills.length} out of {allRequiredSkills.length}
+              </span>
             </div>
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '33%' }} />
+              <div 
+                className="h-full bg-[#1F2144] rounded-full" 
+                style={{ 
+                  width: `${((allRequiredSkills.length - missingSkills.length) / allRequiredSkills.length) * 100}%` 
+                }} 
+              />
             </div>
           </div>
 
@@ -67,12 +87,12 @@ export const BenchmarkAnalysis = () => {
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-medium">Missing Skills or Certifications</span>
             <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {skills.length}
+              {missingSkills.length}
             </span>
           </div>
           
           <div className="flex flex-wrap gap-2">
-            {skills.map((skill, index) => (
+            {missingSkills.map((skill, index) => (
               <Badge 
                 key={`${skill.name}-${index}`}
                 variant="outline" 
