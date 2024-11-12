@@ -24,10 +24,6 @@ export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [searchSkills, setSearchSkills] = useState<string[]>([]);
-  const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { id } = useParams<{ id: string }>();
@@ -38,7 +34,14 @@ export const SkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
-    skill => isRoleBenchmarkTab || searchSkills.length === 0 || searchSkills.includes(skill.title)
+    skill => {
+      if (isRoleBenchmarkTab) return true;
+      if (selectedSkills.length === 0) return true;
+      return selectedSkills.some(searchTerm => 
+        skill.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        skill.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
   );
 
   const handleRowsPerPageChange = (value: string) => {
@@ -65,8 +68,6 @@ export const SkillsMatrix = () => {
           <SkillsMatrixFilters 
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
-            selectedSkills={searchSkills}
-            setSelectedSkills={setSearchSkills}
           />
         ) : (
           <div className="flex justify-between items-start gap-4">
