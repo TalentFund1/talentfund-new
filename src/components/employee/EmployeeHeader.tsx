@@ -16,6 +16,26 @@ interface EmployeeHeaderProps {
 export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
   const navigate = useNavigate();
 
+  const employees = [
+    { id: "123", name: "Victor Smith" },
+    { id: "124", name: "Jennie Richards" },
+    { id: "125", name: "Anna Vyselva" },
+    { id: "126", name: "Suz Manu" }
+  ];
+
+  const currentIndex = employees.findIndex(emp => emp.id === id);
+  const totalEmployees = employees.length;
+
+  const handleNavigation = (direction: 'prev' | 'next') => {
+    let newIndex;
+    if (direction === 'prev') {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : employees.length - 1;
+    } else {
+      newIndex = currentIndex < employees.length - 1 ? currentIndex + 1 : 0;
+    }
+    navigate(`/employee/${employees[newIndex].id}`);
+  };
+
   return (
     <>
       <div className="flex justify-between items-center mb-4">
@@ -27,9 +47,17 @@ export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
           <ChevronLeft className="h-4 w-4" /> Back
         </Button>
         <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
-          <ChevronLeft className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
-          <span className="text-sm text-foreground">2/7</span>
-          <ChevronRight className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" />
+          <ChevronLeft 
+            className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+            onClick={() => handleNavigation('prev')}
+          />
+          <span className="text-sm text-foreground">
+            {currentIndex + 1}/{totalEmployees}
+          </span>
+          <ChevronRight 
+            className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+            onClick={() => handleNavigation('next')}
+          />
         </div>
       </div>
 
