@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Heart } from "lucide-react";
 import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
@@ -9,7 +10,7 @@ interface SkillBadgeProps {
   isSkillGoal?: boolean;
 }
 
-export const SkillBadge = ({ skill, showLevel = false, level }: SkillBadgeProps) => {
+export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: SkillBadgeProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const skillState = currentStates[skill.name];
 
@@ -26,6 +27,22 @@ export const SkillBadge = ({ skill, showLevel = false, level }: SkillBadgeProps)
     }
   };
 
+  // Determine if this skill should show a goal indicator
+  const shouldShowGoal = () => {
+    // If explicitly passed as a prop
+    if (isSkillGoal) return true;
+    
+    // If it's in the current states
+    if (skillState) {
+      return skillState.requirement === 'required' || 
+             skillState.requirement === 'skill_goal';
+    }
+    
+    // For all skill levels, show goal by default
+    const currentLevel = (skillState?.level || level || '').toLowerCase();
+    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
+  };
+
   return (
     <Badge 
       key={skill.name} 
@@ -34,9 +51,14 @@ export const SkillBadge = ({ skill, showLevel = false, level }: SkillBadgeProps)
     >
       {skill.name}
       {(showLevel || skillState) && (
-        <div className={`h-2 w-2 rounded-full ${
-          getLevelColor(skillState?.level || level || "unspecified")
-        }`} />
+        <div className="flex items-center gap-1.5">
+          <div className={`h-2 w-2 rounded-full ${
+            getLevelColor(skillState?.level || level || "unspecified")
+          }`} />
+          {shouldShowGoal() && (
+            <Heart className="w-3 h-3 text-[#1f2144]" />
+          )}
+        </div>
       )}
     </Badge>
   );
