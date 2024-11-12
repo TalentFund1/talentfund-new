@@ -3,15 +3,16 @@ export const roleSkills = {
     specialized: [
       { title: "Machine Learning", subcategory: "Artificial Intelligence", level: "advanced", growth: "30%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
       { title: "Deep Learning", subcategory: "Artificial Intelligence", level: "advanced", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "TensorFlow", subcategory: "Machine Learning Frameworks", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "PyTorch", subcategory: "Machine Learning Frameworks", level: "advanced", growth: "24%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Computer Vision", subcategory: "AI Applications", level: "advanced", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "TensorFlow", subcategory: "Machine Learning Frameworks", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "PyTorch", subcategory: "Machine Learning Frameworks", level: "advanced", growth: "24%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } }
     ],
     common: [
       { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "15%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
       { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "12%", salary: "$156,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "12%", salary: "$156,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Data Analysis", subcategory: "Data Skills", level: "advanced", growth: "18%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } }
     ],
     certifications: [
       { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud Certification", level: "advanced", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },

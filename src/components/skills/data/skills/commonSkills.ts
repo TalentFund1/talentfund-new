@@ -26,5 +26,18 @@ export const commonSkills: SkillData[] = [
       P5: { level: 'advanced', requirement: 'required' },
       P6: { level: 'advanced', requirement: 'required' }
     }
+  },
+  {
+    title: "Technical Writing",
+    category: "common",
+    subcategory: "Communication",
+    professionalTrack: {
+      P1: { level: 'beginner', requirement: 'preferred' },
+      P2: { level: 'intermediate', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
+      P4: { level: 'intermediate', requirement: 'preferred' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
   }
 ];
