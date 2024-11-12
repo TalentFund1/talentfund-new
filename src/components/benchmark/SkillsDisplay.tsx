@@ -77,8 +77,7 @@ export const SkillsDisplay = ({
     <div className="space-y-8">
       <CategorySection
         selectedCategory={selectedCategory}
-        onCategorySelect={setSelectedCategory}
-        toggledSkills={toggledSkills}
+        setSelectedCategory={setSelectedCategory}
       />
 
       <div className="space-y-6">
