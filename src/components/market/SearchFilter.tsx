@@ -13,6 +13,7 @@ interface SearchFilterProps {
   singleSelect?: boolean;
   required?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 export const SearchFilter = ({ 
@@ -23,7 +24,8 @@ export const SearchFilter = ({
   onItemsChange,
   singleSelect = false,
   required = false,
-  className
+  className,
+  disabled = false
 }: SearchFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -42,6 +44,8 @@ export const SearchFilter = ({
   }, []);
 
   const handleSelect = (item: string) => {
+    if (disabled) return;
+    
     if (singleSelect) {
       onItemsChange([item]);
     } else {
@@ -56,6 +60,8 @@ export const SearchFilter = ({
   };
 
   const removeItem = (item: string) => {
+    if (disabled) return;
+    
     if (singleSelect) {
       onItemsChange([]);
     } else {
@@ -79,35 +85,44 @@ export const SearchFilter = ({
             <Badge key={item} variant="secondary" className="flex items-center gap-1">
               {item}
               <X 
-                className="h-3 w-3 cursor-pointer" 
-                onClick={() => removeItem(item)}
+                className={cn("h-3 w-3", disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer")}
+                onClick={() => !disabled && removeItem(item)}
               />
             </Badge>
           ))}
         </div>
         <div 
-          className="relative cursor-pointer"
-          onClick={() => setIsOpen(!isOpen)}
+          className={cn("relative", disabled ? "cursor-not-allowed" : "cursor-pointer")}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
         >
           <Input
             placeholder={selectedItems.length === 0 ? placeholder : ""}
             value={isOpen ? searchQuery : ""}
             onChange={(e) => {
-              e.stopPropagation();
-              setSearchQuery(e.target.value);
+              if (!disabled) {
+                e.stopPropagation();
+                setSearchQuery(e.target.value);
+              }
             }}
             onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(true);
+              if (!disabled) {
+                e.stopPropagation();
+                setIsOpen(true);
+              }
             }}
-            className="bg-white pr-8 placeholder:text-muted-foreground"
+            disabled={disabled}
+            className={cn(
+              "bg-white pr-8 placeholder:text-muted-foreground",
+              disabled && "opacity-50"
+            )}
           />
           <ChevronDown className={cn(
             "absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 transition-transform",
-            isOpen && "transform rotate-180"
+            isOpen && "transform rotate-180",
+            disabled && "opacity-50"
           )} />
         </div>
-        {isOpen && (
+        {isOpen && !disabled && (
           <div className="absolute z-50 w-full mt-1 bg-white rounded-md border shadow-lg max-h-60 overflow-auto">
             <div className="p-1">
               {filteredItems.length === 0 ? (
