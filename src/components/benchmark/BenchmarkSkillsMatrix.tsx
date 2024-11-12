@@ -8,8 +8,9 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from '@/components/skillsData';
+import { roleSkills } from '../skills/data/roleSkills';
 
 export const BenchmarkSkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -20,6 +21,21 @@ export const BenchmarkSkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
   const allSkills = [...technicalSkills, ...softSkills];
+
+  // Get role skills and automatically populate search
+  useEffect(() => {
+    if (id) {
+      const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
+      if (currentRoleSkills) {
+        const requiredAndPreferredSkills = [
+          ...(currentRoleSkills.specialized?.map(skill => skill.title) || []),
+          ...(currentRoleSkills.common?.map(skill => skill.title) || []),
+          ...(currentRoleSkills.certifications?.map(skill => skill.title) || [])
+        ];
+        setSelectedSearchSkills(requiredAndPreferredSkills);
+      }
+    }
+  }, [id]);
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
