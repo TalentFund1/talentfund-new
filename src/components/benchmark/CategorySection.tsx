@@ -1,11 +1,10 @@
 import { roleSkills } from '../skills/data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { useToggledSkills } from '../../components/skills/context/ToggledSkillsContext';
+import { useToggledSkills } from '../skills/context/ToggledSkillsContext';
 
 interface CategorySectionProps {
   selectedCategory: string;
-  onCategorySelect: (category: string) => void;
-  toggledSkills: Set<string>;
+  setSelectedCategory: (category: string) => void;
 }
 
 interface SkillCounts {
@@ -15,12 +14,9 @@ interface SkillCounts {
   all: number;
 }
 
-export const CategorySection = ({ 
-  selectedCategory, 
-  onCategorySelect,
-  toggledSkills
-}: CategorySectionProps) => {
+export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
+  const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const getSkillsCount = (skills: Array<{ title: string }>) => {
@@ -44,16 +40,6 @@ export const CategorySection = ({
       };
     }
 
-    // Frontend Engineer role (ID: 125)
-    if (roleId === "125") {
-      return {
-        specialized: 4,
-        common: 1,
-        certification: 1,
-        all: 6
-      };
-    }
-
     // Backend Engineer role (ID: 124)
     if (roleId === "124") {
       return {
@@ -61,6 +47,16 @@ export const CategorySection = ({
         common: 3,
         certification: 3,
         all: 11
+      };
+    }
+
+    // Frontend Engineer role (ID: 125)
+    if (roleId === "125") {
+      return {
+        specialized: 4,
+        common: 1,
+        certification: 1,
+        all: 6
       };
     }
 
@@ -87,7 +83,7 @@ export const CategorySection = ({
       {categories.map((category) => (
         <button
           key={category.id}
-          onClick={() => onCategorySelect(category.id)}
+          onClick={() => setSelectedCategory(category.id)}
           className={`rounded-lg p-4 transition-colors ${
             selectedCategory === category.id
               ? 'bg-primary-accent/5 border border-primary-accent'
