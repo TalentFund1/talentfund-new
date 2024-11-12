@@ -3,7 +3,7 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
     return skills;
   }
 
-  const specializationMap: { [key: string]: string[] } = {
+  const specializationMap: { [key: string]: string } = {
     "System Design": "specialized",
     "Technical Architecture": "specialized",
     "Team Leadership": "common",
@@ -19,4 +19,16 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
 
 export const getCategoryCount = (skills: any[], category: string) => {
   return filterSkillsByCategory(skills, category).length;
+};
+
+export const categorizeSkill = (skillName: string): string => {
+  const specializationMap: { [key: string]: string } = {
+    "System Design": "specialized",
+    "Technical Architecture": "specialized",
+    "Team Leadership": "common",
+    "Project Management": "common",
+    "Risk Management": "common"
+  };
+
+  return specializationMap[skillName] || 'common';
 };
