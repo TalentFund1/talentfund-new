@@ -30,7 +30,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
   const { toast } = useToast();
 
   const track = roleId ? getTrackForRole(roleId) : initialTrack || "Professional";
-  const jobTitle = roleId ? jobTitles[roleId] : "AI Engineer";
+  const jobTitle = roleId ? jobTitles[roleId] || "Engineering Manager" : "Engineering Manager";
 
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
@@ -68,32 +68,33 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
 
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
+    const profileId = roleId || "126"; // Default to Engineering Manager if no roleId provided
     
     if (selectedCategory === "all") {
       return skillsArray.filter(skill => 
-        isSpecializedSkill(skill, roleId || "") || 
-        isCommonSkill(skill, roleId || "") || 
-        isCertificationSkill(skill, roleId || "")
+        isSpecializedSkill(skill, profileId) || 
+        isCommonSkill(skill, profileId) || 
+        isCertificationSkill(skill, profileId)
       );
     }
     
     if (selectedCategory === "specialized") {
-      return skillsArray.filter(skill => isSpecializedSkill(skill, roleId || ""));
+      return skillsArray.filter(skill => isSpecializedSkill(skill, profileId));
     }
     
     if (selectedCategory === "common") {
-      return skillsArray.filter(skill => isCommonSkill(skill, roleId || ""));
+      return skillsArray.filter(skill => isCommonSkill(skill, profileId));
     }
     
     if (selectedCategory === "certification") {
-      return skillsArray.filter(skill => isCertificationSkill(skill, roleId || ""));
+      return skillsArray.filter(skill => isCertificationSkill(skill, profileId));
     }
     
     return [];
   };
 
   const uniqueSkills = getSkillsByCategory().sort();
-  const skillCounts = categorizeSkills(Array.from(toggledSkills), roleId || "");
+  const skillCounts = categorizeSkills(Array.from(toggledSkills), roleId || "124");
 
   const getSkillDetails = (skillName: string, level: string) => {
     if (!skills || !skills[level]) return { level: "-", required: "-" };
