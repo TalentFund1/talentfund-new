@@ -45,20 +45,7 @@ export const SkillsDisplay = ({
     }
 
     return filteredSkills
-      .filter(skill => {
-        const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
-        const requirements = getSkillRequirements(
-          skill.title,
-          currentTrack,
-          selectedLevel.toUpperCase()
-        );
-        
-        // Only include skills that are marked as required or preferred in the matrix
-        return matrixState?.requirement === 'required' || 
-               matrixState?.requirement === 'preferred' ||
-               requirements?.requirement === 'required' ||
-               requirements?.requirement === 'preferred';
-      })
+      .filter(skill => toggledSkills.has(skill.title))
       .map((skill: any) => {
         const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
         const requirements = getSkillRequirements(
@@ -70,7 +57,7 @@ export const SkillsDisplay = ({
         return {
           title: skill.title,
           level: matrixState?.level || requirements?.level || 'unspecified',
-          requirement: matrixState?.requirement || requirements?.requirement || 'preferred'
+          requirement: matrixState?.required || requirements?.requirement || 'preferred'
         };
       });
   };
