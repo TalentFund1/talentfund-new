@@ -30,10 +30,10 @@ export const CategorySection = ({
   const getSkillCountsByRole = (roleId: string): SkillCounts => {
     if (roleId === "125") { // Frontend Engineer
       return {
-        specialized: 3, // Corrected from 4 to 3 as shown in the image
-        common: 2,      // Updated to 2 as shown in the image
+        specialized: 4, // Corrected back to 4 specialized skills
+        common: 2,      // Keeping 2 common skills as correct
         certification: 1,
-        all: 6
+        all: 7          // Updated total count (4 + 2 + 1)
       };
     }
 
