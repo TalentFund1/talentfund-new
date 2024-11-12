@@ -64,6 +64,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const getSkillsByCategory = () => {
     const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
     
+    // Helper function to filter skills based on category and if they're toggled
     const filterSkillsByCategory = (category: 'specialized' | 'common' | 'certifications') => {
       return currentRoleSkills[category]?.filter(skill => toggledSkills.has(skill.title)) || [];
     };
@@ -108,9 +109,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     };
   };
 
-  const skills = getSkillsByCategory();
+  const skills = getSkillsByCategory() || {};
   const levels = getLevelsForTrack();
-  const uniqueSkills = skills.map(skill => skill.title).sort();
+  const uniqueSkills = getSkillsByCategory().sort();
 
   return (
     <div className="space-y-6">
