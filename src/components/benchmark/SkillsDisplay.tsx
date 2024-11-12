@@ -21,48 +21,31 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const getSkillsForCategory = (category: string) => {
     const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
     
-    // Get all unique skills from different sections that are in toggledSkills
-    const allSkills = new Set([
-      ...(currentRoleSkills.specialized || [])
-        .map(s => s.title)
-        .filter(title => toggledSkills.has(title)),
-      ...(currentRoleSkills.common || [])
-        .map(s => s.title)
-        .filter(title => toggledSkills.has(title)),
-      ...(currentRoleSkills.certifications || [])
-        .map(s => s.title)
-        .filter(title => toggledSkills.has(title))
-    ]);
+    // Get skills based on category and filter by toggled skills
+    let categorySkills: string[] = [];
+    if (category === "All Categories" || category === "Specialized Skills") {
+      categorySkills.push(...currentRoleSkills.specialized.map(s => s.title).filter(title => toggledSkills.has(title)));
+    }
+    if (category === "All Categories" || category === "Common Skills") {
+      categorySkills.push(...currentRoleSkills.common.map(s => s.title).filter(title => toggledSkills.has(title)));
+    }
+    if (category === "All Categories" || category === "Certification") {
+      categorySkills.push(...currentRoleSkills.certifications.map(s => s.title).filter(title => toggledSkills.has(title)));
+    }
 
     // Convert to array and add requirements
-    const filteredSkills = Array.from(allSkills)
-      .map(skillTitle => {
-        const requirements = getSkillRequirements(
-          skillTitle,
-          currentTrack,
-          selectedLevel
-        );
+    return categorySkills.map(skillTitle => {
+      const requirements = getSkillRequirements(
+        skillTitle,
+        currentTrack,
+        selectedLevel
+      );
 
-        return {
-          title: skillTitle,
-          level: requirements?.level || 'unspecified',
-          requirement: requirements?.requirement || 'preferred'
-        };
-      });
-
-    // Apply category filter
-    return filteredSkills.filter((skill: any) => {
-      if (category === "All Categories") return true;
-      if (category === "Specialized Skills") {
-        return currentRoleSkills.specialized.some((s: any) => s.title === skill.title);
-      }
-      if (category === "Common Skills") {
-        return currentRoleSkills.common.some((s: any) => s.title === skill.title);
-      }
-      if (category === "Certification") {
-        return currentRoleSkills.certifications.some((s: any) => s.title === skill.title);
-      }
-      return false;
+      return {
+        title: skillTitle,
+        level: requirements?.level || 'unspecified',
+        requirement: requirements?.requirement || 'preferred'
+      };
     });
   };
 
@@ -115,7 +98,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
                 {category.title}
               </span>
               <span className="text-xs text-muted-foreground">
-                {category.count} skills
+                {category.count} {category.count === 1 ? 'skill' : 'skills'}
               </span>
             </div>
           </button>
