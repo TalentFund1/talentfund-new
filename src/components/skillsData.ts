@@ -1,24 +1,12 @@
 import { initialSkills } from "./benchmark/skills-matrix/initialSkills";
-import { roleSkills } from "./skills/data/roleSkills";
 
 // Extract unique skills from initialSkills by combining all employee skills
 const matrixSkills = Object.values(initialSkills)
   .flatMap(skills => skills.map(skill => skill.title));
 
-// Extract unique skills from roleSkills
-const profileSkills = Object.values(roleSkills)
-  .flatMap(role => [
-    ...(role.specialized?.map(skill => skill.title) || []),
-    ...(role.common?.map(skill => skill.title) || []),
-    ...(role.certifications?.map(skill => skill.title) || [])
-  ]);
-
-// Combine all unique skills
-const allUniqueSkills = [...new Set([...matrixSkills, ...profileSkills])];
-
 export const technicalSkills = [
   ...new Set([
-    ...allUniqueSkills,
+    ...matrixSkills,
     // Programming Languages
     "JavaScript", "TypeScript", "Python", "Java", "C++", "Ruby", "Go", "Rust", "PHP", "Swift",
     
