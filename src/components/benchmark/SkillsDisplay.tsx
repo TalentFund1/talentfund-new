@@ -84,7 +84,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     <div className="space-y-8">
       <div className="grid grid-cols-4 gap-4">
         {[
-          { title: "All Categories", count: specializedSkills.length + commonSkills.length + certificationSkills.length },
+          { title: "All Categories", count: currentRoleSkills.specialized.length + currentRoleSkills.common.length + currentRoleSkills.certifications.length },
           { title: "Specialized Skills", count: specializedSkills.length },
           { title: "Common Skills", count: commonSkills.length },
           { title: "Certification", count: certificationSkills.length }
