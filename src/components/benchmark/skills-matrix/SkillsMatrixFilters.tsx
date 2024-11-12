@@ -22,18 +22,16 @@ export const SkillsMatrixFilters = ({
 
   return (
     <div className="space-y-4 mb-4">
-      {!isRoleBenchmarkTab && (
-        <div className="w-full">
-          <SearchFilter
-            label=""
-            placeholder="Search skills..."
-            items={allSkills}
-            selectedItems={selectedSkills}
-            onItemsChange={setSelectedSkills}
-            singleSelect={false}
-          />
-        </div>
-      )}
+      <div className="w-full">
+        <SearchFilter
+          label=""
+          placeholder="Search skills..."
+          items={allSkills}
+          selectedItems={selectedSkills}
+          onItemsChange={setSelectedSkills}
+          singleSelect={false}
+        />
+      </div>
 
       <div className="flex justify-between items-start gap-4">
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>

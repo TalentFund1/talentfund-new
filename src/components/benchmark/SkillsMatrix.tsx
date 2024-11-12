@@ -11,7 +11,6 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams, useLocation } from "react-router-dom";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -30,7 +29,6 @@ export const SkillsMatrix = () => {
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Only filter by search if not in benchmark tab
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
     skill => isRoleBenchmarkTab || searchSkills.length === 0 || searchSkills.includes(skill.title)
   );
@@ -55,13 +53,30 @@ export const SkillsMatrix = () => {
         />
         <Separator className="my-4" />
         
-        <SkillsMatrixFilters 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedSkills={searchSkills}
-          setSelectedSkills={setSearchSkills}
-          isRoleBenchmarkTab={isRoleBenchmarkTab}
-        />
+        {!isRoleBenchmarkTab ? (
+          <SkillsMatrixFilters 
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            selectedSkills={searchSkills}
+            setSelectedSkills={setSearchSkills}
+            isRoleBenchmarkTab={false}
+          />
+        ) : (
+          <div className="flex justify-between items-start gap-4">
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certifications</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button>Add Skill</Button>
+          </div>
+        )}
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
