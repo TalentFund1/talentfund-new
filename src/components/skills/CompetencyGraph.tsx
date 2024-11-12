@@ -31,7 +31,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
 
-  // Use roleId from props if provided, otherwise use from URL params, fallback to "123"
   const currentRoleId = propRoleId || urlRoleId || "123";
   const track = initialTrack || getTrackForRole(currentRoleId) || "Professional";
   const jobTitle = jobTitles[currentRoleId] || "AI Engineer";
@@ -95,6 +94,23 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     });
     
     return filteredSkills.sort();
+  };
+
+  const getSkillDetails = (skillName: string, level: string) => {
+    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
+    const allSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+    
+    const skill = allSkills.find(s => s.title === skillName);
+    if (!skill) return { level: "-", required: "-" };
+    
+    return {
+      level: skill.level || "-",
+      required: "required" // Default to required for now
+    };
   };
 
   const skills = getSkillsByCategory() || {};
