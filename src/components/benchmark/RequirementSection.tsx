@@ -1,4 +1,7 @@
 import { Card } from "@/components/ui/card";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { roleSkills } from "../skills/data/roleSkills";
+import { useParams } from "react-router-dom";
 
 interface RequirementSectionProps {
   title: string;
@@ -14,12 +17,40 @@ interface RequirementSectionProps {
 
 export const RequirementSection = ({ 
   title, 
-  count, 
   skills,
   isSelected,
   onClick 
 }: RequirementSectionProps) => {
-  const isAllCategories = title === 'All Categories';
+  const { id } = useParams<{ id: string }>();
+  const { toggledSkills } = useToggledSkills();
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  
+  const getToggledSkillsCount = () => {
+    if (title === 'All Categories') {
+      const allSkills = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ];
+      return allSkills.filter(skill => toggledSkills.has(skill.title)).length;
+    }
+    
+    if (title === 'Specialized Skills') {
+      return currentRoleSkills.specialized.filter(skill => toggledSkills.has(skill.title)).length;
+    }
+    
+    if (title === 'Common Skills') {
+      return currentRoleSkills.common.filter(skill => toggledSkills.has(skill.title)).length;
+    }
+    
+    if (title === 'Certification') {
+      return currentRoleSkills.certifications.filter(skill => toggledSkills.has(skill.title)).length;
+    }
+    
+    return 0;
+  };
+
+  const count = getToggledSkillsCount();
   
   return (
     <button
