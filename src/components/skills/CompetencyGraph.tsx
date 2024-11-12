@@ -1,16 +1,12 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState, useEffect } from "react";
+import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { SkillCell } from "./competency/SkillCell";
+import { CompetencyMatrixHeader } from "./CompetencyMatrixHeader";
+import { CompetencyLevels } from "./CompetencyLevels";
+import { SkillsGrid } from "./SkillsGrid";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { skillsByCategory } from "./competency/skillsData";
-import { CategorySection } from "./competency/CategorySection";
-import { categorizeSkills, isSpecializedSkill, isCommonSkill, isCertificationSkill } from "./competency/skillCategories";
-import { useCompetencyStore } from "./competency/CompetencyState";
-import { useToast } from "@/components/ui/use-toast";
-import { TrackSelection } from "./TrackSelection";
 import { useTrack } from "./context/TrackContext";
+import { useToast } from "@/components/ui/use-toast";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -25,56 +21,42 @@ const jobTitles: { [key: string]: string } = {
 };
 
 export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraphProps) => {
-  const { toggledSkills } = useToggledSkills();
+  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     const savedCategory = localStorage.getItem('selectedCategory');
     return savedCategory || "all";
   });
+  const { toggledSkills } = useToggledSkills();
   const { getTrackForRole } = useTrack();
-  const { hasChanges, saveChanges, cancelChanges } = useCompetencyStore();
   const { toast } = useToast();
 
   const track = roleId ? getTrackForRole(roleId) : initialTrack || "Professional";
   const jobTitle = roleId ? jobTitles[roleId] : undefined;
+
+  useEffect(() => {
+    localStorage.setItem('selectedCategory', selectedCategory);
+  }, [selectedCategory]);
 
   if (!jobTitle) {
     console.warn('Invalid or missing role ID');
     return null;
   }
 
-  useEffect(() => {
-    localStorage.setItem('selectedCategory', selectedCategory);
-  }, [selectedCategory]);
-
-  const handleSave = () => {
-    saveChanges();
-    toast({
-      title: "Changes saved",
-      description: "Your changes have been saved successfully.",
-    });
+  const handleLevelSelect = (level: string) => {
+    setSelectedLevels(prev => 
+      prev.includes(level) 
+        ? prev.filter(l => l !== level)
+        : [...prev, level]
+    );
   };
 
-  const handleCancel = () => {
-    cancelChanges();
-    toast({
-      title: "Changes cancelled",
-      description: "Your changes have been discarded.",
-    });
+  const handleTrackChange = (newTrack: "Technical" | "Managerial") => {
+    setTrack(newTrack);
   };
 
-  const getLevelsForTrack = () => {
-    return track === "Professional" 
-      ? ["P1", "P2", "P3", "P4", "P5", "P6"] 
-      : ["M3", "M4", "M5", "M6"];
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
   };
-
-  const getSkillsForCategory = () => {
-    const categoryData = skillsByCategory[selectedCategory as keyof typeof skillsByCategory];
-    return categoryData?.[track.toLowerCase()];
-  };
-
-  const skills = getSkillsForCategory() || {};
-  const levels = getLevelsForTrack();
 
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
@@ -112,74 +94,48 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            onClick={handleCancel}
-            disabled={!hasChanges}
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleSave}
-            disabled={!hasChanges}
-          >
-            Save
-          </Button>
-        </div>
-      </div>
+      <CompetencyMatrixHeader selectedLevels={selectedLevels} />
       
-      <Separator className="my-6" />
-      
-      <div className="mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitle}</h3>
-        <TrackSelection />
-      </div>
-
-      <CategorySection 
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        skillCounts={skillCounts}
+      <CompetencyLevels 
+        selectedLevels={selectedLevels}
+        onLevelSelect={handleLevelSelect}
+        onTrackChange={handleTrackChange}
       />
 
-      <div className="rounded-lg border border-border bg-white overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-[200px] font-semibold bg-background/80 border-r border-border">
-                Skill
-              </TableHead>
-              {levels.map((level, index) => (
-                <TableHead 
-                  key={level} 
-                  className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
-                >
-                  <div className="font-semibold">{level}</div>
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {uniqueSkills.map((skillName) => (
-              <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
-                <TableCell className="font-medium border-r border-border">
-                  {skillName}
-                </TableCell>
-                {levels.map((level, index) => (
-                  <SkillCell 
-                    key={level}
-                    skillName={skillName}
-                    details={getSkillDetails(skillName, level)}
-                    isLastColumn={index === levels.length - 1}
-                    levelKey={level}
-                  />
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <div>
+        <div className="grid grid-cols-4 gap-4 mb-6">
+          {skillCategories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategorySelect(category.id)}
+              className={`rounded-lg p-4 transition-colors ${
+                selectedCategory === category.id
+                  ? 'bg-primary-accent/5 border border-primary-accent'
+                  : 'bg-background border border-border hover:border-primary-accent/50'
+              }`}
+            >
+              <div className="flex flex-col items-start">
+                <span className={`text-sm font-semibold mb-1 ${
+                  selectedCategory === category.id
+                    ? 'text-primary-accent'
+                    : 'text-foreground group-hover:text-primary-accent'
+                }`}>
+                  {category.name}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {skillsArray.filter(skill => 
+                    category.id === 'all' || getSkillCategory(skill) === category.id
+                  ).length} skills
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <SkillsGrid 
+          skillsArray={skillsArray}
+          selectedCategory={selectedCategory}
+        />
       </div>
     </div>
   );
