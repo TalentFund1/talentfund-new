@@ -3,6 +3,7 @@ import { SkillSection } from "../skills/SkillSection";
 import { useState } from "react";
 import { getSkillsByTrackAndLevel, getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
+import { roleSkills } from "../skills/data/roleSkills";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
