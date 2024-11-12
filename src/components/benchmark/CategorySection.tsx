@@ -24,6 +24,7 @@ export const CategorySection = ({
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const getToggledSkillsCount = (skills: Array<{ title: string }> = []) => {
+    if (!skills) return 0;
     return skills.filter(skill => toggledSkills.has(skill.title)).length;
   };
 
