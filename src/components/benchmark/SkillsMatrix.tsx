@@ -26,18 +26,13 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
-  const { benchmarkSearchSkills, setBenchmarkSearchSkills } = useBenchmarkSearch();
 
-  // Get employee-specific skills
+  const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Determine which selected skills to use based on the current tab
-  const isRoleBenchmarkTab = location.pathname.includes('benchmark');
-  const currentSelectedSkills = isRoleBenchmarkTab ? benchmarkSearchSkills : searchSkills;
-
-  // Filter skills based on category and search
+  // Only filter by search if not in benchmark tab
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
-    skill => currentSelectedSkills.length === 0 || currentSelectedSkills.includes(skill.title)
+    skill => isRoleBenchmarkTab || searchSkills.length === 0 || searchSkills.includes(skill.title)
   );
 
   const handleRowsPerPageChange = (value: string) => {
@@ -60,15 +55,13 @@ export const SkillsMatrix = () => {
         />
         <Separator className="my-4" />
         
-        {!isRoleBenchmarkTab && (
-          <SkillsMatrixFilters 
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            selectedSkills={currentSelectedSkills}
-            setSelectedSkills={isRoleBenchmarkTab ? setBenchmarkSearchSkills : setSearchSkills}
-            isRoleBenchmarkTab={isRoleBenchmarkTab}
-          />
-        )}
+        <SkillsMatrixFilters 
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedSkills={searchSkills}
+          setSelectedSkills={setSearchSkills}
+          isRoleBenchmarkTab={isRoleBenchmarkTab}
+        />
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}

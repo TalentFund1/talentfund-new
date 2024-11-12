@@ -20,40 +20,20 @@ export const SkillsMatrixFilters = ({
 }: SkillsMatrixFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
 
-  // Role Benchmark view - only category filter and add skill button
-  if (isRoleBenchmarkTab) {
-    return (
-      <div className="flex justify-between items-start gap-4">
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="specialized">Specialized Skills</SelectItem>
-            <SelectItem value="common">Common Skills</SelectItem>
-            <SelectItem value="certification">Certifications</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        <Button>Add Skill</Button>
-      </div>
-    );
-  }
-
-  // Regular Skills Matrix view - includes search functionality
   return (
     <div className="space-y-4 mb-4">
-      <div className="w-full">
-        <SearchFilter
-          label=""
-          placeholder="Search skills..."
-          items={allSkills}
-          selectedItems={selectedSkills}
-          onItemsChange={setSelectedSkills}
-          singleSelect={false}
-        />
-      </div>
+      {!isRoleBenchmarkTab && (
+        <div className="w-full">
+          <SearchFilter
+            label=""
+            placeholder="Search skills..."
+            items={allSkills}
+            selectedItems={selectedSkills}
+            onItemsChange={setSelectedSkills}
+            singleSelect={false}
+          />
+        </div>
+      )}
 
       <div className="flex justify-between items-start gap-4">
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
