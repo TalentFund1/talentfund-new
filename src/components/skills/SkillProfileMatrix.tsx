@@ -105,7 +105,7 @@ export const SkillProfileMatrix = () => {
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
             <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {filteredSkills.length}
+              {Array.from(toggledSkills).length}
             </span>
           </div>
           <Button>Add Skill</Button>
