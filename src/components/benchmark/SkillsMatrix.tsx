@@ -60,13 +60,15 @@ export const SkillsMatrix = () => {
         />
         <Separator className="my-4" />
         
-        <SkillsMatrixFilters 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedSkills={currentSelectedSkills}
-          setSelectedSkills={isRoleBenchmarkTab ? setBenchmarkSearchSkills : setSearchSkills}
-          isRoleBenchmarkTab={isRoleBenchmarkTab}
-        />
+        {!isRoleBenchmarkTab && (
+          <SkillsMatrixFilters 
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            selectedSkills={currentSelectedSkills}
+            setSelectedSkills={isRoleBenchmarkTab ? setBenchmarkSearchSkills : setSearchSkills}
+            isRoleBenchmarkTab={isRoleBenchmarkTab}
+          />
+        )}
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
