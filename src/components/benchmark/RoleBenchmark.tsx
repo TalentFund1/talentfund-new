@@ -7,7 +7,6 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
-import { CompetencyGraph } from "../skills/CompetencyGraph";
 
 const roles = {
   "123": "AI Engineer",
@@ -22,6 +21,7 @@ export const RoleBenchmark = () => {
   const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
+  const [searchedSkills, setSearchedSkills] = useState<string[]>([]);
 
   const currentTrack = getTrackForRole(selectedRole);
 
@@ -41,6 +41,10 @@ export const RoleBenchmark = () => {
 
   const handleTrackChange = (value: string) => {
     setTrackForRole(selectedRole, value as "Professional" | "Managerial");
+  };
+
+  const handleSkillSearch = (skills: string[]) => {
+    setSearchedSkills(skills);
   };
 
   return (
@@ -74,9 +78,8 @@ export const RoleBenchmark = () => {
           toggledSkills={toggledSkills}
           roleId={selectedRole}
           selectedLevel={selectedLevel}
+          onSkillSearch={handleSkillSearch}
         />
-
-        <CompetencyGraph roleId={selectedRole} track={currentTrack} />
       </div>
     </div>
   );

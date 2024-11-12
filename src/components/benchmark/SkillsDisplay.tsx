@@ -6,25 +6,29 @@ import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { CategorySection } from "./CategorySection";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
+import { SearchFilter } from '@/components/market/SearchFilter';
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
   toggledSkills: Set<string>;
   roleId: string;
   selectedLevel: string;
+  onSkillSearch: (skills: string[]) => void;
 }
 
 export const SkillsDisplay = ({ 
   selectedRoleSkills, 
   toggledSkills, 
   roleId, 
-  selectedLevel 
+  selectedLevel,
+  onSkillSearch
 }: SkillsDisplayProps) => {
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole(roleId);
   const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { currentStates } = useCompetencyStore();
+  const [searchSkills, setSearchSkills] = useState<string[]>([]);
 
   const getSkillsForCategory = () => {
     const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
@@ -46,6 +50,12 @@ export const SkillsDisplay = ({
 
     return filteredSkills
       .filter(skill => toggledSkills.has(skill.title))
+      .filter(skill => 
+        searchSkills.length === 0 || 
+        searchSkills.some(searchTerm => 
+          skill.title.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      )
       .map((skill: any) => {
         const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
         const requirements = getSkillRequirements(
@@ -62,6 +72,11 @@ export const SkillsDisplay = ({
       });
   };
 
+  const handleSkillSearch = (skills: string[]) => {
+    setSearchSkills(skills);
+    onSkillSearch(skills);
+  };
+
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
     return skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
       if (skill.requirement === 'required') {
@@ -76,8 +91,21 @@ export const SkillsDisplay = ({
   const skills = getSkillsForCategory();
   const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skills);
 
+  const allSkillTitles = [...requiredSkills, ...preferredSkills].map(skill => skill.title);
+
   return (
     <div className="space-y-8">
+      <div className="w-full">
+        <SearchFilter
+          label=""
+          placeholder="Search skills..."
+          items={allSkillTitles}
+          selectedItems={searchSkills}
+          onItemsChange={handleSkillSearch}
+          singleSelect={false}
+        />
+      </div>
+
       <CategorySection
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
