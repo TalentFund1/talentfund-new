@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft } from "lucide-react";
+import { Avatar } from "@/components/ui/avatar";
+import { MapPin } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
@@ -11,6 +12,7 @@ import { SkillsMatrixContainer } from "@/components/skills/SkillsMatrixContainer
 import { Sidebar } from "@/components/Sidebar";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
+import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 
 const employees = {
   "123": {
