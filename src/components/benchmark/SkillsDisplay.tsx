@@ -37,6 +37,9 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const certificationSkills = Array.from(toggledSkills)
     .filter(title => validCertificationSkills.has(title));
 
+  // Calculate total skills as sum of individual categories
+  const totalSkills = specializedSkills.length + commonSkills.length + certificationSkills.length;
+
   const getSkillsForCategory = (category: string) => {
     // Get skills based on category
     let categorySkills: string[] = [];
@@ -80,22 +83,14 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const skillsInCategory = getSkillsForCategory(selectedCategory);
   const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skillsInCategory);
 
-  // Calculate total skills for each category based on toggled skills only
-  const totalSkills = {
-    specialized: specializedSkills.length,
-    common: commonSkills.length,
-    certification: certificationSkills.length,
-    all: specializedSkills.length + commonSkills.length + certificationSkills.length
-  };
-
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-4 gap-4">
         {[
-          { title: "All Categories", count: totalSkills.all },
-          { title: "Specialized Skills", count: totalSkills.specialized },
-          { title: "Common Skills", count: totalSkills.common },
-          { title: "Certification", count: totalSkills.certification }
+          { title: "All Categories", count: totalSkills },
+          { title: "Specialized Skills", count: specializedSkills.length },
+          { title: "Common Skills", count: commonSkills.length },
+          { title: "Certification", count: certificationSkills.length }
         ].map((category) => (
           <RequirementSection
             key={category.title}
