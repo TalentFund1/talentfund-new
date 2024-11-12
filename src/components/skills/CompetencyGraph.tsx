@@ -4,9 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { SkillCell } from "./competency/SkillCell";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { skillsByCategory } from "./competency/skillsData";
 import { CategorySection } from "./competency/CategorySection";
-import { categorizeSkills } from "./competency/skillCategories";
 import { useCompetencyStore } from "./competency/CompetencyState";
 import { useToast } from "@/hooks/use-toast";
 import { TrackSelection } from "./TrackSelection";
@@ -64,9 +62,10 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const getSkillsByCategory = () => {
     const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
     
-    // Helper function to filter skills based on category and if they're toggled
     const filterSkillsByCategory = (category: 'specialized' | 'common' | 'certifications') => {
-      return currentRoleSkills[category]?.filter(skill => toggledSkills.has(skill.title)) || [];
+      return currentRoleSkills[category]?.filter(skill => 
+        toggledSkills.has(skill.title)
+      ).map(skill => skill.title) || [];
     };
     
     if (selectedCategory === "all") {
@@ -105,13 +104,12 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     
     return {
       level: skill.level || "-",
-      required: "required" // Default to required for now
+      required: "required"
     };
   };
 
-  const skills = getSkillsByCategory() || {};
   const levels = getLevelsForTrack();
-  const uniqueSkills = getSkillsByCategory().sort();
+  const uniqueSkills = getSkillsByCategory();
 
   return (
     <div className="space-y-6">
@@ -171,7 +169,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
                 </TableCell>
                 {levels.map((level, index) => (
                   <SkillCell 
-                    key={level}
+                    key={`${skillName}-${level}`}
                     skillName={skillName}
                     details={getSkillDetails(skillName, level)}
                     isLastColumn={index === levels.length - 1}
