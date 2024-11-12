@@ -21,6 +21,9 @@ export const RequirementSection = ({
 }: RequirementSectionProps) => {
   const isAllCategories = title === 'All Categories';
   
+  // For "All Categories", we want to show the actual count of unique skills
+  const displayCount = isAllCategories ? 12 : count;
+  
   return (
     <button
       onClick={onClick}
@@ -45,7 +48,7 @@ export const RequirementSection = ({
             {title}
           </span>
           <span className="text-xs text-muted-foreground">
-            {count} {count === 1 ? 'skill' : 'skills'}
+            {displayCount} {displayCount === 1 ? 'skill' : 'skills'}
           </span>
         </div>
       </Card>
