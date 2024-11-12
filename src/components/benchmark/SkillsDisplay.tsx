@@ -2,7 +2,7 @@ import { RequirementSection } from "./RequirementSection";
 import { SkillBadge } from "../skills/SkillBadge";
 import { SkillSection } from "../skills/SkillSection";
 import { useState } from "react";
-import { getSkillsByTrackAndLevel, getSkillRequirements, SkillData } from "../skills/data/skillsDatabase";
+import { getSkillsByTrackAndLevel, getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
 
 interface SkillsDisplayProps {
@@ -18,7 +18,12 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const currentTrack = getTrackForRole(roleId);
 
   const getSkillsForCategory = (category: string) => {
-    const allSkills = selectedRoleSkills.map((skill: any) => ({
+    // Combine all skills from different sections
+    const allSkills = [
+      ...(selectedRoleSkills.specialized || []),
+      ...(selectedRoleSkills.common || []),
+      ...(selectedRoleSkills.certifications || [])
+    ].map((skill: any) => ({
       title: skill.title,
       level: skill.level || 'unspecified',
       requirement: skill.requirement || 'preferred'
