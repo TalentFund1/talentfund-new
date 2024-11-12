@@ -21,16 +21,21 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const getSkillsForCategory = (category: string) => {
     const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
     
-    // Get all unique skills from different sections
+    // Get all unique skills from different sections that are in toggledSkills
     const allSkills = new Set([
-      ...(currentRoleSkills.specialized || []).map(s => s.title),
-      ...(currentRoleSkills.common || []).map(s => s.title),
-      ...(currentRoleSkills.certifications || []).map(s => s.title)
+      ...(currentRoleSkills.specialized || [])
+        .map(s => s.title)
+        .filter(title => toggledSkills.has(title)),
+      ...(currentRoleSkills.common || [])
+        .map(s => s.title)
+        .filter(title => toggledSkills.has(title)),
+      ...(currentRoleSkills.certifications || [])
+        .map(s => s.title)
+        .filter(title => toggledSkills.has(title))
     ]);
 
-    // Filter based on toggled skills
+    // Convert to array and add requirements
     const filteredSkills = Array.from(allSkills)
-      .filter(skillTitle => toggledSkills.has(skillTitle))
       .map(skillTitle => {
         const requirements = getSkillRequirements(
           skillTitle,
