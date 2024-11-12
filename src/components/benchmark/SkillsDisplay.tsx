@@ -18,20 +18,23 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const track = getTrackForRole(roleId);
   const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
 
+  // Get current role's skills
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   
-  // Get filtered skills for each category, ensuring they belong to current role
-  const specializedSkills = currentRoleSkills.specialized
-    .map(s => s.title)
-    .filter(title => toggledSkills.has(title));
+  // Create sets of valid skills for this role
+  const validSpecializedSkills = new Set(currentRoleSkills.specialized.map(s => s.title));
+  const validCommonSkills = new Set(currentRoleSkills.common.map(s => s.title));
+  const validCertificationSkills = new Set(currentRoleSkills.certifications.map(s => s.title));
+  
+  // Filter toggled skills to only include those that belong to this role
+  const specializedSkills = Array.from(toggledSkills)
+    .filter(title => validSpecializedSkills.has(title));
     
-  const commonSkills = currentRoleSkills.common
-    .map(s => s.title)
-    .filter(title => toggledSkills.has(title));
+  const commonSkills = Array.from(toggledSkills)
+    .filter(title => validCommonSkills.has(title));
     
-  const certificationSkills = currentRoleSkills.certifications
-    .map(s => s.title)
-    .filter(title => toggledSkills.has(title));
+  const certificationSkills = Array.from(toggledSkills)
+    .filter(title => validCertificationSkills.has(title));
 
   const getSkillsForCategory = (category: string) => {
     // Get skills based on category
@@ -81,8 +84,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     specialized: specializedSkills.length,
     common: commonSkills.length,
     certification: certificationSkills.length,
-    // Calculate all as the sum of unique skills across categories for this role
-    all: new Set([...specializedSkills, ...commonSkills, ...certificationSkills]).size
+    all: specializedSkills.length + commonSkills.length + certificationSkills.length
   };
 
   return (
