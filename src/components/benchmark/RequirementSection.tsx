@@ -15,9 +15,12 @@ interface RequirementSectionProps {
 export const RequirementSection = ({ 
   title, 
   count, 
+  skills,
   isSelected,
   onClick 
 }: RequirementSectionProps) => {
+  const isAllCategories = title === 'All Categories';
+  
   return (
     <button
       onClick={onClick}
