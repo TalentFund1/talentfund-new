@@ -44,7 +44,6 @@ export const SkillsDisplay = ({
       filteredSkills = currentRoleSkills.certifications || [];
     }
 
-    // Only filter by toggled skills for display in the skills sections
     return filteredSkills.map((skill: any) => {
       const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
       const requirements = getSkillRequirements(
@@ -58,7 +57,7 @@ export const SkillsDisplay = ({
         level: matrixState?.level || requirements?.level || 'unspecified',
         requirement: matrixState?.required || requirements?.requirement || 'preferred'
       };
-    }).filter(skill => toggledSkills.has(skill.title));
+    });
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
