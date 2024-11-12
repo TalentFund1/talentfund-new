@@ -14,7 +14,7 @@ import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [benchmarkSelectedSkills, setBenchmarkSelectedSkills] = useState<string[]>([]);
+  const [benchmarkSearchSkills, setBenchmarkSearchSkills] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -47,8 +47,10 @@ export const SkillsMatrix = () => {
 
   // Determine which selected skills to use based on the current tab
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
-  const currentSelectedSkills = isRoleBenchmarkTab ? benchmarkSelectedSkills : selectedSkills;
-  const setCurrentSelectedSkills = isRoleBenchmarkTab ? setBenchmarkSelectedSkills : () => {};
+  const currentSelectedSkills = isRoleBenchmarkTab ? benchmarkSearchSkills : selectedSkills;
+  const setCurrentSelectedSkills = isRoleBenchmarkTab 
+    ? setBenchmarkSearchSkills 
+    : (skills: string[]) => {};
 
   // Filter skills based on category and search
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
