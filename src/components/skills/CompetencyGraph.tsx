@@ -22,6 +22,7 @@ export const CompetencyGraph = ({ roleId, track = "Professional" }: CompetencyGr
     const trackSkills = skills[effectiveTrack as keyof typeof skills];
     if (!trackSkills) return [];
 
+    // Return all levels for the selected track
     return Object.entries(trackSkills).map(([level, skillsList]) => ({
       level,
       skills: skillsList
@@ -35,12 +36,13 @@ export const CompetencyGraph = ({ roleId, track = "Professional" }: CompetencyGr
         
         <CategoryCards 
           selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
+          setSelectedCategory={setSelectedCategory}
         />
 
         <CategorySection 
+          roleId={effectiveRoleId}
           selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
+          track={effectiveTrack}
           skillsData={getSkillsForRole()}
         />
       </div>

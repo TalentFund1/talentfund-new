@@ -1,34 +1,15 @@
 interface CategorySectionProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-  skillCounts?: {
+  skillCounts: {
     all: number;
     specialized: number;
     common: number;
     certification: number;
   };
-  roleId?: string;
-  track?: string;
-  skillsData?: Array<{
-    level: string;
-    skills: Array<{
-      name: string;
-      level: string;
-      required: string;
-    }>;
-  }>;
 }
 
-export const CategorySection = ({ 
-  selectedCategory, 
-  setSelectedCategory, 
-  skillCounts = {
-    all: 0,
-    specialized: 0,
-    common: 0,
-    certification: 0
-  }
-}: CategorySectionProps) => {
+export const CategorySection = ({ selectedCategory, setSelectedCategory, skillCounts }: CategorySectionProps) => {
   const categories = [
     { id: "all", name: "All Categories", count: skillCounts.all },
     { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
