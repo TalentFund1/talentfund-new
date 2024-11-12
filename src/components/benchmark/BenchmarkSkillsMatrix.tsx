@@ -22,12 +22,13 @@ export const BenchmarkSkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { toast } = useToast();
+  const [previousId, setPreviousId] = useState<string | null>(null);
 
   const employeeSkills = getEmployeeSkills(id || "");
   const allSkills = [...technicalSkills, ...softSkills];
 
   useEffect(() => {
-    if (id && roleSkills[id as keyof typeof roleSkills]) {
+    if (id && roleSkills[id as keyof typeof roleSkills] && id !== previousId) {
       // Clear previous search skills and toggled skills
       setSelectedSearchSkills([]);
       setToggledSkills(new Set());
@@ -48,12 +49,17 @@ export const BenchmarkSkillsMatrix = () => {
                       id === "125" ? "Frontend Engineer" :
                       id === "126" ? "Engineering Manager" : "selected role";
       
-      toast({
-        title: "Skills Updated",
-        description: `Updated skills for ${roleName}`,
-      });
+      // Only show toast if the role has actually changed
+      if (id !== previousId) {
+        toast({
+          title: "Skills Updated",
+          description: `Updated skills for ${roleName}`,
+          duration: 3000,
+        });
+        setPreviousId(id);
+      }
     }
-  }, [id, setToggledSkills]);
+  }, [id, setToggledSkills, previousId, toast]);
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
