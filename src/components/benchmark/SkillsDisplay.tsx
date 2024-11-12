@@ -26,7 +26,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
       // Get the skill requirements for current level
       const requirements = getSkillRequirements(
         skill.title,
-        currentTrack.toLowerCase(),
+        currentTrack.toLowerCase() as "professional" | "managerial",
         selectedLevel.toLowerCase()
       );
 
