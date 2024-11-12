@@ -2,11 +2,11 @@ import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
-import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -42,8 +43,13 @@ export const SkillsMatrix = () => {
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Filter skills based only on category, ignoring search
-  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory);
+  // Filter skills based on category and search query
+  const filteredSkills = filterSkillsByCategory(
+    employeeSkills.filter(skill => 
+      skill.title.toLowerCase().includes(searchQuery.toLowerCase())
+    ), 
+    selectedCategory
+  );
 
   const handleRowsPerPageChange = (value: string) => {
     setRowsPerPage(Number(value));
@@ -65,10 +71,18 @@ export const SkillsMatrix = () => {
         />
         <Separator className="my-4" />
         
-        <SkillsMatrixFilters 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        />
+        <div className="flex items-center gap-4 mb-4">
+          <SkillsMatrixFilters 
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
+          <Input
+            placeholder="Search skills..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="max-w-xs"
+          />
+        </div>
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
