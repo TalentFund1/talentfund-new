@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -41,8 +42,13 @@ export const SkillsMatrix = () => {
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Filter skills based on category only
-  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory);
+  // Filter skills based on category and search query
+  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
+    .filter(skill => 
+      searchQuery === "" || 
+      skill.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      skill.subcategory.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const handleRowsPerPageChange = (value: string) => {
     setRowsPerPage(Number(value));
@@ -67,6 +73,8 @@ export const SkillsMatrix = () => {
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
         />
 
         <SkillsMatrixTable 
