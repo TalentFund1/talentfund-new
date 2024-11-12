@@ -18,19 +18,32 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const track = getTrackForRole(roleId);
   const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
 
-  const getSkillsForCategory = (category: string) => {
-    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  
+  // Get filtered skills for each category
+  const specializedSkills = currentRoleSkills.specialized
+    .map(s => s.title)
+    .filter(title => toggledSkills.has(title));
     
-    // Get skills based on category and filter by toggled skills
+  const commonSkills = currentRoleSkills.common
+    .map(s => s.title)
+    .filter(title => toggledSkills.has(title));
+    
+  const certificationSkills = currentRoleSkills.certifications
+    .map(s => s.title)
+    .filter(title => toggledSkills.has(title));
+
+  const getSkillsForCategory = (category: string) => {
+    // Get skills based on category
     let categorySkills: string[] = [];
     if (category === "All Categories" || category === "Specialized Skills") {
-      categorySkills.push(...currentRoleSkills.specialized.map(s => s.title).filter(title => toggledSkills.has(title)));
+      categorySkills.push(...specializedSkills);
     }
     if (category === "All Categories" || category === "Common Skills") {
-      categorySkills.push(...currentRoleSkills.common.map(s => s.title).filter(title => toggledSkills.has(title)));
+      categorySkills.push(...commonSkills);
     }
     if (category === "All Categories" || category === "Certification") {
-      categorySkills.push(...currentRoleSkills.certifications.map(s => s.title).filter(title => toggledSkills.has(title)));
+      categorySkills.push(...certificationSkills);
     }
 
     // Convert to array and add requirements
@@ -65,10 +78,10 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
 
   // Calculate total skills for each category
   const totalSkills = {
-    all: getSkillsForCategory("All Categories").length,
-    specialized: getSkillsForCategory("Specialized Skills").length,
-    common: getSkillsForCategory("Common Skills").length,
-    certification: getSkillsForCategory("Certification").length
+    all: [...specializedSkills, ...commonSkills, ...certificationSkills].length,
+    specialized: specializedSkills.length,
+    common: commonSkills.length,
+    certification: certificationSkills.length
   };
 
   return (
