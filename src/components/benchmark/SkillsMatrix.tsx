@@ -6,6 +6,7 @@ import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
+import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
@@ -19,6 +20,7 @@ export const SkillsMatrix = () => {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver>();
   const { toast } = useToast();
+  const { selectedSkills } = useSelectedSkills();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { id } = useParams<{ id: string }>();
 
@@ -41,8 +43,17 @@ export const SkillsMatrix = () => {
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Filter skills based on category only
-  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory);
+  // Filter skills based on search and category
+  const filteredSkills = selectedSkills.length === 0
+    ? filterSkillsByCategory(employeeSkills, selectedCategory)
+    : filterSkillsByCategory(
+        employeeSkills.filter(skill => 
+          selectedSkills.some(selected => 
+            skill.title.toLowerCase().includes(selected.toLowerCase())
+          )
+        ),
+        selectedCategory
+      );
 
   const handleRowsPerPageChange = (value: string) => {
     setRowsPerPage(Number(value));
