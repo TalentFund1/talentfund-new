@@ -2,12 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
+import { RoleBenchmarkMatrix } from "./RoleBenchmarkMatrix";
 
 const roles = {
   "123": "AI Engineer",
@@ -24,14 +25,6 @@ export const RoleBenchmark = () => {
   const { getTrackForRole, setTrackForRole } = useTrack();
 
   const currentTrack = getTrackForRole(selectedRole);
-
-  useEffect(() => {
-    if (currentTrack === "Professional" && selectedLevel.toLowerCase().startsWith("m")) {
-      setSelectedLevel("p4");
-    } else if (currentTrack === "Managerial" && selectedLevel.toLowerCase().startsWith("p")) {
-      setSelectedLevel("m3");
-    }
-  }, [currentTrack]);
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -77,6 +70,8 @@ export const RoleBenchmark = () => {
         />
 
         <CompetencyGraph roleId={selectedRole} track={currentTrack} />
+        
+        <RoleBenchmarkMatrix id={selectedRole} />
       </div>
     </div>
   );
