@@ -26,7 +26,7 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
-  const { benchmarkSearchSkills } = useBenchmarkSearch();
+  const { benchmarkSearchSkills, setBenchmarkSearchSkills } = useBenchmarkSearch();
 
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
