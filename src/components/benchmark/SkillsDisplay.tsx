@@ -44,20 +44,22 @@ export const SkillsDisplay = ({
       filteredSkills = currentRoleSkills.certifications || [];
     }
 
-    return filteredSkills.map((skill: any) => {
-      const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
-      const requirements = getSkillRequirements(
-        skill.title,
-        currentTrack,
-        selectedLevel.toUpperCase()
-      );
+    return filteredSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .map((skill: any) => {
+        const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
+        const requirements = getSkillRequirements(
+          skill.title,
+          currentTrack,
+          selectedLevel.toUpperCase()
+        );
 
-      return {
-        title: skill.title,
-        level: matrixState?.level || requirements?.level || 'unspecified',
-        requirement: matrixState?.required || requirements?.requirement || 'preferred'
-      };
-    });
+        return {
+          title: skill.title,
+          level: matrixState?.level || requirements?.level || 'unspecified',
+          requirement: matrixState?.required || requirements?.requirement || 'preferred'
+        };
+      });
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
