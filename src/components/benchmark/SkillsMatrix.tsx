@@ -38,8 +38,7 @@ export const SkillsMatrix = () => {
       if (isRoleBenchmarkTab) return true;
       if (selectedSkills.length === 0) return true;
       return selectedSkills.some(searchTerm => 
-        skill.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        skill.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
+        skill.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
   );
