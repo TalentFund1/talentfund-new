@@ -8,6 +8,13 @@ interface CategorySectionProps {
   toggledSkills: Set<string>;
 }
 
+interface SkillCounts {
+  specialized: number;
+  common: number;
+  certification: number;
+  all: number;
+}
+
 export const CategorySection = ({ 
   selectedCategory, 
   onCategorySelect,
@@ -20,12 +27,14 @@ export const CategorySection = ({
     return skills.filter(skill => toggledSkills.has(skill.title)).length;
   };
 
-  const skillCounts = {
+  const skillCounts: SkillCounts = {
     specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
     common: getToggledSkillsCount(currentRoleSkills.common || []),
     certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
+    all: 0 // Initialize with 0
   };
 
+  // Calculate total after individual counts are set
   skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
 
   const categories = [
