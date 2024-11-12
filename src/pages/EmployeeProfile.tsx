@@ -116,7 +116,6 @@ const EmployeeProfile = () => {
                       <RoleBenchmark />
                     </Card>
                     <BenchmarkAnalysis />
-                    <SkillsMatrix />
                   </TabsContent>
                 </Tabs>
               </BenchmarkSearchProvider>
