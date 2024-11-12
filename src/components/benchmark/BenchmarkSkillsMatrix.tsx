@@ -28,6 +28,9 @@ export const BenchmarkSkillsMatrix = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   useEffect(() => {
+    // Clear previous search skills when role changes
+    setSelectedSearchSkills([]);
+
     if (id && roleSkills[id as keyof typeof roleSkills]) {
       const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
       const allRoleSkills = [
@@ -36,26 +39,20 @@ export const BenchmarkSkillsMatrix = () => {
         ...(currentRoleSkills.certifications?.map(skill => skill.title) || [])
       ];
 
-      // Filter skills based on what's toggled
-      const toggledSearchSkills = allRoleSkills.filter(skill => toggledSkills.has(skill));
-      
-      // Update search skills
-      setSelectedSearchSkills(toggledSearchSkills);
+      // Set all role skills regardless of toggle state
+      setSelectedSearchSkills(allRoleSkills);
 
-      // Show toast when skills are updated
-      if (toggledSearchSkills.length > 0) {
-        const roleName = id === "123" ? "AI Engineer" :
-                        id === "124" ? "Backend Engineer" :
-                        id === "125" ? "Frontend Engineer" :
-                        id === "126" ? "Engineering Manager" : "selected role";
-        
-        toast({
-          title: "Search Skills Updated",
-          description: `Updated search skills for ${roleName}`,
-        });
-      }
+      const roleName = id === "123" ? "AI Engineer" :
+                      id === "124" ? "Backend Engineer" :
+                      id === "125" ? "Frontend Engineer" :
+                      id === "126" ? "Engineering Manager" : "selected role";
+      
+      toast({
+        title: "Search Skills Updated",
+        description: `Updated search skills for ${roleName}`,
+      });
     }
-  }, [id, toggledSkills]);
+  }, [id]); // Only depend on id change, not toggledSkills
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
