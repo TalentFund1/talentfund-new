@@ -8,9 +8,16 @@ interface SkillBadgeProps {
   showLevel?: boolean;
   level?: string;
   isSkillGoal?: boolean;
+  isRoleBenchmark?: boolean;
 }
 
-export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: SkillBadgeProps) => {
+export const SkillBadge = ({ 
+  skill, 
+  showLevel = false, 
+  level, 
+  isSkillGoal,
+  isRoleBenchmark = false 
+}: SkillBadgeProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const skillState = currentStates[skill.name];
 
@@ -27,8 +34,10 @@ export const SkillBadge = ({ skill, showLevel = false, level, isSkillGoal }: Ski
     }
   };
 
-  // Determine if this skill should show a goal indicator
   const shouldShowGoal = () => {
+    // Don't show heart in role benchmark view
+    if (isRoleBenchmark) return false;
+    
     // If explicitly passed as a prop
     if (isSkillGoal) return true;
     
