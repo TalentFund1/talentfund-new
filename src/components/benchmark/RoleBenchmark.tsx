@@ -8,7 +8,6 @@ import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
-import { Card } from "@/components/ui/card";
 
 const roles = {
   "123": "AI Engineer",
@@ -44,18 +43,6 @@ export const RoleBenchmark = () => {
     setTrackForRole(selectedRole, value as "Professional" | "Managerial");
   };
 
-  const getCategoryCount = (category: 'specialized' | 'common' | 'certifications') => {
-    return selectedRoleSkills[category]?.length || 0;
-  };
-
-  const getTotalSkillsCount = () => {
-    return (
-      getCategoryCount('specialized') +
-      getCategoryCount('common') +
-      getCategoryCount('certifications')
-    );
-  };
-
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -79,33 +66,6 @@ export const RoleBenchmark = () => {
           onTrackChange={handleTrackChange}
           roles={roles}
         />
-
-        <div className="grid grid-cols-4 gap-4">
-          <Card className="p-4 bg-[#F7F9FF] border border-[#CCDBFF]">
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-[#6E56CF]">All Categories</h4>
-              <p className="text-xs text-muted-foreground">{getTotalSkillsCount()} skills</p>
-            </div>
-          </Card>
-          <Card className="p-4 bg-white border border-[#CCDBFF]">
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-foreground">Specialized Skills</h4>
-              <p className="text-xs text-muted-foreground">{getCategoryCount('specialized')} skills</p>
-            </div>
-          </Card>
-          <Card className="p-4 bg-white border border-[#CCDBFF]">
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-foreground">Common Skills</h4>
-              <p className="text-xs text-muted-foreground">{getCategoryCount('common')} skills</p>
-            </div>
-          </Card>
-          <Card className="p-4 bg-white border border-[#CCDBFF]">
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-foreground">Certification</h4>
-              <p className="text-xs text-muted-foreground">{getCategoryCount('certifications')} skills</p>
-            </div>
-          </Card>
-        </div>
 
         <Separator className="my-6" />
 
