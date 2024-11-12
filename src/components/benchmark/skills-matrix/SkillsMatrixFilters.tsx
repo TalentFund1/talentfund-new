@@ -8,6 +8,7 @@ interface SkillsMatrixFiltersProps {
   setSelectedCategory: (value: string) => void;
   selectedSkills: string[];
   setSelectedSkills: (skills: string[]) => void;
+  isRoleBenchmarkTab: boolean;
 }
 
 export const SkillsMatrixFilters = ({
@@ -15,6 +16,7 @@ export const SkillsMatrixFilters = ({
   setSelectedCategory,
   selectedSkills,
   setSelectedSkills,
+  isRoleBenchmarkTab,
 }: SkillsMatrixFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
 
@@ -28,6 +30,7 @@ export const SkillsMatrixFilters = ({
           selectedItems={selectedSkills}
           onItemsChange={setSelectedSkills}
           singleSelect={false}
+          disabled={isRoleBenchmarkTab && !setSelectedSkills}
         />
       </div>
 

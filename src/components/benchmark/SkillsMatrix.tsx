@@ -9,11 +9,12 @@ import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [benchmarkSelectedSkills, setBenchmarkSelectedSkills] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,8 @@ export const SkillsMatrix = () => {
   const { toast } = useToast();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const { selectedSkills } = useSelectedSkills();
 
   const handleSave = () => {
     saveChanges();
@@ -42,9 +45,14 @@ export const SkillsMatrix = () => {
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
 
+  // Determine which selected skills to use based on the current tab
+  const isRoleBenchmarkTab = location.pathname.includes('benchmark');
+  const currentSelectedSkills = isRoleBenchmarkTab ? benchmarkSelectedSkills : selectedSkills;
+  const setCurrentSelectedSkills = isRoleBenchmarkTab ? setBenchmarkSelectedSkills : () => {};
+
   // Filter skills based on category and search
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory).filter(
-    skill => selectedSkills.length === 0 || selectedSkills.includes(skill.title)
+    skill => currentSelectedSkills.length === 0 || currentSelectedSkills.includes(skill.title)
   );
 
   const handleRowsPerPageChange = (value: string) => {
@@ -70,8 +78,9 @@ export const SkillsMatrix = () => {
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
-          selectedSkills={selectedSkills}
-          setSelectedSkills={setSelectedSkills}
+          selectedSkills={currentSelectedSkills}
+          setSelectedSkills={setCurrentSelectedSkills}
+          isRoleBenchmarkTab={isRoleBenchmarkTab}
         />
 
         <SkillsMatrixTable 
