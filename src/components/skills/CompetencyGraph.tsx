@@ -30,7 +30,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
   const { toast } = useToast();
 
   const track = roleId ? getTrackForRole(roleId) : initialTrack || "Professional";
-  const jobTitle = roleId ? jobTitles[roleId] || "Backend Engineer" : "Backend Engineer";
+  const jobTitle = roleId ? jobTitles[roleId] || "Engineering Manager" : "Engineering Manager";
 
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
@@ -68,7 +68,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId }: CompetencyGraph
 
   const getSkillsByCategory = () => {
     const skillsArray = Array.from(toggledSkills);
-    const profileId = roleId || "124"; // Use the provided roleId or default to Backend Engineer
+    const profileId = roleId || "126"; // Default to Engineering Manager if no roleId provided
     
     if (selectedCategory === "all") {
       return skillsArray.filter(skill => 
