@@ -38,5 +38,5 @@ export const getSkillRequirements = (
   if (!skill) return undefined;
   
   const trackData = track === 'professional' ? skill.professionalTrack : skill.managerialTrack;
-  return trackData?.[level.toUpperCase()];
+  return trackData?.[level];
 };
