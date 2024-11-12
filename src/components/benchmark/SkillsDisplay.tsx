@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getSkillsByTrackAndLevel, getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
+import { RequirementSection } from "./RequirementSection";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -79,13 +80,12 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const skillsInCategory = getSkillsForCategory(selectedCategory);
   const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skillsInCategory);
 
-  // Calculate total skills for each category based on current role only
+  // Calculate total skills for each category based on toggled skills only
   const totalSkills = {
     specialized: specializedSkills.length,
     common: commonSkills.length,
     certification: certificationSkills.length,
-    // Calculate total unique skills for this role only
-    all: specializedSkills.length + commonSkills.length + certificationSkills.length
+    all: toggledSkills.size // Use the size of toggledSkills directly
   };
 
   return (
@@ -97,28 +97,14 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
           { title: "Common Skills", count: totalSkills.common },
           { title: "Certification", count: totalSkills.certification }
         ].map((category) => (
-          <button
+          <RequirementSection
             key={category.title}
+            title={category.title}
+            count={category.count}
+            skills={skillsInCategory}
+            isSelected={selectedCategory === category.title}
             onClick={() => setSelectedCategory(category.title)}
-            className={`rounded-lg p-4 transition-colors ${
-              selectedCategory === category.title
-                ? 'bg-primary-accent/5 border border-primary-accent'
-                : 'bg-background border border-border hover:border-primary-accent/50'
-            }`}
-          >
-            <div className="flex flex-col items-start">
-              <span className={`text-sm font-semibold mb-1 ${
-                selectedCategory === category.title
-                  ? 'text-primary-accent'
-                  : 'text-foreground group-hover:text-primary-accent'
-              }`}>
-                {category.title}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {category.count} {category.count === 1 ? 'skill' : 'skills'}
-              </span>
-            </div>
-          </button>
+          />
         ))}
       </div>
 
