@@ -12,11 +12,7 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
 
-interface SkillsMatrixProps {
-  searchedSkills?: string[];
-}
-
-export const SkillsMatrix = ({ searchedSkills = [] }: SkillsMatrixProps) => {
+export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -48,25 +44,16 @@ export const SkillsMatrix = ({ searchedSkills = [] }: SkillsMatrixProps) => {
   const employeeSkills = getEmployeeSkills(id || "");
 
   // Filter skills based on search and category
-  const filteredSkills = (() => {
-    let skills = filterSkillsByCategory(employeeSkills, selectedCategory);
-    
-    if (searchedSkills.length > 0) {
-      skills = skills.filter(skill =>
-        searchedSkills.some(searchTerm =>
-          skill.title.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+  const filteredSkills = selectedSkills.length === 0
+    ? filterSkillsByCategory(employeeSkills, selectedCategory)
+    : filterSkillsByCategory(
+        employeeSkills.filter(skill => 
+          selectedSkills.some(selected => 
+            skill.title.toLowerCase().includes(selected.toLowerCase())
+          )
+        ),
+        selectedCategory
       );
-    } else if (selectedSkills.length > 0) {
-      skills = skills.filter(skill =>
-        selectedSkills.some(selected =>
-          skill.title.toLowerCase().includes(selected.toLowerCase())
-        )
-      );
-    }
-    
-    return skills;
-  })();
 
   const handleRowsPerPageChange = (value: string) => {
     setRowsPerPage(Number(value));
