@@ -22,7 +22,6 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
   const getSkillsForCategory = (category: string) => {
     const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
     
-    // Combine all skills from different sections
     const allSkills = [
       ...(currentRoleSkills.specialized || []),
       ...(currentRoleSkills.common || []),
