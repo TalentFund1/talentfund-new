@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 interface SearchFilterProps {
   label: string;
   placeholder: string;
-  items: string[];
+  items?: string[];
   selectedItems: string[];
   onItemsChange: (items: string[]) => void;
   singleSelect?: boolean;
@@ -19,7 +19,7 @@ interface SearchFilterProps {
 export const SearchFilter = ({ 
   label, 
   placeholder, 
-  items, 
+  items = [], 
   selectedItems, 
   onItemsChange,
   singleSelect = false,
