@@ -1,11 +1,12 @@
 import { roleSkills } from '../skills/data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { useToggledSkills } from '../context/ToggledSkillsContext';
+import { useToggledSkills } from '../skills/context/ToggledSkillsContext';
 import { RequirementSection } from './RequirementSection';
 
 interface CategorySectionProps {
   selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
+  onCategorySelect: (category: string) => void;
+  toggledSkills: Set<string>;
 }
 
 interface SkillCounts {
@@ -15,9 +16,12 @@ interface SkillCounts {
   all: number;
 }
 
-export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
+export const CategorySection = ({ 
+  selectedCategory, 
+  onCategorySelect,
+  toggledSkills
+}: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
-  const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const getToggledSkillsCount = (skills: Array<{ title: string }> = []) => {
@@ -36,10 +40,10 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
 
   const categories = [
-    { id: "all", name: "All Categories", count: skillCounts.all },
-    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
-    { id: "common", name: "Common Skills", count: skillCounts.common },
-    { id: "certification", name: "Certification", count: skillCounts.certification }
+    { id: "all", title: "All Categories", count: skillCounts.all },
+    { id: "specialized", title: "Specialized Skills", count: skillCounts.specialized },
+    { id: "common", title: "Common Skills", count: skillCounts.common },
+    { id: "certification", title: "Certification", count: skillCounts.certification }
   ];
 
   return (
@@ -47,11 +51,11 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
       {categories.map((category) => (
         <RequirementSection
           key={category.id}
-          title={category.name}
+          title={category.title}
           count={category.count}
           skills={[]}
           isSelected={selectedCategory === category.id}
-          onClick={() => setSelectedCategory(category.id)}
+          onClick={() => onCategorySelect(category.id)}
         />
       ))}
     </div>
