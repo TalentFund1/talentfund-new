@@ -1,10 +1,8 @@
 import { SkillBadge } from "../skills/SkillBadge";
 import { SkillSection } from "../skills/SkillSection";
-import { useState } from "react";
-import { getSkillsByTrackAndLevel, getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
-import { RequirementSection } from "./RequirementSection";
+import { getSkillRequirements } from "../skills/data/skillsDatabase";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -54,7 +52,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
         currentRoleSkills.certifications.some((s: any) => s.title === skill.title)
       );
     }
-    return [];
+    return allSkills;
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
@@ -68,7 +66,7 @@ export const SkillsDisplay = ({ selectedRoleSkills, toggledSkills, roleId, selec
     }, { required: [], preferred: [] });
   };
 
-  const skillsInCategory = getSkillsForCategory(selectedCategory);
+  const skillsInCategory = getSkillsForCategory("Specialized Skills");
   const { required: requiredSkills, preferred: preferredSkills } = categorizeSkillsByRequirement(skillsInCategory);
 
   return (
