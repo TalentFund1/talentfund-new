@@ -3,11 +3,12 @@ import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useState, useEffect } from "react";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useTrack } from "../skills/context/TrackContext";
+import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { useTrack } from "./context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 
 const roles = {
   "123": "AI Engineer",
@@ -22,6 +23,7 @@ export const RoleBenchmark = () => {
   const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
+  const { setBenchmarkSearchSkills } = useBenchmarkSearch();
 
   const currentTrack = getTrackForRole(selectedRole);
 
@@ -34,6 +36,17 @@ export const RoleBenchmark = () => {
   }, [currentTrack]);
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+
+  // Update search skills when role changes
+  useEffect(() => {
+    const allSkills = [
+      ...(selectedRoleSkills.specialized || []),
+      ...(selectedRoleSkills.common || []),
+      ...(selectedRoleSkills.certifications || [])
+    ].map(skill => skill.title);
+    
+    setBenchmarkSearchSkills(allSkills);
+  }, [selectedRole, selectedRoleSkills, setBenchmarkSearchSkills]);
 
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
@@ -80,4 +93,3 @@ export const RoleBenchmark = () => {
       </div>
     </div>
   );
-};

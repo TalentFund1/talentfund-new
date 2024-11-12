@@ -10,7 +10,8 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 
 export const BenchmarkSkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -19,6 +20,12 @@ export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
+  const { benchmarkSearchSkills } = useBenchmarkSearch();
+
+  // Update selected search skills when benchmarkSearchSkills changes
+  useEffect(() => {
+    setSelectedSearchSkills(benchmarkSearchSkills);
+  }, [benchmarkSearchSkills]);
 
   const employeeSkills = getEmployeeSkills(id || "");
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
