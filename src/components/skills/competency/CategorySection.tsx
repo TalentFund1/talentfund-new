@@ -1,15 +1,26 @@
+import { roleSkills } from '../data/roleSkills';
+import { useParams } from 'react-router-dom';
+
 interface CategorySectionProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-  skillCounts: {
-    all: number;
-    specialized: number;
-    common: number;
-    certification: number;
-  };
 }
 
-export const CategorySection = ({ selectedCategory, setSelectedCategory, skillCounts }: CategorySectionProps) => {
+export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
+  const { id } = useParams<{ id: string }>();
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+
+  const skillCounts = {
+    all: [
+      ...(currentRoleSkills.specialized || []),
+      ...(currentRoleSkills.common || []),
+      ...(currentRoleSkills.certifications || [])
+    ].length,
+    specialized: currentRoleSkills.specialized?.length || 0,
+    common: currentRoleSkills.common?.length || 0,
+    certification: currentRoleSkills.certifications?.length || 0
+  };
+
   const categories = [
     { id: "all", name: "All Categories", count: skillCounts.all },
     { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
