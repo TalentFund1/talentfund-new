@@ -67,7 +67,6 @@ export const SkillsMatrix = () => {
             setSelectedCategory={setSelectedCategory}
             selectedSkills={searchSkills}
             setSelectedSkills={setSearchSkills}
-            isRoleBenchmarkTab={false}
           />
         ) : (
           <div className="flex justify-between items-start gap-4">
