@@ -1,10 +1,11 @@
-import { roleSkills } from '../skills/data/roleSkills';
-import { useParams } from 'react-router-dom';
-import { useToggledSkills } from '../skills/context/ToggledSkillsContext';
+import { RequirementSection } from "./RequirementSection";
+import { useParams } from "react-router-dom";
+import { roleSkills } from "../skills/data/roleSkills";
 
 interface CategorySectionProps {
   selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
+  onCategorySelect: (category: string) => void;
+  toggledSkills: Set<string>;
 }
 
 interface SkillCounts {
@@ -14,95 +15,46 @@ interface SkillCounts {
   all: number;
 }
 
-export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
+export const CategorySection = ({ 
+  selectedCategory, 
+  onCategorySelect,
+  toggledSkills
+}: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
-  const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  const getSkillsCount = (skills: Array<{ title: string }>) => {
-    return skills ? skills.filter(skill => toggledSkills.has(skill.title)).length : 0;
+  const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
+    return skills.filter(skill => toggledSkills.has(skill.title)).length;
   };
 
-  const getSkillCountsByRole = (roleId: string): SkillCounts => {
-    const currentSkills = roleSkills[roleId as keyof typeof roleSkills];
-    
-    if (!currentSkills) {
-      return { specialized: 0, common: 0, certification: 0, all: 0 };
-    }
-
-    // AI Engineer role (ID: 123)
-    if (roleId === "123") {
-      return {
-        specialized: 4,
-        common: 1,
-        certification: 1,
-        all: 6
-      };
-    }
-
-    // Backend Engineer role (ID: 124)
-    if (roleId === "124") {
-      return {
-        specialized: 5,
-        common: 3,
-        certification: 3,
-        all: 11
-      };
-    }
-
-    // Frontend Engineer role (ID: 125)
-    if (roleId === "125") {
-      return {
-        specialized: 4,
-        common: 1,
-        certification: 1,
-        all: 6
-      };
-    }
-
-    // For other roles, calculate based on actual data
-    const specialized = getSkillsCount(currentSkills.specialized || []);
-    const common = getSkillsCount(currentSkills.common || []);
-    const certification = getSkillsCount(currentSkills.certifications || []);
-    const all = specialized + common + certification;
-
-    return { specialized, common, certification, all };
+  const skillCounts: SkillCounts = {
+    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
+    common: getToggledSkillsCount(currentRoleSkills.common || []),
+    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
+    all: 0 // Initialize with 0
   };
 
-  const skillCounts = getSkillCountsByRole(id || "123");
+  // Calculate total after individual counts are set
+  skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
 
   const categories = [
-    { id: "all", name: "All Categories", count: skillCounts.all },
-    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
-    { id: "common", name: "Common Skills", count: skillCounts.common },
-    { id: "certification", name: "Certification", count: skillCounts.certification }
+    { id: "all", title: "All Categories", count: skillCounts.all },
+    { id: "specialized", title: "Specialized Skills", count: skillCounts.specialized },
+    { id: "common", title: "Common Skills", count: skillCounts.common },
+    { id: "certification", title: "Certification", count: skillCounts.certification }
   ];
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
       {categories.map((category) => (
-        <button
+        <RequirementSection
           key={category.id}
-          onClick={() => setSelectedCategory(category.id)}
-          className={`rounded-lg p-4 transition-colors ${
-            selectedCategory === category.id
-              ? 'bg-primary-accent/5 border border-primary-accent'
-              : 'bg-background border border-border hover:border-primary-accent/50'
-          }`}
-        >
-          <div className="flex flex-col items-start">
-            <span className={`text-sm font-semibold mb-1 ${
-              selectedCategory === category.id
-                ? 'text-primary-accent'
-                : 'text-foreground group-hover:text-primary-accent'
-            }`}>
-              {category.name}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              {category.count} skills
-            </span>
-          </div>
-        </button>
+          title={category.title}
+          count={category.count}
+          skills={[]}
+          isSelected={selectedCategory === category.id}
+          onClick={() => onCategorySelect(category.id)}
+        />
       ))}
     </div>
   );
