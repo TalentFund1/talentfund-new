@@ -11,6 +11,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -23,6 +24,7 @@ export const SkillsMatrix = () => {
   const { selectedSkills } = useSelectedSkills();
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { id } = useParams<{ id: string }>();
+  const { toggledSkills } = useToggledSkills();
 
   const handleSave = () => {
     saveChanges();
@@ -43,11 +45,15 @@ export const SkillsMatrix = () => {
   // Get employee-specific skills
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Filter skills based on search and category
+  // Filter skills based on search, category, and toggled state
   const filteredSkills = selectedSkills.length === 0
-    ? filterSkillsByCategory(employeeSkills, selectedCategory)
+    ? filterSkillsByCategory(
+        employeeSkills.filter(skill => toggledSkills.has(skill.title)),
+        selectedCategory
+      )
     : filterSkillsByCategory(
         employeeSkills.filter(skill => 
+          toggledSkills.has(skill.title) &&
           selectedSkills.some(selected => 
             skill.title.toLowerCase().includes(selected.toLowerCase())
           )
