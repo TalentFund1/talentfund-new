@@ -35,11 +35,11 @@ export const skillsDatabase: SkillData[] = [
     subcategory: "AI & ML",
     professionalTrack: {
       P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'unspecified', requirement: 'preferred' },
-      P3: { level: 'unspecified', requirement: 'preferred' },
+      P2: { level: 'beginner', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
       P4: { level: 'beginner', requirement: 'preferred' },
-      P5: { level: 'unspecified', requirement: 'preferred' },
-      P6: { level: 'unspecified', requirement: 'preferred' }
+      P5: { level: 'advanced', requirement: 'preferred' },
+      P6: { level: 'advanced', requirement: 'required' }
     }
   },
   {
@@ -48,11 +48,11 @@ export const skillsDatabase: SkillData[] = [
     subcategory: "AI Applications",
     professionalTrack: {
       P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'unspecified', requirement: 'preferred' },
-      P3: { level: 'unspecified', requirement: 'preferred' },
+      P2: { level: 'beginner', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
       P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'unspecified', requirement: 'preferred' },
-      P6: { level: 'unspecified', requirement: 'preferred' }
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
     }
   },
   {
@@ -61,27 +61,117 @@ export const skillsDatabase: SkillData[] = [
     subcategory: "AI Applications",
     professionalTrack: {
       P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'unspecified', requirement: 'preferred' },
-      P3: { level: 'unspecified', requirement: 'preferred' },
-      P4: { level: 'unspecified', requirement: 'required' },
-      P5: { level: 'unspecified', requirement: 'preferred' },
-      P6: { level: 'unspecified', requirement: 'preferred' }
+      P2: { level: 'beginner', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'required' },
+      P4: { level: 'advanced', requirement: 'required' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
     }
   },
   {
-    title: "AWS Certified Solutions Architect",
-    category: "certification",
-    subcategory: "Cloud Certification",
+    title: "TensorFlow",
+    category: "specialized",
+    subcategory: "Machine Learning Frameworks",
     professionalTrack: {
       P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'unspecified', requirement: 'preferred' },
+      P2: { level: 'beginner', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
+      P4: { level: 'intermediate', requirement: 'preferred' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
+  },
+  {
+    title: "PyTorch",
+    category: "specialized",
+    subcategory: "Machine Learning Frameworks",
+    professionalTrack: {
+      P1: { level: 'unspecified', requirement: 'preferred' },
+      P2: { level: 'beginner', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
+      P4: { level: 'intermediate', requirement: 'preferred' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
+  },
+  {
+    title: "Python",
+    category: "common",
+    subcategory: "Programming Languages",
+    professionalTrack: {
+      P1: { level: 'intermediate', requirement: 'required' },
+      P2: { level: 'advanced', requirement: 'required' },
       P3: { level: 'advanced', requirement: 'required' },
       P4: { level: 'advanced', requirement: 'required' },
       P5: { level: 'advanced', requirement: 'required' },
       P6: { level: 'advanced', requirement: 'required' }
     }
   },
-  // Other skills can be added here
+  {
+    title: "Problem Solving",
+    category: "common",
+    subcategory: "Soft Skills",
+    professionalTrack: {
+      P1: { level: 'intermediate', requirement: 'required' },
+      P2: { level: 'intermediate', requirement: 'required' },
+      P3: { level: 'advanced', requirement: 'required' },
+      P4: { level: 'advanced', requirement: 'required' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
+  },
+  {
+    title: "Technical Writing",
+    category: "common",
+    subcategory: "Communication",
+    professionalTrack: {
+      P1: { level: 'beginner', requirement: 'preferred' },
+      P2: { level: 'intermediate', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
+      P4: { level: 'intermediate', requirement: 'preferred' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
+  },
+  {
+    title: "AWS Certified Machine Learning - Specialty",
+    category: "certification",
+    subcategory: "Cloud Certification",
+    professionalTrack: {
+      P1: { level: 'unspecified', requirement: 'preferred' },
+      P2: { level: 'beginner', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
+      P4: { level: 'intermediate', requirement: 'preferred' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
+  },
+  {
+    title: "TensorFlow Developer Certificate",
+    category: "certification",
+    subcategory: "AI Certification",
+    professionalTrack: {
+      P1: { level: 'unspecified', requirement: 'preferred' },
+      P2: { level: 'beginner', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
+      P4: { level: 'intermediate', requirement: 'preferred' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
+  },
+  {
+    title: "Google Cloud Professional Machine Learning Engineer",
+    category: "certification",
+    subcategory: "Cloud Certification",
+    professionalTrack: {
+      P1: { level: 'unspecified', requirement: 'preferred' },
+      P2: { level: 'beginner', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
+      P4: { level: 'intermediate', requirement: 'preferred' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
+  }
 ];
 
 // Helper functions remain unchanged
