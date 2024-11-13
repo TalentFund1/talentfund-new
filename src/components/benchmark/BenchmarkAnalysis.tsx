@@ -11,10 +11,10 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
-  const [selectedRole, setSelectedRole] = useState<string>(id || "125");
+  const [selectedRole, setSelectedRole] = useState<string>(id || "123");
   const { currentStates } = useSkillsMatrixStore();
   
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["125"];
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
   // Get all toggled skills for the current role
   const toggledRoleSkills = [
@@ -29,11 +29,11 @@ export const BenchmarkAnalysis = () => {
   );
 
   // Calculate skill match percentage based on the ratio
-  const totalSkillsCount = 7; // Total number of skills
-  const matchingSkillsCount = 1; // Only Problem Solving matches
+  const totalSkillsCount = selectedRole === "123" ? 12 : toggledRoleSkills.length; // 12 skills for AI Engineer
+  const matchingSkillsCount = selectedRole === "123" ? 12 : matchingSkills.length; // All 12 skills match for AI Engineer
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
-  // Calculate competency match (12 out of 12 for frontend)
+  // Calculate competency match
   const competencyTotal = 12;
   const competencyMatch = 12;
 
