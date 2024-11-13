@@ -9,9 +9,11 @@ import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import { BenchmarkSearchProvider } from "@/components/skills/context/BenchmarkSearchContext";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { EmployeeHeader } from "@/components/employee/EmployeeHeader";
 import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const employees = {
   "123": {
@@ -70,25 +72,64 @@ const employees = {
 
 const EmployeeProfile = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const employee = employees[id as keyof typeof employees];
 
   if (!employee) {
     return <div>Employee not found</div>;
   }
 
+  const handleNavigation = (direction: 'prev' | 'next') => {
+    const employeeIds = Object.keys(employees);
+    const currentIndex = employeeIds.indexOf(id || "123");
+    
+    let newIndex;
+    if (direction === 'prev') {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : employeeIds.length - 1;
+    } else {
+      newIndex = currentIndex < employeeIds.length - 1 ? currentIndex + 1 : 0;
+    }
+    
+    navigate(`/employee/${employeeIds[newIndex]}`);
+  };
+
+  const currentIndex = Object.keys(employees).indexOf(id || "123") + 1;
+  const totalEmployees = Object.keys(employees).length;
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
         <div className="max-w-7xl mx-auto space-y-6">
+          <div className="flex justify-between items-center mb-4">
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2 bg-white border-border hover:bg-background"
+              onClick={() => navigate('/employees')}
+            >
+              <ChevronLeft className="h-4 w-4" /> Back
+            </Button>
+            <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
+              <ChevronLeft 
+                className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+                onClick={() => handleNavigation('prev')}
+              />
+              <span className="text-sm text-foreground">{currentIndex}/{totalEmployees}</span>
+              <ChevronRight 
+                className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+                onClick={() => handleNavigation('next')}
+              />
+            </div>
+          </div>
+
+          <Card className="p-8 bg-white">
+            <EmployeeHeader id={id || ""} employee={employee} />
+            <EmployeeDetails employee={employee} />
+          </Card>
+
           <SelectedSkillsProvider>
             <TrackProvider>
               <BenchmarkSearchProvider>
-                <Card className="p-8 bg-white">
-                  <EmployeeHeader id={id || ""} employee={employee} />
-                  <EmployeeDetails employee={employee} />
-                </Card>
-
                 <Tabs defaultValue="experience" className="w-full space-y-6">
                   <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
                     <TabsTrigger 
