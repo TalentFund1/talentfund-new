@@ -47,10 +47,12 @@ export const BenchmarkAnalysis = () => {
       ...(role.certifications || [])
     ];
 
-    return allRoleSkills.filter(skill => 
+    const matches = allRoleSkills.filter(skill => 
       currentStates[skill.title] && 
       currentStates[skill.title].level !== 'Not Interested'
-    ).length;
+    );
+
+    return matches.length;
   };
 
   const totalSkillsCount = getTotalSkillsCount(selectedRole);
