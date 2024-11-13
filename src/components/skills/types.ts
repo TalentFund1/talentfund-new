@@ -29,7 +29,7 @@ export interface EmployeeSkill {
   level: string;
   growth: string;
   confidence: string;
-  requirement?: 'required' | 'preferred';
+  requirement?: 'required' | 'preferred' | 'skill_goal';
 }
 
 export interface RoleSkill {
@@ -37,5 +37,5 @@ export interface RoleSkill {
   subcategory: string;
   level: string;
   growth: string;
-  requirement?: 'required' | 'preferred';
+  requirement?: 'required' | 'preferred' | 'skill_goal';
 }
