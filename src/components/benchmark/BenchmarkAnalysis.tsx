@@ -29,8 +29,32 @@ export const BenchmarkAnalysis = () => {
   );
 
   // Calculate total skills count based on the role
-  const totalSkillsCount = 12; // Frontend Engineer has 12 skills
-  const matchingSkillsCount = selectedRole === "125" ? 1 : matchingSkills.length; // For Frontend Engineer (125), we know there's 1 match
+  const getTotalSkillsCount = (roleId: string) => {
+    const role = roleSkills[roleId as keyof typeof roleSkills];
+    if (!role) return 0;
+    return (role.specialized?.length || 0) + 
+           (role.common?.length || 0) + 
+           (role.certifications?.length || 0);
+  };
+
+  const getMatchingSkillsCount = (roleId: string) => {
+    const role = roleSkills[roleId as keyof typeof roleSkills];
+    if (!role) return 0;
+    
+    const allRoleSkills = [
+      ...(role.specialized || []),
+      ...(role.common || []),
+      ...(role.certifications || [])
+    ];
+
+    return allRoleSkills.filter(skill => 
+      currentStates[skill.title] && 
+      currentStates[skill.title].level !== 'Not Interested'
+    ).length;
+  };
+
+  const totalSkillsCount = getTotalSkillsCount(selectedRole);
+  const matchingSkillsCount = getMatchingSkillsCount(selectedRole);
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
   // Calculate competency match
