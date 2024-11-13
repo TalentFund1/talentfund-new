@@ -3,14 +3,21 @@ import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { getSkillRequirements } from "../skills/data/skillsDatabase";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface MissingSkillsProps {
   roleId: string;
   employeeId: string;
+  selectedLevel?: string;
 }
 
-export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
+export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
+  const { getTrackForRole } = useTrack();
+  const track = getTrackForRole(roleId);
+  const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
+  
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -28,12 +35,22 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   });
 
   const getLevelColor = (skillTitle: string) => {
-    // Frontend Engineer P4 specific levels
-    if (roleId === "125") { // Frontend Engineer
-      if (skillTitle === "React") return "bg-primary-accent"; // Purple for Advanced
-      if (skillTitle === "TypeScript") return "bg-primary-icon"; // Orange for Intermediate
+    const requirements = getSkillRequirements(
+      skillTitle,
+      currentTrack,
+      selectedLevel
+    );
+
+    switch (requirements?.level?.toLowerCase()) {
+      case "advanced":
+        return "bg-primary-accent"; // Purple for Advanced
+      case "intermediate":
+        return "bg-primary-icon"; // Orange for Intermediate
+      case "beginner":
+        return "bg-[#008000]"; // Green for Beginner
+      default:
+        return "bg-gray-300"; // Gray for Unspecified
     }
-    return "bg-gray-300"; // Default color for other skills
   };
 
   if (missingSkills.length === 0) {
