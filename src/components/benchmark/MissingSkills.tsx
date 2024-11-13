@@ -37,17 +37,27 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   });
 
   const getDotColor = (skillTitle: string) => {
-    const roleSkill = allRoleSkills.find(s => s.title === skillTitle);
+    // Get the current state for this skill at the selected level
+    const skillState = currentStates[skillTitle]?.[selectedLevel.toUpperCase()];
     
-    if (roleSkill) {
-      if (roleSkill.level?.toLowerCase() === 'advanced') {
-        return "bg-primary-accent"; // Purple for advanced skills
-      } else if (roleSkill.level?.toLowerCase() === 'intermediate') {
-        return "bg-primary-icon"; // Orange for intermediate skills
+    if (skillState) {
+      // If we have a state for this skill at this level, use its level
+      if (skillState.level.toLowerCase() === 'advanced') {
+        return "bg-primary-accent"; // Purple for advanced
+      } else if (skillState.level.toLowerCase() === 'intermediate') {
+        return "bg-primary-icon"; // Orange for intermediate
       }
+      return "bg-gray-300"; // Grey for other levels
     }
     
-    return "bg-gray-300"; // Grey for unspecified or other levels
+    // Fallback to the default role skill level if no state exists
+    const skill = allRoleSkills.find(s => s.title === skillTitle);
+    if (skill?.level?.toLowerCase() === "advanced") {
+      return "bg-primary-accent"; // Purple for advanced
+    } else if (skill?.level?.toLowerCase() === "intermediate") {
+      return "bg-primary-icon"; // Orange for intermediate
+    }
+    return "bg-gray-300"; // Grey for other levels
   };
 
   if (missingSkills.length === 0) {
