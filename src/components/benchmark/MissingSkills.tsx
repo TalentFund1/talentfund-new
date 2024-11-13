@@ -23,35 +23,35 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all required and preferred skills for the role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ] as RoleSkill[];
 
-  // Find missing skills by comparing with employee skills, but only for toggled skills
   const missingSkills = allRoleSkills.filter(roleSkill => {
     const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
   const getDotColor = (skillTitle: string) => {
-    // Find the skill in the role skills to determine if it's required or preferred
+    // Find the skill in the role skills
     const skill = allRoleSkills.find(s => s.title === skillTitle);
     
-    // For Frontend Engineer role (125)
     if (roleId === "125") {
-      if (skillTitle === "React" || skillTitle === "TypeScript") {
-        return "bg-primary-accent"; // Purple dot for required skills
+      if (skillTitle === "React") {
+        return "bg-primary-accent"; // Purple dot for React (advanced)
       }
-      return "bg-primary-icon"; // Orange dot for preferred skills
+      if (skillTitle === "TypeScript") {
+        return "bg-primary-icon"; // Orange dot for TypeScript (intermediate)
+      }
     }
     
-    // Default colors for other roles based on requirement
-    return skill?.requirement === 'required' 
-      ? "bg-primary-accent" 
-      : "bg-primary-icon";
+    // Default colors based on skill level
+    if (skill?.level?.toLowerCase() === "advanced") {
+      return "bg-primary-accent"; // Purple for advanced
+    }
+    return "bg-primary-icon"; // Orange for intermediate and others
   };
 
   if (missingSkills.length === 0) {
