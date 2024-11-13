@@ -2,9 +2,11 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { RoleSkill } from "../skills/types";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 
 interface Skill {
   name: string;
@@ -14,8 +16,9 @@ interface Skill {
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
+  const [selectedRole, setSelectedRole] = useState<string>(id || "123");
   
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   const employeeSkills = getEmployeeSkills(id || "");
   
   const allRequiredSkills = [
@@ -48,6 +51,17 @@ export const BenchmarkAnalysis = () => {
             {matchPercentage}%
           </span>
         </h2>
+        <Select value={selectedRole} onValueChange={setSelectedRole}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="123">AI Engineer</SelectItem>
+            <SelectItem value="124">Backend Engineer</SelectItem>
+            <SelectItem value="125">Frontend Engineer</SelectItem>
+            <SelectItem value="126">Engineering Manager</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-6">
