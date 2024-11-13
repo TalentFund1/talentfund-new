@@ -23,7 +23,7 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.certifications
   ];
 
-  // Count total toggled skills for this role
+  // Calculate total toggled skills for this role
   const totalToggledSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title)).length;
 
   // Calculate matching skills (skills that employee has from toggled skills)
@@ -31,10 +31,14 @@ export const BenchmarkAnalysis = () => {
     toggledSkills.has(skill.title) && employeeSkills.some(empSkill => empSkill.title === skill.title)
   );
 
-  // Calculate skill match percentage
-  const matchingSkillsCount = matchingSkills.length;
+  // Calculate skill goals (skills marked as required)
+  const skillGoals = matchingSkills.filter(skill => 
+    skill.level === 'advanced' || skill.level === 'intermediate'
+  );
+
+  // Calculate percentages
   const matchPercentage = totalToggledSkills > 0 
-    ? Math.round((matchingSkillsCount / totalToggledSkills) * 100)
+    ? Math.round((matchingSkills.length / totalToggledSkills) * 100)
     : 0;
 
   return (
@@ -65,7 +69,7 @@ export const BenchmarkAnalysis = () => {
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Skill Match</span>
               <span className="text-sm text-muted-foreground">
-                {matchingSkillsCount} out of {totalToggledSkills}
+                {matchingSkills.length} out of {totalToggledSkills}
               </span>
             </div>
             <div className="h-2 w-full bg-[#F2F4F7] rounded-full overflow-hidden">
@@ -81,7 +85,9 @@ export const BenchmarkAnalysis = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Competency Match</span>
-              <span className="text-sm text-muted-foreground">12 out of 12</span>
+              <span className="text-sm text-muted-foreground">
+                {matchingSkills.length} out of {totalToggledSkills}
+              </span>
             </div>
             <div className="h-2 w-full bg-[#F2F4F7] rounded-full overflow-hidden">
               <div 
@@ -96,12 +102,14 @@ export const BenchmarkAnalysis = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Skill Goal</span>
-              <span className="text-sm text-muted-foreground">6 out of 6</span>
+              <span className="text-sm text-muted-foreground">
+                {skillGoals.length} out of {matchingSkills.length}
+              </span>
             </div>
             <div className="h-2 w-full bg-[#F2F4F7] rounded-full overflow-hidden">
               <div 
                 className="h-full bg-primary-icon transition-all duration-500"
-                style={{ width: "100%" }}
+                style={{ width: `${(skillGoals.length / matchingSkills.length) * 100}%` }}
               />
             </div>
           </div>
