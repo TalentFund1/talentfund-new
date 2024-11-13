@@ -5,7 +5,6 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
-import { professionalSkills } from "../skills/competency/skillsData";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -36,41 +35,43 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: Miss
   });
 
   const getLevelColor = (skillTitle: string) => {
-    // Get the skill requirements for the current level
+    // Get the skill requirements for the current level from the skills matrix
     const requirements = getSkillRequirements(
       skillTitle,
       currentTrack,
       selectedLevel.toUpperCase()
     );
 
-    // If no requirements found, check the role skills for the level
-    if (!requirements) {
-      const roleSkill = allRoleSkills.find(skill => skill.title === skillTitle);
-      if (roleSkill) {
-        switch (roleSkill.level.toLowerCase()) {
-          case "advanced":
-            return "bg-primary-accent";
-          case "intermediate":
-            return "bg-primary-icon";
-          case "beginner":
-            return "bg-[#008000]";
-          default:
-            return "bg-gray-300";
-        }
+    if (requirements) {
+      // Use the requirements level from the skills matrix
+      switch (requirements.level.toLowerCase()) {
+        case "advanced":
+          return "bg-primary-accent";
+        case "intermediate":
+          return "bg-primary-icon";
+        case "beginner":
+          return "bg-[#008000]";
+        default:
+          return "bg-gray-300";
       }
     }
 
-    // Use the requirements level if found
-    switch (requirements?.level.toLowerCase()) {
-      case "advanced":
-        return "bg-primary-accent";
-      case "intermediate":
-        return "bg-primary-icon";
-      case "beginner":
-        return "bg-[#008000]";
-      default:
-        return "bg-gray-300";
+    // Fallback to the role skills level if no matrix requirements found
+    const roleSkill = allRoleSkills.find(skill => skill.title === skillTitle);
+    if (roleSkill) {
+      switch (roleSkill.level.toLowerCase()) {
+        case "advanced":
+          return "bg-primary-accent";
+        case "intermediate":
+          return "bg-primary-icon";
+        case "beginner":
+          return "bg-[#008000]";
+        default:
+          return "bg-gray-300";
+      }
     }
+
+    return "bg-gray-300"; // Default color for unspecified level
   };
 
   if (missingSkills.length === 0) {
