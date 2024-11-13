@@ -7,9 +7,10 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 interface MissingSkillsProps {
   roleId: string;
   employeeId: string;
+  selectedLevel: string;
 }
 
-export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
+export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
@@ -27,17 +28,16 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
-  const getLevelColor = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case "advanced":
-        return "bg-primary-accent";
-      case "intermediate":
-        return "bg-primary-icon";
-      case "beginner":
-        return "bg-[#008000]";
-      default:
-        return "bg-gray-300";
+  const getLevelColor = (skillTitle: string) => {
+    // Check if the skill is in required skills
+    const isRequired = allRoleSkills.find(
+      skill => skill.title === skillTitle && skill.requirement === 'required'
+    );
+
+    if (isRequired) {
+      return "bg-primary-accent"; // Purple for required skills
     }
+    return "bg-gray-300"; // Gray for preferred skills
   };
 
   if (missingSkills.length === 0) {
@@ -60,7 +60,7 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
             className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
           </Badge>
         ))}
       </div>
