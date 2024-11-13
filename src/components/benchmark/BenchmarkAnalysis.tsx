@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useParams } from "react-router-dom";
@@ -14,6 +14,7 @@ export const BenchmarkAnalysis = () => {
   const [selectedRole, setSelectedRole] = useState<string>(id || "123");
   const { currentStates } = useSkillsMatrixStore();
   
+  // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
   // Calculate total skills for the selected role
@@ -23,11 +24,11 @@ export const BenchmarkAnalysis = () => {
     ...(currentRoleSkills.certifications || [])
   ];
 
-  // Calculate matching skills (skills that employee has from the role's required skills)
-  const matchingSkills = totalSkills.filter(skill => 
-    currentStates[skill.title] && 
-    currentStates[skill.title].level !== 'Not Interested'
-  );
+  // Calculate matching skills by comparing employee's skills with role requirements
+  const matchingSkills = totalSkills.filter(skill => {
+    const employeeSkillState = currentStates[skill.title];
+    return employeeSkillState && employeeSkillState.level !== 'Not Interested';
+  });
 
   const totalSkillsCount = totalSkills.length;
   const matchingSkillsCount = matchingSkills.length;
