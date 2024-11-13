@@ -40,6 +40,12 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
     }
   };
 
+  const getRequirementBadgeColor = (requirement: string | undefined) => {
+    return requirement === 'required' 
+      ? 'border-primary-accent bg-primary-accent/10 text-primary-accent'
+      : 'border-primary-icon bg-primary-icon/10 text-primary-icon';
+  };
+
   if (missingSkills.length === 0) {
     return null;
   }
@@ -54,14 +60,18 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
       </div>
       <div className="flex flex-wrap gap-2">
         {missingSkills.map((skill) => (
-          <Badge 
-            key={skill.title}
-            variant="outline" 
-            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-          >
-            {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
-          </Badge>
+          <div key={skill.title} className="flex flex-col gap-1">
+            <Badge 
+              variant="outline" 
+              className={`rounded-md px-4 py-2 border bg-white hover:bg-background/80 transition-colors flex items-center gap-2 ${getRequirementBadgeColor(skill.requirement)}`}
+            >
+              <span>{skill.title}</span>
+              <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
+              <span className="text-xs font-normal">
+                ({skill.level || 'Unspecified'} - {skill.requirement || 'Preferred'})
+              </span>
+            </Badge>
+          </div>
         ))}
       </div>
     </Card>
