@@ -4,31 +4,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useTrack } from "../skills/context/TrackContext";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 export const BenchmarkAnalysis = () => {
-  const [selectedRole, setSelectedRole] = useState<string>("125");
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
+  const [selectedRole, setSelectedRole] = useState<string>(id || "123");
   const { currentStates } = useSkillsMatrixStore();
-
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["125"];
-
-  // Get all skills for the current role
-  const allRoleSkills = [
+  
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  
+  // Get all toggled skills for the current role
+  const toggledRoleSkills = [
     ...(currentRoleSkills.specialized || []),
     ...(currentRoleSkills.common || []),
     ...(currentRoleSkills.certifications || [])
-  ];
+  ].filter(skill => toggledSkills.has(skill.title));
 
-  // Calculate matching skills (skills that employee has from all role skills)
-  const matchingSkills = allRoleSkills.filter(skill => 
-    currentStates[skill.title] && 
-    currentStates[skill.title].level !== 'Not Interested'
+  // Calculate matching skills (skills that employee has from toggled skills)
+  const matchingSkills = toggledRoleSkills.filter(skill => 
+    currentStates[skill.title] && currentStates[skill.title].level !== 'Not Interested'
   );
 
-  // Calculate total skills count and matching skills
-  const totalSkillsCount = 12; // Frontend Engineer has 12 skills total
+  // Calculate total skills count based on the role
+  const totalSkillsCount = selectedRole === "125" ? 12 : toggledRoleSkills.length; // Frontend Engineer has 12 skills
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
@@ -36,11 +37,12 @@ export const BenchmarkAnalysis = () => {
   const competencyTotal = 12;
   const competencyMatch = 12;
 
-  // Calculate skill goals
-  const skillGoals = matchingSkills.filter(skill => 
-    currentStates[skill.title]?.requirement === 'required' ||
-    currentStates[skill.title]?.requirement === 'skill_goal'
-  );
+  // Calculate skill goals (dynamically based on matrix state)
+  const skillGoalTotal = matchingSkills.length;
+  const skillGoalMatch = matchingSkills.filter(skill => {
+    const state = currentStates[skill.title];
+    return state && state.requirement === 'required';
+  }).length;
 
   return (
     <div className="space-y-6">
@@ -103,12 +105,12 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">{skillGoals.length} out of {matchingSkillsCount}</span>
+                <span className="text-sm text-foreground">{skillGoalMatch} out of {skillGoalTotal}</span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(skillGoals.length/matchingSkillsCount) * 100}%` }} 
+                  style={{ width: `${(skillGoalMatch/skillGoalTotal) * 100}%` }} 
                 />
               </div>
             </div>
