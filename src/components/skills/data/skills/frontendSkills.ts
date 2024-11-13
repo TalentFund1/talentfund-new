@@ -1,4 +1,6 @@
-export const frontendSkills = [
+import { SkillData } from '../skillLevels';
+
+export const frontendSkills: SkillData[] = [
   {
     title: "React",
     category: "specialized",
@@ -6,9 +8,9 @@ export const frontendSkills = [
     professionalTrack: {
       P1: { level: "beginner", requirement: "required" },
       P2: { level: "intermediate", requirement: "required" },
-      P3: { level: "advanced", requirement: "required" },
-      P4: { level: "advanced", requirement: "required" },
-      P5: { level: "advanced", requirement: "required" },
+      P3: { level: "intermediate", requirement: "required" },
+      P4: { level: "intermediate", requirement: "required" },
+      P5: { level: "intermediate", requirement: "required" },
       P6: { level: "advanced", requirement: "required" }
     }
   },
@@ -19,9 +21,9 @@ export const frontendSkills = [
     professionalTrack: {
       P1: { level: "beginner", requirement: "preferred" },
       P2: { level: "intermediate", requirement: "required" },
-      P3: { level: "advanced", requirement: "required" },
+      P3: { level: "intermediate", requirement: "required" },
       P4: { level: "advanced", requirement: "required" },
-      P5: { level: "advanced", requirement: "required" },
+      P5: { level: "intermediate", requirement: "required" },
       P6: { level: "advanced", requirement: "required" }
     }
   }
