@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { RoleSkill } from "../skills/types";
 
 interface Skill {
   name: string;
@@ -19,7 +20,7 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter(skill => skill.requirement === 'required');
+  ].filter((skill: RoleSkill) => skill.requirement === 'required');
 
   const missingSkills = allRequiredSkills
     .filter(skill => !toggledSkills.has(skill.title))
