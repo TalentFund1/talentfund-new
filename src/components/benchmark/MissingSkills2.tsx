@@ -5,13 +5,13 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
 
-interface MissingSkillsProps {
+interface MissingSkills2Props {
   roleId: string;
   employeeId: string;
   selectedLevel: string;
 }
 
-export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkillsProps) => {
+export const MissingSkills2 = ({ roleId, employeeId, selectedLevel }: MissingSkills2Props) => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useCompetencyStore();
   const employeeSkills = getEmployeeSkills(employeeId);
