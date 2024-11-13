@@ -122,7 +122,7 @@ export const BenchmarkAnalysis = () => {
 
         <div className="rounded-2xl border border-border bg-white p-6 w-full">
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm font-medium">Missing Skills or Certifications</span>
+            <span className="text-sm font-medium text-foreground">Missing Skills or Certifications</span>
             <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
               {missingSkills.length}
             </span>
@@ -133,9 +133,12 @@ export const BenchmarkAnalysis = () => {
               <Badge 
                 key={`${skill.name}-${index}`}
                 variant="outline" 
-                className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles()}`}
+                className="rounded-full px-4 py-2 border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
               >
-                {skill.name} <div className="h-2 w-2 rounded-full bg-primary-icon" />
+                {skill.name}
+                <div className={`h-2 w-2 rounded-full ${
+                  index % 2 === 0 ? 'bg-primary-accent' : 'bg-primary-icon'
+                }`} />
               </Badge>
             ))}
           </div>
