@@ -34,8 +34,8 @@ export const BenchmarkAnalysis = () => {
   );
 
   // Calculate skill match percentage based on the ratio
-  const totalSkillsCount = requiredAndPreferredSkills.length; // This is 3 for P4 Frontend Engineer
-  const matchingSkillsCount = matchingSkills.length; // This is 1 for the current view
+  const totalSkillsCount = requiredAndPreferredSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = totalSkillsCount > 0 
     ? Math.round((matchingSkillsCount / totalSkillsCount) * 100)
     : 0;
@@ -47,14 +47,6 @@ export const BenchmarkAnalysis = () => {
       name: skill.title,
       status: "missing" as const
     }));
-
-  // Calculate competency match (12 out of 12 for frontend)
-  const competencyTotal = 12;
-  const competencyMatch = 12;
-
-  // Calculate skill goals (6 out of 6 for frontend)
-  const skillGoalTotal = 6;
-  const skillGoalMatch = 6;
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
@@ -91,32 +83,6 @@ export const BenchmarkAnalysis = () => {
               <div 
                 className="h-full bg-[#1F2144] rounded-full" 
                 style={{ width: `${matchPercentage}%` }} 
-              />
-            </div>
-          </div>
-
-          <div className="space-y-4 mt-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-foreground">Competency Match</span>
-              <span className="text-sm text-foreground">{competencyMatch} out of {competencyTotal}</span>
-            </div>
-            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-[#1F2144] rounded-full" 
-                style={{ width: `${(competencyMatch/competencyTotal) * 100}%` }} 
-              />
-            </div>
-          </div>
-
-          <div className="space-y-4 mt-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-foreground">Skill Goal</span>
-              <span className="text-sm text-foreground">{skillGoalMatch} out of {skillGoalTotal}</span>
-            </div>
-            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-[#1F2144] rounded-full" 
-                style={{ width: `${(skillGoalMatch/skillGoalTotal) * 100}%` }} 
               />
             </div>
           </div>
