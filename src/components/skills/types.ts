@@ -37,7 +37,5 @@ export interface RoleSkill {
   subcategory: string;
   level: string;
   growth: string;
-  salary?: string;
-  benchmarks?: { J: boolean; B: boolean; O: boolean };
   requirement?: 'required' | 'preferred' | 'skill_goal';
 }
