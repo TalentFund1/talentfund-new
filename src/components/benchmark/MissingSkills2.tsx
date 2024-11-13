@@ -17,107 +17,55 @@ export const MissingSkills2 = ({ roleId, employeeId, selectedLevel }: MissingSki
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
+  // Get all required and preferred skills for the role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
 
+  // Find missing skills by comparing with employee skills, but only for toggled skills
   const missingSkills = allRoleSkills.filter(roleSkill => {
     const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
   const getLevelColor = (skillTitle: string) => {
-    const level = selectedLevel.toLowerCase();
-    const levelNum = parseInt(level.substring(1));
-
-    // Frontend Engineer (125)
-    if (roleId === "125") {
-      if (skillTitle === "React") {
+    // Frontend Engineer P2 specific logic
+    if (selectedLevel.toLowerCase() === 'p2') {
+      if (skillTitle === 'React') return "bg-[#008000]"; // Beginner (green)
+      if (skillTitle === 'TypeScript') return "bg-gray-300"; // Unspecified (gray)
+    }
+    
+    // Professional track (P1-P6)
+    if (selectedLevel.toLowerCase().startsWith('p')) {
+      const levelNum = parseInt(selectedLevel.substring(1));
+      
+      // React specific progression
+      if (skillTitle === 'React') {
         if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 3) return "bg-primary-icon"; // Intermediate for P3
-        return "bg-primary-accent"; // Advanced for P4+
+        if (levelNum === 3) return "bg-gray-300"; // Unspecified for P3
+        if (levelNum === 4) return "bg-primary-accent"; // Advanced for P4
+        if (levelNum === 5) return "bg-primary-accent"; // Advanced for P5
+        return "bg-[#008000]"; // Beginner for P6
       }
-      if (skillTitle === "TypeScript") {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
-        return "bg-primary-accent"; // Advanced for P5+
-      }
-      if (skillTitle === "UI/UX Design") {
-        if (levelNum <= 3) return "bg-[#008000]"; // Beginner for P1-P3
-        if (levelNum <= 5) return "bg-primary-icon"; // Intermediate for P4-P5
-        return "bg-primary-accent"; // Advanced for P6
-      }
-      if (skillTitle === "CSS/SASS" || skillTitle === "Next.js") {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 3) return "bg-primary-icon"; // Intermediate for P3
-        return "bg-primary-accent"; // Advanced for P4+
+      
+      // TypeScript specific progression
+      if (skillTitle === 'TypeScript') {
+        if (levelNum <= 3) return "bg-gray-300"; // Unspecified for P1-P3
+        if (levelNum === 4) return "bg-primary-icon"; // Intermediate for P4
+        return "bg-gray-300"; // Unspecified for P5-P6
       }
     }
-
-    // Backend Engineer (124)
-    if (roleId === "124") {
-      if (skillTitle === "Node.js" || skillTitle === "Database Design") {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 3) return "bg-primary-icon"; // Intermediate for P3
-        return "bg-primary-accent"; // Advanced for P4+
-      }
-      if (skillTitle === "API Development" || skillTitle === "System Architecture") {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
-        return "bg-primary-accent"; // Advanced for P5+
-      }
-      if (skillTitle === "Kubernetes") {
-        if (levelNum <= 3) return "bg-[#008000]"; // Beginner for P1-P3
-        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P4
-        return "bg-primary-accent"; // Advanced for P5+
-      }
+    
+    // Managerial track (M3-M6)
+    if (selectedLevel.toLowerCase().startsWith('m')) {
+      const levelNum = parseInt(selectedLevel.substring(1));
+      if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
+      return "bg-primary-accent"; // Advanced for M4-M6
     }
 
-    // AI Engineer (123)
-    if (roleId === "123") {
-      if (skillTitle === "Machine Learning" || skillTitle === "Deep Learning") {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 3) return "bg-primary-icon"; // Intermediate for P3
-        return "bg-primary-accent"; // Advanced for P4+
-      }
-      if (skillTitle === "TensorFlow" || skillTitle === "PyTorch") {
-        if (levelNum <= 3) return "bg-[#008000]"; // Beginner for P1-P3
-        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P4
-        return "bg-primary-accent"; // Advanced for P5+
-      }
-      if (skillTitle === "Natural Language Processing" || skillTitle === "Computer Vision") {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
-        return "bg-primary-accent"; // Advanced for P5+
-      }
-    }
-
-    // Engineering Manager (126)
-    if (roleId === "126") {
-      // Engineering Manager uses M3-M6 levels
-      if (level.startsWith('m')) {
-        if (skillTitle === "System Design" || skillTitle === "Technical Architecture") {
-          if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
-          return "bg-primary-accent"; // Advanced for M4+
-        }
-        if (skillTitle === "Team Leadership" || skillTitle === "Project Management") {
-          if (levelNum === 3) return "bg-[#008000]"; // Beginner for M3
-          if (levelNum === 4) return "bg-primary-icon"; // Intermediate for M4
-          return "bg-primary-accent"; // Advanced for M5+
-        }
-      }
-    }
-
-    // Common skills progression
-    if (skillTitle === "Problem Solving" || skillTitle === "Cross-browser Compatibility") {
-      if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-      if (levelNum <= 3) return "bg-primary-icon"; // Intermediate for P3
-      return "bg-primary-accent"; // Advanced for P4+
-    }
-
-    return "bg-gray-300"; // Default/Unspecified
+    return "bg-gray-300"; // Default
   };
 
   if (missingSkills.length === 0) {
