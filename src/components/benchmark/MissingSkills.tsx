@@ -4,6 +4,8 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
+import { getSkillRequirements } from "../skills/data/skillsDatabase";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -22,6 +24,10 @@ interface RoleSkill {
 export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useCompetencyStore();
+  const { getTrackForRole } = useTrack();
+  const track = getTrackForRole(roleId);
+  const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
+  
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -37,11 +43,11 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   });
 
   const getDotColor = (skillTitle: string) => {
-    // Get the current state for this skill at the selected level
+    // First check the competency state for this skill at the selected level
     const skillState = currentStates[skillTitle]?.[selectedLevel.toUpperCase()];
     
+    // If we have a competency state, use that to determine the color
     if (skillState) {
-      // If we have a state for this skill at this level, use its level
       if (skillState.level.toLowerCase() === 'advanced') {
         return "bg-primary-accent"; // Purple for advanced
       } else if (skillState.level.toLowerCase() === 'intermediate') {
@@ -50,13 +56,19 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
       return "bg-gray-300"; // Grey for other levels
     }
     
-    // Fallback to the default role skill level if no state exists
-    const skill = allRoleSkills.find(s => s.title === skillTitle);
-    if (skill?.level?.toLowerCase() === "advanced") {
+    // If no competency state, check the skill requirements from the database
+    const requirements = getSkillRequirements(
+      skillTitle,
+      currentTrack,
+      selectedLevel.toUpperCase()
+    );
+    
+    if (requirements?.level?.toLowerCase() === 'advanced') {
       return "bg-primary-accent"; // Purple for advanced
-    } else if (skill?.level?.toLowerCase() === "intermediate") {
+    } else if (requirements?.level?.toLowerCase() === 'intermediate') {
       return "bg-primary-icon"; // Orange for intermediate
     }
+    
     return "bg-gray-300"; // Grey for other levels
   };
 
