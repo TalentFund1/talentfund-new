@@ -10,9 +10,10 @@ import { useTrack } from "../skills/context/TrackContext";
 interface MissingSkillsProps {
   roleId: string;
   employeeId: string;
+  selectedLevel: string;
 }
 
-export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
+export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employeeId);
@@ -35,7 +36,7 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   });
 
   const getLevelColor = (skillTitle: string) => {
-    const requirements = getSkillRequirements(skillTitle, currentTrack, "P4");
+    const requirements = getSkillRequirements(skillTitle, currentTrack, selectedLevel);
     
     if (!requirements) return "bg-gray-300";
 
