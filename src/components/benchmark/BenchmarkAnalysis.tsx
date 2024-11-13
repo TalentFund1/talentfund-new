@@ -16,59 +16,30 @@ export const BenchmarkAnalysis = () => {
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
-  // Get all toggled skills for the current role
-  const toggledRoleSkills = [
+  // Calculate total skills for the selected role
+  const totalSkills = [
     ...(currentRoleSkills.specialized || []),
     ...(currentRoleSkills.common || []),
     ...(currentRoleSkills.certifications || [])
-  ].filter(skill => toggledSkills.has(skill.title));
+  ];
 
-  // Calculate matching skills (skills that employee has from toggled skills)
-  const matchingSkills = toggledRoleSkills.filter(skill => 
-    currentStates[skill.title] && currentStates[skill.title].level !== 'Not Interested'
+  // Calculate matching skills (skills that employee has from the role's required skills)
+  const matchingSkills = totalSkills.filter(skill => 
+    currentStates[skill.title] && 
+    currentStates[skill.title].level !== 'Not Interested'
   );
 
-  // Calculate total skills count based on the role
-  const getTotalSkillsCount = (roleId: string) => {
-    const role = roleSkills[roleId as keyof typeof roleSkills];
-    if (!role) return 0;
-    return (role.specialized?.length || 0) + 
-           (role.common?.length || 0) + 
-           (role.certifications?.length || 0);
-  };
-
-  const getMatchingSkillsCount = (roleId: string) => {
-    const role = roleSkills[roleId as keyof typeof roleSkills];
-    if (!role) return 0;
-    
-    const allRoleSkills = [
-      ...(role.specialized || []),
-      ...(role.common || []),
-      ...(role.certifications || [])
-    ];
-
-    const matches = allRoleSkills.filter(skill => 
-      currentStates[skill.title] && 
-      currentStates[skill.title].level !== 'Not Interested'
-    );
-
-    return matches.length;
-  };
-
-  const totalSkillsCount = getTotalSkillsCount(selectedRole);
-  const matchingSkillsCount = getMatchingSkillsCount(selectedRole);
+  const totalSkillsCount = totalSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
   // Calculate competency match
   const competencyTotal = 12;
   const competencyMatch = 12;
 
-  // Calculate skill goals (dynamically based on matrix state)
-  const skillGoalTotal = matchingSkills.length;
-  const skillGoalMatch = matchingSkills.filter(skill => {
-    const state = currentStates[skill.title];
-    return state && state.requirement === 'required';
-  }).length;
+  // Calculate skill goals
+  const skillGoalTotal = 12;
+  const skillGoalMatch = 8;
 
   return (
     <div className="space-y-6">
