@@ -15,7 +15,7 @@ export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   
-  const currentRoleSkills = roleSkills["125"]; // Frontend Engineer role
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
   const employeeSkills = getEmployeeSkills(id || "");
   
   const allRequiredSkills = [
