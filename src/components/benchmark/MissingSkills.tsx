@@ -2,22 +2,13 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { getSkillRequirements } from "../skills/data/skillsDatabase";
-import { useTrack } from "../skills/context/TrackContext";
 
 interface MissingSkillsProps {
   roleId: string;
   employeeId: string;
-  selectedLevel?: string;
 }
 
-export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: MissingSkillsProps) => {
-  const { toggledSkills } = useToggledSkills();
-  const { getTrackForRole } = useTrack();
-  const track = getTrackForRole(roleId);
-  const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
-  
+export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -28,50 +19,23 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: Miss
     ...currentRoleSkills.certifications
   ];
 
-  // Find missing skills by comparing with employee skills, but only for toggled skills
+  // Find missing skills by comparing with employee skills
   const missingSkills = allRoleSkills.filter(roleSkill => {
     const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
-    return !hasSkill && toggledSkills.has(roleSkill.title);
+    return !hasSkill;
   });
 
-  const getLevelColor = (skillTitle: string) => {
-    // Get the skill requirements for the current level from the skills matrix
-    const requirements = getSkillRequirements(
-      skillTitle,
-      currentTrack,
-      selectedLevel.toUpperCase()
-    );
-
-    if (requirements) {
-      // Use the requirements level from the skills matrix
-      switch (requirements.level.toLowerCase()) {
-        case "advanced":
-          return "bg-primary-accent"; // Purple dot
-        case "intermediate":
-          return "bg-primary-icon"; // Orange dot
-        case "beginner":
-          return "bg-[#008000]"; // Green dot
-        default:
-          return "bg-gray-300";
-      }
+  const getLevelColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case "advanced":
+        return "bg-primary-accent";
+      case "intermediate":
+        return "bg-primary-icon";
+      case "beginner":
+        return "bg-[#008000]";
+      default:
+        return "bg-gray-300";
     }
-
-    // Fallback to the role skills level if no matrix requirements found
-    const roleSkill = allRoleSkills.find(skill => skill.title === skillTitle);
-    if (roleSkill) {
-      switch (roleSkill.level.toLowerCase()) {
-        case "advanced":
-          return "bg-primary-accent";
-        case "intermediate":
-          return "bg-primary-icon";
-        case "beginner":
-          return "bg-[#008000]";
-        default:
-          return "bg-gray-300";
-      }
-    }
-
-    return "bg-gray-300"; // Default color for unspecified level
   };
 
   if (missingSkills.length === 0) {
@@ -94,7 +58,7 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: Miss
             className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
           </Badge>
         ))}
       </div>

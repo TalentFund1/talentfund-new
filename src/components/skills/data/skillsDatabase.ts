@@ -3,7 +3,6 @@ import { aiSkills } from './skills/aiSkills';
 import { backendSkills } from './skills/backendSkills';
 import { commonSkills } from './skills/commonSkills';
 import { certificationSkills } from './skills/certificationSkills';
-import { frontendSkills } from './skills/frontendSkills';
 
 export type { SkillData, SkillLevel };
 
@@ -11,8 +10,7 @@ export const skillsDatabase: SkillData[] = [
   ...aiSkills,
   ...backendSkills,
   ...commonSkills,
-  ...certificationSkills,
-  ...frontendSkills
+  ...certificationSkills
 ];
 
 export const getSkillsByTrackAndLevel = (
