@@ -5,6 +5,7 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { RoleSkill } from "../skills/types";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface Skill {
   name: string;
@@ -14,15 +15,51 @@ interface Skill {
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
+  const { currentStates } = useSkillsMatrixStore();
   
   const currentRoleSkills = roleSkills["125"]; // Frontend Engineer role
   const employeeSkills = getEmployeeSkills(id || "");
   
+  // Get all required skills from the role
   const allRequiredSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter((skill: RoleSkill) => skill.requirement === 'required');
+
+  // Calculate skill matches
+  const skillMatches = allRequiredSkills.filter(requiredSkill => {
+    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === requiredSkill.title);
+    if (!employeeSkill) return false;
+
+    const currentState = currentStates[requiredSkill.title];
+    const employeeLevel = currentState?.level || employeeSkill.level;
+    const requiredLevel = requiredSkill.level;
+
+    const levelValues = { beginner: 1, intermediate: 2, advanced: 3 };
+    return levelValues[employeeLevel.toLowerCase() as keyof typeof levelValues] >= 
+           levelValues[requiredLevel.toLowerCase() as keyof typeof levelValues];
+  });
+
+  // Calculate competency matches (skills at or above required level)
+  const competencyMatches = allRequiredSkills.filter(requiredSkill => {
+    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === requiredSkill.title);
+    if (!employeeSkill) return false;
+
+    const currentState = currentStates[requiredSkill.title];
+    const employeeLevel = currentState?.level || employeeSkill.level;
+    const requiredLevel = requiredSkill.level;
+
+    const levelValues = { beginner: 1, intermediate: 2, advanced: 3 };
+    return levelValues[employeeLevel.toLowerCase() as keyof typeof levelValues] === 
+           levelValues[requiredLevel.toLowerCase() as keyof typeof levelValues];
+  });
+
+  // Calculate skill goals (skills marked as required in matrix)
+  const skillGoals = employeeSkills.filter(skill => {
+    const currentState = currentStates[skill.title];
+    return currentState?.requirement === 'required';
+  });
 
   const missingSkills = allRequiredSkills
     .filter(skill => !employeeSkills.some(empSkill => empSkill.title === skill.title))
@@ -31,8 +68,16 @@ export const BenchmarkAnalysis = () => {
       status: "missing" as const
     }));
 
-  const matchPercentage = Math.round(
-    ((allRequiredSkills.length - missingSkills.length) / allRequiredSkills.length) * 100
+  const skillMatchPercentage = Math.round(
+    (skillMatches.length / allRequiredSkills.length) * 100
+  );
+
+  const competencyMatchPercentage = Math.round(
+    (competencyMatches.length / allRequiredSkills.length) * 100
+  );
+
+  const skillGoalPercentage = Math.round(
+    (skillGoals.length / allRequiredSkills.length) * 100
   );
 
   const getLevelStyles = () => {
@@ -45,7 +90,7 @@ export const BenchmarkAnalysis = () => {
         <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
           Benchmark Analysis
           <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
-            {matchPercentage}%
+            {skillMatchPercentage}%
           </span>
         </h2>
       </div>
@@ -56,37 +101,30 @@ export const BenchmarkAnalysis = () => {
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">Skill Match</span>
               <span className="text-sm text-foreground">
-                {allRequiredSkills.length - missingSkills.length} out of {allRequiredSkills.length}
+                {skillMatches.length} out of {allRequiredSkills.length}
               </span>
             </div>
-            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-[#1F2144] rounded-full" 
-                style={{ 
-                  width: `${matchPercentage}%` 
-                }} 
-              />
-            </div>
+            <Progress value={skillMatchPercentage} className="h-2 w-full" />
           </div>
 
           <div className="space-y-4 mt-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">Competency Match</span>
-              <span className="text-sm text-foreground">8 out of 12</span>
+              <span className="text-sm text-foreground">
+                {competencyMatches.length} out of {allRequiredSkills.length}
+              </span>
             </div>
-            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '66%' }} />
-            </div>
+            <Progress value={competencyMatchPercentage} className="h-2 w-full" />
           </div>
 
           <div className="space-y-4 mt-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">Skill Goal</span>
-              <span className="text-sm text-foreground">4 out of 6</span>
+              <span className="text-sm text-foreground">
+                {skillGoals.length} out of {allRequiredSkills.length}
+              </span>
             </div>
-            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '66%' }} />
-            </div>
+            <Progress value={skillGoalPercentage} className="h-2 w-full" />
           </div>
         </div>
 
