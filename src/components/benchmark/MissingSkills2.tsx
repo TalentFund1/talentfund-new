@@ -104,10 +104,6 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
     return "bg-gray-300"; // Default color
   };
 
-  if (missingSkills.length === 0) {
-    return null;
-  }
-
   return (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
