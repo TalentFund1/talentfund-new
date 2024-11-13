@@ -4,6 +4,8 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { getSkillRequirements } from "../skills/data/skillsDatabase";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -15,6 +17,9 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  const { getTrackForRole } = useTrack();
+  const track = getTrackForRole(roleId);
+  const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
 
   // Get all required and preferred skills for the role
   const allRoleSkills = [
@@ -30,10 +35,11 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   });
 
   const getLevelColor = (skillTitle: string) => {
-    const skill = allRoleSkills.find(s => s.title === skillTitle);
-    const level = skill?.level?.toLowerCase() || 'unspecified';
+    const requirements = getSkillRequirements(skillTitle, currentTrack, "P4");
+    
+    if (!requirements) return "bg-gray-300";
 
-    switch (level) {
+    switch (requirements.level) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
