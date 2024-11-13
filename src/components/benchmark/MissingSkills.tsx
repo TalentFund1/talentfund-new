@@ -36,18 +36,6 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
-  const getLevelColor = (skillTitle: string) => {
-    // Check if the skill is in required skills
-    const isRequired = allRoleSkills.find(
-      skill => skill.title === skillTitle && skill.requirement === 'required'
-    );
-
-    if (isRequired) {
-      return "bg-primary-accent"; // Purple for required skills
-    }
-    return "bg-gray-300"; // Gray for preferred skills
-  };
-
   if (missingSkills.length === 0) {
     return null;
   }
@@ -65,10 +53,9 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
           <Badge 
             key={skill.title}
             variant="outline" 
-            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
           </Badge>
         ))}
       </div>
