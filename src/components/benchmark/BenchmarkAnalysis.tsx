@@ -41,9 +41,9 @@ export const BenchmarkAnalysis = () => {
       status: "missing" as const
     }));
 
-  const matchPercentage = Math.round(
-    ((allRequiredSkills.length - missingSkills.length) / allRequiredSkills.length) * 100
-  );
+  const matchPercentage = allRequiredSkills.length > 0 
+    ? Math.round((matchingSkills.length / allRequiredSkills.length) * 100)
+    : 0;
 
   // Calculate competency match (8 out of 12 for frontend)
   const competencyTotal = 12;
