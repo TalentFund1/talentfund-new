@@ -23,33 +23,18 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
+  // Get all required and preferred skills for the role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ] as RoleSkill[];
 
+  // Find missing skills by comparing with employee skills, but only for toggled skills
   const missingSkills = allRoleSkills.filter(roleSkill => {
     const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
-
-  const getLevelColor = (skillTitle: string) => {
-    const skill = allRoleSkills.find(s => s.title === skillTitle);
-    
-    if (!skill) return "bg-gray-300";
-
-    switch (skill.level?.toLowerCase()) {
-      case "advanced":
-        return "bg-primary-accent"; // Purple for Advanced
-      case "intermediate":
-        return "bg-primary-icon"; // Orange for Intermediate
-      case "beginner":
-        return "bg-[#008000]"; // Green for Beginner
-      default:
-        return "bg-gray-300"; // Default gray
-    }
-  };
 
   if (missingSkills.length === 0) {
     return null;
@@ -68,10 +53,9 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
           <Badge 
             key={skill.title}
             variant="outline" 
-            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
           </Badge>
         ))}
       </div>
