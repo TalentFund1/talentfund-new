@@ -32,8 +32,9 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   const getLevelColor = (skillTitle: string) => {
     // First check the current states from the competency store
     const skillState = currentStates[skillTitle];
-    if (skillState) {
-      switch (skillState.level.toLowerCase()) {
+    if (skillState && skillState.level) {
+      const level = skillState.level.toString().toLowerCase();
+      switch (level) {
         case "advanced":
           return "bg-primary-accent";
         case "intermediate":
