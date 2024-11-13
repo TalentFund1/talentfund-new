@@ -7,8 +7,9 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
+import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { MissingSkills2 } from "./MissingSkills2";
+import { MissingSkills } from "./MissingSkills";
 
 const roles = {
   "123": "AI Engineer",
@@ -90,7 +91,9 @@ export const RoleBenchmark = () => {
           selectedLevel={selectedLevel}
         />
 
-        <MissingSkills2 roleId={selectedRole} employeeId="123" selectedLevel={selectedLevel} />
+        <MissingSkills roleId={selectedRole} employeeId="123" />
+
+        <CompetencyGraph roleId={selectedRole} track={currentTrack} />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
+import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
 import { BenchmarkSkillsMatrix } from "@/components/benchmark/BenchmarkSkillsMatrix";
 import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
@@ -13,7 +14,6 @@ import { EmployeeHeader } from "@/components/employee/EmployeeHeader";
 import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
 
 const employees = {
   "123": {
@@ -158,6 +158,7 @@ const EmployeeProfile = () => {
                       <RoleBenchmark />
                     </Card>
                     <BenchmarkAnalysis />
+                    <BenchmarkSkillsMatrix />
                   </TabsContent>
                 </Tabs>
               </BenchmarkSearchProvider>
