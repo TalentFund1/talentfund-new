@@ -36,6 +36,19 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
+  const getLevelColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case "advanced":
+        return "bg-[#8073ec]";
+      case "intermediate":
+        return "bg-[#ec7373]";
+      case "beginner":
+        return "bg-[#73ec73]";
+      default:
+        return "bg-gray-300";
+    }
+  };
+
   if (missingSkills.length === 0) {
     return null;
   }
@@ -53,9 +66,10 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
           <Badge 
             key={skill.title}
             variant="outline" 
-            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
+            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
           </Badge>
         ))}
       </div>
