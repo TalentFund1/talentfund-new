@@ -68,12 +68,21 @@ export const BenchmarkSkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+      <Card className="p-8 bg-white space-y-8">
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
+            <p className="text-sm text-muted-foreground">
+              Manage and track employee skills and competencies
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" className="bg-white">Export</Button>
+            <Button>Add Skill</Button>
+          </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="flex flex-col gap-2">
             <div className="relative flex-1">
               <Input
@@ -121,9 +130,10 @@ export const BenchmarkSkillsMatrix = () => {
               </div>
             )}
           </div>
-          <div className="flex justify-between items-start gap-4">
+          
+          <div className="grid grid-cols-2 gap-4">
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-[180px] bg-white">
+              <SelectTrigger className="w-full bg-white">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
@@ -133,7 +143,6 @@ export const BenchmarkSkillsMatrix = () => {
                 <SelectItem value="certification">Certifications</SelectItem>
               </SelectContent>
             </Select>
-            <Button>Add Skill</Button>
           </div>
         </div>
 

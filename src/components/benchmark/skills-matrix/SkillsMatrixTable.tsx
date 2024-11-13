@@ -14,7 +14,7 @@ interface SkillsMatrixTableProps {
 
 export const SkillsMatrixTable = ({ filteredSkills }: SkillsMatrixTableProps) => {
   return (
-    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden">
+    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
       <Table>
         <SkillsMatrixTableHeader />
         <TableBody>
