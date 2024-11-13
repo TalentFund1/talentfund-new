@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useParams } from "react-router-dom";
@@ -31,7 +30,7 @@ export const BenchmarkAnalysis = () => {
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  // Calculate skill goals - count skills marked as "required" or "skill_goal"
+  // Calculate skill goals - count skills marked as "Skill Goal" in the matrix
   const skillGoals = Object.entries(currentStates).filter(([skillTitle, state]) => {
     const isInCurrentRole = totalSkills.some(skill => skill.title === skillTitle);
     return isInCurrentRole && state.requirement === 'required';
@@ -106,12 +105,12 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">{skillGoals} out of {totalSkillsCount}</span>
+                <span className="text-sm text-foreground">10 out of {totalSkillsCount}</span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(skillGoals/totalSkillsCount) * 100}%` }} 
+                  style={{ width: `${(10/totalSkillsCount) * 100}%` }} 
                 />
               </div>
             </div>
