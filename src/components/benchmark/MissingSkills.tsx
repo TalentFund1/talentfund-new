@@ -30,9 +30,8 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   });
 
   const getLevelColor = (skillTitle: string) => {
-    // First check if there's a dynamic level set in the store
-    const skillState = currentStates[skillTitle];
-    const level = skillState?.level?.toLowerCase() || 'unspecified';
+    const skill = allRoleSkills.find(s => s.title === skillTitle);
+    const level = skill?.level?.toLowerCase() || 'unspecified';
 
     switch (level) {
       case "advanced":
