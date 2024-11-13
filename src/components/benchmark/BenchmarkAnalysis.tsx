@@ -35,10 +35,6 @@ export const BenchmarkAnalysis = () => {
     ((allRequiredSkills.length - missingSkills.length) / allRequiredSkills.length) * 100
   );
 
-  const getLevelStyles = () => {
-    return "border-[#CCDBFF]";
-  };
-
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
       <div className="flex items-center justify-between">
@@ -103,9 +99,10 @@ export const BenchmarkAnalysis = () => {
               <Badge 
                 key={`${skill.name}-${index}`}
                 variant="outline" 
-                className={`rounded-md px-4 py-2 border-2 flex items-center gap-2 bg-white hover:bg-background/80 transition-colors ${getLevelStyles()}`}
+                className="rounded-md px-4 py-2 border-2 border-[#CCDBFF] flex items-center gap-2 bg-white hover:bg-background/80 transition-colors"
               >
-                {skill.name} <div className="h-2 w-2 rounded-full bg-primary-icon" />
+                {skill.name}
+                <div className="h-2 w-2 rounded-full bg-red-500" />
               </Badge>
             ))}
           </div>
