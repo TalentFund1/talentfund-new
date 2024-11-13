@@ -35,14 +35,20 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   });
 
   const getLevelColor = (skillTitle: string) => {
-    if (selectedLevel === "p4") {
-      if (skillTitle === "React") {
+    const skill = allRoleSkills.find(s => s.title === skillTitle);
+    
+    if (!skill) return "bg-gray-300";
+
+    switch (skill.level?.toLowerCase()) {
+      case "advanced":
         return "bg-primary-accent"; // Purple for Advanced
-      } else if (skillTitle === "TypeScript") {
+      case "intermediate":
         return "bg-primary-icon"; // Orange for Intermediate
-      }
+      case "beginner":
+        return "bg-[#008000]"; // Green for Beginner
+      default:
+        return "bg-gray-300"; // Default gray
     }
-    return "bg-gray-300"; // Default color
   };
 
   if (missingSkills.length === 0) {
