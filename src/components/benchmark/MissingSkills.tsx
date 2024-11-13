@@ -3,7 +3,6 @@ import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -12,7 +11,6 @@ interface MissingSkillsProps {
 
 export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
-  const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -29,12 +27,8 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
-  const getLevelColor = (skillTitle: string) => {
-    // First check if there's a dynamic level set in the store
-    const skillState = currentStates[skillTitle];
-    const level = skillState?.level?.toLowerCase() || 'unspecified';
-
-    switch (level) {
+  const getLevelColor = (level: string) => {
+    switch (level?.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
@@ -66,7 +60,7 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
             className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
           </Badge>
         ))}
       </div>
