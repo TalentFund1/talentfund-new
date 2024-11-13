@@ -36,6 +36,12 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
       selectedLevel.toUpperCase()
     );
 
+    // For Frontend Engineer P4, React should be purple and TypeScript orange
+    if (selectedLevel === "P4" && roleId === "125") {
+      if (skillTitle === "React") return "bg-[#8073ec]";
+      if (skillTitle === "TypeScript") return "bg-[#EC7373]";
+    }
+
     switch (requirements?.level?.toLowerCase()) {
       case "advanced":
         return "bg-[#8073ec]";
