@@ -1,4 +1,3 @@
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
@@ -71,23 +70,6 @@ export const BenchmarkAnalysis = () => {
       </div>
 
       <div className="space-y-6">
-        <div className="rounded-2xl border border-border bg-white p-6 w-full">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-foreground">Skill Match</span>
-              <span className="text-sm text-foreground">
-                {matchingSkillsCount} out of {totalSkillsCount}
-              </span>
-            </div>
-            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-[#1F2144] rounded-full" 
-                style={{ width: `${matchPercentage}%` }} 
-              />
-            </div>
-          </div>
-        </div>
-
         <div className="rounded-2xl border border-border bg-white p-6 w-full">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-medium text-foreground">Missing Skills or Certifications</span>
