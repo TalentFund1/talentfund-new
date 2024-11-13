@@ -35,11 +35,8 @@ export const MissingSkills2 = ({ roleId, employeeId, selectedLevel }: MissingSki
     const skillState = currentStates[skillTitle];
     if (!skillState) return "bg-gray-300"; // Unspecified
 
-    const level = skillState.level.toLowerCase();
-    const requirement = skillState.requirement.toLowerCase();
-
     // Return color based on level
-    switch (level) {
+    switch (skillState.level) {
       case "beginner":
         return "bg-[#008000]"; // Green
       case "intermediate":
