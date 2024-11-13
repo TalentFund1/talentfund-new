@@ -27,21 +27,14 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
-  const getLevelColor = (skillTitle: string, selectedLevel: string) => {
-    // Frontend Engineer specific levels
+  const getLevelColor = (skillTitle: string) => {
+    // Frontend Engineer P4 specific levels
     if (roleId === "125") { // Frontend Engineer
-      if (selectedLevel === "p4") {
-        if (skillTitle === "React") return "bg-primary-accent"; // Purple for Advanced
-        if (skillTitle === "TypeScript") return "bg-primary-icon"; // Orange for Intermediate
-      } else if (selectedLevel === "p5") {
-        return "bg-gray-300"; // Unspecified for P5 level
-      }
+      if (skillTitle === "React") return "bg-primary-accent"; // Purple for Advanced
+      if (skillTitle === "TypeScript") return "bg-primary-icon"; // Orange for Intermediate
     }
     return "bg-gray-300"; // Default color for other skills
   };
-
-  // Extract level from URL or props (assuming it's in the URL for this example)
-  const selectedLevel = window.location.pathname.includes("p5") ? "p5" : "p4";
 
   if (missingSkills.length === 0) {
     return null;
@@ -63,7 +56,7 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
             className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title, selectedLevel)}`} />
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
           </Badge>
         ))}
       </div>
