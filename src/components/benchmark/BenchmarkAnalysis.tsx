@@ -28,9 +28,9 @@ export const BenchmarkAnalysis = () => {
     currentStates[skill.title] && currentStates[skill.title].level !== 'Not Interested'
   );
 
-  // Calculate skill match percentage based on the ratio
-  const totalSkillsCount = selectedRole === "123" ? 12 : toggledRoleSkills.length; // 12 skills for AI Engineer
-  const matchingSkillsCount = selectedRole === "123" ? 12 : matchingSkills.length; // All 12 skills match for AI Engineer
+  // Calculate skill match percentage based on the role
+  const totalSkillsCount = toggledRoleSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
   // Calculate competency match
