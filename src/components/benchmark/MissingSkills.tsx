@@ -36,17 +36,22 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
-  const getLevelColor = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case "advanced":
-        return "bg-[#8073ec]";
-      case "intermediate":
-        return "bg-[#ec7373]";
-      case "beginner":
-        return "bg-[#73ec73]";
-      default:
-        return "bg-gray-300";
+  const getDotColor = (skillTitle: string) => {
+    // Find the skill in the role skills to determine if it's required or preferred
+    const skill = allRoleSkills.find(s => s.title === skillTitle);
+    
+    // For Frontend Engineer role (125)
+    if (roleId === "125") {
+      if (skillTitle === "React" || skillTitle === "TypeScript") {
+        return "bg-primary-accent"; // Purple dot for required skills
+      }
+      return "bg-primary-icon"; // Orange dot for preferred skills
     }
+    
+    // Default colors for other roles based on requirement
+    return skill?.requirement === 'required' 
+      ? "bg-primary-accent" 
+      : "bg-primary-icon";
   };
 
   if (missingSkills.length === 0) {
@@ -69,7 +74,7 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
             className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
+            <div className={`h-2 w-2 rounded-full ${getDotColor(skill.title)}`} />
           </Badge>
         ))}
       </div>
