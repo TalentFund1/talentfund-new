@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -34,13 +34,6 @@ export const SkillsMatrix = () => {
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
   const { toggledSkills } = useToggledSkills();
-
-  // Auto-populate search with toggled skills on component mount
-  useEffect(() => {
-    if (isRoleBenchmarkTab && toggledSkills.size > 0) {
-      setSelectedSearchSkills(Array.from(toggledSkills));
-    }
-  }, [toggledSkills]);
 
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
