@@ -10,6 +10,14 @@ interface MissingSkillsProps {
   selectedLevel: string;
 }
 
+interface RoleSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  requirement?: 'required' | 'preferred';
+}
+
 export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employeeId);
@@ -20,7 +28,7 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ];
+  ] as RoleSkill[];
 
   // Find missing skills by comparing with employee skills, but only for toggled skills
   const missingSkills = allRoleSkills.filter(roleSkill => {
