@@ -3,24 +3,16 @@ import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getSkillRequirements } from "../skills/data/skillsDatabase";
-import { useTrack } from "../skills/context/TrackContext";
 
 interface MissingSkillsProps {
   roleId: string;
   employeeId: string;
-  selectedLevel: string;
 }
 
-export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkillsProps) => {
+export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
-  const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-  const { getTrackForRole } = useTrack();
-  const track = getTrackForRole(roleId);
-  const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
 
   // Get all required and preferred skills for the role
   const allRoleSkills = [
@@ -35,12 +27,8 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
-  const getLevelColor = (skillTitle: string) => {
-    const requirements = getSkillRequirements(skillTitle, currentTrack, selectedLevel);
-    
-    if (!requirements) return "bg-gray-300";
-
-    switch (requirements.level) {
+  const getLevelColor = (level: string) => {
+    switch (level?.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
@@ -72,7 +60,7 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
             className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
           </Badge>
         ))}
       </div>
