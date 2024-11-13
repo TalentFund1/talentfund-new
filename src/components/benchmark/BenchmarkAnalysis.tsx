@@ -7,28 +7,29 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   const [selectedRole, setSelectedRole] = useState<string>(id || "123");
   const { currentStates } = useSkillsMatrixStore();
+  const employeeSkills = getEmployeeSkills(id || "123");
   
   // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
   // Calculate total skills for the selected role
   const totalSkills = [
-    ...(currentRoleSkills.specialized || []),
-    ...(currentRoleSkills.common || []),
-    ...(currentRoleSkills.certifications || [])
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
   ];
 
   // Calculate matching skills by comparing employee's skills with role requirements
-  const matchingSkills = totalSkills.filter(skill => {
-    const employeeSkillState = currentStates[skill.title];
-    return employeeSkillState && employeeSkillState.level !== 'Not Interested';
-  });
+  const matchingSkills = totalSkills.filter(roleSkill => 
+    employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
+  );
 
   const totalSkillsCount = totalSkills.length;
   const matchingSkillsCount = matchingSkills.length;
