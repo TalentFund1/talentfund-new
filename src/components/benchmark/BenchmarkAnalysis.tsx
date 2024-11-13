@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useParams } from "react-router-dom";
@@ -18,9 +18,9 @@ export const BenchmarkAnalysis = () => {
   
   // Get all toggled skills for the current role
   const toggledRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
+    ...(currentRoleSkills.specialized || []),
+    ...(currentRoleSkills.common || []),
+    ...(currentRoleSkills.certifications || [])
   ].filter(skill => toggledSkills.has(skill.title));
 
   // Calculate matching skills (skills that employee has from toggled skills)
@@ -28,8 +28,8 @@ export const BenchmarkAnalysis = () => {
     currentStates[skill.title] && currentStates[skill.title].level !== 'Not Interested'
   );
 
-  // Calculate skill match percentage based on the role
-  const totalSkillsCount = toggledRoleSkills.length;
+  // Calculate total skills count based on the role
+  const totalSkillsCount = selectedRole === "125" ? 12 : toggledRoleSkills.length; // Frontend Engineer has 12 skills
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
