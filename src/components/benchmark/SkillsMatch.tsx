@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { RoleSkill } from "../skills/types";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 
 export const SkillsMatch = () => {
@@ -16,7 +17,7 @@ export const SkillsMatch = () => {
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter(skill => skill.requirement === 'required' || skill.requirement === 'preferred');
+  ].filter((skill: RoleSkill) => skill.requirement === 'required' || skill.requirement === 'preferred');
 
   // Calculate matching skills
   const matchingSkills = requiredAndPreferredSkills.filter(skill => 
