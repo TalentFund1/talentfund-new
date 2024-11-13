@@ -31,21 +31,18 @@ export const MissingSkills2 = ({ roleId, employeeId, selectedLevel }: MissingSki
   });
 
   const getLevelColor = (skillTitle: string) => {
-    // Get the current level from competency matrix
     const skillState = currentStates[skillTitle];
     if (!skillState) return "bg-gray-300"; // Unspecified
 
     // Return color based on level
-    switch (skillState.level) {
-      case "beginner":
-        return "bg-[#008000]"; // Green
-      case "intermediate":
-        return "bg-primary-icon"; // Orange/Coral
-      case "advanced":
-        return "bg-primary-accent"; // Purple/Blue
-      default:
-        return "bg-gray-300"; // Unspecified - Gray
+    if (skillState.level === "beginner") {
+      return "bg-[#008000]"; // Green
+    } else if (skillState.level === "intermediate") {
+      return "bg-primary-icon"; // Orange/Coral
+    } else if (skillState.level === "advanced") {
+      return "bg-primary-accent"; // Purple/Blue
     }
+    return "bg-gray-300"; // Unspecified - Gray
   };
 
   if (missingSkills.length === 0) {
