@@ -31,45 +31,32 @@ export const MissingSkills2 = ({ roleId, employeeId, selectedLevel }: MissingSki
   });
 
   const getLevelColor = (skillTitle: string) => {
-    // Frontend Engineer P2 specific logic
-    if (selectedLevel.toLowerCase() === 'p2') {
-      if (skillTitle === 'React') return "bg-[#008000]"; // Beginner (green)
-      if (skillTitle === 'TypeScript') return "bg-gray-300"; // Unspecified (gray)
-    }
-    
-    // Professional track (P1-P6)
-    if (selectedLevel.toLowerCase().startsWith('p')) {
-      const levelNum = parseInt(selectedLevel.substring(1));
-      
-      // React specific progression
-      if (skillTitle === 'React') {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum === 3) return "bg-gray-300"; // Unspecified for P3
-        if (levelNum === 4) return "bg-primary-accent"; // Advanced for P4
-        if (levelNum === 5) return "bg-primary-accent"; // Advanced for P5
-        return "bg-[#008000]"; // Beginner for P6
-      }
-      
-      // TypeScript specific progression
-      if (skillTitle === 'TypeScript') {
-        if (levelNum <= 3) return "bg-gray-300"; // Unspecified for P1-P3
-        if (levelNum === 4) return "bg-primary-icon"; // Intermediate for P4
-        return "bg-gray-300"; // Unspecified for P5-P6
+    // Backend Engineer specific logic
+    if (roleId === "124") {
+      if (selectedLevel.toLowerCase() === 'p4') {
+        // For Backend Engineer P4, all core skills are at advanced level
+        if (["Node.js", "Database Design", "API Development", 
+             "System Architecture", "Kubernetes", "Code Review"].includes(skillTitle)) {
+          return "bg-primary-accent"; // Advanced level (blue)
+        }
       }
     }
     
-    // Managerial track (M3-M6)
-    if (selectedLevel.toLowerCase().startsWith('m')) {
-      const levelNum = parseInt(selectedLevel.substring(1));
-      if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
-      return "bg-primary-accent"; // Advanced for M4-M6
-    }
-
+    // Keep existing fallback logic
     return "bg-gray-300"; // Default
   };
 
   if (missingSkills.length === 0) {
-    return null;
+    return (
+      <Card className="p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">Missing Skills 2 (Level-based)</span>
+          <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+            0
+          </span>
+        </div>
+      </Card>
+    );
   }
 
   return (
