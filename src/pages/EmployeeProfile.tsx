@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
+import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
 import { BenchmarkSkillsMatrix } from "@/components/benchmark/BenchmarkSkillsMatrix";
 import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
@@ -136,6 +137,12 @@ const EmployeeProfile = () => {
                     >
                       Skills Summary
                     </TabsTrigger>
+                    <TabsTrigger 
+                      value="benchmark"
+                      className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                    >
+                      Role Benchmark
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="experience" className="space-y-6">
@@ -143,6 +150,13 @@ const EmployeeProfile = () => {
                       <SkillsSummary />
                     </Card>
                     <SkillsMatrix />
+                  </TabsContent>
+
+                  <TabsContent value="benchmark" className="space-y-6">
+                    <Card className="p-8 bg-white">
+                      <RoleBenchmark />
+                    </Card>
+                    <BenchmarkSkillsMatrix />
                   </TabsContent>
                 </Tabs>
               </BenchmarkSearchProvider>
