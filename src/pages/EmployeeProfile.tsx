@@ -13,6 +13,7 @@ import { EmployeeHeader } from "@/components/employee/EmployeeHeader";
 import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
 
 const employees = {
   "123": {
@@ -156,7 +157,8 @@ const EmployeeProfile = () => {
                     <Card className="p-8 bg-white">
                       <RoleBenchmark />
                     </Card>
-                    <BenchmarkSkillsMatrix />
+                    <BenchmarkAnalysis selectedRole="125" selectedLevel="p4" />
+                    <SkillsMatrix />
                   </TabsContent>
                 </Tabs>
               </BenchmarkSearchProvider>

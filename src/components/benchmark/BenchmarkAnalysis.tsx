@@ -4,18 +4,16 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { RoleSkill } from "../skills/types";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { MissingSkills2 } from "./MissingSkills2";
 
-interface Skill {
-  name: string;
-  status: "present" | "missing";
+interface BenchmarkAnalysisProps {
+  selectedRole: string;
+  selectedLevel: string;
 }
 
-export const BenchmarkAnalysis = () => {
+export const BenchmarkAnalysis = ({ selectedRole, selectedLevel }: BenchmarkAnalysisProps) => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
-  const [selectedRole, setSelectedRole] = useState<string>(id || "125"); // Default to Frontend Engineer
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["125"];
   const employeeSkills = getEmployeeSkills(id || "");
@@ -27,25 +25,17 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.certifications
   ].filter((skill: RoleSkill) => skill.requirement === 'required' || skill.requirement === 'preferred');
 
-  // Calculate matching skills (skills that employee has from required and preferred skills)
+  // Calculate matching skills
   const matchingSkills = requiredAndPreferredSkills.filter(skill => 
     employeeSkills.some(empSkill => empSkill.title === skill.title)
   );
 
-  // Calculate skill match percentage based on the ratio
+  // Calculate skill match percentage
   const totalSkillsCount = requiredAndPreferredSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = totalSkillsCount > 0 
     ? Math.round((matchingSkillsCount / totalSkillsCount) * 100)
     : 0;
-
-  // Calculate missing skills
-  const missingSkills = requiredAndPreferredSkills
-    .filter(skill => !employeeSkills.some(empSkill => empSkill.title === skill.title))
-    .map(skill => ({
-      name: skill.title,
-      status: "missing" as const
-    }));
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
@@ -56,43 +46,57 @@ export const BenchmarkAnalysis = () => {
             {matchPercentage}%
           </span>
         </h2>
-        <Select value={selectedRole} onValueChange={setSelectedRole}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="123">AI Engineer</SelectItem>
-            <SelectItem value="124">Backend Engineer</SelectItem>
-            <SelectItem value="125">Frontend Engineer</SelectItem>
-            <SelectItem value="126">Engineering Manager</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="space-y-6">
         <div className="rounded-2xl border border-border bg-white p-6 w-full">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm font-medium text-foreground">Missing Skills or Certifications</span>
-            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {missingSkills.length}
-            </span>
-          </div>
-          
-          <div className="flex flex-wrap gap-2">
-            {missingSkills.map((skill, index) => (
-              <Badge 
-                key={`${skill.name}-${index}`}
-                variant="outline" 
-                className="rounded-full px-4 py-2 border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-              >
-                {skill.name}
-                <div className={`h-2 w-2 rounded-full ${
-                  index % 2 === 0 ? 'bg-primary-accent' : 'bg-primary-icon'
-                }`} />
-              </Badge>
-            ))}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Skill Match</span>
+              <span className="text-sm text-muted-foreground">
+                {matchingSkillsCount} out of {totalSkillsCount}
+              </span>
+            </div>
+            <div className="h-2 w-full bg-[#F2F4F7] rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-[#027A48] transition-all duration-500"
+                style={{ width: `${matchPercentage}%` }}
+              />
+            </div>
           </div>
         </div>
+
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Competency Match</span>
+              <span className="text-sm text-muted-foreground">12 out of 12</span>
+            </div>
+            <div className="h-2 w-full bg-[#F2F4F7] rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-primary-accent transition-all duration-500"
+                style={{ width: "100%" }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Skill Goal</span>
+              <span className="text-sm text-muted-foreground">6 out of 6</span>
+            </div>
+            <div className="h-2 w-full bg-[#F2F4F7] rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-primary-icon transition-all duration-500"
+                style={{ width: "100%" }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <MissingSkills2 roleId={selectedRole} employeeId={id || ""} selectedLevel={selectedLevel} />
       </div>
     </div>
   );
