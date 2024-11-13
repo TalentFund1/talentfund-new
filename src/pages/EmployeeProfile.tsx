@@ -3,6 +3,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
+import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
+import { BenchmarkSkillsMatrix } from "@/components/benchmark/BenchmarkSkillsMatrix";
+import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import { BenchmarkSearchProvider } from "@/components/skills/context/BenchmarkSearchContext";
@@ -147,12 +150,15 @@ const EmployeeProfile = () => {
                     <Card className="p-8 bg-white">
                       <SkillsSummary />
                     </Card>
+                    <SkillsMatrix />
                   </TabsContent>
 
                   <TabsContent value="benchmark" className="space-y-6">
                     <Card className="p-8 bg-white">
                       <RoleBenchmark />
                     </Card>
+                    <BenchmarkAnalysis />
+                    <BenchmarkSkillsMatrix />
                   </TabsContent>
                 </Tabs>
               </BenchmarkSearchProvider>
