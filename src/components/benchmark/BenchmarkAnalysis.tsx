@@ -16,23 +16,25 @@ export const BenchmarkAnalysis = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["125"];
   const employeeSkills = getEmployeeSkills(id || "");
   
-  // Calculate total required and preferred skills for P4
-  const requiredAndPreferredSkills = [
+  // Get all toggled skills for the current role
+  const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter((skill: RoleSkill) => skill.requirement === 'required' || skill.requirement === 'preferred');
+  ];
 
-  // Calculate matching skills
-  const matchingSkills = requiredAndPreferredSkills.filter(skill => 
-    employeeSkills.some(empSkill => empSkill.title === skill.title)
+  // Count total toggled skills for this role
+  const totalToggledSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title)).length;
+
+  // Calculate matching skills (skills that employee has from toggled skills)
+  const matchingSkills = allRoleSkills.filter(skill => 
+    toggledSkills.has(skill.title) && employeeSkills.some(empSkill => empSkill.title === skill.title)
   );
 
   // Calculate skill match percentage
-  const totalSkillsCount = requiredAndPreferredSkills.length;
   const matchingSkillsCount = matchingSkills.length;
-  const matchPercentage = totalSkillsCount > 0 
-    ? Math.round((matchingSkillsCount / totalSkillsCount) * 100)
+  const matchPercentage = totalToggledSkills > 0 
+    ? Math.round((matchingSkillsCount / totalToggledSkills) * 100)
     : 0;
 
   return (
@@ -63,7 +65,7 @@ export const BenchmarkAnalysis = () => {
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Skill Match</span>
               <span className="text-sm text-muted-foreground">
-                {matchingSkillsCount} out of {totalSkillsCount}
+                {matchingSkillsCount} out of {totalToggledSkills}
               </span>
             </div>
             <div className="h-2 w-full bg-[#F2F4F7] rounded-full overflow-hidden">
