@@ -2,7 +2,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
-import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { RoleSkill } from "../skills/types";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
