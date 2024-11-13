@@ -9,7 +9,6 @@ import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { MissingSkills } from "./MissingSkills2";
-import { BenchmarkAnalysis } from "./BenchmarkAnalysis";
 
 const roles = {
   "123": "AI Engineer",
@@ -92,21 +91,6 @@ export const RoleBenchmark = () => {
         />
 
         <MissingSkills roleId={selectedRole} employeeId="123" selectedLevel={selectedLevel} />
-      </div>
-
-      <BenchmarkAnalysis />
-
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xl font-semibold text-foreground">Skills Matrix</h3>
-          <Button 
-            variant="outline" 
-            className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-            onClick={handleSeeSkillProfile}
-          >
-            See Skills Matrix
-          </Button>
-        </div>
       </div>
     </div>
   );
