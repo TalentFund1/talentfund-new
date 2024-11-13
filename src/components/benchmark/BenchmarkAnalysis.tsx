@@ -21,7 +21,7 @@ export const BenchmarkAnalysis = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   const employeeSkills = getEmployeeSkills(id || "");
   
-  // Get all required skills for the role
+  // Get all required skills for the selected role
   const allRequiredSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -30,20 +30,20 @@ export const BenchmarkAnalysis = () => {
 
   // Calculate matching skills (skills that employee has from required skills)
   const matchingSkills = allRequiredSkills.filter(skill => 
-    employeeSkills.some(empSkill => empSkill.title === skill.title)
+    toggledSkills.has(skill.title)
   );
 
   // Calculate missing skills
   const missingSkills = allRequiredSkills
-    .filter(skill => !employeeSkills.some(empSkill => empSkill.title === skill.title))
+    .filter(skill => !toggledSkills.has(skill.title))
     .map(skill => ({
       name: skill.title,
       status: "missing" as const
     }));
 
-  const matchPercentage = Math.round(
-    ((allRequiredSkills.length - missingSkills.length) / allRequiredSkills.length) * 100
-  );
+  const matchPercentage = allRequiredSkills.length > 0 
+    ? Math.round((matchingSkills.length / allRequiredSkills.length) * 100)
+    : 0;
 
   // Calculate competency match (8 out of 12 for frontend)
   const competencyTotal = 12;
