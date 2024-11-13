@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { RoleSkill } from "../skills/types";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 
 interface Skill {
   name: string;
@@ -14,7 +15,8 @@ export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills["125"]; // Frontend Engineer role
+  const employeeSkills = getEmployeeSkills(id || "");
   
   const allRequiredSkills = [
     ...currentRoleSkills.specialized,
@@ -23,7 +25,7 @@ export const BenchmarkAnalysis = () => {
   ].filter((skill: RoleSkill) => skill.requirement === 'required');
 
   const missingSkills = allRequiredSkills
-    .filter(skill => !toggledSkills.has(skill.title))
+    .filter(skill => !employeeSkills.some(empSkill => empSkill.title === skill.title))
     .map(skill => ({
       name: skill.title,
       status: "missing" as const
