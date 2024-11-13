@@ -8,6 +8,7 @@ import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { MissingSkills } from "./MissingSkills";
 
 const roles = {
   "123": "AI Engineer",
@@ -88,6 +89,8 @@ export const RoleBenchmark = () => {
           roleId={selectedRole}
           selectedLevel={selectedLevel}
         />
+
+        <MissingSkills roleId={selectedRole} employeeId="123" />
       </div>
     </div>
   );
