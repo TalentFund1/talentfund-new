@@ -34,6 +34,51 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
     const level = selectedLevel.toLowerCase();
     const levelNum = parseInt(level.substring(1));
     
+    // Backend Engineer specific progression
+    if (roleId === "124") {
+      // Node.js progression
+      if (skillTitle === "Node.js") {
+        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
+        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
+        return "bg-primary-accent"; // Advanced for P5-P6
+      }
+      
+      // Database Design progression
+      if (skillTitle === "Database Design") {
+        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
+        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
+        return "bg-primary-accent"; // Advanced for P5-P6
+      }
+
+      // API Development progression
+      if (skillTitle === "API Development") {
+        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
+        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
+        return "bg-primary-accent"; // Advanced for P5-P6
+      }
+
+      // System Architecture progression
+      if (skillTitle === "System Architecture") {
+        if (levelNum <= 3) return "bg-[#008000]"; // Beginner for P1-P3
+        if (levelNum <= 5) return "bg-primary-icon"; // Intermediate for P4-P5
+        return "bg-primary-accent"; // Advanced for P6
+      }
+
+      // Kubernetes progression
+      if (skillTitle === "Kubernetes") {
+        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
+        if (levelNum <= 3) return "bg-primary-icon"; // Intermediate for P3
+        return "bg-primary-accent"; // Advanced for P4-P6
+      }
+
+      // Code Review progression
+      if (skillTitle === "Code Review") {
+        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
+        if (levelNum <= 3) return "bg-primary-icon"; // Intermediate for P3
+        return "bg-primary-accent"; // Advanced for P4-P6
+      }
+    }
+    
     // Frontend Engineer specific progression
     if (roleId === "125") {
       // React progression
@@ -51,30 +96,6 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
       }
     }
     
-    // Backend Engineer specific progression
-    if (roleId === "124") {
-      // Kubernetes progression
-      if (skillTitle === "Kubernetes") {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
-        return "bg-primary-accent"; // Advanced for P5-P6
-      }
-      
-      // Code Review progression
-      if (skillTitle === "Code Review") {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
-        return "bg-primary-accent"; // Advanced for P5-P6
-      }
-
-      // Node.js progression
-      if (skillTitle === "Node.js") {
-        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
-        if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
-        return "bg-primary-accent"; // Advanced for P5-P6
-      }
-    }
-    
     // AI Engineer specific progression
     if (roleId === "123") {
       // Machine Learning progression
@@ -87,10 +108,36 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
     
     // Engineering Manager specific progression
     if (roleId === "126") {
-      // All skills for Engineering Manager
-      if (level.startsWith('m')) {
-        if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
-        return "bg-primary-accent"; // Advanced for M4-M6
+      // Team Leadership progression
+      if (skillTitle === "Team Leadership") {
+        if (level.startsWith('m')) {
+          if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
+          return "bg-primary-accent"; // Advanced for M4-M6
+        }
+      }
+
+      // Project Management progression
+      if (skillTitle === "Project Management") {
+        if (level.startsWith('m')) {
+          if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
+          return "bg-primary-accent"; // Advanced for M4-M6
+        }
+      }
+
+      // Technical Architecture progression
+      if (skillTitle === "Technical Architecture") {
+        if (level.startsWith('m')) {
+          if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
+          return "bg-primary-accent"; // Advanced for M4-M6
+        }
+      }
+
+      // Strategic Planning progression
+      if (skillTitle === "Strategic Planning") {
+        if (level.startsWith('m')) {
+          if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
+          return "bg-primary-accent"; // Advanced for M4-M6
+        }
       }
     }
     
@@ -99,6 +146,11 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
       if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
       if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
       return "bg-primary-accent"; // Advanced for P5-P6
+    }
+
+    if (level.startsWith('m')) {
+      if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
+      return "bg-primary-accent"; // Advanced for M4-M6
     }
 
     return "bg-gray-300"; // Default color
