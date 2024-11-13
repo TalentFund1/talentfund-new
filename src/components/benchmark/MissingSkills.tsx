@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStore } from "../skills/competency/CompetencyState";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -20,6 +21,7 @@ interface RoleSkill {
 
 export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
+  const { currentStates } = useCompetencyStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -35,23 +37,27 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   });
 
   const getDotColor = (skillTitle: string) => {
-    // Find the skill in the role skills
-    const skill = allRoleSkills.find(s => s.title === skillTitle);
+    // Get the current state for this skill at the selected level
+    const skillState = currentStates[skillTitle]?.[selectedLevel.toUpperCase()];
     
-    if (roleId === "125") {
-      if (skillTitle === "React") {
-        return "bg-primary-accent"; // Purple dot for React (advanced)
+    if (skillState) {
+      // If we have a state for this skill at this level, use its level
+      if (skillState.level.toLowerCase() === 'advanced') {
+        return "bg-primary-accent"; // Purple for advanced
+      } else if (skillState.level.toLowerCase() === 'intermediate') {
+        return "bg-primary-icon"; // Orange for intermediate
       }
-      if (skillTitle === "TypeScript") {
-        return "bg-primary-icon"; // Orange dot for TypeScript (intermediate)
-      }
+      return "bg-gray-300"; // Grey for other levels
     }
     
-    // Default colors based on skill level
+    // Fallback to the default role skill level if no state exists
+    const skill = allRoleSkills.find(s => s.title === skillTitle);
     if (skill?.level?.toLowerCase() === "advanced") {
       return "bg-primary-accent"; // Purple for advanced
+    } else if (skill?.level?.toLowerCase() === "intermediate") {
+      return "bg-primary-icon"; // Orange for intermediate
     }
-    return "bg-primary-icon"; // Orange for intermediate and others
+    return "bg-gray-300"; // Grey for other levels
   };
 
   if (missingSkills.length === 0) {
