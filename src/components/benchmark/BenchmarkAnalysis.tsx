@@ -55,14 +55,7 @@ export const BenchmarkAnalysis = () => {
                 {allRequiredSkills.length - missingSkills.length} out of {allRequiredSkills.length}
               </span>
             </div>
-            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-[#1F2144] rounded-full" 
-                style={{ 
-                  width: `${matchPercentage}%` 
-                }} 
-              />
-            </div>
+            <Progress value={matchPercentage} className="h-2" />
           </div>
 
           <div className="space-y-4 mt-6">
@@ -70,9 +63,7 @@ export const BenchmarkAnalysis = () => {
               <span className="text-sm font-medium text-foreground">Competency Match</span>
               <span className="text-sm text-foreground">8 out of 12</span>
             </div>
-            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '66%' }} />
-            </div>
+            <Progress value={66} className="h-2" />
           </div>
 
           <div className="space-y-4 mt-6">
@@ -80,12 +71,11 @@ export const BenchmarkAnalysis = () => {
               <span className="text-sm font-medium text-foreground">Skill Goal</span>
               <span className="text-sm text-foreground">4 out of 6</span>
             </div>
-            <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '66%' }} />
-            </div>
+            <Progress value={66} className="h-2" />
           </div>
         </div>
 
+        {/* Missing Skills Section */}
         <div className="rounded-2xl border border-border bg-white p-6 w-full">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-medium">Missing Skills or Certifications</span>
@@ -105,6 +95,36 @@ export const BenchmarkAnalysis = () => {
                 <div className="h-2 w-2 rounded-full bg-red-500" />
               </Badge>
             ))}
+          </div>
+        </div>
+
+        {/* New Missing Skills Detailed Section */}
+        <div className="rounded-2xl border border-border bg-white p-6 w-full">
+          <h3 className="text-lg font-semibold mb-4">Required Skills Analysis</h3>
+          
+          <div className="space-y-6">
+            {missingSkills.length > 0 ? (
+              missingSkills.map((skill, index) => (
+                <div key={index} className="border-b border-border pb-4 last:border-0 last:pb-0">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-3 w-3 rounded-full bg-red-500" />
+                      <span className="font-medium">{skill.name}</span>
+                    </div>
+                    <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200">
+                      Missing
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    This skill is required for the current role. Consider prioritizing its development.
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                All required skills are present. Great job!
+              </p>
+            )}
           </div>
         </div>
       </div>
