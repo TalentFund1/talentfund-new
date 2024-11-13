@@ -31,19 +31,36 @@ export const MissingSkills2 = ({ roleId, employeeId, selectedLevel }: MissingSki
   });
 
   const getLevelColor = (skillTitle: string) => {
-    const level = selectedLevel.toLowerCase();
+    // Frontend Engineer P2 specific logic
+    if (selectedLevel.toLowerCase() === 'p2') {
+      if (skillTitle === 'React') return "bg-[#008000]"; // Beginner (green)
+      if (skillTitle === 'TypeScript') return "bg-gray-300"; // Unspecified (gray)
+    }
     
     // Professional track (P1-P6)
-    if (level.startsWith('p')) {
-      const levelNum = parseInt(level.substring(1));
-      if (levelNum <= 2) return "bg-gray-300"; // Beginner for P1-P2
-      if (levelNum <= 4) return "bg-primary-icon"; // Intermediate for P3-P4
-      return "bg-primary-accent"; // Advanced for P5-P6
+    if (selectedLevel.toLowerCase().startsWith('p')) {
+      const levelNum = parseInt(selectedLevel.substring(1));
+      
+      // React specific progression
+      if (skillTitle === 'React') {
+        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
+        if (levelNum === 3) return "bg-gray-300"; // Unspecified for P3
+        if (levelNum === 4) return "bg-primary-accent"; // Advanced for P4
+        if (levelNum === 5) return "bg-primary-accent"; // Advanced for P5
+        return "bg-[#008000]"; // Beginner for P6
+      }
+      
+      // TypeScript specific progression
+      if (skillTitle === 'TypeScript') {
+        if (levelNum <= 3) return "bg-gray-300"; // Unspecified for P1-P3
+        if (levelNum === 4) return "bg-primary-icon"; // Intermediate for P4
+        return "bg-gray-300"; // Unspecified for P5-P6
+      }
     }
     
     // Managerial track (M3-M6)
-    if (level.startsWith('m')) {
-      const levelNum = parseInt(level.substring(1));
+    if (selectedLevel.toLowerCase().startsWith('m')) {
+      const levelNum = parseInt(selectedLevel.substring(1));
       if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
       return "bg-primary-accent"; // Advanced for M4-M6
     }
