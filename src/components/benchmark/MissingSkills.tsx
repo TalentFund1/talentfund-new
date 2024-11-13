@@ -27,8 +27,8 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
-  const getLevelColor = (skill: any) => {
-    switch (skill.level?.toLowerCase()) {
+  const getLevelColor = (level: string) => {
+    switch (level?.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
@@ -60,7 +60,7 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
             className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill)}`} />
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
           </Badge>
         ))}
       </div>
