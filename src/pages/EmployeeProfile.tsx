@@ -14,6 +14,7 @@ import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { BenchmarkAnalysis } from "@/components/benchmark/BenchmarkAnalysis";
+import { useState } from "react";
 
 const employees = {
   "123": {
@@ -74,6 +75,8 @@ const EmployeeProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const employee = employees[id as keyof typeof employees];
+  const [selectedRole, setSelectedRole] = useState("125");
+  const [selectedLevel, setSelectedLevel] = useState("p4");
 
   if (!employee) {
     return <div>Employee not found</div>;
@@ -157,7 +160,7 @@ const EmployeeProfile = () => {
                     <Card className="p-8 bg-white">
                       <RoleBenchmark />
                     </Card>
-                    <BenchmarkAnalysis />
+                    <BenchmarkAnalysis selectedRole={selectedRole} selectedLevel={selectedLevel} />
                     <SkillsMatrix />
                   </TabsContent>
                 </Tabs>
