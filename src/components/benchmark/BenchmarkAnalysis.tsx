@@ -16,46 +16,45 @@ interface Skill {
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
-  const [selectedRole, setSelectedRole] = useState<string>(id || "123");
+  const [selectedRole, setSelectedRole] = useState<string>(id || "125"); // Default to Frontend Engineer
   
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["125"];
   const employeeSkills = getEmployeeSkills(id || "");
   
-  // Get all required skills for the role
-  const allRequiredSkills = [
+  // Calculate total required and preferred skills for P4
+  const requiredAndPreferredSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter((skill: RoleSkill) => skill.requirement === 'required');
+  ].filter((skill: RoleSkill) => skill.requirement === 'required' || skill.requirement === 'preferred');
 
-  // Calculate matching skills (skills that employee has from required skills)
-  const matchingSkills = allRequiredSkills.filter(skill => 
+  // Calculate matching skills (skills that employee has from required and preferred skills)
+  const matchingSkills = requiredAndPreferredSkills.filter(skill => 
     employeeSkills.some(empSkill => empSkill.title === skill.title)
   );
 
+  // Calculate skill match percentage based on the ratio
+  const totalSkillsCount = requiredAndPreferredSkills.length; // This is 3 for P4 Frontend Engineer
+  const matchingSkillsCount = matchingSkills.length; // This is 1 for the current view
+  const matchPercentage = totalSkillsCount > 0 
+    ? Math.round((matchingSkillsCount / totalSkillsCount) * 100)
+    : 0;
+
   // Calculate missing skills
-  const missingSkills = allRequiredSkills
+  const missingSkills = requiredAndPreferredSkills
     .filter(skill => !employeeSkills.some(empSkill => empSkill.title === skill.title))
     .map(skill => ({
       name: skill.title,
       status: "missing" as const
     }));
 
-  const matchPercentage = allRequiredSkills.length > 0 
-    ? Math.round((matchingSkills.length / allRequiredSkills.length) * 100)
-    : 0;
-
-  // Calculate competency match (8 out of 12 for frontend)
+  // Calculate competency match (12 out of 12 for frontend)
   const competencyTotal = 12;
-  const competencyMatch = selectedRole === "125" ? 8 : 
-                         selectedRole === "124" ? 6 : 
-                         selectedRole === "126" ? 10 : 12;
+  const competencyMatch = 12;
 
-  // Calculate skill goals (4 out of 6 for frontend)
+  // Calculate skill goals (6 out of 6 for frontend)
   const skillGoalTotal = 6;
-  const skillGoalMatch = selectedRole === "125" ? 4 : 
-                        selectedRole === "124" ? 3 : 
-                        selectedRole === "126" ? 5 : 6;
+  const skillGoalMatch = 6;
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
@@ -85,7 +84,7 @@ export const BenchmarkAnalysis = () => {
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">Skill Match</span>
               <span className="text-sm text-foreground">
-                {matchingSkills.length} out of {allRequiredSkills.length}
+                {matchingSkillsCount} out of {totalSkillsCount}
               </span>
             </div>
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
