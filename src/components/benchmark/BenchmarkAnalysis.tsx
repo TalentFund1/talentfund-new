@@ -7,11 +7,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 
-interface Skill {
-  name: string;
-  status: "present" | "missing";
-}
-
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
