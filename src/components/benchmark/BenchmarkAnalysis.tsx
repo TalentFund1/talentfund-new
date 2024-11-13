@@ -8,11 +8,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 
-interface Skill {
-  name: string;
-  status: "present" | "missing";
-}
-
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
@@ -34,19 +29,11 @@ export const BenchmarkAnalysis = () => {
   );
 
   // Calculate skill match percentage based on the ratio
-  const totalSkillsCount = requiredAndPreferredSkills.length; // This is 3 for P4 Frontend Engineer
-  const matchingSkillsCount = matchingSkills.length; // This is 1 for the current view
+  const totalSkillsCount = requiredAndPreferredSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = totalSkillsCount > 0 
     ? Math.round((matchingSkillsCount / totalSkillsCount) * 100)
     : 0;
-
-  // Calculate missing skills
-  const missingSkills = requiredAndPreferredSkills
-    .filter(skill => !employeeSkills.some(empSkill => empSkill.title === skill.title))
-    .map(skill => ({
-      name: skill.title,
-      status: "missing" as const
-    }));
 
   // Calculate competency match (12 out of 12 for frontend)
   const competencyTotal = 12;
@@ -119,30 +106,6 @@ export const BenchmarkAnalysis = () => {
                 style={{ width: `${(skillGoalMatch/skillGoalTotal) * 100}%` }} 
               />
             </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-border bg-white p-6 w-full">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm font-medium text-foreground">Missing Skills or Certifications</span>
-            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {missingSkills.length}
-            </span>
-          </div>
-          
-          <div className="flex flex-wrap gap-2">
-            {missingSkills.map((skill, index) => (
-              <Badge 
-                key={`${skill.name}-${index}`}
-                variant="outline" 
-                className="rounded-full px-4 py-2 border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-              >
-                {skill.name}
-                <div className={`h-2 w-2 rounded-full ${
-                  index % 2 === 0 ? 'bg-primary-accent' : 'bg-primary-icon'
-                }`} />
-              </Badge>
-            ))}
           </div>
         </div>
       </div>
