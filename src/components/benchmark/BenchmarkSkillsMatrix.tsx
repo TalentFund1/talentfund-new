@@ -12,6 +12,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 export const BenchmarkSkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -21,6 +22,7 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
+  const { toggledSkills } = useToggledSkills();
 
   // Update selected search skills when benchmarkSearchSkills changes
   useEffect(() => {
@@ -30,6 +32,11 @@ export const BenchmarkSkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
+      // Only show skills that have been toggled on
+      if (!toggledSkills.has(skill.title)) {
+        return false;
+      }
+
       if (selectedSearchSkills.length > 0) {
         return selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
