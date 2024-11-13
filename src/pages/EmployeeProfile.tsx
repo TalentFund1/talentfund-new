@@ -157,7 +157,7 @@ const EmployeeProfile = () => {
                     <Card className="p-8 bg-white">
                       <RoleBenchmark />
                     </Card>
-                    <BenchmarkAnalysis />
+                    <BenchmarkAnalysis selectedRole="125" selectedLevel="p4" />
                     <SkillsMatrix />
                   </TabsContent>
                 </Tabs>
