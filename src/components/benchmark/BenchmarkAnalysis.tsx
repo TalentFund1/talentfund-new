@@ -23,7 +23,8 @@ export const BenchmarkAnalysis = () => {
   
   const allRequiredSkills = [
     ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
   ].filter((skill: RoleSkill) => skill.requirement === 'required');
 
   const missingSkills = allRequiredSkills
