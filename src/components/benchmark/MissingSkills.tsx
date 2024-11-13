@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -9,6 +10,7 @@ interface MissingSkillsProps {
 }
 
 export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
+  const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -19,10 +21,10 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
     ...currentRoleSkills.certifications
   ];
 
-  // Find missing skills by comparing with employee skills
+  // Find missing skills by comparing with employee skills, but only for toggled skills
   const missingSkills = allRoleSkills.filter(roleSkill => {
     const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
-    return !hasSkill;
+    return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
   const getLevelColor = (level: string) => {
