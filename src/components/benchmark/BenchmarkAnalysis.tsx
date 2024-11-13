@@ -21,12 +21,19 @@ export const BenchmarkAnalysis = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   const employeeSkills = getEmployeeSkills(id || "");
   
+  // Get all required skills for the role
   const allRequiredSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter((skill: RoleSkill) => skill.requirement === 'required');
 
+  // Calculate matching skills (skills that employee has from required skills)
+  const matchingSkills = allRequiredSkills.filter(skill => 
+    employeeSkills.some(empSkill => empSkill.title === skill.title)
+  );
+
+  // Calculate missing skills
   const missingSkills = allRequiredSkills
     .filter(skill => !employeeSkills.some(empSkill => empSkill.title === skill.title))
     .map(skill => ({
@@ -49,10 +56,6 @@ export const BenchmarkAnalysis = () => {
   const skillGoalMatch = selectedRole === "125" ? 4 : 
                         selectedRole === "124" ? 3 : 
                         selectedRole === "126" ? 5 : 6;
-
-  const getLevelStyles = () => {
-    return "border-[#CCDBFF]";
-  };
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
@@ -82,7 +85,7 @@ export const BenchmarkAnalysis = () => {
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">Skill Match</span>
               <span className="text-sm text-foreground">
-                {allRequiredSkills.length - missingSkills.length} out of {allRequiredSkills.length}
+                {matchingSkills.length} out of {allRequiredSkills.length}
               </span>
             </div>
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
