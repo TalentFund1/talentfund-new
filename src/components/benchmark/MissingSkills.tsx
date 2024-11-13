@@ -37,7 +37,9 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
     const skillState = currentStates[skillTitle];
     if (!skillState?.level) return "bg-gray-300";
 
-    switch (skillState.level.toLowerCase()) {
+    const level = String(skillState.level).toLowerCase();
+    
+    switch (level) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
