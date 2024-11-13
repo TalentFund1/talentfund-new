@@ -18,7 +18,7 @@ export const BenchmarkAnalysis = ({ selectedRole, selectedLevel }: BenchmarkAnal
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["125"];
   const employeeSkills = getEmployeeSkills(id || "");
   
-  // Calculate total required and preferred skills for P4
+  // Calculate total required and preferred skills for selected level
   const requiredAndPreferredSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
