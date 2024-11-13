@@ -30,10 +30,6 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   });
 
   const getLevelColor = (skillTitle: string) => {
-    const roleSkill = allRoleSkills.find(skill => skill.title === skillTitle);
-    if (!roleSkill) return "bg-gray-300";
-
-    // Get the skill state from competency store
     const skillState = currentStates[skillTitle];
     if (!skillState?.level) return "bg-gray-300";
 
