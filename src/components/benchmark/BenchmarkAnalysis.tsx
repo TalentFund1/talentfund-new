@@ -16,20 +16,20 @@ export const BenchmarkAnalysis = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["125"];
   const employeeSkills = getEmployeeSkills(id || "");
   
-  // Calculate total required and preferred skills for P4
-  const requiredAndPreferredSkills = [
+  // Get all toggled skills for the current role
+  const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter((skill: RoleSkill) => skill.requirement === 'required' || skill.requirement === 'preferred');
+  ].filter((skill: RoleSkill) => toggledSkills.has(skill.title));
 
-  // Calculate matching skills (skills that employee has from required and preferred skills)
-  const matchingSkills = requiredAndPreferredSkills.filter(skill => 
+  // Calculate matching skills (skills that employee has from toggled skills)
+  const matchingSkills = toggledRoleSkills.filter(skill => 
     employeeSkills.some(empSkill => empSkill.title === skill.title)
   );
 
   // Calculate skill match percentage based on the ratio
-  const totalSkillsCount = requiredAndPreferredSkills.length;
+  const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = totalSkillsCount > 0 
     ? Math.round((matchingSkillsCount / totalSkillsCount) * 100)
