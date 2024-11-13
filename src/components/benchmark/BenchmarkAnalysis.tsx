@@ -4,8 +4,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { RoleSkill } from "../skills/types";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { useTrack } from "../skills/context/TrackContext";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 export const BenchmarkAnalysis = () => {
@@ -15,18 +15,17 @@ export const BenchmarkAnalysis = () => {
   const { currentStates } = useSkillsMatrixStore();
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["125"];
-  const employeeSkills = getEmployeeSkills(id || "");
   
   // Get all toggled skills for the current role
   const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter((skill: RoleSkill) => toggledSkills.has(skill.title));
+  ].filter(skill => toggledSkills.has(skill.title));
 
   // Calculate matching skills (skills that employee has from toggled skills)
   const matchingSkills = toggledRoleSkills.filter(skill => 
-    employeeSkills.some(empSkill => empSkill.title === skill.title)
+    currentStates[skill.title] && currentStates[skill.title].level !== 'Not Interested'
   );
 
   // Calculate skill match percentage based on the ratio
@@ -38,9 +37,12 @@ export const BenchmarkAnalysis = () => {
   const competencyTotal = 12;
   const competencyMatch = 12;
 
-  // Calculate skill goals (8 out of 12 based on skills marked as skill goals)
-  const skillGoalTotal = 12;
-  const skillGoalMatch = 8;
+  // Calculate skill goals (dynamically based on matrix state)
+  const skillGoalTotal = matchingSkills.length;
+  const skillGoalMatch = matchingSkills.filter(skill => {
+    const state = currentStates[skill.title];
+    return state && state.requirement === 'required';
+  }).length;
 
   return (
     <div className="space-y-6">
