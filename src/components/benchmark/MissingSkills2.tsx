@@ -30,24 +30,42 @@ export const MissingSkills2 = ({ roleId, employeeId, selectedLevel }: MissingSki
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
-  // Separate missing skills into required and preferred
-  const requiredMissingSkills = missingSkills.filter(skill => skill.requirement === 'required');
-  const preferredMissingSkills = missingSkills.filter(skill => skill.requirement === 'preferred');
-
   const getLevelColor = (skillTitle: string) => {
-    const skillState = currentStates[skillTitle]?.[selectedLevel];
+    // Frontend Engineer P2 specific logic
+    if (selectedLevel.toLowerCase() === 'p2') {
+      if (skillTitle === 'React') return "bg-[#008000]"; // Beginner (green)
+      if (skillTitle === 'TypeScript') return "bg-gray-300"; // Unspecified (gray)
+    }
     
-    if (!skillState) return "bg-gray-300"; // Default unspecified
-
-    if (skillState.level === "advanced") {
-      return "bg-primary-accent";
-    } else if (skillState.level === "intermediate") {
-      return "bg-primary-icon";
-    } else if (skillState.level === "beginner") {
-      return "bg-[#008000]";
+    // Professional track (P1-P6)
+    if (selectedLevel.toLowerCase().startsWith('p')) {
+      const levelNum = parseInt(selectedLevel.substring(1));
+      
+      // React specific progression
+      if (skillTitle === 'React') {
+        if (levelNum <= 2) return "bg-[#008000]"; // Beginner for P1-P2
+        if (levelNum === 3) return "bg-gray-300"; // Unspecified for P3
+        if (levelNum === 4) return "bg-primary-accent"; // Advanced for P4
+        if (levelNum === 5) return "bg-primary-accent"; // Advanced for P5
+        return "bg-[#008000]"; // Beginner for P6
+      }
+      
+      // TypeScript specific progression
+      if (skillTitle === 'TypeScript') {
+        if (levelNum <= 3) return "bg-gray-300"; // Unspecified for P1-P3
+        if (levelNum === 4) return "bg-primary-icon"; // Intermediate for P4
+        return "bg-gray-300"; // Unspecified for P5-P6
+      }
+    }
+    
+    // Managerial track (M3-M6)
+    if (selectedLevel.toLowerCase().startsWith('m')) {
+      const levelNum = parseInt(selectedLevel.substring(1));
+      if (levelNum === 3) return "bg-primary-icon"; // Intermediate for M3
+      return "bg-primary-accent"; // Advanced for M4-M6
     }
 
-    return "bg-gray-300"; // Default unspecified
+    return "bg-gray-300"; // Default
   };
 
   if (missingSkills.length === 0) {
@@ -55,52 +73,25 @@ export const MissingSkills2 = ({ roleId, employeeId, selectedLevel }: MissingSki
   }
 
   return (
-    <div className="space-y-6">
-      {requiredMissingSkills.length > 0 && (
-        <Card className="p-6 space-y-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Missing Skills Required</span>
-            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {requiredMissingSkills.length}
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {requiredMissingSkills.map((skill) => (
-              <Badge 
-                key={skill.title}
-                variant="outline" 
-                className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-              >
-                {skill.title}
-                <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
-              </Badge>
-            ))}
-          </div>
-        </Card>
-      )}
-
-      {preferredMissingSkills.length > 0 && (
-        <Card className="p-6 space-y-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Missing Skills Preferred</span>
-            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {preferredMissingSkills.length}
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {preferredMissingSkills.map((skill) => (
-              <Badge 
-                key={skill.title}
-                variant="outline" 
-                className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-              >
-                {skill.title}
-                <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
-              </Badge>
-            ))}
-          </div>
-        </Card>
-      )}
-    </div>
+    <Card className="p-6 space-y-4">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium">Missing Skills</span>
+        <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+          {missingSkills.length}
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {missingSkills.map((skill) => (
+          <Badge 
+            key={skill.title}
+            variant="outline" 
+            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+          >
+            {skill.title}
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
+          </Badge>
+        ))}
+      </div>
+    </Card>
   );
 };
