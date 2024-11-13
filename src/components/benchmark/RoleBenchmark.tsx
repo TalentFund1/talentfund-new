@@ -9,6 +9,7 @@ import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { MissingSkills } from "./MissingSkills";
 
 const roles = {
   "123": "AI Engineer",
@@ -37,7 +38,6 @@ export const RoleBenchmark = () => {
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Update search skills when role changes, filtering by toggled skills
   useEffect(() => {
     const allSkills = [
       ...(selectedRoleSkills.specialized || []),
@@ -90,6 +90,8 @@ export const RoleBenchmark = () => {
           roleId={selectedRole}
           selectedLevel={selectedLevel}
         />
+
+        <MissingSkills roleId={selectedRole} employeeId="123" />
 
         <CompetencyGraph roleId={selectedRole} track={currentTrack} />
       </div>
