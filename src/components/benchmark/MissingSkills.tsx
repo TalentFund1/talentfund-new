@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { getSkillRequirements } from "../skills/data/skillsDatabase";
+import { professionalSkills } from "../skills/competency/skillsData";
 import { useTrack } from "../skills/context/TrackContext";
 
 interface MissingSkillsProps {
@@ -16,7 +16,6 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: Miss
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole(roleId);
-  const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
   
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
@@ -35,28 +34,24 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: Miss
   });
 
   const getLevelColor = (skillTitle: string) => {
-    // Get the skill requirements for the current level from the skills matrix
-    const requirements = getSkillRequirements(
-      skillTitle,
-      currentTrack,
-      selectedLevel.toUpperCase()
-    );
+    // Get the skill level from the professional skills matrix for P4
+    const p4Skills = professionalSkills["P4"];
+    const skillRequirement = p4Skills?.find(skill => skill.name === skillTitle);
 
-    if (requirements) {
-      // Use the requirements level from the skills matrix
-      switch (requirements.level.toLowerCase()) {
+    if (skillRequirement) {
+      switch (skillRequirement.level.toLowerCase()) {
         case "advanced":
-          return "bg-primary-accent";
+          return "bg-primary-accent"; // Purple dot
         case "intermediate":
-          return "bg-primary-icon";
+          return "bg-primary-icon"; // Orange dot
         case "beginner":
-          return "bg-[#008000]";
+          return "bg-[#008000]"; // Green dot
         default:
           return "bg-gray-300";
       }
     }
 
-    // Fallback to the role skills level if no matrix requirements found
+    // Fallback to role skills if not found in matrix
     const roleSkill = allRoleSkills.find(skill => skill.title === skillTitle);
     if (roleSkill) {
       switch (roleSkill.level.toLowerCase()) {
@@ -71,7 +66,7 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: Miss
       }
     }
 
-    return "bg-gray-300"; // Default color for unspecified level
+    return "bg-gray-300";
   };
 
   if (missingSkills.length === 0) {
