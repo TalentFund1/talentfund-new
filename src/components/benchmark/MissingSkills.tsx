@@ -36,24 +36,40 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: Miss
   });
 
   const getLevelColor = (skillTitle: string) => {
-    // Get the skill level from professionalSkills data structure
-    const levelData = professionalSkills[selectedLevel]?.find(
-      skill => skill.name === skillTitle
+    // Get the skill requirements for the current level
+    const requirements = getSkillRequirements(
+      skillTitle,
+      currentTrack,
+      selectedLevel.toUpperCase()
     );
 
-    if (!levelData) {
-      return "bg-gray-300"; // Default color if no level data found
+    // If no requirements found, check the role skills for the level
+    if (!requirements) {
+      const roleSkill = allRoleSkills.find(skill => skill.title === skillTitle);
+      if (roleSkill) {
+        switch (roleSkill.level.toLowerCase()) {
+          case "advanced":
+            return "bg-primary-accent";
+          case "intermediate":
+            return "bg-primary-icon";
+          case "beginner":
+            return "bg-[#008000]";
+          default:
+            return "bg-gray-300";
+        }
+      }
     }
 
-    switch (levelData.level.toLowerCase()) {
+    // Use the requirements level if found
+    switch (requirements?.level.toLowerCase()) {
       case "advanced":
-        return "bg-primary-accent"; // Purple for Advanced
+        return "bg-primary-accent";
       case "intermediate":
-        return "bg-primary-icon"; // Orange for Intermediate
+        return "bg-primary-icon";
       case "beginner":
-        return "bg-[#008000]"; // Green for Beginner
+        return "bg-[#008000]";
       default:
-        return "bg-gray-300"; // Gray for Unspecified
+        return "bg-gray-300";
     }
   };
 
