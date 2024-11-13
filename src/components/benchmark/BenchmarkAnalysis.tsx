@@ -23,8 +23,7 @@ export const BenchmarkAnalysis = () => {
   
   const allRequiredSkills = [
     ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
+    ...currentRoleSkills.common
   ].filter((skill: RoleSkill) => skill.requirement === 'required');
 
   const missingSkills = allRequiredSkills
@@ -37,6 +36,18 @@ export const BenchmarkAnalysis = () => {
   const matchPercentage = Math.round(
     ((allRequiredSkills.length - missingSkills.length) / allRequiredSkills.length) * 100
   );
+
+  // Calculate competency match (8 out of 12 for frontend)
+  const competencyTotal = 12;
+  const competencyMatch = selectedRole === "125" ? 8 : 
+                         selectedRole === "124" ? 6 : 
+                         selectedRole === "126" ? 10 : 12;
+
+  // Calculate skill goals (4 out of 6 for frontend)
+  const skillGoalTotal = 6;
+  const skillGoalMatch = selectedRole === "125" ? 4 : 
+                        selectedRole === "124" ? 3 : 
+                        selectedRole === "126" ? 5 : 6;
 
   const getLevelStyles = () => {
     return "border-[#CCDBFF]";
@@ -76,9 +87,7 @@ export const BenchmarkAnalysis = () => {
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
               <div 
                 className="h-full bg-[#1F2144] rounded-full" 
-                style={{ 
-                  width: `${matchPercentage}%` 
-                }} 
+                style={{ width: `${matchPercentage}%` }} 
               />
             </div>
           </div>
@@ -86,20 +95,26 @@ export const BenchmarkAnalysis = () => {
           <div className="space-y-4 mt-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">Competency Match</span>
-              <span className="text-sm text-foreground">8 out of 12</span>
+              <span className="text-sm text-foreground">{competencyMatch} out of {competencyTotal}</span>
             </div>
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '66%' }} />
+              <div 
+                className="h-full bg-[#1F2144] rounded-full" 
+                style={{ width: `${(competencyMatch/competencyTotal) * 100}%` }} 
+              />
             </div>
           </div>
 
           <div className="space-y-4 mt-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">Skill Goal</span>
-              <span className="text-sm text-foreground">4 out of 6</span>
+              <span className="text-sm text-foreground">{skillGoalMatch} out of {skillGoalTotal}</span>
             </div>
             <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-              <div className="h-full bg-[#1F2144] rounded-full" style={{ width: '66%' }} />
+              <div 
+                className="h-full bg-[#1F2144] rounded-full" 
+                style={{ width: `${(skillGoalMatch/skillGoalTotal) * 100}%` }} 
+              />
             </div>
           </div>
         </div>
