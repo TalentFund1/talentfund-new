@@ -3,48 +3,41 @@ import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStore } from "../skills/competency/CompetencyState";
 
 interface MissingSkillsProps {
   roleId: string;
   employeeId: string;
-  selectedLevel: string;
 }
 
-interface RoleSkill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  requirement?: 'required' | 'preferred';
-}
-
-export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkillsProps) => {
+export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
-  const { currentStates } = useCompetencyStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
+  // Get all required and preferred skills for the role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ] as RoleSkill[];
+  ];
 
+  // Find missing skills by comparing with employee skills, but only for toggled skills
   const missingSkills = allRoleSkills.filter(roleSkill => {
     const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
     return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
-  const getDotColor = (skillTitle: string) => {
-    const roleSkill = allRoleSkills.find(s => s.title === skillTitle);
-    
-    if (roleSkill?.requirement === 'required') {
-      return "bg-primary-accent"; // Purple for required skills
-    } else if (roleSkill?.requirement === 'preferred') {
-      return "bg-primary-icon"; // Orange for preferred skills
+  const getLevelColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case "advanced":
+        return "bg-primary-accent";
+      case "intermediate":
+        return "bg-primary-icon";
+      case "beginner":
+        return "bg-[#008000]";
+      default:
+        return "bg-gray-300";
     }
-    return "bg-gray-300"; // Grey for other skills
   };
 
   if (missingSkills.length === 0) {
@@ -67,7 +60,7 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
             className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getDotColor(skill.title)}`} />
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.level)}`} />
           </Badge>
         ))}
       </div>
