@@ -10,40 +10,34 @@ type SkillLevels = {
 
 export const professionalSkills: SkillLevels = {
   "P1": [
-    { name: "Node.js", level: "beginner", required: "required" },
-    { name: "Database Design", level: "beginner", required: "required" },
-    { name: "API Development", level: "beginner", required: "preferred" },
-    { name: "System Architecture", level: "beginner", required: "unspecified" },
+    { name: "React", level: "beginner", required: "required" },
+    { name: "TypeScript", level: "beginner", required: "required" },
+    { name: "Problem Solving", level: "beginner", required: "preferred" },
   ],
   "P2": [
-    { name: "Node.js", level: "intermediate", required: "required" },
-    { name: "Database Design", level: "intermediate", required: "required" },
-    { name: "API Development", level: "intermediate", required: "required" },
-    { name: "System Architecture", level: "intermediate", required: "preferred" },
+    { name: "React", level: "intermediate", required: "required" },
+    { name: "TypeScript", level: "intermediate", required: "required" },
+    { name: "Problem Solving", level: "intermediate", required: "required" },
   ],
   "P3": [
-    { name: "Node.js", level: "advanced", required: "required" },
-    { name: "Database Design", level: "advanced", required: "required" },
-    { name: "API Development", level: "advanced", required: "required" },
-    { name: "System Architecture", level: "advanced", required: "required" },
+    { name: "React", level: "intermediate", required: "required" },
+    { name: "TypeScript", level: "intermediate", required: "required" },
+    { name: "Problem Solving", level: "advanced", required: "required" },
   ],
   "P4": [
-    { name: "Node.js", level: "advanced", required: "required" },
-    { name: "Database Design", level: "advanced", required: "required" },
-    { name: "API Development", level: "advanced", required: "required" },
-    { name: "System Architecture", level: "advanced", required: "required" },
+    { name: "React", level: "intermediate", required: "required" },
+    { name: "TypeScript", level: "advanced", required: "required" },
+    { name: "Problem Solving", level: "advanced", required: "required" },
   ],
   "P5": [
-    { name: "Node.js", level: "advanced", required: "required" },
-    { name: "Database Design", level: "advanced", required: "required" },
-    { name: "API Development", level: "advanced", required: "required" },
-    { name: "System Architecture", level: "advanced", required: "required" },
+    { name: "React", level: "intermediate", required: "required" },
+    { name: "TypeScript", level: "intermediate", required: "required" },
+    { name: "Problem Solving", level: "advanced", required: "required" },
   ],
   "P6": [
-    { name: "Node.js", level: "advanced", required: "required" },
-    { name: "Database Design", level: "advanced", required: "required" },
-    { name: "API Development", level: "advanced", required: "required" },
-    { name: "System Architecture", level: "advanced", required: "required" },
+    { name: "React", level: "advanced", required: "required" },
+    { name: "TypeScript", level: "advanced", required: "required" },
+    { name: "Problem Solving", level: "advanced", required: "required" },
   ],
 };
 

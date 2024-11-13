@@ -5,6 +5,7 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
+import { professionalSkills } from "../skills/competency/skillsData";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -35,13 +36,16 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel = 'P4' }: Miss
   });
 
   const getLevelColor = (skillTitle: string) => {
-    const requirements = getSkillRequirements(
-      skillTitle,
-      currentTrack,
-      selectedLevel
+    // Get the skill level from professionalSkills data structure
+    const levelData = professionalSkills[selectedLevel]?.find(
+      skill => skill.name === skillTitle
     );
 
-    switch (requirements?.level?.toLowerCase()) {
+    if (!levelData) {
+      return "bg-gray-300"; // Default color if no level data found
+    }
+
+    switch (levelData.level.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent"; // Purple for Advanced
       case "intermediate":
