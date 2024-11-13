@@ -12,6 +12,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { roleSkills } from "../skills/data/roleSkills";
 
 export const BenchmarkSkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
