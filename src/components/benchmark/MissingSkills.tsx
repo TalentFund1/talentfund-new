@@ -30,23 +30,7 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   });
 
   const getLevelColor = (skillTitle: string) => {
-    // First check if there's a current state in the store
-    const currentState = currentStates[skillTitle];
-    if (currentState?.level) {
-      const level = currentState.level.toLowerCase();
-      switch (level) {
-        case "advanced":
-          return "bg-primary-accent";
-        case "intermediate":
-          return "bg-primary-icon";
-        case "beginner":
-          return "bg-[#008000]";
-        default:
-          return "bg-gray-300";
-      }
-    }
-
-    // If no state in store, use the level from roleSkills
+    // Find the skill in the role requirements
     const roleSkill = allRoleSkills.find(skill => skill.title === skillTitle);
     const level = roleSkill?.level?.toLowerCase() || 'unspecified';
     
