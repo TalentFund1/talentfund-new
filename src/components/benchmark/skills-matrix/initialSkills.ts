@@ -1,8 +1,16 @@
 // Individual employee skills data
 export const initialSkills = {
-  "124": [ // ... keep existing code (Backend Engineer skills) ],
-  "123": [ // ... keep existing code (AI Engineer skills) ],
-  "125": [ // Frontend Engineer
+  "124": [
+    { title: "Node.js", subcategory: "Backend Frameworks", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Database Design", subcategory: "Database", level: "advanced", growth: "15%", confidence: "high", requirement: "required", isCompanySkill: true }
+  ],
+  "123": [
+    { title: "Machine Learning", subcategory: "AI/ML", level: "advanced", growth: "30%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Deep Learning", subcategory: "AI/ML", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true }
+  ],
+  "125": [
     // Specialized Skills
     { title: "React", subcategory: "Frontend Frameworks", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "TypeScript", subcategory: "Programming Languages", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
@@ -33,7 +41,11 @@ export const initialSkills = {
     { title: "JavaScript Algorithms and Data Structures", subcategory: "Programming Certification", level: "advanced", growth: "19%", confidence: "high", requirement: "preferred", isCompanySkill: true },
     { title: "Accessibility Certification (IAAP)", subcategory: "Web Accessibility", level: "intermediate", growth: "21%", confidence: "medium", requirement: "preferred", isCompanySkill: true }
   ],
-  "126": [ // ... keep existing code (Engineering Manager skills) ]
+  "126": [
+    { title: "Team Leadership", subcategory: "Management", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Project Management", subcategory: "Management", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Strategic Planning", subcategory: "Management", level: "advanced", growth: "22%", confidence: "high", requirement: "required", isCompanySkill: true }
+  ]
 };
 
 export const getEmployeeSkills = (employeeId: string) => {
