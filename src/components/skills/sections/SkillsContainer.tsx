@@ -12,7 +12,7 @@ interface SkillsContainerProps {
     common: boolean;
     certifications: boolean;
   };
-  visibleSpecializedCount: number;
+  visibleSpecializedCount?: number;
   onToggleSection: (section: string) => void;
 }
 

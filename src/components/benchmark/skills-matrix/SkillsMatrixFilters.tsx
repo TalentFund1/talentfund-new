@@ -29,7 +29,7 @@ export const SkillsMatrixFilters = ({
   };
 
   const removeSearchSkill = (skill: string) => {
-    setBenchmarkSearchSkills(prev => prev.filter(s => s !== skill));
+    setBenchmarkSearchSkills((prev: string[]) => prev.filter(s => s !== skill));
   };
 
   return (
