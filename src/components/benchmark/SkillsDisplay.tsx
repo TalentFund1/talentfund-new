@@ -14,6 +14,16 @@ interface SkillsDisplayProps {
   selectedLevel: string;
 }
 
+const getLevelPriority = (level: string = 'unspecified') => {
+  const priorities: { [key: string]: number } = {
+    'advanced': 0,
+    'intermediate': 1,
+    'beginner': 2,
+    'unspecified': 3
+  };
+  return priorities[level.toLowerCase()] ?? 3;
+};
+
 export const SkillsDisplay = ({ 
   selectedRoleSkills, 
   toggledSkills, 
@@ -59,7 +69,8 @@ export const SkillsDisplay = ({
           level: matrixState?.level || requirements?.level || 'unspecified',
           requirement: matrixState?.required || requirements?.requirement || 'preferred'
         };
-      });
+      })
+      .sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
