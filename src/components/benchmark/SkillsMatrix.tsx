@@ -132,6 +132,7 @@ export const SkillsMatrix = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             selectedSearchSkills={selectedSearchSkills}
+            setSelectedSearchSkills={setSelectedSearchSkills}
             handleSearchKeyDown={handleSearchKeyDown}
             removeSearchSkill={removeSearchSkill}
             clearSearch={clearSearch}
@@ -147,6 +148,7 @@ export const SkillsMatrix = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             selectedSearchSkills={selectedSearchSkills}
+            setSelectedSearchSkills={setSelectedSearchSkills}
             handleSearchKeyDown={handleSearchKeyDown}
             removeSearchSkill={removeSearchSkill}
             clearSearch={clearSearch}
