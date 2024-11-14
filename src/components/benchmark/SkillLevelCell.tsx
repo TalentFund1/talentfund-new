@@ -17,7 +17,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
   const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
-  const { setSkillState } = useSkillsMatrixStore();
+  const { setSkillState, originalStates } = useSkillsMatrixStore();
 
   useEffect(() => {
     const state = getCurrentState();
@@ -26,6 +26,15 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
       setRequired(state.requirement);
     }
   }, [skillTitle, currentStates]);
+
+  // Add effect to handle cancellation
+  useEffect(() => {
+    const originalState = originalStates[skillTitle];
+    if (originalState) {
+      setLevel(originalState.level);
+      setRequired(originalState.requirement);
+    }
+  }, [originalStates, skillTitle]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
