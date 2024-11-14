@@ -127,9 +127,9 @@ const EmployeeProfile = () => {
             <EmployeeDetails employee={employee} />
           </Card>
 
-          <SelectedSkillsProvider>
-            <TrackProvider>
-              <BenchmarkSearchProvider>
+          <BenchmarkSearchProvider>
+            <SelectedSkillsProvider>
+              <TrackProvider>
                 <Tabs defaultValue="experience" className="w-full space-y-6">
                   <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
                     <TabsTrigger 
@@ -161,9 +161,9 @@ const EmployeeProfile = () => {
                     <BenchmarkSkillsMatrix />
                   </TabsContent>
                 </Tabs>
-              </BenchmarkSearchProvider>
-            </TrackProvider>
-          </SelectedSkillsProvider>
+              </TrackProvider>
+            </SelectedSkillsProvider>
+          </BenchmarkSearchProvider>
         </div>
       </div>
     </div>
