@@ -9,7 +9,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { SkillsMatrixSearch } from "./skills-matrix/SkillsMatrixSearch";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,25 +27,6 @@ export const SkillsMatrix = () => {
   const { searchTerm, setSearchTerm } = useBenchmarkSearch();
 
   const employeeSkills = getEmployeeSkills(id || "");
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchTerm.trim()) {
-      const newTerm = searchTerm.trim().toLowerCase();
-      if (!selectedSearchSkills.includes(newTerm)) {
-        setSelectedSearchSkills(prev => [...prev, newTerm]);
-        setSearchTerm("");
-      }
-    }
-  };
-
-  const removeSearchSkill = (skill: string) => {
-    setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
-  };
-
-  const clearSearch = () => {
-    setSearchTerm("");
-    setSelectedSearchSkills([]);
-  };
 
   const getLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
@@ -80,7 +60,11 @@ export const SkillsMatrix = () => {
       const requirement = (currentSkillState?.requirement || skill.requirement || '').toLowerCase();
 
       if (selectedLevel !== 'all') {
-        matchesLevel = skillLevel === selectedLevel.toLowerCase();
+        if (selectedLevel === 'unspecified') {
+          matchesLevel = !skillLevel || skillLevel === 'unspecified';
+        } else {
+          matchesLevel = skillLevel === selectedLevel.toLowerCase();
+        }
       }
 
       if (selectedInterest !== 'all') {
@@ -119,14 +103,33 @@ export const SkillsMatrix = () => {
       const aInterest = aState?.requirement || a.requirement || 'unknown';
       const bInterest = bState?.requirement || b.requirement || 'unknown';
 
+      // First sort by level priority
       const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
+      // Then sort by interest priority
       const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
       if (interestDiff !== 0) return interestDiff;
 
+      // Finally sort alphabetically by title
       return a.title.localeCompare(b.title);
     });
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
+      setSearchTerm("");
+    }
+  };
+
+  const removeSearchSkill = (skill: string) => {
+    setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
+  };
+
+  const clearSearch = () => {
+    setSearchTerm("");
+    setSelectedSearchSkills([]);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -158,16 +161,6 @@ export const SkillsMatrix = () => {
           hasChanges={hasChanges}
           onSave={saveChanges}
           onCancel={cancelChanges}
-        />
-        
-        <SkillsMatrixSearch
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-          handleSearchKeyDown={handleSearchKeyDown}
-          removeSearchSkill={removeSearchSkill}
-          clearSearch={clearSearch}
         />
         
         <SkillsMatrixFilters 
