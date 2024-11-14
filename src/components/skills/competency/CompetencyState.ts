@@ -7,48 +7,33 @@ interface SkillState {
 }
 
 interface CompetencyState {
-  originalStates: Record<string, Record<string, SkillState>>;
   currentStates: Record<string, Record<string, SkillState>>;
-  hasChanges: boolean;
   setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
-  initializeStates: (states: Record<string, Record<string, SkillState>>) => void;
 }
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
     (set) => ({
-      originalStates: {},
       currentStates: {},
-      hasChanges: false,
       setSkillState: (skillName, level, levelKey, required) =>
-        set((state) => {
-          const newStates = {
+        set((state) => ({
+          currentStates: {
             ...state.currentStates,
             [skillName]: {
-              ...(state.currentStates[skillName] || {}),
-              [levelKey]: { level, required },
+              ...state.currentStates[skillName],
+              [levelKey]: {
+                level: level || "unspecified",
+                required: required || "preferred",
+              },
             },
-          };
-          const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
-          return { currentStates: newStates, hasChanges };
-        }),
-      saveChanges: () =>
-        set((state) => ({
-          originalStates: { ...state.currentStates },
-          hasChanges: false,
+          },
         })),
+      saveChanges: () => set((state) => ({ ...state })),
       cancelChanges: () =>
         set((state) => ({
-          currentStates: { ...state.originalStates },
-          hasChanges: false,
-        })),
-      initializeStates: (states) =>
-        set(() => ({
-          originalStates: states,
-          currentStates: states,
-          hasChanges: false,
+          currentStates: {},
         })),
     }),
     {
