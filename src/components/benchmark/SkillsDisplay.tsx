@@ -94,7 +94,6 @@ export const SkillsDisplay = ({
                 level={skill.level}
                 isSkillGoal={true}
                 isRoleBenchmark={true}
-                isRequired={true}
               />
             ))}
           </div>
@@ -109,7 +108,6 @@ export const SkillsDisplay = ({
                 showLevel={true}
                 level={skill.level}
                 isRoleBenchmark={true}
-                isRequired={false}
               />
             ))}
           </div>
