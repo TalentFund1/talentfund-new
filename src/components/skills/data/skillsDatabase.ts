@@ -21,27 +21,27 @@ export const getSkillRequirements = (
   if (track === 'professional') {
     const requirements = {
       P1: {
-        "Deep Learning": { level: "unspecified", requirement: "preferred" },
-        "Machine Learning": { level: "unspecified", requirement: "preferred" },
         "Computer Vision": { level: "unspecified", requirement: "preferred" },
+        "Deep Learning": { level: "beginner", requirement: "required" },
+        "Machine Learning": { level: "unspecified", requirement: "preferred" },
         "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
         "PyTorch": { level: "unspecified", requirement: "preferred" },
         "Python": { level: "unspecified", requirement: "preferred" },
         "TensorFlow": { level: "unspecified", requirement: "preferred" }
       },
       P2: {
+        "Computer Vision": { level: "unspecified", requirement: "preferred" },
         "Deep Learning": { level: "intermediate", requirement: "required" },
         "Machine Learning": { level: "unspecified", requirement: "preferred" },
-        "Computer Vision": { level: "unspecified", requirement: "preferred" },
         "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
         "PyTorch": { level: "unspecified", requirement: "preferred" },
         "Python": { level: "unspecified", requirement: "preferred" },
         "TensorFlow": { level: "unspecified", requirement: "preferred" }
       },
       P3: {
+        "Computer Vision": { level: "intermediate", requirement: "required" },
         "Deep Learning": { level: "advanced", requirement: "required" },
         "Machine Learning": { level: "intermediate", requirement: "required" },
-        "Computer Vision": { level: "intermediate", requirement: "required" },
         "Natural Language Processing": { level: "beginner", requirement: "preferred" },
         "PyTorch": { level: "unspecified", requirement: "preferred" },
         "Python": { level: "unspecified", requirement: "preferred" },
