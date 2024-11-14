@@ -1,4 +1,3 @@
-```tsx
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
@@ -96,7 +95,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       filteredSkills = [];
     }
 
-    // Sort skills by advanced level count
     return filteredSkills.sort((a, b) => {
       const aAdvancedCount = getAdvancedLevelCount(a.title);
       const bAdvancedCount = getAdvancedLevelCount(b.title);
@@ -117,7 +115,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     
     return {
       level: skill.level || "-",
-      required: "required" // Default to required for now
+      required: "required"
     };
   };
 
@@ -168,7 +166,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
               {levels.map((level, index) => (
                 <TableHead 
                   key={level} 
-                  className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
+                  className="text-center bg-background/80 border-r border-border"
                 >
                   <div className="font-semibold">{level.toUpperCase()}</div>
                 </TableHead>
@@ -198,4 +196,3 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     </div>
   );
 };
-```
