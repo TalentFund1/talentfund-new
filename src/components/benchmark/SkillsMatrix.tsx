@@ -56,13 +56,14 @@ export const SkillsMatrix = () => {
       let matchesSearch = true;
 
       if (selectedLevel !== 'all') {
-        // Get the current level from the store, fallback to original level if not in store
         const currentSkillState = currentStates[skill.title];
         const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
         const selectedLevelLower = selectedLevel.toLowerCase();
 
         if (selectedLevelLower === 'unspecified') {
           matchesLevel = !skillLevel || skillLevel === 'unspecified';
+        } else if (selectedLevelLower === 'intermediate') {
+          matchesLevel = skillLevel === 'intermediate';
         } else {
           matchesLevel = skillLevel === selectedLevelLower;
         }
@@ -117,6 +118,10 @@ export const SkillsMatrix = () => {
 
     return () => observer.disconnect();
   }, [visibleItems, filteredSkills.length]);
+
+  useEffect(() => {
+    setHasChanges(storeHasChanges);
+  }, [storeHasChanges]);
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
