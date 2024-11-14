@@ -9,7 +9,6 @@ import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { useToast } from "@/hooks/use-toast";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,53 +20,41 @@ export const SkillsMatrix = () => {
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
-  const [originalSkills, setOriginalSkills] = useState<any[]>([]);
-  const [currentSkills, setCurrentSkills] = useState<any[]>([]);
   
   const { id } = useParams<{ id: string }>();
   const { selectedSkills } = useSelectedSkills();
   const { toggledSkills } = useToggledSkills();
   const observerTarget = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
 
-  useEffect(() => {
-    const skills = getEmployeeSkills(id || "");
-    setOriginalSkills(skills);
-    setCurrentSkills(skills);
-  }, [id]);
+  const employeeSkills = getEmployeeSkills(id || "");
 
   const handleSave = () => {
-    setOriginalSkills(currentSkills);
     setHasChanges(false);
-    toast({
-      title: "Changes saved",
-      description: "Your changes have been saved successfully.",
-    });
+    // Add save logic here
   };
 
   const handleCancel = () => {
-    setCurrentSkills(originalSkills);
     setHasChanges(false);
-    toast({
-      title: "Changes cancelled",
-      description: "Your changes have been discarded.",
-    });
+    // Add cancel logic here
   };
 
-  const filteredSkills = filterSkillsByCategory(currentSkills, selectedCategory)
+  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
       let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
 
+      // Filter by skill level
       if (selectedLevel !== 'all') {
         matchesLevel = skill.level?.toLowerCase() === selectedLevel.toLowerCase();
       }
 
+      // Filter by skill interest/requirement
       if (selectedInterest !== 'all') {
         matchesInterest = skill.requirement?.toLowerCase() === selectedInterest.toLowerCase();
       }
 
+      // Filter by search term
       if (selectedSearchSkills.length > 0) {
         matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
@@ -134,6 +121,7 @@ export const SkillsMatrix = () => {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedSearchSkills={selectedSearchSkills}
+          setSelectedSearchSkills={setSelectedSearchSkills}
           handleSearchKeyDown={handleSearchKeyDown}
           removeSearchSkill={removeSearchSkill}
           clearSearch={clearSearch}
