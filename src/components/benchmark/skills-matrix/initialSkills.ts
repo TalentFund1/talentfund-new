@@ -19,8 +19,8 @@ export const getEmployeeSkills = (employeeId: string) => {
     title: skill.title,
     subcategory: skill.subcategory,
     level: skill.level || 'unspecified',
-    growth: skill.growth || '0%',
+    growth: skill.growth,
     confidence: 'high',
-    requirement: skill.requirement || 'preferred'
+    requirement: 'required' // Add default requirement
   }));
 };
