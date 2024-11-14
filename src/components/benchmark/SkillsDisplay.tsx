@@ -53,12 +53,10 @@ export const SkillsDisplay = ({
           selectedLevel.toUpperCase()
         );
 
-        // Use requirements from skillsDatabase if available, otherwise use matrix state
-        const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
         return {
           title: skill.title,
-          level: requirements?.level || matrixState?.level || 'unspecified',
-          requirement: requirements?.requirement || matrixState?.required || 'preferred'
+          level: requirements?.level || 'unspecified',
+          requirement: requirements?.requirement || 'preferred'
         };
       });
   };
