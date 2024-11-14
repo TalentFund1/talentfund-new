@@ -8,6 +8,9 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
+import { useBenchmarkSearch } from "@/components/skills/context/BenchmarkSearchContext";
+import { SearchFilter } from "@/components/market/SearchFilter";
+import { technicalSkills, softSkills } from '@/components/skillsData';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -17,11 +20,14 @@ export const SkillsMatrix = () => {
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { saveChanges, cancelChanges, hasChanges: storeHasChanges, currentStates } = useSkillsMatrixStore();
+  const { benchmarkSearchSkills, setBenchmarkSearchSkills } = useBenchmarkSearch();
+  const allSkills = [...technicalSkills, ...softSkills];
 
   const employeeSkills = getEmployeeSkills(id || "");
 
@@ -50,6 +56,7 @@ export const SkillsMatrix = () => {
     .filter(skill => {
       let matchesLevel = true;
       let matchesInterest = true;
+      let matchesSearch = true;
 
       const currentSkillState = currentStates[skill.title];
       const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
@@ -79,7 +86,13 @@ export const SkillsMatrix = () => {
         }
       }
 
-      return matchesLevel && matchesInterest;
+      if (benchmarkSearchSkills.length > 0) {
+        matchesSearch = benchmarkSearchSkills.some(term => 
+          skill.title.toLowerCase().includes(term.toLowerCase())
+        );
+      }
+
+      return matchesLevel && matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
       const aState = currentStates[a.title];
@@ -134,6 +147,16 @@ export const SkillsMatrix = () => {
           onSave={saveChanges}
           onCancel={cancelChanges}
         />
+        
+        <div className="space-y-4">
+          <SearchFilter
+            label=""
+            placeholder="Search skills..."
+            items={allSkills}
+            selectedItems={benchmarkSearchSkills}
+            onItemsChange={setBenchmarkSearchSkills}
+          />
+        </div>
         
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
