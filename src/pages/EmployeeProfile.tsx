@@ -9,6 +9,7 @@ import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import { BenchmarkSearchProvider } from "@/components/skills/context/BenchmarkSearchContext";
+import { SkillsMatrixProvider } from "@/components/benchmark/skills-matrix/SkillsMatrixState";
 import { useParams, useNavigate } from "react-router-dom";
 import { EmployeeHeader } from "@/components/employee/EmployeeHeader";
 import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
