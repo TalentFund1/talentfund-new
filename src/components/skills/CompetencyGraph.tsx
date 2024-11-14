@@ -41,12 +41,10 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   }, [selectedCategory]);
 
   useEffect(() => {
-    // Update track when role changes or when track is changed externally
+    // Update track when role changes
     const savedTrack = getTrackForRole(currentRoleId);
-    if (savedTrack !== track) {
-      setTrack(savedTrack);
-    }
-  }, [currentRoleId, getTrackForRole, track]);
+    setTrack(savedTrack);
+  }, [currentRoleId, getTrackForRole]);
 
   const handleSave = () => {
     saveChanges();
