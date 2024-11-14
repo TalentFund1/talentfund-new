@@ -1,7 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check, X } from "lucide-react";
-import { SkillLevelCell } from "./SkillLevelCell";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -11,82 +10,60 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
   };
+  setHasChanges?: (value: boolean) => void;
 }
 
-export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
-  const { currentStates, setSkillState } = useSkillsMatrixStore();
-  const currentState = currentStates[skill.title] || {
-    level: skill.level,
-    requirement: 'required'
-  };
-
-  const getConfidenceStyles = (confidence: string) => {
-    switch (confidence) {
-      case 'high':
-        return 'bg-green-100 text-green-800';
-      case 'medium':
-        return 'bg-orange-100 text-orange-800';
-      case 'low':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'text-gray-500 text-sm';
+export const SkillsMatrixRow = ({ skill, setHasChanges }: SkillsMatrixRowProps) => {
+  const handleLevelChange = (value: string) => {
+    if (setHasChanges) {
+      setHasChanges(true);
     }
   };
 
-  const isCompanySkill = (skillTitle: string) => {
-    const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
-    return !nonCompanySkills.includes(skillTitle);
-  };
-
-  const handleLevelChange = (newLevel: string, requirement: string) => {
-    setSkillState(skill.title, newLevel, requirement);
+  const handleRequirementChange = (value: string) => {
+    if (setHasChanges) {
+      setHasChanges(true);
+    }
   };
 
   return (
-    <TableRow className="group border-b border-gray-200">
-      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <div className="flex justify-center">
-          {isCompanySkill(skill.title) ? (
-            <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-              <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
-            </div>
-          ) : (
-            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-              <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
-            </div>
-          )}
-        </div>
+    <TableRow>
+      <TableCell className="font-medium">{skill.title}</TableCell>
+      <TableCell>{skill.subcategory}</TableCell>
+      <TableCell>
+        <Select defaultValue={skill.level} onValueChange={handleLevelChange}>
+          <SelectTrigger className="w-[130px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="advanced">Advanced</SelectItem>
+            <SelectItem value="intermediate">Intermediate</SelectItem>
+            <SelectItem value="beginner">Beginner</SelectItem>
+            <SelectItem value="unspecified">Unspecified</SelectItem>
+          </SelectContent>
+        </Select>
       </TableCell>
-      <SkillLevelCell 
-        initialLevel={currentState.level} 
-        skillTitle={skill.title}
-        onLevelChange={handleLevelChange}
-      />
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        {skill.confidence === 'n/a' ? (
-          <span className="text-gray-500 text-sm">n/a</span>
-        ) : (
-          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${getConfidenceStyles(skill.confidence)}`}>
-            {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
-          </span>
-        )}
+      <TableCell>
+        <Select defaultValue="required" onValueChange={handleRequirementChange}>
+          <SelectTrigger className="w-[130px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="required">Skill Goal</SelectItem>
+            <SelectItem value="not-interested">Not Interested</SelectItem>
+            <SelectItem value="unknown">Unknown</SelectItem>
+          </SelectContent>
+        </Select>
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
-          skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-        }`}>
+      <TableCell>
+        <Badge variant={skill.confidence === "high" ? "default" : "secondary"}>
+          {skill.confidence}
+        </Badge>
+      </TableCell>
+      <TableCell className="text-right">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
           ↗ {skill.growth}
         </span>
-      </TableCell>
-      <TableCell className="text-center py-2">
-        <div className="flex items-center justify-center space-x-1">
-          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
-          <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
-          <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">M</span>
-          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-medium">S</span>
-        </div>
       </TableCell>
     </TableRow>
   );
