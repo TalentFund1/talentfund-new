@@ -1,13 +1,13 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 interface BenchmarkSearchContextType {
   benchmarkSearchSkills: string[];
-  setBenchmarkSearchSkills: (skills: string[]) => void;
+  setBenchmarkSearchSkills: (skills: string[] | ((prev: string[]) => string[])) => void;
 }
 
 const BenchmarkSearchContext = createContext<BenchmarkSearchContextType | undefined>(undefined);
 
-export const BenchmarkSearchProvider = ({ children }: { children: ReactNode }) => {
+export function BenchmarkSearchProvider({ children }: { children: React.ReactNode }) {
   const [benchmarkSearchSkills, setBenchmarkSearchSkills] = useState<string[]>([]);
 
   return (
@@ -15,12 +15,12 @@ export const BenchmarkSearchProvider = ({ children }: { children: ReactNode }) =
       {children}
     </BenchmarkSearchContext.Provider>
   );
-};
+}
 
-export const useBenchmarkSearch = () => {
+export function useBenchmarkSearch() {
   const context = useContext(BenchmarkSearchContext);
   if (context === undefined) {
     throw new Error('useBenchmarkSearch must be used within a BenchmarkSearchProvider');
   }
   return context;
-};
+}

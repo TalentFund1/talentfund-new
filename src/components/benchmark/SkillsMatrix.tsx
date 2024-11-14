@@ -20,7 +20,6 @@ export const SkillsMatrix = () => {
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);

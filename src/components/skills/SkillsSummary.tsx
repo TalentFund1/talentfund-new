@@ -8,16 +8,7 @@ import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategori
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-
-const getLevelPriority = (level: string = 'unspecified') => {
-  const priorities: { [key: string]: number } = {
-    'advanced': 0,
-    'intermediate': 1,
-    'beginner': 2,
-    'unspecified': 3
-  };
-  return priorities[level.toLowerCase()] ?? 3;
-};
+import { useBenchmarkSearch } from "./context/BenchmarkSearchContext";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -34,6 +25,7 @@ export const SkillsSummary = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
+  const { setBenchmarkSearchSkills } = useBenchmarkSearch();
 
   // Get employee skills and transform them
   const employeeSkills = getEmployeeSkills(id || "");
@@ -52,6 +44,26 @@ export const SkillsSummary = () => {
         const levelB = (b.level || 'unspecified').toLowerCase();
         return getLevelPriority(levelA) - getLevelPriority(levelB);
       });
+  };
+
+  const handleSkillsChange = (skills: string[]) => {
+    setSelectedSkills(skills);
+    setBenchmarkSearchSkills(skills);
+    
+    const allExistingSkills = [
+      ...specializedSkills.map(s => s.name),
+      ...commonSkills.map(s => s.name),
+      ...certifications.map(s => s.name)
+    ];
+
+    const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
+    
+    if (newSkills.length > 0) {
+      toast({
+        title: "Skills Added",
+        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
+      });
+    }
   };
 
   const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
@@ -74,25 +86,6 @@ export const SkillsSummary = () => {
   const certifications: DetailedSkill[] = transformAndSortSkills(
     filterSkillsByCategory(employeeSkills, "certification")
   );
-
-  const handleSkillsChange = (skills: string[]) => {
-    setSelectedSkills(skills);
-    
-    const allExistingSkills = [
-      ...specializedSkills.map(s => s.name),
-      ...commonSkills.map(s => s.name),
-      ...certifications.map(s => s.name)
-    ];
-
-    const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
-    
-    if (newSkills.length > 0) {
-      toast({
-        title: "Skills Added",
-        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
-      });
-    }
-  };
 
   const handleClearAll = () => {
     setSelectedSkills([]);
