@@ -11,9 +11,9 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
     "Computer Vision": "specialized",
     "PyTorch": "specialized",
     "TensorFlow": "specialized",
+    "Python": "specialized", // Moved Python to specialized skills
     
     // Common Skills
-    "Python": "common",
     "Problem Solving": "common",
     "Technical Writing": "common",
     
@@ -42,9 +42,9 @@ export const categorizeSkill = (skillName: string): string => {
     "Computer Vision": "specialized",
     "PyTorch": "specialized",
     "TensorFlow": "specialized",
+    "Python": "specialized", // Moved Python to specialized skills
     
     // Common Skills
-    "Python": "common",
     "Problem Solving": "common",
     "Technical Writing": "common",
     
