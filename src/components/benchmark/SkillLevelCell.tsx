@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed, X, CircleHelp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
@@ -149,9 +149,9 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
                 {required === 'required' ? (
                   <Heart className="w-3.5 h-3.5" />
                 ) : required === 'not-interested' ? (
-                  <HeartOff className="w-3.5 h-3.5" />
+                  <X className="w-3.5 h-3.5" />
                 ) : required === 'unknown' ? (
-                  <HelpCircle className="w-3.5 h-3.5" />
+                  <CircleHelp className="w-3.5 h-3.5" />
                 ) : (
                   <Heart className="w-3.5 h-3.5" />
                 )}
@@ -167,12 +167,12 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
             </SelectItem>
             <SelectItem value="not-interested">
               <span className="flex items-center gap-1.5">
-                <HeartOff className="w-3.5 h-3.5" /> Not Interested
+                <X className="w-3.5 h-3.5" /> Not Interested
               </span>
             </SelectItem>
             <SelectItem value="unknown">
               <span className="flex items-center gap-1.5">
-                <HelpCircle className="w-3.5 h-3.5" /> Unknown
+                <CircleHelp className="w-3.5 h-3.5" /> Unknown
               </span>
             </SelectItem>
           </SelectContent>
