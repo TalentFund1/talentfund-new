@@ -6,7 +6,6 @@ import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { CategorySection } from "./CategorySection";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
-import { aiSkills } from "../skills/data/skills/aiSkills";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -48,14 +47,16 @@ export const SkillsDisplay = ({
     return filteredSkills
       .filter(skill => toggledSkills.has(skill.title))
       .map((skill: any) => {
-        // Get skill requirements for the current level
-        const skillData = aiSkills.find(s => s.title === skill.title);
-        const levelRequirements = skillData?.professionalTrack?.[selectedLevel];
+        const requirements = getSkillRequirements(
+          skill.title,
+          currentTrack,
+          selectedLevel.toUpperCase()
+        );
 
         return {
           title: skill.title,
-          level: levelRequirements?.level || 'unspecified',
-          requirement: levelRequirements?.requirement || 'preferred'
+          level: requirements?.level || 'unspecified',
+          requirement: requirements?.requirement || 'preferred'
         };
       });
   };

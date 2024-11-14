@@ -4,7 +4,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
-import { aiSkills } from "../skills/data/skills/aiSkills";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -28,25 +27,16 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   // Find missing skills by comparing with employee skills, but only for toggled skills
   const missingSkills = allRoleSkills.filter(roleSkill => {
     const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
-    const isToggled = toggledSkills.has(roleSkill.title);
-    
-    if (!hasSkill && isToggled) {
-      // Get skill requirements for the current level
-      const skillData = aiSkills.find(s => s.title === roleSkill.title);
-      const levelRequirements = skillData?.professionalTrack?.[selectedLevel];
-      roleSkill.level = levelRequirements?.level || 'unspecified';
-      roleSkill.requirement = levelRequirements?.requirement || 'preferred';
-      return true;
-    }
-    return false;
+    return !hasSkill && toggledSkills.has(roleSkill.title);
   });
 
   const getLevelColor = (skillTitle: string) => {
-    const skillData = aiSkills.find(s => s.title === skillTitle);
-    const levelRequirements = skillData?.professionalTrack?.[selectedLevel];
-    const level = levelRequirements?.level || 'unspecified';
+    const skillState = currentStates[skillTitle];
+    if (!skillState?.level) return "bg-gray-300";
 
-    switch (level.toLowerCase()) {
+    const level = String(skillState.level).toLowerCase();
+    
+    switch (level) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
