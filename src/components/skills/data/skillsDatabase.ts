@@ -21,22 +21,22 @@ export const getSkillRequirements = (
   if (track === 'professional') {
     const requirements = {
       P1: {
-        "Computer Vision": { level: "unspecified", requirement: "preferred" },
-        "Deep Learning": { level: "beginner", requirement: "required" },
-        "Machine Learning": { level: "unspecified", requirement: "preferred" },
-        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
+        "Machine Learning": { level: "beginner", requirement: "required" },
+        "Deep Learning": { level: "unspecified", requirement: "preferred" },
+        "TensorFlow": { level: "unspecified", requirement: "preferred" },
         "PyTorch": { level: "unspecified", requirement: "preferred" },
-        "Python": { level: "unspecified", requirement: "preferred" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" }
+        "Computer Vision": { level: "unspecified", requirement: "preferred" },
+        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
+        "Python": { level: "unspecified", requirement: "preferred" }
       },
       P2: {
-        "Computer Vision": { level: "unspecified", requirement: "preferred" },
-        "Deep Learning": { level: "intermediate", requirement: "required" },
-        "Machine Learning": { level: "unspecified", requirement: "preferred" },
-        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
+        "Machine Learning": { level: "intermediate", requirement: "required" },
+        "Deep Learning": { level: "unspecified", requirement: "preferred" },
+        "TensorFlow": { level: "unspecified", requirement: "preferred" },
         "PyTorch": { level: "unspecified", requirement: "preferred" },
-        "Python": { level: "unspecified", requirement: "preferred" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" }
+        "Computer Vision": { level: "unspecified", requirement: "preferred" },
+        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
+        "Python": { level: "unspecified", requirement: "preferred" }
       },
       P3: {
         "Node.js": { level: "unspecified", requirement: "preferred" },
@@ -46,7 +46,7 @@ export const getSkillRequirements = (
         "Kubernetes": { level: "unspecified", requirement: "preferred" },
         "Problem Solving": { level: "unspecified", requirement: "preferred" },
         "Code Review": { level: "unspecified", requirement: "preferred" },
-        "Agile Methodologies": { level: "unspecified", requirement: "preferred" },
+        "Agile Methodologies": { level: "unspecified", requirement: "required" },
         "AWS Certified Solutions Architect": { level: "unspecified", requirement: "required" },
         "Kubernetes Administrator (CKA)": { level: "unspecified", requirement: "preferred" }
       },
@@ -61,8 +61,7 @@ export const getSkillRequirements = (
         "Agile Methodologies": { level: "advanced", requirement: "preferred" },
         "AWS Certified Solutions Architect": { level: "advanced", requirement: "required" },
         "Kubernetes Administrator (CKA)": { level: "advanced", requirement: "preferred" }
-      },
-      // Add other professional levels (P5-P6) following the same pattern
+      }
     };
 
     return requirements[level]?.[skillTitle];
@@ -79,8 +78,7 @@ export const getSkillRequirements = (
         "Project Management": { level: "advanced", requirement: "required" },
         "Strategic Planning": { level: "advanced", requirement: "required" },
         "Stakeholder Management": { level: "advanced", requirement: "required" }
-      },
-      // Add other managerial levels (M4-M6) following the same pattern
+      }
     };
 
     return managerialRequirements[level]?.[skillTitle];
