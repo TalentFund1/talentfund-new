@@ -1,12 +1,11 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createContext, useContext, useState } from 'react';
 
 interface SkillState {
   level: string;
   required: string;
 }
 
-interface CompetencyState {
+interface CompetencyContextType {
   originalStates: Record<string, Record<string, SkillState>>;
   currentStates: Record<string, Record<string, SkillState>>;
   hasChanges: boolean;
@@ -16,44 +15,62 @@ interface CompetencyState {
   initializeStates: (states: Record<string, Record<string, SkillState>>) => void;
 }
 
-export const useCompetencyStore = create<CompetencyState>()(
-  persist(
-    (set) => ({
-      originalStates: {},
-      currentStates: {},
-      hasChanges: false,
-      setSkillState: (skillName, level, levelKey, required) =>
-        set((state) => {
-          const newStates = {
-            ...state.currentStates,
-            [skillName]: {
-              ...(state.currentStates[skillName] || {}),
-              [levelKey]: { level, required },
-            },
-          };
-          const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
-          return { currentStates: newStates, hasChanges };
-        }),
-      saveChanges: () =>
-        set((state) => ({
-          originalStates: { ...state.currentStates },
-          hasChanges: false,
-        })),
-      cancelChanges: () =>
-        set((state) => ({
-          currentStates: { ...state.originalStates },
-          hasChanges: false,
-        })),
-      initializeStates: (states) =>
-        set(() => ({
-          originalStates: states,
-          currentStates: states,
-          hasChanges: false,
-        })),
-    }),
-    {
-      name: 'competency-storage',
-      skipHydration: false,
-    }
-  )
-);
+const CompetencyContext = createContext<CompetencyContextType | undefined>(undefined);
+
+export const CompetencyProvider = ({ children }: { children: React.ReactNode }) => {
+  const [originalStates, setOriginalStates] = useState<Record<string, Record<string, SkillState>>>({});
+  const [currentStates, setCurrentStates] = useState<Record<string, Record<string, SkillState>>>({});
+  const [hasChanges, setHasChanges] = useState(false);
+
+  const setSkillState = (skillName: string, level: string, levelKey: string, required: string) => {
+    const newStates = {
+      ...currentStates,
+      [skillName]: {
+        ...(currentStates[skillName] || {}),
+        [levelKey]: { level, required },
+      },
+    };
+    setCurrentStates(newStates);
+    setHasChanges(JSON.stringify(newStates) !== JSON.stringify(originalStates));
+  };
+
+  const saveChanges = () => {
+    setOriginalStates(currentStates);
+    setHasChanges(false);
+  };
+
+  const cancelChanges = () => {
+    setCurrentStates(originalStates);
+    setHasChanges(false);
+  };
+
+  const initializeStates = (states: Record<string, Record<string, SkillState>>) => {
+    setOriginalStates(states);
+    setCurrentStates(states);
+    setHasChanges(false);
+  };
+
+  return (
+    <CompetencyContext.Provider
+      value={{
+        originalStates,
+        currentStates,
+        hasChanges,
+        setSkillState,
+        saveChanges,
+        cancelChanges,
+        initializeStates,
+      }}
+    >
+      {children}
+    </CompetencyContext.Provider>
+  );
+};
+
+export const useCompetencyStore = () => {
+  const context = useContext(CompetencyContext);
+  if (context === undefined) {
+    throw new Error('useCompetencyStore must be used within a CompetencyProvider');
+  }
+  return context;
+};
