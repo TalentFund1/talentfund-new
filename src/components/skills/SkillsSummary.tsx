@@ -5,6 +5,7 @@ import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
 import { initialSkills, getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { categorizeSkill } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 
@@ -26,50 +27,59 @@ export const SkillsSummary = () => {
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
 
-  // Get skills for the current employee
-  const employeeSkills = getEmployeeSkills(id || "");
+  // Get skills for the current employee only
+  const employeeSkills = getEmployeeSkills(id || "") as EmployeeSkill[];
 
-  // Transform and categorize employee skills
-  const categorizeSkills = () => {
-    const currentRoleSkills = initialSkills[id as keyof typeof initialSkills] || [];
-    
-    const specializedSkills: DetailedSkill[] = currentRoleSkills
-      .filter(skill => skill.subcategory.includes("Frontend") || 
-                      skill.subcategory.includes("Programming") || 
-                      skill.subcategory.includes("State Management") ||
-                      skill.subcategory.includes("Build Tools"))
-      .map(skill => ({
-        name: skill.title,
-        level: currentStates[skill.title]?.level || skill.level,
-        isSkillGoal: currentStates[skill.title]?.requirement === 'required' || skill.requirement === 'required'
-      }));
+  // Transform employee skills into the required format and sort by level
+  const transformedSkills: DetailedSkill[] = employeeSkills
+    .map(skill => ({
+      name: skill.title,
+      level: currentStates[skill.title]?.level || skill.level,
+      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                   currentStates[skill.title]?.requirement === 'skill_goal' ||
+                   skill.level === 'advanced'
+    }))
+    .sort((a, b) => {
+      const levelOrder = {
+        advanced: 0,
+        intermediate: 1,
+        beginner: 2,
+        unspecified: 3
+      };
+      const levelA = (a.level || 'unspecified').toLowerCase();
+      const levelB = (b.level || 'unspecified').toLowerCase();
+      return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
+    });
 
-    const commonSkills: DetailedSkill[] = currentRoleSkills
-      .filter(skill => skill.subcategory.includes("Development") || 
-                      skill.subcategory.includes("Soft Skills") ||
-                      skill.subcategory.includes("Communication"))
-      .map(skill => ({
-        name: skill.title,
-        level: currentStates[skill.title]?.level || skill.level,
-        isSkillGoal: currentStates[skill.title]?.requirement === 'required' || skill.requirement === 'required'
-      }));
+  const specializedSkills: DetailedSkill[] = transformedSkills.filter(
+    skill => categorizeSkill(skill.name) === 'specialized'
+  );
 
-    const certifications: DetailedSkill[] = currentRoleSkills
-      .filter(skill => skill.subcategory.includes("Certification"))
-      .map(skill => ({
-        name: skill.title,
-        level: currentStates[skill.title]?.level || skill.level,
-        isSkillGoal: currentStates[skill.title]?.requirement === 'required' || skill.requirement === 'required'
-      }));
+  const commonSkills: DetailedSkill[] = transformedSkills.filter(
+    skill => categorizeSkill(skill.name) === 'common'
+  );
 
-    return {
-      specializedSkills,
-      commonSkills,
-      certifications
-    };
-  };
-
-  const { specializedSkills, commonSkills, certifications } = categorizeSkills();
+  const certifications: DetailedSkill[] = employeeSkills
+    .filter(skill => categorizeSkill(skill.title) === 'certification')
+    .map(skill => ({ 
+      name: skill.title,
+      level: currentStates[skill.title]?.level || skill.level,
+      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                   currentStates[skill.title]?.requirement === 'skill_goal' ||
+                   skill.requirement === 'required' ||
+                   skill.requirement === 'skill_goal'
+    }))
+    .sort((a, b) => {
+      const levelOrder = {
+        advanced: 0,
+        intermediate: 1,
+        beginner: 2,
+        unspecified: 3
+      };
+      const levelA = (a.level || 'unspecified').toLowerCase();
+      const levelB = (b.level || 'unspecified').toLowerCase();
+      return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
+    });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
@@ -102,9 +112,7 @@ export const SkillsSummary = () => {
     setSelectedSkills(skills);
     
     const allExistingSkills = [
-      ...specializedSkills.map(s => s.name),
-      ...commonSkills.map(s => s.name),
-      ...certifications.map(s => s.name)
+      ...transformedSkills.map(s => s.name)
     ];
 
     const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
