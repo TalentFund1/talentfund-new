@@ -38,18 +38,12 @@ export const SkillBadge = ({
     // Don't show heart in role benchmark view
     if (isRoleBenchmark) return false;
     
-    // If explicitly passed as a prop
-    if (isSkillGoal) return true;
-    
-    // If it's in the current states
+    // If it's in the current states and marked as required/skill_goal
     if (skillState) {
-      return skillState.requirement === 'required' || 
-             skillState.requirement === 'skill_goal';
+      return skillState.requirement === 'required';
     }
     
-    // For all skill levels, show goal by default
-    const currentLevel = (skillState?.level || level || '').toLowerCase();
-    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
+    return false;
   };
 
   return (
