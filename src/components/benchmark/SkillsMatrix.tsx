@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
@@ -22,59 +22,48 @@ export const SkillsMatrix = () => {
   const [hasChanges, setHasChanges] = useState(false);
   
   const { id } = useParams<{ id: string }>();
-  const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
   const { toggledSkills } = useToggledSkills();
   const observerTarget = useRef<HTMLDivElement>(null);
 
-  const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
 
   const handleSave = () => {
     setHasChanges(false);
+    // Add save logic here
   };
 
   const handleCancel = () => {
     setHasChanges(false);
+    // Add cancel logic here
   };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
-      if (!toggledSkills.has(skill.title)) {
-        return false;
-      }
+      let matchesLevel = true;
+      let matchesInterest = true;
+      let matchesSearch = true;
 
       // Filter by skill level
       if (selectedLevel !== 'all') {
-        const skillLevel = skill.level?.toLowerCase() || 'unspecified';
-        if (selectedLevel === 'advanced' && skillLevel !== 'advanced') return false;
-        if (selectedLevel === 'intermediate' && skillLevel !== 'intermediate') return false;
-        if (selectedLevel === 'beginner' && skillLevel !== 'beginner') return false;
-        if (selectedLevel === 'unspecified' && skillLevel !== 'unspecified') return false;
+        matchesLevel = skill.level?.toLowerCase() === selectedLevel.toLowerCase();
       }
 
       // Filter by skill interest/requirement
       if (selectedInterest !== 'all') {
-        const requirement = skill.requirement?.toLowerCase() || 'unknown';
-        if (selectedInterest === 'required' && requirement !== 'required' && requirement !== 'skill_goal') return false;
-        if (selectedInterest === 'not-interested' && requirement !== 'not-interested') return false;
-        if (selectedInterest === 'unknown' && requirement !== 'unknown') return false;
+        matchesInterest = skill.requirement?.toLowerCase() === selectedInterest.toLowerCase();
       }
 
-      if (isRoleBenchmarkTab) {
-        if (selectedSearchSkills.length > 0) {
-          return selectedSearchSkills.some(term => 
-            skill.title.toLowerCase().includes(term.toLowerCase())
-          );
-        }
-        return searchTerm 
-          ? skill.title.toLowerCase().includes(searchTerm.toLowerCase())
-          : true;
+      // Filter by search term
+      if (selectedSearchSkills.length > 0) {
+        matchesSearch = selectedSearchSkills.some(term => 
+          skill.title.toLowerCase().includes(term.toLowerCase())
+        );
+      } else if (searchTerm) {
+        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
-      if (selectedSkills.length === 0) return true;
-      return selectedSkills.some(searchTerm => 
-        skill.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+
+      return matchesLevel && matchesInterest && matchesSearch;
     });
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -122,42 +111,25 @@ export const SkillsMatrix = () => {
         />
         <Separator className="my-4" />
         
-        {!isRoleBenchmarkTab ? (
-          <SkillsMatrixFilters 
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            selectedLevel={selectedLevel}
-            setSelectedLevel={setSelectedLevel}
-            selectedInterest={selectedInterest}
-            setSelectedInterest={setSelectedInterest}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            selectedSearchSkills={selectedSearchSkills}
-            setSelectedSearchSkills={setSelectedSearchSkills}
-            handleSearchKeyDown={handleSearchKeyDown}
-            removeSearchSkill={removeSearchSkill}
-            clearSearch={clearSearch}
-          />
-        ) : (
-          <SkillsMatrixFilters 
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            selectedLevel={selectedLevel}
-            setSelectedLevel={setSelectedLevel}
-            selectedInterest={selectedInterest}
-            setSelectedInterest={setSelectedInterest}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            selectedSearchSkills={selectedSearchSkills}
-            setSelectedSearchSkills={setSelectedSearchSkills}
-            handleSearchKeyDown={handleSearchKeyDown}
-            removeSearchSkill={removeSearchSkill}
-            clearSearch={clearSearch}
-          />
-        )}
+        <SkillsMatrixFilters 
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedSearchSkills={selectedSearchSkills}
+          setSelectedSearchSkills={setSelectedSearchSkills}
+          handleSearchKeyDown={handleSearchKeyDown}
+          removeSearchSkill={removeSearchSkill}
+          clearSearch={clearSearch}
+        />
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
+          setHasChanges={setHasChanges}
         />
         
         {visibleItems < filteredSkills.length && (
