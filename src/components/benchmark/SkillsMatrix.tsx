@@ -28,6 +28,25 @@ export const SkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      const newTerm = searchTerm.trim().toLowerCase();
+      if (!selectedSearchSkills.includes(newTerm)) {
+        setSelectedSearchSkills(prev => [...prev, newTerm]);
+        setSearchTerm("");
+      }
+    }
+  };
+
+  const removeSearchSkill = (skill: string) => {
+    setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
+  };
+
+  const clearSearch = () => {
+    setSearchTerm("");
+    setSelectedSearchSkills([]);
+  };
+
   const getLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
@@ -114,22 +133,6 @@ export const SkillsMatrix = () => {
       // Finally sort alphabetically by title
       return a.title.localeCompare(b.title);
     });
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchTerm.trim()) {
-      setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
-      setSearchTerm("");
-    }
-  };
-
-  const removeSearchSkill = (skill: string) => {
-    setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
-  };
-
-  const clearSearch = () => {
-    setSearchTerm("");
-    setSelectedSearchSkills([]);
-  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
