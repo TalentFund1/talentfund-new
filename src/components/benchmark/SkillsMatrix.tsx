@@ -15,13 +15,13 @@ import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams, useLocation } from "react-router-dom";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { Badge } from "../ui/badge";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useSkillsMatrix } from "./skills-matrix/SkillsMatrixContext";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -29,7 +29,7 @@ export const SkillsMatrix = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
-  const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
+  const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrix();
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();

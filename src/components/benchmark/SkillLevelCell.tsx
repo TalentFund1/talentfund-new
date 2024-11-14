@@ -3,8 +3,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState, useEffect } from "react";
 import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons";
 import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
-import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { Heart, X, CircleHelp } from "lucide-react";
+import { useSkillsMatrix } from "./skills-matrix/SkillsMatrixContext";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -13,12 +13,12 @@ interface SkillLevelCellProps {
 }
 
 export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
-  const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
+  const { currentStates, setSkillState } = useSkillsMatrix();
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
 
   useEffect(() => {
-    const state = getCurrentState();
+    const state = currentStates[skillTitle];
     if (state) {
       setLevel(state.level);
       setRequired(state.requirement);
@@ -37,11 +37,13 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
+    setSkillState(skillTitle, newLevel, required);
     onLevelChange?.(newLevel, required);
   };
 
   const handleRequirementChange = (newRequired: string) => {
     setRequired(newRequired);
+    setSkillState(skillTitle, level, newRequired);
     onLevelChange?.(level, newRequired);
   };
 
