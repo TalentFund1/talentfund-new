@@ -1,7 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useSkillsMatrix } from "./skills-matrix/SkillsMatrixContext";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -14,7 +14,7 @@ interface SkillsMatrixRowProps {
 }
 
 export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
-  const { currentStates, setSkillState } = useSkillsMatrixStore();
+  const { currentStates, setSkillState } = useSkillsMatrix();
   const currentState = currentStates[skill.title] || {
     level: skill.level,
     requirement: 'required'
