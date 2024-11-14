@@ -12,24 +12,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { id } = useParams<{ id: string }>();
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
     const savedSkills = localStorage.getItem('toggledSkillsByRole');
-    if (!savedSkills) {
-      // Initialize with default AI Engineer skills
-      const defaultAISkills = new Set([
-        "Deep Learning",
-        "Computer Vision",
-        "Machine Learning",
-        "Natural Language Processing",
-        "PyTorch",
-        "Python",
-        "TensorFlow",
-        "Problem Solving",
-        "Technical Writing",
-        "AWS Certified Machine Learning - Specialty",
-        "TensorFlow Developer Certificate",
-        "Google Cloud Professional Machine Learning Engineer"
-      ]);
-      return { "123": defaultAISkills };
-    }
+    if (!savedSkills) return {};
     
     try {
       const parsed = JSON.parse(savedSkills);
