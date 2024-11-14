@@ -10,9 +10,8 @@ const levelPriority: Record<string, number> = {
 
 const requirementPriority: Record<string, number> = {
   'required': 0,    // Skill Goal
-  'preferred': 1,   // Preferred
-  'not-interested': 2,
-  'unknown': 3
+  'not-interested': 1,
+  'unknown': 2
 };
 
 // Specialized Skills - AI & ML
@@ -55,6 +54,14 @@ export const sortSkillsByPriority = (skills: any[]) => {
   });
 };
 
+export const filterSkillsByCategory = (skills: any[], category: string) => {
+  const filteredSkills = category === 'all' 
+    ? skills 
+    : skills.filter(skill => categorizeSkill(skill.title) === category);
+    
+  return sortSkillsByPriority(filteredSkills);
+};
+
 export const categorizeSkill = (skillTitle: string): string => {
   if (specializedSkills.includes(skillTitle)) {
     return "specialized";
@@ -62,17 +69,8 @@ export const categorizeSkill = (skillTitle: string): string => {
     return "common";
   } else if (certificationSkills.includes(skillTitle)) {
     return "certification";
-  } else {
-    return "specialized"; // Default to specialized if not found
   }
-};
-
-export const filterSkillsByCategory = (skills: any[], category: string) => {
-  const filteredSkills = category === 'all' 
-    ? skills 
-    : skills.filter(skill => categorizeSkill(skill.title) === category);
-    
-  return sortSkillsByPriority(filteredSkills);
+  return "specialized"; // Default to specialized if not found
 };
 
 export const getSkillsByCategory = (skills: SkillData[], category: string) => {
