@@ -177,6 +177,13 @@ export const SkillsMatrix = () => {
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedSearchSkills={selectedSearchSkills}
+          setSelectedSearchSkills={setSelectedSearchSkills}
+          handleSearchKeyDown={handleSearchKeyDown}
+          removeSearchSkill={removeSearchSkill}
+          clearSearch={clearSearch}
         />
 
         <SkillsMatrixTable 
