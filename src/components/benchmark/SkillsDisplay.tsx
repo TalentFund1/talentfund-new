@@ -82,9 +82,16 @@ export const SkillsDisplay = ({
       return acc;
     }, { required: [], preferred: [] });
 
-    // Sort both arrays by level priority
-    categorized.required.sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
-    categorized.preferred.sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
+    // Sort both arrays by level priority only
+    categorized.required.sort((a, b) => {
+      const levelComparison = getLevelPriority(a.level) - getLevelPriority(b.level);
+      return levelComparison;
+    });
+
+    categorized.preferred.sort((a, b) => {
+      const levelComparison = getLevelPriority(a.level) - getLevelPriority(b.level);
+      return levelComparison;
+    });
 
     return categorized;
   };
