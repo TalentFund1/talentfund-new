@@ -15,25 +15,19 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
 
-  // Effect to sync with store states and handle cancellation
   useEffect(() => {
+    // Log all skills' states when component mounts
+    console.log("All Skills States:", currentStates);
+    
     const currentState = currentStates[skillTitle];
     const originalState = originalStates[skillTitle];
     
     if (currentState) {
       setLevel(currentState.level);
       setRequired(currentState.requirement);
-      console.log(`Skill State - ${skillTitle}:`, {
-        level: currentState.level,
-        requirement: currentState.requirement
-      });
     } else if (originalState) {
       setLevel(originalState.level);
       setRequired(originalState.requirement);
-      console.log(`Original Skill State - ${skillTitle}:`, {
-        level: originalState.level,
-        requirement: originalState.requirement
-      });
     }
   }, [currentStates, originalStates, skillTitle]);
 
