@@ -31,24 +31,6 @@ export const SkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
 
-  const handleSave = () => {
-    saveChanges();
-    setHasChanges(false);
-    toast({
-      title: "Changes saved successfully",
-      description: "Your skill matrix has been updated.",
-    });
-  };
-
-  const handleCancel = () => {
-    cancelChanges();
-    setHasChanges(false);
-    toast({
-      title: "Changes discarded",
-      description: "Your skill matrix has been restored to its previous state.",
-    });
-  };
-
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
       let matchesLevel = true;
@@ -72,7 +54,20 @@ export const SkillsMatrix = () => {
       if (selectedInterest !== 'all') {
         const currentSkillState = currentStates[skill.title];
         const requirement = (currentSkillState?.requirement || skill.requirement || '').toLowerCase();
-        matchesInterest = requirement === selectedInterest.toLowerCase();
+        
+        switch (selectedInterest.toLowerCase()) {
+          case 'skill_goal':
+            matchesInterest = requirement === 'required' || requirement === 'skill_goal';
+            break;
+          case 'not_interested':
+            matchesInterest = requirement === 'not_interested';
+            break;
+          case 'unknown':
+            matchesInterest = !requirement || requirement === 'unknown';
+            break;
+          default:
+            matchesInterest = requirement === selectedInterest.toLowerCase();
+        }
       }
 
       if (selectedSearchSkills.length > 0) {
@@ -130,8 +125,8 @@ export const SkillsMatrix = () => {
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <SkillsMatrixHeader 
           hasChanges={hasChanges}
-          onSave={handleSave}
-          onCancel={handleCancel}
+          onSave={saveChanges}
+          onCancel={cancelChanges}
         />
         
         <SkillsMatrixFilters 
@@ -144,7 +139,6 @@ export const SkillsMatrix = () => {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
           handleSearchKeyDown={handleSearchKeyDown}
           removeSearchSkill={removeSearchSkill}
           clearSearch={clearSearch}
