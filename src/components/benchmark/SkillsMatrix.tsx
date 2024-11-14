@@ -28,7 +28,7 @@ export const SkillsMatrix = () => {
   const observerTarget = useRef<HTMLDivElement>(null);
 
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
-  const employeeSkills = getEmployeeSkills(id || "");
+  const employeeSkills = getEmployeeSkills(id || "123"); // Provide default ID if none exists
 
   const handleSave = () => {
     setHasChanges(false);
@@ -40,6 +40,7 @@ export const SkillsMatrix = () => {
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
+      // First check if skill is toggled
       if (!toggledSkills.has(skill.title)) {
         return false;
       }
@@ -132,6 +133,7 @@ export const SkillsMatrix = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             selectedSearchSkills={selectedSearchSkills}
+            setSelectedSearchSkills={setSelectedSearchSkills}
             handleSearchKeyDown={handleSearchKeyDown}
             removeSearchSkill={removeSearchSkill}
             clearSearch={clearSearch}
@@ -147,6 +149,7 @@ export const SkillsMatrix = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             selectedSearchSkills={selectedSearchSkills}
+            setSelectedSearchSkills={setSelectedSearchSkills}
             handleSearchKeyDown={handleSearchKeyDown}
             removeSearchSkill={removeSearchSkill}
             clearSearch={clearSearch}
@@ -155,6 +158,7 @@ export const SkillsMatrix = () => {
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
+          setHasChanges={setHasChanges}
         />
         
         {visibleItems < filteredSkills.length && (
