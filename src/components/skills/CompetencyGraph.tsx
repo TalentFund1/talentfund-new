@@ -40,6 +40,12 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     localStorage.setItem('selectedCategory', selectedCategory);
   }, [selectedCategory]);
 
+  useEffect(() => {
+    // Update track when role changes
+    const savedTrack = getTrackForRole(currentRoleId);
+    setTrack(savedTrack);
+  }, [currentRoleId, getTrackForRole]);
+
   const handleSave = () => {
     saveChanges();
     toast({

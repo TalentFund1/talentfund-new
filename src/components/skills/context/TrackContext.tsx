@@ -12,7 +12,6 @@ interface TrackContextType {
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
 
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
-  // Initialize tracks from localStorage or empty object if none exists
   const [tracks, setTracks] = useState<Record<string, Track>>(() => {
     const savedTracks = localStorage.getItem('roleTracks');
     return savedTracks ? JSON.parse(savedTracks) : {};
@@ -29,19 +28,17 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
       [roleId]: track
     }));
     setHasUnsavedChanges(true);
+    // Immediately save to localStorage to ensure persistence
+    localStorage.setItem('roleTracks', JSON.stringify({
+      ...tracks,
+      [roleId]: track
+    }));
   };
 
   const saveTrackSelection = () => {
     localStorage.setItem('roleTracks', JSON.stringify(tracks));
     setHasUnsavedChanges(false);
   };
-
-  // Save to localStorage whenever tracks change
-  useEffect(() => {
-    if (!hasUnsavedChanges) {
-      localStorage.setItem('roleTracks', JSON.stringify(tracks));
-    }
-  }, [tracks, hasUnsavedChanges]);
 
   return (
     <TrackContext.Provider value={{ 
