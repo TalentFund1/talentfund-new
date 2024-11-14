@@ -63,10 +63,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const getLevelsForTrack = () => {
-    if (track === "Managerial") {
-      return Object.keys(managerialLevels);
-    }
-    return Object.keys(professionalLevels);
+    return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
   };
 
   const getSkillsByCategory = () => {
@@ -145,7 +142,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       
       <div className="mb-8">
         <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitle}</h3>
-        <TrackSelection />
+        <TrackSelection onTrackChange={handleTrackChange} />
       </div>
 
       <CategorySection 

@@ -2,10 +2,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useTrack } from "./context/TrackContext";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useParams } from "react-router-dom";
 
-export const TrackSelection = () => {
+interface TrackSelectionProps {
+  onTrackChange?: (track: "Professional" | "Managerial") => void;
+}
+
+export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
   const { id } = useParams<{ id: string }>();
   const { getTrackForRole, setTrackForRole, hasUnsavedChanges, saveTrackSelection } = useTrack();
   const { toast } = useToast();
@@ -14,6 +18,7 @@ export const TrackSelection = () => {
 
   const handleTrackChange = (value: "Professional" | "Managerial") => {
     setTrackForRole(id || "", value);
+    onTrackChange?.(value);
   };
 
   const handleSave = () => {
