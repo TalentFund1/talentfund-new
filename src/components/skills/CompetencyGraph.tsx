@@ -28,7 +28,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return savedCategory || "all";
   });
   const { getTrackForRole } = useTrack();
-  const { hasChanges, saveChanges, cancelChanges } = useCompetencyStore();
+  const { saveChanges, cancelChanges } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
 
@@ -125,13 +125,11 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
           <Button 
             variant="outline" 
             onClick={handleCancel}
-            disabled={!hasChanges}
           >
             Cancel
           </Button>
           <Button 
             onClick={handleSave}
-            disabled={!hasChanges}
           >
             Save
           </Button>
