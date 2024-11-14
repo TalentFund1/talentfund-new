@@ -8,9 +8,10 @@ import { useCompetencyStore } from "../skills/competency/CompetencyState";
 interface MissingSkillsProps {
   roleId: string;
   employeeId: string;
+  selectedLevel: string;
 }
 
-export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
+export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useCompetencyStore();
   const employeeSkills = getEmployeeSkills(employeeId);
