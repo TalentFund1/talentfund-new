@@ -41,8 +41,11 @@ export const BenchmarkSkillsMatrix = () => {
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
-      setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
-      setSearchTerm("");
+      const newTerm = searchTerm.trim().toLowerCase();
+      if (!selectedSearchSkills.includes(newTerm)) {
+        setSelectedSearchSkills(prev => [...prev, newTerm]);
+        setSearchTerm("");
+      }
     }
   };
 
