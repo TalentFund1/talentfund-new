@@ -100,14 +100,13 @@ export const SkillsMatrix = () => {
       const aLevel = aState?.level || a.level || 'unspecified';
       const bLevel = bState?.level || b.level || 'unspecified';
       
-      const aInterest = aState?.requirement || a.requirement || 'unknown';
-      const bInterest = bState?.requirement || b.requirement || 'unknown';
-
-      // First sort by level priority
+      // First sort by level priority (Advanced -> Intermediate -> Beginner -> Unspecified)
       const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
-      // Then sort by interest priority
+      // Then sort by requirement priority
+      const aInterest = aState?.requirement || a.requirement || 'unknown';
+      const bInterest = bState?.requirement || b.requirement || 'unknown';
       const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
       if (interestDiff !== 0) return interestDiff;
 
