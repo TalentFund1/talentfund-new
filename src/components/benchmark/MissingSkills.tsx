@@ -40,8 +40,8 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
       return !hasSkill && toggledSkills.has(roleSkill.title);
     })
     .sort((a, b) => {
-      const levelA = currentStates[a.title]?.level || 'unspecified';
-      const levelB = currentStates[b.title]?.level || 'unspecified';
+      const levelA = (currentStates[a.title]?.level || 'unspecified') as string;
+      const levelB = (currentStates[b.title]?.level || 'unspecified') as string;
       return getLevelPriority(levelA) - getLevelPriority(levelB);
     });
 
