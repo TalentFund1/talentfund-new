@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,6 @@ import {
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
-import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
@@ -23,24 +22,25 @@ import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { Badge } from "../ui/badge";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
+const ITEMS_PER_PAGE = 10;
+
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
+  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
   const { toggledSkills } = useToggledSkills();
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
-      // Only show skills that have been toggled on in the skill profile
       if (!toggledSkills.has(skill.title)) {
         return false;
       }
@@ -61,11 +61,6 @@ export const SkillsMatrix = () => {
       );
     });
 
-  const handleRowsPerPageChange = (value: string) => {
-    setRowsPerPage(Number(value));
-    setPage(1);
-  };
-
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
       setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
@@ -82,10 +77,25 @@ export const SkillsMatrix = () => {
     setSelectedSearchSkills([]);
   };
 
-  const startIndex = (page - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
-  const paginatedSkills = filteredSkills.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(filteredSkills.length / rowsPerPage);
+  // Infinite scroll observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
+          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [visibleItems, filteredSkills.length]);
+
+  const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
   return (
     <div className="space-y-6">
@@ -172,16 +182,15 @@ export const SkillsMatrix = () => {
           filteredSkills={paginatedSkills}
         />
         
-        <SkillsMatrixPagination 
-          rowsPerPage={rowsPerPage}
-          handleRowsPerPageChange={handleRowsPerPageChange}
-          startIndex={startIndex}
-          endIndex={endIndex}
-          totalSkills={filteredSkills.length}
-          currentPage={page}
-          totalPages={totalPages}
-          handlePageChange={setPage}
-        />
+        {/* Infinite scroll observer target */}
+        {visibleItems < filteredSkills.length && (
+          <div 
+            ref={observerTarget} 
+            className="h-10 flex items-center justify-center"
+          >
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+          </div>
+        )}
       </Card>
     </div>
   );
