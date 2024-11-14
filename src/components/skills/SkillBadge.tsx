@@ -1,7 +1,6 @@
 import { Badge } from "@/components/ui/badge";
-import { Heart } from "lucide-react";
+import { Heart, Star, Shield, Target, CircleDashed } from "lucide-react";
 import { BaseSkill } from "./types";
-import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 interface SkillBadgeProps {
   skill: BaseSkill;
@@ -9,6 +8,7 @@ interface SkillBadgeProps {
   level?: string;
   isSkillGoal?: boolean;
   isRoleBenchmark?: boolean;
+  isRequired?: boolean;
 }
 
 export const SkillBadge = ({ 
@@ -16,12 +16,23 @@ export const SkillBadge = ({
   showLevel = false, 
   level, 
   isSkillGoal,
-  isRoleBenchmark = false 
+  isRoleBenchmark = false,
+  isRequired = false
 }: SkillBadgeProps) => {
-  const { currentStates } = useSkillsMatrixStore();
-  const skillState = currentStates[skill.name];
+  const getLevelIcon = () => {
+    switch (level?.toLowerCase()) {
+      case "advanced":
+        return <Star className="w-3 h-3 text-primary-accent" />;
+      case "intermediate":
+        return <Shield className="w-3 h-3 text-primary-icon" />;
+      case "beginner":
+        return <Target className="w-3 h-3 text-[#008000]" />;
+      default:
+        return <CircleDashed className="w-3 h-3 text-gray-400" />;
+    }
+  };
 
-  const getLevelColor = (level: string) => {
+  const getLevelColor = () => {
     switch (level?.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
@@ -34,37 +45,26 @@ export const SkillBadge = ({
     }
   };
 
-  const shouldShowGoal = () => {
-    // Don't show heart in role benchmark view
-    if (isRoleBenchmark) return false;
+  const getBadgeStyle = () => {
+    const baseStyle = "rounded-md px-4 py-2 border transition-colors flex items-center gap-2";
     
-    // If explicitly passed as a prop
-    if (isSkillGoal) return true;
-    
-    // If it's in the current states
-    if (skillState) {
-      return skillState.requirement === 'required' || 
-             skillState.requirement === 'skill_goal';
+    if (isRequired) {
+      return `${baseStyle} bg-white border-primary-accent/50 hover:border-primary-accent`;
     }
     
-    // For all skill levels, show goal by default
-    const currentLevel = (skillState?.level || level || '').toLowerCase();
-    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
+    return `${baseStyle} bg-white border-border hover:bg-background/80`;
   };
 
   return (
     <Badge 
-      key={skill.name} 
       variant="outline" 
-      className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+      className={getBadgeStyle()}
     >
       {skill.name}
-      {(showLevel || skillState) && (
+      {showLevel && (
         <div className="flex items-center gap-1.5">
-          <div className={`h-2 w-2 rounded-full ${
-            getLevelColor(skillState?.level || level || "unspecified")
-          }`} />
-          {shouldShowGoal() && (
+          {getLevelIcon()}
+          {isSkillGoal && !isRoleBenchmark && (
             <Heart className="w-3 h-3 text-[#1f2144]" />
           )}
         </div>
