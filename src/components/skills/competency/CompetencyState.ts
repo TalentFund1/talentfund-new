@@ -13,7 +13,6 @@ interface CompetencyState {
   setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
-  get: () => Pick<CompetencyState, 'currentStates' | 'originalStates'>;
 }
 
 export const useCompetencyStore = create<CompetencyState>()(
@@ -24,6 +23,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       hasChanges: false,
       setSkillState: (skillName, level, levelKey, required) =>
         set((state) => {
+          // If this is the first change for this skill, save the original state
           if (!state.originalStates[skillName]?.[levelKey]) {
             return {
               originalStates: {
@@ -75,10 +75,6 @@ export const useCompetencyStore = create<CompetencyState>()(
           currentStates: { ...state.originalStates },
           hasChanges: false,
         })),
-      get: () => ({
-        currentStates: get().currentStates,
-        originalStates: get().originalStates,
-      }),
     }),
     {
       name: 'competency-storage',
