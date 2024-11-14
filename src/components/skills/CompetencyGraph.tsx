@@ -14,6 +14,7 @@ import { useTrack } from "./context/TrackContext";
 import { jobTitles } from "./competency/skillProfileData";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
+import { getLevelsForTrack } from "@/components/benchmark/data/levelData";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -53,12 +54,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       title: "Changes cancelled",
       description: "Your changes have been discarded.",
     });
-  };
-
-  const getLevelsForTrack = (currentTrack: "Professional" | "Managerial") => {
-    return currentTrack === "Professional" 
-      ? ["P1", "P2", "P3", "P4", "P5", "P6"] 
-      : ["M3", "M4", "M5", "M6"];
   };
 
   const getSkillsByCategory = () => {
@@ -109,7 +104,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const skills = getSkillsByCategory();
-  const levels = getLevelsForTrack(track as "Professional" | "Managerial");
+  const levels = getLevelsForTrack(track);
   const uniqueSkills = skills.map(skill => skill.title).sort();
 
   return (
