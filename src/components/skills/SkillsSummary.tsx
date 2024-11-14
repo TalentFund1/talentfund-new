@@ -8,6 +8,7 @@ import { initialSkills, getEmployeeSkills } from "../benchmark/skills-matrix/ini
 import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
+import { roleSkills } from './data/roleSkills';
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -27,31 +28,11 @@ export const SkillsSummary = () => {
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
 
-  // Get skills for the current employee only
-  const employeeSkills = getEmployeeSkills(id || "") as EmployeeSkill[];
+  // Get current role skills
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Transform employee skills into the required format and sort by level
-  const transformedSkills: DetailedSkill[] = employeeSkills
-    .map(skill => ({
-      name: skill.title,
-      level: currentStates[skill.title]?.level || skill.level,
-      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
-                   currentStates[skill.title]?.requirement === 'skill_goal' ||
-                   skill.level === 'advanced'
-    }))
-    .sort((a, b) => {
-      const levelOrder = {
-        advanced: 0,
-        intermediate: 1,
-        beginner: 2,
-        unspecified: 3
-      };
-      const levelA = (a.level || 'unspecified').toLowerCase();
-      const levelB = (b.level || 'unspecified').toLowerCase();
-      return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
-    });
-
-  const specializedSkills: DetailedSkill[] = filterSkillsByCategory(employeeSkills, "specialized")
+  // Transform specialized skills
+  const specializedSkills: DetailedSkill[] = (currentRoleSkills.specialized || [])
     .map(skill => ({
       name: skill.title,
       level: currentStates[skill.title]?.level || skill.level,
@@ -60,7 +41,8 @@ export const SkillsSummary = () => {
                    skill.level === 'advanced'
     }));
 
-  const commonSkills: DetailedSkill[] = filterSkillsByCategory(employeeSkills, "common")
+  // Transform common skills
+  const commonSkills: DetailedSkill[] = (currentRoleSkills.common || [])
     .map(skill => ({
       name: skill.title,
       level: currentStates[skill.title]?.level || skill.level,
@@ -69,7 +51,8 @@ export const SkillsSummary = () => {
                    skill.level === 'advanced'
     }));
 
-  const certifications: DetailedSkill[] = filterSkillsByCategory(employeeSkills, "certification")
+  // Transform certification skills
+  const certifications: DetailedSkill[] = (currentRoleSkills.certifications || [])
     .map(skill => ({
       name: skill.title,
       level: currentStates[skill.title]?.level || skill.level,
@@ -109,16 +92,10 @@ export const SkillsSummary = () => {
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
     
-    const allExistingSkills = [
-      ...transformedSkills.map(s => s.name)
-    ];
-
-    const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
-    
-    if (newSkills.length > 0) {
+    if (skills.length > 0) {
       toast({
-        title: "Skills Added",
-        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
+        title: "Skills Updated",
+        description: `Updated ${skills.length} skill${skills.length > 1 ? 's' : ''} in your profile.`,
       });
     }
   };
