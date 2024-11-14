@@ -14,6 +14,7 @@ interface SkillsMatrixFiltersProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
   selectedSearchSkills: string[];
+  setSelectedSearchSkills: (skills: string[]) => void;
   handleSearchKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   removeSearchSkill: (skill: string) => void;
   clearSearch: () => void;

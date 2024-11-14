@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useParams } from "react-router-dom";
+import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
@@ -21,6 +24,9 @@ export const SkillsMatrix = () => {
   const [hasChanges, setHasChanges] = useState(false);
   
   const { id } = useParams<{ id: string }>();
+  const { selectedSkills } = useSelectedSkills();
+  const { toggledSkills } = useToggledSkills();
+  const observerTarget = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { saveChanges, cancelChanges, hasChanges: storeHasChanges } = useSkillsMatrixStore();
 
@@ -54,17 +60,14 @@ export const SkillsMatrix = () => {
       let matchesInterest = true;
       let matchesSearch = true;
 
-      // Level filtering
       if (selectedLevel !== 'all') {
         matchesLevel = skill.level?.toLowerCase() === selectedLevel.toLowerCase();
       }
 
-      // Interest filtering
       if (selectedInterest !== 'all') {
         matchesInterest = skill.requirement?.toLowerCase() === selectedInterest.toLowerCase();
       }
 
-      // Search filtering
       if (selectedSearchSkills.length > 0) {
         matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
@@ -92,6 +95,23 @@ export const SkillsMatrix = () => {
     setSelectedSearchSkills([]);
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
+          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [visibleItems, filteredSkills.length]);
+
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
   return (
@@ -114,6 +134,7 @@ export const SkillsMatrix = () => {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedSearchSkills={selectedSearchSkills}
+          setSelectedSearchSkills={setSelectedSearchSkills}
           handleSearchKeyDown={handleSearchKeyDown}
           removeSearchSkill={removeSearchSkill}
           clearSearch={clearSearch}
@@ -123,6 +144,15 @@ export const SkillsMatrix = () => {
           filteredSkills={paginatedSkills}
           setHasChanges={setHasChanges}
         />
+        
+        {visibleItems < filteredSkills.length && (
+          <div 
+            ref={observerTarget} 
+            className="h-10 flex items-center justify-center"
+          >
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+          </div>
+        )}
       </Card>
     </div>
   );
