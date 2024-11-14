@@ -16,12 +16,14 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
   const [required, setRequired] = useState<string>("required");
 
   useEffect(() => {
-    // Log all skills' states when component mounts
-    console.log("All Skills States:", {
-      skillTitle,
-      currentState: currentStates[skillTitle],
-      originalState: originalStates[skillTitle]
-    });
+    // Create a comprehensive log of all skills' states
+    const allSkillsStates = Object.entries(currentStates).map(([skill, state]) => ({
+      skill,
+      level: state.level,
+      requirement: state.requirement
+    }));
+    
+    console.log("Complete Skills Matrix State:", allSkillsStates);
     
     const currentState = currentStates[skillTitle];
     const originalState = originalStates[skillTitle];
