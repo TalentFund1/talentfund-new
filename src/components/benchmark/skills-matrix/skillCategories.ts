@@ -3,32 +3,47 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
     return skills;
   }
 
-  // Define category types
-  const categoryTypes = {
+  // Define category mappings based on subcategories
+  const categoryMappings = {
     specialized: [
+      "AI & ML",
+      "ML Frameworks",
+      "AI Applications",
+      "Backend Development",
+      "Data Management",
+      "Software Architecture",
+      "Container Orchestration",
       "Frontend Frameworks",
       "Programming Languages",
       "State Management",
-      "API Integration",
       "Build Tools",
-      "Design"
+      "Design",
+      "Architecture"
     ],
     common: [
-      "Frontend Development",
-      "Web Development",
       "Soft Skills",
-      "Development Tools",
+      "Communication",
       "Development Practices",
       "Project Management",
-      "Communication"
+      "Frontend Development",
+      "Web Development",
+      "Development Tools",
+      "Leadership",
+      "Management"
     ],
     certification: [
       "Cloud Certification",
+      "AI Certification",
+      "Container Certification",
+      "Database Certification",
       "Web Development Certification",
       "Development Certification",
       "Frontend Certification",
       "Programming Certification",
-      "Web Accessibility"
+      "Web Accessibility",
+      "Management Certification",
+      "Agile Certification",
+      "IT Service Management"
     ]
   };
 
@@ -36,11 +51,11 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
     const subcategory = skill.subcategory;
     switch (category) {
       case "specialized":
-        return categoryTypes.specialized.includes(subcategory);
+        return categoryMappings.specialized.includes(subcategory);
       case "common":
-        return categoryTypes.common.includes(subcategory);
+        return categoryMappings.common.includes(subcategory);
       case "certification":
-        return categoryTypes.certification.includes(subcategory);
+        return categoryMappings.certification.includes(subcategory);
       default:
         return false;
     }
