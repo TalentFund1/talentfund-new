@@ -1,3 +1,4 @@
+```tsx
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
@@ -26,7 +27,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return savedCategory || "all";
   });
   const { getTrackForRole } = useTrack();
-  const { saveChanges, cancelChanges, hasChanges } = useCompetencyStore();
+  const { saveChanges, cancelChanges, hasChanges, get } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
 
@@ -64,6 +65,13 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
   };
 
+  const getAdvancedLevelCount = (skillName: string) => {
+    const skillStates = get().currentStates[skillName] || {};
+    return Object.values(skillStates).filter(state => 
+      state?.level?.toLowerCase() === 'advanced'
+    ).length;
+  };
+
   const getSkillsByCategory = () => {
     const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
     
@@ -71,27 +79,29 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       return currentRoleSkills[category]?.filter(skill => toggledSkills.has(skill.title)) || [];
     };
     
+    let filteredSkills;
     if (selectedCategory === "all") {
-      return [
+      filteredSkills = [
         ...filterSkillsByCategory('specialized'),
         ...filterSkillsByCategory('common'),
         ...filterSkillsByCategory('certifications')
       ];
+    } else if (selectedCategory === "specialized") {
+      filteredSkills = filterSkillsByCategory('specialized');
+    } else if (selectedCategory === "common") {
+      filteredSkills = filterSkillsByCategory('common');
+    } else if (selectedCategory === "certification") {
+      filteredSkills = filterSkillsByCategory('certifications');
+    } else {
+      filteredSkills = [];
     }
-    
-    if (selectedCategory === "specialized") {
-      return filterSkillsByCategory('specialized');
-    }
-    
-    if (selectedCategory === "common") {
-      return filterSkillsByCategory('common');
-    }
-    
-    if (selectedCategory === "certification") {
-      return filterSkillsByCategory('certifications');
-    }
-    
-    return [];
+
+    // Sort skills by advanced level count
+    return filteredSkills.sort((a, b) => {
+      const aAdvancedCount = getAdvancedLevelCount(a.title);
+      const bAdvancedCount = getAdvancedLevelCount(b.title);
+      return bAdvancedCount - aAdvancedCount;
+    });
   };
 
   const getSkillDetails = (skillName: string, level: string) => {
@@ -188,3 +198,4 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     </div>
   );
 };
+```
