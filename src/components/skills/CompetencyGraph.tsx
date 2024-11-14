@@ -94,9 +94,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const getSkillDetails = (skillName: string, level: string) => {
     const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
     const allSkills = [
-      ...(currentRoleSkills.specialized || []),
-      ...(currentRoleSkills.common || []),
-      ...(currentRoleSkills.certifications || [])
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
     ];
     
     const skill = allSkills.find(s => s.title === skillName);
