@@ -15,8 +15,6 @@ export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
   
@@ -52,7 +50,6 @@ export const SkillsMatrix = () => {
     .filter(skill => {
       let matchesLevel = true;
       let matchesInterest = true;
-      let matchesSearch = true;
 
       const currentSkillState = currentStates[skill.title];
       const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
@@ -82,15 +79,7 @@ export const SkillsMatrix = () => {
         }
       }
 
-      if (selectedSearchSkills.length > 0) {
-        matchesSearch = selectedSearchSkills.some(term => 
-          skill.title.toLowerCase().includes(term.toLowerCase())
-        );
-      } else if (searchTerm) {
-        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
-      }
-
-      return matchesLevel && matchesInterest && matchesSearch;
+      return matchesLevel && matchesInterest;
     })
     .sort((a, b) => {
       const aState = currentStates[a.title];
@@ -113,22 +102,6 @@ export const SkillsMatrix = () => {
       // Finally sort alphabetically by title
       return a.title.localeCompare(b.title);
     });
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchTerm.trim()) {
-      setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
-      setSearchTerm("");
-    }
-  };
-
-  const removeSearchSkill = (skill: string) => {
-    setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
-  };
-
-  const clearSearch = () => {
-    setSearchTerm("");
-    setSelectedSearchSkills([]);
-  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -169,13 +142,6 @@ export const SkillsMatrix = () => {
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-          handleSearchKeyDown={handleSearchKeyDown}
-          removeSearchSkill={removeSearchSkill}
-          clearSearch={clearSearch}
         />
 
         <SkillsMatrixTable 
