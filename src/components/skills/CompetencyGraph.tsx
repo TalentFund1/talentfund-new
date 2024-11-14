@@ -55,8 +55,8 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     });
   };
 
-  const getLevelsForTrack = () => {
-    return track === "Professional" 
+  const getLevelsForTrack = (currentTrack: string) => {
+    return currentTrack === "Professional" 
       ? ["P1", "P2", "P3", "P4", "P5", "P6"] 
       : ["M3", "M4", "M5", "M6"];
   };
@@ -109,7 +109,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const skills = getSkillsByCategory();
-  const levels = getLevelsForTrack();
+  const levels = getLevelsForTrack(track);
   const uniqueSkills = skills.map(skill => skill.title).sort();
 
   return (
