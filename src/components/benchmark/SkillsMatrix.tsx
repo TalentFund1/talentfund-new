@@ -60,8 +60,11 @@ export const SkillsMatrix = () => {
       let matchesInterest = true;
       let matchesSearch = true;
 
+      // Normalize level comparison
       if (selectedLevel !== 'all') {
-        matchesLevel = skill.level?.toLowerCase() === selectedLevel.toLowerCase();
+        const skillLevel = (skill.level || '').toLowerCase();
+        const selectedLevelLower = selectedLevel.toLowerCase();
+        matchesLevel = skillLevel === selectedLevelLower;
       }
 
       if (selectedInterest !== 'all') {
