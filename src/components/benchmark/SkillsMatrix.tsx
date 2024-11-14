@@ -46,19 +46,18 @@ export const SkillsMatrix = () => {
 
       // Filter by skill level
       if (selectedLevel !== 'all') {
-        const skillLevel = skill.level?.toLowerCase() || 'unspecified';
-        if (selectedLevel === 'advanced' && skillLevel !== 'advanced') return false;
-        if (selectedLevel === 'intermediate' && skillLevel !== 'intermediate') return false;
-        if (selectedLevel === 'beginner' && skillLevel !== 'beginner') return false;
-        if (selectedLevel === 'unspecified' && skillLevel !== 'unspecified') return false;
+        const skillLevel = skill.level.toLowerCase();
+        if (skillLevel !== selectedLevel.toLowerCase()) {
+          return false;
+        }
       }
 
       // Filter by skill interest/requirement
       if (selectedInterest !== 'all') {
         const requirement = skill.requirement?.toLowerCase() || 'unknown';
-        if (selectedInterest === 'required' && requirement !== 'required' && requirement !== 'skill_goal') return false;
-        if (selectedInterest === 'not-interested' && requirement !== 'not-interested') return false;
-        if (selectedInterest === 'unknown' && requirement !== 'unknown') return false;
+        if (requirement !== selectedInterest.toLowerCase()) {
+          return false;
+        }
       }
 
       if (isRoleBenchmarkTab) {
