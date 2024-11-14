@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { filterSkillsByCategory, sortSkillsByPriority } from "./skills-matrix/skillCategories";
+import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
