@@ -15,8 +15,8 @@ const ITEMS_PER_PAGE = 10;
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedLevel, setSelectedLevel] = useState("all");
-  const [selectedInterest, setSelectedInterest] = useState("all");
+  const [selectedLevel, setSelectedLevel] = useState("advanced"); // Set default to advanced
+  const [selectedInterest, setSelectedInterest] = useState("required"); // Set default to required (Skill Goal)
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
@@ -44,8 +44,6 @@ export const SkillsMatrix = () => {
 
         if (selectedLevelLower === 'unspecified') {
           matchesLevel = !skillLevel || skillLevel === 'unspecified';
-        } else if (selectedLevelLower === 'intermediate') {
-          matchesLevel = skillLevel === 'intermediate';
         } else {
           matchesLevel = skillLevel === selectedLevelLower;
         }
@@ -56,11 +54,11 @@ export const SkillsMatrix = () => {
         const requirement = (currentSkillState?.requirement || skill.requirement || '').toLowerCase();
         
         switch (selectedInterest.toLowerCase()) {
-          case 'skill_goal':
+          case 'required':
             matchesInterest = requirement === 'required' || requirement === 'skill_goal';
             break;
-          case 'not_interested':
-            matchesInterest = requirement === 'not_interested';
+          case 'not-interested':
+            matchesInterest = requirement === 'not-interested';
             break;
           case 'unknown':
             matchesInterest = !requirement || requirement === 'unknown';
