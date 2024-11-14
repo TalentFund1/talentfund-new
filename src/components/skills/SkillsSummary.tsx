@@ -8,6 +8,7 @@ import { initialSkills, getEmployeeSkills } from "../benchmark/skills-matrix/ini
 import { categorizeSkill } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
+import { SkillGoalsSection } from "./SkillGoalsSection";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
@@ -140,6 +141,8 @@ export const SkillsSummary = () => {
         onSkillsChange={handleSkillsChange}
         onClearAll={handleClearAll}
       />
+      
+      <SkillGoalsSection />
       
       <SkillsContainer
         specializedSkills={filteredSpecializedSkills}
