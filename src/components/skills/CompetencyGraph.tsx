@@ -33,7 +33,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { id: urlRoleId } = useParams<{ id: string }>();
 
   const currentRoleId = propRoleId || urlRoleId || "123";
-  const track = initialTrack || getTrackForRole(currentRoleId) || "Professional";
+  const [track, setTrack] = useState<"Professional" | "Managerial">(
+    initialTrack || getTrackForRole(currentRoleId) || "Professional"
+  );
   const jobTitle = jobTitles[currentRoleId] || "AI Engineer";
 
   useEffect(() => {
@@ -54,6 +56,10 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       title: "Changes cancelled",
       description: "Your changes have been discarded.",
     });
+  };
+
+  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
+    setTrack(newTrack);
   };
 
   const getLevelsForTrack = () => {
