@@ -102,11 +102,28 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       filteredSkills = [];
     }
 
-    // Sort skills by advanced level count
+    // Sort skills by advanced level count and predefined order
+    const skillOrder = {
+      "Deep Learning": 5,
+      "Computer Vision": 4,
+      "Machine Learning": 3,
+      "AWS Certified Machine Learning - Specialty": 2,
+      "Problem Solving": 1
+    };
+
     return filteredSkills.sort((a, b) => {
       const aAdvancedCount = getAdvancedLevelCount(a.title);
       const bAdvancedCount = getAdvancedLevelCount(b.title);
-      return bAdvancedCount - aAdvancedCount;
+      
+      // First sort by advanced count
+      if (bAdvancedCount !== aAdvancedCount) {
+        return bAdvancedCount - aAdvancedCount;
+      }
+      
+      // If advanced counts are equal, sort by predefined order
+      const aOrder = skillOrder[a.title as keyof typeof skillOrder] || 0;
+      const bOrder = skillOrder[b.title as keyof typeof skillOrder] || 0;
+      return bOrder - aOrder;
     });
   };
 
