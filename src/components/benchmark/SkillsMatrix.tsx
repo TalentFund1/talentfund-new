@@ -31,10 +31,6 @@ export const SkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
 
-  useEffect(() => {
-    setHasChanges(storeHasChanges);
-  }, [storeHasChanges]);
-
   const handleSave = () => {
     saveChanges();
     setHasChanges(false);
@@ -60,13 +56,15 @@ export const SkillsMatrix = () => {
       let matchesSearch = true;
 
       if (selectedLevel !== 'all') {
+        // Get the current level from the store, fallback to original level if not in store
         const currentSkillState = currentStates[skill.title];
-        const currentLevel = currentSkillState?.level || skill.level;
-        
-        if (selectedLevel === 'unspecified') {
-          matchesLevel = !currentLevel || currentLevel.toLowerCase() === 'unspecified';
+        const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
+        const selectedLevelLower = selectedLevel.toLowerCase();
+
+        if (selectedLevelLower === 'unspecified') {
+          matchesLevel = !skillLevel || skillLevel === 'unspecified';
         } else {
-          matchesLevel = currentLevel?.toLowerCase() === selectedLevel.toLowerCase();
+          matchesLevel = skillLevel === selectedLevelLower;
         }
       }
 
