@@ -1,7 +1,7 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
-import { Heart, X, CircleHelp } from "lucide-react";
+import { Heart, X, CircleHelp, Star, Shield, Target, CircleDashed, Check } from "lucide-react";
 import { useSkillsMatrix } from "./skills-matrix/SkillsMatrixContext";
 
 interface SkillLevelCellProps {
