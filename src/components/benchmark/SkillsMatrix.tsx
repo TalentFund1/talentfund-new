@@ -9,6 +9,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { SkillsMatrixSearch } from "./skills-matrix/SkillsMatrixSearch";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -79,11 +80,7 @@ export const SkillsMatrix = () => {
       const requirement = (currentSkillState?.requirement || skill.requirement || '').toLowerCase();
 
       if (selectedLevel !== 'all') {
-        if (selectedLevel === 'unspecified') {
-          matchesLevel = !skillLevel || skillLevel === 'unspecified';
-        } else {
-          matchesLevel = skillLevel === selectedLevel.toLowerCase();
-        }
+        matchesLevel = skillLevel === selectedLevel.toLowerCase();
       }
 
       if (selectedInterest !== 'all') {
@@ -122,15 +119,12 @@ export const SkillsMatrix = () => {
       const aInterest = aState?.requirement || a.requirement || 'unknown';
       const bInterest = bState?.requirement || b.requirement || 'unknown';
 
-      // First sort by level priority
       const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
-      // Then sort by interest priority
       const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
       if (interestDiff !== 0) return interestDiff;
 
-      // Finally sort alphabetically by title
       return a.title.localeCompare(b.title);
     });
 
@@ -166,13 +160,7 @@ export const SkillsMatrix = () => {
           onCancel={cancelChanges}
         />
         
-        <SkillsMatrixFilters 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
+        <SkillsMatrixSearch
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedSearchSkills={selectedSearchSkills}
@@ -180,6 +168,15 @@ export const SkillsMatrix = () => {
           handleSearchKeyDown={handleSearchKeyDown}
           removeSearchSkill={removeSearchSkill}
           clearSearch={clearSearch}
+        />
+        
+        <SkillsMatrixFilters 
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
         />
 
         <SkillsMatrixTable 
