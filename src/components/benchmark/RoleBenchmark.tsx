@@ -9,6 +9,8 @@ import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { MissingSkills } from "./MissingSkills";
+import { CompetencyGraph } from "../skills/CompetencyGraph";
+import { Card } from "../ui/card";
 
 const roles = {
   "123": "AI Engineer",
@@ -91,6 +93,13 @@ export const RoleBenchmark = () => {
         />
 
         <MissingSkills roleId={selectedRole} employeeId="123" />
+
+        <Card className="p-6 bg-white">
+          <CompetencyGraph 
+            track={currentTrack as "Professional" | "Managerial"}
+            roleId={selectedRole}
+          />
+        </Card>
       </div>
     </div>
   );
