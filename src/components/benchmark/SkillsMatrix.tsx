@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useParams } from "react-router-dom";
@@ -60,11 +60,16 @@ export const SkillsMatrix = () => {
       let matchesInterest = true;
       let matchesSearch = true;
 
-      // Normalize level comparison
+      // Handle level filtering with proper null/undefined checks
       if (selectedLevel !== 'all') {
-        const skillLevel = (skill.level || '').toLowerCase();
+        const skillLevel = skill.level?.toLowerCase() || 'unspecified';
         const selectedLevelLower = selectedLevel.toLowerCase();
-        matchesLevel = skillLevel === selectedLevelLower;
+        
+        if (selectedLevelLower === 'unspecified') {
+          matchesLevel = !skill.level || skill.level.toLowerCase() === 'unspecified';
+        } else {
+          matchesLevel = skillLevel === selectedLevelLower;
+        }
       }
 
       if (selectedInterest !== 'all') {
