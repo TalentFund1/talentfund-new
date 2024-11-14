@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { BaseSkill } from "./types";
-import { useSkillsMatrix } from "../benchmark/skills-matrix/SkillsMatrixContext";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 interface SkillBadgeProps {
   skill: BaseSkill;
@@ -18,7 +18,7 @@ export const SkillBadge = ({
   isSkillGoal,
   isRoleBenchmark = false 
 }: SkillBadgeProps) => {
-  const { currentStates } = useSkillsMatrix();
+  const { currentStates } = useSkillsMatrixStore();
   const skillState = currentStates[skill.name];
 
   const getLevelColor = (level: string) => {

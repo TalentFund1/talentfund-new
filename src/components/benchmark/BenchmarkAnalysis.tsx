@@ -6,14 +6,14 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { useSkillsMatrix } from "./skills-matrix/SkillsMatrixContext";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   const [selectedRole, setSelectedRole] = useState<string>(id || "123");
-  const { currentStates } = useSkillsMatrix();
+  const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "123");
   
   // Get all skills for the selected role

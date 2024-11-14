@@ -6,7 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
 import { initialSkills, getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { categorizeSkill } from "../benchmark/skills-matrix/skillCategories";
-import { useSkillsMatrix } from "../benchmark/skills-matrix/SkillsMatrixContext";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 
 export const SkillsSummary = () => {
@@ -25,7 +25,7 @@ export const SkillsSummary = () => {
   const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
   const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { currentStates } = useSkillsMatrix();
+  const { currentStates } = useSkillsMatrixStore();
 
   // Get skills for the current employee only
   const employeeSkills = getEmployeeSkills(id || "") as EmployeeSkill[];
