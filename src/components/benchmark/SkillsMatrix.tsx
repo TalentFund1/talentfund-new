@@ -60,14 +60,18 @@ export const SkillsMatrix = () => {
       let matchesInterest = true;
       let matchesSearch = true;
 
-      // Handle level filtering with proper null/undefined checks
       if (selectedLevel !== 'all') {
-        const skillLevel = skill.level?.toLowerCase() || 'unspecified';
+        const skillLevel = skill.level?.toLowerCase() || '';
         const selectedLevelLower = selectedLevel.toLowerCase();
-        
+
         if (selectedLevelLower === 'unspecified') {
-          matchesLevel = !skill.level || skill.level.toLowerCase() === 'unspecified';
+          // For unspecified, match if level is empty, null, undefined, or explicitly "unspecified"
+          matchesLevel = !skillLevel || skillLevel === 'unspecified';
+        } else if (selectedLevelLower === 'advanced') {
+          // For advanced, exact match required
+          matchesLevel = skillLevel === 'advanced';
         } else {
+          // For other levels (beginner, intermediate)
           matchesLevel = skillLevel === selectedLevelLower;
         }
       }
