@@ -1,6 +1,7 @@
-import { RequirementSection } from "./RequirementSection";
-import { useParams } from "react-router-dom";
-import { roleSkills } from "../skills/data/roleSkills";
+import { roleSkills } from '../skills/data/roleSkills';
+import { useParams } from 'react-router-dom';
+import { useToggledSkills } from '../skills/context/ToggledSkillsContext';
+import { filterSkillsByCategory } from './skills-matrix/skillCategories';
 
 interface CategorySectionProps {
   selectedCategory: string;
@@ -23,19 +24,20 @@ export const CategorySection = ({
   const { id } = useParams<{ id: string }>();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
-    return skills.filter(skill => toggledSkills.has(skill.title)).length;
-  };
+  // Get all skills for the current role
+  const allSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
 
+  // Filter skills by category and count them
   const skillCounts: SkillCounts = {
-    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
-    common: getToggledSkillsCount(currentRoleSkills.common || []),
-    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
-    all: 0 // Initialize with 0
+    specialized: filterSkillsByCategory(allSkills, "specialized").length,
+    common: filterSkillsByCategory(allSkills, "common").length,
+    certification: filterSkillsByCategory(allSkills, "certification").length,
+    all: allSkills.length
   };
-
-  // Calculate total after individual counts are set
-  skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
 
   const categories = [
     { id: "all", title: "All Categories", count: skillCounts.all },
@@ -47,14 +49,28 @@ export const CategorySection = ({
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
       {categories.map((category) => (
-        <RequirementSection
+        <button
           key={category.id}
-          title={category.title}
-          count={category.count}
-          skills={[]}
-          isSelected={selectedCategory === category.id}
           onClick={() => onCategorySelect(category.id)}
-        />
+          className={`rounded-lg p-4 transition-colors ${
+            selectedCategory === category.id
+              ? 'bg-primary-accent/5 border border-primary-accent'
+              : 'bg-background border border-border hover:border-primary-accent/50'
+          }`}
+        >
+          <div className="flex flex-col items-start">
+            <span className={`text-sm font-semibold mb-1 ${
+              selectedCategory === category.id
+                ? 'text-primary-accent'
+                : 'text-foreground group-hover:text-primary-accent'
+            }`}>
+              {category.title}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {category.count} skills
+            </span>
+          </div>
+        </button>
       ))}
     </div>
   );
