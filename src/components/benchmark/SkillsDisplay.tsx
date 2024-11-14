@@ -69,12 +69,11 @@ export const SkillsDisplay = ({
           level: matrixState?.level || requirements?.level || 'unspecified',
           requirement: matrixState?.required || requirements?.requirement || 'preferred'
         };
-      })
-      .sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
+      });
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
-    return skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
+    const categorized = skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
       if (skill.requirement === 'required') {
         acc.required.push(skill);
       } else {
@@ -82,6 +81,12 @@ export const SkillsDisplay = ({
       }
       return acc;
     }, { required: [], preferred: [] });
+
+    // Sort both arrays by level priority
+    categorized.required.sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
+    categorized.preferred.sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
+
+    return categorized;
   };
 
   const skills = getSkillsForCategory();
