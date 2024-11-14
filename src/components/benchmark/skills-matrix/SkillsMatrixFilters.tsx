@@ -1,8 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
 import { useBenchmarkSearch } from "@/components/skills/context/BenchmarkSearchContext";
 
 interface SkillsMatrixFiltersProps {
@@ -22,48 +19,8 @@ export const SkillsMatrixFilters = ({
   selectedInterest,
   setSelectedInterest,
 }: SkillsMatrixFiltersProps) => {
-  const { benchmarkSearchSkills, setBenchmarkSearchSkills } = useBenchmarkSearch();
-  
-  const handleClearAll = () => {
-    setBenchmarkSearchSkills([]);
-  };
-
-  const removeSearchSkill = (skill: string) => {
-    setBenchmarkSearchSkills((prev: string[]) => prev.filter(s => s !== skill));
-  };
-
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-2">
-        {benchmarkSearchSkills.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {benchmarkSearchSkills.map((skill, index) => (
-              <Badge 
-                key={index} 
-                variant="secondary"
-                className="flex items-center gap-1 bg-background"
-              >
-                {skill}
-                <button
-                  onClick={() => removeSearchSkill(skill)}
-                  className="ml-1 hover:text-destructive"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            ))}
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={handleClearAll}
-              className="text-sm"
-            >
-              Clear All
-            </Button>
-          </div>
-        )}
-      </div>
-
       <div className="flex justify-between items-start gap-4">
         <div className="flex gap-4">
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
