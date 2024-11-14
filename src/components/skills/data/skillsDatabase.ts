@@ -48,13 +48,16 @@ export const getSkillRequirements = (
         "TensorFlow": { level: "unspecified", requirement: "preferred" }
       },
       P4: {
-        "Computer Vision": { level: "advanced", requirement: "required" },
-        "Deep Learning": { level: "advanced", requirement: "required" },
-        "Machine Learning": { level: "intermediate", requirement: "required" },
-        "Natural Language Processing": { level: "intermediate", requirement: "required" },
-        "PyTorch": { level: "beginner", requirement: "required" },
-        "Python": { level: "unspecified", requirement: "required" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" }
+        "Node.js": { level: "advanced", requirement: "required" },
+        "Database Design": { level: "advanced", requirement: "required" },
+        "API Development": { level: "advanced", requirement: "required" },
+        "System Architecture": { level: "advanced", requirement: "required" },
+        "Kubernetes": { level: "advanced", requirement: "required" },
+        "Problem Solving": { level: "advanced", requirement: "required" },
+        "Code Review": { level: "advanced", requirement: "required" },
+        "Agile Methodologies": { level: "advanced", requirement: "required" },
+        "AWS Certified Solutions Architect": { level: "advanced", requirement: "required" },
+        "Kubernetes Administrator (CKA)": { level: "advanced", requirement: "required" }
       },
       P5: {
         "Computer Vision": { level: "advanced", requirement: "required" },
