@@ -17,20 +17,20 @@ interface SkillCellProps {
 export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillCellProps) => {
   const { currentStates, setSkillState } = useCompetencyStore();
   const currentState = currentStates[skillName]?.[levelKey] || {
-    level: details.level === "-" ? "unspecified" : details.level.toLowerCase(),
-    required: details.required === "-" ? "preferred" : details.required.toLowerCase(),
+    level: "unspecified",
+    required: "preferred",
   };
 
   useEffect(() => {
     if (!currentStates[skillName]?.[levelKey]) {
       setSkillState(
         skillName,
-        details.level === "-" ? "unspecified" : details.level.toLowerCase(),
+        "unspecified",
         levelKey,
-        details.required === "-" ? "preferred" : details.required.toLowerCase()
+        "preferred"
       );
     }
-  }, [skillName, details, currentStates, setSkillState, levelKey]);
+  }, [skillName, currentStates, setSkillState, levelKey]);
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
