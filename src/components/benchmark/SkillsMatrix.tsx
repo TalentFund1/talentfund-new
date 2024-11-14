@@ -9,6 +9,8 @@ import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useToast } from "@/components/ui/use-toast";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,18 +27,32 @@ export const SkillsMatrix = () => {
   const { selectedSkills } = useSelectedSkills();
   const { toggledSkills } = useToggledSkills();
   const observerTarget = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+  const { saveChanges, cancelChanges, hasChanges: storeHasChanges } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
 
   const handleSave = () => {
+    saveChanges();
     setHasChanges(false);
-    // Add save logic here
+    toast({
+      title: "Changes saved successfully",
+      description: "Your skill matrix has been updated.",
+    });
   };
 
   const handleCancel = () => {
+    cancelChanges();
     setHasChanges(false);
-    // Add cancel logic here
+    toast({
+      title: "Changes discarded",
+      description: "Your skill matrix has been restored to its previous state.",
+    });
   };
+
+  useEffect(() => {
+    setHasChanges(storeHasChanges);
+  }, [storeHasChanges]);
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
@@ -44,17 +60,14 @@ export const SkillsMatrix = () => {
       let matchesInterest = true;
       let matchesSearch = true;
 
-      // Filter by skill level
       if (selectedLevel !== 'all') {
         matchesLevel = skill.level?.toLowerCase() === selectedLevel.toLowerCase();
       }
 
-      // Filter by skill interest/requirement
       if (selectedInterest !== 'all') {
         matchesInterest = skill.requirement?.toLowerCase() === selectedInterest.toLowerCase();
       }
 
-      // Filter by search term
       if (selectedSearchSkills.length > 0) {
         matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())

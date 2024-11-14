@@ -17,7 +17,7 @@ interface SkillsMatrixState {
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       originalStates: {},
       currentStates: {},
       hasChanges: false,
@@ -27,9 +27,13 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             ...state.currentStates,
             [skillTitle]: { level, requirement },
           };
+          
+          // Compare stringified versions of the states to detect changes
+          const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
+          
           return { 
             currentStates: newStates,
-            hasChanges: JSON.stringify(newStates) !== JSON.stringify(state.originalStates)
+            hasChanges
           };
         }),
       saveChanges: () =>

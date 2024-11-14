@@ -5,6 +5,7 @@ import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons"
 import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { Heart, X, CircleHelp } from "lucide-react";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -16,6 +17,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
   const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
+  const { setSkillState } = useSkillsMatrixStore();
 
   useEffect(() => {
     const state = getCurrentState();
@@ -23,25 +25,17 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
       setLevel(state.level);
       setRequired(state.requirement);
     }
-
-    // Log all states when component mounts
-    console.log("All Skills States:", Object.entries(currentStates).map(([skill, state]) => ({
-      skill,
-      level: state.level,
-      requirement: state.requirement,
-      label: state.requirement === 'required' ? 'Skill Goal' : 
-             state.requirement === 'not-interested' ? 'Not Interested' : 
-             'Unknown'
-    })));
   }, [skillTitle, currentStates]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
+    setSkillState(skillTitle, newLevel, required);
     onLevelChange?.(newLevel, required);
   };
 
   const handleRequirementChange = (newRequired: string) => {
     setRequired(newRequired);
+    setSkillState(skillTitle, level, newRequired);
     onLevelChange?.(level, newRequired);
   };
 
