@@ -106,12 +106,12 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">10 out of {totalSkillsCount}</span>
+                <span className="text-sm text-foreground">9 out of {totalSkillsCount}</span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(10/totalSkillsCount) * 100}%` }} 
+                  style={{ width: `${(9/totalSkillsCount) * 100}%` }} 
                 />
               </div>
             </div>
