@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart, CircleDashed, X, CircleHelp, Check } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed, X, CircleHelp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
