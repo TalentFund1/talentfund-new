@@ -10,8 +10,10 @@ const levelPriority: Record<string, number> = {
 
 const requirementPriority: Record<string, number> = {
   'required': 0,    // Skill Goal
-  'not-interested': 1,
-  'unknown': 2
+  'skill_goal': 0,  // Also Skill Goal
+  'preferred': 1,
+  'not_interested': 2,
+  'unknown': 3
 };
 
 // Specialized Skills - AI & ML
@@ -40,20 +42,22 @@ const certificationSkills = [
 
 export const sortSkillsByPriority = (skills: any[]) => {
   return [...skills].sort((a, b) => {
-    // First compare by level
-    const levelA = a.level?.toLowerCase() || 'unspecified';
-    const levelB = b.level?.toLowerCase() || 'unspecified';
+    // First compare by level (most important)
+    const levelA = (a.level || 'unspecified').toLowerCase();
+    const levelB = (b.level || 'unspecified').toLowerCase();
     
-    if (levelPriority[levelA] !== levelPriority[levelB]) {
-      return levelPriority[levelA] - levelPriority[levelB];
+    const levelCompare = levelPriority[levelA] - levelPriority[levelB];
+    if (levelCompare !== 0) {
+      return levelCompare;
     }
     
     // If levels are equal, compare by requirement
-    const reqA = a.requirement?.toLowerCase() || 'unknown';
-    const reqB = b.requirement?.toLowerCase() || 'unknown';
+    const reqA = (a.requirement || 'unknown').toLowerCase();
+    const reqB = (b.requirement || 'unknown').toLowerCase();
     
-    if (requirementPriority[reqA] !== requirementPriority[reqB]) {
-      return requirementPriority[reqA] - requirementPriority[reqB];
+    const reqCompare = requirementPriority[reqA] - requirementPriority[reqB];
+    if (reqCompare !== 0) {
+      return reqCompare;
     }
     
     // If both level and requirement are equal, sort by title
