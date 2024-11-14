@@ -2,14 +2,17 @@ import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 
+interface Skill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement: string;
+}
+
 interface SkillsMatrixTableProps {
-  filteredSkills: Array<{
-    title: string;
-    subcategory: string;
-    level: string;
-    growth: string;
-    confidence: string;
-  }>;
+  filteredSkills: Skill[];
 }
 
 export const SkillsMatrixTable = ({ filteredSkills }: SkillsMatrixTableProps) => {

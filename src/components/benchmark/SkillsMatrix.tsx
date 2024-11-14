@@ -14,7 +14,6 @@ import {
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
-import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
@@ -22,11 +21,10 @@ import { useParams, useLocation } from "react-router-dom";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { Badge } from "../ui/badge";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useToast } from "@/hooks/use-toast";
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
@@ -34,13 +32,13 @@ export const SkillsMatrix = () => {
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
   const { toggledSkills } = useToggledSkills();
+  const { toast } = useToast();
 
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
-      // Only show skills that have been toggled on in the skill profile
       if (!toggledSkills.has(skill.title)) {
         return false;
       }
@@ -61,11 +59,6 @@ export const SkillsMatrix = () => {
       );
     });
 
-  const handleRowsPerPageChange = (value: string) => {
-    setRowsPerPage(Number(value));
-    setPage(1);
-  };
-
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
       setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
@@ -82,18 +75,29 @@ export const SkillsMatrix = () => {
     setSelectedSearchSkills([]);
   };
 
-  const startIndex = (page - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
-  const paginatedSkills = filteredSkills.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(filteredSkills.length / rowsPerPage);
+  const handleSave = () => {
+    saveChanges();
+    toast({
+      title: "Changes saved",
+      description: "Your changes have been saved successfully."
+    });
+  };
+
+  const handleCancel = () => {
+    cancelChanges();
+    toast({
+      title: "Changes cancelled",
+      description: "Your changes have been discarded."
+    });
+  };
 
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <SkillsMatrixHeader 
           hasChanges={hasChanges}
-          onSave={saveChanges}
-          onCancel={cancelChanges}
+          onSave={handleSave}
+          onCancel={handleCancel}
         />
         <Separator className="my-4" />
         
@@ -101,6 +105,13 @@ export const SkillsMatrix = () => {
           <SkillsMatrixFilters 
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedSearchSkills={selectedSearchSkills}
+            setSelectedSearchSkills={setSelectedSearchSkills}
+            handleSearchKeyDown={handleSearchKeyDown}
+            removeSearchSkill={removeSearchSkill}
+            clearSearch={clearSearch}
           />
         ) : (
           <div className="space-y-4">
@@ -169,18 +180,7 @@ export const SkillsMatrix = () => {
         )}
 
         <SkillsMatrixTable 
-          filteredSkills={paginatedSkills}
-        />
-        
-        <SkillsMatrixPagination 
-          rowsPerPage={rowsPerPage}
-          handleRowsPerPageChange={handleRowsPerPageChange}
-          startIndex={startIndex}
-          endIndex={endIndex}
-          totalSkills={filteredSkills.length}
-          currentPage={page}
-          totalPages={totalPages}
-          handlePageChange={setPage}
+          filteredSkills={filteredSkills}
         />
       </Card>
     </div>
