@@ -39,16 +39,18 @@ export const getSkillRequirements = (
         "TensorFlow": { level: "unspecified", requirement: "preferred" }
       },
       P3: {
-        "Computer Vision": { level: "intermediate", requirement: "required" },
-        "Deep Learning": { level: "advanced", requirement: "required" },
-        "Machine Learning": { level: "intermediate", requirement: "required" },
-        "Natural Language Processing": { level: "beginner", requirement: "preferred" },
-        "PyTorch": { level: "unspecified", requirement: "preferred" },
-        "Python": { level: "unspecified", requirement: "preferred" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" }
+        "Node.js": { level: "unspecified", requirement: "preferred" },
+        "Database Design": { level: "unspecified", requirement: "preferred" },
+        "API Development": { level: "unspecified", requirement: "required" },
+        "System Architecture": { level: "unspecified", requirement: "preferred" },
+        "Kubernetes": { level: "unspecified", requirement: "preferred" },
+        "Problem Solving": { level: "unspecified", requirement: "preferred" },
+        "Code Review": { level: "unspecified", requirement: "preferred" },
+        "Agile Methodologies": { level: "unspecified", requirement: "preferred" },
+        "AWS Certified Solutions Architect": { level: "unspecified", requirement: "required" },
+        "Kubernetes Administrator (CKA)": { level: "unspecified", requirement: "preferred" }
       },
       P4: {
-        // Backend Engineer P4
         "Node.js": { level: "advanced", requirement: "preferred" },
         "Database Design": { level: "advanced", requirement: "preferred" },
         "API Development": { level: "advanced", requirement: "required" },
@@ -58,23 +60,7 @@ export const getSkillRequirements = (
         "Code Review": { level: "advanced", requirement: "preferred" },
         "Agile Methodologies": { level: "advanced", requirement: "preferred" },
         "AWS Certified Solutions Architect": { level: "advanced", requirement: "required" },
-        "Kubernetes Administrator (CKA)": { level: "advanced", requirement: "preferred" },
-        // AI Engineer P4
-        "Machine Learning": { level: "advanced", requirement: "required" },
-        "Deep Learning": { level: "advanced", requirement: "required" },
-        "TensorFlow": { level: "advanced", requirement: "preferred" },
-        "PyTorch": { level: "advanced", requirement: "preferred" },
-        "Computer Vision": { level: "advanced", requirement: "required" },
-        "Natural Language Processing": { level: "advanced", requirement: "required" },
-        "Python": { level: "advanced", requirement: "required" },
-        // Frontend Engineer P4
-        "React": { level: "advanced", requirement: "required" },
-        "TypeScript": { level: "advanced", requirement: "required" },
-        "UI/UX Design": { level: "intermediate", requirement: "preferred" },
-        "CSS/SASS": { level: "advanced", requirement: "required" },
-        "Next.js": { level: "advanced", requirement: "preferred" },
-        "Cross-browser Compatibility": { level: "advanced", requirement: "required" },
-        "Responsive Design": { level: "advanced", requirement: "preferred" }
+        "Kubernetes Administrator (CKA)": { level: "advanced", requirement: "preferred" }
       },
       // Add other professional levels (P5-P6) following the same pattern
     };
