@@ -1,26 +1,16 @@
-import { roleSkills } from "../../skills/data/roleSkills";
+// Split into separate files for better organization
+import { aiEngineerSkills } from './roles/aiEngineer';
+import { backendEngineerSkills } from './roles/backendEngineer';
+import { frontendDeveloperSkills } from './roles/frontendDeveloper';
+import { engineeringManagerSkills } from './roles/engineeringManager';
 
 export const initialSkills = {
-  "123": roleSkills["123"],
-  "124": roleSkills["124"],
-  "125": roleSkills["125"],
-  "126": roleSkills["126"]
+  "123": aiEngineerSkills,
+  "124": backendEngineerSkills,
+  "125": frontendDeveloperSkills,
+  "126": engineeringManagerSkills
 };
 
 export const getEmployeeSkills = (employeeId: string) => {
-  const skills = initialSkills[employeeId as keyof typeof initialSkills] || initialSkills["123"];
-  
-  // Combine all skills into a single array with proper structure
-  return [
-    ...(skills.specialized || []),
-    ...(skills.common || []),
-    ...(skills.certifications || [])
-  ].map(skill => ({
-    title: skill.title,
-    subcategory: skill.subcategory,
-    level: skill.level || 'unspecified',
-    growth: skill.growth,
-    confidence: 'high',
-    requirement: 'required' // Add default requirement
-  }));
+  return initialSkills[employeeId as keyof typeof initialSkills] || [];
 };

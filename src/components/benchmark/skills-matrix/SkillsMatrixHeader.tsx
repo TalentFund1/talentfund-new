@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface SkillsMatrixHeaderProps {
+export interface SkillsMatrixHeaderProps {
   hasChanges: boolean;
   onSave: () => void;
   onCancel: () => void;
