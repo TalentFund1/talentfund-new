@@ -14,6 +14,7 @@ import { useTrack } from "./context/TrackContext";
 import { jobTitles } from "./competency/skillProfileData";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
+import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -56,9 +57,10 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const getLevelsForTrack = () => {
-    return track === "Professional" 
-      ? ["P1", "P2", "P3", "P4", "P5", "P6"] 
-      : ["M3", "M4", "M5", "M6"];
+    if (track === "Managerial") {
+      return Object.keys(managerialLevels);
+    }
+    return Object.keys(professionalLevels);
   };
 
   const getSkillsByCategory = () => {
@@ -157,7 +159,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
                   key={level} 
                   className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
                 >
-                  <div className="font-semibold">{level}</div>
+                  <div className="font-semibold">{level.toUpperCase()}</div>
                 </TableHead>
               ))}
             </TableRow>
