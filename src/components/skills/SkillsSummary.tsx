@@ -7,6 +7,7 @@ import { useSelectedSkills } from "./context/SelectedSkillsContext";
 import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -34,10 +35,9 @@ export const SkillsSummary = () => {
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
 
-  // Get skills for the current employee only
-  const employeeSkills = getEmployeeSkills(id || "") as EmployeeSkill[];
+  // Get employee skills and transform them
+  const employeeSkills = getEmployeeSkills(id || "");
 
-  // Transform and sort employee skills by level
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
     return skills
       .map(skill => ({
@@ -54,6 +54,15 @@ export const SkillsSummary = () => {
       });
   };
 
+  const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
+    if (selectedSkills.length === 0) return skills;
+    return skills.filter(skill => 
+      selectedSkills.some(selectedSkill => 
+        skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
+      )
+    );
+  };
+
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
     filterSkillsByCategory(employeeSkills, "specialized")
   );
@@ -65,13 +74,6 @@ export const SkillsSummary = () => {
   const certifications: DetailedSkill[] = transformAndSortSkills(
     filterSkillsByCategory(employeeSkills, "certification")
   );
-
-  const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
@@ -96,18 +98,16 @@ export const SkillsSummary = () => {
     setSelectedSkills([]);
   };
 
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
   const filteredSpecializedSkills = filterSkills(specializedSkills);
   const filteredCommonSkills = filterSkills(commonSkills);
   const filteredCertifications = filterSkills(certifications);
-
-  const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
-    if (selectedSkills.length === 0) return skills;
-    return skills.filter(skill => 
-      selectedSkills.some(selectedSkill => 
-        skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
-      )
-    );
-  };
 
   return (
     <div className="space-y-4 w-full">
