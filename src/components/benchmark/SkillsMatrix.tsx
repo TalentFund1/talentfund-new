@@ -1,8 +1,6 @@
-import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
-import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useState, useEffect, useRef } from "react";
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
@@ -23,13 +21,32 @@ export const SkillsMatrix = () => {
   const [hasChanges, setHasChanges] = useState(false);
   
   const { id } = useParams<{ id: string }>();
-  const { selectedSkills } = useSelectedSkills();
-  const { toggledSkills } = useToggledSkills();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { saveChanges, cancelChanges, hasChanges: storeHasChanges, currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
+
+  const getLevelPriority = (level: string) => {
+    const priorities: { [key: string]: number } = {
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
+    };
+    return priorities[level.toLowerCase()] ?? 4;
+  };
+
+  const getInterestPriority = (requirement: string) => {
+    const priorities: { [key: string]: number } = {
+      'required': 0,
+      'skill_goal': 0,
+      'preferred': 1,
+      'not_interested': 2,
+      'unknown': 3
+    };
+    return priorities[requirement.toLowerCase()] ?? 4;
+  };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
@@ -37,24 +54,19 @@ export const SkillsMatrix = () => {
       let matchesInterest = true;
       let matchesSearch = true;
 
-      if (selectedLevel !== 'all') {
-        const currentSkillState = currentStates[skill.title];
-        const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
-        const selectedLevelLower = selectedLevel.toLowerCase();
+      const currentSkillState = currentStates[skill.title];
+      const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
+      const requirement = (currentSkillState?.requirement || skill.requirement || '').toLowerCase();
 
-        if (selectedLevelLower === 'unspecified') {
+      if (selectedLevel !== 'all') {
+        if (selectedLevel === 'unspecified') {
           matchesLevel = !skillLevel || skillLevel === 'unspecified';
-        } else if (selectedLevelLower === 'intermediate') {
-          matchesLevel = skillLevel === 'intermediate';
         } else {
-          matchesLevel = skillLevel === selectedLevelLower;
+          matchesLevel = skillLevel === selectedLevel.toLowerCase();
         }
       }
 
       if (selectedInterest !== 'all') {
-        const currentSkillState = currentStates[skill.title];
-        const requirement = (currentSkillState?.requirement || skill.requirement || '').toLowerCase();
-        
         switch (selectedInterest.toLowerCase()) {
           case 'skill_goal':
             matchesInterest = requirement === 'required' || requirement === 'skill_goal';
@@ -79,6 +91,27 @@ export const SkillsMatrix = () => {
       }
 
       return matchesLevel && matchesInterest && matchesSearch;
+    })
+    .sort((a, b) => {
+      const aState = currentStates[a.title];
+      const bState = currentStates[b.title];
+      
+      const aLevel = aState?.level || a.level || 'unspecified';
+      const bLevel = bState?.level || b.level || 'unspecified';
+      
+      const aInterest = aState?.requirement || a.requirement || 'unknown';
+      const bInterest = bState?.requirement || b.requirement || 'unknown';
+
+      // First sort by level priority
+      const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
+      if (levelDiff !== 0) return levelDiff;
+
+      // Then sort by interest priority
+      const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
+      if (interestDiff !== 0) return interestDiff;
+
+      // Finally sort alphabetically by title
+      return a.title.localeCompare(b.title);
     });
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
