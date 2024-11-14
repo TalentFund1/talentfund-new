@@ -66,9 +66,16 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
 
   const getAdvancedLevelCount = (skillName: string) => {
     const skillStates = get().currentStates[skillName] || {};
-    return Object.values(skillStates).filter(state => 
-      (state as { level?: string })?.level?.toLowerCase() === 'advanced'
-    ).length;
+    let advancedCount = 0;
+    
+    // Count all levels that are set to "Advanced"
+    Object.values(skillStates).forEach(state => {
+      if ((state as { level?: string })?.level?.toLowerCase() === 'advanced') {
+        advancedCount++;
+      }
+    });
+    
+    return advancedCount;
   };
 
   const getSkillsByCategory = () => {
@@ -95,6 +102,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       filteredSkills = [];
     }
 
+    // Sort skills by advanced level count
     return filteredSkills.sort((a, b) => {
       const aAdvancedCount = getAdvancedLevelCount(a.title);
       const bAdvancedCount = getAdvancedLevelCount(b.title);
