@@ -18,35 +18,61 @@ export const getSkillRequirements = (
   track: 'professional' | 'managerial',
   level: string
 ): { level: string; requirement: string } | undefined => {
-  // For AI Engineer P4 level
   if (track === 'professional') {
-    const p4Requirements: { [key: string]: { level: string; requirement: string } } = {
-      "Computer Vision": { level: "advanced", requirement: "required" },
-      "Deep Learning": { level: "advanced", requirement: "required" },
-      "Machine Learning": { level: "intermediate", requirement: "required" },
-      "Natural Language Processing": { level: "intermediate", requirement: "required" },
-      "PyTorch": { level: "beginner", requirement: "required" },
-      "Python": { level: "unspecified", requirement: "required" },
-      "TensorFlow": { level: "unspecified", requirement: "preferred" }
-    };
-
-    // Add requirements for other levels (P1-P3, P5-P6)
     const requirements = {
       P1: {
-        // Define P1 requirements
+        "Deep Learning": { level: "unspecified", requirement: "preferred" },
+        "Machine Learning": { level: "unspecified", requirement: "preferred" },
+        "Computer Vision": { level: "unspecified", requirement: "preferred" },
+        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
+        "PyTorch": { level: "unspecified", requirement: "preferred" },
+        "Python": { level: "unspecified", requirement: "preferred" },
+        "TensorFlow": { level: "unspecified", requirement: "preferred" }
       },
       P2: {
-        // Define P2 requirements
+        "Deep Learning": { level: "intermediate", requirement: "required" },
+        "Machine Learning": { level: "unspecified", requirement: "preferred" },
+        "Computer Vision": { level: "unspecified", requirement: "preferred" },
+        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
+        "PyTorch": { level: "unspecified", requirement: "preferred" },
+        "Python": { level: "unspecified", requirement: "preferred" },
+        "TensorFlow": { level: "unspecified", requirement: "preferred" }
       },
       P3: {
-        // Define P3 requirements
+        "Deep Learning": { level: "advanced", requirement: "required" },
+        "Machine Learning": { level: "intermediate", requirement: "required" },
+        "Computer Vision": { level: "intermediate", requirement: "required" },
+        "Natural Language Processing": { level: "beginner", requirement: "preferred" },
+        "PyTorch": { level: "unspecified", requirement: "preferred" },
+        "Python": { level: "unspecified", requirement: "preferred" },
+        "TensorFlow": { level: "unspecified", requirement: "preferred" }
       },
-      P4: p4Requirements,
+      P4: {
+        "Computer Vision": { level: "advanced", requirement: "required" },
+        "Deep Learning": { level: "advanced", requirement: "required" },
+        "Machine Learning": { level: "intermediate", requirement: "required" },
+        "Natural Language Processing": { level: "intermediate", requirement: "required" },
+        "PyTorch": { level: "beginner", requirement: "required" },
+        "Python": { level: "unspecified", requirement: "required" },
+        "TensorFlow": { level: "unspecified", requirement: "preferred" }
+      },
       P5: {
-        // Define P5 requirements
+        "Computer Vision": { level: "advanced", requirement: "required" },
+        "Deep Learning": { level: "advanced", requirement: "required" },
+        "Machine Learning": { level: "advanced", requirement: "required" },
+        "Natural Language Processing": { level: "intermediate", requirement: "required" },
+        "PyTorch": { level: "beginner", requirement: "required" },
+        "Python": { level: "beginner", requirement: "required" },
+        "TensorFlow": { level: "unspecified", requirement: "preferred" }
       },
       P6: {
-        // Define P6 requirements
+        "Computer Vision": { level: "advanced", requirement: "required" },
+        "Deep Learning": { level: "advanced", requirement: "required" },
+        "Machine Learning": { level: "advanced", requirement: "required" },
+        "Natural Language Processing": { level: "intermediate", requirement: "required" },
+        "PyTorch": { level: "advanced", requirement: "required" },
+        "Python": { level: "advanced", requirement: "required" },
+        "TensorFlow": { level: "unspecified", requirement: "preferred" }
       }
     };
 
@@ -57,16 +83,16 @@ export const getSkillRequirements = (
   if (track === 'managerial') {
     const managerialRequirements: { [key: string]: { [key: string]: { level: string; requirement: string } } } = {
       M3: {
-        // Define M3 requirements
+        // Define M3 requirements based on the matrix
       },
       M4: {
-        // Define M4 requirements
+        // Define M4 requirements based on the matrix
       },
       M5: {
-        // Define M5 requirements
+        // Define M5 requirements based on the matrix
       },
       M6: {
-        // Define M6 requirements
+        // Define M6 requirements based on the matrix
       }
     };
 
