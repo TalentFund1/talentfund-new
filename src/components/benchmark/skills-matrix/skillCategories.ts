@@ -3,29 +3,47 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
     return skills;
   }
 
-  const specializationMap: { [key: string]: string } = {
-    // Specialized Skills - AI & ML
-    "Machine Learning": "specialized",
-    "Deep Learning": "specialized",
-    "Natural Language Processing": "specialized",
-    "Computer Vision": "specialized",
-    "PyTorch": "specialized",
-    "TensorFlow": "specialized",
-    "Python": "specialized", // Moved Python to specialized skills
-    
-    // Common Skills
-    "Problem Solving": "common",
-    "Technical Writing": "common",
-    
-    // Certifications
-    "AWS Certified Machine Learning - Specialty": "certification",
-    "TensorFlow Developer Certificate": "certification",
-    "Google Cloud Professional Machine Learning Engineer": "certification"
+  // Define category types
+  const categoryTypes = {
+    specialized: [
+      "Frontend Frameworks",
+      "Programming Languages",
+      "State Management",
+      "API Integration",
+      "Build Tools",
+      "Design"
+    ],
+    common: [
+      "Frontend Development",
+      "Web Development",
+      "Soft Skills",
+      "Development Tools",
+      "Development Practices",
+      "Project Management",
+      "Communication"
+    ],
+    certification: [
+      "Cloud Certification",
+      "Web Development Certification",
+      "Development Certification",
+      "Frontend Certification",
+      "Programming Certification",
+      "Web Accessibility"
+    ]
   };
 
   return skills.filter(skill => {
-    const skillCategory = specializationMap[skill.title];
-    return skillCategory === category;
+    const subcategory = skill.subcategory;
+    switch (category) {
+      case "specialized":
+        return categoryTypes.specialized.includes(subcategory);
+      case "common":
+        return categoryTypes.common.includes(subcategory);
+      case "certification":
+        return categoryTypes.certification.includes(subcategory);
+      default:
+        return false;
+    }
   });
 };
 
@@ -34,25 +52,6 @@ export const getCategoryCount = (skills: any[], category: string) => {
 };
 
 export const categorizeSkill = (skillName: string): string => {
-  const specializationMap: { [key: string]: string } = {
-    // Specialized Skills - AI & ML
-    "Machine Learning": "specialized",
-    "Deep Learning": "specialized",
-    "Natural Language Processing": "specialized",
-    "Computer Vision": "specialized",
-    "PyTorch": "specialized",
-    "TensorFlow": "specialized",
-    "Python": "specialized", // Moved Python to specialized skills
-    
-    // Common Skills
-    "Problem Solving": "common",
-    "Technical Writing": "common",
-    
-    // Certifications
-    "AWS Certified Machine Learning - Specialty": "certification",
-    "TensorFlow Developer Certificate": "certification",
-    "Google Cloud Professional Machine Learning Engineer": "certification"
-  };
-
-  return specializationMap[skillName] || 'common';
+  // This function can be used for individual skill categorization if needed
+  return 'common'; // Default fallback
 };
