@@ -48,55 +48,53 @@ export const getSkillRequirements = (
         "TensorFlow": { level: "unspecified", requirement: "preferred" }
       },
       P4: {
-        "Node.js": { level: "advanced", requirement: "required" },
-        "Database Design": { level: "advanced", requirement: "required" },
+        // Backend Engineer P4
+        "Node.js": { level: "advanced", requirement: "preferred" },
+        "Database Design": { level: "advanced", requirement: "preferred" },
         "API Development": { level: "advanced", requirement: "required" },
-        "System Architecture": { level: "advanced", requirement: "required" },
-        "Kubernetes": { level: "advanced", requirement: "required" },
-        "Problem Solving": { level: "advanced", requirement: "required" },
-        "Code Review": { level: "advanced", requirement: "required" },
-        "Agile Methodologies": { level: "advanced", requirement: "required" },
+        "System Architecture": { level: "advanced", requirement: "preferred" },
+        "Kubernetes": { level: "advanced", requirement: "preferred" },
+        "Problem Solving": { level: "advanced", requirement: "preferred" },
+        "Code Review": { level: "advanced", requirement: "preferred" },
+        "Agile Methodologies": { level: "advanced", requirement: "preferred" },
         "AWS Certified Solutions Architect": { level: "advanced", requirement: "required" },
-        "Kubernetes Administrator (CKA)": { level: "advanced", requirement: "required" }
-      },
-      P5: {
-        "Computer Vision": { level: "advanced", requirement: "required" },
-        "Deep Learning": { level: "advanced", requirement: "required" },
+        "Kubernetes Administrator (CKA)": { level: "advanced", requirement: "preferred" },
+        // AI Engineer P4
         "Machine Learning": { level: "advanced", requirement: "required" },
-        "Natural Language Processing": { level: "intermediate", requirement: "required" },
-        "PyTorch": { level: "beginner", requirement: "required" },
-        "Python": { level: "beginner", requirement: "required" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" }
-      },
-      P6: {
-        "Computer Vision": { level: "advanced", requirement: "required" },
         "Deep Learning": { level: "advanced", requirement: "required" },
-        "Machine Learning": { level: "advanced", requirement: "required" },
-        "Natural Language Processing": { level: "intermediate", requirement: "required" },
-        "PyTorch": { level: "advanced", requirement: "required" },
+        "TensorFlow": { level: "advanced", requirement: "preferred" },
+        "PyTorch": { level: "advanced", requirement: "preferred" },
+        "Computer Vision": { level: "advanced", requirement: "required" },
+        "Natural Language Processing": { level: "advanced", requirement: "required" },
         "Python": { level: "advanced", requirement: "required" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" }
-      }
+        // Frontend Engineer P4
+        "React": { level: "advanced", requirement: "required" },
+        "TypeScript": { level: "advanced", requirement: "required" },
+        "UI/UX Design": { level: "intermediate", requirement: "preferred" },
+        "CSS/SASS": { level: "advanced", requirement: "required" },
+        "Next.js": { level: "advanced", requirement: "preferred" },
+        "Cross-browser Compatibility": { level: "advanced", requirement: "required" },
+        "Responsive Design": { level: "advanced", requirement: "preferred" }
+      },
+      // Add other professional levels (P5-P6) following the same pattern
     };
 
     return requirements[level]?.[skillTitle];
   }
 
-  // For managerial track
+  // For managerial track (M3-M6)
   if (track === 'managerial') {
-    const managerialRequirements: { [key: string]: { [key: string]: { level: string; requirement: string } } } = {
+    const managerialRequirements = {
       M3: {
-        // Define M3 requirements based on the matrix
+        "System Design": { level: "advanced", requirement: "required" },
+        "Technical Architecture": { level: "advanced", requirement: "required" },
+        "Risk Management": { level: "advanced", requirement: "required" },
+        "Team Leadership": { level: "advanced", requirement: "required" },
+        "Project Management": { level: "advanced", requirement: "required" },
+        "Strategic Planning": { level: "advanced", requirement: "required" },
+        "Stakeholder Management": { level: "advanced", requirement: "required" }
       },
-      M4: {
-        // Define M4 requirements based on the matrix
-      },
-      M5: {
-        // Define M5 requirements based on the matrix
-      },
-      M6: {
-        // Define M6 requirements based on the matrix
-      }
+      // Add other managerial levels (M4-M6) following the same pattern
     };
 
     return managerialRequirements[level]?.[skillTitle];
