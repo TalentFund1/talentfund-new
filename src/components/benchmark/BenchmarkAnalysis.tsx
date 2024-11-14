@@ -45,11 +45,6 @@ export const BenchmarkAnalysis = () => {
   const competencyMatch = matchingSkillsCount;
   const competencyTotal = totalSkillsCount;
 
-  // Log the counts for verification
-  console.log('Current States:', currentStates);
-  console.log('Total Skills:', totalSkillsCount);
-  console.log('Skills marked as goals:', skillGoals);
-
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
