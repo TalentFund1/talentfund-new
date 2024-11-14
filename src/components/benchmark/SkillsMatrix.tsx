@@ -30,6 +30,7 @@ export const SkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
+  const [hasChanges, setHasChanges] = useState(false);
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
@@ -38,6 +39,16 @@ export const SkillsMatrix = () => {
 
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
+
+  const handleSave = () => {
+    // Save changes logic here
+    setHasChanges(false);
+  };
+
+  const handleCancel = () => {
+    // Cancel changes logic here
+    setHasChanges(false);
+  };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
@@ -115,7 +126,11 @@ export const SkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <SkillsMatrixHeader />
+        <SkillsMatrixHeader 
+          hasChanges={hasChanges}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
         <Separator className="my-4" />
         
         {!isRoleBenchmarkTab ? (
@@ -220,7 +235,6 @@ export const SkillsMatrix = () => {
           filteredSkills={paginatedSkills}
         />
         
-        {/* Infinite scroll observer target */}
         {visibleItems < filteredSkills.length && (
           <div 
             ref={observerTarget} 
