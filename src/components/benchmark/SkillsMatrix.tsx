@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { useParams } from "react-router-dom";
 import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
@@ -28,7 +27,7 @@ export const SkillsMatrix = () => {
   const { toggledSkills } = useToggledSkills();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { saveChanges, cancelChanges, hasChanges: storeHasChanges } = useSkillsMatrixStore();
+  const { saveChanges, cancelChanges, hasChanges: storeHasChanges, currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
 
@@ -50,10 +49,6 @@ export const SkillsMatrix = () => {
     });
   };
 
-  useEffect(() => {
-    setHasChanges(storeHasChanges);
-  }, [storeHasChanges]);
-
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
       let matchesLevel = true;
@@ -61,23 +56,22 @@ export const SkillsMatrix = () => {
       let matchesSearch = true;
 
       if (selectedLevel !== 'all') {
-        const skillLevel = skill.level?.toLowerCase() || '';
+        // Get the current level from the store, fallback to original level if not in store
+        const currentSkillState = currentStates[skill.title];
+        const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
         const selectedLevelLower = selectedLevel.toLowerCase();
 
         if (selectedLevelLower === 'unspecified') {
-          // For unspecified, match if level is empty, null, undefined, or explicitly "unspecified"
           matchesLevel = !skillLevel || skillLevel === 'unspecified';
-        } else if (selectedLevelLower === 'advanced') {
-          // For advanced, exact match required
-          matchesLevel = skillLevel === 'advanced';
         } else {
-          // For other levels (beginner, intermediate)
           matchesLevel = skillLevel === selectedLevelLower;
         }
       }
 
       if (selectedInterest !== 'all') {
-        matchesInterest = skill.requirement?.toLowerCase() === selectedInterest.toLowerCase();
+        const currentSkillState = currentStates[skill.title];
+        const requirement = (currentSkillState?.requirement || skill.requirement || '').toLowerCase();
+        matchesInterest = requirement === selectedInterest.toLowerCase();
       }
 
       if (selectedSearchSkills.length > 0) {
@@ -134,7 +128,6 @@ export const SkillsMatrix = () => {
           onSave={handleSave}
           onCancel={handleCancel}
         />
-        <Separator className="my-4" />
         
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
