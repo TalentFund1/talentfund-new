@@ -3,6 +3,8 @@ import { aiSkills } from './skills/aiSkills';
 import { backendSkills } from './skills/backendSkills';
 import { commonSkills } from './skills/commonSkills';
 import { certificationSkills } from './skills/certificationSkills';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type { SkillData, SkillLevel };
 
@@ -13,78 +15,78 @@ export const skillsDatabase: SkillData[] = [
   ...certificationSkills
 ];
 
+interface SkillRequirement {
+  level: string;
+  requirement: string;
+}
+
+interface SkillRequirements {
+  [key: string]: {
+    [level: string]: {
+      [skillTitle: string]: SkillRequirement;
+    };
+  };
+}
+
+interface SkillRequirementsStore {
+  requirements: SkillRequirements;
+  updateSkillRequirement: (
+    track: string,
+    level: string,
+    skillTitle: string,
+    requirement: SkillRequirement
+  ) => void;
+}
+
+export const useSkillRequirements = create<SkillRequirementsStore>()(
+  persist(
+    (set) => ({
+      requirements: {
+        professional: {
+          P1: {},
+          P2: {},
+          P3: {},
+          P4: {},
+          P5: {},
+          P6: {},
+        },
+        managerial: {
+          M3: {},
+          M4: {},
+          M5: {},
+          M6: {},
+        },
+      },
+      updateSkillRequirement: (track, level, skillTitle, requirement) =>
+        set((state) => ({
+          requirements: {
+            ...state.requirements,
+            [track]: {
+              ...state.requirements[track],
+              [level]: {
+                ...state.requirements[track]?.[level],
+                [skillTitle]: requirement,
+              },
+            },
+          },
+        })),
+    }),
+    {
+      name: 'skill-requirements-storage',
+    }
+  )
+);
+
 export const getSkillRequirements = (
   skillTitle: string,
   track: 'professional' | 'managerial',
   level: string
 ): { level: string; requirement: string } | undefined => {
-  if (track === 'professional') {
-    const requirements = {
-      P1: {
-        "Machine Learning": { level: "beginner", requirement: "required" },
-        "Deep Learning": { level: "unspecified", requirement: "preferred" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" },
-        "PyTorch": { level: "unspecified", requirement: "preferred" },
-        "Computer Vision": { level: "unspecified", requirement: "preferred" },
-        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
-        "Python": { level: "unspecified", requirement: "preferred" }
-      },
-      P2: {
-        "Machine Learning": { level: "intermediate", requirement: "required" },
-        "Deep Learning": { level: "unspecified", requirement: "preferred" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" },
-        "PyTorch": { level: "unspecified", requirement: "preferred" },
-        "Computer Vision": { level: "unspecified", requirement: "preferred" },
-        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
-        "Python": { level: "unspecified", requirement: "preferred" }
-      },
-      P3: {
-        "Node.js": { level: "unspecified", requirement: "preferred" },
-        "Database Design": { level: "unspecified", requirement: "preferred" },
-        "API Development": { level: "unspecified", requirement: "required" },
-        "System Architecture": { level: "unspecified", requirement: "preferred" },
-        "Kubernetes": { level: "unspecified", requirement: "preferred" },
-        "Problem Solving": { level: "unspecified", requirement: "preferred" },
-        "Code Review": { level: "unspecified", requirement: "preferred" },
-        "Agile Methodologies": { level: "unspecified", requirement: "required" },
-        "AWS Certified Solutions Architect": { level: "unspecified", requirement: "required" },
-        "Kubernetes Administrator (CKA)": { level: "unspecified", requirement: "preferred" }
-      },
-      P4: {
-        "Node.js": { level: "advanced", requirement: "preferred" },
-        "Database Design": { level: "advanced", requirement: "preferred" },
-        "API Development": { level: "advanced", requirement: "required" },
-        "System Architecture": { level: "advanced", requirement: "preferred" },
-        "Kubernetes": { level: "advanced", requirement: "preferred" },
-        "Problem Solving": { level: "advanced", requirement: "preferred" },
-        "Code Review": { level: "advanced", requirement: "preferred" },
-        "Agile Methodologies": { level: "advanced", requirement: "preferred" },
-        "AWS Certified Solutions Architect": { level: "advanced", requirement: "required" },
-        "Kubernetes Administrator (CKA)": { level: "advanced", requirement: "preferred" }
-      }
-    };
-
-    return requirements[level]?.[skillTitle];
-  }
-
-  // For managerial track (M3-M6)
-  if (track === 'managerial') {
-    const managerialRequirements = {
-      M3: {
-        "System Design": { level: "advanced", requirement: "required" },
-        "Technical Architecture": { level: "advanced", requirement: "required" },
-        "Risk Management": { level: "advanced", requirement: "required" },
-        "Team Leadership": { level: "advanced", requirement: "required" },
-        "Project Management": { level: "advanced", requirement: "required" },
-        "Strategic Planning": { level: "advanced", requirement: "required" },
-        "Stakeholder Management": { level: "advanced", requirement: "required" }
-      }
-    };
-
-    return managerialRequirements[level]?.[skillTitle];
-  }
-
-  return undefined;
+  const { requirements } = useSkillRequirements.getState();
+  return requirements[track]?.[level]?.[skillTitle] || {
+    level: 'unspecified',
+    requirement: 'preferred',
+  };
 };
 
 export const getSkillsByTrackAndLevel = (
