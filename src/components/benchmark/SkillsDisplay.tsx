@@ -61,11 +61,12 @@ export const SkillsDisplay = ({
     .filter(skill => 
       selectedSkillLevel === 'all' || 
       skill.level.toLowerCase() === selectedSkillLevel.toLowerCase()
-    );
+    )
+    .sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
-    const categorized = skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
+    return skills.reduce((acc: { required: any[], preferred: any[] }, skill) => {
       if (skill.requirement === 'required') {
         acc.required.push(skill);
       } else {
@@ -73,12 +74,6 @@ export const SkillsDisplay = ({
       }
       return acc;
     }, { required: [], preferred: [] });
-
-    // Sort both arrays by level priority only
-    categorized.required.sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
-    categorized.preferred.sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
-
-    return categorized;
   };
 
   const skills = getSkillsForCategory();
