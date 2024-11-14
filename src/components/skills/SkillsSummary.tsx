@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect } from "react";
-import { DetailedSkill, Certification, EmployeeSkill } from "./types";
+import { useState } from "react";
+import { DetailedSkill, EmployeeSkill } from "./types";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
-import { initialSkills, getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
@@ -32,8 +31,6 @@ export const SkillsSummary = () => {
 
   const { id } = useParams<{ id: string }>();
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
-  const [visibleSpecializedCount, setVisibleSpecializedCount] = useState(7);
-  const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
 
@@ -76,31 +73,13 @@ export const SkillsSummary = () => {
     }));
   };
 
-  useEffect(() => {
-    if (containerRef.current) {
-      const container = containerRef.current;
-      const containerWidth = container.offsetWidth;
-      const skillWidth = 150;
-      const skillsPerRow = Math.floor(containerWidth / skillWidth);
-      const optimalRows = 2;
-      setVisibleSpecializedCount(skillsPerRow * optimalRows);
-    }
-  }, []);
-
-  const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
-    if (selectedSkills.length === 0) return skills;
-    return skills.filter(skill => 
-      selectedSkills.some(selectedSkill => 
-        skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
-      )
-    );
-  };
-
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
     
     const allExistingSkills = [
-      ...transformedSkills.map(s => s.name)
+      ...specializedSkills.map(s => s.name),
+      ...commonSkills.map(s => s.name),
+      ...certifications.map(s => s.name)
     ];
 
     const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
@@ -121,8 +100,17 @@ export const SkillsSummary = () => {
   const filteredCommonSkills = filterSkills(commonSkills);
   const filteredCertifications = filterSkills(certifications);
 
+  const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
+    if (selectedSkills.length === 0) return skills;
+    return skills.filter(skill => 
+      selectedSkills.some(selectedSkill => 
+        skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
+      )
+    );
+  };
+
   return (
-    <div className="space-y-4 w-full" ref={containerRef}>
+    <div className="space-y-4 w-full">
       <SkillSearchSection
         selectedSkills={selectedSkills}
         onSkillsChange={handleSkillsChange}
@@ -134,7 +122,6 @@ export const SkillsSummary = () => {
         commonSkills={filteredCommonSkills}
         certifications={filteredCertifications}
         expandedSections={expandedSections}
-        visibleSpecializedCount={visibleSpecializedCount}
         onToggleSection={toggleSection}
       />
     </div>
