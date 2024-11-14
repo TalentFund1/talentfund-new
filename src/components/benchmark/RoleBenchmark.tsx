@@ -9,7 +9,6 @@ import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { MissingSkills } from "./MissingSkills";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const roles = {
   "123": "AI Engineer",
@@ -22,7 +21,6 @@ export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string>("125");
   const [selectedLevel, setSelectedLevel] = useState<string>("p4");
-  const [selectedSkillLevel, setSelectedSkillLevel] = useState<string>("all");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
@@ -73,36 +71,15 @@ export const RoleBenchmark = () => {
           </Button>
         </div>
         
-        <div className="flex flex-col gap-4">
-          <RoleSelection 
-            selectedRole={selectedRole}
-            selectedLevel={selectedLevel}
-            currentTrack={currentTrack}
-            onRoleChange={setSelectedRole}
-            onLevelChange={setSelectedLevel}
-            onTrackChange={handleTrackChange}
-            roles={roles}
-          />
-
-          <Select
-            value={selectedSkillLevel}
-            onValueChange={setSelectedSkillLevel}
-          >
-            <SelectTrigger className="w-[200px] bg-white">
-              <SelectValue placeholder="Filter by skill level">
-                {selectedSkillLevel === 'all' ? 'All Levels' : 
-                 selectedSkillLevel.charAt(0).toUpperCase() + selectedSkillLevel.slice(1)}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Levels</SelectItem>
-              <SelectItem value="advanced">Advanced</SelectItem>
-              <SelectItem value="intermediate">Intermediate</SelectItem>
-              <SelectItem value="beginner">Beginner</SelectItem>
-              <SelectItem value="unspecified">Unspecified</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <RoleSelection 
+          selectedRole={selectedRole}
+          selectedLevel={selectedLevel}
+          currentTrack={currentTrack}
+          onRoleChange={setSelectedRole}
+          onLevelChange={setSelectedLevel}
+          onTrackChange={handleTrackChange}
+          roles={roles}
+        />
 
         <Separator className="my-6" />
 
@@ -111,7 +88,6 @@ export const RoleBenchmark = () => {
           toggledSkills={toggledSkills}
           roleId={selectedRole}
           selectedLevel={selectedLevel}
-          selectedSkillLevel={selectedSkillLevel}
         />
 
         <MissingSkills roleId={selectedRole} employeeId="123" />

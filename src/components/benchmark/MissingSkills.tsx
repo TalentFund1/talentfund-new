@@ -10,16 +10,6 @@ interface MissingSkillsProps {
   employeeId: string;
 }
 
-const getLevelPriority = (level: string = 'unspecified') => {
-  const priorities: { [key: string]: number } = {
-    'advanced': 0,
-    'intermediate': 1,
-    'beginner': 2,
-    'unspecified': 3
-  };
-  return priorities[level.toLowerCase()] ?? 3;
-};
-
 export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useCompetencyStore();
@@ -34,16 +24,10 @@ export const MissingSkills = ({ roleId, employeeId }: MissingSkillsProps) => {
   ];
 
   // Find missing skills by comparing with employee skills, but only for toggled skills
-  const missingSkills = allRoleSkills
-    .filter(roleSkill => {
-      const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
-      return !hasSkill && toggledSkills.has(roleSkill.title);
-    })
-    .sort((a, b) => {
-      const levelA = (currentStates[a.title]?.level || 'unspecified') as string;
-      const levelB = (currentStates[b.title]?.level || 'unspecified') as string;
-      return getLevelPriority(levelA) - getLevelPriority(levelB);
-    });
+  const missingSkills = allRoleSkills.filter(roleSkill => {
+    const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
+    return !hasSkill && toggledSkills.has(roleSkill.title);
+  });
 
   const getLevelColor = (skillTitle: string) => {
     const skillState = currentStates[skillTitle];
