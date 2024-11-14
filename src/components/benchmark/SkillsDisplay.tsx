@@ -4,7 +4,6 @@ import { useState } from "react";
 import { getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
-import { CategorySection } from "./CategorySection";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
 
 interface SkillsDisplayProps {
@@ -33,43 +32,30 @@ export const SkillsDisplay = ({
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole(roleId);
   const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const { currentStates } = useCompetencyStore();
 
   const getSkillsForCategory = () => {
     const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
     
-    let filteredSkills = [];
-    if (selectedCategory === "all") {
-      filteredSkills = [
-        ...(currentRoleSkills.specialized || []),
-        ...(currentRoleSkills.common || []),
-        ...(currentRoleSkills.certifications || [])
-      ];
-    } else if (selectedCategory === "specialized") {
-      filteredSkills = currentRoleSkills.specialized || [];
-    } else if (selectedCategory === "common") {
-      filteredSkills = currentRoleSkills.common || [];
-    } else if (selectedCategory === "certification") {
-      filteredSkills = currentRoleSkills.certifications || [];
-    }
+    return [
+      ...(currentRoleSkills.specialized || []),
+      ...(currentRoleSkills.common || []),
+      ...(currentRoleSkills.certifications || [])
+    ].filter(skill => toggledSkills.has(skill.title))
+    .map((skill: any) => {
+      const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
+      const requirements = getSkillRequirements(
+        skill.title,
+        currentTrack,
+        selectedLevel.toUpperCase()
+      );
 
-    return filteredSkills
-      .filter(skill => toggledSkills.has(skill.title))
-      .map((skill: any) => {
-        const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
-        const requirements = getSkillRequirements(
-          skill.title,
-          currentTrack,
-          selectedLevel.toUpperCase()
-        );
-
-        return {
-          title: skill.title,
-          level: matrixState?.level || requirements?.level || 'unspecified',
-          requirement: matrixState?.required || requirements?.requirement || 'preferred'
-        };
-      });
+      return {
+        title: skill.title,
+        level: matrixState?.level || requirements?.level || 'unspecified',
+        requirement: matrixState?.required || requirements?.requirement || 'preferred'
+      };
+    });
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
@@ -101,12 +87,6 @@ export const SkillsDisplay = ({
 
   return (
     <div className="space-y-8">
-      <CategorySection
-        selectedCategory={selectedCategory}
-        onCategorySelect={setSelectedCategory}
-        toggledSkills={toggledSkills}
-      />
-
       <div className="space-y-6">
         <SkillSection title="Required Skills" count={requiredSkills.length}>
           <div className="flex flex-wrap gap-2">
