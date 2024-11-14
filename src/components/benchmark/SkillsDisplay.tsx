@@ -1,6 +1,5 @@
 import { SkillBadge } from "../skills/SkillBadge";
 import { SkillSection } from "../skills/SkillSection";
-import { useState } from "react";
 import { getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
@@ -69,15 +68,8 @@ export const SkillsDisplay = ({
     }, { required: [], preferred: [] });
 
     // Sort both arrays by level priority only
-    categorized.required.sort((a, b) => {
-      const levelComparison = getLevelPriority(a.level) - getLevelPriority(b.level);
-      return levelComparison;
-    });
-
-    categorized.preferred.sort((a, b) => {
-      const levelComparison = getLevelPriority(a.level) - getLevelPriority(b.level);
-      return levelComparison;
-    });
+    categorized.required.sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
+    categorized.preferred.sort((a, b) => getLevelPriority(a.level) - getLevelPriority(b.level));
 
     return categorized;
   };
