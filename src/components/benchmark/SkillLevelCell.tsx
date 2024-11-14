@@ -23,17 +23,19 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
     if (currentState) {
       setLevel(currentState.level);
       setRequired(currentState.requirement);
+      console.log(`Skill State - ${skillTitle}:`, {
+        level: currentState.level,
+        requirement: currentState.requirement
+      });
     } else if (originalState) {
       setLevel(originalState.level);
       setRequired(originalState.requirement);
+      console.log(`Original Skill State - ${skillTitle}:`, {
+        level: originalState.level,
+        requirement: originalState.requirement
+      });
     }
-
-    // Add console log to see current state
-    console.log(`Skill: ${skillTitle}`, {
-      level: level,
-      requirement: required
-    });
-  }, [currentStates, originalStates, skillTitle, level, required]);
+  }, [currentStates, originalStates, skillTitle]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
