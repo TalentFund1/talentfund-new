@@ -1,8 +1,10 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
+import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons";
+import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
+import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { Heart, X, CircleHelp } from "lucide-react";
-import { useSkillsMatrix } from "./skills-matrix/SkillsMatrixContext";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -11,27 +13,35 @@ interface SkillLevelCellProps {
 }
 
 export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
-  const { currentStates, setSkillState } = useSkillsMatrix();
+  const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
 
   useEffect(() => {
-    const state = currentStates[skillTitle];
+    const state = getCurrentState();
     if (state) {
       setLevel(state.level);
       setRequired(state.requirement);
     }
+
+    // Log all states when component mounts
+    console.log("All Skills States:", Object.entries(currentStates).map(([skill, state]) => ({
+      skill,
+      level: state.level,
+      requirement: state.requirement,
+      label: state.requirement === 'required' ? 'Skill Goal' : 
+             state.requirement === 'not-interested' ? 'Not Interested' : 
+             'Unknown'
+    })));
   }, [skillTitle, currentStates]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
-    setSkillState(skillTitle, newLevel, required);
     onLevelChange?.(newLevel, required);
   };
 
   const handleRequirementChange = (newRequired: string) => {
     setRequired(newRequired);
-    setSkillState(skillTitle, level, newRequired);
     onLevelChange?.(level, newRequired);
   };
 
@@ -109,68 +119,4 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
       </div>
     </TableCell>
   );
-};
-
-const getLevelIcon = (level: string) => {
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return <Star className="w-4 h-4 text-primary-accent" />;
-    case 'intermediate':
-      return <Shield className="w-4 h-4 text-primary-icon" />;
-    case 'beginner':
-      return <Target className="w-4 h-4 text-[#008000]" />;
-    case 'unspecified':
-      return <CircleDashed className="w-4 h-4 text-gray-400" />;
-    default:
-      return <CircleDashed className="w-4 h-4 text-gray-400" />;
-  }
-};
-
-const getLevelStyles = (level: string) => {
-  const baseStyles = 'rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]';
-
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
-    case 'intermediate':
-      return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
-    case 'beginner':
-      return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
-    case 'unspecified':
-      return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
-    default:
-      return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
-  }
-};
-
-const getRequirementStyles = (requirement: string, level: string) => {
-  const borderColor = level.toLowerCase() === 'advanced' 
-    ? 'border-primary-accent'
-    : level.toLowerCase() === 'intermediate'
-      ? 'border-primary-icon'
-      : level.toLowerCase() === 'beginner'
-        ? 'border-[#008000]'
-        : 'border-gray-400';
-
-  const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
-  
-  switch (requirement.toLowerCase()) {
-    case 'required':
-      return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
-    case 'preferred':
-      return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
-    default:
-      return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
-  }
-};
-
-const getRequirementIcon = (requirement: string) => {
-  switch (requirement.toLowerCase()) {
-    case 'required':
-      return <Check className="w-3.5 h-3.5" />;
-    case 'preferred':
-      return <Heart className="w-3.5 h-3.5" />;
-    default:
-      return null;
-  }
 };
