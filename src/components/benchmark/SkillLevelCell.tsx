@@ -1,7 +1,7 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart, CircleDashed, X, CircleHelp } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Star, Shield, Target, Heart, CircleDashed, Check, X, CircleHelp } from "lucide-react";
+import { useEffect } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillLevelCellProps {
@@ -16,26 +16,28 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
   const [required, setRequired] = useState<string>("required");
 
   useEffect(() => {
-    // Create a comprehensive log of all skills' states
-    const allSkillsStates = Object.entries(currentStates).map(([skill, state]) => ({
-      skill,
-      level: state.level,
-      requirement: state.requirement
-    }));
+    // Log the complete state in a more readable format
+    const skillState = currentStates[skillTitle]?.[levelKey];
+    console.log(`Skill: ${skillTitle}`, {
+      level: skillState?.level || 'unspecified',
+      requirement: skillState?.required || 'preferred',
+      levelKey
+    });
     
-    console.log("Complete Skills Matrix State:", allSkillsStates);
-    
-    const currentState = currentStates[skillTitle];
-    const originalState = originalStates[skillTitle];
-    
-    if (currentState) {
-      setLevel(currentState.level);
-      setRequired(currentState.requirement);
-    } else if (originalState) {
-      setLevel(originalState.level);
-      setRequired(originalState.requirement);
+    // Log all skills states at once for easier viewing
+    if (skillTitle === Object.keys(currentStates)[0]) {
+      console.log("=== COMPLETE SKILLS MATRIX STATE ===");
+      Object.entries(currentStates).forEach(([skill, levels]) => {
+        Object.entries(levels).forEach(([key, state]) => {
+          console.log(`${skill} (${key}):`, {
+            level: state.level,
+            requirement: state.required
+          });
+        });
+      });
+      console.log("===================================");
     }
-  }, [currentStates, originalStates, skillTitle]);
+  }, [currentStates, skillTitle, levelKey]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
