@@ -19,6 +19,15 @@ const getLevelPriority = (level: string = 'unspecified') => {
   return priorities[level.toLowerCase()] ?? 3;
 };
 
+const filterSkills = <T extends DetailedSkill>(skills: T[], selectedSkills: string[]) => {
+  if (selectedSkills.length === 0) return skills;
+  return skills.filter(skill => 
+    selectedSkills.some(selectedSkill => 
+      skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
+    )
+  );
+};
+
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
     specialized: boolean;
@@ -54,15 +63,6 @@ export const SkillsSummary = () => {
       });
   };
 
-  const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
-    if (selectedSkills.length === 0) return skills;
-    return skills.filter(skill => 
-      selectedSkills.some(selectedSkill => 
-        skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
-      )
-    );
-  };
-
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
     filterSkillsByCategory(employeeSkills, "specialized")
   );
@@ -78,6 +78,7 @@ export const SkillsSummary = () => {
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
     setBenchmarkSearchSkills(skills);
+    setSearchTerm(skills[0] || "");
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -108,9 +109,9 @@ export const SkillsSummary = () => {
     }));
   };
 
-  const filteredSpecializedSkills = filterSkills(specializedSkills);
-  const filteredCommonSkills = filterSkills(commonSkills);
-  const filteredCertifications = filterSkills(certifications);
+  const filteredSpecializedSkills = filterSkills(specializedSkills, selectedSkills);
+  const filteredCommonSkills = filterSkills(commonSkills, selectedSkills);
+  const filteredCertifications = filterSkills(certifications, selectedSkills);
 
   return (
     <div className="space-y-4 w-full">
