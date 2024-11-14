@@ -10,6 +10,7 @@ interface SkillsDisplayProps {
   toggledSkills: Set<string>;
   roleId: string;
   selectedLevel: string;
+  selectedSkillLevel: string;
 }
 
 const getLevelPriority = (level: string = 'unspecified') => {
@@ -26,7 +27,8 @@ export const SkillsDisplay = ({
   selectedRoleSkills, 
   toggledSkills, 
   roleId, 
-  selectedLevel 
+  selectedLevel,
+  selectedSkillLevel
 }: SkillsDisplayProps) => {
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole(roleId);
@@ -40,7 +42,8 @@ export const SkillsDisplay = ({
       ...(currentRoleSkills.specialized || []),
       ...(currentRoleSkills.common || []),
       ...(currentRoleSkills.certifications || [])
-    ].filter(skill => toggledSkills.has(skill.title))
+    ]
+    .filter(skill => toggledSkills.has(skill.title))
     .map((skill: any) => {
       const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
       const requirements = getSkillRequirements(
@@ -54,7 +57,11 @@ export const SkillsDisplay = ({
         level: matrixState?.level || requirements?.level || 'unspecified',
         requirement: matrixState?.required || requirements?.requirement || 'preferred'
       };
-    });
+    })
+    .filter(skill => 
+      selectedSkillLevel === 'all' || 
+      skill.level.toLowerCase() === selectedSkillLevel.toLowerCase()
+    );
   };
 
   const categorizeSkillsByRequirement = (skills: ReturnType<typeof getSkillsForCategory>) => {
