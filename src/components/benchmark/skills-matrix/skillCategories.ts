@@ -1,4 +1,4 @@
-import { SkillData } from "../../skills/data/skillLevels";
+import { SkillData } from "../../../components/skills/data/skillLevels";
 
 // Sorting priority maps
 const levelPriority: Record<string, number> = {
@@ -43,14 +43,21 @@ export const sortSkillsByPriority = (skills: any[]) => {
     // First compare by level
     const levelA = a.level?.toLowerCase() || 'unspecified';
     const levelB = b.level?.toLowerCase() || 'unspecified';
-    const levelDiff = levelPriority[levelA] - levelPriority[levelB];
     
-    if (levelDiff !== 0) return levelDiff;
+    if (levelPriority[levelA] !== levelPriority[levelB]) {
+      return levelPriority[levelA] - levelPriority[levelB];
+    }
     
     // If levels are equal, compare by requirement
     const reqA = a.requirement?.toLowerCase() || 'unknown';
     const reqB = b.requirement?.toLowerCase() || 'unknown';
-    return requirementPriority[reqA] - requirementPriority[reqB];
+    
+    if (requirementPriority[reqA] !== requirementPriority[reqB]) {
+      return requirementPriority[reqA] - requirementPriority[reqB];
+    }
+    
+    // If both level and requirement are equal, sort by title
+    return a.title.localeCompare(b.title);
   });
 };
 
