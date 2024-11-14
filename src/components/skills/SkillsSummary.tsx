@@ -9,6 +9,16 @@ import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategori
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 
+const getLevelPriority = (level: string = 'unspecified') => {
+  const priorities: { [key: string]: number } = {
+    'advanced': 0,
+    'intermediate': 1,
+    'beginner': 2,
+    'unspecified': 3
+  };
+  return priorities[level.toLowerCase()] ?? 3;
+};
+
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
     specialized: boolean;
@@ -30,54 +40,34 @@ export const SkillsSummary = () => {
   // Get skills for the current employee only
   const employeeSkills = getEmployeeSkills(id || "") as EmployeeSkill[];
 
-  // Transform employee skills into the required format and sort by level
-  const transformedSkills: DetailedSkill[] = employeeSkills
-    .map(skill => ({
-      name: skill.title,
-      level: currentStates[skill.title]?.level || skill.level,
-      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
-                   currentStates[skill.title]?.requirement === 'skill_goal' ||
-                   skill.level === 'advanced'
-    }))
-    .sort((a, b) => {
-      const levelOrder = {
-        advanced: 0,
-        intermediate: 1,
-        beginner: 2,
-        unspecified: 3
-      };
-      const levelA = (a.level || 'unspecified').toLowerCase();
-      const levelB = (b.level || 'unspecified').toLowerCase();
-      return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
-    });
+  // Transform and sort employee skills by level
+  const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
+    return skills
+      .map(skill => ({
+        name: skill.title,
+        level: currentStates[skill.title]?.level || skill.level,
+        isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                     currentStates[skill.title]?.requirement === 'skill_goal' ||
+                     skill.level === 'advanced'
+      }))
+      .sort((a, b) => {
+        const levelA = (a.level || 'unspecified').toLowerCase();
+        const levelB = (b.level || 'unspecified').toLowerCase();
+        return getLevelPriority(levelA) - getLevelPriority(levelB);
+      });
+  };
 
-  const specializedSkills: DetailedSkill[] = filterSkillsByCategory(employeeSkills, "specialized")
-    .map(skill => ({
-      name: skill.title,
-      level: currentStates[skill.title]?.level || skill.level,
-      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
-                   currentStates[skill.title]?.requirement === 'skill_goal' ||
-                   skill.level === 'advanced'
-    }));
+  const specializedSkills: DetailedSkill[] = transformAndSortSkills(
+    filterSkillsByCategory(employeeSkills, "specialized")
+  );
 
-  const commonSkills: DetailedSkill[] = filterSkillsByCategory(employeeSkills, "common")
-    .map(skill => ({
-      name: skill.title,
-      level: currentStates[skill.title]?.level || skill.level,
-      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
-                   currentStates[skill.title]?.requirement === 'skill_goal' ||
-                   skill.level === 'advanced'
-    }));
+  const commonSkills: DetailedSkill[] = transformAndSortSkills(
+    filterSkillsByCategory(employeeSkills, "common")
+  );
 
-  const certifications: DetailedSkill[] = filterSkillsByCategory(employeeSkills, "certification")
-    .map(skill => ({
-      name: skill.title,
-      level: currentStates[skill.title]?.level || skill.level,
-      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
-                   currentStates[skill.title]?.requirement === 'skill_goal' ||
-                   skill.requirement === 'required' ||
-                   skill.requirement === 'skill_goal'
-    }));
+  const certifications: DetailedSkill[] = transformAndSortSkills(
+    filterSkillsByCategory(employeeSkills, "certification")
+  );
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
