@@ -5,23 +5,22 @@ import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
+import { SkillsMatrixPagination } from "./skills-matrix/SkillsMatrixPagination";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-
-const ITEMS_PER_PAGE = 10;
 
 export const BenchmarkSkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
-  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
-  const observerTarget = useRef<HTMLDivElement>(null);
 
   // Update selected search skills when benchmarkSearchSkills changes
   useEffect(() => {
@@ -41,6 +40,11 @@ export const BenchmarkSkillsMatrix = () => {
         : true;
     });
 
+  const handleRowsPerPageChange = (value: string) => {
+    setRowsPerPage(Number(value));
+    setPage(1);
+  };
+
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
       setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
@@ -57,25 +61,10 @@ export const BenchmarkSkillsMatrix = () => {
     setSelectedSearchSkills([]);
   };
 
-  // Infinite scroll observer
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
-          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
-    return () => observer.disconnect();
-  }, [visibleItems, filteredSkills.length]);
-
-  const paginatedSkills = filteredSkills.slice(0, visibleItems);
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedSkills = filteredSkills.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredSkills.length / rowsPerPage);
 
   return (
     <div className="space-y-6">
@@ -161,15 +150,16 @@ export const BenchmarkSkillsMatrix = () => {
           filteredSkills={paginatedSkills}
         />
         
-        {/* Infinite scroll observer target */}
-        {visibleItems < filteredSkills.length && (
-          <div 
-            ref={observerTarget} 
-            className="h-10 flex items-center justify-center"
-          >
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-          </div>
-        )}
+        <SkillsMatrixPagination 
+          rowsPerPage={rowsPerPage}
+          handleRowsPerPageChange={handleRowsPerPageChange}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          totalSkills={filteredSkills.length}
+          currentPage={page}
+          totalPages={totalPages}
+          handlePageChange={setPage}
+        />
       </Card>
     </div>
   );
