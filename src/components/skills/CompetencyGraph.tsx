@@ -32,7 +32,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { id: urlRoleId } = useParams<{ id: string }>();
 
   const currentRoleId = propRoleId || urlRoleId || "123";
-  const track = initialTrack || getTrackForRole(currentRoleId) || "Professional";
+  const track = initialTrack || getTrackForRole(currentRoleId);
   const jobTitle = jobTitles[currentRoleId] || "AI Engineer";
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     });
   };
 
-  const getLevelsForTrack = (currentTrack: string) => {
+  const getLevelsForTrack = (currentTrack: "Professional" | "Managerial") => {
     return currentTrack === "Professional" 
       ? ["P1", "P2", "P3", "P4", "P5", "P6"] 
       : ["M3", "M4", "M5", "M6"];
@@ -109,7 +109,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const skills = getSkillsByCategory();
-  const levels = getLevelsForTrack(track);
+  const levels = getLevelsForTrack(track as "Professional" | "Managerial");
   const uniqueSkills = skills.map(skill => skill.title).sort();
 
   return (
