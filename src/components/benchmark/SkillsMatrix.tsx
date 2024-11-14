@@ -8,7 +8,6 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -16,8 +15,6 @@ export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
   
@@ -25,31 +22,8 @@ export const SkillsMatrix = () => {
   const observerTarget = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { saveChanges, cancelChanges, hasChanges: storeHasChanges, currentStates } = useSkillsMatrixStore();
-  const { setBenchmarkSearchSkills } = useBenchmarkSearch();
 
   const employeeSkills = getEmployeeSkills(id || "");
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchTerm.trim()) {
-      setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
-      setBenchmarkSearchSkills([...selectedSearchSkills, searchTerm.trim()]);
-      setSearchTerm("");
-    }
-  };
-
-  const removeSearchSkill = (skill: string) => {
-    setSelectedSearchSkills(prev => {
-      const newSkills = prev.filter(s => s !== skill);
-      setBenchmarkSearchSkills(newSkills);
-      return newSkills;
-    });
-  };
-
-  const clearSearch = () => {
-    setSearchTerm("");
-    setSelectedSearchSkills([]);
-    setBenchmarkSearchSkills([]);
-  };
 
   const getLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
@@ -76,7 +50,6 @@ export const SkillsMatrix = () => {
     .filter(skill => {
       let matchesLevel = true;
       let matchesInterest = true;
-      let matchesSearch = true;
 
       const currentSkillState = currentStates[skill.title];
       const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
@@ -106,13 +79,7 @@ export const SkillsMatrix = () => {
         }
       }
 
-      if (selectedSearchSkills.length > 0) {
-        matchesSearch = selectedSearchSkills.some(term => 
-          skill.title.toLowerCase().includes(term.toLowerCase())
-        );
-      }
-
-      return matchesLevel && matchesInterest && matchesSearch;
+      return matchesLevel && matchesInterest;
     })
     .sort((a, b) => {
       const aState = currentStates[a.title];
@@ -124,12 +91,15 @@ export const SkillsMatrix = () => {
       const aInterest = aState?.requirement || a.requirement || 'unknown';
       const bInterest = bState?.requirement || b.requirement || 'unknown';
 
+      // First sort by level priority
       const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
+      // Then sort by interest priority
       const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
       if (interestDiff !== 0) return interestDiff;
 
+      // Finally sort alphabetically by title
       return a.title.localeCompare(b.title);
     });
 
@@ -172,13 +142,6 @@ export const SkillsMatrix = () => {
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-          handleSearchKeyDown={handleSearchKeyDown}
-          removeSearchSkill={removeSearchSkill}
-          clearSearch={clearSearch}
         />
 
         <SkillsMatrixTable 
