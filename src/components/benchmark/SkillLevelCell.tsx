@@ -16,11 +16,11 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
   const [required, setRequired] = useState<string>("required");
 
   useEffect(() => {
-    // Log all skills' states when component mounts
-    console.log("All Skills States:", {
-      skillTitle,
-      currentState: currentStates[skillTitle],
-      originalState: originalStates[skillTitle]
+    // Log skill state when component mounts or state changes
+    console.log("Skill State for " + skillTitle + ":", {
+      level: level,
+      requirement: required,
+      isSkillGoal: required === 'required'
     });
     
     const currentState = currentStates[skillTitle];
@@ -33,7 +33,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
       setLevel(originalState.level);
       setRequired(originalState.requirement);
     }
-  }, [currentStates, originalStates, skillTitle]);
+  }, [currentStates, originalStates, skillTitle, level, required]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
