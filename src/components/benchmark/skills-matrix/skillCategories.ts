@@ -1,4 +1,3 @@
-```typescript
 import { SkillData } from "../../skills/data/skillLevels";
 
 // Sorting priority maps
@@ -15,6 +14,30 @@ const requirementPriority: Record<string, number> = {
   'not-interested': 2,
   'unknown': 3
 };
+
+// Specialized Skills - AI & ML
+const specializedSkills = [
+  "Machine Learning",
+  "Deep Learning",
+  "Natural Language Processing",
+  "Computer Vision",
+  "PyTorch",
+  "TensorFlow",
+  "Python"
+];
+
+// Common Skills
+const commonSkills = [
+  "Problem Solving",
+  "Technical Writing"
+];
+
+// Certifications
+const certificationSkills = [
+  "AWS Certified Machine Learning - Specialty",
+  "TensorFlow Developer Certificate",
+  "Google Cloud Professional Machine Learning Engineer"
+];
 
 export const sortSkillsByPriority = (skills: any[]) => {
   return [...skills].sort((a, b) => {
@@ -33,28 +56,14 @@ export const sortSkillsByPriority = (skills: any[]) => {
 };
 
 export const categorizeSkill = (skillTitle: string): string => {
-  const commonSkills = [
-    "Communication",
-    "Problem Solving",
-    "Leadership",
-    "Teamwork",
-    "Time Management"
-  ];
-
-  const certifications = [
-    "AWS Certified Solutions Architect",
-    "Google Cloud Professional Architect",
-    "Microsoft Azure Solutions Architect",
-    "Certified Information Systems Security Professional",
-    "Project Management Professional"
-  ];
-
-  if (commonSkills.includes(skillTitle)) {
+  if (specializedSkills.includes(skillTitle)) {
+    return "specialized";
+  } else if (commonSkills.includes(skillTitle)) {
     return "common";
-  } else if (certifications.includes(skillTitle)) {
+  } else if (certificationSkills.includes(skillTitle)) {
     return "certification";
   } else {
-    return "specialized";
+    return "specialized"; // Default to specialized if not found
   }
 };
 
@@ -69,4 +78,3 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
 export const getSkillsByCategory = (skills: SkillData[], category: string) => {
   return skills.filter(skill => skill.category === category);
 };
-```
