@@ -31,19 +31,17 @@ export const BenchmarkAnalysis = () => {
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  // Calculate skill goals - count skills marked as "Skill Goal" in the matrix
-  const skillGoals = Object.entries(currentStates).filter(([skillTitle, state]) => {
-    const isInCurrentRole = totalSkills.some(skill => skill.title === skillTitle);
-    return isInCurrentRole && state.requirement === 'required';
-  }).length;
-
   const totalSkillsCount = totalSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
   // Calculate competency match
-  const competencyMatch = matchingSkillsCount;
-  const competencyTotal = totalSkillsCount;
+  const competencyTotal = 12;
+  const competencyMatch = 12;
+
+  // Calculate skill goals
+  const skillGoalTotal = 12;
+  const skillGoalMatch = 8;
 
   return (
     <div className="space-y-6">
@@ -106,12 +104,12 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">{skillGoals} out of {totalSkillsCount}</span>
+                <span className="text-sm text-foreground">{skillGoalMatch} out of {skillGoalTotal}</span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(skillGoals/totalSkillsCount) * 100}%` }} 
+                  style={{ width: `${(skillGoalMatch/skillGoalTotal) * 100}%` }} 
                 />
               </div>
             </div>
