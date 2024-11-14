@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
@@ -17,6 +18,7 @@ export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
+  const [selectedLevel, setSelectedLevel] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -28,14 +30,37 @@ export const BenchmarkSkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
+      let matchesSearch = true;
+      let matchesLevel = true;
+
+      // Level filtering
+      if (selectedLevel !== 'all') {
+        matchesLevel = (skill.level || 'unspecified').toLowerCase() === selectedLevel.toLowerCase();
+      }
+
+      // Search filtering
       if (selectedSearchSkills.length > 0) {
-        return selectedSearchSkills.some(term => 
+        matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
         );
+      } else if (searchTerm) {
+        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
-      return searchTerm 
-        ? skill.title.toLowerCase().includes(searchTerm.toLowerCase())
-        : true;
+
+      return matchesSearch && matchesLevel;
+    })
+    .sort((a, b) => {
+      const levelPriority: { [key: string]: number } = {
+        'advanced': 0,
+        'intermediate': 1,
+        'beginner': 2,
+        'unspecified': 3
+      };
+      
+      const aLevel = (a.level || 'unspecified').toLowerCase();
+      const bLevel = (b.level || 'unspecified').toLowerCase();
+      
+      return levelPriority[aLevel] - levelPriority[bLevel];
     });
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -91,6 +116,20 @@ export const BenchmarkSkillsMatrix = () => {
 
         <div className="space-y-6">
           <div className="flex flex-col gap-2">
+            <div className="flex gap-4 mb-4">
+              <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+                <SelectTrigger className="w-[180px] bg-white">
+                  <SelectValue placeholder="All Levels" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Levels</SelectItem>
+                  <SelectItem value="advanced">Advanced</SelectItem>
+                  <SelectItem value="intermediate">Intermediate</SelectItem>
+                  <SelectItem value="beginner">Beginner</SelectItem>
+                  <SelectItem value="unspecified">Unspecified</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="relative flex-1">
               <Input
                 type="text"
