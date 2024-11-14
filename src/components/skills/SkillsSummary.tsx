@@ -78,7 +78,7 @@ export const SkillsSummary = () => {
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
     setBenchmarkSearchSkills(skills);
-    setSearchTerm(skills[0] || "");
+    setSearchTerm(skills.join(' ')); // Join all selected skills with spaces
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
