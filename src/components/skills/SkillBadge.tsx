@@ -35,7 +35,7 @@ export const SkillBadge = ({
   };
 
   const shouldShowGoal = () => {
-    // If it's in the current states and marked as required (skill goal)
+    // Check if the skill is marked as "Skill Goal" in the Skills Matrix
     if (skillState) {
       return skillState.requirement === 'required';
     }
