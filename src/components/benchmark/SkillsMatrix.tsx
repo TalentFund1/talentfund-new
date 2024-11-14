@@ -14,7 +14,6 @@ import {
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams, useLocation } from "react-router-dom";
@@ -26,10 +25,11 @@ const ITEMS_PER_PAGE = 10;
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedLevel, setSelectedLevel] = useState("all");
+  const [selectedInterest, setSelectedInterest] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
-  const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { selectedSkills } = useSelectedSkills();
@@ -43,6 +43,22 @@ export const SkillsMatrix = () => {
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) {
         return false;
+      }
+
+      // Filter by skill level
+      if (selectedLevel !== 'all') {
+        const skillLevel = skill.level.toLowerCase();
+        if (skillLevel !== selectedLevel.toLowerCase()) {
+          return false;
+        }
+      }
+
+      // Filter by skill interest/requirement
+      if (selectedInterest !== 'all') {
+        const requirement = skill.requirement?.toLowerCase() || 'unknown';
+        if (requirement !== selectedInterest.toLowerCase()) {
+          return false;
+        }
       }
 
       if (isRoleBenchmarkTab) {
@@ -77,7 +93,6 @@ export const SkillsMatrix = () => {
     setSelectedSearchSkills([]);
   };
 
-  // Infinite scroll observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -100,11 +115,7 @@ export const SkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <SkillsMatrixHeader 
-          hasChanges={hasChanges}
-          onSave={saveChanges}
-          onCancel={cancelChanges}
-        />
+        <SkillsMatrixHeader />
         <Separator className="my-4" />
         
         {!isRoleBenchmarkTab ? (
@@ -162,17 +173,44 @@ export const SkillsMatrix = () => {
               )}
             </div>
             <div className="flex justify-between items-start gap-4">
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-[180px] bg-white">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="specialized">Specialized Skills</SelectItem>
-                  <SelectItem value="common">Common Skills</SelectItem>
-                  <SelectItem value="certification">Certifications</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex gap-4">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-[180px] bg-white">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="specialized">Specialized Skills</SelectItem>
+                    <SelectItem value="common">Common Skills</SelectItem>
+                    <SelectItem value="certification">Certifications</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+                  <SelectTrigger className="w-[180px] bg-white">
+                    <SelectValue placeholder="Skill Level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Levels</SelectItem>
+                    <SelectItem value="advanced">Advanced</SelectItem>
+                    <SelectItem value="intermediate">Intermediate</SelectItem>
+                    <SelectItem value="beginner">Beginner</SelectItem>
+                    <SelectItem value="unspecified">Unspecified</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={selectedInterest} onValueChange={setSelectedInterest}>
+                  <SelectTrigger className="w-[180px] bg-white">
+                    <SelectValue placeholder="Skill Interest" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Interests</SelectItem>
+                    <SelectItem value="required">Skill Goal</SelectItem>
+                    <SelectItem value="not-interested">Not Interested</SelectItem>
+                    <SelectItem value="unknown">Unknown</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <Button>Add Skill</Button>
             </div>
           </div>
