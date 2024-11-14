@@ -14,7 +14,6 @@ import { useTrack } from "./context/TrackContext";
 import { jobTitles } from "./competency/skillProfileData";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
-import { getLevelsForTrack } from "@/components/benchmark/data/levelData";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -33,7 +32,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { id: urlRoleId } = useParams<{ id: string }>();
 
   const currentRoleId = propRoleId || urlRoleId || "123";
-  const track = initialTrack || getTrackForRole(currentRoleId);
+  const track = initialTrack || getTrackForRole(currentRoleId) || "Professional";
   const jobTitle = jobTitles[currentRoleId] || "AI Engineer";
 
   useEffect(() => {
@@ -54,6 +53,12 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       title: "Changes cancelled",
       description: "Your changes have been discarded.",
     });
+  };
+
+  const getLevelsForTrack = () => {
+    return track === "Professional" 
+      ? ["P1", "P2", "P3", "P4", "P5", "P6"] 
+      : ["M3", "M4", "M5", "M6"];
   };
 
   const getSkillsByCategory = () => {
@@ -89,9 +94,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const getSkillDetails = (skillName: string, level: string) => {
     const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
     const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
+      ...(currentRoleSkills.specialized || []),
+      ...(currentRoleSkills.common || []),
+      ...(currentRoleSkills.certifications || [])
     ];
     
     const skill = allSkills.find(s => s.title === skillName);
@@ -104,7 +109,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const skills = getSkillsByCategory();
-  const levels = getLevelsForTrack(track);
+  const levels = getLevelsForTrack();
   const uniqueSkills = skills.map(skill => skill.title).sort();
 
   return (
