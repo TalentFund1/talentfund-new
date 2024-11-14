@@ -10,6 +10,16 @@ import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useBenchmarkSearch } from "./context/BenchmarkSearchContext";
 
+const getLevelPriority = (level: string = 'unspecified') => {
+  const priorities: { [key: string]: number } = {
+    'advanced': 0,
+    'intermediate': 1,
+    'beginner': 2,
+    'unspecified': 3
+  };
+  return priorities[level.toLowerCase()] ?? 3;
+};
+
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
     specialized: boolean;
