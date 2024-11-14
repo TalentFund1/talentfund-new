@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons";
 import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
+import { Heart, X, CircleHelp } from "lucide-react";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -12,7 +13,7 @@ interface SkillLevelCellProps {
 }
 
 export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
-  const { getCurrentState } = useSkillLevelState(skillTitle);
+  const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
 
@@ -22,7 +23,17 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
       setLevel(state.level);
       setRequired(state.requirement);
     }
-  }, [skillTitle]);
+
+    // Log all states when component mounts
+    console.log("All Skills States:", Object.entries(currentStates).map(([skill, state]) => ({
+      skill,
+      level: state.level,
+      requirement: state.requirement,
+      label: state.requirement === 'required' ? 'Skill Goal' : 
+             state.requirement === 'not-interested' ? 'Not Interested' : 
+             'Unknown'
+    })));
+  }, [skillTitle, currentStates]);
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
@@ -90,17 +101,17 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
           <SelectContent>
             <SelectItem value="required">
               <span className="flex items-center gap-1.5">
-                {getRequirementIcon('required')} Skill Goal
+                <Heart className="w-3.5 h-3.5" /> Skill Goal
               </span>
             </SelectItem>
             <SelectItem value="not-interested">
               <span className="flex items-center gap-1.5">
-                {getRequirementIcon('not-interested')} Not Interested
+                <X className="w-3.5 h-3.5" /> Not Interested
               </span>
             </SelectItem>
             <SelectItem value="unknown">
               <span className="flex items-center gap-1.5">
-                {getRequirementIcon('unknown')} Unknown
+                <CircleHelp className="w-3.5 h-3.5" /> Unknown
               </span>
             </SelectItem>
           </SelectContent>
