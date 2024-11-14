@@ -5,7 +5,7 @@ import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
 import { initialSkills, getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { categorizeSkill } from "../benchmark/skills-matrix/skillCategories";
+import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 
@@ -51,35 +51,33 @@ export const SkillsSummary = () => {
       return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
     });
 
-  const specializedSkills: DetailedSkill[] = transformedSkills.filter(
-    skill => categorizeSkill(skill.name) === 'specialized'
-  );
+  const specializedSkills: DetailedSkill[] = filterSkillsByCategory(employeeSkills, "specialized")
+    .map(skill => ({
+      name: skill.title,
+      level: currentStates[skill.title]?.level || skill.level,
+      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                   currentStates[skill.title]?.requirement === 'skill_goal' ||
+                   skill.level === 'advanced'
+    }));
 
-  const commonSkills: DetailedSkill[] = transformedSkills.filter(
-    skill => categorizeSkill(skill.name) === 'common'
-  );
+  const commonSkills: DetailedSkill[] = filterSkillsByCategory(employeeSkills, "common")
+    .map(skill => ({
+      name: skill.title,
+      level: currentStates[skill.title]?.level || skill.level,
+      isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                   currentStates[skill.title]?.requirement === 'skill_goal' ||
+                   skill.level === 'advanced'
+    }));
 
-  const certifications: DetailedSkill[] = employeeSkills
-    .filter(skill => categorizeSkill(skill.title) === 'certification')
-    .map(skill => ({ 
+  const certifications: DetailedSkill[] = filterSkillsByCategory(employeeSkills, "certification")
+    .map(skill => ({
       name: skill.title,
       level: currentStates[skill.title]?.level || skill.level,
       isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
                    currentStates[skill.title]?.requirement === 'skill_goal' ||
                    skill.requirement === 'required' ||
                    skill.requirement === 'skill_goal'
-    }))
-    .sort((a, b) => {
-      const levelOrder = {
-        advanced: 0,
-        intermediate: 1,
-        beginner: 2,
-        unspecified: 3
-      };
-      const levelA = (a.level || 'unspecified').toLowerCase();
-      const levelB = (b.level || 'unspecified').toLowerCase();
-      return levelOrder[levelA as keyof typeof levelOrder] - levelOrder[levelB as keyof typeof levelOrder];
-    });
+    }));
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
