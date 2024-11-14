@@ -4,9 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { SkillCell } from "./competency/SkillCell";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { skillsByCategory } from "./competency/skillsData";
 import { CategorySection } from "./competency/CategorySection";
-import { categorizeSkills } from "./competency/skillCategories";
 import { useCompetencyStore } from "./competency/CompetencyState";
 import { useToast } from "@/hooks/use-toast";
 import { TrackSelection } from "./TrackSelection";
@@ -28,7 +26,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return savedCategory || "all";
   });
   const { getTrackForRole } = useTrack();
-  const { saveChanges, cancelChanges } = useCompetencyStore();
+  const { saveChanges, cancelChanges, hasChanges } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
 
@@ -125,11 +123,13 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
           <Button 
             variant="outline" 
             onClick={handleCancel}
+            disabled={!hasChanges}
           >
             Cancel
           </Button>
           <Button 
             onClick={handleSave}
+            disabled={!hasChanges}
           >
             Save
           </Button>

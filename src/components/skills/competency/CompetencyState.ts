@@ -8,6 +8,7 @@ interface SkillState {
 
 interface CompetencyState {
   currentStates: Record<string, Record<string, SkillState>>;
+  hasChanges: boolean;
   setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
@@ -17,6 +18,7 @@ export const useCompetencyStore = create<CompetencyState>()(
   persist(
     (set) => ({
       currentStates: {},
+      hasChanges: false,
       setSkillState: (skillName, level, levelKey, required) =>
         set((state) => ({
           currentStates: {
@@ -29,12 +31,14 @@ export const useCompetencyStore = create<CompetencyState>()(
               },
             },
           },
+          hasChanges: true,
         })),
-      saveChanges: () => set((state) => ({ ...state })),
+      saveChanges: () => set({ hasChanges: false }),
       cancelChanges: () =>
-        set((state) => ({
+        set({
           currentStates: {},
-        })),
+          hasChanges: false,
+        }),
     }),
     {
       name: 'competency-storage',
