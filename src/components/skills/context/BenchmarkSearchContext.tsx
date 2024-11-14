@@ -3,23 +3,15 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 interface BenchmarkSearchContextType {
   benchmarkSearchSkills: string[];
   setBenchmarkSearchSkills: (skills: string[]) => void;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
 }
 
 const BenchmarkSearchContext = createContext<BenchmarkSearchContextType | undefined>(undefined);
 
 export const BenchmarkSearchProvider = ({ children }: { children: ReactNode }) => {
   const [benchmarkSearchSkills, setBenchmarkSearchSkills] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
 
   return (
-    <BenchmarkSearchContext.Provider value={{ 
-      benchmarkSearchSkills, 
-      setBenchmarkSearchSkills,
-      searchTerm,
-      setSearchTerm
-    }}>
+    <BenchmarkSearchContext.Provider value={{ benchmarkSearchSkills, setBenchmarkSearchSkills }}>
       {children}
     </BenchmarkSearchContext.Provider>
   );

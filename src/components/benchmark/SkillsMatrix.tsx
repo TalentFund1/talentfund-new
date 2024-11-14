@@ -8,14 +8,14 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 
 const ITEMS_PER_PAGE = 10;
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedLevel, setSelectedLevel] = useState("advanced");
-  const [selectedInterest, setSelectedInterest] = useState("skill_goal");
+  const [selectedLevel, setSelectedLevel] = useState("all");
+  const [selectedInterest, setSelectedInterest] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
@@ -24,7 +24,6 @@ export const SkillsMatrix = () => {
   const observerTarget = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { saveChanges, cancelChanges, hasChanges: storeHasChanges, currentStates } = useSkillsMatrixStore();
-  const { searchTerm, setSearchTerm } = useBenchmarkSearch();
 
   const employeeSkills = getEmployeeSkills(id || "");
 

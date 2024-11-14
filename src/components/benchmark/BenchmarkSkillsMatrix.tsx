@@ -16,12 +16,14 @@ const ITEMS_PER_PAGE = 10;
 
 export const BenchmarkSkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const { id } = useParams<{ id: string }>();
-  const { benchmarkSearchSkills, searchTerm, setSearchTerm } = useBenchmarkSearch();
-  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
+  const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
 
+  // Update selected search skills when benchmarkSearchSkills changes
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
   }, [benchmarkSearchSkills]);
@@ -41,11 +43,8 @@ export const BenchmarkSkillsMatrix = () => {
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
-      const newTerm = searchTerm.trim().toLowerCase();
-      if (!selectedSearchSkills.includes(newTerm)) {
-        setSelectedSearchSkills(prev => [...prev, newTerm]);
-        setSearchTerm("");
-      }
+      setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
+      setSearchTerm("");
     }
   };
 
@@ -58,6 +57,7 @@ export const BenchmarkSkillsMatrix = () => {
     setSelectedSearchSkills([]);
   };
 
+  // Infinite scroll observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -161,6 +161,7 @@ export const BenchmarkSkillsMatrix = () => {
           filteredSkills={paginatedSkills}
         />
         
+        {/* Infinite scroll observer target */}
         {visibleItems < filteredSkills.length && (
           <div 
             ref={observerTarget} 
