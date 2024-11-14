@@ -9,8 +9,6 @@ import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,27 +26,16 @@ export const SkillsMatrix = () => {
   const { selectedSkills } = useSelectedSkills();
   const { toggledSkills } = useToggledSkills();
   const observerTarget = useRef<HTMLDivElement>(null);
-  const { currentStates, originalStates, saveChanges, cancelChanges } = useSkillsMatrixStore();
 
   const isRoleBenchmarkTab = location.pathname.includes('benchmark');
   const employeeSkills = getEmployeeSkills(id || "");
 
-  useEffect(() => {
-    // Check if there are any differences between current and original states
-    const hasStateChanges = JSON.stringify(currentStates) !== JSON.stringify(originalStates);
-    setHasChanges(hasStateChanges);
-  }, [currentStates, originalStates]);
-
   const handleSave = () => {
-    saveChanges();
     setHasChanges(false);
-    toast.success("Changes saved successfully");
   };
 
   const handleCancel = () => {
-    cancelChanges();
     setHasChanges(false);
-    toast.info("Changes discarded");
   };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
@@ -135,25 +122,42 @@ export const SkillsMatrix = () => {
         />
         <Separator className="my-4" />
         
-        <SkillsMatrixFilters 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-          handleSearchKeyDown={handleSearchKeyDown}
-          removeSearchSkill={removeSearchSkill}
-          clearSearch={clearSearch}
-        />
+        {!isRoleBenchmarkTab ? (
+          <SkillsMatrixFilters 
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            selectedLevel={selectedLevel}
+            setSelectedLevel={setSelectedLevel}
+            selectedInterest={selectedInterest}
+            setSelectedInterest={setSelectedInterest}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedSearchSkills={selectedSearchSkills}
+            setSelectedSearchSkills={setSelectedSearchSkills}
+            handleSearchKeyDown={handleSearchKeyDown}
+            removeSearchSkill={removeSearchSkill}
+            clearSearch={clearSearch}
+          />
+        ) : (
+          <SkillsMatrixFilters 
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            selectedLevel={selectedLevel}
+            setSelectedLevel={setSelectedLevel}
+            selectedInterest={selectedInterest}
+            setSelectedInterest={setSelectedInterest}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedSearchSkills={selectedSearchSkills}
+            setSelectedSearchSkills={setSelectedSearchSkills}
+            handleSearchKeyDown={handleSearchKeyDown}
+            removeSearchSkill={removeSearchSkill}
+            clearSearch={clearSearch}
+          />
+        )}
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
-          setHasChanges={setHasChanges}
         />
         
         {visibleItems < filteredSkills.length && (
