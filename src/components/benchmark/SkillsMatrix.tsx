@@ -31,6 +31,11 @@ export const SkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
 
+  // Sync local hasChanges state with store's hasChanges
+  useEffect(() => {
+    setHasChanges(storeHasChanges);
+  }, [storeHasChanges]);
+
   const handleSave = () => {
     saveChanges();
     setHasChanges(false);
