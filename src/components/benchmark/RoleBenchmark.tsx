@@ -51,7 +51,6 @@ export const RoleBenchmark = () => {
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Update benchmark search skills only when role or toggled skills change
   useEffect(() => {
     const allSkills = [
       ...(selectedRoleSkills.specialized || []),
