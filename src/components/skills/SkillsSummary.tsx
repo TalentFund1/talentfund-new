@@ -36,7 +36,6 @@ export const SkillsSummary = () => {
   const { currentStates } = useSkillsMatrixStore();
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
 
-  // Get employee skills and transform them
   const employeeSkills = getEmployeeSkills(id || "");
 
   const handleSkillsChange = (skills: string[]) => {

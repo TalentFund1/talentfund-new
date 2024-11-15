@@ -127,34 +127,34 @@ const EmployeeProfile = () => {
             <EmployeeDetails employee={employee} />
           </Card>
 
-          <BenchmarkSearchProvider>
-            <TrackProvider>
-              <Tabs defaultValue="experience" className="w-full space-y-6">
-                <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
-                  <TabsTrigger 
-                    value="experience" 
-                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-                  >
-                    Skills Summary
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="benchmark"
-                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-                  >
-                    Role Benchmark
-                  </TabsTrigger>
-                </TabsList>
+          <TrackProvider>
+            <Tabs defaultValue="experience" className="w-full space-y-6">
+              <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
+                <TabsTrigger 
+                  value="experience" 
+                  className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                >
+                  Skills Summary
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="benchmark"
+                  className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                >
+                  Role Benchmark
+                </TabsTrigger>
+              </TabsList>
 
-                <TabsContent value="experience" className="space-y-6">
-                  <SelectedSkillsProvider>
-                    <Card className="p-8 bg-white">
-                      <SkillsSummary />
-                    </Card>
-                    <SkillsMatrix />
-                  </SelectedSkillsProvider>
-                </TabsContent>
+              <TabsContent value="experience" className="space-y-6">
+                <SelectedSkillsProvider>
+                  <Card className="p-8 bg-white">
+                    <SkillsSummary />
+                  </Card>
+                  <SkillsMatrix />
+                </SelectedSkillsProvider>
+              </TabsContent>
 
-                <TabsContent value="benchmark" className="space-y-6">
+              <TabsContent value="benchmark" className="space-y-6">
+                <BenchmarkSearchProvider>
                   <SelectedSkillsProvider>
                     <Card className="p-8 bg-white">
                       <RoleBenchmark />
@@ -162,10 +162,10 @@ const EmployeeProfile = () => {
                     <BenchmarkAnalysis />
                     <BenchmarkSkillsMatrix />
                   </SelectedSkillsProvider>
-                </TabsContent>
-              </Tabs>
-            </TrackProvider>
-          </BenchmarkSearchProvider>
+                </BenchmarkSearchProvider>
+              </TabsContent>
+            </Tabs>
+          </TrackProvider>
         </div>
       </div>
     </div>
