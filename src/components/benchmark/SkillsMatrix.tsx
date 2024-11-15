@@ -8,9 +8,9 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
-import { useBenchmarkSearch } from "@/components/skills/context/BenchmarkSearchContext";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { technicalSkills, softSkills } from '@/components/skillsData';
+import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,7 +25,7 @@ export const SkillsMatrix = () => {
   const observerTarget = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { saveChanges, cancelChanges, hasChanges: storeHasChanges, currentStates } = useSkillsMatrixStore();
-  const { benchmarkSearchSkills, setBenchmarkSearchSkills } = useBenchmarkSearch();
+  const { matrixSearchSkills, setMatrixSearchSkills } = useSkillsMatrixSearch();
   const allSkills = [...technicalSkills, ...softSkills];
 
   const employeeSkills = getEmployeeSkills(id || "");
@@ -81,8 +81,8 @@ export const SkillsMatrix = () => {
         }
       }
 
-      if (benchmarkSearchSkills.length > 0) {
-        matchesSearch = benchmarkSearchSkills.some(term => 
+      if (matrixSearchSkills.length > 0) {
+        matchesSearch = matrixSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
         );
       }
@@ -144,8 +144,8 @@ export const SkillsMatrix = () => {
             label=""
             placeholder="Search skills..."
             items={allSkills}
-            selectedItems={benchmarkSearchSkills}
-            onItemsChange={setBenchmarkSearchSkills}
+            selectedItems={matrixSearchSkills}
+            onItemsChange={setMatrixSearchSkills}
           />
         </div>
         

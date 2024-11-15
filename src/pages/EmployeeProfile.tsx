@@ -9,6 +9,7 @@ import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
 import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkillsContext";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import { BenchmarkSearchProvider } from "@/components/skills/context/BenchmarkSearchContext";
+import { SkillsMatrixSearchProvider } from "@/components/skills/context/SkillsMatrixSearchContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { EmployeeHeader } from "@/components/employee/EmployeeHeader";
 import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
@@ -146,12 +147,12 @@ const EmployeeProfile = () => {
 
               <TabsContent value="experience" className="space-y-6">
                 <SelectedSkillsProvider>
-                  <BenchmarkSearchProvider>
+                  <SkillsMatrixSearchProvider>
                     <Card className="p-8 bg-white">
                       <SkillsSummary />
                     </Card>
                     <SkillsMatrix />
-                  </BenchmarkSearchProvider>
+                  </SkillsMatrixSearchProvider>
                 </SelectedSkillsProvider>
               </TabsContent>
 
