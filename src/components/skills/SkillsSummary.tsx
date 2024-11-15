@@ -37,6 +37,7 @@ export const SkillsSummary = () => {
   const { currentStates } = useSkillsMatrixStore();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
 
+  // Get employee skills and transform them
   const employeeSkills = getEmployeeSkills(id || "");
 
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
@@ -57,7 +58,7 @@ export const SkillsSummary = () => {
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
-    setBenchmarkSearchSkills(skills); // This will update both matrices
+    setBenchmarkSearchSkills(skills);
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -98,7 +99,6 @@ export const SkillsSummary = () => {
 
   const handleClearAll = () => {
     setSelectedSkills([]);
-    setBenchmarkSearchSkills([]); // Clear both matrices
   };
 
   const toggleSection = (section: keyof typeof expandedSections) => {
