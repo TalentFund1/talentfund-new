@@ -124,6 +124,7 @@ export const BenchmarkSkillsMatrix = () => {
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
           showCompanySkill={false}
+          isReadOnly={true}
         />
         
         {visibleItems < filteredSkills.length && (
