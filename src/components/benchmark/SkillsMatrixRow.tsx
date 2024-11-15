@@ -12,10 +12,9 @@ interface SkillsMatrixRowProps {
     confidence: string;
   };
   showCompanySkill?: boolean;
-  isReadOnly?: boolean;
 }
 
-export const SkillsMatrixRow = ({ skill, showCompanySkill = true, isReadOnly = false }: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill, showCompanySkill = true }: SkillsMatrixRowProps) => {
   const { currentStates, setSkillState } = useSkillsMatrixStore();
   const currentState = currentStates[skill.title] || {
     level: skill.level,
@@ -41,9 +40,7 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true, isReadOnly = f
   };
 
   const handleLevelChange = (newLevel: string, requirement: string) => {
-    if (!isReadOnly) {
-      setSkillState(skill.title, newLevel, requirement);
-    }
+    setSkillState(skill.title, newLevel, requirement);
   };
 
   return (
@@ -69,7 +66,6 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true, isReadOnly = f
         initialLevel={currentState.level} 
         skillTitle={skill.title}
         onLevelChange={handleLevelChange}
-        isReadOnly={isReadOnly}
       />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (

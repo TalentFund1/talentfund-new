@@ -11,10 +11,9 @@ interface SkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
   onLevelChange?: (newLevel: string, requirement: string) => void;
-  isReadOnly?: boolean;
 }
 
-export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isReadOnly = false }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
   const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
@@ -28,6 +27,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
     }
   }, [skillTitle, currentStates]);
 
+  // Add effect to handle cancellation
   useEffect(() => {
     const originalState = originalStates[skillTitle];
     if (originalState) {
@@ -37,14 +37,12 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
   }, [originalStates, skillTitle]);
 
   const handleLevelChange = (newLevel: string) => {
-    if (isReadOnly) return;
     setLevel(newLevel);
     setSkillState(skillTitle, newLevel, required);
     onLevelChange?.(newLevel, required);
   };
 
   const handleRequirementChange = (newRequired: string) => {
-    if (isReadOnly) return;
     setRequired(newRequired);
     setSkillState(skillTitle, level, newRequired);
     onLevelChange?.(level, newRequired);
@@ -53,7 +51,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={level} onValueChange={handleLevelChange} disabled={isReadOnly}>
+        <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
@@ -92,7 +90,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
           </SelectContent>
         </Select>
 
-        <Select value={required} onValueChange={handleRequirementChange} disabled={isReadOnly}>
+        <Select value={required} onValueChange={handleRequirementChange}>
           <SelectTrigger 
             className={getRequirementStyles(required, level)}
           >
