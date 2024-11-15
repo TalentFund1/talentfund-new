@@ -8,7 +8,6 @@ import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategori
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { useBenchmarkSearch } from "./context/BenchmarkSearchContext";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -35,7 +34,6 @@ export const SkillsSummary = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
-  const { setBenchmarkSearchSkills } = useBenchmarkSearch();
 
   // Get employee skills and transform them
   const employeeSkills = getEmployeeSkills(id || "");
@@ -58,7 +56,6 @@ export const SkillsSummary = () => {
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
-    setBenchmarkSearchSkills(skills);
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
