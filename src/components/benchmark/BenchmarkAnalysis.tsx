@@ -8,13 +8,14 @@ import { useTrack } from "../skills/context/TrackContext";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { useRoleStore } from "./RoleBenchmark";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
-  const [selectedRole, setSelectedRole] = useState<string>(id || "123");
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "123");
+  const { selectedRole, setSelectedRole } = useRoleStore();
   
   // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
