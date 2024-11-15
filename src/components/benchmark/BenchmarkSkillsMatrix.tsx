@@ -114,9 +114,8 @@ export const BenchmarkSkillsMatrix = () => {
               Manage and track employee skills and competencies
             </p>
           </div>
-          <div className="flex gap-2">
+          <div>
             <Button variant="outline" className="bg-white">Export</Button>
-            <Button>Add Skill</Button>
           </div>
         </div>
 
