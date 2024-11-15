@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
@@ -33,22 +32,18 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesLevel = true;
       let matchesInterest = true;
 
-      // Get the current skill state
       const currentSkillState = currentStates[skill.title];
       const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
       const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
-      // Level filtering
       if (selectedLevel !== 'all') {
         matchesLevel = skillLevel === selectedLevel.toLowerCase();
       }
 
-      // Interest filtering
       if (selectedInterest !== 'all') {
         matchesInterest = requirement === selectedInterest.toLowerCase();
       }
 
-      // Search filtering
       if (selectedSearchSkills.length > 0) {
         matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
@@ -107,16 +102,11 @@ export const BenchmarkSkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
-            <p className="text-sm text-muted-foreground">
-              Manage and track employee skills and competencies
-            </p>
-          </div>
-          <div>
-            <Button variant="outline" className="bg-white">Export</Button>
-          </div>
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
+          <p className="text-sm text-muted-foreground">
+            Manage and track employee skills and competencies
+          </p>
         </div>
 
         <BenchmarkMatrixFilters
