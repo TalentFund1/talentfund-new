@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -6,24 +7,19 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 
 const ITEMS_PER_PAGE = 10;
 
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const { id } = useParams<{ id: string }>();
-  const { benchmarkSearchSkills } = useBenchmarkSearch();
+  const { selectedSkills } = useSelectedSkills();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
-
-  useEffect(() => {
-    setSelectedSearchSkills(benchmarkSearchSkills);
-  }, [benchmarkSearchSkills]);
 
   const employeeSkills = getEmployeeSkills(id || "");
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
@@ -48,8 +44,8 @@ export const BenchmarkSkillsMatrix = () => {
       }
 
       // Search filtering
-      if (selectedSearchSkills.length > 0) {
-        matchesSearch = selectedSearchSkills.some(term => 
+      if (selectedSkills.length > 0) {
+        matchesSearch = selectedSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
         );
       } else if (searchTerm) {
@@ -76,12 +72,11 @@ export const BenchmarkSkillsMatrix = () => {
     });
 
   const removeSearchSkill = (skill: string) => {
-    setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
+    // This is now handled by the SelectedSkillsContext
   };
 
   const clearSearch = () => {
     setSearchTerm("");
-    setSelectedSearchSkills([]);
   };
 
   useEffect(() => {
@@ -106,14 +101,17 @@ export const BenchmarkSkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold text-foreground">Skill Profile</h2>
-            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {Array.from(selectedSearchSkills).length}
-            </span>
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
+            <p className="text-sm text-muted-foreground">
+              Manage and track employee skills and competencies
+            </p>
           </div>
-          <Button>Add Skill</Button>
+          <div className="flex gap-2">
+            <Button variant="outline" className="bg-white">Export</Button>
+            <Button>Add Skill</Button>
+          </div>
         </div>
 
         <BenchmarkMatrixFilters
@@ -123,16 +121,14 @@ export const BenchmarkSkillsMatrix = () => {
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
-          selectedSearchSkills={selectedSearchSkills}
+          selectedSearchSkills={selectedSkills}
           removeSearchSkill={removeSearchSkill}
           clearSearch={clearSearch}
         />
 
-        <div className="rounded-lg border border-border overflow-hidden">
-          <SkillsMatrixTable 
-            filteredSkills={paginatedSkills}
-          />
-        </div>
+        <SkillsMatrixTable 
+          filteredSkills={paginatedSkills}
+        />
         
         {visibleItems < filteredSkills.length && (
           <div 
