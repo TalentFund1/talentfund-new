@@ -3,6 +3,13 @@ import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons"
 import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface SkillLevelCellProps {
   initialLevel: string;
