@@ -1,6 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
+import { ReadOnlySkillCell } from "../skills/competency/ReadOnlySkillCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillsMatrixRowProps {
@@ -12,10 +13,15 @@ interface SkillsMatrixRowProps {
     confidence: string;
   };
   showCompanySkill?: boolean;
+  isReadOnly?: boolean;
 }
 
-export const SkillsMatrixRow = ({ skill, showCompanySkill = true }: SkillsMatrixRowProps) => {
-  const { currentStates, setSkillState } = useSkillsMatrixStore();
+export const SkillsMatrixRow = ({ 
+  skill, 
+  showCompanySkill = true,
+  isReadOnly = false 
+}: SkillsMatrixRowProps) => {
+  const { currentStates } = useSkillsMatrixStore();
   const currentState = currentStates[skill.title] || {
     level: skill.level,
     requirement: 'required'
@@ -39,10 +45,6 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true }: SkillsMatrix
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const handleLevelChange = (newLevel: string, requirement: string) => {
-    setSkillState(skill.title, newLevel, requirement);
-  };
-
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
@@ -62,11 +64,18 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true }: SkillsMatrix
           </div>
         </TableCell>
       )}
-      <SkillLevelCell 
-        initialLevel={currentState.level} 
-        skillTitle={skill.title}
-        onLevelChange={handleLevelChange}
-      />
+      {isReadOnly ? (
+        <ReadOnlySkillCell 
+          skillName={skill.title}
+          details={currentState}
+          isLastColumn={false}
+        />
+      ) : (
+        <SkillLevelCell 
+          initialLevel={currentState.level} 
+          skillTitle={skill.title}
+        />
+      )}
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
