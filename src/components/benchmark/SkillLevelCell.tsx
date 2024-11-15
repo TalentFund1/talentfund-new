@@ -26,7 +26,7 @@ export const SkillLevelCell = ({
   const [required, setRequired] = useState<'required' | 'preferred'>('required');
 
   const getLevelStyles = (level: string) => {
-    const baseStyles = "rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144]";
+    const baseStyles = "rounded-t-none px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144]";
     
     switch (level.toLowerCase()) {
       case "advanced":
@@ -49,7 +49,7 @@ export const SkillLevelCell = ({
           ? "border-[#008000]"
           : "border-gray-300";
 
-    return `text-xs px-2 py-1 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md bg-gray-100/90 ${borderColor}`;
+    return `text-xs px-2 py-1 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-none bg-gray-100/90 ${borderColor}`;
   };
 
   const getLevelIcon = (level: string) => {
@@ -78,7 +78,7 @@ export const SkillLevelCell = ({
   if (isReadOnly) {
     return (
       <TableCell className="border-r border-blue-200 p-0">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center h-full">
           <div className={getLevelStyles(initialLevel)}>
             <span className="flex items-center gap-2 justify-center text-[15px]">
               {getLevelIcon(initialLevel)}
@@ -96,7 +96,7 @@ export const SkillLevelCell = ({
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center h-full">
         <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
             className={`${getLevelStyles(level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
