@@ -1,31 +1,17 @@
-import React, { createContext, useContext } from 'react';
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import React, { createContext, useContext, useState } from 'react';
 
-interface SkillsMatrixSearchState {
+interface SkillsMatrixSearchContextType {
   matrixSearchSkills: string[];
-  setMatrixSearchSkills: (skills: string[]) => void;
+  setMatrixSearchSkills: (skills: string[] | ((prev: string[]) => string[])) => void;
 }
 
-const useSkillsMatrixSearchStore = create<SkillsMatrixSearchState>()(
-  persist(
-    (set) => ({
-      matrixSearchSkills: [],
-      setMatrixSearchSkills: (skills) => set({ matrixSearchSkills: skills }),
-    }),
-    {
-      name: 'skills-matrix-search',
-    }
-  )
-);
-
-const SkillsMatrixSearchContext = createContext<SkillsMatrixSearchState | undefined>(undefined);
+const SkillsMatrixSearchContext = createContext<SkillsMatrixSearchContextType | undefined>(undefined);
 
 export function SkillsMatrixSearchProvider({ children }: { children: React.ReactNode }) {
-  const store = useSkillsMatrixSearchStore();
+  const [matrixSearchSkills, setMatrixSearchSkills] = useState<string[]>([]);
 
   return (
-    <SkillsMatrixSearchContext.Provider value={store}>
+    <SkillsMatrixSearchContext.Provider value={{ matrixSearchSkills, setMatrixSearchSkills }}>
       {children}
     </SkillsMatrixSearchContext.Provider>
   );

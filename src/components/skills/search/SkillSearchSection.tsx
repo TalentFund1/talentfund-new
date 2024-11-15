@@ -20,12 +20,12 @@ export const SkillSearchSection = ({
 
   const handleSkillsChange = (skills: string[]) => {
     onSkillsChange(skills);
-    setMatrixSearchSkills(skills); // Auto-populate and persist Skills Matrix search
+    setMatrixSearchSkills(skills); // Auto-populate Skills Matrix search
   };
 
   const handleClearAll = () => {
     onClearAll();
-    setMatrixSearchSkills([]); // Clear persisted Skills Matrix search
+    setMatrixSearchSkills([]); // Clear Skills Matrix search
   };
 
   return (
