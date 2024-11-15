@@ -1,10 +1,8 @@
 import { TableCell } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons";
 import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
-import { Heart, X, CircleHelp } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillLevelCellProps {
@@ -54,7 +52,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
     return (
       <TableCell className="border-r border-blue-200 p-0">
         <div className="flex flex-col items-center">
-          <div className={`${getLevelStyles(level)} rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144]`}>
+          <div className={`${getLevelStyles(level)} px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144]`}>
             <span className="flex items-center gap-2 justify-center text-[15px]">
               {getLevelIcon(level)}
               {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -76,7 +74,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
       <div className="flex flex-col items-center">
         <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
-            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
+            className={`${getLevelStyles(level)} rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
