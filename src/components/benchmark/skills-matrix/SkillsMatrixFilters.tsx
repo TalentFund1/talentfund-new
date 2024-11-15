@@ -37,7 +37,7 @@ export const SkillsMatrixFilters = ({
 
           <Select value={selectedLevel} onValueChange={setSelectedLevel}>
             <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="All Levels" />
+              <SelectValue placeholder="Skill Level" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Levels</SelectItem>

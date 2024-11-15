@@ -92,11 +92,7 @@ export const RoleBenchmark = () => {
           selectedLevel={selectedLevel}
         />
 
-        <MissingSkills 
-          roleId={selectedRole} 
-          employeeId="123" 
-          selectedLevel={selectedLevel}
-        />
+        <MissingSkills roleId={selectedRole} employeeId="123" />
 
         <Card className="p-6 bg-white">
           <CompetencyGraph 

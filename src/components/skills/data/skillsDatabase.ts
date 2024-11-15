@@ -13,80 +13,6 @@ export const skillsDatabase: SkillData[] = [
   ...certificationSkills
 ];
 
-export const getSkillRequirements = (
-  skillTitle: string,
-  track: 'professional' | 'managerial',
-  level: string
-): { level: string; requirement: string } | undefined => {
-  if (track === 'professional') {
-    const requirements = {
-      P1: {
-        "Machine Learning": { level: "beginner", requirement: "required" },
-        "Deep Learning": { level: "unspecified", requirement: "preferred" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" },
-        "PyTorch": { level: "unspecified", requirement: "preferred" },
-        "Computer Vision": { level: "unspecified", requirement: "preferred" },
-        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
-        "Python": { level: "unspecified", requirement: "preferred" }
-      },
-      P2: {
-        "Machine Learning": { level: "intermediate", requirement: "required" },
-        "Deep Learning": { level: "unspecified", requirement: "preferred" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" },
-        "PyTorch": { level: "unspecified", requirement: "preferred" },
-        "Computer Vision": { level: "unspecified", requirement: "preferred" },
-        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
-        "Python": { level: "unspecified", requirement: "preferred" }
-      },
-      P3: {
-        "Node.js": { level: "unspecified", requirement: "preferred" },
-        "Database Design": { level: "unspecified", requirement: "preferred" },
-        "API Development": { level: "unspecified", requirement: "required" },
-        "System Architecture": { level: "unspecified", requirement: "preferred" },
-        "Kubernetes": { level: "unspecified", requirement: "preferred" },
-        "Problem Solving": { level: "unspecified", requirement: "preferred" },
-        "Code Review": { level: "unspecified", requirement: "preferred" },
-        "Agile Methodologies": { level: "unspecified", requirement: "required" },
-        "AWS Certified Solutions Architect": { level: "unspecified", requirement: "required" },
-        "Kubernetes Administrator (CKA)": { level: "unspecified", requirement: "preferred" }
-      },
-      P4: {
-        "Node.js": { level: "advanced", requirement: "preferred" },
-        "Database Design": { level: "advanced", requirement: "preferred" },
-        "API Development": { level: "advanced", requirement: "required" },
-        "System Architecture": { level: "advanced", requirement: "preferred" },
-        "Kubernetes": { level: "advanced", requirement: "preferred" },
-        "Problem Solving": { level: "advanced", requirement: "preferred" },
-        "Code Review": { level: "advanced", requirement: "preferred" },
-        "Agile Methodologies": { level: "advanced", requirement: "preferred" },
-        "AWS Certified Solutions Architect": { level: "advanced", requirement: "required" },
-        "Kubernetes Administrator (CKA)": { level: "advanced", requirement: "preferred" }
-      }
-    };
-
-    return requirements[level]?.[skillTitle];
-  }
-
-  // For managerial track (M3-M6)
-  if (track === 'managerial') {
-    const managerialRequirements = {
-      M3: {
-        "System Design": { level: "advanced", requirement: "required" },
-        "Technical Architecture": { level: "advanced", requirement: "required" },
-        "Risk Management": { level: "advanced", requirement: "required" },
-        "Team Leadership": { level: "advanced", requirement: "required" },
-        "Project Management": { level: "advanced", requirement: "required" },
-        "Strategic Planning": { level: "advanced", requirement: "required" },
-        "Stakeholder Management": { level: "advanced", requirement: "required" }
-      }
-    };
-
-    return managerialRequirements[level]?.[skillTitle];
-  }
-
-  return undefined;
-};
-
 export const getSkillsByTrackAndLevel = (
   track: 'professional' | 'managerial',
   level: string
@@ -101,4 +27,18 @@ export const getSkillsByCategory = (
   category: 'specialized' | 'common' | 'certification'
 ): SkillData[] => {
   return skillsDatabase.filter(skill => skill.category === category);
+};
+
+export const getSkillRequirements = (
+  skillTitle: string,
+  track: 'professional' | 'managerial',
+  level: string
+): SkillLevel | undefined => {
+  const skill = skillsDatabase.find(s => s.title === skillTitle);
+  if (!skill) return undefined;
+  
+  const trackData = track === 'professional' ? skill.professionalTrack : skill.managerialTrack;
+  if (!trackData) return undefined;
+
+  return trackData[level];
 };

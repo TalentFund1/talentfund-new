@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
@@ -14,6 +15,7 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 const ITEMS_PER_PAGE = 10;
 
 export const BenchmarkSkillsMatrix = () => {
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
@@ -21,12 +23,13 @@ export const BenchmarkSkillsMatrix = () => {
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
 
+  // Update selected search skills when benchmarkSearchSkills changes
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
   }, [benchmarkSearchSkills]);
 
   const employeeSkills = getEmployeeSkills(id || "");
-  const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
+  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
       if (selectedSearchSkills.length > 0) {
         return selectedSearchSkills.some(term => 
@@ -54,6 +57,7 @@ export const BenchmarkSkillsMatrix = () => {
     setSelectedSearchSkills([]);
   };
 
+  // Infinite scroll observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -137,12 +141,27 @@ export const BenchmarkSkillsMatrix = () => {
               </div>
             )}
           </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full bg-white">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certifications</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
         />
         
+        {/* Infinite scroll observer target */}
         {visibleItems < filteredSkills.length && (
           <div 
             ref={observerTarget} 

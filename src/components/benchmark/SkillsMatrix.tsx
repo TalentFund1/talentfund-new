@@ -37,7 +37,7 @@ export const SkillsMatrix = () => {
       'beginner': 2,
       'unspecified': 3
     };
-    return priorities[level.toLowerCase()] ?? 3; // Default to unspecified priority
+    return priorities[level.toLowerCase()] ?? 4;
   };
 
   const getInterestPriority = (requirement: string) => {
@@ -48,7 +48,7 @@ export const SkillsMatrix = () => {
       'not_interested': 2,
       'unknown': 3
     };
-    return priorities[requirement.toLowerCase()] ?? 3; // Default to unknown priority
+    return priorities[requirement.toLowerCase()] ?? 4;
   };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
@@ -97,16 +97,17 @@ export const SkillsMatrix = () => {
       const aState = currentStates[a.title];
       const bState = currentStates[b.title];
       
-      const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
-      const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
+      const aLevel = aState?.level || a.level || 'unspecified';
+      const bLevel = bState?.level || b.level || 'unspecified';
       
-      // Sort by level priority (Advanced -> Intermediate -> Beginner -> Unspecified)
+      const aInterest = aState?.requirement || a.requirement || 'unknown';
+      const bInterest = bState?.requirement || b.requirement || 'unknown';
+
+      // First sort by level priority
       const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
-      // Then sort by requirement priority
-      const aInterest = (aState?.requirement || a.requirement || 'unknown').toLowerCase();
-      const bInterest = (bState?.requirement || b.requirement || 'unknown').toLowerCase();
+      // Then sort by interest priority
       const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
       if (interestDiff !== 0) return interestDiff;
 
