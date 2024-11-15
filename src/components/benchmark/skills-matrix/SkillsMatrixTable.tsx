@@ -12,18 +12,24 @@ interface SkillsMatrixTableProps {
     confidence: string;
   }>;
   setHasChanges?: Dispatch<SetStateAction<boolean>>;
+  showCompanySkill?: boolean;
 }
 
-export const SkillsMatrixTable = ({ filteredSkills, setHasChanges }: SkillsMatrixTableProps) => {
+export const SkillsMatrixTable = ({ 
+  filteredSkills, 
+  setHasChanges,
+  showCompanySkill = true 
+}: SkillsMatrixTableProps) => {
   return (
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
       <Table>
-        <SkillsMatrixTableHeader />
+        <SkillsMatrixTableHeader showCompanySkill={showCompanySkill} />
         <TableBody>
           {filteredSkills.map((skill) => (
             <SkillsMatrixRow 
               key={skill.title} 
               skill={skill}
+              showCompanySkill={showCompanySkill}
             />
           ))}
         </TableBody>
