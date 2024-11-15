@@ -11,10 +11,9 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
   };
-  showCompanySkill?: boolean;
 }
 
-export const SkillsMatrixRow = ({ skill, showCompanySkill = true }: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
   const { currentStates, setSkillState } = useSkillsMatrixStore();
   const currentState = currentStates[skill.title] || {
     level: skill.level,
@@ -47,21 +46,19 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true }: SkillsMatrix
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
-      {showCompanySkill && (
-        <TableCell className="text-center border-r border-blue-200 py-2">
-          <div className="flex justify-center">
-            {isCompanySkill(skill.title) ? (
-              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
-              </div>
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
-              </div>
-            )}
-          </div>
-        </TableCell>
-      )}
+      <TableCell className="text-center border-r border-blue-200 py-2">
+        <div className="flex justify-center">
+          {isCompanySkill(skill.title) ? (
+            <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+              <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
+            </div>
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+              <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
+            </div>
+          )}
+        </div>
+      </TableCell>
       <SkillLevelCell 
         initialLevel={currentState.level} 
         skillTitle={skill.title}
