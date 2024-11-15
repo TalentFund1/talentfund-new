@@ -19,6 +19,55 @@ interface CompetencyGraphProps {
   roleId?: string;
 }
 
+type LevelCounts = {
+  advanced: number;
+  intermediate: number;
+  beginner: number;
+  unspecified: number;
+};
+
+const calculateLevelCounts = (skillName: string, currentStates: any, levels: string[]): LevelCounts => {
+  const counts: LevelCounts = {
+    advanced: 0,
+    intermediate: 0,
+    beginner: 0,
+    unspecified: 0
+  };
+
+  levels.forEach(level => {
+    const skillState = currentStates[skillName]?.[level];
+    const skillLevel = (skillState?.level || 'unspecified').toLowerCase();
+    counts[skillLevel as keyof LevelCounts]++;
+  });
+
+  return counts;
+};
+
+const sortSkillsByLevelCount = (skills: string[], currentStates: any, levels: string[]): string[] => {
+  return [...skills].sort((a, b) => {
+    const countsA = calculateLevelCounts(a, currentStates, levels);
+    const countsB = calculateLevelCounts(b, currentStates, levels);
+
+    // Sort by advanced count first
+    if (countsB.advanced !== countsA.advanced) {
+      return countsB.advanced - countsA.advanced;
+    }
+    
+    // Then by intermediate count
+    if (countsB.intermediate !== countsA.intermediate) {
+      return countsB.intermediate - countsA.intermediate;
+    }
+    
+    // Then by beginner count
+    if (countsB.beginner !== countsA.beginner) {
+      return countsB.beginner - countsA.beginner;
+    }
+    
+    // Finally by unspecified count
+    return countsB.unspecified - countsA.unspecified;
+  });
+};
+
 export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: CompetencyGraphProps) => {
   const { toggledSkills } = useToggledSkills();
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
@@ -26,9 +75,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return savedCategory || "all";
   });
   const { getTrackForRole } = useTrack();
-  const { saveChanges, cancelChanges, hasChanges } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
+  const { currentStates, saveChanges, cancelChanges, hasChanges } = useCompetencyStore();
 
   const currentRoleId = propRoleId || urlRoleId || "123";
   const [track, setTrack] = useState<"Professional" | "Managerial">(
@@ -39,14 +88,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   useEffect(() => {
     localStorage.setItem('selectedCategory', selectedCategory);
   }, [selectedCategory]);
-
-  useEffect(() => {
-    // Update track when role changes or when track is changed externally
-    const savedTrack = getTrackForRole(currentRoleId);
-    if (savedTrack !== track) {
-      setTrack(savedTrack);
-    }
-  }, [currentRoleId, getTrackForRole, track]);
 
   const handleSave = () => {
     saveChanges();
@@ -74,54 +115,28 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
 
   const getSkillsByCategory = () => {
     const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
-    
-    const filterSkillsByCategory = (category: 'specialized' | 'common' | 'certifications') => {
-      return currentRoleSkills[category]?.filter(skill => toggledSkills.has(skill.title)) || [];
-    };
+    let skills: string[] = [];
     
     if (selectedCategory === "all") {
-      return [
-        ...filterSkillsByCategory('specialized'),
-        ...filterSkillsByCategory('common'),
-        ...filterSkillsByCategory('certifications')
+      skills = [
+        ...(currentRoleSkills.specialized?.map(s => s.title) || []),
+        ...(currentRoleSkills.common?.map(s => s.title) || []),
+        ...(currentRoleSkills.certifications?.map(s => s.title) || [])
       ];
+    } else if (selectedCategory === "specialized") {
+      skills = currentRoleSkills.specialized?.map(s => s.title) || [];
+    } else if (selectedCategory === "common") {
+      skills = currentRoleSkills.common?.map(s => s.title) || [];
+    } else if (selectedCategory === "certification") {
+      skills = currentRoleSkills.certifications?.map(s => s.title) || [];
     }
-    
-    if (selectedCategory === "specialized") {
-      return filterSkillsByCategory('specialized');
-    }
-    
-    if (selectedCategory === "common") {
-      return filterSkillsByCategory('common');
-    }
-    
-    if (selectedCategory === "certification") {
-      return filterSkillsByCategory('certifications');
-    }
-    
-    return [];
+
+    return skills.filter(skillTitle => toggledSkills.has(skillTitle));
   };
 
-  const getSkillDetails = (skillName: string, level: string) => {
-    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-    
-    const skill = allSkills.find(s => s.title === skillName);
-    if (!skill) return { level: "-", required: "-" };
-    
-    return {
-      level: skill.level || "-",
-      required: "required" // Default to required for now
-    };
-  };
-
-  const skills = getSkillsByCategory();
   const levels = getLevelsForTrack();
-  const uniqueSkills = skills.map(skill => skill.title).sort();
+  const skills = getSkillsByCategory();
+  const sortedSkills = sortSkillsByLevelCount(skills, currentStates, levels);
 
   return (
     <div className="space-y-6">
@@ -174,7 +189,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
             </TableRow>
           </TableHeader>
           <TableBody>
-            {uniqueSkills.map((skillName) => (
+            {sortedSkills.map((skillName) => (
               <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
                 <TableCell className="font-medium border-r border-border">
                   {skillName}
@@ -183,7 +198,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
                   <SkillCell 
                     key={level}
                     skillName={skillName}
-                    details={getSkillDetails(skillName, level)}
+                    details={currentStates[skillName]?.[level] || { level: 'unspecified', required: 'preferred' }}
                     isLastColumn={index === levels.length - 1}
                     levelKey={level}
                   />
