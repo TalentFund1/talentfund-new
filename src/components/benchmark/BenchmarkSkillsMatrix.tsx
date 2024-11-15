@@ -2,24 +2,29 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
-import { useSelectedSkills } from "../skills/context/SelectedSkillsContext";
 
 const ITEMS_PER_PAGE = 10;
 
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const { id } = useParams<{ id: string }>();
-  const { selectedSkills } = useSelectedSkills();
+  const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
+
+  useEffect(() => {
+    setSelectedSearchSkills(benchmarkSearchSkills);
+  }, [benchmarkSearchSkills]);
 
   const employeeSkills = getEmployeeSkills(id || "");
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
@@ -44,8 +49,8 @@ export const BenchmarkSkillsMatrix = () => {
       }
 
       // Search filtering
-      if (selectedSkills.length > 0) {
-        matchesSearch = selectedSkills.some(term => 
+      if (selectedSearchSkills.length > 0) {
+        matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
         );
       } else if (searchTerm) {
@@ -72,11 +77,12 @@ export const BenchmarkSkillsMatrix = () => {
     });
 
   const removeSearchSkill = (skill: string) => {
-    // This is now handled by the SelectedSkillsContext
+    setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
   };
 
   const clearSearch = () => {
     setSearchTerm("");
+    setSelectedSearchSkills([]);
   };
 
   useEffect(() => {
@@ -121,7 +127,7 @@ export const BenchmarkSkillsMatrix = () => {
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
-          selectedSearchSkills={selectedSkills}
+          selectedSearchSkills={selectedSearchSkills}
           removeSearchSkill={removeSearchSkill}
           clearSearch={clearSearch}
         />
