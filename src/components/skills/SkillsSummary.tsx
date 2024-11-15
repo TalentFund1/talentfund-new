@@ -37,7 +37,6 @@ export const SkillsSummary = () => {
   const { currentStates } = useSkillsMatrixStore();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
 
-  // Get employee skills and transform them
   const employeeSkills = getEmployeeSkills(id || "");
 
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
@@ -58,6 +57,7 @@ export const SkillsSummary = () => {
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
+    // Also update benchmark search skills to maintain the connection
     setBenchmarkSearchSkills(skills);
     
     const allExistingSkills = [
