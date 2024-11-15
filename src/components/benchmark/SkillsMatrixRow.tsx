@@ -15,11 +15,7 @@ interface SkillsMatrixRowProps {
   isReadOnly?: boolean;
 }
 
-export const SkillsMatrixRow = ({ 
-  skill, 
-  showCompanySkill = true,
-  isReadOnly = false 
-}: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill, showCompanySkill = true, isReadOnly = false }: SkillsMatrixRowProps) => {
   const { currentStates, setSkillState } = useSkillsMatrixStore();
   const currentState = currentStates[skill.title] || {
     level: skill.level,
@@ -45,7 +41,9 @@ export const SkillsMatrixRow = ({
   };
 
   const handleLevelChange = (newLevel: string, requirement: string) => {
-    setSkillState(skill.title, newLevel, requirement);
+    if (!isReadOnly) {
+      setSkillState(skill.title, newLevel, requirement);
+    }
   };
 
   return (
