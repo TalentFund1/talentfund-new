@@ -13,17 +13,15 @@ interface SkillsMatrixTableProps {
   }>;
   setHasChanges?: Dispatch<SetStateAction<boolean>>;
   showCompanySkill?: boolean;
-  isReadOnly?: boolean;
 }
 
 export const SkillsMatrixTable = ({ 
   filteredSkills, 
   setHasChanges,
-  showCompanySkill = true,
-  isReadOnly = false
+  showCompanySkill = true 
 }: SkillsMatrixTableProps) => {
   return (
-    <div className="bg-white rounded-lg overflow-hidden">
+    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
       <Table>
         <SkillsMatrixTableHeader showCompanySkill={showCompanySkill} />
         <TableBody>
@@ -32,7 +30,6 @@ export const SkillsMatrixTable = ({
               key={skill.title} 
               skill={skill}
               showCompanySkill={showCompanySkill}
-              isReadOnly={isReadOnly}
             />
           ))}
         </TableBody>
