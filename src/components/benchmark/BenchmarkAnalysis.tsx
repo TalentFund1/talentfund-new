@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useParams } from "react-router-dom";
@@ -16,25 +17,24 @@ export const BenchmarkAnalysis = () => {
   const employeeSkills = getEmployeeSkills(id || "123");
   const { selectedRole, setSelectedRole } = useRoleStore();
   
-  // Get required skills for the selected role
+  // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
-  // Calculate total required skills (only count required skills, not preferred)
+  // Calculate total skills for the selected role
   const totalSkills = [
     ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common
-  ].filter(skill => skill.requirement === "required").length;
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
 
-  // Calculate matching skills by comparing employee's skills with required role skills
-  const matchingSkills = employeeSkills.filter(empSkill => 
-    [...currentRoleSkills.specialized, ...currentRoleSkills.common]
-      .some(roleSkill => 
-        roleSkill.requirement === "required" && 
-        roleSkill.title === empSkill.title
-      )
-  ).length;
+  // Calculate matching skills by comparing employee's skills with role requirements
+  const matchingSkills = totalSkills.filter(roleSkill => 
+    employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
+  );
 
-  const matchPercentage = Math.round((matchingSkills / totalSkills) * 100);
+  const totalSkillsCount = totalSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
+  const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
   // Calculate competency match
   const competencyTotal = 12;
@@ -78,7 +78,7 @@ export const BenchmarkAnalysis = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Match</span>
                 <span className="text-sm text-foreground">
-                  {matchingSkills} out of {totalSkills}
+                  {matchingSkillsCount} out of {totalSkillsCount}
                 </span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
