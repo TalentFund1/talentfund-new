@@ -1,5 +1,13 @@
 import { TableCell } from "@/components/ui/table";
-import { Star, Shield, Target, Heart, CircleDashed } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -8,7 +16,15 @@ interface SkillLevelCellProps {
   isReadOnly?: boolean;
 }
 
-export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isReadOnly = false }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ 
+  initialLevel, 
+  skillTitle, 
+  onLevelChange, 
+  isReadOnly = false 
+}: SkillLevelCellProps) => {
+  const [level, setLevel] = useState(initialLevel);
+  const [required, setRequired] = useState<'required' | 'preferred'>('required');
+
   const getLevelStyles = (level: string) => {
     const baseStyles = "rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144]";
     
@@ -49,6 +65,16 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
     }
   };
 
+  const handleLevelChange = (newLevel: string) => {
+    setLevel(newLevel);
+    onLevelChange?.(newLevel, required);
+  };
+
+  const handleRequirementChange = (newRequirement: 'required' | 'preferred') => {
+    setRequired(newRequirement);
+    onLevelChange?.(level, newRequirement);
+  };
+
   if (isReadOnly) {
     return (
       <TableCell className="border-r border-blue-200 p-0">
@@ -71,14 +97,14 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={initialLevel} onValueChange={handleLevelChange}>
+        <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
-            className={`${getLevelStyles(initialLevel)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+            className={`${getLevelStyles(level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
-                {getLevelIcon(initialLevel)}
-                {initialLevel.charAt(0).toUpperCase() + initialLevel.slice(1)}
+                {getLevelIcon(level)}
+                {level.charAt(0).toUpperCase() + level.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -112,7 +138,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
 
         <Select value={required} onValueChange={handleRequirementChange}>
           <SelectTrigger 
-            className={`${getRequirementStyles(required, level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+            className={`${getRequirementStyles(level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center">
