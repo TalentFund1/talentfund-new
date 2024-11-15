@@ -146,10 +146,12 @@ const EmployeeProfile = () => {
 
               <TabsContent value="experience" className="space-y-6">
                 <SelectedSkillsProvider>
-                  <Card className="p-8 bg-white">
-                    <SkillsSummary />
-                  </Card>
-                  <SkillsMatrix />
+                  <BenchmarkSearchProvider>
+                    <Card className="p-8 bg-white">
+                      <SkillsSummary />
+                    </Card>
+                    <SkillsMatrix />
+                  </BenchmarkSearchProvider>
                 </SelectedSkillsProvider>
               </TabsContent>
 
