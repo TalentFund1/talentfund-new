@@ -7,11 +7,13 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { SkillsDisplay } from "./SkillsDisplay";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { MissingSkills } from "./MissingSkills";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
 import { create } from "zustand";
 
+// Create a Zustand store for sharing selected role
 interface RoleStore {
   selectedRole: string;
   setSelectedRole: (role: string) => void;
@@ -34,7 +36,6 @@ export const RoleBenchmark = () => {
   const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
-  const [benchmarkSearchSkills, setBenchmarkSearchSkills] = useState<string[]>([]);
   const { selectedRole, setSelectedRole } = useRoleStore();
 
   const currentTrack = getTrackForRole(selectedRole);
@@ -48,18 +49,6 @@ export const RoleBenchmark = () => {
   }, [currentTrack]);
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-
-  useEffect(() => {
-    const allSkills = [
-      ...(selectedRoleSkills.specialized || []),
-      ...(selectedRoleSkills.common || []),
-      ...(selectedRoleSkills.certifications || [])
-    ]
-    .map(skill => skill.title)
-    .filter(skillTitle => toggledSkills.has(skillTitle));
-    
-    setBenchmarkSearchSkills(allSkills);
-  }, [selectedRole, selectedRoleSkills, toggledSkills]);
 
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
@@ -100,8 +89,6 @@ export const RoleBenchmark = () => {
           toggledSkills={toggledSkills}
           roleId={selectedRole}
           selectedLevel={selectedLevel}
-          benchmarkSearchSkills={benchmarkSearchSkills}
-          setBenchmarkSearchSkills={setBenchmarkSearchSkills}
         />
 
         <MissingSkills 

@@ -8,6 +8,7 @@ import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategori
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { useBenchmarkSearch } from "./context/BenchmarkSearchContext";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -34,9 +35,8 @@ export const SkillsSummary = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
-  const [summarySearchSkills, setSummarySearchSkills] = useState<string[]>([]);
+  const { setBenchmarkSearchSkills } = useBenchmarkSearch();
 
-  // Get employee skills and transform them
   const employeeSkills = getEmployeeSkills(id || "");
 
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
@@ -57,7 +57,7 @@ export const SkillsSummary = () => {
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
-    setSummarySearchSkills(skills);
+    setBenchmarkSearchSkills(skills); // This will update both matrices
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -76,9 +76,9 @@ export const SkillsSummary = () => {
   };
 
   const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
-    if (summarySearchSkills.length === 0) return skills;
+    if (selectedSkills.length === 0) return skills;
     return skills.filter(skill => 
-      summarySearchSkills.some(selectedSkill => 
+      selectedSkills.some(selectedSkill => 
         skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
       )
     );
@@ -98,7 +98,7 @@ export const SkillsSummary = () => {
 
   const handleClearAll = () => {
     setSelectedSkills([]);
-    setSummarySearchSkills([]);
+    setBenchmarkSearchSkills([]); // Clear both matrices
   };
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -115,7 +115,7 @@ export const SkillsSummary = () => {
   return (
     <div className="space-y-4 w-full">
       <SkillSearchSection
-        selectedSkills={summarySearchSkills}
+        selectedSkills={selectedSkills}
         onSkillsChange={handleSkillsChange}
         onClearAll={handleClearAll}
       />

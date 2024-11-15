@@ -11,17 +11,13 @@ interface SkillsDisplayProps {
   toggledSkills: Set<string>;
   roleId: string;
   selectedLevel: string;
-  benchmarkSearchSkills: string[];
-  setBenchmarkSearchSkills: (skills: string[]) => void;
 }
 
 export const SkillsDisplay = ({ 
   selectedRoleSkills, 
   toggledSkills, 
   roleId, 
-  selectedLevel,
-  benchmarkSearchSkills,
-  setBenchmarkSearchSkills
+  selectedLevel 
 }: SkillsDisplayProps) => {
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole(roleId);
@@ -48,12 +44,6 @@ export const SkillsDisplay = ({
 
     return filteredSkills
       .filter(skill => toggledSkills.has(skill.title))
-      .filter(skill => {
-        if (benchmarkSearchSkills.length === 0) return true;
-        return benchmarkSearchSkills.some(searchSkill => 
-          skill.title.toLowerCase().includes(searchSkill.toLowerCase())
-        );
-      })
       .map((skill: any) => {
         const requirements = getSkillRequirements(
           skill.title,
