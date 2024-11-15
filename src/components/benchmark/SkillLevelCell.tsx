@@ -11,15 +11,9 @@ interface SkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
   onLevelChange?: (newLevel: string, requirement: string) => void;
-  isRoleBenchmark?: boolean;
 }
 
-export const SkillLevelCell = ({ 
-  initialLevel, 
-  skillTitle, 
-  onLevelChange,
-  isRoleBenchmark = false 
-}: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
   const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
@@ -42,44 +36,23 @@ export const SkillLevelCell = ({
   }, [originalStates, skillTitle]);
 
   const handleLevelChange = (newLevel: string) => {
-    if (isRoleBenchmark) return;
     setLevel(newLevel);
     setSkillState(skillTitle, newLevel, required);
     onLevelChange?.(newLevel, required);
   };
 
   const handleRequirementChange = (newRequired: string) => {
-    if (isRoleBenchmark) return;
     setRequired(newRequired);
     setSkillState(skillTitle, level, newRequired);
     onLevelChange?.(level, newRequired);
   };
 
-  const renderContent = () => {
-    if (isRoleBenchmark) {
-      return (
-        <div className="flex flex-col items-center">
-          <div className={`${getLevelStyles(level)} min-h-[28px] flex items-center justify-center`}>
-            <span className="flex items-center gap-2 justify-center text-[15px]">
-              {getLevelIcon(level)}
-              {level.charAt(0).toUpperCase() + level.slice(1)}
-            </span>
-          </div>
-          <div className={`${getRequirementStyles(required, level)} min-h-[28px] flex items-center justify-center`}>
-            <span className="flex items-center gap-1.5 justify-center text-xs">
-              {getRequirementIcon(required)}
-              {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : required === 'unknown' ? 'Unknown' : 'Skill Goal'}
-            </span>
-          </div>
-        </div>
-      );
-    }
-
-    return (
+  return (
+    <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
-            className={`${getLevelStyles(level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)} [&>svg]:hidden`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
@@ -90,25 +63,25 @@ export const SkillLevelCell = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="unspecified">
-              <span className="flex items-center gap-2">
-                <CircleHelp className="w-4 h-4 text-gray-400" />
+              <span className="flex items-center gap-1.5">
+                {getLevelIcon('unspecified')}
                 Unspecified
               </span>
             </SelectItem>
             <SelectItem value="beginner">
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-1.5">
                 {getLevelIcon('beginner')}
                 Beginner
               </span>
             </SelectItem>
             <SelectItem value="intermediate">
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-1.5">
                 {getLevelIcon('intermediate')}
                 Intermediate
               </span>
             </SelectItem>
             <SelectItem value="advanced">
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-1.5">
                 {getLevelIcon('advanced')}
                 Advanced
               </span>
@@ -118,7 +91,7 @@ export const SkillLevelCell = ({
 
         <Select value={required} onValueChange={handleRequirementChange}>
           <SelectTrigger 
-            className={`${getRequirementStyles(required, level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+            className={`${getRequirementStyles(required, level)} [&>svg]:hidden`}
           >
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">
@@ -146,12 +119,6 @@ export const SkillLevelCell = ({
           </SelectContent>
         </Select>
       </div>
-    );
-  };
-
-  return (
-    <TableCell className="border-r border-blue-200 p-0">
-      {renderContent()}
     </TableCell>
   );
 };

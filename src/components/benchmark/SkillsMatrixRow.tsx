@@ -12,14 +12,9 @@ interface SkillsMatrixRowProps {
     confidence: string;
   };
   showCompanySkill?: boolean;
-  isRoleBenchmark?: boolean;
 }
 
-export const SkillsMatrixRow = ({ 
-  skill, 
-  showCompanySkill = true,
-  isRoleBenchmark = false 
-}: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill, showCompanySkill = true }: SkillsMatrixRowProps) => {
   const { currentStates, setSkillState } = useSkillsMatrixStore();
   const currentState = currentStates[skill.title] || {
     level: skill.level,
@@ -71,7 +66,6 @@ export const SkillsMatrixRow = ({
         initialLevel={currentState.level} 
         skillTitle={skill.title}
         onLevelChange={handleLevelChange}
-        isRoleBenchmark={isRoleBenchmark}
       />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
