@@ -27,6 +27,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
     }
   }, [skillTitle, currentStates]);
 
+  // Add effect to handle cancellation
   useEffect(() => {
     const originalState = originalStates[skillTitle];
     if (originalState) {
@@ -52,7 +53,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
       <div className="flex flex-col items-center">
         <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
-            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)} [&>svg]:hidden`}
+            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
@@ -91,7 +92,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
 
         <Select value={required} onValueChange={handleRequirementChange}>
           <SelectTrigger 
-            className={`${getRequirementStyles(required, level)} [&>svg]:hidden`}
+            className={getRequirementStyles(required, level)}
           >
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">
