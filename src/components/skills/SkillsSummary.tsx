@@ -8,7 +8,6 @@ import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategori
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { useBenchmarkSearch } from "./context/BenchmarkSearchContext";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -35,7 +34,7 @@ export const SkillsSummary = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
-  const { setBenchmarkSearchSkills } = useBenchmarkSearch();
+  const [summarySearchSkills, setSummarySearchSkills] = useState<string[]>([]);
 
   // Get employee skills and transform them
   const employeeSkills = getEmployeeSkills(id || "");
@@ -58,7 +57,7 @@ export const SkillsSummary = () => {
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
-    setBenchmarkSearchSkills(skills);
+    setSummarySearchSkills(skills);
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -77,9 +76,9 @@ export const SkillsSummary = () => {
   };
 
   const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
-    if (selectedSkills.length === 0) return skills;
+    if (summarySearchSkills.length === 0) return skills;
     return skills.filter(skill => 
-      selectedSkills.some(selectedSkill => 
+      summarySearchSkills.some(selectedSkill => 
         skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
       )
     );
@@ -99,6 +98,7 @@ export const SkillsSummary = () => {
 
   const handleClearAll = () => {
     setSelectedSkills([]);
+    setSummarySearchSkills([]);
   };
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -115,7 +115,7 @@ export const SkillsSummary = () => {
   return (
     <div className="space-y-4 w-full">
       <SkillSearchSection
-        selectedSkills={selectedSkills}
+        selectedSkills={summarySearchSkills}
         onSkillsChange={handleSkillsChange}
         onClearAll={handleClearAll}
       />
