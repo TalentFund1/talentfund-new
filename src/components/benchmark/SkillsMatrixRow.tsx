@@ -1,6 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
+import { ReadOnlySkillCell } from "./skill-level/ReadOnlySkillCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillsMatrixRowProps {
@@ -12,9 +13,10 @@ interface SkillsMatrixRowProps {
     confidence: string;
   };
   showCompanySkill?: boolean;
+  isReadOnly?: boolean;
 }
 
-export const SkillsMatrixRow = ({ skill, showCompanySkill = true }: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill, showCompanySkill = true, isReadOnly = false }: SkillsMatrixRowProps) => {
   const { currentStates, setSkillState } = useSkillsMatrixStore();
   const currentState = currentStates[skill.title] || {
     level: skill.level,
@@ -62,11 +64,18 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true }: SkillsMatrix
           </div>
         </TableCell>
       )}
-      <SkillLevelCell 
-        initialLevel={currentState.level} 
-        skillTitle={skill.title}
-        onLevelChange={handleLevelChange}
-      />
+      {isReadOnly ? (
+        <ReadOnlySkillCell 
+          level={currentState.level} 
+          requirement={currentState.requirement}
+        />
+      ) : (
+        <SkillLevelCell 
+          initialLevel={currentState.level} 
+          skillTitle={skill.title}
+          onLevelChange={handleLevelChange}
+        />
+      )}
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
