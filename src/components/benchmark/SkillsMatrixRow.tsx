@@ -45,11 +45,11 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true, isReadOnly = f
   };
 
   return (
-    <TableRow className="group border-b border-gray-200">
-      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
+    <TableRow className="group border-b border-gray-200 hover:bg-muted/50">
+      <TableCell className="font-medium border-r border-blue-200 py-3 px-4">{skill.title}</TableCell>
+      <TableCell className="border-r border-blue-200 py-3 px-4">{skill.subcategory}</TableCell>
       {showCompanySkill && (
-        <TableCell className="text-center border-r border-blue-200 py-2">
+        <TableCell className="text-center border-r border-blue-200 py-3">
           <div className="flex justify-center">
             {isCompanySkill(skill.title) ? (
               <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
@@ -69,7 +69,7 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true, isReadOnly = f
         onLevelChange={handleLevelChange}
         isReadOnly={isReadOnly}
       />
-      <TableCell className="text-center border-r border-blue-200 py-2">
+      <TableCell className="text-center border-r border-blue-200 py-3">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
         ) : (
@@ -78,14 +78,14 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true, isReadOnly = f
           </span>
         )}
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
+      <TableCell className="text-center border-r border-blue-200 py-3">
         <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
           skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
         }`}>
           ↗ {skill.growth}
         </span>
       </TableCell>
-      <TableCell className="text-center py-2">
+      <TableCell className="text-center py-3">
         <div className="flex items-center justify-center space-x-1">
           <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
           <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
