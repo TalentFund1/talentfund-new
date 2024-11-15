@@ -158,10 +158,12 @@ export const SkillsMatrix = () => {
           setSelectedInterest={setSelectedInterest}
         />
 
-        <SkillsMatrixTable 
-          filteredSkills={paginatedSkills}
-          setHasChanges={setHasChanges}
-        />
+        <div className="rounded-lg border border-[#CCDBFF] overflow-hidden">
+          <SkillsMatrixTable 
+            filteredSkills={paginatedSkills}
+            setHasChanges={setHasChanges}
+          />
+        </div>
         
         {visibleItems < filteredSkills.length && (
           <div 
