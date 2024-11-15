@@ -121,7 +121,7 @@ export const BenchmarkSkillsMatrix = () => {
           clearSearch={clearSearch}
         />
 
-        <div className="rounded-lg border border-[#CCDBFF]">
+        <div className="rounded-lg border border-[#CCDBFF] overflow-hidden">
           <SkillsMatrixTable 
             filteredSkills={paginatedSkills}
             showCompanySkill={false}

@@ -23,7 +23,7 @@ export const SkillsMatrixTable = ({
   isReadOnly = false
 }: SkillsMatrixTableProps) => {
   return (
-    <div className="bg-white">
+    <div className="bg-white rounded-lg overflow-hidden">
       <Table>
         <SkillsMatrixTableHeader showCompanySkill={showCompanySkill} />
         <TableBody>
