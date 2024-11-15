@@ -51,6 +51,18 @@ export const RoleBenchmark = () => {
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
+  useEffect(() => {
+    const allSkills = [
+      ...(selectedRoleSkills.specialized || []),
+      ...(selectedRoleSkills.common || []),
+      ...(selectedRoleSkills.certifications || [])
+    ]
+    .map(skill => skill.title)
+    .filter(skillTitle => toggledSkills.has(skillTitle));
+    
+    setBenchmarkSearchSkills(allSkills);
+  }, [selectedRole, selectedRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
+
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
   };
