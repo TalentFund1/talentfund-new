@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { Separator } from "@/components/ui/separator";
+import { useSkillsMatrixSearch } from "../context/SkillsMatrixSearchContext";
 
 interface SkillSearchSectionProps {
   selectedSkills: string[];
@@ -15,6 +16,17 @@ export const SkillSearchSection = ({
   onClearAll 
 }: SkillSearchSectionProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
+  const { setMatrixSearchSkills } = useSkillsMatrixSearch();
+
+  const handleSkillsChange = (skills: string[]) => {
+    onSkillsChange(skills);
+    setMatrixSearchSkills(skills); // Auto-populate Skills Matrix search
+  };
+
+  const handleClearAll = () => {
+    onClearAll();
+    setMatrixSearchSkills([]); // Clear Skills Matrix search
+  };
 
   return (
     <div className="space-y-4">
@@ -27,7 +39,7 @@ export const SkillSearchSection = ({
             placeholder="Search skills..."
             items={allSkills}
             selectedItems={selectedSkills}
-            onItemsChange={onSkillsChange}
+            onItemsChange={handleSkillsChange}
             singleSelect={false}
           />
         </div>
@@ -35,7 +47,7 @@ export const SkillSearchSection = ({
           <div className="flex justify-end mt-2">
             <Button 
               variant="outline" 
-              onClick={onClearAll}
+              onClick={handleClearAll}
               size="sm"
             >
               Clear All
