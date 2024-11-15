@@ -11,9 +11,10 @@ interface SkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
   onLevelChange?: (newLevel: string, requirement: string) => void;
+  isRoleBenchmark?: boolean;
 }
 
-export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRoleBenchmark = false }: SkillLevelCellProps) => {
   const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
@@ -27,7 +28,6 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
     }
   }, [skillTitle, currentStates]);
 
-  // Add effect to handle cancellation
   useEffect(() => {
     const originalState = originalStates[skillTitle];
     if (originalState) {
@@ -37,12 +37,14 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
   }, [originalStates, skillTitle]);
 
   const handleLevelChange = (newLevel: string) => {
+    if (isRoleBenchmark) return;
     setLevel(newLevel);
     setSkillState(skillTitle, newLevel, required);
     onLevelChange?.(newLevel, required);
   };
 
   const handleRequirementChange = (newRequired: string) => {
+    if (isRoleBenchmark) return;
     setRequired(newRequired);
     setSkillState(skillTitle, level, newRequired);
     onLevelChange?.(level, newRequired);
@@ -51,9 +53,9 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={level} onValueChange={handleLevelChange}>
+        <Select value={level} onValueChange={handleLevelChange} disabled={isRoleBenchmark}>
           <SelectTrigger 
-            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
+            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)} ${isRoleBenchmark ? '[&>svg]:hidden' : ''}`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
@@ -90,9 +92,9 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
           </SelectContent>
         </Select>
 
-        <Select value={required} onValueChange={handleRequirementChange}>
+        <Select value={required} onValueChange={handleRequirementChange} disabled={isRoleBenchmark}>
           <SelectTrigger 
-            className={getRequirementStyles(required, level)}
+            className={`${getRequirementStyles(required, level)} ${isRoleBenchmark ? '[&>svg]:hidden' : ''}`}
           >
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">

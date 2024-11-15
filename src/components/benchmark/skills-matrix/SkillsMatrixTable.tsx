@@ -13,12 +13,14 @@ interface SkillsMatrixTableProps {
   }>;
   setHasChanges?: Dispatch<SetStateAction<boolean>>;
   showCompanySkill?: boolean;
+  isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixTable = ({ 
   filteredSkills, 
   setHasChanges,
-  showCompanySkill = true 
+  showCompanySkill = true,
+  isRoleBenchmark = false
 }: SkillsMatrixTableProps) => {
   return (
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
@@ -30,6 +32,7 @@ export const SkillsMatrixTable = ({
               key={skill.title} 
               skill={skill}
               showCompanySkill={showCompanySkill}
+              isRoleBenchmark={isRoleBenchmark}
             />
           ))}
         </TableBody>
