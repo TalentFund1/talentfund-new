@@ -23,7 +23,7 @@ export const SkillsMatrixTable = ({
   isReadOnly = false
 }: SkillsMatrixTableProps) => {
   return (
-    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
+    <div className="rounded-lg overflow-hidden bg-white">
       <Table>
         <SkillsMatrixTableHeader showCompanySkill={showCompanySkill} />
         <TableBody>
