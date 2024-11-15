@@ -40,6 +40,10 @@ export const SkillsMatrixRow = ({ skill, showCompanySkill = true, isReadOnly = f
     return !nonCompanySkills.includes(skillTitle);
   };
 
+  const handleLevelChange = (newLevel: string, requirement: string) => {
+    setSkillState(skill.title, newLevel, requirement);
+  };
+
   return (
     <TableRow className="group hover:bg-muted/50">
       <TableCell className="font-medium border-r border-blue-200/60 py-6 px-4">{skill.title}</TableCell>
