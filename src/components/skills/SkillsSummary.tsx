@@ -8,7 +8,6 @@ import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategori
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { useBenchmarkSearch } from "./context/BenchmarkSearchContext";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -35,30 +34,14 @@ export const SkillsSummary = () => {
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
-  const { setBenchmarkSearchSkills } = useBenchmarkSearch();
+  const [searchSkills, setSearchSkills] = useState<string[]>([]);
 
   // Get employee skills and transform them
   const employeeSkills = getEmployeeSkills(id || "");
 
-  const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
-    return skills
-      .map(skill => ({
-        name: skill.title,
-        level: currentStates[skill.title]?.level || skill.level,
-        isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
-                     currentStates[skill.title]?.requirement === 'skill_goal' ||
-                     skill.level === 'advanced'
-      }))
-      .sort((a, b) => {
-        const levelA = (a.level || 'unspecified').toLowerCase();
-        const levelB = (b.level || 'unspecified').toLowerCase();
-        return getLevelPriority(levelA) - getLevelPriority(levelB);
-      });
-  };
-
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
-    setBenchmarkSearchSkills(skills);
+    setSearchSkills(skills);
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -76,10 +59,26 @@ export const SkillsSummary = () => {
     }
   };
 
+  const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
+    return skills
+      .map(skill => ({
+        name: skill.title,
+        level: currentStates[skill.title]?.level || skill.level,
+        isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                     currentStates[skill.title]?.requirement === 'skill_goal' ||
+                     skill.level === 'advanced'
+      }))
+      .sort((a, b) => {
+        const levelA = (a.level || 'unspecified').toLowerCase();
+        const levelB = (b.level || 'unspecified').toLowerCase();
+        return getLevelPriority(levelA) - getLevelPriority(levelB);
+      });
+  };
+
   const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
-    if (selectedSkills.length === 0) return skills;
+    if (searchSkills.length === 0) return skills;
     return skills.filter(skill => 
-      selectedSkills.some(selectedSkill => 
+      searchSkills.some(selectedSkill => 
         skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
       )
     );
@@ -99,6 +98,7 @@ export const SkillsSummary = () => {
 
   const handleClearAll = () => {
     setSelectedSkills([]);
+    setSearchSkills([]);
   };
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -115,7 +115,7 @@ export const SkillsSummary = () => {
   return (
     <div className="space-y-4 w-full">
       <SkillSearchSection
-        selectedSkills={selectedSkills}
+        selectedSkills={searchSkills}
         onSkillsChange={handleSkillsChange}
         onClearAll={handleClearAll}
       />
