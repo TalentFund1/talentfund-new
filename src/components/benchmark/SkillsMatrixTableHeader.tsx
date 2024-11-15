@@ -1,5 +1,5 @@
-import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { HelpCircle, ArrowUp } from "lucide-react";
+import { TableHeader, TableHead, TableRow } from "@/components/ui/table";
+import { HelpCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -13,7 +13,6 @@ export const SkillsMatrixTableHeader = () => {
       <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
         <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
         <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
-        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Company Skill</TableHead>
         <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Skill Level</TableHead>
         <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
@@ -58,7 +57,6 @@ export const SkillsMatrixTableHeader = () => {
         <TableHead className="w-[100px] text-center py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
             Appears In
-            <ArrowUp className="h-4 w-4" />
           </div>
         </TableHead>
       </TableRow>
