@@ -3,11 +3,12 @@ import { DetailedSkill, EmployeeSkill } from "./types";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
+import { useSelectedSkills } from "./context/SelectedSkillsContext";
 import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { useSkillsSummary } from "./context/SkillsSummaryContext";
+import { useBenchmarkSearch } from "./context/BenchmarkSearchContext";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -31,10 +32,12 @@ export const SkillsSummary = () => {
   });
 
   const { id } = useParams<{ id: string }>();
-  const { summarySelectedSkills, setSummarySelectedSkills } = useSkillsSummary();
+  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
+  const { setBenchmarkSearchSkills } = useBenchmarkSearch();
 
+  // Get employee skills and transform them
   const employeeSkills = getEmployeeSkills(id || "");
 
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
@@ -54,7 +57,8 @@ export const SkillsSummary = () => {
   };
 
   const handleSkillsChange = (skills: string[]) => {
-    setSummarySelectedSkills(skills);
+    setSelectedSkills(skills);
+    setBenchmarkSearchSkills(skills);
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -73,9 +77,9 @@ export const SkillsSummary = () => {
   };
 
   const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
-    if (summarySelectedSkills.length === 0) return skills;
+    if (selectedSkills.length === 0) return skills;
     return skills.filter(skill => 
-      summarySelectedSkills.some(selectedSkill => 
+      selectedSkills.some(selectedSkill => 
         skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
       )
     );
@@ -94,7 +98,7 @@ export const SkillsSummary = () => {
   );
 
   const handleClearAll = () => {
-    setSummarySelectedSkills([]);
+    setSelectedSkills([]);
   };
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -111,7 +115,7 @@ export const SkillsSummary = () => {
   return (
     <div className="space-y-4 w-full">
       <SkillSearchSection
-        selectedSkills={summarySelectedSkills}
+        selectedSkills={selectedSkills}
         onSkillsChange={handleSkillsChange}
         onClearAll={handleClearAll}
       />
