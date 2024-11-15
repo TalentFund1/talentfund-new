@@ -50,10 +50,31 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
     onLevelChange?.(level, newRequired);
   };
 
+  if (isReadOnly) {
+    return (
+      <TableCell className="border-r border-blue-200 p-0">
+        <div className="flex flex-col items-center">
+          <div className={`${getLevelStyles(level)} px-4 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]`}>
+            <span className="flex items-center gap-2 justify-center text-[15px]">
+              {getLevelIcon(level)}
+              {level.charAt(0).toUpperCase() + level.slice(1)}
+            </span>
+          </div>
+          <div className={`${getRequirementStyles(required, level)} min-h-[32px]`}>
+            <span className="flex items-center gap-1.5 justify-center text-xs">
+              {getRequirementIcon(required)}
+              {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : required === 'unknown' ? 'Unknown' : 'Skill Goal'}
+            </span>
+          </div>
+        </div>
+      </TableCell>
+    );
+  }
+
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={level} onValueChange={handleLevelChange} disabled={isReadOnly}>
+        <Select value={level} onValueChange={handleLevelChange}>
           <SelectTrigger 
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
@@ -92,7 +113,7 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange, isRead
           </SelectContent>
         </Select>
 
-        <Select value={required} onValueChange={handleRequirementChange} disabled={isReadOnly}>
+        <Select value={required} onValueChange={handleRequirementChange}>
           <SelectTrigger 
             className={getRequirementStyles(required, level)}
           >

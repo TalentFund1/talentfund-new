@@ -101,7 +101,7 @@ export const BenchmarkSkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="p-8 bg-white space-y-8">
+      <Card className="p-6 bg-white space-y-6">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
           <p className="text-sm text-muted-foreground">
@@ -121,11 +121,13 @@ export const BenchmarkSkillsMatrix = () => {
           clearSearch={clearSearch}
         />
 
-        <SkillsMatrixTable 
-          filteredSkills={paginatedSkills}
-          showCompanySkill={false}
-          isReadOnly={true}
-        />
+        <div className="rounded-lg border border-[#CCDBFF] overflow-hidden">
+          <SkillsMatrixTable 
+            filteredSkills={paginatedSkills}
+            showCompanySkill={false}
+            isReadOnly={true}
+          />
+        </div>
         
         {visibleItems < filteredSkills.length && (
           <div 
