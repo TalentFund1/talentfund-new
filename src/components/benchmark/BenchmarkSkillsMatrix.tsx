@@ -22,6 +22,7 @@ export const BenchmarkSkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
+  const { currentStates } = useSkillsMatrixStore();
 
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
@@ -33,9 +34,13 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesSearch = true;
       let matchesLevel = true;
 
+      // Get the current skill state
+      const currentSkillState = currentStates[skill.title];
+      const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
+
       // Level filtering
       if (selectedLevel !== 'all') {
-        matchesLevel = (skill.level || 'unspecified').toLowerCase() === selectedLevel.toLowerCase();
+        matchesLevel = skillLevel === selectedLevel.toLowerCase();
       }
 
       // Search filtering
@@ -57,8 +62,11 @@ export const BenchmarkSkillsMatrix = () => {
         'unspecified': 3
       };
       
-      const aLevel = (a.level || 'unspecified').toLowerCase();
-      const bLevel = (b.level || 'unspecified').toLowerCase();
+      const aState = currentStates[a.title];
+      const bState = currentStates[b.title];
+      
+      const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
+      const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
       
       return levelPriority[aLevel] - levelPriority[bLevel];
     });
