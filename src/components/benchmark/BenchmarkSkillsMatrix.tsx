@@ -1,52 +1,80 @@
 import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
+import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
 
 const ITEMS_PER_PAGE = 10;
 
 export const BenchmarkSkillsMatrix = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
+  const [selectedLevel, setSelectedLevel] = useState("all");
+  const [selectedInterest, setSelectedInterest] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
+  const { currentStates } = useSkillsMatrixStore();
 
-  // Update selected search skills when benchmarkSearchSkills changes
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
   }, [benchmarkSearchSkills]);
 
   const employeeSkills = getEmployeeSkills(id || "");
-  const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
+  const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
+      let matchesSearch = true;
+      let matchesLevel = true;
+      let matchesInterest = true;
+
+      // Get the current skill state
+      const currentSkillState = currentStates[skill.title];
+      const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+
+      // Level filtering
+      if (selectedLevel !== 'all') {
+        matchesLevel = skillLevel === selectedLevel.toLowerCase();
+      }
+
+      // Interest filtering
+      if (selectedInterest !== 'all') {
+        matchesInterest = requirement === selectedInterest.toLowerCase();
+      }
+
+      // Search filtering
       if (selectedSearchSkills.length > 0) {
-        return selectedSearchSkills.some(term => 
+        matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
         );
+      } else if (searchTerm) {
+        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
-      return searchTerm 
-        ? skill.title.toLowerCase().includes(searchTerm.toLowerCase())
-        : true;
-    });
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchTerm.trim()) {
-      setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
-      setSearchTerm("");
-    }
-  };
+      return matchesSearch && matchesLevel && matchesInterest;
+    })
+    .sort((a, b) => {
+      const levelPriority: { [key: string]: number } = {
+        'advanced': 0,
+        'intermediate': 1,
+        'beginner': 2,
+        'unspecified': 3
+      };
+      
+      const aState = currentStates[a.title];
+      const bState = currentStates[b.title];
+      
+      const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
+      const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
+      
+      return levelPriority[aLevel] - levelPriority[bLevel];
+    });
 
   const removeSearchSkill = (skill: string) => {
     setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
@@ -57,7 +85,6 @@ export const BenchmarkSkillsMatrix = () => {
     setSelectedSearchSkills([]);
   };
 
-  // Infinite scroll observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -93,75 +120,22 @@ export const BenchmarkSkillsMatrix = () => {
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="flex flex-col gap-2">
-            <div className="relative flex-1">
-              <Input
-                type="text"
-                placeholder="Search skills..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={handleSearchKeyDown}
-                className="w-full pr-8"
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-            {selectedSearchSkills.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {selectedSearchSkills.map((skill, index) => (
-                  <Badge 
-                    key={index} 
-                    variant="secondary"
-                    className="flex items-center gap-1 bg-background"
-                  >
-                    {skill}
-                    <button
-                      onClick={() => removeSearchSkill(skill)}
-                      className="ml-1 hover:text-destructive"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={clearSearch}
-                  className="text-sm"
-                >
-                  Clear All
-                </Button>
-              </div>
-            )}
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full bg-white">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="specialized">Specialized Skills</SelectItem>
-                <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certifications</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <BenchmarkMatrixFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedSearchSkills={selectedSearchSkills}
+          removeSearchSkill={removeSearchSkill}
+          clearSearch={clearSearch}
+        />
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
         />
         
-        {/* Infinite scroll observer target */}
         {visibleItems < filteredSkills.length && (
           <div 
             ref={observerTarget} 

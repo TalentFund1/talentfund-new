@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 type Track = "Professional" | "Managerial";
 
@@ -12,7 +12,6 @@ interface TrackContextType {
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
 
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
-  // Initialize tracks from localStorage or empty object if none exists
   const [tracks, setTracks] = useState<Record<string, Track>>(() => {
     const savedTracks = localStorage.getItem('roleTracks');
     return savedTracks ? JSON.parse(savedTracks) : {};
@@ -20,28 +19,30 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const getTrackForRole = (roleId: string): Track => {
-    return tracks[roleId] || "Professional";
+    // Default to Managerial for Engineering Manager (126), Professional for others
+    if (!tracks[roleId]) {
+      const defaultTrack = roleId === "126" ? "Managerial" : "Professional";
+      setTrackForRole(roleId, defaultTrack);
+      return defaultTrack;
+    }
+    return tracks[roleId];
   };
 
   const setTrackForRole = (roleId: string, track: Track) => {
-    setTracks(prev => ({
-      ...prev,
+    const newTracks = {
+      ...tracks,
       [roleId]: track
-    }));
+    };
+    setTracks(newTracks);
     setHasUnsavedChanges(true);
+    // Immediately save to localStorage
+    localStorage.setItem('roleTracks', JSON.stringify(newTracks));
   };
 
   const saveTrackSelection = () => {
     localStorage.setItem('roleTracks', JSON.stringify(tracks));
     setHasUnsavedChanges(false);
   };
-
-  // Save to localStorage whenever tracks change
-  useEffect(() => {
-    if (!hasUnsavedChanges) {
-      localStorage.setItem('roleTracks', JSON.stringify(tracks));
-    }
-  }, [tracks, hasUnsavedChanges]);
 
   return (
     <TrackContext.Provider value={{ 

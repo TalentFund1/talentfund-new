@@ -11,6 +11,18 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { MissingSkills } from "./MissingSkills";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
+import { create } from "zustand";
+
+// Create a Zustand store for sharing selected role
+interface RoleStore {
+  selectedRole: string;
+  setSelectedRole: (role: string) => void;
+}
+
+export const useRoleStore = create<RoleStore>((set) => ({
+  selectedRole: "123",
+  setSelectedRole: (role) => set({ selectedRole: role }),
+}));
 
 const roles = {
   "123": "AI Engineer",
@@ -21,11 +33,11 @@ const roles = {
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState<string>("125");
   const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
+  const { selectedRole, setSelectedRole } = useRoleStore();
 
   const currentTrack = getTrackForRole(selectedRole);
 
@@ -92,7 +104,11 @@ export const RoleBenchmark = () => {
           selectedLevel={selectedLevel}
         />
 
-        <MissingSkills roleId={selectedRole} employeeId="123" />
+        <MissingSkills 
+          roleId={selectedRole} 
+          employeeId="123" 
+          selectedLevel={selectedLevel}
+        />
 
         <Card className="p-6 bg-white">
           <CompetencyGraph 

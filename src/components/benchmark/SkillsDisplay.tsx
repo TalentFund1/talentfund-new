@@ -5,7 +5,6 @@ import { getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { CategorySection } from "./CategorySection";
-import { useCompetencyStore } from "../skills/competency/CompetencyState";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -24,7 +23,6 @@ export const SkillsDisplay = ({
   const track = getTrackForRole(roleId);
   const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const { currentStates } = useCompetencyStore();
 
   const getSkillsForCategory = () => {
     const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
@@ -53,12 +51,10 @@ export const SkillsDisplay = ({
           selectedLevel.toUpperCase()
         );
 
-        // Use requirements from skillsDatabase if available, otherwise use matrix state
-        const matrixState = currentStates[skill.title]?.[selectedLevel.toUpperCase()];
         return {
           title: skill.title,
-          level: requirements?.level || matrixState?.level || 'unspecified',
-          requirement: requirements?.requirement || matrixState?.required || 'preferred'
+          level: requirements?.level || 'unspecified',
+          requirement: requirements?.requirement || 'preferred'
         };
       });
   };
