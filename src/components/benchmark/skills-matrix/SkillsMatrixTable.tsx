@@ -1,7 +1,6 @@
 import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
-import { Dispatch, SetStateAction } from "react";
 
 interface SkillsMatrixTableProps {
   filteredSkills: Array<{
@@ -11,10 +10,9 @@ interface SkillsMatrixTableProps {
     growth: string;
     confidence: string;
   }>;
-  setHasChanges?: Dispatch<SetStateAction<boolean>>;
 }
 
-export const SkillsMatrixTable = ({ filteredSkills, setHasChanges }: SkillsMatrixTableProps) => {
+export const SkillsMatrixTable = ({ filteredSkills }: SkillsMatrixTableProps) => {
   return (
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
       <Table>
