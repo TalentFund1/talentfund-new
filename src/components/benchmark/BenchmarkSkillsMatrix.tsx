@@ -1,16 +1,13 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
+import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -19,6 +16,7 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
+  const [selectedInterest, setSelectedInterest] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -33,14 +31,21 @@ export const BenchmarkSkillsMatrix = () => {
     .filter(skill => {
       let matchesSearch = true;
       let matchesLevel = true;
+      let matchesInterest = true;
 
       // Get the current skill state
       const currentSkillState = currentStates[skill.title];
       const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
       // Level filtering
       if (selectedLevel !== 'all') {
         matchesLevel = skillLevel === selectedLevel.toLowerCase();
+      }
+
+      // Interest filtering
+      if (selectedInterest !== 'all') {
+        matchesInterest = requirement === selectedInterest.toLowerCase();
       }
 
       // Search filtering
@@ -52,7 +57,7 @@ export const BenchmarkSkillsMatrix = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesSearch && matchesLevel;
+      return matchesSearch && matchesLevel && matchesInterest;
     })
     .sort((a, b) => {
       const levelPriority: { [key: string]: number } = {
@@ -70,13 +75,6 @@ export const BenchmarkSkillsMatrix = () => {
       
       return levelPriority[aLevel] - levelPriority[bLevel];
     });
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchTerm.trim()) {
-      setSelectedSearchSkills(prev => [...prev, searchTerm.trim()]);
-      setSearchTerm("");
-    }
-  };
 
   const removeSearchSkill = (skill: string) => {
     setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
@@ -122,69 +120,17 @@ export const BenchmarkSkillsMatrix = () => {
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-4 mb-4">
-              <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-                <SelectTrigger className="w-[180px] bg-white">
-                  <SelectValue placeholder="All Levels" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Levels</SelectItem>
-                  <SelectItem value="advanced">Advanced</SelectItem>
-                  <SelectItem value="intermediate">Intermediate</SelectItem>
-                  <SelectItem value="beginner">Beginner</SelectItem>
-                  <SelectItem value="unspecified">Unspecified</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="relative flex-1">
-              <Input
-                type="text"
-                placeholder="Search skills..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={handleSearchKeyDown}
-                className="w-full pr-8"
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-            {selectedSearchSkills.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {selectedSearchSkills.map((skill, index) => (
-                  <Badge 
-                    key={index} 
-                    variant="secondary"
-                    className="flex items-center gap-1 bg-background"
-                  >
-                    {skill}
-                    <button
-                      onClick={() => removeSearchSkill(skill)}
-                      className="ml-1 hover:text-destructive"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={clearSearch}
-                  className="text-sm"
-                >
-                  Clear All
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
+        <BenchmarkMatrixFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedSearchSkills={selectedSearchSkills}
+          removeSearchSkill={removeSearchSkill}
+          clearSearch={clearSearch}
+        />
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
