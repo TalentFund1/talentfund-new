@@ -9,6 +9,7 @@ import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
 import { RoleSelection } from "./RoleSelection";
 import { useRoleStore } from "./RoleBenchmark";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,6 +24,7 @@ export const BenchmarkSkillsMatrix = () => {
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
+  const { toggledSkills } = useToggledSkills();
 
   const roles = {
     "123": "AI Engineer",
@@ -38,6 +40,11 @@ export const BenchmarkSkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
+      // Only include skills that are toggled on
+      if (!toggledSkills.has(skill.title)) {
+        return false;
+      }
+
       let matchesSearch = true;
       let matchesLevel = true;
       let matchesInterest = true;
