@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, X, CircleHelp, Check, Heart } from "lucide-react";
+import { Star, Shield, Target, X, CircleHelp, Check } from "lucide-react";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
@@ -12,32 +12,6 @@ interface SkillLevelCellProps {
   onLevelChange?: (newLevel: string, requirement: string) => void;
   isRoleBenchmark?: boolean;
 }
-
-const getLevelIcon = (level: string) => {
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return <Star className="w-3.5 h-3.5 text-primary-accent" />;
-    case 'intermediate':
-      return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
-    case 'beginner':
-      return <Target className="w-3.5 h-3.5 text-[#008000]" />;
-    default:
-      return <CircleHelp className="w-3.5 h-3.5 text-gray-400" />;
-  }
-};
-
-const getRequirementIcon = (requirement: string) => {
-  switch (requirement) {
-    case 'required':
-      return <Check className="w-3.5 h-3.5" />;
-    case 'not-interested':
-      return <X className="w-3.5 h-3.5" />;
-    case 'unknown':
-      return <CircleHelp className="w-3.5 h-3.5" />;
-    default:
-      return <Heart className="w-3.5 h-3.5" />;
-  }
-};
 
 export const SkillLevelCell = ({ 
   initialLevel, 
