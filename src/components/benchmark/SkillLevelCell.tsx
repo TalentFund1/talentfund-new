@@ -183,7 +183,7 @@ export const SkillLevelCell = ({
             ].map(({ value, label }) => (
               <SelectItem key={value} value={value}>
                 <span className="flex items-center gap-1.5">
-                  {currentState.requirement === 'required' ? (
+                  {value === 'required' ? (
                     <>
                       <Check className="w-3.5 h-3.5" />
                       <span>{label}</span>
