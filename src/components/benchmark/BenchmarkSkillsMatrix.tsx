@@ -32,11 +32,8 @@ export const BenchmarkSkillsMatrix = () => {
     "126": "Engineering Manager"
   };
 
-  useEffect(() => {
-    setSelectedSearchSkills(benchmarkSearchSkills);
-  }, [benchmarkSearchSkills]);
-
   const employeeSkills = getEmployeeSkills(id || "");
+
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
       let matchesSearch = true;
@@ -94,7 +91,7 @@ export const BenchmarkSkillsMatrix = () => {
           </p>
         </div>
 
-        <div className="flex gap-4 w-full max-w-[800px]">
+        <div className="flex gap-4">
           <Select 
             value={selectedRole}
             onValueChange={setSelectedRole}
@@ -118,7 +115,9 @@ export const BenchmarkSkillsMatrix = () => {
             onValueChange={setSelectedRoleLevel}
           >
             <SelectTrigger className="w-[200px] bg-white">
-              <SelectValue placeholder="Select Level" />
+              <SelectValue placeholder="Select Level">
+                {professionalLevels[selectedRoleLevel as keyof typeof professionalLevels]}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {Object.entries(professionalLevels).map(([id, title]) => (
