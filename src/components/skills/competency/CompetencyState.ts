@@ -1,5 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { aiSkills } from '../data/skills/aiSkills';
+import { backendSkills } from '../data/skills/backendSkills';
+import { commonSkills } from '../data/skills/commonSkills';
+import { certificationSkills } from '../data/skills/certificationSkills';
 
 interface SkillState {
   level: string;
@@ -10,10 +14,49 @@ interface CompetencyState {
   currentStates: Record<string, Record<string, SkillState>>;
   originalStates: Record<string, Record<string, SkillState>>;
   hasChanges: boolean;
+  initializeStates: (roleId: string) => void;
   setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
+
+const initializeSkillStates = (roleId: string) => {
+  const states: Record<string, Record<string, SkillState>> = {};
+  
+  const allSkills = [
+    ...aiSkills,
+    ...backendSkills,
+    ...commonSkills,
+    ...certificationSkills
+  ];
+
+  allSkills.forEach(skill => {
+    if (skill.professionalTrack) {
+      states[skill.title] = {};
+      Object.entries(skill.professionalTrack).forEach(([level, state]) => {
+        states[skill.title][level.toLowerCase()] = {
+          level: state.level,
+          required: state.requirement
+        };
+      });
+    }
+    
+    if (skill.managerialTrack) {
+      states[skill.title] = {
+        ...states[skill.title],
+        ...Object.entries(skill.managerialTrack).reduce((acc, [level, state]) => ({
+          ...acc,
+          [level.toLowerCase()]: {
+            level: state.level,
+            required: state.requirement
+          }
+        }), {})
+      };
+    }
+  });
+
+  return states;
+};
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -21,9 +64,17 @@ export const useCompetencyStore = create<CompetencyState>()(
       currentStates: {},
       originalStates: {},
       hasChanges: false,
+      initializeStates: (roleId: string) => 
+        set((state) => {
+          const initializedStates = initializeSkillStates(roleId);
+          return {
+            currentStates: { ...initializedStates },
+            originalStates: { ...initializedStates },
+            hasChanges: false
+          };
+        }),
       setSkillState: (skillName, level, levelKey, required) =>
         set((state) => {
-          // If this is the first change for this skill, save the original state
           if (!state.originalStates[skillName]?.[levelKey]) {
             return {
               originalStates: {

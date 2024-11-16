@@ -26,7 +26,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return savedCategory || "all";
   });
   const { getTrackForRole } = useTrack();
-  const { saveChanges, cancelChanges, hasChanges } = useCompetencyStore();
+  const { saveChanges, cancelChanges, hasChanges, initializeStates } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
 
@@ -34,19 +34,11 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const [track, setTrack] = useState<"Professional" | "Managerial">(
     initialTrack || getTrackForRole(currentRoleId) || "Professional"
   );
-  const jobTitle = jobTitles[currentRoleId] || "AI Engineer";
 
   useEffect(() => {
-    localStorage.setItem('selectedCategory', selectedCategory);
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    // Update track when role changes or when track is changed externally
-    const savedTrack = getTrackForRole(currentRoleId);
-    if (savedTrack !== track) {
-      setTrack(savedTrack);
-    }
-  }, [currentRoleId, getTrackForRole, track]);
+    // Initialize competency states when component mounts or roleId changes
+    initializeStates(currentRoleId);
+  }, [currentRoleId, initializeStates]);
 
   const handleSave = () => {
     saveChanges();
@@ -62,10 +54,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       title: "Changes cancelled",
       description: "Your changes have been discarded.",
     });
-  };
-
-  const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
-    setTrack(newTrack);
   };
 
   const getLevelsForTrack = () => {
@@ -147,8 +135,8 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       <Separator className="my-6" />
       
       <div className="mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitle}</h3>
-        <TrackSelection onTrackChange={handleTrackChange} />
+        <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitles[currentRoleId]}</h3>
+        <TrackSelection onTrackChange={setTrack} />
       </div>
 
       <CategorySection 
