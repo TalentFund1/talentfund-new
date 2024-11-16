@@ -3,6 +3,7 @@ import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getSkillRequirements } from "../skills/data/skillsDatabase";
+import { useRoleStore } from "./RoleBenchmark";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -22,25 +23,14 @@ export const SkillsMatrixRow = ({
   isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
+  const { selectedLevel } = useRoleStore();
+  
   const currentState = currentStates[skill.title] || {
     level: skill.level,
     requirement: 'required'
   };
 
-  const roleRequirements = getSkillRequirements(skill.title, 'professional', 'P4');
-
-  const getConfidenceStyles = (confidence: string) => {
-    switch (confidence) {
-      case 'high':
-        return 'bg-green-100 text-green-800';
-      case 'medium':
-        return 'bg-orange-100 text-orange-800';
-      case 'low':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'text-gray-500 text-sm';
-    }
-  };
+  const roleRequirements = getSkillRequirements(skill.title, 'professional', selectedLevel.toUpperCase());
 
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
@@ -57,6 +47,17 @@ export const SkillsMatrixRow = ({
         return 'bg-[#008000]/10 border-2 border-[#008000] text-[#008000]';
       default:
         return 'bg-gray-100/50 border-2 border-gray-400 text-gray-600';
+    }
+  };
+
+  const getRequirementBadgeStyles = (requirement: string) => {
+    switch (requirement?.toLowerCase()) {
+      case 'required':
+        return 'bg-[#F7F9FF] text-primary border border-primary';
+      case 'preferred':
+        return 'bg-[#F7F9FF] text-gray-600 border border-gray-300';
+      default:
+        return 'bg-gray-100 text-gray-600 border border-gray-300';
     }
   };
 
@@ -80,11 +81,11 @@ export const SkillsMatrixRow = ({
         </TableCell>
       )}
       <TableCell className="text-center border-r border-blue-200 py-2">
-        <div className="flex flex-col items-center gap-1">
-          <span className={`px-3 py-1 rounded-md text-sm ${getLevelStyles(roleRequirements?.level)}`}>
+        <div className="flex flex-col items-center gap-2">
+          <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(roleRequirements?.level)}`}>
             {roleRequirements?.level?.charAt(0).toUpperCase() + roleRequirements?.level?.slice(1) || 'Unspecified'}
           </span>
-          <span className="text-xs text-gray-600">
+          <span className={`px-2 py-0.5 rounded-full text-xs ${getRequirementBadgeStyles(roleRequirements?.requirement)}`}>
             {roleRequirements?.requirement === 'required' ? 'Required' : 'Preferred'}
           </span>
         </div>
@@ -98,7 +99,11 @@ export const SkillsMatrixRow = ({
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
         ) : (
-          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${getConfidenceStyles(skill.confidence)}`}>
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${
+            skill.confidence === 'high' ? 'bg-green-100 text-green-800' :
+            skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
+            'bg-red-100 text-red-800'
+          }`}>
             {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
           </span>
         )}

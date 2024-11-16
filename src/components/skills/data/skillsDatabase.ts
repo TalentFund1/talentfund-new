@@ -20,6 +20,20 @@ export const getSkillRequirements = (
 ): { level: string; requirement: string } | undefined => {
   if (track === 'professional') {
     const requirements = {
+      P4: {
+        "Machine Learning": { level: "advanced", requirement: "required" },
+        "Deep Learning": { level: "advanced", requirement: "required" },
+        "TensorFlow": { level: "advanced", requirement: "required" },
+        "PyTorch": { level: "advanced", requirement: "required" },
+        "Computer Vision": { level: "advanced", requirement: "required" },
+        "Natural Language Processing": { level: "intermediate", requirement: "required" },
+        "Python": { level: "intermediate", requirement: "required" },
+        "Problem Solving": { level: "advanced", requirement: "required" },
+        "Technical Writing": { level: "intermediate", requirement: "preferred" },
+        "AWS Certified Machine Learning - Specialty": { level: "advanced", requirement: "preferred" },
+        "TensorFlow Developer Certificate": { level: "advanced", requirement: "preferred" },
+        "Google Cloud Professional Machine Learning Engineer": { level: "advanced", requirement: "preferred" }
+      },
       P1: {
         "Machine Learning": { level: "beginner", requirement: "required" },
         "Deep Learning": { level: "unspecified", requirement: "preferred" },
@@ -49,25 +63,12 @@ export const getSkillRequirements = (
         "Agile Methodologies": { level: "unspecified", requirement: "required" },
         "AWS Certified Solutions Architect": { level: "unspecified", requirement: "required" },
         "Kubernetes Administrator (CKA)": { level: "unspecified", requirement: "preferred" }
-      },
-      P4: {
-        "Node.js": { level: "advanced", requirement: "preferred" },
-        "Database Design": { level: "advanced", requirement: "preferred" },
-        "API Development": { level: "advanced", requirement: "required" },
-        "System Architecture": { level: "advanced", requirement: "preferred" },
-        "Kubernetes": { level: "advanced", requirement: "preferred" },
-        "Problem Solving": { level: "advanced", requirement: "preferred" },
-        "Code Review": { level: "advanced", requirement: "preferred" },
-        "Agile Methodologies": { level: "advanced", requirement: "preferred" },
-        "AWS Certified Solutions Architect": { level: "advanced", requirement: "required" },
-        "Kubernetes Administrator (CKA)": { level: "advanced", requirement: "preferred" }
       }
     };
 
     return requirements[level]?.[skillTitle];
   }
 
-  // For managerial track (M3-M6)
   if (track === 'managerial') {
     const managerialRequirements = {
       M3: {
