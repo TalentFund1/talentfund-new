@@ -17,13 +17,11 @@ export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
-  const [selectedLevel, setSelectedLevel] = useState("all");
-  const [selectedInterest, setSelectedInterest] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
-  const { selectedRole, setSelectedRole } = useRoleStore();
+  const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
 
   const roles = {
     "123": "AI Engineer",
@@ -41,18 +39,12 @@ export const BenchmarkSkillsMatrix = () => {
     .filter(skill => {
       let matchesSearch = true;
       let matchesLevel = true;
-      let matchesInterest = true;
 
       const currentSkillState = currentStates[skill.title];
       const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
       if (selectedLevel !== 'all') {
         matchesLevel = skillLevel === selectedLevel.toLowerCase();
-      }
-
-      if (selectedInterest !== 'all') {
-        matchesInterest = requirement === selectedInterest.toLowerCase();
       }
 
       if (selectedSearchSkills.length > 0) {
@@ -63,7 +55,7 @@ export const BenchmarkSkillsMatrix = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesSearch && matchesLevel && matchesInterest;
+      return matchesSearch && matchesLevel;
     })
     .sort((a, b) => {
       const levelPriority: { [key: string]: number } = {
@@ -90,23 +82,6 @@ export const BenchmarkSkillsMatrix = () => {
     setSearchTerm("");
     setSelectedSearchSkills([]);
   };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
-          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
-    return () => observer.disconnect();
-  }, [visibleItems, filteredSkills.length]);
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
@@ -147,11 +122,14 @@ export const BenchmarkSkillsMatrix = () => {
               <SelectValue placeholder="Select Level" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Levels</SelectItem>
-              <SelectItem value="advanced">Advanced</SelectItem>
-              <SelectItem value="intermediate">Intermediate</SelectItem>
-              <SelectItem value="beginner">Beginner</SelectItem>
-              <SelectItem value="unspecified">Unspecified</SelectItem>
+              <SelectItem value="p1">P1</SelectItem>
+              <SelectItem value="p2">P2</SelectItem>
+              <SelectItem value="p3">P3</SelectItem>
+              <SelectItem value="p4">P4</SelectItem>
+              <SelectItem value="p5">P5</SelectItem>
+              <SelectItem value="m1">M1</SelectItem>
+              <SelectItem value="m2">M2</SelectItem>
+              <SelectItem value="m3">M3</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -161,8 +139,8 @@ export const BenchmarkSkillsMatrix = () => {
           setSearchTerm={setSearchTerm}
           selectedLevel={selectedLevel}
           setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
+          selectedInterest={"all"}
+          setSelectedInterest={() => {}}
           selectedSearchSkills={selectedSearchSkills}
           removeSearchSkill={removeSearchSkill}
           clearSearch={clearSearch}
