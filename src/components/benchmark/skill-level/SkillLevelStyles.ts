@@ -1,13 +1,13 @@
 export const getLevelStyles = (level: string) => {
   switch (level.toLowerCase()) {
     case 'advanced':
-      return "border-2 border-primary-accent bg-primary-accent/10";
+      return "border-2 border-primary-accent bg-primary-accent/10 rounded-t-md";
     case 'intermediate':
-      return "border-2 border-primary-icon bg-primary-icon/10";
+      return "border-2 border-primary-icon bg-primary-icon/10 rounded-t-md";
     case 'beginner':
-      return "border-2 border-[#008000] bg-[#008000]/10";
+      return "border-2 border-[#008000] bg-[#008000]/10 rounded-t-md";
     default:
-      return "border-2 border-gray-400 bg-gray-100/50";
+      return "border-2 border-gray-400 bg-gray-100/50 rounded-t-md";
   }
 };
 

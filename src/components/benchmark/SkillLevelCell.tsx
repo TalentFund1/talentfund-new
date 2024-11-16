@@ -1,5 +1,4 @@
 import { TableCell } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons";
 import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
@@ -41,29 +40,17 @@ export const SkillLevelCell = ({
     }
   }, [originalStates, skillTitle]);
 
-  const handleLevelChange = (newLevel: string) => {
-    setLevel(newLevel);
-    setSkillState(skillTitle, newLevel, required);
-    onLevelChange?.(newLevel, required);
-  };
-
-  const handleRequirementChange = (newRequired: string) => {
-    setRequired(newRequired);
-    setSkillState(skillTitle, level, newRequired);
-    onLevelChange?.(level, newRequired);
-  };
-
   if (isRoleBenchmark) {
     return (
       <TableCell className="border-r border-blue-200 p-0">
         <div className="flex flex-col items-center">
-          <div className={`${getLevelStyles(level)} rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144]`}>
+          <div className={`${getLevelStyles(level)} px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[32px] text-[#1f2144]`}>
             <span className="flex items-center gap-2 justify-center text-[15px]">
               {getLevelIcon(level)}
               {level.charAt(0).toUpperCase() + level.slice(1)}
             </span>
           </div>
-          <div className={getRequirementStyles(required, level)}>
+          <div className={`${getRequirementStyles(required, level)} min-h-[28px]`}>
             <span className="flex items-center gap-1.5 justify-center text-xs">
               {getRequirementIcon(required)}
               {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : required === 'unknown' ? 'Unknown' : 'Skill Goal'}
@@ -74,6 +61,7 @@ export const SkillLevelCell = ({
     );
   }
 
+  // Non-role benchmark view with dropdowns
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
@@ -82,7 +70,7 @@ export const SkillLevelCell = ({
             className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
           >
             <SelectValue>
-              <span className="flex items-center gap-2 justify-center text-[15px]">
+              <span className="flex items-center gap-2">
                 {getLevelIcon(level)}
                 {level.charAt(0).toUpperCase() + level.slice(1)}
               </span>
@@ -115,7 +103,6 @@ export const SkillLevelCell = ({
             </SelectItem>
           </SelectContent>
         </Select>
-
         <Select value={required} onValueChange={handleRequirementChange}>
           <SelectTrigger 
             className={getRequirementStyles(required, level)}
