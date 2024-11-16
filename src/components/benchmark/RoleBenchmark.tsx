@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useState, useEffect } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
@@ -12,19 +13,15 @@ import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
 import { create } from "zustand";
 
-// Create a Zustand store for sharing selected role and level
+// Create a Zustand store for sharing selected role
 interface RoleStore {
   selectedRole: string;
-  selectedLevel: string;
   setSelectedRole: (role: string) => void;
-  setSelectedLevel: (level: string) => void;
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
-  selectedLevel: "p4",
   setSelectedRole: (role) => set({ selectedRole: role }),
-  setSelectedLevel: (level) => set({ selectedLevel: level }),
 }));
 
 const roles = {
@@ -35,10 +32,12 @@ const roles = {
 };
 
 export const RoleBenchmark = () => {
+  const navigate = useNavigate();
+  const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
-  const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
+  const { selectedRole, setSelectedRole } = useRoleStore();
 
   const currentTrack = getTrackForRole(selectedRole);
 
