@@ -50,6 +50,27 @@ export const SkillLevelCell = ({
     }
   };
 
+  const getLevelStyles = () => {
+    const baseStyles = "rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]";
+    
+    // Only apply colored borders for skill goals
+    if (currentState.requirement === 'required') {
+      switch (currentState.level.toLowerCase()) {
+        case 'advanced':
+          return `${baseStyles} bg-primary-accent/10 border-2 border-primary-accent`;
+        case 'intermediate':
+          return `${baseStyles} bg-primary-icon/10 border-2 border-primary-icon`;
+        case 'beginner':
+          return `${baseStyles} bg-[#008000]/10 border-2 border-[#008000]`;
+        default:
+          return `${baseStyles} bg-gray-100/50 border-2 border-gray-400`;
+      }
+    }
+    
+    // Grey border for not-interested and unknown
+    return `${baseStyles} bg-gray-100/50 border-2 border-gray-300`;
+  };
+
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
@@ -60,13 +81,7 @@ export const SkillLevelCell = ({
             onLevelChange?.(value, currentState.requirement);
           }}
         >
-          <SelectTrigger className={`
-            rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
-              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
-              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
-              'bg-gray-100/50 border-2 border-gray-400'}
-          `}>
+          <SelectTrigger className={getLevelStyles()}>
             <SelectValue>
               <span className="flex items-center gap-2">
                 {getLevelIcon(currentState.level)}
@@ -96,10 +111,12 @@ export const SkillLevelCell = ({
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md
-            ${currentState.level === 'advanced' ? 'border-primary-accent bg-gray-100/90' : 
-              currentState.level === 'intermediate' ? 'border-primary-icon bg-gray-100/90' : 
-              currentState.level === 'beginner' ? 'border-[#008000] bg-gray-100/90' : 
-              'border-gray-400 bg-white'}
+            ${currentState.requirement === 'required' ? 
+              (currentState.level === 'advanced' ? 'border-primary-accent bg-gray-100/90' : 
+               currentState.level === 'intermediate' ? 'border-primary-icon bg-gray-100/90' : 
+               currentState.level === 'beginner' ? 'border-[#008000] bg-gray-100/90' : 
+               'border-gray-400 bg-white') : 
+              'border-gray-300 bg-white'}
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
