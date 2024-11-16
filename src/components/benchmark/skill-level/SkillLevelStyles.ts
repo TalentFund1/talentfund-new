@@ -14,9 +14,22 @@ export const getLevelStyles = (level: string) => {
 export const getRequirementStyles = (requirement: string, level: string) => {
   const baseStyles = "text-xs px-2 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md";
   
+  const getBorderColor = () => {
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return 'border-primary-accent';
+      case 'intermediate':
+        return 'border-primary-icon';
+      case 'beginner':
+        return 'border-[#008000]';
+      default:
+        return 'border-gray-300';
+    }
+  };
+  
   switch (requirement) {
     case 'required':
-      return `${baseStyles} bg-gray-100/90 ${getLevelBorderColor(level)}`;
+      return `${baseStyles} bg-gray-100/90 ${getBorderColor()}`;
     case 'interested':
       return `${baseStyles} bg-gray-50/90 border-gray-300`;
     case 'not-interested':
