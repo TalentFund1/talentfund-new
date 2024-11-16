@@ -1,12 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
+import { useRoleStore } from "./RoleBenchmark";
+import { professionalLevels, managerialLevels } from "./data/levelData";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -20,6 +23,14 @@ export const BenchmarkSkillsMatrix = () => {
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
+  const { selectedRole, setSelectedRole } = useRoleStore();
+
+  const roles = {
+    "123": "AI Engineer",
+    "124": "Backend Engineer",
+    "125": "Frontend Engineer",
+    "126": "Engineering Manager"
+  };
 
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
@@ -107,6 +118,42 @@ export const BenchmarkSkillsMatrix = () => {
           <p className="text-sm text-muted-foreground">
             Manage and track employee skills and competencies
           </p>
+        </div>
+
+        <div className="flex gap-4 w-full max-w-[800px]">
+          <Select 
+            value={selectedRole}
+            onValueChange={setSelectedRole}
+          >
+            <SelectTrigger className="w-full bg-white">
+              <SelectValue placeholder="Select Role">
+                {roles[selectedRole as keyof typeof roles]}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(roles).map(([id, title]) => (
+                <SelectItem key={id} value={id}>
+                  {title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={selectedLevel}
+            onValueChange={setSelectedLevel}
+          >
+            <SelectTrigger className="w-[200px] bg-white">
+              <SelectValue placeholder="Select Level" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Levels</SelectItem>
+              <SelectItem value="advanced">Advanced</SelectItem>
+              <SelectItem value="intermediate">Intermediate</SelectItem>
+              <SelectItem value="beginner">Beginner</SelectItem>
+              <SelectItem value="unspecified">Unspecified</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <BenchmarkMatrixFilters
