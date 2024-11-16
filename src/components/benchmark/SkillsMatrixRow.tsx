@@ -4,6 +4,7 @@ import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useRoleStore } from "./RoleBenchmark";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -24,13 +25,15 @@ export const SkillsMatrixRow = ({
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { selectedLevel } = useRoleStore();
+  const { getTrackForRole } = useTrack();
+  const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
   const currentState = currentStates[skill.title] || {
     level: skill.level,
     requirement: 'required'
   };
 
-  const roleRequirements = getSkillRequirements(skill.title, 'professional', selectedLevel.toUpperCase());
+  const roleRequirements = getSkillRequirements(skill.title, track, selectedLevel.toUpperCase());
 
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
