@@ -1,6 +1,7 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart, CircleDashed, Check, X } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
+import { useEffect } from "react";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
@@ -34,19 +35,6 @@ export const SkillLevelCell = ({
         return <Target className="w-3.5 h-3.5 text-[#008000]" />;
       default:
         return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
-    }
-  };
-
-  const getRequirementIcon = (requirement: string) => {
-    switch (requirement.toLowerCase()) {
-      case 'required':
-        return <Check className="w-3.5 h-3.5" />;
-      case 'not-interested':
-        return <X className="w-3.5 h-3.5" />;
-      case 'unknown':
-        return <CircleDashed className="w-3.5 h-3.5" />;
-      default:
-        return <Heart className="w-3.5 h-3.5" />;
     }
   };
 
@@ -104,10 +92,17 @@ export const SkillLevelCell = ({
             ${getRequirementBackgroundClass(currentState.requirement)}
           `}>
             <span className="flex items-center gap-1.5">
-              {getRequirementIcon(currentState.requirement)}
-              {currentState.requirement === 'required' ? 'Skill Goal' : 
-               currentState.requirement === 'not-interested' ? 'Not Interested' : 
-               currentState.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+              {currentState.requirement === 'required' ? (
+                <>
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Skill Goal</span>
+                </>
+              ) : (
+                <>
+                  <Heart className="w-3.5 h-3.5" />
+                  <span>Skill Goal</span>
+                </>
+              )}
             </span>
           </div>
         </div>
