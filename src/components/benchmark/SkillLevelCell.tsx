@@ -63,7 +63,7 @@ export const SkillLevelCell = ({
           return 'border-gray-400';
       }
     }
-    return 'border-gray-400';
+    return 'border-[#e5e7eb]'; // Lighter grey border color
   };
 
   return (
