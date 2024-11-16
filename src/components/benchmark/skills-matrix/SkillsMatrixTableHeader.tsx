@@ -9,12 +9,12 @@ import {
 
 interface SkillsMatrixTableHeaderProps {
   showCompanySkill?: boolean;
-  showRoleSkills?: boolean;
+  isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixTableHeader = ({ 
   showCompanySkill = true,
-  showRoleSkills = false 
+  isRoleBenchmark = false 
 }: SkillsMatrixTableHeaderProps) => {
   return (
     <TableHeader>
@@ -24,7 +24,7 @@ export const SkillsMatrixTableHeader = ({
         {showCompanySkill && (
           <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Company Skill</TableHead>
         )}
-        {showRoleSkills && (
+        {isRoleBenchmark && (
           <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Role Skills</TableHead>
         )}
         <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Skill Level</TableHead>
