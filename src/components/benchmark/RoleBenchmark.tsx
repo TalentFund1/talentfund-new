@@ -13,18 +13,15 @@ import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
 import { create } from "zustand";
 
+// Create a Zustand store for sharing selected role
 interface RoleStore {
   selectedRole: string;
-  selectedRoleLevel: string;
   setSelectedRole: (role: string) => void;
-  setSelectedRoleLevel: (level: string) => void;
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
-  selectedRoleLevel: "p4",
   setSelectedRole: (role) => set({ selectedRole: role }),
-  setSelectedRoleLevel: (level) => set({ selectedRoleLevel: level }),
 }));
 
 const roles = {
@@ -113,11 +110,26 @@ export const RoleBenchmark = () => {
           selectedLevel={selectedLevel}
         />
 
-        <Card className="p-6 bg-white">
+        <Card className="p-6 bg-white space-y-6">
           <CompetencyGraph 
             track={currentTrack as "Professional" | "Managerial"}
             roleId={selectedRole}
           />
+          
+          <Separator className="my-4" />
+          
+          {/* Bottom synchronized role selection */}
+          <div className="mt-6">
+            <RoleSelection 
+              selectedRole={selectedRole}
+              selectedLevel={selectedLevel}
+              currentTrack={currentTrack}
+              onRoleChange={setSelectedRole}
+              onLevelChange={setSelectedLevel}
+              onTrackChange={handleTrackChange}
+              roles={roles}
+            />
+          </div>
         </Card>
       </div>
     </div>

@@ -1,15 +1,12 @@
-import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
-import { useRoleStore } from "./RoleBenchmark";
-import { professionalLevels, managerialLevels } from "./data/levelData";
-import { useParams } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,14 +20,6 @@ export const BenchmarkSkillsMatrix = () => {
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
-  const { selectedRole, setSelectedRole, selectedRoleLevel, setSelectedRoleLevel } = useRoleStore();
-
-  const roles = {
-    "123": "AI Engineer",
-    "124": "Backend Engineer",
-    "125": "Frontend Engineer",
-    "126": "Engineering Manager"
-  };
 
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
@@ -44,7 +33,7 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesInterest = true;
 
       const currentSkillState = currentStates[skill.title];
-      const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
+      const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
       const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
       if (selectedLevel !== 'all') {
@@ -82,6 +71,32 @@ export const BenchmarkSkillsMatrix = () => {
       return levelPriority[aLevel] - levelPriority[bLevel];
     });
 
+  const removeSearchSkill = (skill: string) => {
+    setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
+  };
+
+  const clearSearch = () => {
+    setSearchTerm("");
+    setSelectedSearchSkills([]);
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
+          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [visibleItems, filteredSkills.length]);
+
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
   return (
@@ -94,42 +109,6 @@ export const BenchmarkSkillsMatrix = () => {
           </p>
         </div>
 
-        <div className="flex gap-4 w-full max-w-[800px]">
-          <Select 
-            value={selectedRole}
-            onValueChange={setSelectedRole}
-          >
-            <SelectTrigger className="w-full bg-white">
-              <SelectValue placeholder="Select Role">
-                {roles[selectedRole as keyof typeof roles]}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(roles).map(([id, title]) => (
-                <SelectItem key={id} value={id}>
-                  {title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={selectedRoleLevel}
-            onValueChange={setSelectedRoleLevel}
-          >
-            <SelectTrigger className="w-[200px] bg-white">
-              <SelectValue placeholder="Select Level" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(professionalLevels).map(([id, title]) => (
-                <SelectItem key={id} value={id}>
-                  {title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
         <BenchmarkMatrixFilters
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -138,8 +117,8 @@ export const BenchmarkSkillsMatrix = () => {
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
           selectedSearchSkills={selectedSearchSkills}
-          removeSearchSkill={() => {}}
-          clearSearch={() => {}}
+          removeSearchSkill={removeSearchSkill}
+          clearSearch={clearSearch}
         />
 
         <SkillsMatrixTable 
