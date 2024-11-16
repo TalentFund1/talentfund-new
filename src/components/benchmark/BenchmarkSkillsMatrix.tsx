@@ -7,6 +7,8 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
+import { useRoleStore } from "./RoleBenchmark";
+import { RoleSelection } from "./RoleSelection";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -20,6 +22,14 @@ export const BenchmarkSkillsMatrix = () => {
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
+  const { selectedRole, setSelectedRole } = useRoleStore();
+
+  const roles = {
+    "123": "AI Engineer",
+    "124": "Backend Engineer",
+    "125": "Frontend Engineer",
+    "126": "Engineering Manager"
+  };
 
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
@@ -107,6 +117,18 @@ export const BenchmarkSkillsMatrix = () => {
           <p className="text-sm text-muted-foreground">
             Manage and track employee skills and competencies
           </p>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <RoleSelection 
+            selectedRole={selectedRole}
+            selectedLevel={"p4"}
+            currentTrack={"Professional"}
+            onRoleChange={setSelectedRole}
+            onLevelChange={() => {}}
+            onTrackChange={() => {}}
+            roles={roles}
+          />
         </div>
 
         <BenchmarkMatrixFilters
