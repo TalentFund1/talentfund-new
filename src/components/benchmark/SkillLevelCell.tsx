@@ -80,66 +80,41 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getLevelStyles = (level: string) => {
-    const baseStyles = 'rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]';
-    switch (level.toLowerCase()) {
-      case 'advanced':
-        return `${baseStyles} bg-primary-accent/10 border-2 border-primary-accent`;
-      case 'intermediate':
-        return `${baseStyles} bg-primary-icon/10 border-2 border-primary-icon`;
-      case 'beginner':
-        return `${baseStyles} bg-[#008000]/10 border-2 border-[#008000]`;
-      default:
-        return `${baseStyles} bg-gray-100/50 border-2 border-gray-400`;
-    }
-  };
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        {isRoleBenchmark ? (
-          // Read-only display for Role Benchmark
-          <div className={getLevelStyles(currentState.level)}>
-            <span className="flex items-center gap-2">
-              {getLevelIcon(currentState.level)}
-              {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
-            </span>
-          </div>
-        ) : (
-          // Editable select for Skills Summary
-          <Select 
-            value={currentState.level} 
-            onValueChange={(value) => {
-              setSkillState(skillTitle, value, currentState.requirement);
-              onLevelChange?.(value, currentState.requirement);
-            }}
-          >
-            <SelectTrigger className={`
-              rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-              ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
-                currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
-                currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
-                'bg-gray-100/50 border-2 border-gray-400'}
-            `}>
-              <SelectValue>
+        <Select 
+          value={currentState.level} 
+          onValueChange={(value) => {
+            setSkillState(skillTitle, value, currentState.requirement);
+            onLevelChange?.(value, currentState.requirement);
+          }}
+        >
+          <SelectTrigger className={`
+            rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
+            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
+              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
+              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
+              'bg-gray-100/50 border-2 border-gray-400'}
+          `}>
+            <SelectValue>
+              <span className="flex items-center gap-2">
+                {getLevelIcon(currentState.level)}
+                {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
+              </span>
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {['unspecified', 'beginner', 'intermediate', 'advanced'].map((level) => (
+              <SelectItem key={level} value={level}>
                 <span className="flex items-center gap-2">
-                  {getLevelIcon(currentState.level)}
-                  {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
+                  {getLevelIcon(level)}
+                  {level.charAt(0).toUpperCase() + level.slice(1)}
                 </span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {['unspecified', 'beginner', 'intermediate', 'advanced'].map((level) => (
-                <SelectItem key={level} value={level}>
-                  <span className="flex items-center gap-2">
-                    {getLevelIcon(level)}
-                    {level.charAt(0).toUpperCase() + level.slice(1)}
-                  </span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
         <Select 
           value={currentState.requirement}
