@@ -49,12 +49,12 @@ export const RoleBenchmarkCell = ({ level, requirement }: RoleBenchmarkCellProps
             {requirement === 'required' ? (
               <>
                 <Check className="w-3.5 h-3.5" />
-                <span>Skill Goal</span>
+                <span>Required</span>
               </>
             ) : (
               <>
                 <Heart className="w-3.5 h-3.5" />
-                <span>Skill Goal</span>
+                <span>Preferred</span>
               </>
             )}
           </span>
