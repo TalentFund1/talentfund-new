@@ -13,6 +13,7 @@ interface SkillsMatrixRowProps {
     level: string;
     growth: string;
     confidence: string;
+    requirement?: string;
   };
   showCompanySkill?: boolean;
   isRoleBenchmark?: boolean;
