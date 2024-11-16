@@ -83,10 +83,10 @@ export const SkillsMatrixRow = ({
       {isRoleBenchmark && (
         <TableCell className="text-center border-r border-blue-200 py-2">
           <div className="flex flex-col items-center gap-2">
-            <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(roleRequirements?.level)}`}>
+            <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(roleRequirements?.level || 'unspecified')}`}>
               {roleRequirements?.level?.charAt(0).toUpperCase() + roleRequirements?.level?.slice(1) || 'Unspecified'}
             </span>
-            <span className={`px-2 py-0.5 rounded-full text-xs ${getRequirementBadgeStyles(roleRequirements?.requirement)}`}>
+            <span className={`px-2 py-0.5 rounded-full text-xs ${getRequirementBadgeStyles(roleRequirements?.requirement || 'preferred')}`}>
               {roleRequirements?.requirement === 'required' ? 'Required' : 'Preferred'}
             </span>
           </div>
