@@ -1,5 +1,6 @@
 import { useCompetencyStore } from "./CompetencyState";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
+import { aiSkills } from '../data/skills/aiSkills';
 
 interface SkillCompetencyState {
   level: string;
@@ -10,37 +11,36 @@ export const useCompetencyStateReader = () => {
   const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
 
-  const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillCompetencyState | null => {
-    if (!toggledSkills.has(skillName)) {
+  const getSkillCompetencyState = (skillName: string, levelKey: string = 'p3'): SkillCompetencyState | null => {
+    // Find the skill in aiSkills
+    const skill = aiSkills.find(s => s.title === skillName);
+    
+    if (!skill) {
       return null;
     }
 
-    const skillState = currentStates[skillName];
-    if (!skillState) {
-      return null;
-    }
-
-    // Get the specific level state
-    const levelState = skillState[levelKey];
-    if (!levelState) {
+    // Get the track level data
+    const trackData = skill.professionalTrack?.[levelKey.toUpperCase()];
+    
+    if (!trackData) {
       return null;
     }
 
     return {
-      level: levelState.level,
-      required: levelState.required
+      level: trackData.level,
+      required: trackData.requirement
     };
   };
 
   const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
     const states: Record<string, SkillCompetencyState> = {};
     
-    Object.entries(currentStates).forEach(([skillName, skillLevels]) => {
-      const levelState = skillLevels[levelKey.toLowerCase()];
-      if (levelState) {
-        states[skillName] = {
-          level: levelState.level,
-          required: levelState.required
+    aiSkills.forEach(skill => {
+      const trackData = skill.professionalTrack?.[levelKey.toUpperCase()];
+      if (trackData) {
+        states[skill.title] = {
+          level: trackData.level,
+          required: trackData.requirement
         };
       }
     });
