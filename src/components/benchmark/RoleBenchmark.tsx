@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
-import { SkillsDisplay } from "./SkillsDisplay";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { MissingSkills } from "./MissingSkills";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
@@ -100,13 +99,6 @@ export const RoleBenchmark = () => {
         />
 
         <Separator className="my-6" />
-
-        <SkillsDisplay 
-          selectedRoleSkills={selectedRoleSkills}
-          toggledSkills={toggledSkills}
-          roleId={selectedRole}
-          selectedLevel={roleLevel}
-        />
 
         <MissingSkills 
           roleId={selectedRole} 
