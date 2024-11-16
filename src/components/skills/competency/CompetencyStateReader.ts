@@ -6,17 +6,11 @@ interface SkillCompetencyState {
   required: string;
 }
 
-interface CompetencyStateMap {
-  [skillName: string]: {
-    [levelKey: string]: SkillCompetencyState;
-  };
-}
-
 export const useCompetencyStateReader = () => {
   const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
 
-  const getSkillCompetencyState = (skillName: string): SkillCompetencyState | null => {
+  const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillCompetencyState | null => {
     if (!toggledSkills.has(skillName)) {
       return null;
     }
@@ -26,20 +20,26 @@ export const useCompetencyStateReader = () => {
       return null;
     }
 
-    // Find the highest level where the skill is marked as required
-    const levels = Object.entries(skillState);
-    let highestRequiredLevel: SkillCompetencyState | null = null;
-
-    for (const [_, state] of levels) {
-      if (state.required === 'required') {
-        if (!highestRequiredLevel || 
-            getLevelPriority(state.level) < getLevelPriority(highestRequiredLevel.level)) {
-          highestRequiredLevel = state;
-        }
-      }
+    // Get the specific level state
+    const levelState = skillState[levelKey];
+    if (!levelState) {
+      return null;
     }
 
-    return highestRequiredLevel;
+    return {
+      level: levelState.level,
+      required: levelState.required
+    };
+  };
+
+  const getAllToggledSkillStates = (levelKey: string = 'p4'): Record<string, SkillCompetencyState | null> => {
+    const states: Record<string, SkillCompetencyState | null> = {};
+    
+    toggledSkills.forEach(skillName => {
+      states[skillName] = getSkillCompetencyState(skillName, levelKey);
+    });
+
+    return states;
   };
 
   const getLevelPriority = (level: string): number => {
@@ -52,18 +52,9 @@ export const useCompetencyStateReader = () => {
     return priorities[level.toLowerCase()] ?? 3;
   };
 
-  const getAllToggledSkillStates = (): Record<string, SkillCompetencyState | null> => {
-    const states: Record<string, SkillCompetencyState | null> = {};
-    
-    toggledSkills.forEach(skillName => {
-      states[skillName] = getSkillCompetencyState(skillName);
-    });
-
-    return states;
-  };
-
   return {
     getSkillCompetencyState,
-    getAllToggledSkillStates
+    getAllToggledSkillStates,
+    getLevelPriority
   };
 };
