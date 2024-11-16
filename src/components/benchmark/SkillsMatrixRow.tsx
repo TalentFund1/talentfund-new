@@ -4,6 +4,7 @@ import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
+import { Star, Shield, Target, CircleDashed } from "lucide-react";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -32,17 +33,37 @@ export const SkillsMatrixRow = ({
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const getLevelStyles = (level: string) => {
+  const getLevelIcon = (level: string) => {
     switch (level?.toLowerCase()) {
       case 'advanced':
-        return 'bg-primary-accent/10 border-2 border-primary-accent text-primary-accent';
+        return <Star className="w-4 h-4 text-primary-accent" />;
       case 'intermediate':
-        return 'bg-primary-icon/10 border-2 border-primary-icon text-primary-icon';
+        return <Shield className="w-4 h-4 text-primary-icon" />;
       case 'beginner':
-        return 'bg-[#008000]/10 border-2 border-[#008000] text-[#008000]';
+        return <Target className="w-4 h-4 text-[#008000]" />;
       default:
-        return 'bg-gray-100/50 border-2 border-gray-400 text-gray-600';
+        return <CircleDashed className="w-4 h-4 text-gray-400" />;
     }
+  };
+
+  const getLevelStyles = (level: string) => {
+    const baseStyles = 'px-3 py-1.5 rounded-md text-sm font-medium';
+    switch (level?.toLowerCase()) {
+      case 'advanced':
+        return `${baseStyles} bg-primary-accent/10 border-2 border-primary-accent text-primary-accent`;
+      case 'intermediate':
+        return `${baseStyles} bg-primary-icon/10 border-2 border-primary-icon text-primary-icon`;
+      case 'beginner':
+        return `${baseStyles} bg-[#008000]/10 border-2 border-[#008000] text-[#008000]`;
+      default:
+        return `${baseStyles} bg-gray-100/50 border-2 border-gray-400 text-gray-600`;
+    }
+  };
+
+  const getRequirementStyles = (requirement: string) => {
+    return requirement === 'required' 
+      ? 'bg-[#F7F9FF] text-primary border border-primary'
+      : 'bg-[#F7F9FF] text-gray-600 border border-gray-300';
   };
 
   return (
@@ -67,15 +88,14 @@ export const SkillsMatrixRow = ({
       {isRoleBenchmark && (
         <TableCell className="text-center border-r border-blue-200 py-2">
           <div className="flex flex-col items-center gap-2">
-            <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(skill.level)}`}>
-              {skill.level?.charAt(0).toUpperCase() + skill.level?.slice(1) || 'Unspecified'}
+            <span className={getLevelStyles(skill.level)}>
+              <span className="flex items-center gap-2 justify-center">
+                {getLevelIcon(skill.level)}
+                {skill.level?.charAt(0).toUpperCase() + skill.level?.slice(1) || 'Unspecified'}
+              </span>
             </span>
-            <span className={`px-2 py-0.5 rounded-full text-xs ${
-              skill.level === 'advanced'
-                ? 'bg-[#F7F9FF] text-primary border border-primary' 
-                : 'bg-[#F7F9FF] text-gray-600 border border-gray-300'
-            }`}>
-              {skill.level === 'advanced' ? 'Required' : 'Preferred'}
+            <span className={`px-2 py-0.5 rounded-full text-xs ${getRequirementStyles(skill.requirement || 'preferred')}`}>
+              {skill.requirement === 'required' ? 'Required' : 'Preferred'}
             </span>
           </div>
         </TableCell>
