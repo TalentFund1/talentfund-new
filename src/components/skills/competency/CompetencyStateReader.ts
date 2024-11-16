@@ -1,6 +1,5 @@
 import { useCompetencyStore } from "./CompetencyState";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { aiSkills } from '../data/skills/aiSkills';
 
 interface SkillCompetencyState {
   level: string;
@@ -11,36 +10,37 @@ export const useCompetencyStateReader = () => {
   const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
 
-  const getSkillCompetencyState = (skillName: string, levelKey: string = 'p3'): SkillCompetencyState | null => {
-    // Find the skill in aiSkills
-    const skill = aiSkills.find(s => s.title === skillName);
-    
-    if (!skill) {
+  const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillCompetencyState | null => {
+    if (!toggledSkills.has(skillName)) {
       return null;
     }
 
-    // Get the track level data
-    const trackData = skill.professionalTrack?.[levelKey.toUpperCase()];
-    
-    if (!trackData) {
+    const skillState = currentStates[skillName];
+    if (!skillState) {
+      return null;
+    }
+
+    // Get the specific level state
+    const levelState = skillState[levelKey];
+    if (!levelState) {
       return null;
     }
 
     return {
-      level: trackData.level,
-      required: trackData.requirement
+      level: levelState.level,
+      required: levelState.required
     };
   };
 
   const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
     const states: Record<string, SkillCompetencyState> = {};
     
-    aiSkills.forEach(skill => {
-      const trackData = skill.professionalTrack?.[levelKey.toUpperCase()];
-      if (trackData) {
-        states[skill.title] = {
-          level: trackData.level,
-          required: trackData.requirement
+    Object.entries(currentStates).forEach(([skillName, skillLevels]) => {
+      const levelState = skillLevels[levelKey.toLowerCase()];
+      if (levelState) {
+        states[skillName] = {
+          level: levelState.level,
+          required: levelState.required
         };
       }
     });
