@@ -50,6 +50,22 @@ export const SkillLevelCell = ({
     }
   };
 
+  const getBorderColorClass = (level: string, requirement: string) => {
+    if (requirement.toLowerCase() === 'required') {
+      switch (level.toLowerCase()) {
+        case 'advanced':
+          return 'border-primary-accent';
+        case 'intermediate':
+          return 'border-primary-icon';
+        case 'beginner':
+          return 'border-[#008000]';
+        default:
+          return 'border-gray-400';
+      }
+    }
+    return 'border-gray-400';
+  };
+
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
@@ -96,10 +112,8 @@ export const SkillLevelCell = ({
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md
-            ${currentState.level === 'advanced' ? 'border-primary-accent bg-gray-100/90' : 
-              currentState.level === 'intermediate' ? 'border-primary-icon bg-gray-100/90' : 
-              currentState.level === 'beginner' ? 'border-[#008000] bg-gray-100/90' : 
-              'border-gray-400 bg-white'}
+            ${getBorderColorClass(currentState.level, currentState.requirement)}
+            ${currentState.requirement === 'required' ? 'bg-gray-100/90' : 'bg-white'}
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
