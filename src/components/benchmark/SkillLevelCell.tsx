@@ -3,6 +3,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useRoleStore } from "./RoleBenchmark";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -19,10 +21,16 @@ export const SkillLevelCell = ({
 }: SkillLevelCellProps) => {
   const { getCurrentState } = useSkillLevelState(skillTitle);
   const { currentStates, setSkillState } = useSkillsMatrixStore();
-  const currentState = currentStates[skillTitle] || {
-    level: initialLevel.toLowerCase(),
-    requirement: 'required'
-  };
+  const { selectedLevel } = useRoleStore();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+
+  const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase());
+  const currentState = isRoleBenchmark 
+    ? { level: competencyState?.level || 'unspecified', requirement: competencyState?.required ? 'required' : 'preferred' }
+    : currentStates[skillTitle] || {
+        level: initialLevel.toLowerCase(),
+        requirement: 'required'
+      };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -67,12 +75,12 @@ export const SkillLevelCell = ({
               {currentState.requirement === 'required' ? (
                 <>
                   <Check className="w-3.5 h-3.5" />
-                  <span>Skill Goal</span>
+                  <span>Required</span>
                 </>
               ) : (
                 <>
                   <Heart className="w-3.5 h-3.5" />
-                  <span>Skill Goal</span>
+                  <span>Preferred</span>
                 </>
               )}
             </span>
@@ -139,12 +147,12 @@ export const SkillLevelCell = ({
                 {currentState.requirement === 'required' ? (
                   <>
                     <Check className="w-3.5 h-3.5" />
-                    <span>Skill Goal</span>
+                    <span>Required</span>
                   </>
                 ) : (
                   <>
                     <Heart className="w-3.5 h-3.5" />
-                    <span>Skill Goal</span>
+                    <span>Preferred</span>
                   </>
                 )}
               </span>
@@ -152,9 +160,8 @@ export const SkillLevelCell = ({
           </SelectTrigger>
           <SelectContent>
             {[
-              { value: 'required', label: 'Skill Goal' },
-              { value: 'not-interested', label: 'Not Interested' },
-              { value: 'unknown', label: 'Unknown' }
+              { value: 'required', label: 'Required' },
+              { value: 'preferred', label: 'Preferred' }
             ].map(({ value, label }) => (
               <SelectItem key={value} value={value}>
                 <span className="flex items-center gap-1.5">
