@@ -63,7 +63,21 @@ export const SkillLevelCell = ({
           return 'border-gray-400';
       }
     }
-    return 'border-[#e5e7eb]'; // Lighter grey border color
+    return 'border-[#e5e7eb]';
+  };
+
+  const getRequirementBackgroundClass = (requirement: string) => {
+    switch (requirement.toLowerCase()) {
+      case 'required':
+      case 'skill_goal':
+        return 'bg-[#F7F9FF]';
+      case 'not-interested':
+        return 'bg-[#FFF5F5]';
+      case 'unknown':
+        return 'bg-[#F9FAFB]';
+      default:
+        return 'bg-[#F7F9FF]';
+    }
   };
 
   return (
@@ -113,7 +127,7 @@ export const SkillLevelCell = ({
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md
             ${getBorderColorClass(currentState.level, currentState.requirement)}
-            bg-gray-100/90
+            ${getRequirementBackgroundClass(currentState.requirement)}
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
