@@ -25,8 +25,7 @@ export const SkillsMatrixTable = ({
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
       <Table>
         <SkillsMatrixTableHeader 
-          showCompanySkill={showCompanySkill} 
-          isRoleBenchmark={isRoleBenchmark}
+          showCompanySkill={showCompanySkill}
         />
         <TableBody>
           {filteredSkills.map((skill) => (
@@ -34,7 +33,6 @@ export const SkillsMatrixTable = ({
               key={skill.title} 
               skill={skill}
               showCompanySkill={showCompanySkill}
-              isRoleBenchmark={isRoleBenchmark}
             />
           ))}
         </TableBody>
