@@ -28,12 +28,8 @@ export const SkillsMatrixRow = ({
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
-  const currentState = currentStates[skill.title] || {
-    level: skill.level,
-    requirement: 'required'
-  };
-
-  const roleRequirements = getSkillRequirements(skill.title, track, selectedLevel.toUpperCase());
+  // Get skill requirements from the competency matrix
+  const skillRequirements = getSkillRequirements(skill.title, track, selectedLevel.toUpperCase());
 
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
@@ -50,17 +46,6 @@ export const SkillsMatrixRow = ({
         return 'bg-[#008000]/10 border-2 border-[#008000] text-[#008000]';
       default:
         return 'bg-gray-100/50 border-2 border-gray-400 text-gray-600';
-    }
-  };
-
-  const getRequirementBadgeStyles = (requirement: string) => {
-    switch (requirement?.toLowerCase()) {
-      case 'required':
-        return 'bg-[#F7F9FF] text-primary border border-primary';
-      case 'preferred':
-        return 'bg-[#F7F9FF] text-gray-600 border border-gray-300';
-      default:
-        return 'bg-gray-100 text-gray-600 border border-gray-300';
     }
   };
 
@@ -86,17 +71,21 @@ export const SkillsMatrixRow = ({
       {isRoleBenchmark && (
         <TableCell className="text-center border-r border-blue-200 py-2">
           <div className="flex flex-col items-center gap-2">
-            <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(roleRequirements?.level)}`}>
-              {roleRequirements?.level?.charAt(0).toUpperCase() + roleRequirements?.level?.slice(1) || 'Unspecified'}
+            <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(skillRequirements?.level)}`}>
+              {skillRequirements?.level?.charAt(0).toUpperCase() + skillRequirements?.level?.slice(1) || 'Unspecified'}
             </span>
-            <span className={`px-2 py-0.5 rounded-full text-xs ${getRequirementBadgeStyles(roleRequirements?.requirement)}`}>
-              {roleRequirements?.requirement === 'required' ? 'Required' : 'Preferred'}
+            <span className={`px-2 py-0.5 rounded-full text-xs ${
+              skillRequirements?.requirement === 'required' 
+                ? 'bg-[#F7F9FF] text-primary border border-primary' 
+                : 'bg-[#F7F9FF] text-gray-600 border border-gray-300'
+            }`}>
+              {skillRequirements?.requirement === 'required' ? 'Required' : 'Preferred'}
             </span>
           </div>
         </TableCell>
       )}
       <SkillLevelCell 
-        initialLevel={currentState.level} 
+        initialLevel={skillRequirements?.level || 'unspecified'}
         skillTitle={skill.title}
         isRoleBenchmark={isRoleBenchmark}
       />
@@ -114,7 +103,7 @@ export const SkillsMatrixRow = ({
         )}
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
+        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
           skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
         }`}>
           ↗ {skill.growth}
