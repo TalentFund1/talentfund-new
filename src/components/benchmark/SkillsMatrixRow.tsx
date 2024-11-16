@@ -80,16 +80,18 @@ export const SkillsMatrixRow = ({
           </div>
         </TableCell>
       )}
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <div className="flex flex-col items-center gap-2">
-          <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(roleRequirements?.level)}`}>
-            {roleRequirements?.level?.charAt(0).toUpperCase() + roleRequirements?.level?.slice(1) || 'Unspecified'}
-          </span>
-          <span className={`px-2 py-0.5 rounded-full text-xs ${getRequirementBadgeStyles(roleRequirements?.requirement)}`}>
-            {roleRequirements?.requirement === 'required' ? 'Required' : 'Preferred'}
-          </span>
-        </div>
-      </TableCell>
+      {isRoleBenchmark && (
+        <TableCell className="text-center border-r border-blue-200 py-2">
+          <div className="flex flex-col items-center gap-2">
+            <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(roleRequirements?.level)}`}>
+              {roleRequirements?.level?.charAt(0).toUpperCase() + roleRequirements?.level?.slice(1) || 'Unspecified'}
+            </span>
+            <span className={`px-2 py-0.5 rounded-full text-xs ${getRequirementBadgeStyles(roleRequirements?.requirement)}`}>
+              {roleRequirements?.requirement === 'required' ? 'Required' : 'Preferred'}
+            </span>
+          </div>
+        </TableCell>
+      )}
       <SkillLevelCell 
         initialLevel={currentState.level} 
         skillTitle={skill.title}

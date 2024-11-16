@@ -24,7 +24,10 @@ export const SkillsMatrixTable = ({
   return (
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
       <Table>
-        <SkillsMatrixTableHeader showCompanySkill={showCompanySkill} />
+        <SkillsMatrixTableHeader 
+          showCompanySkill={showCompanySkill} 
+          showRoleSkills={isRoleBenchmark}
+        />
         <TableBody>
           {filteredSkills.map((skill) => (
             <SkillsMatrixRow 
