@@ -31,8 +31,9 @@ const initializeSkillStates = (roleId: string) => {
   ];
 
   allSkills.forEach(skill => {
+    states[skill.title] = states[skill.title] || {};
+    
     if (skill.professionalTrack) {
-      states[skill.title] = {};
       Object.entries(skill.professionalTrack).forEach(([level, state]) => {
         states[skill.title][level.toLowerCase()] = {
           level: state.level,
@@ -42,16 +43,12 @@ const initializeSkillStates = (roleId: string) => {
     }
     
     if (skill.managerialTrack) {
-      states[skill.title] = {
-        ...states[skill.title],
-        ...Object.entries(skill.managerialTrack).reduce((acc, [level, state]) => ({
-          ...acc,
-          [level.toLowerCase()]: {
-            level: state.level,
-            required: state.requirement
-          }
-        }), {})
-      };
+      Object.entries(skill.managerialTrack).forEach(([level, state]) => {
+        states[skill.title][level.toLowerCase()] = {
+          level: state.level,
+          required: state.requirement
+        };
+      });
     }
   });
 
@@ -75,61 +72,43 @@ export const useCompetencyStore = create<CompetencyState>()(
         }),
       setSkillState: (skillName, level, levelKey, required) =>
         set((state) => {
-          if (!state.originalStates[skillName]?.[levelKey]) {
-            return {
-              originalStates: {
-                ...state.originalStates,
-                [skillName]: {
-                  ...state.originalStates[skillName],
-                  [levelKey]: {
-                    level: state.currentStates[skillName]?.[levelKey]?.level || "unspecified",
-                    required: state.currentStates[skillName]?.[levelKey]?.required || "preferred",
-                  },
-                },
-              },
-              currentStates: {
-                ...state.currentStates,
-                [skillName]: {
-                  ...state.currentStates[skillName],
-                  [levelKey]: {
-                    level,
-                    required,
-                  },
-                },
-              },
-              hasChanges: true,
-            };
-          }
-          
-          return {
-            ...state,
-            currentStates: {
-              ...state.currentStates,
-              [skillName]: {
-                ...state.currentStates[skillName],
-                [levelKey]: {
-                  level,
-                  required,
-                },
+          const newCurrentStates = {
+            ...state.currentStates,
+            [skillName]: {
+              ...state.currentStates[skillName],
+              [levelKey]: {
+                level,
+                required,
               },
             },
-            hasChanges: true,
+          };
+
+          // Compare stringified versions to detect changes
+          const hasChanges = JSON.stringify(newCurrentStates) !== JSON.stringify(state.originalStates);
+
+          return {
+            currentStates: newCurrentStates,
+            hasChanges,
           };
         }),
       saveChanges: () => 
         set((state) => ({
+          originalStates: JSON.parse(JSON.stringify(state.currentStates)),
           hasChanges: false,
-          originalStates: { ...state.currentStates },
         })),
       cancelChanges: () =>
         set((state) => ({
-          currentStates: { ...state.originalStates },
+          currentStates: JSON.parse(JSON.stringify(state.originalStates)),
           hasChanges: false,
         })),
     }),
     {
       name: 'competency-storage',
       skipHydration: false,
+      partialize: (state) => ({
+        originalStates: state.originalStates,
+        currentStates: state.currentStates,
+      }),
     }
   )
 );
