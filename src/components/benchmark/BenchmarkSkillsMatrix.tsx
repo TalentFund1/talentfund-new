@@ -7,8 +7,8 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
-import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
+import { useRoleStore } from "./RoleBenchmark";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -81,15 +81,6 @@ export const BenchmarkSkillsMatrix = () => {
       return levelPriority[aLevel] - levelPriority[bLevel];
     });
 
-  const removeSearchSkill = (skill: string) => {
-    setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
-  };
-
-  const clearSearch = () => {
-    setSearchTerm("");
-    setSelectedSearchSkills([]);
-  };
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -139,8 +130,8 @@ export const BenchmarkSkillsMatrix = () => {
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
           selectedSearchSkills={selectedSearchSkills}
-          removeSearchSkill={removeSearchSkill}
-          clearSearch={clearSearch}
+          removeSearchSkill={(skill) => setSelectedSearchSkills((prev) => prev.filter(s => s !== skill))}
+          clearSearch={() => setSearchTerm("")}
         />
 
         <SkillsMatrixTable 

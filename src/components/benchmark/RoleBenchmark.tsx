@@ -41,15 +41,15 @@ export const RoleBenchmark = () => {
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
-  const { selectedRole, setSelectedRole } = useRoleStore();
+  const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
 
   const currentTrack = getTrackForRole(selectedRole);
 
   useEffect(() => {
-    if (currentTrack === "Professional" && selectedLevel.toLowerCase().startsWith("m")) {
-      setSelectedLevel("p4");
-    } else if (currentTrack === "Managerial" && selectedLevel.toLowerCase().startsWith("p")) {
-      setSelectedLevel("m3");
+    if (currentTrack === "Professional" && roleLevel.toLowerCase().startsWith("m")) {
+      setRoleLevel("p4");
+    } else if (currentTrack === "Managerial" && roleLevel.toLowerCase().startsWith("p")) {
+      setRoleLevel("m3");
     }
   }, [currentTrack]);
 
@@ -91,10 +91,10 @@ export const RoleBenchmark = () => {
         
         <RoleSelection 
           selectedRole={selectedRole}
-          selectedLevel={selectedLevel}
+          selectedLevel={roleLevel}
           currentTrack={currentTrack}
           onRoleChange={setSelectedRole}
-          onLevelChange={setSelectedLevel}
+          onLevelChange={setRoleLevel}
           onTrackChange={handleTrackChange}
           roles={roles}
         />
@@ -105,13 +105,13 @@ export const RoleBenchmark = () => {
           selectedRoleSkills={selectedRoleSkills}
           toggledSkills={toggledSkills}
           roleId={selectedRole}
-          selectedLevel={selectedLevel}
+          selectedLevel={roleLevel}
         />
 
         <MissingSkills 
           roleId={selectedRole} 
           employeeId="123" 
-          selectedLevel={selectedLevel}
+          selectedLevel={roleLevel}
         />
 
         <Card className="p-6 bg-white space-y-6">
