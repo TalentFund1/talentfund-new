@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart, X, CircleHelp } from "lucide-react";
+import { Star, Shield, Target, Heart, X, CircleHelp, Check } from "lucide-react";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
@@ -17,9 +17,9 @@ export const SkillLevelCell = ({
   onLevelChange,
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
-  const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
-  const { currentStates: matrixStates, setSkillState } = useSkillsMatrixStore();
-  const currentState = matrixStates[skillTitle] || {
+  const { getCurrentState } = useSkillLevelState(skillTitle);
+  const { currentStates, setSkillState } = useSkillsMatrixStore();
+  const currentState = currentStates[skillTitle] || {
     level: initialLevel.toLowerCase(),
     requirement: 'required'
   };
@@ -55,7 +55,7 @@ export const SkillLevelCell = ({
       <TableCell className="border-r border-blue-200 p-0">
         <div className="flex flex-col items-center">
           <div className={`
-            px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[32px] text-[#1f2144]
+            px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
             ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
               currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
               currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
@@ -68,7 +68,7 @@ export const SkillLevelCell = ({
           </div>
           <div className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-            border-x-2 border-b-2 min-h-[28px]
+            border-x-2 border-b-2 min-h-[32px]
             ${currentState.level === 'advanced' ? 'border-primary-accent bg-gray-100/90' : 
               currentState.level === 'intermediate' ? 'border-primary-icon bg-gray-100/90' : 
               currentState.level === 'beginner' ? 'border-[#008000] bg-gray-100/90' : 
@@ -98,7 +98,7 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144]
+            rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
             ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
               currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
               currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
@@ -132,7 +132,7 @@ export const SkillLevelCell = ({
         >
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-            border-x-2 border-b-2 min-h-[28px]
+            border-x-2 border-b-2 min-h-[32px]
             ${currentState.level === 'advanced' ? 'border-primary-accent bg-gray-100/90' : 
               currentState.level === 'intermediate' ? 'border-primary-icon bg-gray-100/90' : 
               currentState.level === 'beginner' ? 'border-[#008000] bg-gray-100/90' : 
