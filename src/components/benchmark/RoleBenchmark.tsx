@@ -110,11 +110,26 @@ export const RoleBenchmark = () => {
           selectedLevel={selectedLevel}
         />
 
-        <Card className="p-6 bg-white">
+        <Card className="p-6 bg-white space-y-6">
           <CompetencyGraph 
             track={currentTrack as "Professional" | "Managerial"}
             roleId={selectedRole}
           />
+          
+          <Separator className="my-4" />
+          
+          {/* Bottom synchronized role selection */}
+          <div className="mt-6">
+            <RoleSelection 
+              selectedRole={selectedRole}
+              selectedLevel={selectedLevel}
+              currentTrack={currentTrack}
+              onRoleChange={setSelectedRole}
+              onLevelChange={setSelectedLevel}
+              onTrackChange={handleTrackChange}
+              roles={roles}
+            />
+          </div>
         </Card>
       </div>
     </div>
