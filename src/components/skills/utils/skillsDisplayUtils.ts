@@ -1,5 +1,4 @@
 import { SkillLevel } from '../data/skillLevels';
-import { getSkillsByTrackAndLevel } from '../data/skillsDatabase';
 
 export const getSkillLevelColor = (level: SkillLevel['level']) => {
   switch (level) {
@@ -18,16 +17,4 @@ export const getRequirementColor = (requirement: SkillLevel['requirement']) => {
   return requirement === 'required' 
     ? 'bg-gray-100/90 text-[#1f2144]'
     : 'bg-gray-50/90 text-[#1f2144]';
-};
-
-export const formatSkillsForDisplay = (
-  track: 'professional' | 'managerial',
-  level: string
-) => {
-  const skills = getSkillsByTrackAndLevel(track, level);
-  return {
-    specialized: skills.filter(s => s.category === 'specialized'),
-    common: skills.filter(s => s.category === 'common'),
-    certification: skills.filter(s => s.category === 'certification')
-  };
 };

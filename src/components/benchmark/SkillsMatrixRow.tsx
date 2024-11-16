@@ -2,7 +2,6 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 
@@ -28,9 +27,6 @@ export const SkillsMatrixRow = ({
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
-  // Get skill requirements from the competency matrix
-  const skillRequirements = getSkillRequirements(skill.title, track, selectedLevel.toUpperCase());
-
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
@@ -71,21 +67,21 @@ export const SkillsMatrixRow = ({
       {isRoleBenchmark && (
         <TableCell className="text-center border-r border-blue-200 py-2">
           <div className="flex flex-col items-center gap-2">
-            <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(skillRequirements?.level)}`}>
-              {skillRequirements?.level?.charAt(0).toUpperCase() + skillRequirements?.level?.slice(1) || 'Unspecified'}
+            <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(skill.level)}`}>
+              {skill.level?.charAt(0).toUpperCase() + skill.level?.slice(1) || 'Unspecified'}
             </span>
             <span className={`px-2 py-0.5 rounded-full text-xs ${
-              skillRequirements?.requirement === 'required' 
+              skill.level === 'advanced'
                 ? 'bg-[#F7F9FF] text-primary border border-primary' 
                 : 'bg-[#F7F9FF] text-gray-600 border border-gray-300'
             }`}>
-              {skillRequirements?.requirement === 'required' ? 'Required' : 'Preferred'}
+              {skill.level === 'advanced' ? 'Required' : 'Preferred'}
             </span>
           </div>
         </TableCell>
       )}
       <SkillLevelCell 
-        initialLevel={skillRequirements?.level || 'unspecified'}
+        initialLevel={skill.level || 'unspecified'}
         skillTitle={skill.title}
         isRoleBenchmark={isRoleBenchmark}
       />
