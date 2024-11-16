@@ -32,29 +32,24 @@ export const useCompetencyStateReader = () => {
     };
   };
 
-  const getAllToggledSkillStates = (levelKey: string = 'p4'): Record<string, SkillCompetencyState | null> => {
-    const states: Record<string, SkillCompetencyState | null> = {};
+  const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
+    const states: Record<string, SkillCompetencyState> = {};
     
-    toggledSkills.forEach(skillName => {
-      states[skillName] = getSkillCompetencyState(skillName, levelKey);
+    Object.entries(currentStates).forEach(([skillName, skillLevels]) => {
+      const levelState = skillLevels[levelKey.toLowerCase()];
+      if (levelState) {
+        states[skillName] = {
+          level: levelState.level,
+          required: levelState.required
+        };
+      }
     });
 
     return states;
   };
 
-  const getLevelPriority = (level: string): number => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
-
   return {
     getSkillCompetencyState,
-    getAllToggledSkillStates,
-    getLevelPriority
+    getAllSkillStatesForLevel
   };
 };
