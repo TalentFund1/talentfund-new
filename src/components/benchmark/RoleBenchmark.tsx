@@ -13,15 +13,18 @@ import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
 import { create } from "zustand";
 
-// Create a Zustand store for sharing selected role
 interface RoleStore {
   selectedRole: string;
+  selectedRoleLevel: string;
   setSelectedRole: (role: string) => void;
+  setSelectedRoleLevel: (level: string) => void;
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
+  selectedRoleLevel: "p4",
   setSelectedRole: (role) => set({ selectedRole: role }),
+  setSelectedRoleLevel: (level) => set({ selectedRoleLevel: level }),
 }));
 
 const roles = {
