@@ -1,16 +1,14 @@
 import { useCompetencyStateReader } from "./CompetencyStateReader";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCompetencyStore } from "./CompetencyState";
 
 export const SkillLevelDisplay = ({ roleId, level = "p3" }: { roleId: string; level?: string }) => {
-  const { initializeStates } = useCompetencyStore();
+  const { initializeStates, isInitialized } = useCompetencyStore();
   const { getAllSkillStatesForLevel } = useCompetencyStateReader();
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     if (!isInitialized) {
       initializeStates(roleId);
-      setIsInitialized(true);
     }
   }, [roleId, initializeStates, isInitialized]);
 
