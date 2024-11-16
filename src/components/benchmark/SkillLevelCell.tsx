@@ -113,7 +113,7 @@ export const SkillLevelCell = ({
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md
             ${getBorderColorClass(currentState.level, currentState.requirement)}
-            ${currentState.requirement === 'required' ? 'bg-gray-100/90' : 'bg-white'}
+            bg-gray-100/90
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
