@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ import { jobTitles } from "./competency/skillProfileData";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
 import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
-import { CompetencyStateReader } from './competency/CompetencyStateReader';
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -42,6 +41,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   }, [selectedCategory]);
 
   useEffect(() => {
+    // Update track when role changes or when track is changed externally
     const savedTrack = getTrackForRole(currentRoleId);
     if (savedTrack !== track) {
       setTrack(savedTrack);
@@ -115,7 +115,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     
     return {
       level: skill.level || "-",
-      required: "required"
+      required: "required" // Default to required for now
     };
   };
 
@@ -150,8 +150,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitle}</h3>
         <TrackSelection onTrackChange={handleTrackChange} />
       </div>
-
-      <CompetencyStateReader />
 
       <CategorySection 
         selectedCategory={selectedCategory}
