@@ -1,10 +1,9 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check, X } from "lucide-react";
+import { Check, X, Star, Shield, Target, CircleDashed } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
-import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface SkillsMatrixRowProps {
@@ -61,6 +60,25 @@ export const SkillsMatrixRow = ({
 
   const roleSkillState = getRoleSkillState();
 
+  const getLevelStyles = (level: string) => {
+    const baseStyles = 'rounded-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]';
+    
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return `${baseStyles} bg-primary-accent/10 border-2 border-primary-accent`;
+      case 'intermediate':
+        return `${baseStyles} bg-primary-icon/10 border-2 border-primary-icon`;
+      case 'beginner':
+        return `${baseStyles} bg-[#008000]/10 border-2 border-[#008000]`;
+      default:
+        return `${baseStyles} bg-gray-100/50 border-2 border-gray-400`;
+    }
+  };
+
+  const getRequirementStyles = (requirement: string) => {
+    return 'text-xs px-2 py-1 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 bg-gray-50 rounded-md mt-1';
+  };
+
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
@@ -82,12 +100,17 @@ export const SkillsMatrixRow = ({
       )}
       {isRoleBenchmark && roleSkillState && (
         <TableCell className="text-center border-r border-blue-200 py-2">
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              {getLevelIcon(roleSkillState.level)}
-              <span className="text-sm font-medium capitalize">{roleSkillState.level}</span>
+          <div className="flex flex-col items-center">
+            <div className={getLevelStyles(roleSkillState.level)}>
+              <span className="flex items-center gap-2">
+                {getLevelIcon(roleSkillState.level)}
+                {roleSkillState.level}
+              </span>
             </div>
-            <span className="text-xs text-gray-600 capitalize">{roleSkillState.required}</span>
+            <div className={getRequirementStyles(roleSkillState.required)}>
+              <Check className="w-3.5 h-3.5" />
+              <span>Skill Goal</span>
+            </div>
           </div>
         </TableCell>
       )}
