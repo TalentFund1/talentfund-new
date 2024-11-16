@@ -21,13 +21,13 @@ export const getSkillRequirements = (
   if (track === 'professional') {
     const requirements = {
       P4: {
-        "Machine Learning": { level: "advanced", requirement: "required" },
+        "Machine Learning": { level: "intermediate", requirement: "required" },
         "Deep Learning": { level: "advanced", requirement: "required" },
         "TensorFlow": { level: "advanced", requirement: "required" },
-        "PyTorch": { level: "advanced", requirement: "required" },
+        "PyTorch": { level: "beginner", requirement: "required" },
         "Computer Vision": { level: "advanced", requirement: "required" },
         "Natural Language Processing": { level: "intermediate", requirement: "required" },
-        "Python": { level: "intermediate", requirement: "required" },
+        "Python": { level: "intermediate", requirement: "preferred" },
         "Problem Solving": { level: "advanced", requirement: "required" },
         "Technical Writing": { level: "intermediate", requirement: "preferred" },
         "AWS Certified Machine Learning - Specialty": { level: "advanced", requirement: "preferred" },
@@ -45,24 +45,39 @@ export const getSkillRequirements = (
       },
       P2: {
         "Machine Learning": { level: "intermediate", requirement: "required" },
-        "Deep Learning": { level: "unspecified", requirement: "preferred" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" },
+        "Deep Learning": { level: "beginner", requirement: "preferred" },
+        "TensorFlow": { level: "beginner", requirement: "preferred" },
         "PyTorch": { level: "unspecified", requirement: "preferred" },
         "Computer Vision": { level: "unspecified", requirement: "preferred" },
         "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
-        "Python": { level: "unspecified", requirement: "preferred" }
+        "Python": { level: "beginner", requirement: "required" }
       },
       P3: {
-        "Node.js": { level: "unspecified", requirement: "preferred" },
-        "Database Design": { level: "unspecified", requirement: "preferred" },
-        "API Development": { level: "unspecified", requirement: "required" },
-        "System Architecture": { level: "unspecified", requirement: "preferred" },
-        "Kubernetes": { level: "unspecified", requirement: "preferred" },
-        "Problem Solving": { level: "unspecified", requirement: "preferred" },
-        "Code Review": { level: "unspecified", requirement: "preferred" },
-        "Agile Methodologies": { level: "unspecified", requirement: "required" },
-        "AWS Certified Solutions Architect": { level: "unspecified", requirement: "required" },
-        "Kubernetes Administrator (CKA)": { level: "unspecified", requirement: "preferred" }
+        "Machine Learning": { level: "intermediate", requirement: "required" },
+        "Deep Learning": { level: "intermediate", requirement: "required" },
+        "TensorFlow": { level: "intermediate", requirement: "required" },
+        "PyTorch": { level: "beginner", requirement: "preferred" },
+        "Computer Vision": { level: "intermediate", requirement: "required" },
+        "Natural Language Processing": { level: "beginner", requirement: "required" },
+        "Python": { level: "intermediate", requirement: "required" }
+      },
+      P5: {
+        "Machine Learning": { level: "advanced", requirement: "required" },
+        "Deep Learning": { level: "advanced", requirement: "required" },
+        "TensorFlow": { level: "advanced", requirement: "required" },
+        "PyTorch": { level: "beginner", requirement: "required" },
+        "Computer Vision": { level: "advanced", requirement: "required" },
+        "Natural Language Processing": { level: "advanced", requirement: "required" },
+        "Python": { level: "advanced", requirement: "required" }
+      },
+      P6: {
+        "Machine Learning": { level: "advanced", requirement: "required" },
+        "Deep Learning": { level: "advanced", requirement: "required" },
+        "TensorFlow": { level: "advanced", requirement: "required" },
+        "PyTorch": { level: "advanced", requirement: "required" },
+        "Computer Vision": { level: "advanced", requirement: "required" },
+        "Natural Language Processing": { level: "advanced", requirement: "required" },
+        "Python": { level: "advanced", requirement: "required" }
       }
     };
 
