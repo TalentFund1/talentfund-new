@@ -4,7 +4,6 @@ import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getSkillRequirements } from "../skills/data/skillsDatabase";
 import { useRoleStore } from "./RoleBenchmark";
-import { Star, Shield, Target, CircleHelp, Heart } from "lucide-react";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -38,82 +37,27 @@ export const SkillsMatrixRow = ({
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const getLevelIcon = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case 'advanced':
-        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
-      case 'intermediate':
-        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
-      case 'beginner':
-        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
-      default:
-        return <CircleHelp className="w-3.5 h-3.5 text-gray-400" />;
-    }
-  };
-
   const getLevelStyles = (level: string) => {
-    const baseStyles = "rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]";
-    
     switch (level?.toLowerCase()) {
       case 'advanced':
-        return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
+        return 'bg-primary-accent/10 border-2 border-primary-accent text-primary-accent';
       case 'intermediate':
-        return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
+        return 'bg-primary-icon/10 border-2 border-primary-icon text-primary-icon';
       case 'beginner':
-        return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
-      case 'unspecified':
-        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
+        return 'bg-[#008000]/10 border-2 border-[#008000] text-[#008000]';
       default:
-        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
+        return 'bg-gray-100/50 border-2 border-gray-400 text-gray-600';
     }
   };
 
-  const getRequirementStyles = (requirement: string, level: string) => {
-    const borderColor = level.toLowerCase() === 'advanced' 
-      ? 'border-primary-accent'
-      : level.toLowerCase() === 'intermediate'
-        ? 'border-primary-icon'
-        : level.toLowerCase() === 'beginner'
-          ? 'border-[#008000]'
-          : 'border-gray-400';
-
-    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
-    
+  const getRequirementBadgeStyles = (requirement: string) => {
     switch (requirement?.toLowerCase()) {
       case 'required':
-        return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
+        return 'bg-[#F7F9FF] text-primary border border-primary';
       case 'preferred':
-        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
-      case 'not_interested':
-        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
+        return 'bg-[#F7F9FF] text-gray-600 border border-gray-300';
       default:
-        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
-    }
-  };
-
-  const getRequirementIcon = (requirement: string) => {
-    switch (requirement?.toLowerCase()) {
-      case 'required':
-        return <Heart className="w-3.5 h-3.5" />;
-      case 'preferred':
-        return <Heart className="w-3.5 h-3.5" />;
-      case 'not_interested':
-        return <X className="w-3.5 h-3.5" />;
-      default:
-        return <Heart className="w-3.5 h-3.5" />;
-    }
-  };
-
-  const getRequirementText = (requirement: string) => {
-    switch (requirement?.toLowerCase()) {
-      case 'required':
-        return 'Skill Goal';
-      case 'preferred':
-        return 'Skill Goal';
-      case 'not_interested':
-        return 'Not Interested';
-      default:
-        return 'Unknown';
+        return 'bg-gray-100 text-gray-600 border border-gray-300';
     }
   };
 
@@ -137,20 +81,14 @@ export const SkillsMatrixRow = ({
         </TableCell>
       )}
       {isRoleBenchmark && (
-        <TableCell className="text-center border-r border-blue-200 p-0">
-          <div className="flex flex-col items-center">
-            <div className={getLevelStyles(roleRequirements?.level || 'unspecified')}>
-              <span className="flex items-center gap-2 justify-center text-[15px]">
-                {getLevelIcon(roleRequirements?.level || 'unspecified')}
-                {roleRequirements?.level?.charAt(0).toUpperCase() + roleRequirements?.level?.slice(1) || 'Unspecified'}
-              </span>
-            </div>
-            <div className={getRequirementStyles(roleRequirements?.requirement || 'unknown', roleRequirements?.level || 'unspecified')}>
-              <span className="flex items-center gap-1.5 justify-center">
-                {getRequirementIcon(roleRequirements?.requirement)}
-                {getRequirementText(roleRequirements?.requirement)}
-              </span>
-            </div>
+        <TableCell className="text-center border-r border-blue-200 py-2">
+          <div className="flex flex-col items-center gap-2">
+            <span className={`px-3 py-1.5 rounded-md text-sm font-medium ${getLevelStyles(roleRequirements?.level)}`}>
+              {roleRequirements?.level?.charAt(0).toUpperCase() + roleRequirements?.level?.slice(1) || 'Unspecified'}
+            </span>
+            <span className={`px-2 py-0.5 rounded-full text-xs ${getRequirementBadgeStyles(roleRequirements?.requirement)}`}>
+              {roleRequirements?.requirement === 'required' ? 'Required' : 'Preferred'}
+            </span>
           </div>
         </TableCell>
       )}
