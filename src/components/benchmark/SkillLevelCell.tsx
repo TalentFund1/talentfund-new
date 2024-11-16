@@ -70,10 +70,12 @@ export const SkillLevelCell = ({
           <div className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md
-            ${currentState.level === 'advanced' ? 'border-primary-accent bg-gray-100/90' : 
-              currentState.level === 'intermediate' ? 'border-primary-icon bg-gray-100/90' : 
-              currentState.level === 'beginner' ? 'border-[#008000] bg-gray-100/90' : 
-              'border-gray-400 bg-white'}
+            ${currentState.requirement === 'required' ? 
+              (currentState.level === 'advanced' ? 'border-primary-accent bg-gray-100/90' : 
+               currentState.level === 'intermediate' ? 'border-primary-icon bg-gray-100/90' : 
+               currentState.level === 'beginner' ? 'border-[#008000] bg-gray-100/90' : 
+               'border-gray-400 bg-white') :
+              'border-gray-300 bg-gray-50/90'}
           `}>
             <span className="flex items-center gap-1.5">
               {getRequirementIcon(currentState.requirement)}
