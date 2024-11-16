@@ -57,14 +57,14 @@ export const SkillLevelCell = ({
     return (
       <TableCell className="border-r border-blue-200 p-0">
         <div className="flex flex-col items-center">
-          <div className={`${getLevelStyles(level)} px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[40px] text-[#1f2144] border-b border-blue-200`}>
+          <div className={`${getLevelStyles(level)} px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[32px] text-[#1f2144]`}>
             <span className="flex items-center gap-2 justify-center text-[15px]">
               {getLevelIcon(level)}
               {level.charAt(0).toUpperCase() + level.slice(1)}
             </span>
           </div>
-          <div className={`${getRequirementStyles(required, level)} min-h-[32px] w-full border-b border-blue-200`}>
-            <span className="flex items-center gap-1.5 justify-center text-xs font-medium">
+          <div className={`${getRequirementStyles(required, level)} min-h-[28px]`}>
+            <span className="flex items-center gap-1.5 justify-center text-xs">
               {getRequirementIcon(required)}
               {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : required === 'unknown' ? 'Unknown' : 'Skill Goal'}
             </span>
