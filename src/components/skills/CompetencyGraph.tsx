@@ -13,6 +13,7 @@ import { jobTitles } from "./competency/skillProfileData";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
 import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
+import { SkillLevelDisplay } from "./competency/SkillLevelDisplay";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -111,6 +112,13 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const levels = getLevelsForTrack();
   const uniqueSkills = skills.map(skill => skill.title).sort();
 
+  // Add this section before the return statement in CompetencyGraph:
+  const P3SkillsSection = () => (
+    <div className="mb-8 border border-border rounded-lg p-6 bg-white">
+      <SkillLevelDisplay roleId="123" level="p3" />
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-4">
@@ -138,6 +146,8 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitles[currentRoleId]}</h3>
         <TrackSelection onTrackChange={setTrack} />
       </div>
+
+      <P3SkillsSection />
 
       <CategorySection 
         selectedCategory={selectedCategory}
