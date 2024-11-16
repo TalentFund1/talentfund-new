@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { useToggledSkills } from '../context/ToggledSkillsContext';
-import { roleSkills } from '../data/roleSkills';
+import { aiSkills } from '../data/skills/aiSkills';
+import { backendSkills } from '../data/skills/backendSkills';
+import { commonSkills } from '../data/skills/commonSkills';
+import { certificationSkills } from '../data/skills/certificationSkills';
 
 interface SkillState {
   level: string;
@@ -21,35 +23,36 @@ interface CompetencyState {
 const initializeSkillStates = (roleId: string) => {
   const states: Record<string, Record<string, SkillState>> = {};
   
-  // Get role skills from roleSkills data
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-  
-  // Combine all skills for the role
   const allSkills = [
-    ...(currentRoleSkills.specialized || []),
-    ...(currentRoleSkills.common || []),
-    ...(currentRoleSkills.certifications || [])
+    ...aiSkills,
+    ...backendSkills,
+    ...commonSkills,
+    ...certificationSkills
   ];
 
-  // Initialize states only for toggled skills
   allSkills.forEach(skill => {
-    states[skill.title] = {};
+    if (skill.professionalTrack) {
+      states[skill.title] = {};
+      Object.entries(skill.professionalTrack).forEach(([level, state]) => {
+        states[skill.title][level.toLowerCase()] = {
+          level: state.level,
+          required: state.requirement
+        };
+      });
+    }
     
-    // Initialize professional track levels (P1-P6)
-    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(level => {
-      states[skill.title][level] = {
-        level: skill.level?.toLowerCase() || 'unspecified',
-        required: skill.requirement || 'preferred'
+    if (skill.managerialTrack) {
+      states[skill.title] = {
+        ...states[skill.title],
+        ...Object.entries(skill.managerialTrack).reduce((acc, [level, state]) => ({
+          ...acc,
+          [level.toLowerCase()]: {
+            level: state.level,
+            required: state.requirement
+          }
+        }), {})
       };
-    });
-
-    // Initialize managerial track levels (M3-M6)
-    ['m3', 'm4', 'm5', 'm6'].forEach(level => {
-      states[skill.title][level] = {
-        level: skill.level?.toLowerCase() || 'unspecified',
-        required: skill.requirement || 'preferred'
-      };
-    });
+    }
   });
 
   return states;
@@ -72,7 +75,33 @@ export const useCompetencyStore = create<CompetencyState>()(
         }),
       setSkillState: (skillName, level, levelKey, required) =>
         set((state) => {
-          const newState = {
+          if (!state.originalStates[skillName]?.[levelKey]) {
+            return {
+              originalStates: {
+                ...state.originalStates,
+                [skillName]: {
+                  ...state.originalStates[skillName],
+                  [levelKey]: {
+                    level: state.currentStates[skillName]?.[levelKey]?.level || "unspecified",
+                    required: state.currentStates[skillName]?.[levelKey]?.required || "preferred",
+                  },
+                },
+              },
+              currentStates: {
+                ...state.currentStates,
+                [skillName]: {
+                  ...state.currentStates[skillName],
+                  [levelKey]: {
+                    level,
+                    required,
+                  },
+                },
+              },
+              hasChanges: true,
+            };
+          }
+          
+          return {
             ...state,
             currentStates: {
               ...state.currentStates,
@@ -86,22 +115,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true,
           };
-
-          // If this is a new skill state, also update original states
-          if (!state.originalStates[skillName]?.[levelKey]) {
-            newState.originalStates = {
-              ...state.originalStates,
-              [skillName]: {
-                ...state.originalStates[skillName],
-                [levelKey]: {
-                  level: "unspecified",
-                  required: "preferred",
-                },
-              },
-            };
-          }
-
-          return newState;
         }),
       saveChanges: () => 
         set((state) => ({
