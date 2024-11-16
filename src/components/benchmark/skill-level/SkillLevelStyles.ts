@@ -12,7 +12,7 @@ export const getLevelStyles = (level: string) => {
 };
 
 export const getRequirementStyles = (requirement: string, level: string) => {
-  const baseStyles = "text-xs px-2 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md";
+  const baseStyles = "text-xs px-2 py-1 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md";
   
   switch (requirement) {
     case 'required':
