@@ -62,28 +62,31 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
       initializeStates: (roleId: string) => 
-        set((state) => {
+        set(() => {
           const initializedStates = initializeSkillStates(roleId);
           return {
-            currentStates: { ...initializedStates },
-            originalStates: { ...initializedStates },
+            currentStates: JSON.parse(JSON.stringify(initializedStates)),
+            originalStates: JSON.parse(JSON.stringify(initializedStates)),
             hasChanges: false
           };
         }),
       setSkillState: (skillName, level, levelKey, required) =>
         set((state) => {
-          const newCurrentStates = {
-            ...state.currentStates,
-            [skillName]: {
-              ...state.currentStates[skillName],
-              [levelKey]: {
-                level,
-                required,
-              },
-            },
+          // Create deep copies to avoid reference issues
+          const newCurrentStates = JSON.parse(JSON.stringify(state.currentStates));
+          
+          // Initialize nested objects if they don't exist
+          if (!newCurrentStates[skillName]) {
+            newCurrentStates[skillName] = {};
+          }
+          
+          // Update the state
+          newCurrentStates[skillName][levelKey] = {
+            level,
+            required,
           };
 
-          // Compare stringified versions to detect changes
+          // Deep compare states to detect changes
           const hasChanges = JSON.stringify(newCurrentStates) !== JSON.stringify(state.originalStates);
 
           return {
