@@ -5,6 +5,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -16,21 +17,49 @@ interface SkillsMatrixRowProps {
     requirement?: string;
   };
   showCompanySkill?: boolean;
+  isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixRow = ({ 
   skill, 
-  showCompanySkill = true
+  showCompanySkill = true,
+  isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { selectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
   };
+
+  const getLevelIcon = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return <Star className="w-4 h-4 text-primary-accent" />;
+      case 'intermediate':
+        return <Shield className="w-4 h-4 text-primary-icon" />;
+      case 'beginner':
+        return <Target className="w-4 h-4 text-[#008000]" />;
+      default:
+        return <CircleDashed className="w-4 h-4 text-gray-400" />;
+    }
+  };
+
+  const getRoleSkillState = () => {
+    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+    if (!competencyState) return null;
+
+    return {
+      level: competencyState.level,
+      required: competencyState.required
+    };
+  };
+
+  const roleSkillState = getRoleSkillState();
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -48,6 +77,17 @@ export const SkillsMatrixRow = ({
                 <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
               </div>
             )}
+          </div>
+        </TableCell>
+      )}
+      {isRoleBenchmark && roleSkillState && (
+        <TableCell className="text-center border-r border-blue-200 py-2">
+          <div className="flex flex-col items-center gap-1">
+            <div className="flex items-center gap-2">
+              {getLevelIcon(roleSkillState.level)}
+              <span className="text-sm font-medium capitalize">{roleSkillState.level}</span>
+            </div>
+            <span className="text-xs text-gray-600 capitalize">{roleSkillState.required}</span>
           </div>
         </TableCell>
       )}
