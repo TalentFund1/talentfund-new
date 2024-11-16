@@ -161,10 +161,17 @@ export const SkillLevelCell = ({
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
-                {getRequirementIcon(currentState.requirement)}
-                {currentState.requirement === 'required' ? 'Skill Goal' : 
-                 currentState.requirement === 'not-interested' ? 'Not Interested' : 
-                 currentState.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+                {currentState.requirement === 'required' ? (
+                  <>
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Skill Goal</span>
+                  </>
+                ) : (
+                  <>
+                    <Heart className="w-3.5 h-3.5" />
+                    <span>Skill Goal</span>
+                  </>
+                )}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -176,8 +183,17 @@ export const SkillLevelCell = ({
             ].map(({ value, label }) => (
               <SelectItem key={value} value={value}>
                 <span className="flex items-center gap-1.5">
-                  {getRequirementIcon(value)}
-                  {label}
+                  {currentState.requirement === 'required' ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>{label}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Heart className="w-3.5 h-3.5" />
+                      <span>{label}</span>
+                    </>
+                  )}
                 </span>
               </SelectItem>
             ))}
