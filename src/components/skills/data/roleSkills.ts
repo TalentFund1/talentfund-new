@@ -1,22 +1,20 @@
 export const roleSkills = {
   "123": { // AI Engineer
     specialized: [
-      { title: "Machine Learning", subcategory: "Artificial Intelligence", level: "advanced", growth: "30%", salary: "$180,256", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Deep Learning", subcategory: "Artificial Intelligence", level: "advanced", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "TensorFlow", subcategory: "Machine Learning Frameworks", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
-      { title: "PyTorch", subcategory: "Machine Learning Frameworks", level: "advanced", growth: "24%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
-      { title: "Computer Vision", subcategory: "AI Applications", level: "advanced", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
-      { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
+      { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", salary: "$180,256", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Deep Learning", subcategory: "AI & ML", level: "advanced", growth: "28%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "TensorFlow", subcategory: "ML Frameworks", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Computer Vision", subcategory: "AI Applications", level: "advanced", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Natural Language Processing", subcategory: "AI Applications", level: "intermediate", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "PyTorch", subcategory: "ML Frameworks", level: "intermediate", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     common: [
-      { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "15%", salary: "$173,344", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "12%", salary: "$156,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
+      { title: "Python", subcategory: "Programming Languages", level: "intermediate", growth: "25%", salary: "$173,344", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     certifications: [
-      { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud Certification", level: "advanced", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
-      { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "advanced", growth: "20%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
-      { title: "Google Cloud Professional Machine Learning Engineer", subcategory: "Cloud Certification", level: "advanced", growth: "28%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
+      { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud Certification", level: "beginner", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "unspecified", growth: "20%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
+      { title: "Google Cloud Professional Machine Learning Engineer", subcategory: "Cloud Certification", level: "beginner", growth: "28%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
     ]
   },
   "124": { // Backend Engineer
