@@ -9,7 +9,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
 import { useRoleStore } from "./RoleBenchmark";
-import { professionalLevels, managerialLevels } from "./data/levelData";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -136,22 +135,6 @@ export const BenchmarkSkillsMatrix = () => {
                   {title}
                 </SelectItem>
               ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={selectedLevel}
-            onValueChange={setSelectedLevel}
-          >
-            <SelectTrigger className="w-[200px] bg-white">
-              <SelectValue placeholder="Select Level" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Levels</SelectItem>
-              <SelectItem value="advanced">Advanced</SelectItem>
-              <SelectItem value="intermediate">Intermediate</SelectItem>
-              <SelectItem value="beginner">Beginner</SelectItem>
-              <SelectItem value="unspecified">Unspecified</SelectItem>
             </SelectContent>
           </Select>
         </div>
