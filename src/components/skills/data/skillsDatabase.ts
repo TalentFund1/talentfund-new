@@ -21,13 +21,13 @@ export const getSkillRequirements = (
   if (track === 'professional') {
     const requirements = {
       P4: {
-        "Machine Learning": { level: "intermediate", requirement: "required" },
+        "Machine Learning": { level: "advanced", requirement: "required" },
         "Deep Learning": { level: "advanced", requirement: "required" },
         "TensorFlow": { level: "advanced", requirement: "required" },
         "PyTorch": { level: "beginner", requirement: "required" },
         "Computer Vision": { level: "advanced", requirement: "required" },
         "Natural Language Processing": { level: "intermediate", requirement: "required" },
-        "Python": { level: "intermediate", requirement: "preferred" },
+        "Python": { level: "intermediate", requirement: "required" },
         "Problem Solving": { level: "advanced", requirement: "required" },
         "Technical Writing": { level: "intermediate", requirement: "preferred" },
         "AWS Certified Machine Learning - Specialty": { level: "advanced", requirement: "preferred" },
