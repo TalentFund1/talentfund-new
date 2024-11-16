@@ -18,80 +18,19 @@ export const getSkillRequirements = (
   track: 'professional' | 'managerial',
   level: string
 ): { level: string; requirement: string } | undefined => {
-  if (track === 'professional') {
-    const requirements = {
-      P5: {
-        "Machine Learning": { level: "advanced", requirement: "required" },
-        "Deep Learning": { level: "advanced", requirement: "required" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" },
-        "PyTorch": { level: "beginner", requirement: "required" },
-        "Computer Vision": { level: "advanced", requirement: "required" },
-        "Natural Language Processing": { level: "intermediate", requirement: "required" },
-        "Python": { level: "beginner", requirement: "required" },
-        "Problem Solving": { level: "advanced", requirement: "required" },
-        "Technical Writing": { level: "intermediate", requirement: "preferred" },
-        "AWS Certified Machine Learning - Specialty": { level: "beginner", requirement: "preferred" },
-        "TensorFlow Developer Certificate": { level: "unspecified", requirement: "preferred" },
-        "Google Cloud Professional Machine Learning Engineer": { level: "beginner", requirement: "preferred" }
-      },
-      P4: {
-        "Machine Learning": { level: "intermediate", requirement: "required" },
-        "Deep Learning": { level: "advanced", requirement: "required" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" },
-        "PyTorch": { level: "beginner", requirement: "required" },
-        "Computer Vision": { level: "advanced", requirement: "required" },
-        "Natural Language Processing": { level: "intermediate", requirement: "required" },
-        "Python": { level: "beginner", requirement: "preferred" }
-      },
-      P3: {
-        "Machine Learning": { level: "intermediate", requirement: "required" },
-        "Deep Learning": { level: "intermediate", requirement: "required" },
-        "TensorFlow": { level: "intermediate", requirement: "required" },
-        "PyTorch": { level: "beginner", requirement: "preferred" },
-        "Computer Vision": { level: "intermediate", requirement: "required" },
-        "Natural Language Processing": { level: "intermediate", requirement: "required" },
-        "Python": { level: "intermediate", requirement: "required" }
-      },
-      P2: {
-        "Machine Learning": { level: "intermediate", requirement: "required" },
-        "Deep Learning": { level: "beginner", requirement: "required" },
-        "TensorFlow": { level: "beginner", requirement: "preferred" },
-        "PyTorch": { level: "unspecified", requirement: "preferred" },
-        "Computer Vision": { level: "beginner", requirement: "preferred" },
-        "Natural Language Processing": { level: "beginner", requirement: "preferred" },
-        "Python": { level: "intermediate", requirement: "required" }
-      },
-      P1: {
-        "Machine Learning": { level: "beginner", requirement: "required" },
-        "Deep Learning": { level: "unspecified", requirement: "preferred" },
-        "TensorFlow": { level: "unspecified", requirement: "preferred" },
-        "PyTorch": { level: "unspecified", requirement: "preferred" },
-        "Computer Vision": { level: "unspecified", requirement: "preferred" },
-        "Natural Language Processing": { level: "unspecified", requirement: "preferred" },
-        "Python": { level: "beginner", requirement: "required" }
-      }
-    };
+  const skill = skillsDatabase.find(s => s.title === skillTitle);
+  if (!skill) return undefined;
 
-    return requirements[level]?.[skillTitle];
-  }
+  const trackData = track === 'professional' ? skill.professionalTrack : skill.managerialTrack;
+  if (!trackData) return undefined;
 
-  if (track === 'managerial') {
-    const managerialRequirements = {
-      M3: {
-        "System Design": { level: "advanced", requirement: "required" },
-        "Technical Architecture": { level: "advanced", requirement: "required" },
-        "Risk Management": { level: "advanced", requirement: "required" },
-        "Team Leadership": { level: "advanced", requirement: "required" },
-        "Project Management": { level: "advanced", requirement: "required" },
-        "Strategic Planning": { level: "advanced", requirement: "required" },
-        "Stakeholder Management": { level: "advanced", requirement: "required" }
-      }
-    };
+  const levelData = trackData[level];
+  if (!levelData) return undefined;
 
-    return managerialRequirements[level]?.[skillTitle];
-  }
-
-  return undefined;
+  return {
+    level: levelData.level,
+    requirement: levelData.requirement
+  };
 };
 
 export const getSkillsByTrackAndLevel = (
