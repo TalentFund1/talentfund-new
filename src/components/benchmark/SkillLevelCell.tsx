@@ -56,10 +56,10 @@ export const SkillLevelCell = ({
         <div className="flex flex-col items-center">
           <div className={`
             px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
-              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
-              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
-              'bg-gray-100/50 border-2 border-gray-400'}
+            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent rounded-t-md' : 
+              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon rounded-t-md' : 
+              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000] rounded-t-md' : 
+              'bg-gray-100/50 border-2 border-gray-400 rounded-t-md'}
           `}>
             <span className="flex items-center gap-2 justify-center text-[15px]">
               {getLevelIcon(currentState.level)}
@@ -68,7 +68,7 @@ export const SkillLevelCell = ({
           </div>
           <div className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-            border-x-2 border-b-2 min-h-[32px]
+            border-x-2 border-b-2 min-h-[32px] rounded-b-md
             ${currentState.level === 'advanced' ? 'border-primary-accent bg-gray-100/90' : 
               currentState.level === 'intermediate' ? 'border-primary-icon bg-gray-100/90' : 
               currentState.level === 'beginner' ? 'border-[#008000] bg-gray-100/90' : 
@@ -132,7 +132,7 @@ export const SkillLevelCell = ({
         >
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-            border-x-2 border-b-2 min-h-[32px]
+            border-x-2 border-b-2 min-h-[32px] rounded-b-md
             ${currentState.level === 'advanced' ? 'border-primary-accent bg-gray-100/90' : 
               currentState.level === 'intermediate' ? 'border-primary-icon bg-gray-100/90' : 
               currentState.level === 'beginner' ? 'border-[#008000] bg-gray-100/90' : 
