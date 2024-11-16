@@ -72,7 +72,7 @@ export const SkillLevelCell = ({
       case 'skill_goal':
         return 'bg-[#F7F9FF]';
       case 'not-interested':
-        return 'bg-[#FFF5F5]';
+        return 'bg-[#F9FAFB]';
       case 'unknown':
         return 'bg-[#F9FAFB]';
       default:
