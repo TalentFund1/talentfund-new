@@ -1,4 +1,5 @@
 import { TableCell } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons";
 import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
@@ -40,6 +41,18 @@ export const SkillLevelCell = ({
     }
   }, [originalStates, skillTitle]);
 
+  const handleLevelChange = (newLevel: string) => {
+    setLevel(newLevel);
+    setSkillState(skillTitle, newLevel, required);
+    onLevelChange?.(newLevel, required);
+  };
+
+  const handleRequirementChange = (newRequired: string) => {
+    setRequired(newRequired);
+    setSkillState(skillTitle, level, newRequired);
+    onLevelChange?.(level, newRequired);
+  };
+
   if (isRoleBenchmark) {
     return (
       <TableCell className="border-r border-blue-200 p-0">
@@ -78,25 +91,25 @@ export const SkillLevelCell = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="unspecified">
-              <span className="flex items-center gap-1.5">
-                {getLevelIcon('unspecified')}
+              <span className="flex items-center gap-2">
+                <CircleHelp className="w-4 h-4 text-gray-400" />
                 Unspecified
               </span>
             </SelectItem>
             <SelectItem value="beginner">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-2">
                 {getLevelIcon('beginner')}
                 Beginner
               </span>
             </SelectItem>
             <SelectItem value="intermediate">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-2">
                 {getLevelIcon('intermediate')}
                 Intermediate
               </span>
             </SelectItem>
             <SelectItem value="advanced">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-2">
                 {getLevelIcon('advanced')}
                 Advanced
               </span>
