@@ -31,13 +31,6 @@ export const BenchmarkSkillsMatrix = () => {
     "126": "Engineering Manager"
   };
 
-  // Sync with roleLevel whenever it changes
-  useEffect(() => {
-    if (roleLevel) {
-      setSelectedLevel(roleLevel.toLowerCase());
-    }
-  }, [roleLevel]);
-
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
   }, [benchmarkSearchSkills]);
