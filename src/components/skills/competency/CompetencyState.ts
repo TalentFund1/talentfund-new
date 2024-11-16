@@ -14,7 +14,6 @@ interface CompetencyState {
   currentStates: Record<string, Record<string, SkillState>>;
   originalStates: Record<string, Record<string, SkillState>>;
   hasChanges: boolean;
-  isInitialized: boolean;
   initializeStates: (roleId: string) => void;
   setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
   saveChanges: () => void;
@@ -65,36 +64,56 @@ export const useCompetencyStore = create<CompetencyState>()(
       currentStates: {},
       originalStates: {},
       hasChanges: false,
-      isInitialized: false,
-      initializeStates: (roleId: string) => {
-        const { isInitialized } = get();
-        if (!isInitialized) {
+      initializeStates: (roleId: string) => 
+        set((state) => {
           const initializedStates = initializeSkillStates(roleId);
-          set({
+          return {
             currentStates: { ...initializedStates },
             originalStates: { ...initializedStates },
-            hasChanges: false,
-            isInitialized: true
-          });
-        }
-      },
+            hasChanges: false
+          };
+        }),
       setSkillState: (skillName, level, levelKey, required) =>
         set((state) => {
-          const newStates = {
-            ...state.currentStates,
-            [skillName]: {
-              ...state.currentStates[skillName],
-              [levelKey]: {
-                level,
-                required,
+          if (!state.originalStates[skillName]?.[levelKey]) {
+            return {
+              originalStates: {
+                ...state.originalStates,
+                [skillName]: {
+                  ...state.originalStates[skillName],
+                  [levelKey]: {
+                    level: state.currentStates[skillName]?.[levelKey]?.level || "unspecified",
+                    required: state.currentStates[skillName]?.[levelKey]?.required || "preferred",
+                  },
+                },
               },
-            },
-          };
+              currentStates: {
+                ...state.currentStates,
+                [skillName]: {
+                  ...state.currentStates[skillName],
+                  [levelKey]: {
+                    level,
+                    required,
+                  },
+                },
+              },
+              hasChanges: true,
+            };
+          }
           
           return {
             ...state,
-            currentStates: newStates,
-            hasChanges: JSON.stringify(newStates) !== JSON.stringify(state.originalStates),
+            currentStates: {
+              ...state.currentStates,
+              [skillName]: {
+                ...state.currentStates[skillName],
+                [levelKey]: {
+                  level,
+                  required,
+                },
+              },
+            },
+            hasChanges: true,
           };
         }),
       saveChanges: () => 

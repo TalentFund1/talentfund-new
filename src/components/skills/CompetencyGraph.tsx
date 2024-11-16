@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ import { jobTitles } from "./competency/skillProfileData";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
 import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
-import { SkillLevelDisplay } from "./competency/SkillLevelDisplay";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -112,16 +111,10 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const levels = getLevelsForTrack();
   const uniqueSkills = skills.map(skill => skill.title).sort();
 
-  const P3SkillsSection = () => (
-    <div className="mb-8 border border-border rounded-lg p-6 bg-white">
-      <SkillLevelDisplay roleId={currentRoleId} level="p3" />
-    </div>
-  );
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-foreground">Competency Graph</h2>
+        <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
         <div className="flex items-center gap-2">
           <Button 
             variant="outline" 
@@ -140,8 +133,11 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       </div>
       
       <Separator className="my-6" />
-
-      <P3SkillsSection />
+      
+      <div className="mb-8">
+        <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitles[currentRoleId]}</h3>
+        <TrackSelection onTrackChange={setTrack} />
+      </div>
 
       <CategorySection 
         selectedCategory={selectedCategory}
