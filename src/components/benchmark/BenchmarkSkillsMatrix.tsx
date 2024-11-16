@@ -22,7 +22,7 @@ export const BenchmarkSkillsMatrix = () => {
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
-  const { selectedRole, setSelectedRole } = useRoleStore();
+  const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
 
   const roles = {
     "123": "AI Engineer",
@@ -122,10 +122,10 @@ export const BenchmarkSkillsMatrix = () => {
         <div className="flex flex-col gap-4">
           <RoleSelection 
             selectedRole={selectedRole}
-            selectedLevel={"p4"}
+            selectedLevel={roleLevel}
             currentTrack={"Professional"}
             onRoleChange={setSelectedRole}
-            onLevelChange={() => {}}
+            onLevelChange={setRoleLevel}
             onTrackChange={() => {}}
             roles={roles}
           />
