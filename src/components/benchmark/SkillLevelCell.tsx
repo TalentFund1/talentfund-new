@@ -70,13 +70,13 @@ export const SkillLevelCell = ({
     switch (requirement.toLowerCase()) {
       case 'required':
       case 'skill_goal':
-        return 'bg-[#F7F9FF]';
+        return 'bg-[#F9FAFB]';
       case 'not-interested':
         return 'bg-[#F9FAFB]';
       case 'unknown':
         return 'bg-[#F9FAFB]';
       default:
-        return 'bg-[#F7F9FF]';
+        return 'bg-[#F9FAFB]';
     }
   };
 
