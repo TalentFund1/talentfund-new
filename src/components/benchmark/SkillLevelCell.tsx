@@ -1,10 +1,5 @@
 import { TableCell } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState, useEffect } from "react";
-import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons";
-import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
-import { useSkillLevelState } from "./skill-level/SkillLevelState";
-import { Heart, X, CircleHelp } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Heart, X, CircleHelp } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillLevelCellProps {
@@ -20,53 +15,67 @@ export const SkillLevelCell = ({
   onLevelChange,
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
-  const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
-  const [level, setLevel] = useState(initialLevel.toLowerCase());
-  const [required, setRequired] = useState<string>("required");
-  const { setSkillState, originalStates } = useSkillsMatrixStore();
-
-  useEffect(() => {
-    const state = getCurrentState();
-    if (state) {
-      setLevel(state.level);
-      setRequired(state.requirement);
-    }
-  }, [skillTitle, currentStates]);
-
-  useEffect(() => {
-    const originalState = originalStates[skillTitle];
-    if (originalState) {
-      setLevel(originalState.level);
-      setRequired(originalState.requirement);
-    }
-  }, [originalStates, skillTitle]);
-
-  const handleLevelChange = (newLevel: string) => {
-    setLevel(newLevel);
-    setSkillState(skillTitle, newLevel, required);
-    onLevelChange?.(newLevel, required);
+  const { currentStates } = useSkillsMatrixStore();
+  const currentState = currentStates[skillTitle] || {
+    level: initialLevel.toLowerCase(),
+    requirement: 'required'
   };
 
-  const handleRequirementChange = (newRequired: string) => {
-    setRequired(newRequired);
-    setSkillState(skillTitle, level, newRequired);
-    onLevelChange?.(level, newRequired);
+  const getLevelIcon = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
+      case 'intermediate':
+        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
+      case 'beginner':
+        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
+      default:
+        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
+    }
+  };
+
+  const getLevelStyles = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return "bg-[#E5DEFF] text-[#1f2144] border-[#E5DEFF]";
+      case 'intermediate':
+        return "bg-[#FDE1D3] text-[#1f2144] border-[#FDE1D3]";
+      case 'beginner':
+        return "bg-[#F2FCE2] text-[#1f2144] border-[#F2FCE2]";
+      default:
+        return "bg-gray-50 text-gray-400 border-gray-100";
+    }
+  };
+
+  const getRequirementIcon = (requirement: string) => {
+    switch (requirement.toLowerCase()) {
+      case 'required':
+        return <Heart className="w-3.5 h-3.5" />;
+      case 'not-interested':
+        return <X className="w-3.5 h-3.5" />;
+      case 'unknown':
+        return <CircleHelp className="w-3.5 h-3.5" />;
+      default:
+        return <Heart className="w-3.5 h-3.5" />;
+    }
   };
 
   if (isRoleBenchmark) {
     return (
       <TableCell className="border-r border-blue-200 p-0">
         <div className="flex flex-col items-center">
-          <div className={`${getLevelStyles(level)} px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[40px] text-[#1f2144] border-b border-blue-200`}>
-            <span className="flex items-center gap-2 justify-center text-[15px]">
-              {getLevelIcon(level)}
-              {level.charAt(0).toUpperCase() + level.slice(1)}
+          <div className={`${getLevelStyles(currentState.level)} h-[36px] px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center border-b border-blue-200`}>
+            <span className="flex items-center gap-2 justify-center text-[13px]">
+              {getLevelIcon(currentState.level)}
+              {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
             </span>
           </div>
-          <div className={`${getRequirementStyles(required, level)} min-h-[32px] w-full border-b border-blue-200`}>
-            <span className="flex items-center gap-1.5 justify-center text-xs font-medium">
-              {getRequirementIcon(required)}
-              {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : required === 'unknown' ? 'Unknown' : 'Skill Goal'}
+          <div className="bg-white h-[28px] w-full flex items-center justify-center border-b border-blue-200">
+            <span className="flex items-center gap-1.5 justify-center text-xs font-medium text-[#1f2144]">
+              {getRequirementIcon(currentState.requirement)}
+              {currentState.requirement === 'required' ? 'Skill Goal' : 
+               currentState.requirement === 'not-interested' ? 'Not Interested' : 
+               currentState.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
             </span>
           </div>
         </div>
@@ -78,14 +87,14 @@ export const SkillLevelCell = ({
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <Select value={level} onValueChange={handleLevelChange}>
+        <Select value={currentState.level} onValueChange={(value) => onLevelChange?.(value, currentState.requirement)}>
           <SelectTrigger 
-            className={`rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 ${getLevelStyles(level)}`}
+            className={`${getLevelStyles(currentState.level)} rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144]`}
           >
             <SelectValue>
               <span className="flex items-center gap-2">
-                {getLevelIcon(level)}
-                {level.charAt(0).toUpperCase() + level.slice(1)}
+                {getLevelIcon(currentState.level)}
+                {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -116,21 +125,21 @@ export const SkillLevelCell = ({
             </SelectItem>
           </SelectContent>
         </Select>
-        <Select value={required} onValueChange={handleRequirementChange}>
+        <Select value={currentState.requirement} onValueChange={(value) => onLevelChange?.(currentState.level, value)}>
           <SelectTrigger 
-            className={getRequirementStyles(required, level)}
+            className={getRequirementStyles(currentState.requirement, currentState.level)}
           >
             <SelectValue>
               <span className="flex items-center gap-1.5 justify-center text-xs">
-                {getRequirementIcon(required)}
-                {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : required === 'unknown' ? 'Unknown' : 'Skill Goal'}
+                {getRequirementIcon(currentState.requirement)}
+                {currentState.requirement === 'required' ? 'Skill Goal' : 'Preferred'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="required">
               <span className="flex items-center gap-1.5">
-                <Heart className="w-3.5 h-3.5" /> Skill Goal
+                <Check className="w-3.5 h-3.5" /> Skill Goal
               </span>
             </SelectItem>
             <SelectItem value="not-interested">
