@@ -23,7 +23,7 @@ export const BenchmarkSkillsMatrix = () => {
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
-  const { selectedRole, setSelectedRole, selectedRoleLevel, setSelectedRoleLevel } = useRoleStore();
+  const { selectedRole, selectedRoleLevel } = useRoleStore();
 
   const roles = {
     "123": "AI Engineer",
@@ -97,7 +97,7 @@ export const BenchmarkSkillsMatrix = () => {
         <div className="flex gap-4 w-full max-w-[800px]">
           <Select 
             value={selectedRole}
-            onValueChange={setSelectedRole}
+            disabled
           >
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Select Role">
@@ -115,10 +115,12 @@ export const BenchmarkSkillsMatrix = () => {
 
           <Select
             value={selectedRoleLevel}
-            onValueChange={setSelectedRoleLevel}
+            disabled
           >
             <SelectTrigger className="w-[200px] bg-white">
-              <SelectValue placeholder="Select Level" />
+              <SelectValue placeholder="Select Level">
+                {selectedRoleLevel.toUpperCase()}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {Object.entries(professionalLevels).map(([id, title]) => (
