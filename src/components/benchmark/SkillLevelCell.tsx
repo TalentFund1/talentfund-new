@@ -11,9 +11,15 @@ interface SkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
   onLevelChange?: (newLevel: string, requirement: string) => void;
+  isRoleBenchmark?: boolean;
 }
 
-export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: SkillLevelCellProps) => {
+export const SkillLevelCell = ({ 
+  initialLevel, 
+  skillTitle, 
+  onLevelChange,
+  isRoleBenchmark = false
+}: SkillLevelCellProps) => {
   const { getCurrentState, currentStates } = useSkillLevelState(skillTitle);
   const [level, setLevel] = useState(initialLevel.toLowerCase());
   const [required, setRequired] = useState<string>("required");
@@ -27,7 +33,6 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
     }
   }, [skillTitle, currentStates]);
 
-  // Add effect to handle cancellation
   useEffect(() => {
     const originalState = originalStates[skillTitle];
     if (originalState) {
@@ -47,6 +52,27 @@ export const SkillLevelCell = ({ initialLevel, skillTitle, onLevelChange }: Skil
     setSkillState(skillTitle, level, newRequired);
     onLevelChange?.(level, newRequired);
   };
+
+  if (isRoleBenchmark) {
+    return (
+      <TableCell className="border-r border-blue-200 p-0">
+        <div className="flex flex-col items-center">
+          <div className={`${getLevelStyles(level)} rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[28px] text-[#1f2144]`}>
+            <span className="flex items-center gap-2 justify-center text-[15px]">
+              {getLevelIcon(level)}
+              {level.charAt(0).toUpperCase() + level.slice(1)}
+            </span>
+          </div>
+          <div className={getRequirementStyles(required, level)}>
+            <span className="flex items-center gap-1.5 justify-center text-xs">
+              {getRequirementIcon(required)}
+              {required === 'required' ? 'Skill Goal' : required === 'not-interested' ? 'Not Interested' : required === 'unknown' ? 'Unknown' : 'Skill Goal'}
+            </span>
+          </div>
+        </div>
+      </TableCell>
+    );
+  }
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
