@@ -13,7 +13,6 @@ import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
-import { CompetencyMatchSection } from "./CompetencyMatchSection";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -42,6 +41,7 @@ export const BenchmarkSkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
+  // Get all skills for the selected role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -161,8 +161,6 @@ export const BenchmarkSkillsMatrix = () => {
           employeeId={id || ""}
           selectedLevel={roleLevel}
         />
-
-        <CompetencyMatchSection skills={allRoleSkills} />
 
         <SkillsMatrixContent 
           filteredSkills={filteredSkills}
