@@ -9,13 +9,14 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
+import { professionalLevels } from "./data/levelData";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "123");
-  const { selectedRole, setSelectedRole } = useRoleStore();
+  const { selectedRole, setSelectedRole, selectedLevel, setSelectedLevel } = useRoleStore();
   
   // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
@@ -59,17 +60,32 @@ export const BenchmarkAnalysis = () => {
               Manage and track employee skills and competencies
             </p>
           </div>
-          <Select value={selectedRole} onValueChange={setSelectedRole}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select role" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="123">AI Engineer</SelectItem>
-              <SelectItem value="124">Backend Engineer</SelectItem>
-              <SelectItem value="125">Frontend Engineer</SelectItem>
-              <SelectItem value="126">Engineering Manager</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-4">
+            <Select value={selectedRole} onValueChange={setSelectedRole}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="123">AI Engineer</SelectItem>
+                <SelectItem value="124">Backend Engineer</SelectItem>
+                <SelectItem value="125">Frontend Engineer</SelectItem>
+                <SelectItem value="126">Engineering Manager</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+              <SelectTrigger className="w-[100px]">
+                <SelectValue placeholder="Level" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(professionalLevels).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="space-y-6">
