@@ -8,7 +8,6 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
-import { SkillBadge } from "../skills/SkillBadge";
 
 const roles = {
   "123": "AI Engineer",
@@ -57,7 +56,7 @@ export const BenchmarkAnalysis = () => {
   const matchingSkillGoals = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  });
+  }).length;
 
   return (
     <div className="space-y-6">
@@ -120,41 +119,16 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">{matchingSkillGoals.length} out of {skillGoalCount}</span>
+                <span className="text-sm text-foreground">{matchingSkillGoals} out of {skillGoalCount}</span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(matchingSkillGoals.length/skillGoalCount) * 100}%` }} 
+                  style={{ width: `${(matchingSkillGoals/skillGoalCount) * 100}%` }} 
                 />
               </div>
             </div>
           </div>
-
-          {/* New Skill Goals Section */}
-          {matchingSkillGoals.length > 0 && (
-            <div className="rounded-2xl border border-border bg-white p-6 w-full">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-medium text-foreground">Skill Goals</span>
-                  <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                    {matchingSkillGoals.length}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {matchingSkillGoals.map((skill) => (
-                    <SkillBadge 
-                      key={skill.title}
-                      skill={{ name: skill.title }}
-                      showLevel={true}
-                      level={skill.level || "unspecified"}
-                      isSkillGoal={true}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </Card>
     </div>
