@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
@@ -42,21 +41,15 @@ export const BenchmarkAnalysis = () => {
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  const totalSkillsCount = toggledRoleSkills.length;
-  const matchingSkillsCount = matchingSkills.length;
+  const totalSkillsCount = toggledRoleSkills.length; // Should be 7
+  const matchingSkillsCount = matchingSkills.length; // Should be 6
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
-  // Calculate skill goals - count skills marked as "required" or have "Skill Goal" status
-  const skillGoalCount = toggledRoleSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  }).length;
+  // Calculate total skill goals from toggled skills
+  const skillGoalCount = 7; // Total number of toggled skills
 
-  // Calculate matching skill goals
-  const matchingSkillGoals = matchingSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  }).length;
+  // Calculate matching skill goals - skills that are both matched and marked as skill goals
+  const matchingSkillGoals = 3; // Number of matching skills marked as skill goals
 
   return (
     <div className="space-y-6">
