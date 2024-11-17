@@ -41,6 +41,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   });
 
+  // Get the current role's toggled skills, ensuring we always return a Set
   const toggledSkills = skillsByRole[currentRoleId] || new Set<string>();
 
   const saveToLocalStorage = (updatedSkills: Record<string, Set<string>>) => {
@@ -74,9 +75,9 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     });
   };
 
-  // Load skills when role changes
+  // Load skills when component mounts or role changes
   useEffect(() => {
-    console.log(`Role changed to ${currentRoleId}, reloading skills`);
+    console.log(`Loading skills for role ${currentRoleId}`);
     try {
       const savedSkills = localStorage.getItem('toggledSkillsByRole');
       if (savedSkills) {
@@ -97,6 +98,17 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       console.error('Error loading skills on role change:', error);
     }
   }, [currentRoleId]);
+
+  // Ensure we're not losing state on re-renders
+  useEffect(() => {
+    if (!skillsByRole[currentRoleId] && toggledSkills.size > 0) {
+      console.log('Preserving existing toggled skills for role:', currentRoleId);
+      setSkillsByRole(prev => ({
+        ...prev,
+        [currentRoleId]: toggledSkills
+      }));
+    }
+  }, [currentRoleId, toggledSkills]);
 
   return (
     <ToggledSkillsContext.Provider value={{ toggledSkills, setToggledSkills }}>
