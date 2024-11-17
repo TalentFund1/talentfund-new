@@ -95,19 +95,19 @@ export const SkillsMatrixRow = ({
         </TableCell>
       )}
       {isRoleBenchmark && roleSkillState && (
-        <TableCell className="border-r border-blue-200 p-1.5">
-          <div className="flex flex-col items-center gap-1">
+        <TableCell className="border-r border-blue-200 p-1">
+          <div className="flex flex-col items-center gap-0.5">
             <div className={`
-              rounded-lg px-4 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[38px] text-[#1f2144]
+              rounded-lg px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[34px] text-[#1f2144]
               border-2 ${getBorderColorClass(roleSkillState.level)}
             `}>
-              <span className="flex items-center gap-2.5">
+              <span className="flex items-center gap-2">
                 {getLevelIcon(roleSkillState.level)}
                 {roleSkillState.level.charAt(0).toUpperCase() + roleSkillState.level.slice(1)}
               </span>
             </div>
             <div className={`
-              text-sm px-4 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
+              text-sm px-3 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
               border-2 min-h-[34px] rounded-lg bg-[#F9FAFB]
               ${roleSkillState.required === 'required' ? getBorderColorClass(roleSkillState.level).split(' ')[0] : 'border-[#e5e7eb]'}
             `}>
