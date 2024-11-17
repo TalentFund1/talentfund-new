@@ -13,6 +13,7 @@ import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
+import { CompetencyMatchSection } from "./CompetencyMatchSection";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -168,6 +169,11 @@ export const BenchmarkSkillsMatrix = () => {
           roleId={selectedRole}
           employeeId={id || ""}
           selectedLevel={roleLevel}
+        />
+
+        <CompetencyMatchSection 
+          skills={filteredSkills}
+          roleLevel={roleLevel}
         />
 
         <SkillsMatrixContent 
