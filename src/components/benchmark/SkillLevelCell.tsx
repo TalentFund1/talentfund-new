@@ -50,16 +50,16 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getBorderColorClass = (level: string) => {
+  const getBorderColorClass = (level: string, requirement: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return 'border-primary-accent bg-primary-accent/10';
+        return 'border-primary-accent';
       case 'intermediate':
-        return 'border-primary-icon bg-primary-icon/10';
+        return 'border-primary-icon';
       case 'beginner':
-        return 'border-[#008000] bg-[#008000]/10';
+        return 'border-[#008000]';
       default:
-        return 'border-gray-400 bg-gray-100/50';
+        return 'border-gray-400';
     }
   };
 
@@ -67,12 +67,23 @@ export const SkillLevelCell = ({
     if (requirement.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
-    return getBorderColorClass(level).split(' ')[0];
+    return getBorderColorClass(level, requirement);
+  };
+
+  const getRequirementBackgroundClass = (requirement: string) => {
+    switch (requirement.toLowerCase()) {
+      case 'required':
+      case 'skill_goal':
+      case 'not-interested':
+      case 'unknown':
+      default:
+        return 'bg-[#F9FAFB]';
+    }
   };
 
   return (
     <TableCell className="border-r border-blue-200 p-2">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center gap-1">
         <Select 
           value={currentState.level} 
           onValueChange={(value) => {
@@ -81,8 +92,11 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            w-full rounded-t-lg px-4 py-2.5 text-sm font-medium capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
-            border-2 border-b-0 ${getBorderColorClass(currentState.level)}
+            rounded-lg px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
+            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
+              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
+              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
+              'bg-gray-100/50 border-2 border-gray-400'}
           `}>
             <SelectValue>
               <span className="flex items-center gap-2.5">
@@ -111,9 +125,10 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            w-full rounded-b-lg -mt-[2px] px-4 py-2 text-sm font-normal text-[#1f2144] flex items-center justify-center gap-2 
-            border-2 min-h-[38px] bg-[#F9FAFB]
+            text-sm px-4 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
+            border-2 min-h-[38px] rounded-lg
             ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
+            ${getRequirementBackgroundClass(currentState.requirement)}
           `}>
             <SelectValue>
               <span className="flex items-center gap-2">
