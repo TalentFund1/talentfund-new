@@ -20,13 +20,26 @@ export const StaticSkillLevelCell = ({
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return <Star className="w-4 h-4 text-primary-accent" />;
+        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
       case 'intermediate':
-        return <Shield className="w-4 h-4 text-primary-icon" />;
+        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
       case 'beginner':
-        return <Target className="w-4 h-4 text-[#008000]" />;
+        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
       default:
-        return <CircleDashed className="w-4 h-4 text-gray-400" />;
+        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
+    }
+  };
+
+  const getRequirementIcon = (requirement: string) => {
+    switch (requirement.toLowerCase()) {
+      case 'required':
+        return <Check className="w-3.5 h-3.5" />;
+      case 'not-interested':
+        return <CircleDashed className="w-3.5 h-3.5" />;
+      case 'unknown':
+        return <CircleDashed className="w-3.5 h-3.5" />;
+      default:
+        return <Heart className="w-3.5 h-3.5" />;
     }
   };
 
@@ -52,26 +65,23 @@ export const StaticSkillLevelCell = ({
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col h-[74px]">
+      <div className="flex flex-col items-center p-1">
         <div className={`
-          h-[37px] text-sm font-medium w-full capitalize flex items-center justify-center text-[#1f2144]
-          border-2 rounded-t-xl ${getBorderColorClass(currentState.level)}
+          rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
+          border-2 ${getBorderColorClass(currentState.level)}
         `}>
-          <span className="flex items-center gap-2.5">
+          <span className="flex items-center gap-2">
             {getLevelIcon(currentState.level)}
             {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
           </span>
         </div>
         <div className={`
-          h-[37px] text-sm font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
-          border-x-2 border-b-2 rounded-b-xl bg-[#F9FAFB]
+          text-xs px-2 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+          border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
           ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
         `}>
-          <span className="flex items-center gap-2">
-            {currentState.requirement === 'required' ? <Check className="w-3.5 h-3.5" /> :
-             currentState.requirement === 'not-interested' ? <CircleDashed className="w-3.5 h-3.5" /> :
-             currentState.requirement === 'unknown' ? <CircleDashed className="w-3.5 h-3.5" /> :
-             <Heart className="w-3.5 h-3.5" />}
+          <span className="flex items-center gap-1.5">
+            {getRequirementIcon(currentState.requirement)}
             {currentState.requirement === 'required' ? 'Skill Goal' : 
              currentState.requirement === 'not-interested' ? 'Not Interested' : 
              currentState.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}

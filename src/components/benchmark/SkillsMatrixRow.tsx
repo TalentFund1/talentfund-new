@@ -50,6 +50,18 @@ export const SkillsMatrixRow = ({
     }
   };
 
+  const getRoleSkillState = () => {
+    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+    if (!competencyState) return null;
+
+    return {
+      level: competencyState.level,
+      required: competencyState.required
+    };
+  };
+
+  const roleSkillState = getRoleSkillState();
+
   const getBorderColorClass = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
@@ -62,18 +74,6 @@ export const SkillsMatrixRow = ({
         return 'border-gray-400 bg-gray-100/50';
     }
   };
-
-  const getRoleSkillState = () => {
-    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-    if (!competencyState) return null;
-
-    return {
-      level: competencyState.level,
-      required: competencyState.required
-    };
-  };
-
-  const roleSkillState = getRoleSkillState();
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -95,23 +95,23 @@ export const SkillsMatrixRow = ({
         </TableCell>
       )}
       {isRoleBenchmark && roleSkillState && (
-        <TableCell className="border-r border-blue-200 p-2">
-          <div className="flex flex-col items-center gap-1">
+        <TableCell className="text-center border-r border-blue-200 py-2">
+          <div className="flex flex-col items-center p-1">
             <div className={`
-              rounded-lg px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
+              rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
               border-2 ${getBorderColorClass(roleSkillState.level)}
             `}>
-              <span className="flex items-center gap-2.5">
+              <span className="flex items-center gap-2">
                 {getLevelIcon(roleSkillState.level)}
                 {roleSkillState.level.charAt(0).toUpperCase() + roleSkillState.level.slice(1)}
               </span>
             </div>
             <div className={`
-              text-sm px-4 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
-              border-2 min-h-[38px] rounded-lg bg-[#F9FAFB]
+              text-xs px-2 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+              border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
               ${roleSkillState.required === 'required' ? getBorderColorClass(roleSkillState.level).split(' ')[0] : 'border-[#e5e7eb]'}
             `}>
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5" />
                 Required
               </span>
