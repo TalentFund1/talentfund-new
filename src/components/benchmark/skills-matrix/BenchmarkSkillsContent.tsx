@@ -55,7 +55,8 @@ export const BenchmarkSkillsContent = () => {
       }
 
       return matchesLevel && matchesInterest && matchesSearch;
-    });
+    })
+    .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically by title
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
