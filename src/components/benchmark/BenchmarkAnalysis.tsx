@@ -43,21 +43,6 @@ export const BenchmarkAnalysis = () => {
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
-  // First, get all skills that are marked as skill goals
-  const skillGoals = toggledRoleSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  });
-
-  // Then, count how many of these skill goals are also matching skills
-  const matchingSkillGoals = matchingSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  });
-
-  const skillGoalCount = skillGoals.length;
-  const matchingSkillGoalsCount = matchingSkillGoals.length;
-
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
@@ -112,19 +97,6 @@ export const BenchmarkAnalysis = () => {
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
                   style={{ width: `${(12/12) * 100}%` }} 
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4 mt-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">{matchingSkillGoalsCount} out of {skillGoalCount}</span>
-              </div>
-              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(matchingSkillGoalsCount/skillGoalCount) * 100}%` }} 
                 />
               </div>
             </div>
