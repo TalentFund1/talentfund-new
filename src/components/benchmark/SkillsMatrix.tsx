@@ -27,37 +27,6 @@ export const SkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
 
-  const getLevelPriority = (level: string) => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
-
-  const getInterestPriority = (requirement: string) => {
-    const priorities: { [key: string]: number } = {
-      'required': 0,
-      'skill_goal': 0,
-      'preferred': 1,
-      'not_interested': 2,
-      'unknown': 3
-    };
-    return priorities[requirement.toLowerCase()] ?? 3;
-  };
-
-  const getRoleLevelPriority = (level: string) => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
-
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
       let matchesLevel = true;
