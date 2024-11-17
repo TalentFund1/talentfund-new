@@ -15,8 +15,8 @@ import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
-import { SkillGoalWidget } from "./SkillGoalWidget";
-import { BenchmarkSkillsContent } from "./skills-matrix/BenchmarkSkillsContent";
+
+const ITEMS_PER_PAGE = 10;
 
 const roles = {
   "123": "AI Engineer",
@@ -26,11 +26,19 @@ const roles = {
 };
 
 export const BenchmarkSkillsMatrix = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
+  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
+  const [selectedLevel, setSelectedLevel] = useState("all");
+  const [selectedInterest, setSelectedInterest] = useState("all");
   const { id } = useParams<{ id: string }>();
+  const { benchmarkSearchSkills } = useBenchmarkSearch();
+  const observerTarget = useRef<HTMLDivElement>(null);
+  const { currentStates } = useSkillsMatrixStore();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const { getTrackForRole } = useTrack();
-  const { currentStates } = useSkillsMatrixStore();
 
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
@@ -50,13 +58,18 @@ export const BenchmarkSkillsMatrix = () => {
   // Filter skills that are marked as skill goals AND are matching skills
   const skillGoals = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
-      if (!toggledSkills.has(skill.title)) return false;
+      if (!toggledSkills.has(skill.title)) {
+        return false;
+      }
 
+      // Check if it's a matching skill
       const isMatching = matchingSkills.some(matchingSkill => 
         matchingSkill.title === skill.title
       );
 
-      if (!isMatching) return false;
+      if (!isMatching) {
+        return false;
+      }
 
       const currentSkillState = currentStates[skill.title];
       const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
@@ -64,8 +77,98 @@ export const BenchmarkSkillsMatrix = () => {
       return requirement === 'required' || requirement === 'skill_goal';
     });
 
-  console.log('Skill Goals Count:', skillGoals.length);
-  console.log('Total Skills:', allRoleSkills.length);
+  useEffect(() => {
+    setSelectedSearchSkills(benchmarkSearchSkills);
+  }, [benchmarkSearchSkills]);
+
+  const getRoleLevelPriority = (level: string) => {
+    const priorities: { [key: string]: number } = {
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
+    };
+    return priorities[level.toLowerCase()] ?? 3;
+  };
+
+  const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
+    .filter(skill => {
+      if (!toggledSkills.has(skill.title)) {
+        return false;
+      }
+
+      let matchesLevel = true;
+      let matchesInterest = true;
+      let matchesSearch = true;
+
+      const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
+      const roleSkillLevel = competencyState?.level || 'unspecified';
+
+      if (selectedLevel !== 'all') {
+        matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
+      }
+
+      const currentSkillState = currentStates[skill.title];
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+
+      if (selectedInterest !== 'all') {
+        switch (selectedInterest.toLowerCase()) {
+          case 'skill_goal':
+            matchesInterest = requirement === 'required' || requirement === 'skill_goal';
+            break;
+          case 'not_interested':
+            matchesInterest = requirement === 'not_interested';
+            break;
+          case 'unknown':
+            matchesInterest = !requirement || requirement === 'unknown';
+            break;
+          default:
+            matchesInterest = requirement === selectedInterest.toLowerCase();
+        }
+      }
+
+      if (selectedSearchSkills.length > 0) {
+        matchesSearch = selectedSearchSkills.some(term => 
+          skill.title.toLowerCase().includes(term.toLowerCase())
+        );
+      } else if (searchTerm) {
+        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+
+      return matchesLevel && matchesInterest && matchesSearch;
+    })
+    .sort((a, b) => {
+      const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
+      const bCompetencyState = getSkillCompetencyState(b.title, roleLevel.toLowerCase());
+      
+      const aRoleLevel = aCompetencyState?.level || 'unspecified';
+      const bRoleLevel = bCompetencyState?.level || 'unspecified';
+      
+      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
+      if (roleLevelDiff !== 0) return roleLevelDiff;
+
+      // If levels are the same, sort alphabetically
+      return a.title.localeCompare(b.title);
+    });
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
+          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [visibleItems, filteredSkills.length]);
+
+  const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
   return (
     <div className="space-y-6">
@@ -89,11 +192,6 @@ export const BenchmarkSkillsMatrix = () => {
           />
         </div>
 
-        <SkillGoalWidget 
-          totalSkills={allRoleSkills.length}
-          skillGoalsCount={skillGoals.length}
-        />
-
         <CategorizedSkills 
           roleId={selectedRole}
           employeeId={id || ""}
@@ -107,7 +205,32 @@ export const BenchmarkSkillsMatrix = () => {
           />
         )}
 
-        <BenchmarkSkillsContent />
+        <BenchmarkMatrixFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedSearchSkills={selectedSearchSkills}
+          removeSearchSkill={(skill) => setSelectedSearchSkills((prev) => prev.filter(s => s !== skill))}
+          clearSearch={() => setSearchTerm("")}
+        />
+
+        <SkillsMatrixTable 
+          filteredSkills={paginatedSkills}
+          showCompanySkill={false}
+          isRoleBenchmark={true}
+        />
+        
+        {visibleItems < filteredSkills.length && (
+          <div 
+            ref={observerTarget} 
+            className="h-10 flex items-center justify-center"
+          >
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+          </div>
+        )}
       </Card>
     </div>
   );
