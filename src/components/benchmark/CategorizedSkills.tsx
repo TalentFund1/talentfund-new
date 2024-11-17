@@ -17,13 +17,6 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all skills for the role
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
@@ -34,11 +27,19 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     return priorities[level.toLowerCase()] ?? 3;
   };
 
+  // Get all skills for the role
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
   // Filter and sort skills based on requirement and employee possession
   const requiredSkills = allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      return competencyState?.required === 'required' && toggledSkills.has(skill.title);
+      const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+      return competencyState?.required === 'required' && toggledSkills.has(skill.title) && hasSkill;
     })
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
@@ -49,7 +50,8 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const preferredSkills = allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      return competencyState?.required === 'preferred' && toggledSkills.has(skill.title);
+      const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+      return competencyState?.required === 'preferred' && toggledSkills.has(skill.title) && hasSkill;
     })
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
