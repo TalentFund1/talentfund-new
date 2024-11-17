@@ -24,13 +24,18 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
 
   const matchingSkills = skills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
-    if (!roleSkillState) return false;
+    if (!roleSkillState || !roleSkillState.required) return false;
 
-    const employeeSkillLevel = currentStates[skill.title]?.[roleLevel.toLowerCase()]?.level || skill.level || 'unspecified';
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     // If role requires advanced, don't match unspecified
     if (roleSkillLevel.toLowerCase() === 'advanced' && employeeSkillLevel.toLowerCase() === 'unspecified') {
+      return false;
+    }
+
+    // Only include skills that are marked as required
+    if (roleSkillState.required.toLowerCase() !== 'required') {
       return false;
     }
 
