@@ -15,7 +15,6 @@ import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
-import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -187,7 +186,8 @@ export const BenchmarkSkillsMatrix = () => {
           />
         )}
 
-        <BenchmarkMatrixFilters
+        <SkillsMatrixContent 
+          filteredSkills={filteredSkills}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedLevel={selectedLevel}
@@ -196,10 +196,6 @@ export const BenchmarkSkillsMatrix = () => {
           setSelectedInterest={setSelectedInterest}
           selectedSearchSkills={selectedSearchSkills}
           setSelectedSearchSkills={setSelectedSearchSkills}
-        />
-
-        <SkillsMatrixContent 
-          filteredSkills={filteredSkills}
           visibleItems={visibleItems}
           observerTarget={observerTarget}
         />
