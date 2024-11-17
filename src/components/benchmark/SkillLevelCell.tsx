@@ -39,7 +39,7 @@ export const SkillLevelCell = ({
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col h-[70px]">
+      <div className="flex flex-col h-[84px]">
         <Select 
           value={currentState.level} 
           onValueChange={(value) => {
@@ -48,7 +48,7 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            h-[35px] rounded-none text-sm font-medium w-full capitalize flex items-center justify-center text-[#1f2144]
+            h-[42px] rounded-none text-sm font-medium w-full capitalize flex items-center justify-center text-[#1f2144]
             ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
               currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
               currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
@@ -81,7 +81,7 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            h-[35px] rounded-none text-sm font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
+            h-[42px] rounded-none text-sm font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
             border-x-2 border-b-2
             ${currentState.requirement === 'required' ? getBorderColorClass(currentState.level) : 'border-[#e5e7eb]'}
             ${getRequirementBackgroundClass(currentState.requirement)}
