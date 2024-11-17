@@ -1,19 +1,21 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
+import { useToast } from "@/components/ui/use-toast";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { roleSkills } from './data/roleSkills';
 import { RoleSelection } from "./RoleSelection";
 import { useRoleStore } from "./RoleBenchmark";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { CompetencyMatchSection } from "./CompetencyMatchSection";
 import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
-import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
-import { CompetencyMatchSection } from "./CompetencyMatchSection";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -32,7 +34,6 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const { id } = useParams<{ id: string }>();
-  const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
@@ -40,25 +41,30 @@ export const BenchmarkSkillsMatrix = () => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { getTrackForRole } = useTrack();
 
+  // Auto-populate search skills when role changes
+  useEffect(() => {
+    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+    
+    const toggledRoleSkills = allRoleSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .map(skill => skill.title);
+    
+    setSelectedSearchSkills(toggledRoleSkills);
+    console.log('Auto-populated search skills:', toggledRoleSkills);
+  }, [selectedRole, toggledSkills]);
+
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-  
-  // Get all skills for the selected role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
-
-  const getRoleLevelPriority = (level: string) => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
+  ];
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
@@ -126,34 +132,11 @@ export const BenchmarkSkillsMatrix = () => {
       return a.title.localeCompare(b.title);
     });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
-          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
-    return () => observer.disconnect();
-  }, [visibleItems, filteredSkills.length]);
-
   return (
     <div className="space-y-6">
-      <Card className="p-8 bg-white space-y-8">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
-          <p className="text-sm text-muted-foreground">
-            Manage and track employee skills and competencies
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-4">
+      <Card className="p-6 bg-white space-y-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-foreground">Benchmark Skills Matrix</h2>
           <RoleSelection 
             selectedRole={selectedRole}
             selectedLevel={roleLevel}
@@ -165,17 +148,12 @@ export const BenchmarkSkillsMatrix = () => {
           />
         </div>
 
-        <CategorizedSkills 
-          roleId={selectedRole}
-          employeeId={id || ""}
-          selectedLevel={roleLevel}
-        />
+        {/* Skills Matrix Filters */}
+        <div className="mb-4">
+          {/* Search Filter code here */}
+        </div>
 
-        <CompetencyMatchSection 
-          skills={filteredSkills}
-          roleLevel={roleLevel}
-        />
-
+        {/* Skills Matrix Table */}
         <SkillsMatrixContent 
           filteredSkills={filteredSkills}
           searchTerm={searchTerm}
