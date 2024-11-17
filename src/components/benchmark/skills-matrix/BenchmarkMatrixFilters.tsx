@@ -27,17 +27,15 @@ export const BenchmarkMatrixFilters = ({
   removeSearchSkill,
   clearSearch,
 }: BenchmarkMatrixFiltersProps) => {
-  console.log('Current selected level:', selectedLevel);
-
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
         <Select value={selectedLevel} onValueChange={setSelectedLevel}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Level" />
+            <SelectValue placeholder="All Levels" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Skill Level</SelectItem>
+            <SelectItem value="all">All Levels</SelectItem>
             <SelectItem value="advanced">Advanced</SelectItem>
             <SelectItem value="intermediate">Intermediate</SelectItem>
             <SelectItem value="beginner">Beginner</SelectItem>
