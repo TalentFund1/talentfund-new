@@ -51,6 +51,7 @@ export const SkillLevelCell = ({
   };
 
   const getBorderColorClass = (level: string, requirement: string) => {
+    // Always keep seniority-based border colors for the upper section
     switch (level.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent';
@@ -64,9 +65,11 @@ export const SkillLevelCell = ({
   };
 
   const getLowerBorderColorClass = (level: string, requirement: string) => {
+    // For the lower section, use light grey for non-skill goal states
     if (requirement.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
+    // Keep seniority-based colors for skill goals
     return getBorderColorClass(level, requirement);
   };
 
@@ -83,7 +86,7 @@ export const SkillLevelCell = ({
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center p-1">
         <Select 
           value={currentState.level} 
           onValueChange={(value) => {
@@ -92,7 +95,7 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            rounded-t-xl h-[37px] text-sm font-medium w-full capitalize flex items-center justify-center text-[#1f2144]
+            rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
             ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
               currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
               currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
@@ -125,8 +128,8 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            text-xs font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-            border-x-2 border-b-2 h-[32px] rounded-b-xl
+            text-xs px-2 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+            border-x-2 border-b-2 min-h-[32px] rounded-b-md
             ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
             ${getRequirementBackgroundClass(currentState.requirement)}
           `}>
