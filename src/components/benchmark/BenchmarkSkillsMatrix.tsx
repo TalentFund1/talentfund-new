@@ -16,6 +16,13 @@ import { useTrack } from "../skills/context/TrackContext";
 
 const ITEMS_PER_PAGE = 10;
 
+const roles = {
+  "123": "AI Engineer",
+  "124": "Backend Engineer",
+  "125": "Frontend Engineer",
+  "126": "Engineering Manager"
+};
+
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
@@ -30,13 +37,6 @@ export const BenchmarkSkillsMatrix = () => {
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { getTrackForRole } = useTrack();
-
-  const roles = {
-    "123": "AI Engineer",
-    "124": "Backend Engineer",
-    "125": "Frontend Engineer",
-    "126": "Engineering Manager"
-  };
 
   // Get the current track for the selected role
   const currentTrack = getTrackForRole(selectedRole);

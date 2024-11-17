@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useParams } from "react-router-dom";
@@ -10,6 +9,14 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { professionalLevels, managerialLevels } from "./data/levelData";
+import { RoleSelection } from "./RoleSelection";
+
+const roles = {
+  "123": "AI Engineer",
+  "124": "Backend Engineer",
+  "125": "Frontend Engineer",
+  "126": "Engineering Manager"
+};
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,9 +31,6 @@ export const BenchmarkAnalysis = () => {
   
   // Get the current track for the selected role
   const currentTrack = getTrackForRole(selectedRole);
-  
-  // Determine which levels to show based on the track
-  const levels = currentTrack === "Managerial" ? managerialLevels : professionalLevels;
   
   // Calculate total skills for the selected role
   const totalSkills = [
@@ -68,30 +72,15 @@ export const BenchmarkAnalysis = () => {
             </p>
           </div>
           <div className="flex gap-4">
-            <Select value={selectedRole} onValueChange={setSelectedRole}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="123">AI Engineer</SelectItem>
-                <SelectItem value="124">Backend Engineer</SelectItem>
-                <SelectItem value="125">Frontend Engineer</SelectItem>
-                <SelectItem value="126">Engineering Manager</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-              <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Level" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(levels).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <RoleSelection 
+              selectedRole={selectedRole}
+              selectedLevel={selectedLevel}
+              currentTrack={currentTrack}
+              onRoleChange={setSelectedRole}
+              onLevelChange={setSelectedLevel}
+              onTrackChange={() => {}}
+              roles={roles}
+            />
           </div>
         </div>
 
