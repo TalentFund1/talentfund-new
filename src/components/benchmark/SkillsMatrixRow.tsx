@@ -1,11 +1,12 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
-import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
+import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -95,10 +96,17 @@ export const SkillsMatrixRow = ({
           </div>
         </TableCell>
       )}
-      <StaticSkillLevelCell 
-        level={currentState.level}
-        requirement={currentState.requirement}
+      <SkillLevelCell 
+        initialLevel={skill.level || 'unspecified'}
+        skillTitle={skill.title}
+        isRoleBenchmark={isRoleBenchmark}
       />
+      {isRoleBenchmark && (
+        <StaticSkillLevelCell 
+          level={currentState.level}
+          requirement={currentState.requirement}
+        />
+      )}
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
