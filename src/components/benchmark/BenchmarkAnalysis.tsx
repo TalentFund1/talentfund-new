@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
