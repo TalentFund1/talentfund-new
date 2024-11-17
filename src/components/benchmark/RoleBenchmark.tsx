@@ -10,7 +10,6 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
 import { create } from "zustand";
-import { CategorizedSkills } from "./CategorizedSkills";
 
 interface RoleStore {
   selectedRole: string;
@@ -95,12 +94,6 @@ export const RoleBenchmark = () => {
           onLevelChange={setRoleLevel}
           onTrackChange={handleTrackChange}
           roles={roles}
-        />
-
-        <CategorizedSkills 
-          roleId={selectedRole}
-          employeeId={selectedRole}
-          selectedLevel={roleLevel}
         />
 
         <Separator className="my-6" />
