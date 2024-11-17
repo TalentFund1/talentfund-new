@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
@@ -41,15 +40,21 @@ export const BenchmarkAnalysis = () => {
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  const totalSkillsCount = toggledRoleSkills.length; // Should be 7
-  const matchingSkillsCount = matchingSkills.length; // Should be 6
+  const totalSkillsCount = toggledRoleSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
   // Calculate total skill goals from toggled skills
-  const skillGoalCount = 7; // Total number of toggled skills
+  const skillGoalCount = toggledRoleSkills.filter(skill => {
+    const skillState = currentStates[skill.title];
+    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
+  }).length;
 
   // Calculate matching skill goals - skills that are both matched and marked as skill goals
-  const matchingSkillGoals = 3; // Number of matching skills marked as skill goals
+  const matchingSkillGoals = matchingSkills.filter(skill => {
+    const skillState = currentStates[skill.title];
+    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
+  }).length;
 
   return (
     <div className="space-y-6">
