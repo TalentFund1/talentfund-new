@@ -6,6 +6,7 @@ import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -60,6 +61,10 @@ export const SkillsMatrixRow = ({
   };
 
   const roleSkillState = getRoleSkillState();
+  const currentState = currentStates[skill.title] || {
+    level: skill.level || 'unspecified',
+    requirement: skill.requirement || 'required'
+  };
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -94,6 +99,10 @@ export const SkillsMatrixRow = ({
       <SkillLevelCell 
         initialLevel={skill.level || 'unspecified'}
         skillTitle={skill.title}
+      />
+      <StaticSkillLevelCell 
+        level={currentState.level}
+        requirement={currentState.requirement}
       />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
