@@ -13,7 +13,6 @@ import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
-import { useToast } from "@/hooks/use-toast";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -39,7 +38,6 @@ export const BenchmarkSkillsMatrix = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { getTrackForRole } = useTrack();
-  const { toast } = useToast();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
@@ -60,11 +58,6 @@ export const BenchmarkSkillsMatrix = () => {
     // Update toggled skills to match the role's skills
     const newToggledSkills = new Set(roleSpecificSkills);
     setToggledSkills(newToggledSkills);
-    
-    toast({
-      title: "Skills Updated",
-      description: `Skills have been updated for ${roles[selectedRole]}`,
-    });
 
     console.log("Auto-populated skills:", roleSpecificSkills);
   }, [selectedRole, currentRoleSkills, setToggledSkills, setBenchmarkSearchSkills]);
