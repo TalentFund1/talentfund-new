@@ -127,13 +127,11 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
         />
       )}
       
-      {missingSkills.length > 0 && (
-        <SkillSection 
-          title="Missing Skills" 
-          skills={missingSkills} 
-          count={missingSkills.length} 
-        />
-      )}
+      <SkillSection 
+        title="Missing Skills" 
+        skills={missingSkills} 
+        count={missingSkills.length} 
+      />
     </div>
   );
 };
