@@ -32,19 +32,19 @@ export const BenchmarkAnalysis = () => {
   // Get the current track for the selected role
   const currentTrack = getTrackForRole(selectedRole);
   
-  // Get all toggled skills for the role
-  const toggledRoleSkills = [
+  // Calculate total skills for the selected role
+  const totalSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
+  ];
 
-  // Calculate matching skills by comparing employee's skills with toggled role requirements
-  const matchingSkills = toggledRoleSkills.filter(roleSkill => 
+  // Calculate matching skills by comparing employee's skills with role requirements
+  const matchingSkills = totalSkills.filter(roleSkill => 
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  const totalSkillsCount = toggledRoleSkills.length;
+  const totalSkillsCount = totalSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
@@ -52,18 +52,9 @@ export const BenchmarkAnalysis = () => {
   const competencyTotal = 12;
   const competencyMatch = 12;
 
-  // Calculate skill goals - count skills marked as "Skill Goal" in current states
-  const skillGoalMatch = toggledRoleSkills.filter(skill => {
-    const currentState = currentStates[skill.title];
-    return currentState?.requirement === 'skill_goal' || currentState?.requirement === 'required';
-  }).length;
-
-  console.log('Skill Goals Calculation:', {
-    totalSkills: totalSkillsCount,
-    skillGoalMatch,
-    toggledSkills: Array.from(toggledSkills),
-    currentStates
-  });
+  // Calculate skill goals
+  const skillGoalTotal = 12;
+  const skillGoalMatch = 8;
 
   return (
     <div className="space-y-6">
@@ -126,12 +117,12 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">{skillGoalMatch} out of {totalSkillsCount}</span>
+                <span className="text-sm text-foreground">{skillGoalMatch} out of {skillGoalTotal}</span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(skillGoalMatch/totalSkillsCount) * 100}%` }} 
+                  style={{ width: `${(skillGoalMatch/skillGoalTotal) * 100}%` }} 
                 />
               </div>
             </div>
