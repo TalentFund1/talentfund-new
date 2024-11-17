@@ -43,15 +43,20 @@ export const BenchmarkAnalysis = () => {
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
-  // Calculate total skills that are marked as skill goals
-  const skillGoalCount = toggledRoleSkills.length;
+  // First, get all skills that are marked as skill goals
+  const skillGoals = toggledRoleSkills.filter(skill => {
+    const skillState = currentStates[skill.title];
+    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
+  });
 
-  // Calculate matching skill goals - skills that exist in both employee skills and role skills
-  // and are marked as required or skill_goal
+  // Then, count how many of these skill goals are also matching skills
   const matchingSkillGoals = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  }).length;
+  });
+
+  const skillGoalCount = skillGoals.length;
+  const matchingSkillGoalsCount = matchingSkillGoals.length;
 
   return (
     <div className="space-y-6">
@@ -114,12 +119,12 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">{matchingSkillGoals} out of {skillGoalCount}</span>
+                <span className="text-sm text-foreground">{matchingSkillGoalsCount} out of {skillGoalCount}</span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(matchingSkillGoals/skillGoalCount) * 100}%` }} 
+                  style={{ width: `${(matchingSkillGoalsCount/skillGoalCount) * 100}%` }} 
                 />
               </div>
             </div>
