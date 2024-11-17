@@ -13,9 +13,9 @@ const getLevelPriority = (level: string = 'unspecified') => {
     'advanced': 3,
     'intermediate': 2,
     'beginner': 1,
-    'unspecified': 0
+    'unspecified': 1  // Changed from 0 to 1 to match beginner level
   };
-  return priorities[level.toLowerCase()] ?? 0;
+  return priorities[level.toLowerCase()] ?? 1;
 };
 
 export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSectionProps) => {
@@ -28,6 +28,11 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
 
     const employeeSkillLevel = currentStates[skill.title]?.[roleLevel.toLowerCase()]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
+
+    // If role requires advanced, don't match unspecified
+    if (roleSkillLevel.toLowerCase() === 'advanced' && employeeSkillLevel.toLowerCase() === 'unspecified') {
+      return false;
+    }
 
     return getLevelPriority(employeeSkillLevel) >= getLevelPriority(roleSkillLevel);
   });
