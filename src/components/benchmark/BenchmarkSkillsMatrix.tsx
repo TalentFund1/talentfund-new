@@ -31,6 +31,8 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const { id } = useParams<{ id: string }>();
+  const { benchmarkSearchSkills } = useBenchmarkSearch();
+  const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
