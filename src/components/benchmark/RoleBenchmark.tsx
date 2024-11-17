@@ -52,25 +52,24 @@ export const RoleBenchmark = () => {
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Auto-populate skills when role changes to AI Engineer
+  // Auto-populate skills when role changes
   useEffect(() => {
-    if (selectedRole === "123") { // AI Engineer role ID
-      console.log("Auto-populating AI Engineer skills");
-      const aiEngineerSkills = [
-        ...selectedRoleSkills.specialized.map(skill => skill.title),
-        ...selectedRoleSkills.common.map(skill => skill.title),
-        ...selectedRoleSkills.certifications.map(skill => skill.title)
-      ];
-      
-      // Create a new Set with all AI Engineer skills toggled on
-      const newToggledSkills = new Set(aiEngineerSkills);
-      setToggledSkills(newToggledSkills);
-      
-      // Update benchmark search skills
-      setBenchmarkSearchSkills(Array.from(newToggledSkills));
-      
-      console.log("Auto-populated skills:", aiEngineerSkills);
-    }
+    console.log(`Auto-populating skills for role: ${roles[selectedRole]}`);
+    
+    const roleSpecificSkills = [
+      ...selectedRoleSkills.specialized.map(skill => skill.title),
+      ...selectedRoleSkills.common.map(skill => skill.title),
+      ...selectedRoleSkills.certifications.map(skill => skill.title)
+    ];
+    
+    // Create a new Set with all role-specific skills toggled on
+    const newToggledSkills = new Set(roleSpecificSkills);
+    setToggledSkills(newToggledSkills);
+    
+    // Update benchmark search skills
+    setBenchmarkSearchSkills(Array.from(newToggledSkills));
+    
+    console.log("Auto-populated skills:", roleSpecificSkills);
   }, [selectedRole, selectedRoleSkills]);
 
   useEffect(() => {
