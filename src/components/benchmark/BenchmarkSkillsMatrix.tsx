@@ -1,12 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
-import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
 import { RoleSelection } from "./RoleSelection";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
@@ -15,8 +13,7 @@ import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
-
-const ITEMS_PER_PAGE = 10;
+import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 
 const roles = {
   "123": "AI Engineer",
@@ -28,74 +25,27 @@ const roles = {
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
-  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
-  const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
+  const employeeSkills = getEmployeeSkills(id || "");
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { getTrackForRole } = useTrack();
 
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-  
-  // Get all skills for the selected role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
 
-  // Get matching skills by comparing employee's skills with role requirements
-  const employeeSkills = getEmployeeSkills(id || "");
-  const matchingSkills = allRoleSkills.filter(roleSkill => 
-    employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
-  );
-
-  // Filter skills that are marked as skill goals AND are matching skills
-  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
-    .filter(skill => {
-      if (!toggledSkills.has(skill.title)) {
-        return false;
-      }
-
-      // Check if it's a matching skill
-      const isMatching = matchingSkills.some(matchingSkill => 
-        matchingSkill.title === skill.title
-      );
-
-      if (!isMatching) {
-        return false;
-      }
-
-      const currentSkillState = currentStates[skill.title];
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
-      
-      return requirement === 'required' || requirement === 'skill_goal';
-    });
-
-  useEffect(() => {
-    setSelectedSearchSkills(benchmarkSearchSkills);
-  }, [benchmarkSearchSkills]);
-
-  const getRoleLevelPriority = (level: string) => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
-
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
-      if (!toggledSkills.has(skill.title)) {
-        return false;
-      }
+      if (!toggledSkills.has(skill.title)) return false;
 
       let matchesLevel = true;
       let matchesInterest = true;
@@ -136,39 +86,7 @@ export const BenchmarkSkillsMatrix = () => {
       }
 
       return matchesLevel && matchesInterest && matchesSearch;
-    })
-    .sort((a, b) => {
-      const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
-      const bCompetencyState = getSkillCompetencyState(b.title, roleLevel.toLowerCase());
-      
-      const aRoleLevel = aCompetencyState?.level || 'unspecified';
-      const bRoleLevel = bCompetencyState?.level || 'unspecified';
-      
-      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
-      if (roleLevelDiff !== 0) return roleLevelDiff;
-
-      // If levels are the same, sort alphabetically
-      return a.title.localeCompare(b.title);
     });
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
-          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
-    return () => observer.disconnect();
-  }, [visibleItems, filteredSkills.length]);
-
-  const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
   return (
     <div className="space-y-6">
@@ -198,38 +116,19 @@ export const BenchmarkSkillsMatrix = () => {
           selectedLevel={roleLevel}
         />
 
-        {skillGoals.length > 0 && (
-          <SkillGoalSection 
-            skills={skillGoals}
-            count={skillGoals.length}
+        {allRoleSkills.length > 0 && (
+          <SkillsMatrixContent 
+            filteredSkills={filteredSkills}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedLevel={selectedLevel}
+            setSelectedLevel={setSelectedLevel}
+            selectedInterest={selectedInterest}
+            setSelectedInterest={setSelectedInterest}
+            selectedSearchSkills={selectedSearchSkills}
+            setSelectedSearchSkills={setSelectedSearchSkills}
+            allSkills={allRoleSkills}
           />
-        )}
-
-        <BenchmarkMatrixFilters
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
-          selectedSearchSkills={selectedSearchSkills}
-          removeSearchSkill={(skill) => setSelectedSearchSkills((prev) => prev.filter(s => s !== skill))}
-          clearSearch={() => setSearchTerm("")}
-        />
-
-        <SkillsMatrixTable 
-          filteredSkills={paginatedSkills}
-          showCompanySkill={false}
-          isRoleBenchmark={true}
-        />
-        
-        {visibleItems < filteredSkills.length && (
-          <div 
-            ref={observerTarget} 
-            className="h-10 flex items-center justify-center"
-          >
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-          </div>
         )}
       </Card>
     </div>
