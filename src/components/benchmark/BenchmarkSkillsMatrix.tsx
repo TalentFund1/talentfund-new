@@ -42,13 +42,24 @@ export const BenchmarkSkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-  
-  // Get all skills for the selected role
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
+
+  // Auto-populate toggled skills when role changes
+  useEffect(() => {
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const toggledRoleSkills = allRoleSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .map(skill => skill.title);
+
+    console.log('Auto-populating toggled skills for role:', selectedRole);
+    console.log('Toggled skills:', toggledRoleSkills);
+    
+    setSelectedSearchSkills(toggledRoleSkills);
+  }, [selectedRole, toggledSkills, currentRoleSkills]);
 
   const getRoleLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
