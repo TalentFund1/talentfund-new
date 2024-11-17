@@ -7,12 +7,10 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { MissingSkills } from "./MissingSkills";
 import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
 import { create } from "zustand";
 
-// Create a Zustand store for sharing selected role
 interface RoleStore {
   selectedRole: string;
   setSelectedRole: (role: string) => void;
@@ -99,12 +97,6 @@ export const RoleBenchmark = () => {
         />
 
         <Separator className="my-6" />
-
-        <MissingSkills 
-          roleId={selectedRole} 
-          employeeId="123" 
-          selectedLevel={roleLevel}
-        />
 
         <Card className="p-6 bg-white space-y-6">
           <CompetencyGraph 
