@@ -100,14 +100,12 @@ export const SkillsMatrix = () => {
       return matchesLevel && matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
-      // Sort by Role Skills level first
       const aRoleLevel = (a.roleLevel || 'unspecified').toLowerCase();
       const bRoleLevel = (b.roleLevel || 'unspecified').toLowerCase();
       
       const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
-      // If Role Skills levels are the same, sort by current skill level
       const aState = currentStates[a.title];
       const bState = currentStates[b.title];
       
@@ -117,13 +115,11 @@ export const SkillsMatrix = () => {
       const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
-      // If levels are the same, sort by interest/requirement
       const aInterest = (aState?.requirement || a.requirement || 'unknown').toLowerCase();
       const bInterest = (bState?.requirement || b.requirement || 'unknown').toLowerCase();
       const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
       if (interestDiff !== 0) return interestDiff;
 
-      // Finally, sort alphabetically by title
       return a.title.localeCompare(b.title);
     });
 
