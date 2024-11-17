@@ -1,32 +1,21 @@
 import { TableCell } from "@/components/ui/table";
 import { Star, Shield, Target, CircleDashed, Check, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface StaticSkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
-  isRoleSkill?: boolean;
-  roleLevel?: string;
 }
 
 export const StaticSkillLevelCell = ({ 
   initialLevel, 
   skillTitle,
-  isRoleSkill = false,
-  roleLevel = ''
 }: StaticSkillLevelCellProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
-  
   const currentState = currentStates[skillTitle] || {
     level: initialLevel.toLowerCase(),
     requirement: 'required'
   };
-
-  const competencyState = getSkillCompetencyState(skillTitle, roleLevel.toLowerCase());
-  const roleSkillLevel = competencyState?.level || 'unspecified';
-  const roleSkillRequired = competencyState?.required || false;
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -74,31 +63,28 @@ export const StaticSkillLevelCell = ({
     return getBorderColorClass(level).split(' ')[0];
   };
 
-  const level = isRoleSkill ? roleSkillLevel : currentState.level;
-  const requirement = isRoleSkill ? (roleSkillRequired ? 'required' : 'preferred') : currentState.requirement;
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <div className={`
           rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-          border-2 ${getBorderColorClass(level)}
+          border-2 ${getBorderColorClass(currentState.level)}
         `}>
           <span className="flex items-center gap-2">
-            {getLevelIcon(level)}
-            {level.charAt(0).toUpperCase() + level.slice(1)}
+            {getLevelIcon(currentState.level)}
+            {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
           </span>
         </div>
         <div className={`
           text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
           border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-          ${getLowerBorderColorClass(level, requirement)}
+          ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
         `}>
           <span className="flex items-center gap-1.5">
-            {getRequirementIcon(requirement)}
-            {requirement === 'required' ? 'Required' : 
-             requirement === 'not-interested' ? 'Not Interested' : 
-             requirement === 'unknown' ? 'Unknown' : 'Preferred'}
+            {getRequirementIcon(currentState.requirement)}
+            {currentState.requirement === 'required' ? 'Skill Goal' : 
+             currentState.requirement === 'not-interested' ? 'Not Interested' : 
+             currentState.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
           </span>
         </div>
       </div>
