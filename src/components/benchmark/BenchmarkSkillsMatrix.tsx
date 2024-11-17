@@ -15,6 +15,7 @@ import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
+import { CompetencyMatchWidget } from "./skills-matrix/CompetencyMatchWidget";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -43,14 +44,12 @@ export const BenchmarkSkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
-  // Get all skills for the selected role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
 
-  // Calculate skill goals
   const skillGoals = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) return false;
@@ -58,16 +57,6 @@ export const BenchmarkSkillsMatrix = () => {
       const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
       return requirement === 'required' || requirement === 'skill_goal';
     });
-
-  const getRoleLevelPriority = (level: string) => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
@@ -122,10 +111,6 @@ export const BenchmarkSkillsMatrix = () => {
       const aRoleLevel = aCompetencyState?.level || 'unspecified';
       const bRoleLevel = bCompetencyState?.level || 'unspecified';
       
-      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
-      if (roleLevelDiff !== 0) return roleLevelDiff;
-
-      // If levels are the same, sort alphabetically
       return a.title.localeCompare(b.title);
     });
 
@@ -174,10 +159,17 @@ export const BenchmarkSkillsMatrix = () => {
           selectedLevel={roleLevel}
         />
 
-        <SkillGoalsWidget 
-          totalSkills={allRoleSkills.length}
-          skillGoalsCount={skillGoals.length}
-        />
+        <div className="grid gap-6 md:grid-cols-2">
+          <SkillGoalsWidget 
+            totalSkills={allRoleSkills.length}
+            skillGoalsCount={skillGoals.length}
+          />
+          
+          <CompetencyMatchWidget 
+            totalSkills={allRoleSkills.length}
+            skills={employeeSkills}
+          />
+        </div>
 
         {skillGoals.length > 0 && (
           <SkillGoalSection 
