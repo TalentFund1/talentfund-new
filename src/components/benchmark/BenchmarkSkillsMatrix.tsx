@@ -15,15 +15,9 @@ import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
+import { MatrixFilters } from "./skills-matrix/MatrixFilters";
 
 const ITEMS_PER_PAGE = 10;
-
-const roles = {
-  "123": "AI Engineer",
-  "124": "Backend Engineer",
-  "125": "Frontend Engineer",
-  "126": "Engineering Manager"
-};
 
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,6 +25,8 @@ export const BenchmarkSkillsMatrix = () => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
+  
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -59,16 +55,6 @@ export const BenchmarkSkillsMatrix = () => {
       return requirement === 'required' || requirement === 'skill_goal';
     });
 
-  const getRoleLevelPriority = (level: string) => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
-
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) {
@@ -78,16 +64,16 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
+      let matchesSkillLevel = true;
 
       const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
-      const roleSkillLevel = competencyState?.level || 'unspecified';
+      const currentSkillState = currentStates[skill.title];
+      const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
       if (selectedLevel !== 'all') {
-        matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
+        matchesLevel = skillLevel === selectedLevel.toLowerCase();
       }
-
-      const currentSkillState = currentStates[skill.title];
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {
@@ -105,6 +91,10 @@ export const BenchmarkSkillsMatrix = () => {
         }
       }
 
+      if (selectedSkillLevel !== 'all') {
+        matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
+      }
+
       if (selectedSearchSkills.length > 0) {
         matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
@@ -113,20 +103,18 @@ export const BenchmarkSkillsMatrix = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesLevel && matchesInterest && matchesSearch;
+      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
     })
     .sort((a, b) => {
-      const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
-      const bCompetencyState = getSkillCompetencyState(b.title, roleLevel.toLowerCase());
+      const aState = currentStates[a.title];
+      const bState = currentStates[b.title];
       
-      const aRoleLevel = aCompetencyState?.level || 'unspecified';
-      const bRoleLevel = bCompetencyState?.level || 'unspecified';
+      const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
+      const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
       
-      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
-      if (roleLevelDiff !== 0) return roleLevelDiff;
-
-      // If levels are the same, sort alphabetically
-      return a.title.localeCompare(b.title);
+      // Sort by skill level (advanced -> unspecified)
+      const levelOrder = { advanced: 0, intermediate: 1, beginner: 2, unspecified: 3 };
+      return (levelOrder[aLevel as keyof typeof levelOrder] || 3) - (levelOrder[bLevel as keyof typeof levelOrder] || 3);
     });
 
   useEffect(() => {
@@ -186,8 +174,7 @@ export const BenchmarkSkillsMatrix = () => {
           />
         )}
 
-        <SkillsMatrixContent 
-          filteredSkills={filteredSkills}
+        <MatrixFilters
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedLevel={selectedLevel}
@@ -196,10 +183,23 @@ export const BenchmarkSkillsMatrix = () => {
           setSelectedInterest={setSelectedInterest}
           selectedSearchSkills={selectedSearchSkills}
           setSelectedSearchSkills={setSelectedSearchSkills}
+          selectedSkillLevel={selectedSkillLevel}
+          onSkillLevelChange={setSelectedSkillLevel}
+        />
+
+        <SkillsMatrixContent 
+          filteredSkills={filteredSkills}
           visibleItems={visibleItems}
           observerTarget={observerTarget}
         />
       </Card>
     </div>
   );
+};
+
+const roles = {
+  "123": "AI Engineer",
+  "124": "Backend Engineer",
+  "125": "Frontend Engineer",
+  "126": "Engineering Manager"
 };
