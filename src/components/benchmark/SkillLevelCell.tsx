@@ -83,7 +83,7 @@ export const SkillLevelCell = ({
 
   return (
     <TableCell className="border-r border-blue-200 p-2">
-      <div className="flex flex-col items-center gap-1">
+      <div className="flex flex-col items-center">
         <Select 
           value={currentState.level} 
           onValueChange={(value) => {
@@ -92,11 +92,11 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            rounded-lg px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
-            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
-              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
-              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
-              'bg-gray-100/50 border-2 border-gray-400'}
+            rounded-t-lg rounded-b-none px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
+            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent border-b-0' : 
+              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon border-b-0' : 
+              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000] border-b-0' : 
+              'bg-gray-100/50 border-2 border-gray-400 border-b-0'}
           `}>
             <SelectValue>
               <span className="flex items-center gap-2.5">
@@ -126,7 +126,7 @@ export const SkillLevelCell = ({
         >
           <SelectTrigger className={`
             text-sm px-4 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
-            border-2 min-h-[38px] rounded-lg
+            border-2 min-h-[38px] rounded-t-none rounded-b-lg -mt-[2px]
             ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
             ${getRequirementBackgroundClass(currentState.requirement)}
           `}>

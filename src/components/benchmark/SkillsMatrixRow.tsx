@@ -95,8 +95,8 @@ export const SkillsMatrixRow = ({
         </TableCell>
       )}
       {isRoleBenchmark && roleSkillState && (
-        <TableCell className="border-r border-blue-200 p-2">
-          <div className="flex flex-col items-center">
+        <TableCell className="border-r border-blue-200 p-0">
+          <div className="flex flex-col items-center p-1">
             <div className={`
               rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
               border-2 ${getBorderColorClass(roleSkillState.level)}

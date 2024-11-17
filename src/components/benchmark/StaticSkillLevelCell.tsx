@@ -65,10 +65,10 @@ export const StaticSkillLevelCell = ({
 
   return (
     <TableCell className="border-r border-blue-200 p-2">
-      <div className="flex flex-col items-center gap-1">
+      <div className="flex flex-col items-center">
         <div className={`
-          rounded-lg px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
-          border-2 ${getBorderColorClass(currentState.level)}
+          rounded-t-lg rounded-b-none px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
+          border-2 border-b-0 ${getBorderColorClass(currentState.level)}
         `}>
           <span className="flex items-center gap-2.5">
             {getLevelIcon(currentState.level)}
@@ -77,7 +77,7 @@ export const StaticSkillLevelCell = ({
         </div>
         <div className={`
           text-sm px-4 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
-          border-2 min-h-[38px] rounded-lg bg-[#F9FAFB]
+          border-2 min-h-[38px] rounded-t-none rounded-b-lg -mt-[2px] bg-[#F9FAFB]
           ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
         `}>
           <span className="flex items-center gap-2">
