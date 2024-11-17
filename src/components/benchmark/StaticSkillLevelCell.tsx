@@ -64,7 +64,7 @@ export const StaticSkillLevelCell = ({
   };
 
   return (
-    <TableCell className="border-r border-blue-200 p-0 w-[150px]">
+    <TableCell className="border-r border-blue-200 p-0 w-[180px]">
       <div className="flex flex-col items-center p-1">
         <div className={`
           rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
