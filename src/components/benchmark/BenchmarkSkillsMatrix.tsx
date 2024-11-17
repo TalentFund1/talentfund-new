@@ -122,17 +122,6 @@ export const BenchmarkSkillsMatrix = () => {
       const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
-      // Sort by skill level first (advanced to unspecified)
-      const aState = currentStates[a.title];
-      const bState = currentStates[b.title];
-      
-      const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
-      const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
-      
-      const levelDiff = getRoleLevelPriority(aLevel) - getRoleLevelPriority(bLevel);
-      if (levelDiff !== 0) return levelDiff;
-
-      // Finally, sort alphabetically by title
       return a.title.localeCompare(b.title);
     });
 
@@ -155,11 +144,26 @@ export const BenchmarkSkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <div className="space-y-4">
-          {/* Your search filter component can go here */}
+      <Card className="p-8 bg-white space-y-8">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
+          <p className="text-sm text-muted-foreground">
+            Manage and track employee skills and competencies
+          </p>
         </div>
-        
+
+        <div className="flex flex-col gap-4">
+          <RoleSelection 
+            selectedRole={selectedRole}
+            selectedLevel={roleLevel}
+            currentTrack={getTrackForRole(selectedRole)}
+            onRoleChange={setSelectedRole}
+            onLevelChange={setRoleLevel}
+            onTrackChange={() => {}}
+            roles={roles}
+          />
+        </div>
+
         <CategorizedSkills 
           roleId={selectedRole}
           employeeId={id || ""}
