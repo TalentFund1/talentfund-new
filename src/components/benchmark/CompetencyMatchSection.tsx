@@ -13,7 +13,7 @@ const getLevelPriority = (level: string = 'unspecified') => {
     'advanced': 3,
     'intermediate': 2,
     'beginner': 1,
-    'unspecified': 1  // Changed from 0 to 1 to match beginner level
+    'unspecified': 1  // Match beginner level
   };
   return priorities[level.toLowerCase()] ?? 1;
 };
