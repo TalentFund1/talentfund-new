@@ -28,18 +28,22 @@ export const BenchmarkSkillsContent = () => {
     setSelectedSearchSkills(benchmarkSearchSkills);
   }, [benchmarkSearchSkills]);
 
+  const getLevelPriority = (level: string = 'unspecified') => {
+    const priorities: { [key: string]: number } = {
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
+    };
+    return priorities[level.toLowerCase()] ?? 3;
+  };
+
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) return false;
 
-      let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
-
-      if (selectedLevel !== 'all') {
-        const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-        matchesLevel = (competencyState?.level || '').toLowerCase() === selectedLevel.toLowerCase();
-      }
 
       if (selectedInterest !== 'all') {
         const requirement = skill.requirement?.toLowerCase() || 'unknown';
@@ -54,9 +58,23 @@ export const BenchmarkSkillsContent = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesLevel && matchesInterest && matchesSearch;
+      return matchesInterest && matchesSearch;
     })
-    .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically by title
+    .sort((a, b) => {
+      // Get role skill levels
+      const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
+      const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
+      
+      const aLevel = (aState?.level || 'unspecified').toLowerCase();
+      const bLevel = (bState?.level || 'unspecified').toLowerCase();
+
+      // Sort by level priority first
+      const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
+      if (levelDiff !== 0) return levelDiff;
+
+      // If levels are the same, sort alphabetically by title
+      return a.title.localeCompare(b.title);
+    });
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
