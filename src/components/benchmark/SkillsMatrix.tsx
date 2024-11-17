@@ -32,12 +32,12 @@ export const SkillsMatrix = () => {
 
   const getLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
-      'unspecified': 0,
-      'beginner': 1,
-      'intermediate': 2,
-      'advanced': 3
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
     };
-    return priorities[level.toLowerCase()] ?? 0;
+    return priorities[level.toLowerCase()] ?? 3;
   };
 
   const getInterestPriority = (requirement: string) => {
@@ -53,12 +53,12 @@ export const SkillsMatrix = () => {
 
   const getRoleLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
-      'unspecified': 0,
-      'beginner': 1,
-      'intermediate': 2,
-      'advanced': 3
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
     };
-    return priorities[level.toLowerCase()] ?? 0;
+    return priorities[level.toLowerCase()] ?? 3;
   };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
@@ -100,13 +100,19 @@ export const SkillsMatrix = () => {
       return matchesLevel && matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
+      const aRoleLevel = (a.roleLevel || 'unspecified').toLowerCase();
+      const bRoleLevel = (b.roleLevel || 'unspecified').toLowerCase();
+      
+      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
+      if (roleLevelDiff !== 0) return roleLevelDiff;
+
       const aState = currentStates[a.title];
       const bState = currentStates[b.title];
       
       const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
       const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
       
-      const levelDiff = getLevelPriority(bLevel) - getLevelPriority(aLevel);
+      const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
       const aInterest = (aState?.requirement || a.requirement || 'unknown').toLowerCase();
