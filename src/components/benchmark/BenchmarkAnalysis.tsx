@@ -42,23 +42,18 @@ export const BenchmarkAnalysis = () => {
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  // Calculate skill goals from matching skills only
-  const skillGoals = matchingSkills.filter(skill => {
-    const currentSkillState = currentStates[skill.title];
-    return currentSkillState?.requirement === 'required' || 
-           currentSkillState?.requirement === 'skill_goal';
-  });
+  // Calculate skill goals
+  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
+    .filter(skill => {
+      if (!toggledSkills.has(skill.title)) return false;
+      const currentSkillState = currentStates[skill.title];
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      return requirement === 'required' || requirement === 'skill_goal';
+    });
 
-  const totalSkillsCount = matchingSkills.length;
-  const skillGoalsCount = skillGoals.length;
-  const matchPercentage = Math.round((matchingSkills.length / toggledRoleSkills.length) * 100);
-
-  console.log('Skill Goals Calculation:', {
-    totalMatchingSkills: totalSkillsCount,
-    skillGoalsCount,
-    matchingSkills: matchingSkills.map(s => s.title),
-    skillGoals: skillGoals.map(s => s.title)
-  });
+  const totalSkillsCount = toggledRoleSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
+  const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
   return (
     <div className="space-y-6">
@@ -94,7 +89,7 @@ export const BenchmarkAnalysis = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Match</span>
                 <span className="text-sm text-foreground">
-                  {matchingSkills.length} out of {toggledRoleSkills.length}
+                  {matchingSkillsCount} out of {totalSkillsCount}
                 </span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
@@ -107,8 +102,8 @@ export const BenchmarkAnalysis = () => {
           </div>
 
           <SkillGoalsWidget 
-            totalSkills={totalSkillsCount}
-            skillGoalsCount={skillGoalsCount}
+            totalSkills={toggledRoleSkills.length}
+            skillGoalsCount={skillGoals.length}
           />
 
           {skillGoals.length > 0 && (
