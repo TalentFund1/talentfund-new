@@ -1,11 +1,14 @@
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
+import { professionalLevels, managerialLevels } from "./data/levelData";
 import { RoleSelection } from "./RoleSelection";
 
 const roles = {
@@ -45,23 +48,13 @@ export const BenchmarkAnalysis = () => {
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
-  // Calculate total skill goals - skills that are marked as required in role definition
-  const skillGoalCount = toggledRoleSkills.filter(skill => 
-    skill.requirement?.toLowerCase() === 'required'
-  ).length;
+  // Calculate competency match
+  const competencyTotal = 12;
+  const competencyMatch = 12;
 
-  // Calculate matching skill goals - skills that are both matched and marked as required
-  const matchingSkillGoals = matchingSkills.filter(skill => 
-    skill.requirement?.toLowerCase() === 'required'
-  ).length;
-
-  console.log('Skill Goals Debug:', {
-    totalToggled: toggledRoleSkills.length,
-    skillGoalCount,
-    matchingSkillGoals,
-    toggledSkills: Array.from(toggledSkills),
-    roleSkills: currentRoleSkills
-  });
+  // Calculate skill goals
+  const skillGoalTotal = 12;
+  const skillGoalMatch = 8;
 
   return (
     <div className="space-y-6">
@@ -111,12 +104,12 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Competency Match</span>
-                <span className="text-sm text-foreground">12 out of 12</span>
+                <span className="text-sm text-foreground">{competencyMatch} out of {competencyTotal}</span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(12/12) * 100}%` }} 
+                  style={{ width: `${(competencyMatch/competencyTotal) * 100}%` }} 
                 />
               </div>
             </div>
@@ -124,12 +117,12 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">{matchingSkillGoals} out of {skillGoalCount}</span>
+                <span className="text-sm text-foreground">{skillGoalMatch} out of {skillGoalTotal}</span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(matchingSkillGoals/skillGoalCount) * 100}%` }} 
+                  style={{ width: `${(skillGoalMatch/skillGoalTotal) * 100}%` }} 
                 />
               </div>
             </div>
