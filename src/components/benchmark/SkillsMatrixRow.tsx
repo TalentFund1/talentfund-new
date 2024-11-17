@@ -6,6 +6,7 @@ import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { RoleBenchmarkCell } from "./RoleBenchmarkCell";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -34,19 +35,6 @@ export const SkillsMatrixRow = ({
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
-  };
-
-  const getLevelIcon = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'advanced':
-        return <Star className="w-4 h-4 text-primary-accent" />;
-      case 'intermediate':
-        return <Shield className="w-4 h-4 text-primary-icon" />;
-      case 'beginner':
-        return <Target className="w-4 h-4 text-[#008000]" />;
-      default:
-        return <CircleDashed className="w-4 h-4 text-gray-400" />;
-    }
   };
 
   const getRoleSkillState = () => {
@@ -81,15 +69,10 @@ export const SkillsMatrixRow = ({
         </TableCell>
       )}
       {isRoleBenchmark && roleSkillState && (
-        <TableCell className="text-center border-r border-blue-200 py-2">
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              {getLevelIcon(roleSkillState.level)}
-              <span className="text-sm font-medium capitalize">{roleSkillState.level}</span>
-            </div>
-            <span className="text-xs text-gray-600 capitalize">{roleSkillState.required}</span>
-          </div>
-        </TableCell>
+        <RoleBenchmarkCell 
+          level={roleSkillState.level} 
+          requirement={roleSkillState.required ? 'required' : 'preferred'} 
+        />
       )}
       <SkillLevelCell 
         initialLevel={skill.level || 'unspecified'}
