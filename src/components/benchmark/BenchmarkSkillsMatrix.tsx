@@ -14,6 +14,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { SkillGoalSection } from "./SkillGoalSection";
+import { roleSkills } from "../skills/data/roleSkills";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -39,14 +40,46 @@ export const BenchmarkSkillsMatrix = () => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { getTrackForRole } = useTrack();
 
-  // Get the current track for the selected role
-  const currentTrack = getTrackForRole(selectedRole);
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  
+  // Get all skills for the selected role
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ].filter(skill => toggledSkills.has(skill.title));
+
+  // Get matching skills by comparing employee's skills with role requirements
+  const employeeSkills = getEmployeeSkills(id || "");
+  const matchingSkills = allRoleSkills.filter(roleSkill => 
+    employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
+  );
+
+  // Filter skills that are marked as skill goals AND are matching skills
+  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
+    .filter(skill => {
+      if (!toggledSkills.has(skill.title)) {
+        return false;
+      }
+
+      // Check if it's a matching skill
+      const isMatching = matchingSkills.some(matchingSkill => 
+        matchingSkill.title === skill.title
+      );
+
+      if (!isMatching) {
+        return false;
+      }
+
+      const currentSkillState = currentStates[skill.title];
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      
+      return requirement === 'required' || requirement === 'skill_goal';
+    });
 
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
   }, [benchmarkSearchSkills]);
-
-  const employeeSkills = getEmployeeSkills(id || "");
 
   const getRoleLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
@@ -105,7 +138,6 @@ export const BenchmarkSkillsMatrix = () => {
       return matchesLevel && matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
-      // Sort by Role Skills level
       const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
       const bCompetencyState = getSkillCompetencyState(b.title, roleLevel.toLowerCase());
       
@@ -138,19 +170,6 @@ export const BenchmarkSkillsMatrix = () => {
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
-  // Filter skills that are marked as skill goals
-  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
-    .filter(skill => {
-      if (!toggledSkills.has(skill.title)) {
-        return false;
-      }
-
-      const currentSkillState = currentStates[skill.title];
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
-      
-      return requirement === 'required' || requirement === 'skill_goal';
-    });
-
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
@@ -165,7 +184,7 @@ export const BenchmarkSkillsMatrix = () => {
           <RoleSelection 
             selectedRole={selectedRole}
             selectedLevel={roleLevel}
-            currentTrack={currentTrack}
+            currentTrack={getTrackForRole(selectedRole)}
             onRoleChange={setSelectedRole}
             onLevelChange={setRoleLevel}
             onTrackChange={() => {}}
