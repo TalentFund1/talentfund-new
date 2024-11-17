@@ -11,7 +11,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
-import { Progress } from "@/components/ui/progress";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -30,28 +29,6 @@ export const SkillsMatrix = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   const employeeSkills = getEmployeeSkills(id || "");
-
-  // Calculate skill goals stats
-  const calculateSkillGoals = () => {
-    const totalSkills = Object.keys(currentStates).length;
-    const skillGoals = Object.values(currentStates).filter(
-      state => state?.requirement === 'required'
-    ).length;
-    
-    console.log('Skill Goals calculation:', {
-      total: totalSkills,
-      goals: skillGoals,
-      states: currentStates
-    });
-
-    return {
-      total: totalSkills,
-      goals: skillGoals,
-      percentage: totalSkills > 0 ? (skillGoals / totalSkills) * 100 : 0
-    };
-  };
-
-  const skillGoalsStats = calculateSkillGoals();
 
   const getLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
@@ -200,16 +177,6 @@ export const SkillsMatrix = () => {
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
         />
-
-        <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Skill Goals</span>
-            <span className="text-sm text-muted-foreground">
-              {skillGoalsStats.goals} out of {skillGoalsStats.total}
-            </span>
-          </div>
-          <Progress value={skillGoalsStats.percentage} className="h-2" />
-        </div>
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
