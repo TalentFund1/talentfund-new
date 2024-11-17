@@ -11,6 +11,16 @@ import { useCompetencyStateReader } from "../../skills/competency/CompetencyStat
 
 const ITEMS_PER_PAGE = 10;
 
+const getRoleLevelPriority = (level: string = 'unspecified') => {
+  const priorities: { [key: string]: number } = {
+    'advanced': 0,
+    'intermediate': 1,
+    'beginner': 2,
+    'unspecified': 3
+  };
+  return priorities[level.toLowerCase()] ?? 3;
+};
+
 export const BenchmarkSkillsContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
@@ -49,7 +59,25 @@ export const BenchmarkSkillsContent = () => {
 
       return matchesInterest && matchesSearch;
     })
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .sort((a, b) => {
+      // Sort by Role Skills level first
+      const aState = getSkillCompetencyState(a.title, 'p4');
+      const bState = getSkillCompetencyState(b.title, 'p4');
+      
+      const aRoleLevel = (aState?.level || 'unspecified').toLowerCase();
+      const bRoleLevel = (bState?.level || 'unspecified').toLowerCase();
+      
+      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
+      if (roleLevelDiff !== 0) return roleLevelDiff;
+
+      // If Role Skills levels are the same, sort by requirement
+      const aRequired = aState?.required === 'required';
+      const bRequired = bState?.required === 'required';
+      if (aRequired !== bRequired) return aRequired ? -1 : 1;
+
+      // Finally, sort alphabetically by title
+      return a.title.localeCompare(b.title);
+    });
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
