@@ -29,11 +29,13 @@ export const SkillsMatrixContent = ({
   setSelectedInterest,
   selectedSkillLevel,
   setSelectedSkillLevel,
-  selectedSearchSkills,
+  selectedSearchSkills = [], // Provide default empty array
   setSelectedSearchSkills,
   visibleItems,
   observerTarget
 }: SkillsMatrixContentProps) => {
+  console.log('Matrix content selected skills:', selectedSearchSkills); // Debug log
+
   const removeSearchSkill = (skill: string) => {
     setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
   };

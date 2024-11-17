@@ -27,10 +27,12 @@ export const BenchmarkMatrixFilters = ({
   setSelectedInterest,
   selectedSkillLevel,
   setSelectedSkillLevel,
-  selectedSearchSkills,
+  selectedSearchSkills = [], // Provide default empty array
   removeSearchSkill,
   clearSearch,
 }: BenchmarkMatrixFiltersProps) => {
+  console.log('Selected search skills:', selectedSearchSkills); // Debug log
+
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
@@ -91,7 +93,7 @@ export const BenchmarkMatrixFilters = ({
         )}
       </div>
 
-      {selectedSearchSkills.length > 0 && (
+      {selectedSearchSkills?.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {selectedSearchSkills.map((skill, index) => (
             <Badge 
