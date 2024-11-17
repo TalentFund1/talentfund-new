@@ -135,17 +135,21 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
         selectedLevel={selectedLevel}
       />
 
-      <SkillSection 
-        title="Required Skills" 
-        skills={requiredSkills} 
-        count={requiredSkills.length} 
-      />
+      {requiredSkills.length > 0 && (
+        <SkillSection 
+          title="Required Skills" 
+          skills={requiredSkills} 
+          count={requiredSkills.length} 
+        />
+      )}
       
-      <SkillSection 
-        title="Preferred Skills" 
-        skills={preferredSkills} 
-        count={preferredSkills.length} 
-      />
+      {preferredSkills.length > 0 && (
+        <SkillSection 
+          title="Preferred Skills" 
+          skills={preferredSkills} 
+          count={preferredSkills.length} 
+        />
+      )}
       
       <SkillSection 
         title="Missing Skills" 
