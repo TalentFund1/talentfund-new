@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -34,11 +35,35 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   });
 
+  // Auto-populate skills when viewing a role profile
+  useEffect(() => {
+    if (id) {
+      console.log('Auto-populating skills for role:', id);
+      const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
+      
+      if (currentRoleSkills) {
+        const allSkills = [
+          ...(currentRoleSkills.specialized || []),
+          ...(currentRoleSkills.common || []),
+          ...(currentRoleSkills.certifications || [])
+        ].map(skill => skill.title);
+
+        console.log('Found skills to auto-populate:', allSkills);
+        
+        setSkillsByRole(prev => ({
+          ...prev,
+          [id]: new Set(allSkills)
+        }));
+      }
+    }
+  }, [id]);
+
   // Get the current role's toggled skills
   const toggledSkills = skillsByRole[id || '123'] || new Set<string>();
 
   // Update skills for the current role
   const setToggledSkills = (newSkills: Set<string>) => {
+    console.log('Updating toggled skills:', Array.from(newSkills));
     setSkillsByRole(prev => ({
       ...prev,
       [id || '123']: newSkills
