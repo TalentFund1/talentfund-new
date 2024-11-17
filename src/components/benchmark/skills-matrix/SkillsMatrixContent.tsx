@@ -1,22 +1,54 @@
 import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
+import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
+import { useRef } from "react";
 
 interface SkillsMatrixContentProps {
   filteredSkills: any[];
-  observerTarget: React.RefObject<HTMLDivElement>;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  selectedLevel: string;
+  setSelectedLevel: (level: string) => void;
+  selectedInterest: string;
+  setSelectedInterest: (interest: string) => void;
+  selectedSearchSkills: string[];
+  setSelectedSearchSkills: (skills: string[]) => void;
   visibleItems: number;
-  totalItems: number;
+  observerTarget: React.RefObject<HTMLDivElement>;
 }
 
-export const SkillsMatrixContent = ({ 
+export const SkillsMatrixContent = ({
   filteredSkills,
-  observerTarget,
+  searchTerm,
+  setSearchTerm,
+  selectedLevel,
+  setSelectedLevel,
+  selectedInterest,
+  setSelectedInterest,
+  selectedSearchSkills,
+  setSelectedSearchSkills,
   visibleItems,
-  totalItems
+  observerTarget
 }: SkillsMatrixContentProps) => {
+  const removeSearchSkill = (skill: string) => {
+    setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
+  };
+
   return (
     <>
+      <BenchmarkMatrixFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
+        selectedInterest={selectedInterest}
+        setSelectedInterest={setSelectedInterest}
+        selectedSearchSkills={selectedSearchSkills}
+        removeSearchSkill={removeSearchSkill}
+        clearSearch={() => setSearchTerm("")}
+      />
+
       <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
         <Table>
           <SkillsMatrixTableHeader 
@@ -24,7 +56,7 @@ export const SkillsMatrixContent = ({
             isRoleBenchmark={true}
           />
           <TableBody>
-            {filteredSkills.map((skill) => (
+            {filteredSkills.slice(0, visibleItems).map((skill) => (
               <SkillsMatrixRow 
                 key={skill.title} 
                 skill={skill}
@@ -36,7 +68,7 @@ export const SkillsMatrixContent = ({
         </Table>
       </div>
 
-      {visibleItems < totalItems && (
+      {visibleItems < filteredSkills.length && (
         <div 
           ref={observerTarget} 
           className="h-10 flex items-center justify-center"
