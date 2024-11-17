@@ -11,8 +11,6 @@ interface BenchmarkMatrixFiltersProps {
   setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
-  selectedSkillLevel: string;
-  setSelectedSkillLevel: (level: string) => void;
   selectedSearchSkills: string[];
   removeSearchSkill: (skill: string) => void;
   clearSearch: () => void;
@@ -25,8 +23,6 @@ export const BenchmarkMatrixFilters = ({
   setSelectedLevel,
   selectedInterest,
   setSelectedInterest,
-  selectedSkillLevel,
-  setSelectedSkillLevel,
   selectedSearchSkills,
   removeSearchSkill,
   clearSearch,
@@ -56,19 +52,6 @@ export const BenchmarkMatrixFilters = ({
             <SelectItem value="required">Skill Goal</SelectItem>
             <SelectItem value="not-interested">Not Interested</SelectItem>
             <SelectItem value="unknown">Unknown</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedSkillLevel} onValueChange={setSelectedSkillLevel}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Level" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Skill Level</SelectItem>
-            <SelectItem value="advanced">Advanced</SelectItem>
-            <SelectItem value="intermediate">Intermediate</SelectItem>
-            <SelectItem value="beginner">Beginner</SelectItem>
-            <SelectItem value="unspecified">Unspecified</SelectItem>
           </SelectContent>
         </Select>
       </div>

@@ -11,6 +11,7 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
+import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 
@@ -29,7 +30,6 @@ export const BenchmarkSkillsMatrix = () => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
-  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -41,12 +41,22 @@ export const BenchmarkSkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-
+  
+  // Get all skills for the selected role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
+
+  // Calculate skill goals
+  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
+    .filter(skill => {
+      if (!toggledSkills.has(skill.title)) return false;
+      const currentSkillState = currentStates[skill.title];
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      return requirement === 'required' || requirement === 'skill_goal';
+    });
 
   const getRoleLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
@@ -67,7 +77,6 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
-      let matchesSkillLevel = true;
 
       const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
       const roleSkillLevel = competencyState?.level || 'unspecified';
@@ -95,11 +104,6 @@ export const BenchmarkSkillsMatrix = () => {
         }
       }
 
-      if (selectedSkillLevel !== 'all') {
-        const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
-        matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
-      }
-
       if (selectedSearchSkills.length > 0) {
         matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
@@ -108,7 +112,7 @@ export const BenchmarkSkillsMatrix = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
+      return matchesLevel && matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
       const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
@@ -120,6 +124,7 @@ export const BenchmarkSkillsMatrix = () => {
       const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
+      // If levels are the same, sort alphabetically
       return a.title.localeCompare(b.title);
     });
 
@@ -168,6 +173,13 @@ export const BenchmarkSkillsMatrix = () => {
           selectedLevel={roleLevel}
         />
 
+        {skillGoals.length > 0 && (
+          <SkillGoalSection 
+            skills={skillGoals}
+            count={skillGoals.length}
+          />
+        )}
+
         <SkillsMatrixContent 
           filteredSkills={filteredSkills}
           searchTerm={searchTerm}
@@ -176,8 +188,6 @@ export const BenchmarkSkillsMatrix = () => {
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
-          selectedSkillLevel={selectedSkillLevel}
-          setSelectedSkillLevel={setSelectedSkillLevel}
           selectedSearchSkills={selectedSearchSkills}
           setSelectedSearchSkills={setSelectedSearchSkills}
           visibleItems={visibleItems}
