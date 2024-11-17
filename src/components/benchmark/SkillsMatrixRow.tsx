@@ -1,6 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
+import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
@@ -91,10 +92,17 @@ export const SkillsMatrixRow = ({
           </div>
         </TableCell>
       )}
-      <SkillLevelCell 
-        initialLevel={skill.level || 'unspecified'}
-        skillTitle={skill.title}
-      />
+      {isRoleBenchmark ? (
+        <StaticSkillLevelCell 
+          initialLevel={skill.level || 'unspecified'}
+          skillTitle={skill.title}
+        />
+      ) : (
+        <SkillLevelCell 
+          initialLevel={skill.level || 'unspecified'}
+          skillTitle={skill.title}
+        />
+      )}
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
