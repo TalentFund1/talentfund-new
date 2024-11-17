@@ -1,12 +1,12 @@
 import { TableCell } from "@/components/ui/table";
 import { Star, Shield, Target, CircleDashed, Check, Heart } from "lucide-react";
 
-interface StaticSkillLevelCellProps {
+interface RoleBenchmarkCellProps {
   level: string;
   requirement: string;
 }
 
-export const StaticSkillLevelCell = ({ level, requirement }: StaticSkillLevelCellProps) => {
+export const RoleBenchmarkCell = ({ level, requirement }: RoleBenchmarkCellProps) => {
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
@@ -49,12 +49,12 @@ export const StaticSkillLevelCell = ({ level, requirement }: StaticSkillLevelCel
             {requirement === 'required' ? (
               <>
                 <Check className="w-3.5 h-3.5" />
-                <span>Required</span>
+                <span>Skill Goal</span>
               </>
             ) : (
               <>
                 <Heart className="w-3.5 h-3.5" />
-                <span>Preferred</span>
+                <span>Skill Goal</span>
               </>
             )}
           </span>

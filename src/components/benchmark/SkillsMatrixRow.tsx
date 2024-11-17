@@ -1,12 +1,11 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
-import { SkillLevelCell } from "./SkillLevelCell";
+import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -63,7 +62,7 @@ export const SkillsMatrixRow = ({
   const roleSkillState = getRoleSkillState();
   const currentState = currentStates[skill.title] || {
     level: skill.level || 'unspecified',
-    requirement: skill.requirement || 'required'
+    requirement: 'required'
   };
 
   return (
@@ -92,14 +91,10 @@ export const SkillsMatrixRow = ({
               {getLevelIcon(roleSkillState.level)}
               <span className="text-sm font-medium capitalize">{roleSkillState.level}</span>
             </div>
-            <span className="text-xs text-gray-600 capitalize">{roleSkillState.required}</span>
+            <span className="text-xs text-gray-600 capitalize">{roleSkillState.required ? 'Required' : 'Preferred'}</span>
           </div>
         </TableCell>
       )}
-      <SkillLevelCell 
-        initialLevel={skill.level || 'unspecified'}
-        skillTitle={skill.title}
-      />
       <StaticSkillLevelCell 
         level={currentState.level}
         requirement={currentState.requirement}
