@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -19,6 +18,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       const parsed = JSON.parse(savedSkills);
       const result: Record<string, Set<string>> = {};
       
+      // Convert the parsed arrays back to Sets
       Object.entries(parsed).forEach(([roleId, skills]) => {
         if (Array.isArray(skills)) {
           result[roleId] = new Set(skills.filter(skill => 
@@ -34,30 +34,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   });
 
-  useEffect(() => {
-    if (id === "123") { // AI Engineer ID
-      const aiEngineerSkills = roleSkills["123"];
-      const allSkills = [
-        ...aiEngineerSkills.specialized.map(skill => skill.title),
-        ...aiEngineerSkills.common.map(skill => skill.title),
-        ...aiEngineerSkills.certifications.map(skill => skill.title)
-      ];
-      
-      console.log('Auto-populating AI Engineer skills:', allSkills);
-      
-      setSkillsByRole(prev => ({
-        ...prev,
-        [id]: new Set(allSkills)
-      }));
-    }
-  }, [id]);
-
   // Get the current role's toggled skills
   const toggledSkills = skillsByRole[id || '123'] || new Set<string>();
 
   // Update skills for the current role
   const setToggledSkills = (newSkills: Set<string>) => {
-    console.log('Updating toggled skills for role:', id, Array.from(newSkills));
     setSkillsByRole(prev => ({
       ...prev,
       [id || '123']: newSkills
@@ -67,6 +48,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   // Save to localStorage whenever skillsByRole changes
   useEffect(() => {
     try {
+      // Convert Sets to arrays for JSON serialization
       const serializable = Object.fromEntries(
         Object.entries(skillsByRole).map(([roleId, skills]) => [
           roleId,
@@ -75,7 +57,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       );
       
       localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
-      console.log('Saved skills to localStorage:', serializable);
     } catch (error) {
       console.error('Error saving skills:', error);
     }
