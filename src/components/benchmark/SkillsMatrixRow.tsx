@@ -37,17 +37,24 @@ export const SkillsMatrixRow = ({
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const getLevelIcon = (level: string) => {
+  const getBorderColorClass = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return <Star className="w-4 h-4 text-primary-accent" />;
+        return 'border-primary-accent bg-primary-accent/10';
       case 'intermediate':
-        return <Shield className="w-4 h-4 text-primary-icon" />;
+        return 'border-primary-icon bg-primary-icon/10';
       case 'beginner':
-        return <Target className="w-4 h-4 text-[#008000]" />;
+        return 'border-[#008000] bg-[#008000]/10';
       default:
-        return <CircleDashed className="w-4 h-4 text-gray-400" />;
+        return 'border-gray-400 bg-gray-100/50';
     }
+  };
+
+  const getLowerBorderColorClass = (level: string, required: string) => {
+    if (required.toLowerCase() !== 'required') {
+      return 'border-[#e5e7eb]';
+    }
+    return getBorderColorClass(level).split(' ')[0];
   };
 
   const getRoleSkillState = () => {
@@ -82,13 +89,33 @@ export const SkillsMatrixRow = ({
         </TableCell>
       )}
       {isRoleBenchmark && roleSkillState && (
-        <TableCell className="text-center border-r border-blue-200 py-2">
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              {getLevelIcon(roleSkillState.level)}
-              <span className="text-sm font-medium capitalize">{roleSkillState.level}</span>
+        <TableCell className="text-center border-r border-blue-200 py-2 p-0">
+          <div className="flex flex-col items-center">
+            <div className={`
+              rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
+              border-2 ${getBorderColorClass(roleSkillState.level)}
+            `}>
+              <span className="flex items-center gap-2">
+                {roleSkillState.level === 'advanced' ? <Star className="w-3.5 h-3.5 text-primary-accent" /> :
+                 roleSkillState.level === 'intermediate' ? <Shield className="w-3.5 h-3.5 text-primary-icon" /> :
+                 roleSkillState.level === 'beginner' ? <Target className="w-3.5 h-3.5 text-[#008000]" /> :
+                 <CircleDashed className="w-3.5 h-3.5 text-gray-400" />}
+                {roleSkillState.level.charAt(0).toUpperCase() + roleSkillState.level.slice(1)}
+              </span>
             </div>
-            <span className="text-xs text-gray-600 capitalize">{roleSkillState.required}</span>
+            <div className={`
+              text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+              border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+              ${getLowerBorderColorClass(roleSkillState.level, roleSkillState.required)}
+            `}>
+              <span className="flex items-center gap-1.5">
+                {roleSkillState.required === 'required' ? <Check className="w-3.5 h-3.5" /> :
+                 roleSkillState.required === 'preferred' ? <CircleDashed className="w-3.5 h-3.5" /> :
+                 <CircleDashed className="w-3.5 h-3.5" />}
+                {roleSkillState.required === 'required' ? 'Required' : 
+                 roleSkillState.required === 'preferred' ? 'Preferred' : 'Preferred'}
+              </span>
+            </div>
           </div>
         </TableCell>
       )}
