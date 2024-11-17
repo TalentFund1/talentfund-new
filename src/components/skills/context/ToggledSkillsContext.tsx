@@ -43,29 +43,48 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   // Update skills for the current role
   const setToggledSkills = (newSkills: Set<string>) => {
     console.log('Setting toggled skills for role', id || '123', Array.from(newSkills));
-    setSkillsByRole(prev => ({
-      ...prev,
-      [id || '123']: newSkills
-    }));
+    setSkillsByRole(prev => {
+      const updated = {
+        ...prev,
+        [id || '123']: newSkills
+      };
+      
+      // Save to localStorage immediately after state update
+      try {
+        const serializable = Object.fromEntries(
+          Object.entries(updated).map(([roleId, skills]) => [
+            roleId,
+            Array.from(skills)
+          ])
+        );
+        localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
+        console.log('Successfully saved skills to localStorage:', serializable);
+      } catch (error) {
+        console.error('Error saving skills:', error);
+      }
+      
+      return updated;
+    });
   };
 
-  // Save to localStorage whenever skillsByRole changes
+  // Load saved skills when role changes
   useEffect(() => {
-    try {
-      // Convert Sets to arrays for JSON serialization
-      const serializable = Object.fromEntries(
-        Object.entries(skillsByRole).map(([roleId, skills]) => [
-          roleId,
-          Array.from(skills)
-        ])
-      );
-      
-      console.log('Saving skills to localStorage:', serializable);
-      localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
-    } catch (error) {
-      console.error('Error saving skills:', error);
+    const savedSkills = localStorage.getItem('toggledSkillsByRole');
+    if (savedSkills) {
+      try {
+        const parsed = JSON.parse(savedSkills);
+        const currentRoleSkills = parsed[id || '123'];
+        if (Array.isArray(currentRoleSkills)) {
+          setSkillsByRole(prev => ({
+            ...prev,
+            [id || '123']: new Set(currentRoleSkills)
+          }));
+        }
+      } catch (error) {
+        console.error('Error loading saved skills for role:', error);
+      }
     }
-  }, [skillsByRole]);
+  }, [id]);
 
   return (
     <ToggledSkillsContext.Provider value={{ toggledSkills, setToggledSkills }}>
