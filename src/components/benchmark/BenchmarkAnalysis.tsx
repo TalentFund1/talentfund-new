@@ -9,7 +9,7 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
-import { professionalLevels } from "./data/levelData";
+import { professionalLevels, managerialLevels } from "./data/levelData";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,9 +17,16 @@ export const BenchmarkAnalysis = () => {
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "123");
   const { selectedRole, setSelectedRole, selectedLevel, setSelectedLevel } = useRoleStore();
+  const { getTrackForRole } = useTrack();
   
   // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  
+  // Get the current track for the selected role
+  const currentTrack = getTrackForRole(selectedRole);
+  
+  // Determine which levels to show based on the track
+  const levels = currentTrack === "Managerial" ? managerialLevels : professionalLevels;
   
   // Calculate total skills for the selected role
   const totalSkills = [
@@ -78,7 +85,7 @@ export const BenchmarkAnalysis = () => {
                 <SelectValue placeholder="Level" />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(professionalLevels).map(([value, label]) => (
+                {Object.entries(levels).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
                   </SelectItem>
