@@ -12,8 +12,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { id } = useParams<{ id: string }>();
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
     const savedSkills = localStorage.getItem('toggledSkillsByRole');
-    console.log('Loading saved skills from localStorage:', savedSkills);
-    
     if (!savedSkills) return {};
     
     try {
@@ -29,7 +27,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         }
       });
       
-      console.log('Loaded skills by role:', result);
       return result;
     } catch (error) {
       console.error('Error loading saved skills:', error);
@@ -42,7 +39,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   // Update skills for the current role
   const setToggledSkills = (newSkills: Set<string>) => {
-    console.log('Setting toggled skills for role', id || '123', Array.from(newSkills));
     setSkillsByRole(prev => ({
       ...prev,
       [id || '123']: newSkills
@@ -60,7 +56,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         ])
       );
       
-      console.log('Saving skills to localStorage:', serializable);
       localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
     } catch (error) {
       console.error('Error saving skills:', error);
