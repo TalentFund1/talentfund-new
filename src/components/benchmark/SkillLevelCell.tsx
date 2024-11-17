@@ -82,8 +82,8 @@ export const SkillLevelCell = ({
   };
 
   return (
-    <TableCell className="border-r border-blue-200 p-2">
-      <div className="flex flex-col items-center gap-1">
+    <TableCell className="border-r border-blue-200 p-1">
+      <div className="flex flex-col items-center gap-0.5">
         <Select 
           value={currentState.level} 
           onValueChange={(value) => {
@@ -92,14 +92,14 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            rounded-lg px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
+            rounded-lg px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[34px] text-[#1f2144]
             ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
               currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
               currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
               'bg-gray-100/50 border-2 border-gray-400'}
           `}>
             <SelectValue>
-              <span className="flex items-center gap-2.5">
+              <span className="flex items-center gap-2">
                 {getLevelIcon(currentState.level)}
                 {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
               </span>
@@ -125,8 +125,8 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            text-sm px-4 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
-            border-2 min-h-[38px] rounded-lg
+            text-sm px-3 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
+            border-2 min-h-[34px] rounded-lg
             ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
             ${getRequirementBackgroundClass(currentState.requirement)}
           `}>
