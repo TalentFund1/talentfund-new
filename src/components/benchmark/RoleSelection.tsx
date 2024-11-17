@@ -20,7 +20,7 @@ export const RoleSelection = ({
   onTrackChange,
   roles
 }: RoleSelectionProps) => {
-  const levels = currentTrack === "Professional" ? professionalLevels : managerialLevels;
+  const levels = currentTrack === "Managerial" ? managerialLevels : professionalLevels;
 
   return (
     <div className="flex flex-col gap-4">

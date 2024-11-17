@@ -12,6 +12,7 @@ import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { CategorizedSkills } from "./CategorizedSkills";
+import { useTrack } from "../skills/context/TrackContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,6 +29,7 @@ export const BenchmarkSkillsMatrix = () => {
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { getTrackForRole } = useTrack();
 
   const roles = {
     "123": "AI Engineer",
@@ -35,6 +37,9 @@ export const BenchmarkSkillsMatrix = () => {
     "125": "Frontend Engineer",
     "126": "Engineering Manager"
   };
+
+  // Get the current track for the selected role
+  const currentTrack = getTrackForRole(selectedRole);
 
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
@@ -146,7 +151,7 @@ export const BenchmarkSkillsMatrix = () => {
           <RoleSelection 
             selectedRole={selectedRole}
             selectedLevel={roleLevel}
-            currentTrack={"Professional"}
+            currentTrack={currentTrack}
             onRoleChange={setSelectedRole}
             onLevelChange={setRoleLevel}
             onTrackChange={() => {}}
