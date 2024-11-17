@@ -8,6 +8,9 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
+import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
+import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
+import { SkillGoalSection } from "./SkillGoalSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -38,6 +41,15 @@ export const BenchmarkAnalysis = () => {
   const matchingSkills = toggledRoleSkills.filter(roleSkill => 
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
+
+  // Calculate skill goals
+  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
+    .filter(skill => {
+      if (!toggledSkills.has(skill.title)) return false;
+      const currentSkillState = currentStates[skill.title];
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      return requirement === 'required' || requirement === 'skill_goal';
+    });
 
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
@@ -88,6 +100,18 @@ export const BenchmarkAnalysis = () => {
               </div>
             </div>
           </div>
+
+          <SkillGoalsWidget 
+            totalSkills={toggledRoleSkills.length}
+            skillGoalsCount={skillGoals.length}
+          />
+
+          {skillGoals.length > 0 && (
+            <SkillGoalSection 
+              skills={skillGoals}
+              count={skillGoals.length}
+            />
+          )}
         </div>
       </Card>
     </div>
