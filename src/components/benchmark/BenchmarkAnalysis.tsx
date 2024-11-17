@@ -45,17 +45,23 @@ export const BenchmarkAnalysis = () => {
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
-  // Calculate total skill goals from toggled skills
-  const skillGoalCount = toggledRoleSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  }).length;
+  // Calculate total skill goals - skills that are marked as required in role definition
+  const skillGoalCount = toggledRoleSkills.filter(skill => 
+    skill.requirement?.toLowerCase() === 'required'
+  ).length;
 
-  // Calculate matching skill goals - skills that are both matched and marked as skill goals
-  const matchingSkillGoals = matchingSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  }).length;
+  // Calculate matching skill goals - skills that are both matched and marked as required
+  const matchingSkillGoals = matchingSkills.filter(skill => 
+    skill.requirement?.toLowerCase() === 'required'
+  ).length;
+
+  console.log('Skill Goals Debug:', {
+    totalToggled: toggledRoleSkills.length,
+    skillGoalCount,
+    matchingSkillGoals,
+    toggledSkills: Array.from(toggledSkills),
+    roleSkills: currentRoleSkills
+  });
 
   return (
     <div className="space-y-6">
