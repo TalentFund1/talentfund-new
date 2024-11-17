@@ -33,10 +33,6 @@ export const BenchmarkSkillsContent = () => {
     return (competencyState?.level || 'unspecified').toLowerCase();
   };
 
-  const getSkillLevel = (skill: any) => {
-    return (skill.level || 'unspecified').toLowerCase();
-  };
-
   const getLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
@@ -44,7 +40,7 @@ export const BenchmarkSkillsContent = () => {
       'beginner': 2,
       'unspecified': 3
     };
-    return priorities[level.toLowerCase()] ?? 3;
+    return priorities[level] ?? 3;
   };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
@@ -70,27 +66,12 @@ export const BenchmarkSkillsContent = () => {
       return matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
-      // First sort by role skill level
-      const aRoleLevel = getRoleSkillLevel(a.title);
-      const bRoleLevel = getRoleSkillLevel(b.title);
+      // Get role skill levels
+      const aLevel = getRoleSkillLevel(a.title);
+      const bLevel = getRoleSkillLevel(b.title);
       
-      // Get skill levels for secondary sorting
-      const aSkillLevel = getSkillLevel(a);
-      const bSkillLevel = getSkillLevel(b);
-
-      // Calculate priorities
-      const aRolePriority = getLevelPriority(aRoleLevel);
-      const bRolePriority = getLevelPriority(bRoleLevel);
-      const aSkillPriority = getLevelPriority(aSkillLevel);
-      const bSkillPriority = getLevelPriority(bSkillLevel);
-
-      // Primary sort by role level
-      if (aRolePriority !== bRolePriority) {
-        return aRolePriority - bRolePriority;
-      }
-
-      // Secondary sort by skill level
-      return aSkillPriority - bSkillPriority;
+      // Sort by role skill level priority only
+      return getLevelPriority(aLevel) - getLevelPriority(bLevel);
     });
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
