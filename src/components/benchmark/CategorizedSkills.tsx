@@ -113,29 +113,23 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
 
   return (
     <div className="space-y-4">
-      {requiredSkills.length > 0 && (
-        <SkillSection 
-          title="Required Skills" 
-          skills={requiredSkills} 
-          count={requiredSkills.length} 
-        />
-      )}
+      <SkillSection 
+        title="Required Skills" 
+        skills={requiredSkills} 
+        count={requiredSkills.length} 
+      />
       
-      {preferredSkills.length > 0 && (
-        <SkillSection 
-          title="Preferred Skills" 
-          skills={preferredSkills} 
-          count={preferredSkills.length} 
-        />
-      )}
+      <SkillSection 
+        title="Preferred Skills" 
+        skills={preferredSkills} 
+        count={preferredSkills.length} 
+      />
       
-      {missingSkills.length > 0 && (
-        <SkillSection 
-          title="Missing Skills" 
-          skills={missingSkills} 
-          count={missingSkills.length} 
-        />
-      )}
+      <SkillSection 
+        title="Missing Skills" 
+        skills={missingSkills} 
+        count={missingSkills.length} 
+      />
     </div>
   );
 };
