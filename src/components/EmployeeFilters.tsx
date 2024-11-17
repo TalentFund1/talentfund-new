@@ -1,12 +1,9 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
-import { roleSkills } from './skills/data/roleSkills';
-import { useParams } from 'react-router-dom';
 
 export const EmployeeFilters = () => {
-  const { id } = useParams();
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
@@ -15,23 +12,6 @@ export const EmployeeFilters = () => {
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
 
   const allSkills = [...technicalSkills, ...softSkills];
-
-  // Auto-populate skills based on role
-  useEffect(() => {
-    if (id && roleSkills[id as keyof typeof roleSkills]) {
-      console.log('Auto-populating skills for role:', id);
-      
-      const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
-      const roleSpecificSkills = [
-        ...currentRoleSkills.specialized.map(skill => skill.title),
-        ...currentRoleSkills.common.map(skill => skill.title),
-        ...currentRoleSkills.certifications.map(skill => skill.title)
-      ];
-
-      console.log('Role-specific skills:', roleSpecificSkills);
-      setSelectedSkills(roleSpecificSkills);
-    }
-  }, [id]);
 
   const handleClearAll = () => {
     setSelectedSkills([]);
