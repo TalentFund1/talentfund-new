@@ -52,9 +52,9 @@ export const RoleBenchmark = () => {
 
   const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Auto-populate skills only if there are no saved selections for this role
+  // Auto-populate skills when role changes
   useEffect(() => {
-    console.log(`Checking if role ${roles[selectedRole]} needs skill auto-population`);
+    console.log(`Auto-populating skills for role: ${roles[selectedRole]}`);
     
     const roleSpecificSkills = [
       ...selectedRoleSkills.specialized.map(skill => skill.title),
@@ -62,16 +62,14 @@ export const RoleBenchmark = () => {
       ...selectedRoleSkills.certifications.map(skill => skill.title)
     ];
     
-    // Only set new skills if there are no existing toggled skills for this role
-    if (toggledSkills.size === 0) {
-      console.log('No existing skills found, auto-populating:', roleSpecificSkills);
-      const newToggledSkills = new Set(roleSpecificSkills);
-      setToggledSkills(newToggledSkills);
-      setBenchmarkSearchSkills(Array.from(newToggledSkills));
-    } else {
-      console.log('Existing skills found, keeping current selection:', Array.from(toggledSkills));
-      setBenchmarkSearchSkills(Array.from(toggledSkills));
-    }
+    // Create a new Set with all role-specific skills toggled on
+    const newToggledSkills = new Set(roleSpecificSkills);
+    setToggledSkills(newToggledSkills);
+    
+    // Update benchmark search skills
+    setBenchmarkSearchSkills(Array.from(newToggledSkills));
+    
+    console.log("Auto-populated skills:", roleSpecificSkills);
   }, [selectedRole, selectedRoleSkills]);
 
   useEffect(() => {
