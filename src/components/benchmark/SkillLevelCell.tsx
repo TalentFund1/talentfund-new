@@ -85,7 +85,7 @@ export const SkillLevelCell = ({
   };
 
   return (
-    <TableCell className="border-r border-blue-200 p-0">
+    <TableCell className="border-r border-blue-200 p-0 w-[180px]">
       <div className="flex flex-col items-center p-1">
         <Select 
           value={currentState.level} 
