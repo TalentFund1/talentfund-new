@@ -80,41 +80,6 @@ export const SkillLevelCell = ({
     }
   };
 
-  if (isRoleBenchmark) {
-    return (
-      <TableCell className="border-r border-blue-200 p-0">
-        <div className="flex flex-col items-center">
-          <div className={`
-            rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
-              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
-              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
-              'bg-gray-100/50 border-2 border-gray-400'}
-          `}>
-            <span className="flex items-center gap-2">
-              {getLevelIcon(currentState.level)}
-              {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
-            </span>
-          </div>
-
-          <div className={`
-            text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-            border-x-2 border-b-2 min-h-[32px] rounded-b-md
-            ${getBorderColorClass(currentState.level, currentState.requirement)}
-            ${getRequirementBackgroundClass(currentState.requirement)}
-          `}>
-            <span className="flex items-center gap-1.5">
-              {getRequirementIcon(currentState.requirement)}
-              {currentState.requirement === 'required' ? 'Skill Goal' : 
-               currentState.requirement === 'not-interested' ? 'Not Interested' : 
-               currentState.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
-            </span>
-          </div>
-        </div>
-      </TableCell>
-    );
-  }
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
