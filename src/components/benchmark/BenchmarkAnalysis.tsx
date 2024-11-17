@@ -8,6 +8,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
+import { SkillGoalSection } from "./SkillGoalSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -129,6 +130,8 @@ export const BenchmarkAnalysis = () => {
               </div>
             </div>
           </div>
+
+          <SkillGoalSection employeeId={id || "123"} />
         </div>
       </Card>
     </div>
