@@ -48,6 +48,10 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
     }
   };
 
+  if (missingSkills.length === 0) {
+    return null;
+  }
+
   return (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
