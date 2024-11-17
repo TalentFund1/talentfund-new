@@ -1,16 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
+import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
-import { roleSkills } from "../skills/data/roleSkills";
+import { roleSkills } from './data/roleSkills';
 import { RoleSelection } from "./RoleSelection";
 import { useRoleStore } from "./RoleBenchmark";
+import { CompetencyMatchSection } from "./CompetencyMatchSection";
+import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -19,17 +24,6 @@ const roles = {
   "124": "Backend Engineer",
   "125": "Frontend Engineer",
   "126": "Engineering Manager"
-};
-
-// Helper function for skill level priority
-const getRoleLevelPriority = (level: string = 'unspecified') => {
-  const priorities: { [key: string]: number } = {
-    'advanced': 0,
-    'intermediate': 1,
-    'beginner': 2,
-    'unspecified': 3
-  };
-  return priorities[level.toLowerCase()] ?? 3;
 };
 
 export const BenchmarkSkillsMatrix = () => {
@@ -154,10 +148,12 @@ export const BenchmarkSkillsMatrix = () => {
           />
         </div>
 
+        {/* Skills Matrix Filters */}
         <div className="mb-4">
           {/* Search Filter code here */}
         </div>
 
+        {/* Skills Matrix Table */}
         <SkillsMatrixContent 
           filteredSkills={filteredSkills}
           searchTerm={searchTerm}
