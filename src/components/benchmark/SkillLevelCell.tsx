@@ -51,30 +51,34 @@ export const SkillLevelCell = ({
   };
 
   const getBorderColorClass = (level: string, requirement: string) => {
-    if (requirement.toLowerCase() === 'required') {
-      switch (level.toLowerCase()) {
-        case 'advanced':
-          return 'border-primary-accent';
-        case 'intermediate':
-          return 'border-primary-icon';
-        case 'beginner':
-          return 'border-[#008000]';
-        default:
-          return 'border-gray-400';
-      }
+    // Always keep seniority-based border colors for the upper section
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return 'border-primary-accent';
+      case 'intermediate':
+        return 'border-primary-icon';
+      case 'beginner':
+        return 'border-[#008000]';
+      default:
+        return 'border-gray-400';
     }
-    return 'border-[#e5e7eb]';
+  };
+
+  const getLowerBorderColorClass = (level: string, requirement: string) => {
+    // For the lower section, use light grey for non-skill goal states
+    if (requirement.toLowerCase() !== 'required') {
+      return 'border-[#e5e7eb]';
+    }
+    // Keep seniority-based colors for skill goals
+    return getBorderColorClass(level, requirement);
   };
 
   const getRequirementBackgroundClass = (requirement: string) => {
     switch (requirement.toLowerCase()) {
       case 'required':
       case 'skill_goal':
-        return 'bg-[#F9FAFB]';
       case 'not-interested':
-        return 'bg-[#F9FAFB]';
       case 'unknown':
-        return 'bg-[#F9FAFB]';
       default:
         return 'bg-[#F9FAFB]';
     }
@@ -126,7 +130,7 @@ export const SkillLevelCell = ({
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md
-            ${getBorderColorClass(currentState.level, currentState.requirement)}
+            ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
             ${getRequirementBackgroundClass(currentState.requirement)}
           `}>
             <SelectValue>
