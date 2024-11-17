@@ -14,7 +14,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
-import { SkillGoalsSection } from "./skills-matrix/SkillGoalsSection";
+import { SkillGoalWidget } from "./skills-matrix/SkillGoalWidget";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -49,8 +49,14 @@ export const BenchmarkSkillsMatrix = () => {
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
 
+  // Get matching skills by comparing employee's skills with role requirements
+  const employeeSkills = getEmployeeSkills(id || "");
+  const matchingSkills = allRoleSkills.filter(roleSkill => 
+    employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
+  );
+
   // Filter skills that are marked as skill goals
-  const skillGoals = filterSkillsByCategory(getEmployeeSkills(id || ""), "all")
+  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) {
         return false;
@@ -61,6 +67,12 @@ export const BenchmarkSkillsMatrix = () => {
       
       return requirement === 'required' || requirement === 'skill_goal';
     });
+
+  console.log('Skill Goals:', {
+    count: skillGoals.length,
+    totalSkills: allRoleSkills.length,
+    goals: skillGoals.map(s => s.title)
+  });
 
   useEffect(() => {
     setSelectedSearchSkills(benchmarkSearchSkills);
@@ -183,8 +195,8 @@ export const BenchmarkSkillsMatrix = () => {
           selectedLevel={roleLevel}
         />
 
-        <SkillGoalsSection 
-          skills={skillGoals}
+        <SkillGoalWidget 
+          skillGoals={skillGoals}
           totalSkills={allRoleSkills.length}
         />
 
