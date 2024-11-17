@@ -80,7 +80,7 @@ export const SkillsMatrixRow = ({
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
       {showCompanySkill && (
-        <TableCell className="text-center border-r border-blue-200 py-2">
+        <TableCell className="text-center border-r border-blue-200 py-2 w-[120px]">
           <div className="flex justify-center">
             {isCompanySkill(skill.title) ? (
               <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
@@ -95,7 +95,7 @@ export const SkillsMatrixRow = ({
         </TableCell>
       )}
       {isRoleBenchmark && roleSkillState && (
-        <TableCell className="border-r border-blue-200 p-0">
+        <TableCell className="border-r border-blue-200 p-0 w-[150px]">
           <div className="flex flex-col items-center p-1">
             <div className={`
               rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
