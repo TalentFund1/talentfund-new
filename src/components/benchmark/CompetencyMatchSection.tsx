@@ -13,9 +13,9 @@ const getLevelPriority = (level: string = 'unspecified') => {
     'advanced': 3,
     'intermediate': 2,
     'beginner': 1,
-    'unspecified': 1  // Match beginner level
+    'unspecified': 0
   };
-  return priorities[level.toLowerCase()] ?? 1;
+  return priorities[level.toLowerCase()] ?? 0;
 };
 
 export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSectionProps) => {
@@ -29,17 +29,17 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
-    // If role requires advanced, don't match unspecified
-    if (roleSkillLevel.toLowerCase() === 'advanced' && employeeSkillLevel.toLowerCase() === 'unspecified') {
-      return false;
-    }
-
     // Only include skills that are marked as required
     if (roleSkillState.required.toLowerCase() !== 'required') {
       return false;
     }
 
-    return getLevelPriority(employeeSkillLevel) >= getLevelPriority(roleSkillLevel);
+    // Compare skill levels using priority numbers
+    const employeePriority = getLevelPriority(employeeSkillLevel);
+    const rolePriority = getLevelPriority(roleSkillLevel);
+
+    // Employee skill level should be equal to or higher than role requirement
+    return employeePriority >= rolePriority;
   });
 
   if (matchingSkills.length === 0) return null;
