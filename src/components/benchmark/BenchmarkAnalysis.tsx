@@ -55,8 +55,7 @@ export const BenchmarkAnalysis = () => {
   // Calculate skill goals - count skills marked as "Skill Goal" in current states
   const skillGoalMatch = toggledRoleSkills.filter(skill => {
     const currentState = currentStates[skill.title];
-    return currentState?.requirement?.toLowerCase() === 'required' || 
-           currentState?.requirement?.toLowerCase() === 'skill_goal';
+    return currentState?.requirement?.toLowerCase() === 'skill_goal';
   }).length;
 
   console.log('Skill Goals Calculation:', {
