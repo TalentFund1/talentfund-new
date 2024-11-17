@@ -98,7 +98,7 @@ export const BenchmarkSkillsMatrix = () => {
       return matchesLevel && matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
-      // Sort by Role Skills level first
+      // Sort by Role Skills level
       const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
       const bCompetencyState = getSkillCompetencyState(b.title, roleLevel.toLowerCase());
       
@@ -108,13 +108,7 @@ export const BenchmarkSkillsMatrix = () => {
       const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
-      // If levels are the same, sort by requirement (required first)
-      const aRequired = aCompetencyState?.required === 'required' ? 0 : 1;
-      const bRequired = bCompetencyState?.required === 'required' ? 0 : 1;
-      const requirementDiff = aRequired - bRequired;
-      if (requirementDiff !== 0) return requirementDiff;
-
-      // Finally, sort alphabetically
+      // If levels are the same, sort alphabetically
       return a.title.localeCompare(b.title);
     });
 
