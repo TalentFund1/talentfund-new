@@ -51,16 +51,6 @@ export const SkillsMatrix = () => {
     return priorities[requirement.toLowerCase()] ?? 3;
   };
 
-  const getRoleLevelPriority = (level: string) => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
-
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
       let matchesLevel = true;
@@ -104,7 +94,7 @@ export const SkillsMatrix = () => {
       const aRoleLevel = (a.roleLevel || 'unspecified').toLowerCase();
       const bRoleLevel = (b.roleLevel || 'unspecified').toLowerCase();
       
-      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
+      const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
       // If Role Skills levels are the same, sort by current skill level
@@ -117,13 +107,13 @@ export const SkillsMatrix = () => {
       const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
-      // If levels are the same, sort by interest/requirement
-      const aInterest = (aState?.requirement || a.requirement || 'unknown').toLowerCase();
-      const bInterest = (bState?.requirement || b.requirement || 'unknown').toLowerCase();
-      const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
-      if (interestDiff !== 0) return interestDiff;
+      // If levels are the same, sort by requirement (required first)
+      const aRequired = aState?.requirement === 'required' ? 0 : 1;
+      const bRequired = bState?.requirement === 'required' ? 0 : 1;
+      const requirementDiff = aRequired - bRequired;
+      if (requirementDiff !== 0) return requirementDiff;
 
-      // Finally, sort alphabetically by title
+      // Finally, sort alphabetically
       return a.title.localeCompare(b.title);
     });
 
