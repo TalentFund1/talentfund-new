@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Check, X } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed, Check, X } from "lucide-react";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
@@ -46,7 +46,7 @@ export const SkillLevelCell = ({
       case 'unknown':
         return <CircleDashed className="w-4 h-4" />;
       default:
-        return <Check className="w-4 h-4" />;
+        return <Heart className="w-4 h-4" />;
     }
   };
 
@@ -83,7 +83,7 @@ export const SkillLevelCell = ({
 
   return (
     <TableCell className="border-r border-blue-200 p-2">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center gap-1">
         <Select 
           value={currentState.level} 
           onValueChange={(value) => {
@@ -92,14 +92,14 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            w-[160px] h-[26px] px-3 text-sm font-medium capitalize flex items-center justify-center text-[#1f2144]
-            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent rounded-t-md rounded-b-none' : 
-              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon rounded-t-md rounded-b-none' : 
-              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000] rounded-t-md rounded-b-none' : 
-              'bg-gray-100/50 border-2 border-gray-400 rounded-t-md rounded-b-none'}
+            rounded-lg px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
+            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
+              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
+              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
+              'bg-gray-100/50 border-2 border-gray-400'}
           `}>
             <SelectValue>
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2.5">
                 {getLevelIcon(currentState.level)}
                 {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
               </span>
@@ -108,7 +108,7 @@ export const SkillLevelCell = ({
           <SelectContent>
             {['unspecified', 'beginner', 'intermediate', 'advanced'].map((level) => (
               <SelectItem key={level} value={level}>
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2.5">
                   {getLevelIcon(level)}
                   {level.charAt(0).toUpperCase() + level.slice(1)}
                 </span>
@@ -125,8 +125,8 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            w-[160px] h-[26px] px-3 text-sm font-normal text-[#1f2144] flex items-center justify-center gap-2 
-            border-x-2 border-b-2 rounded-t-none rounded-b-md
+            text-sm px-4 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
+            border-2 min-h-[38px] rounded-lg
             ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
             ${getRequirementBackgroundClass(currentState.requirement)}
           `}>
