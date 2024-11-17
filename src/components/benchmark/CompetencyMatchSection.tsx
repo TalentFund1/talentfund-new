@@ -39,25 +39,25 @@ export const CompetencyMatchSection = () => {
   const matchingSkills = getMatchingSkills();
 
   return (
-    <Card className="p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h3 className="text-lg font-semibold text-foreground">Competency Match</h3>
-          <p className="text-sm text-muted-foreground">
+    <Card className="p-6 bg-white">
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-base font-semibold text-foreground">Competency Match</h3>
+          <p className="text-sm text-muted-foreground mt-1">
             {matchingSkills.length} skills match or exceed role requirements
           </p>
         </div>
-      </div>
 
-      <div className="flex flex-wrap gap-2">
-        {matchingSkills.map((skill) => (
-          <div
-            key={skill}
-            className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary-accent/10 text-primary-accent"
-          >
-            {skill}
-          </div>
-        ))}
+        <div className="flex flex-wrap gap-2">
+          {matchingSkills.map((skill) => (
+            <div
+              key={skill}
+              className="inline-flex items-center rounded-full bg-white border border-[#E5E7EB] px-3 py-1 text-sm font-medium text-[#374151] shadow-sm"
+            >
+              {skill}
+            </div>
+          ))}
+        </div>
       </div>
     </Card>
   );
