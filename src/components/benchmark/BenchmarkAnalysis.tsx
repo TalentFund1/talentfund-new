@@ -27,9 +27,6 @@ export const BenchmarkAnalysis = () => {
   // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
-  // Get the current track for the selected role
-  const currentTrack = getTrackForRole(selectedRole);
-  
   // Get all toggled skills for the role
   const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
@@ -47,12 +44,7 @@ export const BenchmarkAnalysis = () => {
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
   // Calculate skill goals - count skills marked as "required" or have "Skill Goal" status
-  const skillGoalCount = toggledRoleSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  }).length;
-
-  // Calculate matching skill goals
+  const skillGoalCount = toggledRoleSkills.length;
   const matchingSkillGoals = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
@@ -77,7 +69,7 @@ export const BenchmarkAnalysis = () => {
             <RoleSelection 
               selectedRole={selectedRole}
               selectedLevel={selectedLevel}
-              currentTrack={currentTrack}
+              currentTrack={getTrackForRole(selectedRole)}
               onRoleChange={setSelectedRole}
               onLevelChange={setSelectedLevel}
               onTrackChange={() => {}}
