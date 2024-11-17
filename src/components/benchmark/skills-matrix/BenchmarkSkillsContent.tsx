@@ -70,19 +70,27 @@ export const BenchmarkSkillsContent = () => {
       return matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
-      // Primary sort: Role Skills level
+      // First sort by role skill level
       const aRoleLevel = getRoleSkillLevel(a.title);
       const bRoleLevel = getRoleSkillLevel(b.title);
-      const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
       
-      if (roleLevelDiff !== 0) {
-        return roleLevelDiff;
-      }
-      
-      // Secondary sort: Skill Level
+      // Get skill levels for secondary sorting
       const aSkillLevel = getSkillLevel(a);
       const bSkillLevel = getSkillLevel(b);
-      return getLevelPriority(aSkillLevel) - getLevelPriority(bSkillLevel);
+
+      // Calculate priorities
+      const aRolePriority = getLevelPriority(aRoleLevel);
+      const bRolePriority = getLevelPriority(bRoleLevel);
+      const aSkillPriority = getLevelPriority(aSkillLevel);
+      const bSkillPriority = getLevelPriority(bSkillLevel);
+
+      // Primary sort by role level
+      if (aRolePriority !== bRolePriority) {
+        return aRolePriority - bRolePriority;
+      }
+
+      // Secondary sort by skill level
+      return aSkillPriority - bSkillPriority;
     });
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
