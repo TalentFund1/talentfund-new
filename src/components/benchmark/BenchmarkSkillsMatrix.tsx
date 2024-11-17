@@ -29,6 +29,7 @@ export const BenchmarkSkillsMatrix = () => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -67,6 +68,7 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
+      let matchesSkillLevel = true;
 
       const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
       const roleSkillLevel = competencyState?.level || 'unspecified';
@@ -76,6 +78,12 @@ export const BenchmarkSkillsMatrix = () => {
       }
 
       const currentSkillState = currentStates[skill.title];
+      const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
+      
+      if (selectedSkillLevel !== 'all') {
+        matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
+      }
+
       const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
       if (selectedInterest !== 'all') {
@@ -102,7 +110,7 @@ export const BenchmarkSkillsMatrix = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesLevel && matchesInterest && matchesSearch;
+      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
     })
     .sort((a, b) => {
       const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
@@ -170,6 +178,8 @@ export const BenchmarkSkillsMatrix = () => {
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
+          selectedSkillLevel={selectedSkillLevel}
+          setSelectedSkillLevel={setSelectedSkillLevel}
           selectedSearchSkills={selectedSearchSkills}
           setSelectedSearchSkills={setSelectedSearchSkills}
           visibleItems={visibleItems}
