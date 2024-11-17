@@ -1,0 +1,23 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+interface SkillLevelFilterProps {
+  selectedLevel: string;
+  setSelectedLevel: (level: string) => void;
+}
+
+export const SkillLevelFilter = ({ selectedLevel, setSelectedLevel }: SkillLevelFilterProps) => {
+  return (
+    <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+      <SelectTrigger className="w-[180px] bg-white">
+        <SelectValue placeholder="All Levels" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="all">All Levels</SelectItem>
+        <SelectItem value="advanced">Advanced</SelectItem>
+        <SelectItem value="intermediate">Intermediate</SelectItem>
+        <SelectItem value="beginner">Beginner</SelectItem>
+        <SelectItem value="unspecified">Unspecified</SelectItem>
+      </SelectContent>
+    </Select>
+  );
+};

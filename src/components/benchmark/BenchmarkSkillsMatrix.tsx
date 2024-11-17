@@ -80,10 +80,10 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesSearch = true;
 
       const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
-      const roleSkillLevel = competencyState?.level || 'unspecified';
+      const skillLevel = competencyState?.level || 'unspecified';
 
       if (selectedLevel !== 'all') {
-        matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
+        matchesLevel = skillLevel.toLowerCase() === selectedLevel.toLowerCase();
       }
 
       const currentSkillState = currentStates[skill.title];
@@ -125,7 +125,6 @@ export const BenchmarkSkillsMatrix = () => {
       const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
-      // If levels are the same, sort alphabetically
       return a.title.localeCompare(b.title);
     });
 
@@ -149,13 +148,6 @@ export const BenchmarkSkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
-          <p className="text-sm text-muted-foreground">
-            Manage and track employee skills and competencies
-          </p>
-        </div>
-
         <div className="flex flex-col gap-4">
           <RoleSelection 
             selectedRole={selectedRole}
