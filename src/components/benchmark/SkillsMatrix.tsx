@@ -2,15 +2,13 @@ import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
-import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
-import { SearchFilter } from "@/components/market/SearchFilter";
-import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
+import { SkillsMatrixFilterSection } from "./skills-matrix/SkillsMatrixFilterSection";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -26,7 +24,6 @@ export const SkillsMatrix = () => {
   const { toast } = useToast();
   const { saveChanges, cancelChanges, hasChanges: storeHasChanges, currentStates } = useSkillsMatrixStore();
   const { matrixSearchSkills, setMatrixSearchSkills } = useSkillsMatrixSearch();
-  const allSkills = [...technicalSkills, ...softSkills];
 
   const employeeSkills = getEmployeeSkills(id || "");
 
@@ -99,33 +96,7 @@ export const SkillsMatrix = () => {
 
       return matchesLevel && matchesInterest && matchesSearch;
     })
-    .sort((a, b) => {
-      // Sort by Role Skills level first
-      const aRoleLevel = (a.roleLevel || 'unspecified').toLowerCase();
-      const bRoleLevel = (b.roleLevel || 'unspecified').toLowerCase();
-      
-      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
-      if (roleLevelDiff !== 0) return roleLevelDiff;
-
-      // If Role Skills levels are the same, sort by current skill level
-      const aState = currentStates[a.title];
-      const bState = currentStates[b.title];
-      
-      const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
-      const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
-      
-      const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
-      if (levelDiff !== 0) return levelDiff;
-
-      // If levels are the same, sort by interest/requirement
-      const aInterest = (aState?.requirement || a.requirement || 'unknown').toLowerCase();
-      const bInterest = (bState?.requirement || b.requirement || 'unknown').toLowerCase();
-      const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
-      if (interestDiff !== 0) return interestDiff;
-
-      // Finally, sort alphabetically by title
-      return a.title.localeCompare(b.title);
-    });
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -159,23 +130,15 @@ export const SkillsMatrix = () => {
           onCancel={cancelChanges}
         />
         
-        <div className="space-y-4">
-          <SearchFilter
-            label=""
-            placeholder="Search skills..."
-            items={allSkills}
-            selectedItems={matrixSearchSkills}
-            onItemsChange={setMatrixSearchSkills}
-          />
-        </div>
-        
-        <SkillsMatrixFilters 
+        <SkillsMatrixFilterSection 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           selectedLevel={selectedLevel}
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
+          matrixSearchSkills={matrixSearchSkills}
+          setMatrixSearchSkills={setMatrixSearchSkills}
         />
 
         <SkillsMatrixTable 
