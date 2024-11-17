@@ -43,8 +43,11 @@ export const BenchmarkAnalysis = () => {
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
-  // Calculate skill goals - count skills marked as "required" or have "Skill Goal" status
+  // Calculate total skills that are marked as skill goals
   const skillGoalCount = toggledRoleSkills.length;
+
+  // Calculate matching skill goals - skills that exist in both employee skills and role skills
+  // and are marked as required or skill_goal
   const matchingSkillGoals = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
