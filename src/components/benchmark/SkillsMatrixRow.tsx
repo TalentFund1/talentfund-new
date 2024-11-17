@@ -12,11 +12,17 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
   };
-  isEven: boolean;
+  isEven?: boolean;
+  showCompanySkill?: boolean;
   isRoleBenchmark?: boolean;
 }
 
-export const SkillsMatrixRow = ({ skill, isEven, isRoleBenchmark = false }: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ 
+  skill, 
+  isEven = false, 
+  showCompanySkill = true,
+  isRoleBenchmark = false 
+}: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { selectedLevel } = useRoleStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
