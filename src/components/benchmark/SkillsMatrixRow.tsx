@@ -62,6 +62,19 @@ export const SkillsMatrixRow = ({
 
   const roleSkillState = getRoleSkillState();
 
+  const getBorderColorClass = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return 'border-primary-accent bg-primary-accent/10';
+      case 'intermediate':
+        return 'border-primary-icon bg-primary-icon/10';
+      case 'beginner':
+        return 'border-[#008000] bg-[#008000]/10';
+      default:
+        return 'border-gray-400 bg-gray-100/50';
+    }
+  };
+
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
@@ -83,12 +96,26 @@ export const SkillsMatrixRow = ({
       )}
       {isRoleBenchmark && roleSkillState && (
         <TableCell className="text-center border-r border-blue-200 py-2">
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              {getLevelIcon(roleSkillState.level)}
-              <span className="text-sm font-medium capitalize">{roleSkillState.level}</span>
+          <div className="flex flex-col items-center p-1">
+            <div className={`
+              rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
+              border-2 ${getBorderColorClass(roleSkillState.level)}
+            `}>
+              <span className="flex items-center gap-2">
+                {getLevelIcon(roleSkillState.level)}
+                {roleSkillState.level.charAt(0).toUpperCase() + roleSkillState.level.slice(1)}
+              </span>
             </div>
-            <span className="text-xs text-gray-600 capitalize">{roleSkillState.required}</span>
+            <div className={`
+              text-xs px-2 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+              border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+              ${roleSkillState.required === 'required' ? getBorderColorClass(roleSkillState.level).split(' ')[0] : 'border-[#e5e7eb]'}
+            `}>
+              <span className="flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5" />
+                Required
+              </span>
+            </div>
           </div>
         </TableCell>
       )}
