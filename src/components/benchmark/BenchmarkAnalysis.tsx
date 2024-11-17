@@ -42,14 +42,17 @@ export const BenchmarkAnalysis = () => {
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  // Calculate skill goals
-  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
-    .filter(skill => {
-      if (!toggledSkills.has(skill.title)) return false;
-      const currentSkillState = currentStates[skill.title];
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
-      return requirement === 'required' || requirement === 'skill_goal';
-    });
+  console.log('Matching skills:', matchingSkills.map(skill => skill.title));
+
+  // Calculate skill goals only from matching skills
+  const skillGoals = matchingSkills.filter(skill => {
+    const currentSkillState = currentStates[skill.title];
+    const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+    console.log(`Skill ${skill.title} requirement:`, requirement);
+    return requirement === 'required' || requirement === 'skill_goal';
+  });
+
+  console.log('Skill goals:', skillGoals.map(skill => skill.title));
 
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
@@ -102,7 +105,7 @@ export const BenchmarkAnalysis = () => {
           </div>
 
           <SkillGoalsWidget 
-            totalSkills={toggledRoleSkills.length}
+            totalSkills={totalSkillsCount}
             skillGoalsCount={skillGoals.length}
           />
 
