@@ -46,6 +46,10 @@ export const BenchmarkAnalysis = () => {
     return requirement === 'required' || requirement === 'skill_goal';
   });
 
+  console.log('Matching Skills:', matchingSkills.map(s => s.title));
+  console.log('Matching Skill Goals:', matchingSkillGoals.map(s => s.title));
+  console.log('Current States:', currentStates);
+
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
