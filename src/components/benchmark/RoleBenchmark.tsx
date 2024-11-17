@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate, useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
+import { useState, useEffect } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
@@ -11,7 +11,6 @@ import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
 import { create } from "zustand";
 import { CategorizedSkills } from "./CategorizedSkills";
-import { CategorySection } from "./CategorySection";
 
 interface RoleStore {
   selectedRole: string;
@@ -41,7 +40,6 @@ export const RoleBenchmark = () => {
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
-  const [selectedCategory, setSelectedCategory] = useState("all");
 
   const currentTrack = getTrackForRole(selectedRole);
 
@@ -100,13 +98,6 @@ export const RoleBenchmark = () => {
         />
 
         <Separator className="my-6" />
-
-        {/* Category Cards Section */}
-        <CategorySection
-          selectedCategory={selectedCategory}
-          onCategorySelect={setSelectedCategory}
-          toggledSkills={toggledSkills}
-        />
 
         {/* Skills Categories Section */}
         <CategorizedSkills 

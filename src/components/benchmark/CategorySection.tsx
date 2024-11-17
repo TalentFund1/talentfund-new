@@ -1,7 +1,6 @@
 import { RequirementSection } from "./RequirementSection";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
-import { Card } from "@/components/ui/card";
 
 interface CategorySectionProps {
   selectedCategory: string;
@@ -32,9 +31,10 @@ export const CategorySection = ({
     specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
     common: getToggledSkillsCount(currentRoleSkills.common || []),
     certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
-    all: 0
+    all: 0 // Initialize with 0
   };
 
+  // Calculate total after individual counts are set
   skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
 
   const categories = [
@@ -45,19 +45,17 @@ export const CategorySection = ({
   ];
 
   return (
-    <Card className="p-6 bg-white">
-      <div className="grid grid-cols-4 gap-4">
-        {categories.map((category) => (
-          <RequirementSection
-            key={category.id}
-            title={category.title}
-            count={category.count}
-            skills={[]}
-            isSelected={selectedCategory === category.id}
-            onClick={() => onCategorySelect(category.id)}
-          />
-        ))}
-      </div>
-    </Card>
+    <div className="grid grid-cols-4 gap-4 mb-6">
+      {categories.map((category) => (
+        <RequirementSection
+          key={category.id}
+          title={category.title}
+          count={category.count}
+          skills={[]}
+          isSelected={selectedCategory === category.id}
+          onClick={() => onCategorySelect(category.id)}
+        />
+      ))}
+    </div>
   );
 };
