@@ -43,20 +43,17 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getBorderColorClass = (level: string, requirement: string) => {
-    if (requirement.toLowerCase() === 'required') {
-      switch (level.toLowerCase()) {
-        case 'advanced':
-          return 'border-primary-accent';
-        case 'intermediate':
-          return 'border-primary-icon';
-        case 'beginner':
-          return 'border-[#008000]';
-        default:
-          return 'border-gray-400';
-      }
+  const getBorderColorClass = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return 'border-primary-accent bg-primary-accent/10';
+      case 'intermediate':
+        return 'border-primary-icon bg-primary-icon/10';
+      case 'beginner':
+        return 'border-[#008000] bg-[#008000]/10';
+      default:
+        return 'border-gray-400 bg-gray-100/50';
     }
-    return 'border-[#e5e7eb]';
   };
 
   return (
@@ -64,11 +61,7 @@ export const StaticSkillLevelCell = ({
       <div className="flex flex-col items-center">
         <div className={`
           rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-          border-2 ${getBorderColorClass(currentState.level, currentState.requirement)}
-          ${currentState.level === 'advanced' ? 'bg-primary-accent/10' : 
-            currentState.level === 'intermediate' ? 'bg-primary-icon/10' : 
-            currentState.level === 'beginner' ? 'bg-[#008000]/10' : 
-            'bg-gray-100/50'}
+          border-2 ${getBorderColorClass(currentState.level)}
         `}>
           <span className="flex items-center gap-2">
             {getLevelIcon(currentState.level)}
@@ -78,7 +71,7 @@ export const StaticSkillLevelCell = ({
         <div className={`
           text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
           border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-          ${getBorderColorClass(currentState.level, currentState.requirement)}
+          ${getBorderColorClass(currentState.level).split(' ')[0]}
         `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState.requirement)}
