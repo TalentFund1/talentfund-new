@@ -2,7 +2,6 @@ import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
-import { useRef } from "react";
 
 interface SkillsMatrixContentProps {
   filteredSkills: any[];
@@ -12,6 +11,8 @@ interface SkillsMatrixContentProps {
   setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
+  selectedSkillLevel: string;
+  setSelectedSkillLevel: (level: string) => void;
   selectedSearchSkills: string[];
   setSelectedSearchSkills: (skills: string[]) => void;
   visibleItems: number;
@@ -26,6 +27,8 @@ export const SkillsMatrixContent = ({
   setSelectedLevel,
   selectedInterest,
   setSelectedInterest,
+  selectedSkillLevel,
+  setSelectedSkillLevel,
   selectedSearchSkills,
   setSelectedSearchSkills,
   visibleItems,
@@ -44,9 +47,11 @@ export const SkillsMatrixContent = ({
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
+        selectedSkillLevel={selectedSkillLevel}
+        setSelectedSkillLevel={setSelectedSkillLevel}
         selectedSearchSkills={selectedSearchSkills}
         removeSearchSkill={removeSearchSkill}
-        clearSearch={() => setSearchTerm("")}
+        clearSearch={() => setSelectedSearchSkills([])}
       />
 
       <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">

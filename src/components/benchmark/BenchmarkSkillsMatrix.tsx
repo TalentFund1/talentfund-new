@@ -29,6 +29,7 @@ export const BenchmarkSkillsMatrix = () => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -40,7 +41,7 @@ export const BenchmarkSkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-  
+
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -66,6 +67,7 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
+      let matchesSkillLevel = true;
 
       const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
       const roleSkillLevel = competencyState?.level || 'unspecified';
@@ -93,6 +95,11 @@ export const BenchmarkSkillsMatrix = () => {
         }
       }
 
+      if (selectedSkillLevel !== 'all') {
+        const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
+        matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
+      }
+
       if (selectedSearchSkills.length > 0) {
         matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
@@ -101,7 +108,7 @@ export const BenchmarkSkillsMatrix = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesLevel && matchesInterest && matchesSearch;
+      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
     })
     .sort((a, b) => {
       const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
@@ -169,6 +176,8 @@ export const BenchmarkSkillsMatrix = () => {
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
+          selectedSkillLevel={selectedSkillLevel}
+          setSelectedSkillLevel={setSelectedSkillLevel}
           selectedSearchSkills={selectedSearchSkills}
           setSelectedSearchSkills={setSelectedSearchSkills}
           visibleItems={visibleItems}
