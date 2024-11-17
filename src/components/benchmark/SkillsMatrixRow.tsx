@@ -40,13 +40,13 @@ export const SkillsMatrixRow = ({
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return <Star className="w-4 h-4 text-primary-accent" />;
+        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
       case 'intermediate':
-        return <Shield className="w-4 h-4 text-primary-icon" />;
+        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
       case 'beginner':
-        return <Target className="w-4 h-4 text-[#008000]" />;
+        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
       default:
-        return <CircleDashed className="w-4 h-4 text-gray-400" />;
+        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
     }
   };
 
@@ -95,7 +95,7 @@ export const SkillsMatrixRow = ({
         </TableCell>
       )}
       {isRoleBenchmark && roleSkillState && (
-        <TableCell className="text-center border-r border-blue-200 py-2">
+        <TableCell className="border-r border-blue-200 p-0">
           <div className="flex flex-col items-center p-1">
             <div className={`
               rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
