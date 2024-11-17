@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
+import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
@@ -15,24 +16,25 @@ export const SkillProfileMatrix = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
+  const { toast } = useToast();
   const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
   const handleToggleSkill = (skillTitle: string) => {
-    console.log('Toggling skill:', skillTitle);
     const newToggledSkills = new Set(toggledSkills);
-    
     if (newToggledSkills.has(skillTitle)) {
-      console.log('Removing skill:', skillTitle);
       newToggledSkills.delete(skillTitle);
     } else {
-      console.log('Adding skill:', skillTitle);
       newToggledSkills.add(skillTitle);
     }
-    
     setToggledSkills(newToggledSkills);
     setIsDirty(true);
+    
+    toast({
+      title: "Skill Updated",
+      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
+    });
   };
 
   // Get only the skills for the current role
