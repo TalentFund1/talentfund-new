@@ -50,8 +50,7 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getBorderColorClass = (level: string, requirement: string) => {
-    // Always keep seniority-based border colors for the upper section
+  const getBorderColorClass = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent';
@@ -65,12 +64,12 @@ export const SkillLevelCell = ({
   };
 
   const getLowerBorderColorClass = (level: string, requirement: string) => {
-    // For the lower section, use light grey for non-skill goal states
+    // For non-skill goal states, use light grey
     if (requirement.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     // Keep seniority-based colors for skill goals
-    return getBorderColorClass(level, requirement);
+    return getBorderColorClass(level);
   };
 
   const getRequirementBackgroundClass = (requirement: string) => {
