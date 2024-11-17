@@ -15,6 +15,7 @@ export const BenchmarkSkillsContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
+  const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
@@ -31,8 +32,14 @@ export const BenchmarkSkillsContent = () => {
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) return false;
 
+      let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
+
+      if (selectedLevel !== 'all') {
+        const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+        matchesLevel = (competencyState?.level || '').toLowerCase() === selectedLevel.toLowerCase();
+      }
 
       if (selectedInterest !== 'all') {
         const requirement = skill.requirement?.toLowerCase() || 'unknown';
@@ -47,9 +54,8 @@ export const BenchmarkSkillsContent = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesInterest && matchesSearch;
-    })
-    .sort((a, b) => a.title.localeCompare(b.title));
+      return matchesLevel && matchesInterest && matchesSearch;
+    });
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
@@ -75,6 +81,8 @@ export const BenchmarkSkillsContent = () => {
       <BenchmarkMatrixFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
         selectedSearchSkills={selectedSearchSkills}
