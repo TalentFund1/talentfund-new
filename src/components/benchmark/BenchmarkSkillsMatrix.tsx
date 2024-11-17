@@ -11,6 +11,7 @@ import { RoleSelection } from "./RoleSelection";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { CategorizedSkills } from "./CategorizedSkills";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -152,6 +153,12 @@ export const BenchmarkSkillsMatrix = () => {
             roles={roles}
           />
         </div>
+
+        <CategorizedSkills 
+          roleId={selectedRole}
+          employeeId={id || ""}
+          selectedLevel={roleLevel}
+        />
 
         <BenchmarkMatrixFilters
           searchTerm={searchTerm}
