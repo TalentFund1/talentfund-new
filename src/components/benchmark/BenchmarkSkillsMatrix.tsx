@@ -69,9 +69,6 @@ export const BenchmarkSkillsMatrix = () => {
     console.log("Auto-populated skills:", roleSpecificSkills);
   }, [selectedRole, currentRoleSkills, setToggledSkills, setBenchmarkSearchSkills]);
 
-  const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
