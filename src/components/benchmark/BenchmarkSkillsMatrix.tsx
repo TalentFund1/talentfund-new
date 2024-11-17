@@ -13,7 +13,6 @@ import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -30,7 +29,6 @@ export const BenchmarkSkillsMatrix = () => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
-  const [skillLevelFilter, setSkillLevelFilter] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -68,17 +66,12 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
-      let matchesSkillLevel = true;
 
       const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
       const roleSkillLevel = competencyState?.level || 'unspecified';
 
       if (selectedLevel !== 'all') {
         matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
-      }
-
-      if (skillLevelFilter !== 'all') {
-        matchesSkillLevel = roleSkillLevel.toLowerCase() === skillLevelFilter.toLowerCase();
       }
 
       const currentSkillState = currentStates[skill.title];
@@ -108,7 +101,7 @@ export const BenchmarkSkillsMatrix = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
+      return matchesLevel && matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
       const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
@@ -167,21 +160,6 @@ export const BenchmarkSkillsMatrix = () => {
           employeeId={id || ""}
           selectedLevel={roleLevel}
         />
-
-        <div className="flex gap-4 mb-4">
-          <Select value={skillLevelFilter} onValueChange={setSkillLevelFilter}>
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="Filter Skill Level" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Levels</SelectItem>
-              <SelectItem value="advanced">Advanced</SelectItem>
-              <SelectItem value="intermediate">Intermediate</SelectItem>
-              <SelectItem value="beginner">Beginner</SelectItem>
-              <SelectItem value="unspecified">Unspecified</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
 
         <SkillsMatrixContent 
           filteredSkills={filteredSkills}
