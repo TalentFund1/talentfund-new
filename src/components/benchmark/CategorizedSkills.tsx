@@ -38,7 +38,8 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const requiredSkills = allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      return competencyState?.required === 'required' && toggledSkills.has(skill.title);
+      const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+      return competencyState?.required === 'required' && toggledSkills.has(skill.title) && hasSkill;
     })
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
@@ -49,7 +50,8 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const preferredSkills = allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      return competencyState?.required === 'preferred' && toggledSkills.has(skill.title);
+      const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+      return competencyState?.required === 'preferred' && toggledSkills.has(skill.title) && hasSkill;
     })
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
