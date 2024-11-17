@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
+import { Star, Shield, Target, Heart, CircleDashed, Check, X } from "lucide-react";
 import { useSkillLevelState } from "./skill-level/SkillLevelState";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
@@ -27,31 +27,30 @@ export const SkillLevelCell = ({
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
+        return <Star className="w-4 h-4 text-primary-accent" />;
       case 'intermediate':
-        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
+        return <Shield className="w-4 h-4 text-primary-icon" />;
       case 'beginner':
-        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
+        return <Target className="w-4 h-4 text-[#008000]" />;
       default:
-        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
+        return <CircleDashed className="w-4 h-4 text-gray-400" />;
     }
   };
 
   const getRequirementIcon = (requirement: string) => {
     switch (requirement.toLowerCase()) {
       case 'required':
-        return <Check className="w-3.5 h-3.5" />;
+        return <Check className="w-4 h-4" />;
       case 'not-interested':
-        return <CircleDashed className="w-3.5 h-3.5" />;
+        return <X className="w-4 h-4" />;
       case 'unknown':
-        return <CircleDashed className="w-3.5 h-3.5" />;
+        return <CircleDashed className="w-4 h-4" />;
       default:
-        return <Heart className="w-3.5 h-3.5" />;
+        return <Heart className="w-4 h-4" />;
     }
   };
 
-  const getBorderColorClass = (level: string) => {
-    // Always keep seniority-based border colors for the upper section
+  const getBorderColorClass = (level: string, requirement: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent';
@@ -65,30 +64,26 @@ export const SkillLevelCell = ({
   };
 
   const getLowerBorderColorClass = (level: string, requirement: string) => {
-    // For the lower section, use light grey for non-skill goal states
     if (requirement.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
-    // Keep seniority-based colors for skill goals
-    return getBorderColorClass(level);
+    return getBorderColorClass(level, requirement);
   };
 
-  const getBackgroundClass = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'advanced':
-        return 'bg-primary-accent/10';
-      case 'intermediate':
-        return 'bg-primary-icon/10';
-      case 'beginner':
-        return 'bg-[#008000]/10';
+  const getRequirementBackgroundClass = (requirement: string) => {
+    switch (requirement.toLowerCase()) {
+      case 'required':
+      case 'skill_goal':
+      case 'not-interested':
+      case 'unknown':
       default:
-        return 'bg-gray-100/50';
+        return 'bg-[#F9FAFB]';
     }
   };
 
   return (
-    <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col items-center">
+    <TableCell className="border-r border-blue-200 p-2">
+      <div className="flex flex-col items-center gap-1">
         <Select 
           value={currentState.level} 
           onValueChange={(value) => {
@@ -97,11 +92,14 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-            border-2 ${getBorderColorClass(currentState.level)} ${getBackgroundClass(currentState.level)}
+            rounded-lg px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
+            ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
+              currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
+              currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
+              'bg-gray-100/50 border-2 border-gray-400'}
           `}>
             <SelectValue>
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2.5">
                 {getLevelIcon(currentState.level)}
                 {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
               </span>
@@ -110,7 +108,7 @@ export const SkillLevelCell = ({
           <SelectContent>
             {['unspecified', 'beginner', 'intermediate', 'advanced'].map((level) => (
               <SelectItem key={level} value={level}>
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2.5">
                   {getLevelIcon(level)}
                   {level.charAt(0).toUpperCase() + level.slice(1)}
                 </span>
@@ -127,12 +125,13 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-            border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+            text-sm px-4 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
+            border-2 min-h-[38px] rounded-lg
             ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
+            ${getRequirementBackgroundClass(currentState.requirement)}
           `}>
             <SelectValue>
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-2">
                 {getRequirementIcon(currentState.requirement)}
                 {currentState.requirement === 'required' ? 'Skill Goal' : 
                  currentState.requirement === 'not-interested' ? 'Not Interested' : 
@@ -147,7 +146,7 @@ export const SkillLevelCell = ({
               { value: 'unknown', label: 'Unknown' }
             ].map(({ value, label }) => (
               <SelectItem key={value} value={value}>
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-2">
                   {getRequirementIcon(value)}
                   {label}
                 </span>

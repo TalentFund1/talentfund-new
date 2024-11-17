@@ -1,8 +1,12 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Star, Shield, Target, CircleDashed, Check, X } from "lucide-react";
+import { Check, X } from "lucide-react";
+import { SkillLevelCell } from "./SkillLevelCell";
+import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useRoleStore } from "./RoleBenchmark";
+import { useTrack } from "../skills/context/TrackContext";
+import { Star, Shield, Target, CircleDashed } from "lucide-react";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -11,115 +15,142 @@ interface SkillsMatrixRowProps {
     level: string;
     growth: string;
     confidence: string;
+    requirement?: string;
   };
-  isEven?: boolean;
   showCompanySkill?: boolean;
   isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixRow = ({ 
   skill, 
-  isEven = false, 
   showCompanySkill = true,
-  isRoleBenchmark = false 
+  isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { selectedLevel } = useRoleStore();
+  const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
+  
+  const isCompanySkill = (skillTitle: string) => {
+    const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
+    return !nonCompanySkills.includes(skillTitle);
+  };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return <Star className="w-4 h-4 text-primary-accent" />;
+        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
       case 'intermediate':
-        return <Shield className="w-4 h-4 text-primary-icon" />;
+        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
       case 'beginner':
-        return <Target className="w-4 h-4 text-[#008000]" />;
+        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
       default:
-        return <CircleDashed className="w-4 h-4 text-gray-400" />;
+        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
     }
   };
 
-  const getLevelBgColor = (level: string) => {
+  const getRoleSkillState = () => {
+    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+    if (!competencyState) return null;
+
+    return {
+      level: competencyState.level,
+      required: competencyState.required
+    };
+  };
+
+  const roleSkillState = getRoleSkillState();
+
+  const getBorderColorClass = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
-        return 'bg-primary-accent/10 border-primary-accent';
+        return 'border-primary-accent bg-primary-accent/10';
       case 'intermediate':
-        return 'bg-primary-icon/10 border-primary-icon';
+        return 'border-primary-icon bg-primary-icon/10';
       case 'beginner':
-        return 'bg-[#008000]/10 border-[#008000]';
+        return 'border-[#008000] bg-[#008000]/10';
       default:
-        return 'bg-gray-100/50 border-gray-300';
+        return 'border-gray-400 bg-gray-100/50';
     }
-  };
-
-  const getRequirementIcon = (requirement: string) => {
-    switch (requirement.toLowerCase()) {
-      case 'required':
-        return <Check className="w-3.5 h-3.5" />;
-      case 'not-interested':
-        return <X className="w-3.5 h-3.5" />;
-      default:
-        return <CircleDashed className="w-3.5 h-3.5" />;
-    }
-  };
-
-  const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-  const roleSkillLevel = competencyState?.level || 'unspecified';
-  const roleSkillRequired = competencyState?.required || 'preferred';
-
-  const currentState = currentStates[skill.title] || {
-    level: skill.level || 'unspecified',
-    requirement: 'preferred'
   };
 
   return (
-    <TableRow className={`group transition-all duration-200 hover:bg-muted/50 ${isEven ? 'bg-muted/5' : ''}`}>
-      <TableCell className="font-medium border-x border-blue-200/60 group-hover:bg-transparent py-4">
-        {skill.title}
-      </TableCell>
-      <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
-        {skill.subcategory}
-      </TableCell>
-      {isRoleBenchmark && (
-        <TableCell className="border-r border-blue-200/60 p-2">
-          <div className="flex flex-col items-center gap-1">
-            <div className={`w-full rounded-md px-3 py-2 border-2 flex items-center justify-center gap-2 ${getLevelBgColor(roleSkillLevel)}`}>
-              {getLevelIcon(roleSkillLevel)}
-              <span className="text-sm font-medium capitalize">{roleSkillLevel}</span>
+    <TableRow className="group border-b border-gray-200">
+      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
+      <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
+      {showCompanySkill && (
+        <TableCell className="text-center border-r border-blue-200 py-2">
+          <div className="flex justify-center">
+            {isCompanySkill(skill.title) ? (
+              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
+              </div>
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
+              </div>
+            )}
+          </div>
+        </TableCell>
+      )}
+      {isRoleBenchmark && roleSkillState && (
+        <TableCell className="border-r border-blue-200 p-2">
+          <div className="flex flex-col items-center">
+            <div className={`
+              rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
+              border-2 ${getBorderColorClass(roleSkillState.level)}
+            `}>
+              <span className="flex items-center gap-2">
+                {getLevelIcon(roleSkillState.level)}
+                {roleSkillState.level.charAt(0).toUpperCase() + roleSkillState.level.slice(1)}
+              </span>
             </div>
-            <div className="text-xs text-gray-600 flex items-center gap-1">
-              {getRequirementIcon(roleSkillRequired)}
-              <span className="capitalize">
-                {roleSkillRequired === 'required' ? 'Required' : 'Preferred'}
+            <div className={`
+              text-xs px-2 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+              border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+              ${roleSkillState.required === 'required' ? getBorderColorClass(roleSkillState.level).split(' ')[0] : 'border-[#e5e7eb]'}
+            `}>
+              <span className="flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5" />
+                Required
               </span>
             </div>
           </div>
         </TableCell>
       )}
-      <TableCell className="border-r border-blue-200/60 p-2">
-        <div className="flex flex-col items-center gap-1">
-          <div className={`w-full rounded-md px-3 py-2 border-2 flex items-center justify-center gap-2 ${getLevelBgColor(currentState.level)}`}>
-            {getLevelIcon(currentState.level)}
-            <span className="text-sm font-medium capitalize">{currentState.level}</span>
-          </div>
-          <div className="text-xs text-gray-600 flex items-center gap-1">
-            {getRequirementIcon(currentState.requirement)}
-            <span className="capitalize">
-              {currentState.requirement === 'required' ? 'Skill Goal' : 
-               currentState.requirement === 'not-interested' ? 'Not Interested' : 'Unknown'}
-            </span>
-          </div>
-        </div>
+      {isRoleBenchmark ? (
+        <StaticSkillLevelCell 
+          initialLevel={skill.level || 'unspecified'}
+          skillTitle={skill.title}
+        />
+      ) : (
+        <SkillLevelCell 
+          initialLevel={skill.level || 'unspecified'}
+          skillTitle={skill.title}
+        />
+      )}
+      <TableCell className="text-center border-r border-blue-200 py-2">
+        {skill.confidence === 'n/a' ? (
+          <span className="text-gray-500 text-sm">n/a</span>
+        ) : (
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${
+            skill.confidence === 'high' ? 'bg-green-100 text-green-800' :
+            skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
+            'bg-red-100 text-red-800'
+          }`}>
+            {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
+          </span>
+        )}
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200/60 py-4">
-        <span className={`inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+      <TableCell className="text-center border-r border-blue-200 py-2">
+        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
           skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
         }`}>
           ↗ {skill.growth}
         </span>
       </TableCell>
-      <TableCell className="text-center py-4">
+      <TableCell className="text-center py-2">
         <div className="flex items-center justify-center space-x-1">
           <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
           <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
