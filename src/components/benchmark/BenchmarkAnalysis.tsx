@@ -32,19 +32,19 @@ export const BenchmarkAnalysis = () => {
   // Get the current track for the selected role
   const currentTrack = getTrackForRole(selectedRole);
   
-  // Calculate total skills for the selected role
-  const totalSkills = [
+  // Get all toggled skills for the role
+  const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ];
+  ].filter(skill => toggledSkills.has(skill.title));
 
-  // Calculate matching skills by comparing employee's skills with role requirements
-  const matchingSkills = totalSkills.filter(roleSkill => 
+  // Calculate matching skills by comparing employee's skills with toggled role requirements
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => 
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  const totalSkillsCount = totalSkills.length;
+  const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
