@@ -12,12 +12,19 @@ import SkillProfileDetail from "./pages/SkillProfileDetail";
 import MarketData from "./pages/MarketData";
 import TalentMarketplace from "./pages/TalentMarketplace";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <ToggledSkillsProvider>
+    <ToggledSkillsProvider>
+      <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -31,8 +38,8 @@ const App = () => (
             <Route path="/marketplace" element={<TalentMarketplace />} />
           </Routes>
         </BrowserRouter>
-      </ToggledSkillsProvider>
-    </TooltipProvider>
+      </TooltipProvider>
+    </ToggledSkillsProvider>
   </QueryClientProvider>
 );
 
