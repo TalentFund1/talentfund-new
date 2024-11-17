@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Check, X } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useRoleStore } from "./RoleBenchmark";
@@ -56,8 +56,7 @@ export const SkillsMatrixRow = ({
   const getRequirementIcon = (requirement: string) => {
     switch (requirement.toLowerCase()) {
       case 'required':
-      case 'skill_goal':
-        return <Heart className="w-3.5 h-3.5 text-red-500" />;
+        return <Check className="w-3.5 h-3.5" />;
       case 'not-interested':
         return <X className="w-3.5 h-3.5" />;
       default:
@@ -74,56 +73,42 @@ export const SkillsMatrixRow = ({
     requirement: 'preferred'
   };
 
-  const isSkillGoal = currentState.requirement === 'required' || 
-                      currentState.requirement === 'skill_goal';
-
   return (
     <TableRow className={`group transition-all duration-200 hover:bg-muted/50 ${isEven ? 'bg-muted/5' : ''}`}>
       <TableCell className="font-medium border-x border-blue-200/60 group-hover:bg-transparent py-4">
-        <div className="flex items-center gap-2">
-          {skill.title}
-          {isSkillGoal && (
-            <Heart className="w-4 h-4 text-red-500 animate-pulse" />
-          )}
-        </div>
+        {skill.title}
       </TableCell>
       <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
         {skill.subcategory}
       </TableCell>
       {isRoleBenchmark && (
         <TableCell className="border-r border-blue-200/60 p-2">
-          <div className={`rounded-lg border-2 ${getLevelBgColor(roleSkillLevel)} p-3 transition-all duration-200`}>
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex items-center gap-2">
-                {getLevelIcon(roleSkillLevel)}
-                <span className="text-sm font-medium capitalize">{roleSkillLevel}</span>
-              </div>
-              <div className="text-xs text-gray-600 flex items-center gap-1">
-                {getRequirementIcon(roleSkillRequired)}
-                <span className="capitalize">
-                  {roleSkillRequired === 'required' ? 'Required' : 'Preferred'}
-                </span>
-              </div>
+          <div className="flex flex-col items-center gap-1">
+            <div className={`w-full rounded-md px-3 py-2 border-2 flex items-center justify-center gap-2 ${getLevelBgColor(roleSkillLevel)}`}>
+              {getLevelIcon(roleSkillLevel)}
+              <span className="text-sm font-medium capitalize">{roleSkillLevel}</span>
+            </div>
+            <div className="text-xs text-gray-600 flex items-center gap-1">
+              {getRequirementIcon(roleSkillRequired)}
+              <span className="capitalize">
+                {roleSkillRequired === 'required' ? 'Required' : 'Preferred'}
+              </span>
             </div>
           </div>
         </TableCell>
       )}
       <TableCell className="border-r border-blue-200/60 p-2">
-        <div className={`rounded-lg border-2 ${getLevelBgColor(currentState.level)} p-3 transition-all duration-200 ${
-          isSkillGoal ? 'ring-2 ring-red-200 ring-offset-2' : ''
-        }`}>
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-2">
-              {getLevelIcon(currentState.level)}
-              <span className="text-sm font-medium capitalize">{currentState.level}</span>
-            </div>
-            <div className="text-xs text-gray-600 flex items-center gap-1">
-              {getRequirementIcon(currentState.requirement)}
-              <span className="capitalize">
-                {currentState.requirement === 'required' ? 'Skill Goal' : 
-                 currentState.requirement === 'not-interested' ? 'Not Interested' : 'Unknown'}
-              </span>
-            </div>
+        <div className="flex flex-col items-center gap-1">
+          <div className={`w-full rounded-md px-3 py-2 border-2 flex items-center justify-center gap-2 ${getLevelBgColor(currentState.level)}`}>
+            {getLevelIcon(currentState.level)}
+            <span className="text-sm font-medium capitalize">{currentState.level}</span>
+          </div>
+          <div className="text-xs text-gray-600 flex items-center gap-1">
+            {getRequirementIcon(currentState.requirement)}
+            <span className="capitalize">
+              {currentState.requirement === 'required' ? 'Skill Goal' : 
+               currentState.requirement === 'not-interested' ? 'Not Interested' : 'Unknown'}
+            </span>
           </div>
         </div>
       </TableCell>
