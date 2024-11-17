@@ -14,7 +14,6 @@ import { useTrack } from "../skills/context/TrackContext";
 import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
-import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -172,11 +171,6 @@ export const BenchmarkSkillsMatrix = () => {
           roleId={selectedRole}
           employeeId={id || ""}
           selectedLevel={roleLevel}
-        />
-
-        <SkillGoalsWidget 
-          totalSkills={allRoleSkills.length}
-          skillGoalsCount={skillGoals.length}
         />
 
         {skillGoals.length > 0 && (
