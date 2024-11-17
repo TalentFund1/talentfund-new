@@ -8,6 +8,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
+import { getSkillGoalCounts } from "./utils/skillCounts";
 
 const roles = {
   "123": "AI Engineer",
@@ -27,36 +28,28 @@ export const BenchmarkAnalysis = () => {
   // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
-  // Get the current track for the selected role
-  const currentTrack = getTrackForRole(selectedRole);
-  
-  // Get all toggled skills for the role
-  const toggledRoleSkills = [
+  const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
 
-  // Calculate matching skills by comparing employee's skills with toggled role requirements
-  const matchingSkills = toggledRoleSkills.filter(roleSkill => 
+  // Calculate matching skills
+  const matchingSkills = allRoleSkills.filter(roleSkill => 
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  const totalSkillsCount = toggledRoleSkills.length;
+  const totalSkillsCount = toggledSkills.size;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
-  // Calculate skill goals - count skills marked as "required" or have "Skill Goal" status
-  const skillGoalCount = toggledRoleSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  }).length;
-
-  // Calculate matching skill goals
-  const matchingSkillGoals = matchingSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    return skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-  }).length;
+  // Get skill goal counts using the new utility function
+  const skillGoalCounts = getSkillGoalCounts(
+    allRoleSkills,
+    matchingSkills,
+    currentStates,
+    toggledSkills
+  );
 
   return (
     <div className="space-y-6">
@@ -77,7 +70,7 @@ export const BenchmarkAnalysis = () => {
             <RoleSelection 
               selectedRole={selectedRole}
               selectedLevel={selectedLevel}
-              currentTrack={currentTrack}
+              currentTrack={getTrackForRole(selectedRole)}
               onRoleChange={setSelectedRole}
               onLevelChange={setSelectedLevel}
               onTrackChange={() => {}}
@@ -119,12 +112,14 @@ export const BenchmarkAnalysis = () => {
             <div className="space-y-4 mt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                <span className="text-sm text-foreground">{matchingSkillGoals} out of {skillGoalCount}</span>
+                <span className="text-sm text-foreground">
+                  {skillGoalCounts.matching} out of {skillGoalCounts.total}
+                </span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(matchingSkillGoals/skillGoalCount) * 100}%` }} 
+                  style={{ width: `${(skillGoalCounts.matching/skillGoalCounts.total) * 100}%` }} 
                 />
               </div>
             </div>
