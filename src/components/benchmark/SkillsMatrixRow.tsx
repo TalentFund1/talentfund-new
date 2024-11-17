@@ -1,12 +1,12 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
-import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -63,7 +63,7 @@ export const SkillsMatrixRow = ({
   const roleSkillState = getRoleSkillState();
   const currentState = currentStates[skill.title] || {
     level: skill.level || 'unspecified',
-    requirement: skill.requirement || 'unknown'
+    requirement: skill.requirement || 'required'
   };
 
   return (
