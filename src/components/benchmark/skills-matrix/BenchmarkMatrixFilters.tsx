@@ -1,6 +1,6 @@
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { technicalSkills, softSkills } from '@/components/skillsData';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SkillLevelFilter } from "./SkillLevelFilter";
 
 interface BenchmarkMatrixFiltersProps {
   searchTerm: string;
@@ -28,19 +28,10 @@ export const BenchmarkMatrixFilters = ({
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
-        <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Levels" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Levels</SelectItem>
-            <SelectItem value="advanced">Advanced</SelectItem>
-            <SelectItem value="intermediate">Intermediate</SelectItem>
-            <SelectItem value="beginner">Beginner</SelectItem>
-            <SelectItem value="unspecified">Unspecified</SelectItem>
-          </SelectContent>
-        </Select>
-
+        <SkillLevelFilter 
+          selectedLevel={selectedLevel}
+          onLevelChange={setSelectedLevel}
+        />
         <Select value={selectedInterest} onValueChange={setSelectedInterest}>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Interests" />
