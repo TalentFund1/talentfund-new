@@ -37,53 +37,9 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: string) => {
-    switch (requirement.toLowerCase()) {
-      case 'required':
-        return <Check className="w-4 h-4" />;
-      case 'not-interested':
-        return <X className="w-4 h-4" />;
-      case 'unknown':
-        return <CircleDashed className="w-4 h-4" />;
-      default:
-        return <Heart className="w-4 h-4" />;
-    }
-  };
-
-  const getBorderColorClass = (level: string, requirement: string) => {
-    switch (level.toLowerCase()) {
-      case 'advanced':
-        return 'border-primary-accent';
-      case 'intermediate':
-        return 'border-primary-icon';
-      case 'beginner':
-        return 'border-[#008000]';
-      default:
-        return 'border-gray-400';
-    }
-  };
-
-  const getLowerBorderColorClass = (level: string, requirement: string) => {
-    if (requirement.toLowerCase() !== 'required') {
-      return 'border-[#e5e7eb]';
-    }
-    return getBorderColorClass(level, requirement);
-  };
-
-  const getRequirementBackgroundClass = (requirement: string) => {
-    switch (requirement.toLowerCase()) {
-      case 'required':
-      case 'skill_goal':
-      case 'not-interested':
-      case 'unknown':
-      default:
-        return 'bg-[#F9FAFB]';
-    }
-  };
-
   return (
-    <TableCell className="border-r border-blue-200 p-2">
-      <div className="flex flex-col items-center gap-1">
+    <TableCell className="border-r border-blue-200 p-0">
+      <div className="flex flex-col h-[84px]">
         <Select 
           value={currentState.level} 
           onValueChange={(value) => {
@@ -92,7 +48,7 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            rounded-lg px-4 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]
+            h-[42px] rounded-none text-sm font-medium w-full capitalize flex items-center justify-center text-[#1f2144]
             ${currentState.level === 'advanced' ? 'bg-primary-accent/10 border-2 border-primary-accent' : 
               currentState.level === 'intermediate' ? 'bg-primary-icon/10 border-2 border-primary-icon' : 
               currentState.level === 'beginner' ? 'bg-[#008000]/10 border-2 border-[#008000]' : 
@@ -125,14 +81,17 @@ export const SkillLevelCell = ({
           }}
         >
           <SelectTrigger className={`
-            text-sm px-4 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
-            border-2 min-h-[38px] rounded-lg
-            ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
+            h-[42px] rounded-none text-sm font-normal text-[#1f2144] w-full flex items-center justify-center gap-2 
+            border-x-2 border-b-2
+            ${currentState.requirement === 'required' ? getBorderColorClass(currentState.level) : 'border-[#e5e7eb]'}
             ${getRequirementBackgroundClass(currentState.requirement)}
           `}>
             <SelectValue>
               <span className="flex items-center gap-2">
-                {getRequirementIcon(currentState.requirement)}
+                {currentState.requirement === 'required' ? <Check className="w-3.5 h-3.5" /> :
+                 currentState.requirement === 'not-interested' ? <X className="w-3.5 h-3.5" /> :
+                 currentState.requirement === 'unknown' ? <CircleDashed className="w-3.5 h-3.5" /> :
+                 <Heart className="w-3.5 h-3.5" />}
                 {currentState.requirement === 'required' ? 'Skill Goal' : 
                  currentState.requirement === 'not-interested' ? 'Not Interested' : 
                  currentState.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
@@ -147,7 +106,10 @@ export const SkillLevelCell = ({
             ].map(({ value, label }) => (
               <SelectItem key={value} value={value}>
                 <span className="flex items-center gap-2">
-                  {getRequirementIcon(value)}
+                  {value === 'required' ? <Check className="w-3.5 h-3.5" /> :
+                   value === 'not-interested' ? <X className="w-3.5 h-3.5" /> :
+                   value === 'unknown' ? <CircleDashed className="w-3.5 h-3.5" /> :
+                   <Heart className="w-3.5 h-3.5" />}
                   {label}
                 </span>
               </SelectItem>
@@ -157,4 +119,28 @@ export const SkillLevelCell = ({
       </div>
     </TableCell>
   );
+};
+
+const getBorderColorClass = (level: string) => {
+  switch (level.toLowerCase()) {
+    case 'advanced':
+      return 'border-primary-accent';
+    case 'intermediate':
+      return 'border-primary-icon';
+    case 'beginner':
+      return 'border-[#008000]';
+    default:
+      return 'border-gray-400';
+  }
+};
+
+const getRequirementBackgroundClass = (requirement: string) => {
+  switch (requirement.toLowerCase()) {
+    case 'required':
+    case 'skill_goal':
+    case 'not-interested':
+    case 'unknown':
+    default:
+      return 'bg-[#F9FAFB]';
+  }
 };
