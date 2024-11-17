@@ -13,6 +13,7 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
+import { SkillGoalSection } from "./SkillGoalSection";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -137,6 +138,19 @@ export const BenchmarkSkillsMatrix = () => {
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
+  // Filter skills that are marked as skill goals
+  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
+    .filter(skill => {
+      if (!toggledSkills.has(skill.title)) {
+        return false;
+      }
+
+      const currentSkillState = currentStates[skill.title];
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      
+      return requirement === 'required' || requirement === 'skill_goal';
+    });
+
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
@@ -164,6 +178,13 @@ export const BenchmarkSkillsMatrix = () => {
           employeeId={id || ""}
           selectedLevel={roleLevel}
         />
+
+        {skillGoals.length > 0 && (
+          <SkillGoalSection 
+            skills={skillGoals}
+            count={skillGoals.length}
+          />
+        )}
 
         <BenchmarkMatrixFilters
           searchTerm={searchTerm}
