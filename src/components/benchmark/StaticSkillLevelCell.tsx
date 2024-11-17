@@ -56,20 +56,6 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementBackgroundClass = (requirement: string) => {
-    switch (requirement.toLowerCase()) {
-      case 'required':
-      case 'skill_goal':
-        return 'bg-[#F9FAFB]';
-      case 'not-interested':
-        return 'bg-[#F9FAFB]';
-      case 'unknown':
-        return 'bg-[#F9FAFB]';
-      default:
-        return 'bg-[#F9FAFB]';
-    }
-  };
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
@@ -84,9 +70,8 @@ export const StaticSkillLevelCell = ({
         </div>
         <div className={`
           text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-          border-x-2 border-b-2 min-h-[32px] rounded-b-md
-          ${getBorderColorClass(currentState.level)}
-          ${getRequirementBackgroundClass(currentState.requirement)}
+          border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+          ${getBorderColorClass(currentState.level).split(' ')[0]}
         `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState.requirement)}
