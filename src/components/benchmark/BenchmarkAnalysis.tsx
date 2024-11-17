@@ -39,17 +39,9 @@ export const BenchmarkAnalysis = () => {
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  // Calculate skill goals among matching skills
-  const matchingSkillGoals = matchingSkills.filter(skill => {
-    const currentSkillState = currentStates[skill.title];
-    const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
-    return requirement === 'required' || requirement === 'skill_goal';
-  });
-
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
-  const skillGoalsCount = matchingSkillGoals.length;
 
   return (
     <div className="space-y-6">
@@ -105,21 +97,6 @@ export const BenchmarkAnalysis = () => {
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
                   style={{ width: `${(12/12) * 100}%` }} 
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4 mt-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">Skill Goals</span>
-                <span className="text-sm text-foreground">
-                  {skillGoalsCount} out of {matchingSkillsCount}
-                </span>
-              </div>
-              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(skillGoalsCount/matchingSkillsCount) * 100}%` }} 
                 />
               </div>
             </div>
