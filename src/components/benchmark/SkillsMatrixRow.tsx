@@ -37,31 +37,6 @@ export const SkillsMatrixRow = ({
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const getLevelIcon = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'advanced':
-        return <Star className="w-4 h-4 text-primary-accent" />;
-      case 'intermediate':
-        return <Shield className="w-4 h-4 text-primary-icon" />;
-      case 'beginner':
-        return <Target className="w-4 h-4 text-[#008000]" />;
-      default:
-        return <CircleDashed className="w-4 h-4 text-gray-400" />;
-    }
-  };
-
-  const getRoleSkillState = () => {
-    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-    if (!competencyState) return null;
-
-    return {
-      level: competencyState.level,
-      required: competencyState.required
-    };
-  };
-
-  const roleSkillState = getRoleSkillState();
-
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
@@ -81,28 +56,18 @@ export const SkillsMatrixRow = ({
           </div>
         </TableCell>
       )}
-      {isRoleBenchmark && roleSkillState && (
-        <TableCell className="text-center border-r border-blue-200 py-2">
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              {getLevelIcon(roleSkillState.level)}
-              <span className="text-sm font-medium capitalize">{roleSkillState.level}</span>
-            </div>
-            <span className="text-xs text-gray-600 capitalize">{roleSkillState.required}</span>
-          </div>
-        </TableCell>
-      )}
-      {isRoleBenchmark ? (
+      {isRoleBenchmark && (
         <StaticSkillLevelCell 
-          initialLevel={skill.level || 'unspecified'}
+          initialLevel={skill.level}
           skillTitle={skill.title}
-        />
-      ) : (
-        <SkillLevelCell 
-          initialLevel={skill.level || 'unspecified'}
-          skillTitle={skill.title}
+          isRoleSkill={true}
+          roleLevel={selectedLevel}
         />
       )}
+      <StaticSkillLevelCell 
+        initialLevel={skill.level}
+        skillTitle={skill.title}
+      />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
