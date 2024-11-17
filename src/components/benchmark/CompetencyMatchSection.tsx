@@ -43,8 +43,7 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
     console.log(`Is Match: ${employeePriority >= rolePriority}\n`);
 
     // Employee skill level should be equal to or higher than role requirement
-    // OR if role skill is unspecified, any employee skill level is a match
-    return (employeePriority >= rolePriority || rolePriority === 0) && 
+    return employeePriority >= rolePriority && 
            roleSkillState.required.toLowerCase() === 'required';
   });
 
