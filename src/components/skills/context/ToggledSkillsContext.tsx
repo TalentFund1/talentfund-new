@@ -40,16 +40,17 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   // Get the current role's toggled skills
   const toggledSkills = skillsByRole[id || '123'] || new Set<string>();
 
-  // Update skills for the current role
+  // Update skills for the current role and save to localStorage
   const setToggledSkills = (newSkills: Set<string>) => {
     console.log('Setting toggled skills for role', id || '123', Array.from(newSkills));
+    
     setSkillsByRole(prev => {
       const updated = {
         ...prev,
         [id || '123']: newSkills
       };
       
-      // Save to localStorage immediately after state update
+      // Save to localStorage immediately
       try {
         const serializable = Object.fromEntries(
           Object.entries(updated).map(([roleId, skills]) => [
