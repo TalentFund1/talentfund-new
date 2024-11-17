@@ -28,19 +28,14 @@ export const BenchmarkSkillsContent = () => {
     setSelectedSearchSkills(benchmarkSearchSkills);
   }, [benchmarkSearchSkills]);
 
-  const getRoleSkillLevel = (skillTitle: string) => {
-    const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase());
-    return (competencyState?.level || 'unspecified').toLowerCase();
-  };
-
-  const getLevelPriority = (level: string) => {
+  const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
       'intermediate': 1,
       'beginner': 2,
       'unspecified': 3
     };
-    return priorities[level] ?? 3;
+    return priorities[level.toLowerCase()] ?? 3;
   };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
@@ -49,10 +44,17 @@ export const BenchmarkSkillsContent = () => {
 
       let matchesInterest = true;
       let matchesSearch = true;
+      let matchesLevel = true;
 
       if (selectedInterest !== 'all') {
         const requirement = skill.requirement?.toLowerCase() || 'unknown';
         matchesInterest = requirement === selectedInterest.toLowerCase();
+      }
+
+      if (selectedLevel !== 'all') {
+        const skillState = getSkillCompetencyState(skill.title, "p3");
+        const currentLevel = skillState?.level?.toLowerCase() || 'unspecified';
+        matchesLevel = currentLevel === selectedLevel.toLowerCase();
       }
 
       if (selectedSearchSkills.length > 0) {
@@ -63,14 +65,15 @@ export const BenchmarkSkillsContent = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesInterest && matchesSearch;
+      return matchesInterest && matchesSearch && matchesLevel;
     })
     .sort((a, b) => {
-      // Get role skill levels
-      const aLevel = getRoleSkillLevel(a.title);
-      const bLevel = getRoleSkillLevel(b.title);
+      const aState = getSkillCompetencyState(a.title, "p3");
+      const bState = getSkillCompetencyState(b.title, "p3");
       
-      // Sort by role skill level priority only
+      const aLevel = (aState?.level || 'unspecified').toLowerCase();
+      const bLevel = (bState?.level || 'unspecified').toLowerCase();
+      
       return getLevelPriority(aLevel) - getLevelPriority(bLevel);
     });
 
@@ -92,6 +95,10 @@ export const BenchmarkSkillsContent = () => {
 
     return () => observer.disconnect();
   }, [visibleItems, filteredSkills.length]);
+
+  console.log('Filtered Skills:', filteredSkills.length);
+  console.log('Selected Level:', selectedLevel);
+  console.log('Selected Interest:', selectedInterest);
 
   return (
     <>
