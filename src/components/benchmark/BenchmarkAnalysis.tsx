@@ -7,8 +7,6 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
-import { RoleSelection } from "./RoleSelection";
-import { CompetencyMatchSection } from "./CompetencyMatchSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -22,7 +20,7 @@ export const BenchmarkAnalysis = () => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "123");
-  const { selectedRole, setSelectedRole, selectedLevel, setSelectedLevel } = useRoleStore();
+  const { selectedRole, selectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
@@ -58,17 +56,6 @@ export const BenchmarkAnalysis = () => {
               Manage and track employee skills and competencies
             </p>
           </div>
-          <div className="flex gap-4">
-            <RoleSelection 
-              selectedRole={selectedRole}
-              selectedLevel={selectedLevel}
-              currentTrack={getTrackForRole(selectedRole)}
-              onRoleChange={setSelectedRole}
-              onLevelChange={setSelectedLevel}
-              onTrackChange={() => {}}
-              roles={roles}
-            />
-          </div>
         </div>
 
         <div className="space-y-6">
@@ -88,11 +75,6 @@ export const BenchmarkAnalysis = () => {
               </div>
             </div>
           </div>
-
-          <CompetencyMatchSection 
-            skills={matchingSkills}
-            roleLevel={selectedLevel}
-          />
         </div>
       </Card>
     </div>

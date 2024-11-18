@@ -6,8 +6,12 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { Card } from "../ui/card";
 import { create } from "zustand";
+import { useParams } from "react-router-dom";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
 
 interface RoleStore {
   selectedRole: string;
@@ -32,13 +36,17 @@ const roles = {
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
-  const [selectedLevel, setSelectedLevel] = useState<string>("p4");
+  const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
+  const { currentStates } = useSkillsMatrixStore();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+  const employeeSkills = getEmployeeSkills(id || "123");
 
   const currentTrack = getTrackForRole(selectedRole);
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
   useEffect(() => {
     if (currentTrack === "Professional" && roleLevel.toLowerCase().startsWith("m")) {
@@ -61,6 +69,46 @@ export const RoleBenchmark = () => {
     
     setBenchmarkSearchSkills(allSkills);
   }, [selectedRole, selectedRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
+
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  // Get all toggled skills for the current role
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+  const totalToggledSkills = toggledRoleSkills.length;
+
+  // Skill Match calculation
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
+    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+    return employeeSkill !== undefined;
+  });
+
+  // Competency Match calculation
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
+    if (!roleSkillState) return false;
+
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const roleSkillLevel = roleSkillState.level;
+
+    const getLevelPriority = (level: string = 'unspecified') => {
+      const priorities: { [key: string]: number } = {
+        'advanced': 3,
+        'intermediate': 2,
+        'beginner': 1,
+        'unspecified': 0
+      };
+      return priorities[level.toLowerCase()] ?? 0;
+    };
+
+    const employeePriority = getLevelPriority(employeeSkillLevel);
+    const rolePriority = getLevelPriority(roleSkillLevel);
+
+    return employeePriority === rolePriority || employeePriority > rolePriority;
+  });
 
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
@@ -92,6 +140,21 @@ export const RoleBenchmark = () => {
           onLevelChange={setRoleLevel}
           onTrackChange={handleTrackChange}
           roles={roles}
+        />
+
+        <BenchmarkAnalysisCard 
+          skillMatch={{
+            current: matchingSkills.length,
+            total: totalToggledSkills
+          }}
+          competencyMatch={{
+            current: competencyMatchingSkills.length,
+            total: totalToggledSkills
+          }}
+          skillGoals={{
+            current: matchingSkills.length,
+            total: totalToggledSkills
+          }}
         />
       </div>
     </div>
