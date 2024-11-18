@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useState, useEffect } from "react";
@@ -7,7 +6,6 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
 import { create } from "zustand";
 
@@ -95,15 +93,6 @@ export const RoleBenchmark = () => {
           onTrackChange={handleTrackChange}
           roles={roles}
         />
-
-        <Separator className="my-6" />
-
-        <Card className="p-6 bg-white space-y-6">
-          <CompetencyGraph 
-            track={currentTrack as "Professional" | "Managerial"}
-            roleId={selectedRole}
-          />
-        </Card>
       </div>
     </div>
   );
