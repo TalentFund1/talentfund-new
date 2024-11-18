@@ -32,13 +32,11 @@ export const BenchmarkAnalysisCard = ({
           current={skillMatch.current}
           total={skillMatch.total}
         />
-        <div className="w-full h-[1px] bg-border" />
         <BenchmarkProgressBar 
           label="Competency Match"
           current={competencyMatch.current}
           total={competencyMatch.total}
         />
-        <div className="w-full h-[1px] bg-border" />
         <BenchmarkProgressBar 
           label="Skill Goal"
           current={skillGoals.current}
