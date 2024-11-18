@@ -1,14 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { create } from "zustand";
-import { CategorizedSkills } from "./CategorizedSkills";
 
 interface RoleStore {
   selectedRole: string;
@@ -92,14 +90,6 @@ export const RoleBenchmark = () => {
           onLevelChange={setRoleLevel}
           onTrackChange={handleTrackChange}
           roles={roles}
-        />
-
-        <Separator className="my-6" />
-
-        <CategorizedSkills 
-          roleId={selectedRole}
-          employeeId="123"
-          selectedLevel={roleLevel}
         />
       </div>
     </div>
