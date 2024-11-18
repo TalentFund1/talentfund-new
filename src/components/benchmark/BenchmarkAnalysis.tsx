@@ -7,6 +7,7 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 const roles = {
   "123": "AI Engineer",
@@ -22,6 +23,7 @@ export const BenchmarkAnalysis = () => {
   const employeeSkills = getEmployeeSkills(id || "123");
   const { selectedRole, selectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
@@ -37,9 +39,33 @@ export const BenchmarkAnalysis = () => {
     return employeeSkill !== undefined;
   });
 
+  // Competency Match calculation
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+    if (!roleSkillState) return false;
+
+    const employeeSkillLevel = currentStates[skill.title]?.level || 'unspecified';
+    const roleSkillLevel = roleSkillState.level;
+
+    const getLevelPriority = (level: string = 'unspecified') => {
+      const priorities: { [key: string]: number } = {
+        'advanced': 3,
+        'intermediate': 2,
+        'beginner': 1,
+        'unspecified': 0
+      };
+      return priorities[level.toLowerCase()] ?? 0;
+    };
+
+    const employeePriority = getLevelPriority(employeeSkillLevel);
+    const rolePriority = getLevelPriority(roleSkillLevel);
+
+    return employeePriority >= rolePriority;
+  });
+
   const totalSkillsCount = toggledRoleSkills.length;
-  const matchingSkillsCount = matchingSkills.length;
-  const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
+  const competencyMatchingCount = competencyMatchingSkills.length;
+  const matchPercentage = Math.round((competencyMatchingCount / totalSkillsCount) * 100);
 
   return (
     <div className="space-y-6">
@@ -52,9 +78,6 @@ export const BenchmarkAnalysis = () => {
                 {matchPercentage}%
               </span>
             </h2>
-            <p className="text-sm text-muted-foreground">
-              Manage and track employee skills and competencies
-            </p>
           </div>
         </div>
 
@@ -64,7 +87,7 @@ export const BenchmarkAnalysis = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Match</span>
                 <span className="text-sm text-foreground">
-                  {matchingSkillsCount} out of {totalSkillsCount}
+                  {matchingSkills.length} out of {totalSkillsCount}
                 </span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
