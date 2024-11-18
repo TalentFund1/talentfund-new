@@ -40,10 +40,11 @@ export const BenchmarkAnalysis = () => {
     return employeeSkill !== undefined;
   });
 
+  // Filter skill goals - using the original logic from skills matrix
   const skillGoals = toggledRoleSkills.filter(skill => {
     const currentSkillState = currentStates[skill.title];
-    const requirement = (currentSkillState?.requirement || 'unknown').toLowerCase();
-    return requirement === 'required' || requirement === 'skill_goal';
+    const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+    return requirement === 'required' || requirement === 'preferred';
   });
 
   const totalSkillsCount = toggledRoleSkills.length;
