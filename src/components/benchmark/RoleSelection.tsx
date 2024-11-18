@@ -1,5 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { professionalLevels, managerialLevels } from "./data/levelData";
+import { Separator } from "@/components/ui/separator";
 
 interface RoleSelectionProps {
   selectedRole: string;
@@ -61,6 +62,7 @@ export const RoleSelection = ({
           </SelectContent>
         </Select>
       </div>
+      <Separator className="my-2" />
     </div>
   );
 };
