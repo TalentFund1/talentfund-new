@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
+import { Separator } from "../ui/separator";
 
 interface RoleStore {
   selectedRole: string;
@@ -115,6 +116,8 @@ export const RoleBenchmark = () => {
           onTrackChange={handleTrackChange}
           roles={roles}
         />
+
+        <Separator className="my-6" />
 
         <Card className="p-8 bg-white space-y-8">
           <div className="flex items-center justify-between">
