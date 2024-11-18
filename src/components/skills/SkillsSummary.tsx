@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { DetailedSkill, EmployeeSkill } from "./types";
-import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
@@ -43,7 +42,7 @@ export const SkillsSummary = () => {
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
     setSearchSkills(skills);
-    setMatrixSearchSkills(skills); // Sync with Skills Matrix search
+    setMatrixSearchSkills(skills);
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -59,12 +58,6 @@ export const SkillsSummary = () => {
         description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
       });
     }
-  };
-
-  const handleClearAll = () => {
-    setSelectedSkills([]);
-    setSearchSkills([]);
-    setMatrixSearchSkills([]); // Clear Skills Matrix search
   };
 
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
@@ -117,12 +110,6 @@ export const SkillsSummary = () => {
 
   return (
     <div className="space-y-4 w-full">
-      <SkillSearchSection
-        selectedSkills={searchSkills}
-        onSkillsChange={handleSkillsChange}
-        onClearAll={handleClearAll}
-      />
-      
       <SkillsContainer
         specializedSkills={filteredSpecializedSkills}
         commonSkills={filteredCommonSkills}
