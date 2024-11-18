@@ -14,7 +14,6 @@ import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
-import { SkillGoalsSection } from "./skills-matrix/SkillGoalsSection";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -44,11 +43,33 @@ export const BenchmarkSkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Calculate skill goals
-  const skillGoals = employeeSkills.filter(skill => {
-    const currentSkillState = currentStates[skill.title];
-    return currentSkillState?.requirement === 'required';
-  });
+  // Auto-populate toggled skills when role changes
+  useEffect(() => {
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const toggledRoleSkills = allRoleSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .map(skill => skill.title);
+
+    console.log('Auto-populating toggled skills for role:', selectedRole);
+    console.log('Toggled skills:', toggledRoleSkills);
+    
+    setSelectedSearchSkills(toggledRoleSkills);
+  }, [selectedRole, toggledSkills, currentRoleSkills]);
+
+  const getRoleLevelPriority = (level: string) => {
+    const priorities: { [key: string]: number } = {
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
+    };
+    return priorities[level.toLowerCase()] ?? 3;
+  };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
@@ -93,10 +114,12 @@ export const BenchmarkSkillsMatrix = () => {
         }
       }
 
-      if (benchmarkSearchSkills.length > 0) {
-        matchesSearch = benchmarkSearchSkills.some(term => 
+      if (selectedSearchSkills.length > 0) {
+        matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
         );
+      } else if (searchTerm) {
+        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
       return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
@@ -157,11 +180,6 @@ export const BenchmarkSkillsMatrix = () => {
           roleId={selectedRole}
           employeeId={id || ""}
           selectedLevel={roleLevel}
-        />
-
-        <SkillGoalsSection 
-          skills={skillGoals}
-          count={skillGoals.length}
         />
 
         <CompetencyMatchSection 
