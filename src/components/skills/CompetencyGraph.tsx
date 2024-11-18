@@ -31,9 +31,13 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { id: urlRoleId } = useParams<{ id: string }>();
 
   const currentRoleId = propRoleId || urlRoleId || "123";
-  const [track, setTrack] = useState<"Professional" | "Managerial">(
-    initialTrack || getTrackForRole(currentRoleId) || "Professional"
-  );
+  const savedTrack = getTrackForRole(currentRoleId);
+  const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
+
+  useEffect(() => {
+    // Update track when savedTrack changes
+    setTrack(savedTrack);
+  }, [savedTrack]);
 
   useEffect(() => {
     // Initialize competency states when component mounts or roleId changes
@@ -110,6 +114,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const skills = getSkillsByCategory();
   const levels = getLevelsForTrack();
   const uniqueSkills = skills.map(skill => skill.title).sort();
+
+  console.log('Current track:', track);
+  console.log('Levels for track:', levels);
 
   return (
     <div className="space-y-6">
