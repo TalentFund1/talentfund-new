@@ -1,10 +1,15 @@
-import { Table, TableBody } from "@/components/ui/table";
-import { SkillsMatrixRow } from "../SkillsMatrixRow";
-import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
-import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
 import { useRef } from "react";
+import { SkillsMatrixContent } from "./SkillsMatrixContent";
+import { CategorizedSkills } from "../CategorizedSkills";
+import { useSkillsMatrixStore } from "./SkillsMatrixState";
+import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
+import { Separator } from "@/components/ui/separator";
 
-interface SkillsMatrixContentProps {
+interface BenchmarkSkillsMatrixContentProps {
+  roleId: string;
+  employeeId: string;
+  roleLevel: string;
   filteredSkills: any[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -21,67 +26,46 @@ interface SkillsMatrixContentProps {
 }
 
 export const BenchmarkSkillsMatrixContent = ({
+  roleId,
+  employeeId,
+  roleLevel,
   filteredSkills,
-  searchTerm,
-  setSearchTerm,
-  selectedLevel,
-  setSelectedLevel,
-  selectedInterest,
-  setSelectedInterest,
-  selectedSkillLevel,
-  setSelectedSkillLevel,
-  selectedSearchSkills,
-  setSelectedSearchSkills,
-  visibleItems,
-  observerTarget
-}: SkillsMatrixContentProps) => {
-  const removeSearchSkill = (skill: string) => {
-    setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
+  ...props
+}: BenchmarkSkillsMatrixContentProps) => {
+  const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+
+  const getRoleTitle = (id: string) => {
+    const roleTitles: { [key: string]: string } = {
+      "123": "AI Engineer",
+      "124": "Backend Engineer",
+      "125": "Frontend Engineer",
+      "126": "Engineering Manager"
+    };
+    return roleTitles[id] || "AI Engineer";
   };
 
   return (
     <>
-      <BenchmarkMatrixFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-        selectedSkillLevel={selectedSkillLevel}
-        setSelectedSkillLevel={setSelectedSkillLevel}
-        selectedSearchSkills={selectedSearchSkills}
-        removeSearchSkill={removeSearchSkill}
-        clearSearch={() => setSearchTerm("")}
+      <CategorizedSkills 
+        roleId={roleId}
+        employeeId={employeeId}
+        selectedLevel={roleLevel}
       />
 
-      <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
-        <Table>
-          <SkillsMatrixTableHeader 
-            showCompanySkill={false}
-            isRoleBenchmark={true}
-          />
-          <TableBody>
-            {filteredSkills.slice(0, visibleItems).map((skill) => (
-              <SkillsMatrixRow 
-                key={skill.title} 
-                skill={skill}
-                showCompanySkill={false}
-                isRoleBenchmark={true}
-              />
-            ))}
-          </TableBody>
-        </Table>
+      <Separator className="my-8" />
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-foreground">
+          {getRoleTitle(roleId)}: {roleLevel.toUpperCase()}
+        </h2>
       </div>
 
-      {visibleItems < filteredSkills.length && (
-        <div 
-          ref={observerTarget} 
-          className="h-10 flex items-center justify-center"
-        >
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-        </div>
-      )}
+      <SkillsMatrixContent 
+        filteredSkills={filteredSkills}
+        {...props}
+      />
     </>
   );
 };
