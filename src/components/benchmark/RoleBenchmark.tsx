@@ -122,7 +122,7 @@ export const RoleBenchmark = () => {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
+          <h3 className="text-xl font-semibold text-foreground">Skills Matrix</h3>
           <Button 
             variant="outline" 
             className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
