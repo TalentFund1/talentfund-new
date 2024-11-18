@@ -46,13 +46,11 @@ export const BenchmarkSkillsMatrixContent = ({
         selectedLevel={roleLevel}
       />
 
-      {allSkillGoals.length > 0 && (
-        <SkillGoalSection 
-          skills={allSkillGoals}
-          count={allSkillGoals.length}
-          title="Skill Goals"
-        />
-      )}
+      <SkillGoalSection 
+        skills={allSkillGoals}
+        count={allSkillGoals.length}
+        title="Skill Goals"
+      />
 
       <SkillsMatrixContent 
         filteredSkills={filteredSkills}
