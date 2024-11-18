@@ -62,17 +62,20 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
       initializeStates: (roleId: string) => {
-        const initializedStates = initializeSkillStates(roleId);
-        const storedStates = localStorage.getItem(`competency-storage-${roleId}`);
+        const storedKey = `competency-storage-${roleId}`;
+        const storedStates = localStorage.getItem(storedKey);
         
         if (storedStates) {
           const parsedStates = JSON.parse(storedStates);
+          console.log('Loading stored states for role:', roleId, parsedStates);
           set({
             currentStates: parsedStates,
             originalStates: parsedStates,
             hasChanges: false
           });
         } else {
+          const initializedStates = initializeSkillStates(roleId);
+          console.log('Initializing new states for role:', roleId, initializedStates);
           set({
             currentStates: initializedStates,
             originalStates: initializedStates,
@@ -82,22 +85,24 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
       setSkillState: (skillName, level, levelKey, required) =>
         set((state) => {
-          const newCurrentStates = JSON.parse(JSON.stringify(state.currentStates));
-          
-          if (!newCurrentStates[skillName]) {
-            newCurrentStates[skillName] = {};
-          }
-          
-          newCurrentStates[skillName][levelKey] = {
-            level,
-            required,
+          const roleId = window.location.pathname.split('/')[2] || '123';
+          const newCurrentStates = {
+            ...state.currentStates,
+            [skillName]: {
+              ...state.currentStates[skillName],
+              [levelKey]: {
+                level,
+                required,
+              },
+            },
           };
 
           const hasChanges = JSON.stringify(newCurrentStates) !== JSON.stringify(state.originalStates);
           
           // Store the updated state immediately
-          const roleId = window.location.pathname.split('/')[2] || '123';
-          localStorage.setItem(`competency-storage-${roleId}`, JSON.stringify(newCurrentStates));
+          const storedKey = `competency-storage-${roleId}`;
+          localStorage.setItem(storedKey, JSON.stringify(newCurrentStates));
+          console.log('Saving state for role:', roleId, newCurrentStates);
 
           return {
             currentStates: newCurrentStates,
@@ -107,16 +112,18 @@ export const useCompetencyStore = create<CompetencyState>()(
       saveChanges: () => {
         const state = get();
         const roleId = window.location.pathname.split('/')[2] || '123';
-        localStorage.setItem(`competency-storage-${roleId}`, JSON.stringify(state.currentStates));
+        const storedKey = `competency-storage-${roleId}`;
+        localStorage.setItem(storedKey, JSON.stringify(state.currentStates));
+        console.log('Saving changes for role:', roleId, state.currentStates);
         
         set({
-          originalStates: JSON.parse(JSON.stringify(state.currentStates)),
+          originalStates: { ...state.currentStates },
           hasChanges: false,
         });
       },
       cancelChanges: () =>
         set((state) => ({
-          currentStates: JSON.parse(JSON.stringify(state.originalStates)),
+          currentStates: { ...state.originalStates },
           hasChanges: false,
         })),
     }),
