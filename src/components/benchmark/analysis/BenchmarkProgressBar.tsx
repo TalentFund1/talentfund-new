@@ -11,13 +11,13 @@ export const BenchmarkProgressBar = ({ label, current, total }: BenchmarkProgres
     <div className="space-y-2">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-foreground">{label}</span>
-        <span className="text-sm text-foreground">
+        <span className="text-sm text-foreground font-medium">
           {current} out of {total}
         </span>
       </div>
       <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
         <div 
-          className="h-full bg-[#1F2144] rounded-full" 
+          className="h-full bg-[#1F2144] rounded-full transition-all duration-300 ease-in-out" 
           style={{ width: `${percentage}%` }} 
         />
       </div>
