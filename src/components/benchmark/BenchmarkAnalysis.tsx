@@ -44,17 +44,13 @@ export const BenchmarkAnalysis = () => {
 
   console.log('Matching skills:', matchingSkills.map(skill => skill.title));
 
-  // Calculate skill goals from matching skills that are marked as either required or preferred
+  // Calculate skill goals from matching skills that are marked as skill goals in currentStates
   const skillGoals = matchingSkills.filter(skill => {
     const currentSkillState = currentStates[skill.title];
-    const isSkillGoal = currentSkillState?.requirement === 'required' || 
-                       skill.requirement === 'required' ||
-                       currentSkillState?.requirement === 'preferred' ||
-                       skill.requirement === 'preferred';
+    const isSkillGoal = currentSkillState?.requirement === 'required';
 
     console.log(`Skill ${skill.title}:`, {
       currentRequirement: currentSkillState?.requirement,
-      roleRequirement: skill.requirement,
       isSkillGoal
     });
 
