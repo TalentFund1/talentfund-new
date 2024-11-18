@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useState, useEffect } from "react";
@@ -32,7 +33,6 @@ const roles = {
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
-  const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();

@@ -7,7 +7,9 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
+import { RoleSelection } from "./RoleSelection";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
+import { SkillGoalSection } from "./SkillGoalSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -21,7 +23,7 @@ export const BenchmarkAnalysis = () => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "123");
-  const { selectedRole, selectedLevel } = useRoleStore();
+  const { selectedRole, setSelectedRole, selectedLevel, setSelectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
@@ -36,6 +38,15 @@ export const BenchmarkAnalysis = () => {
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
+  });
+
+  // Filter skill goals - only show skills that are required and not already matched
+  const skillGoals = toggledRoleSkills.filter(skill => {
+    const currentSkillState = currentStates[skill.title];
+    const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+    const isRequired = requirement === 'required';
+    const isMatched = matchingSkills.some(matchSkill => matchSkill.title === skill.title);
+    return isRequired && !isMatched;
   });
 
   const totalSkillsCount = toggledRoleSkills.length;
@@ -56,6 +67,17 @@ export const BenchmarkAnalysis = () => {
             <p className="text-sm text-muted-foreground">
               Manage and track employee skills and competencies
             </p>
+          </div>
+          <div className="flex gap-4">
+            <RoleSelection 
+              selectedRole={selectedRole}
+              selectedLevel={selectedLevel}
+              currentTrack={getTrackForRole(selectedRole)}
+              onRoleChange={setSelectedRole}
+              onLevelChange={setSelectedLevel}
+              onTrackChange={() => {}}
+              roles={roles}
+            />
           </div>
         </div>
 
@@ -80,6 +102,12 @@ export const BenchmarkAnalysis = () => {
           <CompetencyMatchSection 
             skills={matchingSkills}
             roleLevel={selectedLevel}
+          />
+
+          <SkillGoalSection 
+            skills={skillGoals}
+            count={skillGoals.length}
+            title="Skill Goals"
           />
         </div>
       </Card>
