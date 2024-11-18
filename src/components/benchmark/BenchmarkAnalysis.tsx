@@ -47,7 +47,7 @@ export const BenchmarkAnalysis = () => {
   // Calculate skill goals from matching skills that are marked as skill goals in currentStates
   const skillGoals = matchingSkills.filter(skill => {
     const currentSkillState = currentStates[skill.title];
-    const isSkillGoal = currentSkillState?.requirement?.toLowerCase() === 'skill_goal';
+    const isSkillGoal = currentSkillState?.requirement === 'required';
 
     console.log(`Skill ${skill.title}:`, {
       currentRequirement: currentSkillState?.requirement,
