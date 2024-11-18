@@ -32,20 +32,23 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <RadioGroup
-          value={track}
-          onValueChange={handleTrackChange}
-          className="flex items-center space-x-4"
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="Professional" id="professional" />
-            <Label htmlFor="professional">Professional</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="Managerial" id="managerial" />
-            <Label htmlFor="managerial">Managerial</Label>
-          </div>
-        </RadioGroup>
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-medium">Track:</span>
+          <RadioGroup
+            value={track}
+            onValueChange={handleTrackChange}
+            className="flex items-center space-x-4"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="Professional" id="professional" />
+              <Label htmlFor="professional">Professional</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="Managerial" id="managerial" />
+              <Label htmlFor="managerial">Managerial</Label>
+            </div>
+          </RadioGroup>
+        </div>
         {hasUnsavedChanges && (
           <Button onClick={handleSave} size="sm">
             Save Track
