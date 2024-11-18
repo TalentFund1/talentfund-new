@@ -1,18 +1,29 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useParams } from "react-router-dom";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { RoleSelection } from "./RoleSelection";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { SkillsSearch } from "./skills-matrix/SkillsSearch";
-import { MatrixContent } from "./skills-matrix/MatrixContent";
+import { CategorizedSkills } from "./CategorizedSkills";
+import { useTrack } from "../skills/context/TrackContext";
+import { SkillGoalSection } from "./SkillGoalSection";
+import { roleSkills } from "../skills/data/roleSkills";
+import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
+import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
 
 const ITEMS_PER_PAGE = 10;
+
+const roles = {
+  "123": "AI Engineer",
+  "124": "Backend Engineer",
+  "125": "Frontend Engineer",
+  "126": "Engineering Manager"
+};
 
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,16 +31,35 @@ export const BenchmarkSkillsMatrix = () => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
-  
   const { id } = useParams<{ id: string }>();
+  const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
-  const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
+  const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const employeeSkills = getEmployeeSkills(id || "");
+  const { getTrackForRole } = useTrack();
 
-  const getLevelPriority = (level: string = 'unspecified') => {
+  const employeeSkills = getEmployeeSkills(id || "");
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  
+  // Get all skills for the selected role
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ].filter(skill => toggledSkills.has(skill.title));
+
+  // Calculate skill goals
+  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
+    .filter(skill => {
+      if (!toggledSkills.has(skill.title)) return false;
+      const currentSkillState = currentStates[skill.title];
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      return requirement === 'required' || requirement === 'skill_goal';
+    });
+
+  const getRoleLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
       'intermediate': 1,
@@ -79,6 +109,8 @@ export const BenchmarkSkillsMatrix = () => {
         matchesSearch = selectedSearchSkills.some(term => 
           skill.title.toLowerCase().includes(term.toLowerCase())
         );
+      } else if (searchTerm) {
+        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
       return matchesLevel && matchesInterest && matchesSearch;
@@ -90,7 +122,11 @@ export const BenchmarkSkillsMatrix = () => {
       const aRoleLevel = aCompetencyState?.level || 'unspecified';
       const bRoleLevel = bCompetencyState?.level || 'unspecified';
       
-      return getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
+      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
+      if (roleLevelDiff !== 0) return roleLevelDiff;
+
+      // If levels are the same, sort alphabetically
+      return a.title.localeCompare(b.title);
     });
 
   useEffect(() => {
@@ -112,48 +148,57 @@ export const BenchmarkSkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <div className="space-y-6">
-          <SkillsSearch
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            selectedSearchSkills={selectedSearchSkills}
-            setSelectedSearchSkills={setSelectedSearchSkills}
-          />
+      <Card className="p-8 bg-white space-y-8">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
+          <p className="text-sm text-muted-foreground">
+            Manage and track employee skills and competencies
+          </p>
+        </div>
 
-          <div className="flex gap-4 mb-4">
-            <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Levels" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Levels</SelectItem>
-                <SelectItem value="advanced">Advanced</SelectItem>
-                <SelectItem value="intermediate">Intermediate</SelectItem>
-                <SelectItem value="beginner">Beginner</SelectItem>
-                <SelectItem value="unspecified">Unspecified</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedInterest} onValueChange={setSelectedInterest}>
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Interests" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Interests</SelectItem>
-                <SelectItem value="required">Skill Goal</SelectItem>
-                <SelectItem value="not-interested">Not Interested</SelectItem>
-                <SelectItem value="unknown">Unknown</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <MatrixContent 
-            filteredSkills={filteredSkills}
-            visibleItems={visibleItems}
-            observerTarget={observerTarget}
+        <div className="flex flex-col gap-4">
+          <RoleSelection 
+            selectedRole={selectedRole}
+            selectedLevel={roleLevel}
+            currentTrack={getTrackForRole(selectedRole)}
+            onRoleChange={setSelectedRole}
+            onLevelChange={setRoleLevel}
+            onTrackChange={() => {}}
+            roles={roles}
           />
         </div>
+
+        <CategorizedSkills 
+          roleId={selectedRole}
+          employeeId={id || ""}
+          selectedLevel={roleLevel}
+        />
+
+        <SkillGoalsWidget 
+          totalSkills={allRoleSkills.length}
+          skillGoalsCount={skillGoals.length}
+        />
+
+        {skillGoals.length > 0 && (
+          <SkillGoalSection 
+            skills={skillGoals}
+            count={skillGoals.length}
+          />
+        )}
+
+        <SkillsMatrixContent 
+          filteredSkills={filteredSkills}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedSearchSkills={selectedSearchSkills}
+          setSelectedSearchSkills={setSelectedSearchSkills}
+          visibleItems={visibleItems}
+          observerTarget={observerTarget}
+        />
       </Card>
     </div>
   );
