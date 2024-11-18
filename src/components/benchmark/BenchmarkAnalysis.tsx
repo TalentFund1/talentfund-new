@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
@@ -12,8 +11,6 @@ import { RoleSelection } from "./RoleSelection";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
 import { SkillGoalSection } from "./SkillGoalSection";
-import { Badge } from "../ui/badge";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 const roles = {
   "123": "AI Engineer",
@@ -29,7 +26,6 @@ export const BenchmarkAnalysis = () => {
   const employeeSkills = getEmployeeSkills(id || "123");
   const { selectedRole, setSelectedRole, selectedLevel, setSelectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
   
   // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
@@ -42,53 +38,30 @@ export const BenchmarkAnalysis = () => {
   ].filter(skill => toggledSkills.has(skill.title));
 
   // Calculate matching skills by comparing employee's skills with toggled role requirements
-  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
-    const employeeSkillState = currentStates[roleSkill.title];
-    if (!employeeSkillState) return false;
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => 
+    employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
+  );
 
-    const competencyState = getSkillCompetencyState(roleSkill.title, selectedLevel.toLowerCase());
-    if (!competencyState?.level) return false;
-
-    const employeeLevel = employeeSkillState.level.toLowerCase();
-    const requiredLevel = competencyState.level.toLowerCase();
-
-    const levelPriorities = {
-      'advanced': 3,
-      'intermediate': 2,
-      'beginner': 1,
-      'unspecified': 0
-    };
-
-    return levelPriorities[employeeLevel] >= levelPriorities[requiredLevel];
-  });
+  console.log('Matching skills:', matchingSkills.map(skill => skill.title));
 
   // Calculate skill goals from matching skills that are marked as skill goals in currentStates
   const skillGoals = matchingSkills.filter(skill => {
     const currentSkillState = currentStates[skill.title];
-    return currentSkillState?.requirement === 'required';
+    const isSkillGoal = currentSkillState?.requirement === 'required';
+
+    console.log(`Skill ${skill.title}:`, {
+      currentRequirement: currentSkillState?.requirement,
+      isSkillGoal
+    });
+
+    return isSkillGoal;
   });
+
+  console.log('Skill goals:', skillGoals.map(skill => skill.title));
 
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
-
-  const getLevelColor = (skillTitle: string) => {
-    const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase());
-    if (!competencyState?.level) return "bg-gray-300";
-
-    const level = String(competencyState.level).toLowerCase();
-    
-    switch (level) {
-      case "advanced":
-        return "bg-primary-accent";
-      case "intermediate":
-        return "bg-primary-icon";
-      case "beginner":
-        return "bg-[#008000]";
-      default:
-        return "bg-gray-300";
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -140,29 +113,6 @@ export const BenchmarkAnalysis = () => {
             totalSkills={totalSkillsCount}
             skillGoalsCount={skillGoals.length}
           />
-
-          <Card className="p-6 space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Competency Match</span>
-              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                {matchingSkills.length}
-              </span>
-            </div>
-            {matchingSkills.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {matchingSkills.map((skill) => (
-                  <Badge 
-                    key={skill.title}
-                    variant="outline" 
-                    className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-                  >
-                    {skill.title}
-                    <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </Card>
 
           {skillGoals.length > 0 && (
             <SkillGoalSection 
