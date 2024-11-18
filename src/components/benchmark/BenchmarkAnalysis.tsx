@@ -9,7 +9,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
-import { SkillGoalSection } from "./SkillGoalSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -74,50 +73,18 @@ export const BenchmarkAnalysis = () => {
 
         <div className="space-y-6">
           <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="space-y-6">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-foreground">Skill Match</span>
-                  <span className="text-sm text-foreground">
-                    {matchingSkillsCount} out of {totalSkillsCount}
-                  </span>
-                </div>
-                <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-[#1F2144] rounded-full" 
-                    style={{ width: `${matchPercentage}%` }} 
-                  />
-                </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Skill Match</span>
+                <span className="text-sm text-foreground">
+                  {matchingSkillsCount} out of {totalSkillsCount}
+                </span>
               </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-foreground">Competency Match</span>
-                  <span className="text-sm text-foreground">
-                    {matchingSkills.length} out of {totalSkillsCount}
-                  </span>
-                </div>
-                <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-[#1F2144] rounded-full" 
-                    style={{ width: `${(matchingSkills.length / totalSkillsCount) * 100}%` }} 
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-foreground">Skill Goals</span>
-                  <span className="text-sm text-foreground">
-                    {toggledRoleSkills.length} out of {totalSkillsCount}
-                  </span>
-                </div>
-                <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-[#1F2144] rounded-full" 
-                    style={{ width: `${(toggledRoleSkills.length / totalSkillsCount) * 100}%` }} 
-                  />
-                </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full" 
+                  style={{ width: `${matchPercentage}%` }} 
+                />
               </div>
             </div>
           </div>
@@ -125,12 +92,6 @@ export const BenchmarkAnalysis = () => {
           <CompetencyMatchSection 
             skills={matchingSkills}
             roleLevel={selectedLevel}
-          />
-
-          <SkillGoalSection 
-            skills={toggledRoleSkills}
-            count={toggledRoleSkills.length}
-            title="Skill Goals"
           />
         </div>
       </Card>

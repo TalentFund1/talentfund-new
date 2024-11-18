@@ -1,8 +1,10 @@
 import { useRef } from "react";
 import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { CategorizedSkills } from "../CategorizedSkills";
+import { SkillGoalSection } from "../SkillGoalSection";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -30,12 +32,24 @@ export const BenchmarkSkillsMatrixContent = ({
   filteredSkills,
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
+  const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
+
+  // All toggled skills for skill goals
+  const allSkillGoals = filteredSkills.filter(skill => toggledSkills.has(skill.title));
+
   return (
     <>
       <CategorizedSkills 
         roleId={roleId}
         employeeId={employeeId}
         selectedLevel={roleLevel}
+      />
+
+      <SkillGoalSection 
+        skills={allSkillGoals}
+        count={allSkillGoals.length}
+        title="Skill Goals"
       />
 
       <SkillsMatrixContent 
