@@ -9,6 +9,7 @@ interface SkillsMatrixTableProps {
     level: string;
     growth: string;
     confidence: string;
+    roleLevel?: string;
   }>;
   setHasChanges?: React.Dispatch<React.SetStateAction<boolean>>;
   showCompanySkill?: boolean;
@@ -21,6 +22,8 @@ export const SkillsMatrixTable = ({
   showCompanySkill = true,
   isRoleBenchmark = false
 }: SkillsMatrixTableProps) => {
+  console.log("Filtered skills in table:", filteredSkills); // Debug log
+
   return (
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
       <Table>
