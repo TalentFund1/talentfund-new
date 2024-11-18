@@ -77,6 +77,10 @@ export const RoleBenchmark = () => {
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalToggledSkills) * 100) || 0;
 
+  const handleTrackChange = (value: string) => {
+    setTrackForRole(selectedRole, value as Track);
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -97,7 +101,7 @@ export const RoleBenchmark = () => {
           currentTrack={currentTrack}
           onRoleChange={setSelectedRole}
           onLevelChange={setRoleLevel}
-          onTrackChange={setTrackForRole}
+          onTrackChange={handleTrackChange}
           roles={roles}
         />
 
