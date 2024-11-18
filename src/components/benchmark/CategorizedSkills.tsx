@@ -104,9 +104,9 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   };
 
   const SkillSection = ({ title, skills, count }: { title: string, skills: any[], count: number }) => (
-    <Card className="p-6 space-y-4 bg-white shadow-sm">
+    <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-foreground">{title}</span>
+        <span className="text-sm font-medium">{title}</span>
         <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
           {count}
         </span>
@@ -127,7 +127,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <CategoryCards
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
@@ -135,31 +135,27 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
         selectedLevel={selectedLevel}
       />
 
-      <div className="space-y-4">
-        {requiredSkills.length > 0 && (
-          <SkillSection 
-            title="Required Skills" 
-            skills={requiredSkills} 
-            count={requiredSkills.length} 
-          />
-        )}
-        
-        {preferredSkills.length > 0 && (
-          <SkillSection 
-            title="Preferred Skills" 
-            skills={preferredSkills} 
-            count={preferredSkills.length} 
-          />
-        )}
-        
-        {missingSkills.length > 0 && (
-          <SkillSection 
-            title="Missing Skills" 
-            skills={missingSkills} 
-            count={missingSkills.length} 
-          />
-        )}
-      </div>
+      {requiredSkills.length > 0 && (
+        <SkillSection 
+          title="Required Skills" 
+          skills={requiredSkills} 
+          count={requiredSkills.length} 
+        />
+      )}
+      
+      {preferredSkills.length > 0 && (
+        <SkillSection 
+          title="Preferred Skills" 
+          skills={preferredSkills} 
+          count={preferredSkills.length} 
+        />
+      )}
+      
+      <SkillSection 
+        title="Missing Skills" 
+        skills={missingSkills} 
+        count={missingSkills.length} 
+      />
     </div>
   );
 };
