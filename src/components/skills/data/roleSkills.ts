@@ -19,7 +19,8 @@ export const roleSkills = {
       { title: "Google Cloud Professional Machine Learning Engineer", subcategory: "Cloud Certification", level: "advanced", growth: "28%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
     ]
   },
-  "124": { // Backend Engineer
+  
+  "124": {
     specialized: [
       { title: "Node.js", subcategory: "Backend Development", level: "advanced", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "Database Design", subcategory: "Data Management", level: "advanced", growth: "15%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
@@ -38,11 +39,12 @@ export const roleSkills = {
       { title: "MongoDB Professional Developer", subcategory: "Database Certification", level: "advanced", growth: "20%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
     ]
   },
+  
   "125": { // Frontend Engineer
     specialized: [
       { title: "React", subcategory: "Frontend Frameworks", level: "advanced", growth: "20%", salary: "$170,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "TypeScript", subcategory: "Programming Languages", level: "advanced", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "UI/UX Design", subcategory: "Design", level: "intermediate", growth: "30%", salary: "$168,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
+      { title: "UI/UX Design", subcategory: "Design", level: "intermediate", growth: "30%", salary: "$168,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "CSS/SASS", subcategory: "Styling", level: "advanced", growth: "15%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "Next.js", subcategory: "Frontend Frameworks", level: "advanced", growth: "28%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "prefered" }
     ],
@@ -57,7 +59,8 @@ export const roleSkills = {
       { title: "Professional Scrum Developer", subcategory: "Development Certification", level: "intermediate", growth: "15%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
     ]
   },
-  "126": { // Engineering Manager
+  
+  "126": {
     specialized: [
       { title: "System Design", subcategory: "Architecture", level: "advanced", growth: "25%", salary: "$192,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "Technical Architecture", subcategory: "Architecture", level: "advanced", growth: "30%", salary: "$195,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
