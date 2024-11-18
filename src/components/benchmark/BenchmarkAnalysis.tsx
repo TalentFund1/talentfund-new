@@ -9,7 +9,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
-import { Badge } from "../ui/badge";
 
 const roles = {
   "123": "AI Engineer",
@@ -38,15 +37,6 @@ export const BenchmarkAnalysis = () => {
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
-  });
-
-  // Get skill goals - include both toggled skills and employee skills
-  const skillGoals = toggledRoleSkills.filter(skill => {
-    const currentState = currentStates[skill.title];
-    return currentState?.requirement === 'skill_goal' || 
-           currentState?.requirement === 'required' ||
-           skill.requirement === 'skill_goal' ||
-           skill.requirement === 'required';
   });
 
   const totalSkillsCount = toggledRoleSkills.length;
@@ -103,26 +93,6 @@ export const BenchmarkAnalysis = () => {
             skills={matchingSkills}
             roleLevel={selectedLevel}
           />
-
-          <Card className="p-6 space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Skill Goals</span>
-              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                {skillGoals.length}
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {skillGoals.map((skill) => (
-                <Badge 
-                  key={skill.title}
-                  variant="outline" 
-                  className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors"
-                >
-                  {skill.title}
-                </Badge>
-              ))}
-            </div>
-          </Card>
         </div>
       </Card>
     </div>
