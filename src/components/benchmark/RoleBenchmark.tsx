@@ -14,6 +14,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
+import { Track } from "../skills/types/SkillTypes";
 
 interface RoleStore {
   selectedRole: string;
@@ -81,6 +82,14 @@ export const RoleBenchmark = () => {
     setTrackForRole(selectedRole, value as Track);
   };
 
+  // Calculate competency match
+  const competencyMatchCount = matchingSkills.length;
+  const competencyMatchPercentage = Math.round((competencyMatchCount / totalToggledSkills) * 100) || 0;
+
+  // Calculate skill goals
+  const skillGoalsCount = toggledRoleSkills.length;
+  const skillGoalsPercentage = Math.round((skillGoalsCount / totalToggledSkills) * 100) || 0;
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -123,6 +132,7 @@ export const RoleBenchmark = () => {
           </div>
 
           <div className="space-y-6">
+            {/* Skill Match Progress Bar */}
             <div className="rounded-2xl border border-border bg-white p-6 w-full">
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-2">
@@ -133,37 +143,46 @@ export const RoleBenchmark = () => {
                 </div>
                 <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-[#1F2144] rounded-full" 
+                    className="h-full bg-[#1F2144] rounded-full transition-all duration-300" 
                     style={{ width: `${matchPercentage}%` }} 
                   />
                 </div>
               </div>
             </div>
 
+            {/* Competency Match Progress Bar */}
             <div className="rounded-2xl border border-border bg-white p-6 w-full">
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">Competency Match</span>
-                    <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-                      {matchingSkillsCount}
-                    </span>
-                  </div>
+                  <span className="text-sm font-medium text-foreground">Competency Match</span>
+                  <span className="text-sm text-foreground">
+                    {competencyMatchCount} out of {totalToggledSkills}
+                  </span>
                 </div>
-                {matchingSkills.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {matchingSkills.map((skill) => (
-                      <Badge 
-                        key={skill.title}
-                        variant="outline" 
-                        className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-                      >
-                        {skill.title}
-                        <div className={`h-2 w-2 rounded-full bg-primary-accent`} />
-                      </Badge>
-                    ))}
-                  </div>
-                )}
+                <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-primary-accent rounded-full transition-all duration-300" 
+                    style={{ width: `${competencyMatchPercentage}%` }} 
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Skill Goals Progress Bar */}
+            <div className="rounded-2xl border border-border bg-white p-6 w-full">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-foreground">Skill Goals</span>
+                  <span className="text-sm text-foreground">
+                    {skillGoalsCount} out of {totalToggledSkills}
+                  </span>
+                </div>
+                <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-[#008000] rounded-full transition-all duration-300" 
+                    style={{ width: `${skillGoalsPercentage}%` }} 
+                  />
+                </div>
               </div>
             </div>
           </div>
