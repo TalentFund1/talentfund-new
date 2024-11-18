@@ -71,7 +71,6 @@ export const RoleBenchmark = () => {
     setBenchmarkSearchSkills(allSkills);
   }, [selectedRole, selectedRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
-  // Match skills based on role profile skills
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -119,7 +118,7 @@ export const RoleBenchmark = () => {
 
         <Separator className="my-6" />
 
-        <Card className="p-8 bg-white space-y-8">
+        <Card className="p-8 bg-white space-y-8 border-0">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
