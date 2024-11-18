@@ -45,6 +45,24 @@ export const BenchmarkSkillsMatrix = () => {
     setSelectedSearchSkills(toggledRoleSkills);
   }, [selectedRole, toggledSkills, currentRoleSkills]);
 
+  const getLevelPriority = (level: string = 'unspecified') => {
+    const priorities: { [key: string]: number } = {
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
+    };
+    return priorities[level.toLowerCase()] ?? 3;
+  };
+
+  const getRequirementPriority = (required: string = 'preferred') => {
+    const priorities: { [key: string]: number } = {
+      'required': 0,
+      'preferred': 1
+    };
+    return priorities[required.toLowerCase()] ?? 1;
+  };
+
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) return false;
@@ -95,6 +113,24 @@ export const BenchmarkSkillsMatrix = () => {
       }
 
       return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
+    })
+    .sort((a, b) => {
+      const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
+      const bCompetencyState = getSkillCompetencyState(b.title, roleLevel.toLowerCase());
+      
+      const aLevel = aCompetencyState?.level || 'unspecified';
+      const bLevel = bCompetencyState?.level || 'unspecified';
+      
+      const aRequired = aCompetencyState?.required || 'preferred';
+      const bRequired = bCompetencyState?.required || 'preferred';
+
+      const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
+      if (levelDiff !== 0) return levelDiff;
+
+      const requirementDiff = getRequirementPriority(aRequired) - getRequirementPriority(bRequired);
+      if (requirementDiff !== 0) return requirementDiff;
+
+      return a.title.localeCompare(b.title);
     });
 
   return (
