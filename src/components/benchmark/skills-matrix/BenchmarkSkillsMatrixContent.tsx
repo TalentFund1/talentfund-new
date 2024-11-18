@@ -36,6 +36,16 @@ export const BenchmarkSkillsMatrixContent = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
+  const getRoleTitle = (id: string) => {
+    const roleTitles: { [key: string]: string } = {
+      "123": "AI Engineer",
+      "124": "Backend Engineer",
+      "125": "Frontend Engineer",
+      "126": "Engineering Manager"
+    };
+    return roleTitles[id] || "AI Engineer";
+  };
+
   return (
     <>
       <CategorizedSkills 
@@ -45,6 +55,12 @@ export const BenchmarkSkillsMatrixContent = ({
       />
 
       <Separator className="my-8" />
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-foreground">
+          {getRoleTitle(roleId)}: {roleLevel.toUpperCase()}
+        </h2>
+      </div>
 
       <SkillsMatrixContent 
         filteredSkills={filteredSkills}
