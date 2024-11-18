@@ -32,16 +32,22 @@ export const SkillGoalSection = ({ skills, count }: SkillGoalSectionProps) => {
     }
   };
 
+  // Filter skills to only show those marked as required/skill goals
+  const skillGoals = skills.filter(skill => {
+    const state = currentStates[skill.title];
+    return state?.requirement === 'required';
+  });
+
   return (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">Skill Goals</span>
         <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-          {count}
+          {skillGoals.length}
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
+        {skillGoals.map((skill) => (
           <Badge 
             key={skill.title}
             variant="outline" 
