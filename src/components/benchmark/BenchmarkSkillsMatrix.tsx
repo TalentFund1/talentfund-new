@@ -168,7 +168,7 @@ export const BenchmarkSkillsMatrix = () => {
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
         <div className="space-y-1">
-          <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
+          <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
         </div>
 
         <BenchmarkSkillsMatrixContent 
