@@ -40,10 +40,13 @@ export const BenchmarkAnalysis = () => {
     return employeeSkill !== undefined;
   });
 
-  // Get skill goals
-  const skillGoals = employeeSkills.filter(skill => {
+  // Get skill goals - include both toggled skills and employee skills
+  const skillGoals = toggledRoleSkills.filter(skill => {
     const currentState = currentStates[skill.title];
-    return currentState?.requirement === 'skill_goal' || skill.requirement === 'skill_goal';
+    return currentState?.requirement === 'skill_goal' || 
+           currentState?.requirement === 'required' ||
+           skill.requirement === 'skill_goal' ||
+           skill.requirement === 'required';
   });
 
   const totalSkillsCount = toggledRoleSkills.length;
