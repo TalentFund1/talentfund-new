@@ -11,8 +11,11 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { CategorizedSkills } from "./CategorizedSkills";
 import { useTrack } from "../skills/context/TrackContext";
+import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
+import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
+import { BenchmarkMatrixFilters } from "./skills-matrix/BenchmarkMatrixFilters";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -47,6 +50,15 @@ export const BenchmarkSkillsMatrix = () => {
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
+
+  // Calculate skill goals
+  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
+    .filter(skill => {
+      if (!toggledSkills.has(skill.title)) return false;
+      const currentSkillState = currentStates[skill.title];
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      return requirement === 'required' || requirement === 'skill_goal';
+    });
 
   const getRoleLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
@@ -114,6 +126,7 @@ export const BenchmarkSkillsMatrix = () => {
       const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
+      // If levels are the same, sort alphabetically
       return a.title.localeCompare(b.title);
     });
 
@@ -162,8 +175,19 @@ export const BenchmarkSkillsMatrix = () => {
           selectedLevel={roleLevel}
         />
 
-        <SkillsMatrixContent 
-          filteredSkills={filteredSkills}
+        <SkillGoalsWidget 
+          totalSkills={allRoleSkills.length}
+          skillGoalsCount={skillGoals.length}
+        />
+
+        {skillGoals.length > 0 && (
+          <SkillGoalSection 
+            skills={skillGoals}
+            count={skillGoals.length}
+          />
+        )}
+
+        <BenchmarkMatrixFilters
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedLevel={selectedLevel}
@@ -172,6 +196,10 @@ export const BenchmarkSkillsMatrix = () => {
           setSelectedInterest={setSelectedInterest}
           selectedSearchSkills={selectedSearchSkills}
           setSelectedSearchSkills={setSelectedSearchSkills}
+        />
+
+        <SkillsMatrixContent 
+          filteredSkills={filteredSkills}
           visibleItems={visibleItems}
           observerTarget={observerTarget}
         />

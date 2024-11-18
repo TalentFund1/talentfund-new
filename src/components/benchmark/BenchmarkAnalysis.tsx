@@ -8,9 +8,6 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
-import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
-import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
-import { SkillGoalSection } from "./SkillGoalSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -41,15 +38,6 @@ export const BenchmarkAnalysis = () => {
   const matchingSkills = toggledRoleSkills.filter(roleSkill => 
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
-
-  // Calculate skill goals
-  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
-    .filter(skill => {
-      if (!toggledSkills.has(skill.title)) return false;
-      const currentSkillState = currentStates[skill.title];
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
-      return requirement === 'required' || requirement === 'skill_goal';
-    });
 
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
@@ -99,19 +87,20 @@ export const BenchmarkAnalysis = () => {
                 />
               </div>
             </div>
+
+            <div className="space-y-4 mt-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Competency Match</span>
+                <span className="text-sm text-foreground">12 out of 12</span>
+              </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full" 
+                  style={{ width: `${(12/12) * 100}%` }} 
+                />
+              </div>
+            </div>
           </div>
-
-          <SkillGoalsWidget 
-            totalSkills={toggledRoleSkills.length}
-            skillGoalsCount={skillGoals.length}
-          />
-
-          {skillGoals.length > 0 && (
-            <SkillGoalSection 
-              skills={skillGoals}
-              count={skillGoals.length}
-            />
-          )}
         </div>
       </Card>
     </div>
