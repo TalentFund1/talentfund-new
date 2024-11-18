@@ -2,7 +2,7 @@ import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
-import { MutableRefObject } from "react";
+import { useRef } from "react";
 
 interface SkillsMatrixContentProps {
   filteredSkills: any[];
@@ -15,7 +15,7 @@ interface SkillsMatrixContentProps {
   selectedSearchSkills: string[];
   setSelectedSearchSkills: (skills: string[]) => void;
   visibleItems: number;
-  observerTarget: MutableRefObject<HTMLDivElement | null>;
+  observerTarget: React.RefObject<HTMLDivElement>;
 }
 
 export const SkillsMatrixContent = ({

@@ -15,7 +15,6 @@ import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
-import { SkillsMatrixSearch } from "./skills-matrix/SkillsMatrixSearch";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -43,7 +42,7 @@ export const BenchmarkSkillsMatrix = () => {
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-
+  
   // Get all skills for the selected role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
@@ -186,14 +185,6 @@ export const BenchmarkSkillsMatrix = () => {
             count={skillGoals.length}
           />
         )}
-
-        <SkillsMatrixSearch
-          selectedRole={selectedRole}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-        />
 
         <SkillsMatrixContent 
           filteredSkills={filteredSkills}
