@@ -66,7 +66,7 @@ export const BenchmarkAnalysis = () => {
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
-  // Get competency matching skills
+  // Get competency matching skills using the same logic as Skills Matrix
   const getCompetencyMatchingSkills = () => {
     return toggledRoleSkills.filter(skill => {
       const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
@@ -74,6 +74,10 @@ export const BenchmarkAnalysis = () => {
 
       const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
       const roleSkillLevel = roleSkillState.level;
+
+      console.log(`Analyzing skill: ${skill.title}`);
+      console.log(`Role Skill Level: ${roleSkillLevel}`);
+      console.log(`Employee/Target Skill Level: ${employeeSkillLevel}`);
 
       const getLevelPriority = (level: string = 'unspecified') => {
         const priorities: { [key: string]: number } = {
@@ -88,7 +92,17 @@ export const BenchmarkAnalysis = () => {
       const employeePriority = getLevelPriority(employeeSkillLevel);
       const rolePriority = getLevelPriority(roleSkillLevel);
 
-      return employeePriority === rolePriority || employeePriority > rolePriority;
+      console.log(`Employee Priority: ${employeePriority}`);
+      console.log(`Role Priority: ${rolePriority}`);
+
+      // Match if either:
+      // 1. Levels are exactly equal
+      // 2. Employee/Target level is higher than role requirement
+      const isMatch = employeePriority === rolePriority || employeePriority > rolePriority;
+      
+      console.log(`Is Match: ${isMatch}\n`);
+
+      return isMatch;
     });
   };
 
