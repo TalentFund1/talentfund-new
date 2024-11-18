@@ -33,7 +33,7 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <span className="text-sm font-bold">Track:</span>
+          <span className="text-sm font-medium">Track:</span>
           <RadioGroup
             value={track}
             onValueChange={handleTrackChange}
