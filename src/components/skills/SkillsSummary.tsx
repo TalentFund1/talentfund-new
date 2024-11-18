@@ -8,6 +8,7 @@ import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategori
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -35,12 +36,14 @@ export const SkillsSummary = () => {
   const { toast } = useToast();
   const { currentStates } = useSkillsMatrixStore();
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
+  const { setMatrixSearchSkills } = useSkillsMatrixSearch();
 
   const employeeSkills = getEmployeeSkills(id || "");
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
     setSearchSkills(skills);
+    setMatrixSearchSkills(skills); // Sync with Skills Matrix search
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -56,6 +59,12 @@ export const SkillsSummary = () => {
         description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
       });
     }
+  };
+
+  const handleClearAll = () => {
+    setSelectedSkills([]);
+    setSearchSkills([]);
+    setMatrixSearchSkills([]); // Clear Skills Matrix search
   };
 
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
@@ -94,11 +103,6 @@ export const SkillsSummary = () => {
   const certifications: DetailedSkill[] = transformAndSortSkills(
     filterSkillsByCategory(employeeSkills, "certification")
   );
-
-  const handleClearAll = () => {
-    setSelectedSkills([]);
-    setSearchSkills([]);
-  };
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
