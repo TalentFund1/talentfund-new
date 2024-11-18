@@ -35,17 +35,8 @@ export const BenchmarkSkillsMatrixContent = ({
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
 
-  // Original skill goals - based on required skills
-  const skillGoals = filteredSkills.filter(skill => {
-    const currentSkillState = currentStates[skill.title];
-    return currentSkillState?.requirement === 'required';
-  });
-
-  // New skill goals - based on all toggled skills
-  const allSkillGoals = filteredSkills.filter(skill => {
-    const currentSkillState = currentStates[skill.title];
-    return currentSkillState?.requirement === 'skill_goal' || currentSkillState?.requirement === 'required';
-  });
+  // All toggled skills for skill goals
+  const allSkillGoals = filteredSkills.filter(skill => toggledSkills.has(skill.title));
 
   return (
     <>
@@ -55,19 +46,11 @@ export const BenchmarkSkillsMatrixContent = ({
         selectedLevel={roleLevel}
       />
 
-      {skillGoals.length > 0 && (
-        <SkillGoalSection 
-          skills={skillGoals}
-          count={skillGoals.length}
-          title="Skill Goals (Required)"
-        />
-      )}
-
       {allSkillGoals.length > 0 && (
         <SkillGoalSection 
           skills={allSkillGoals}
           count={allSkillGoals.length}
-          title="Skill Goals (All)"
+          title="Skill Goals"
         />
       )}
 
