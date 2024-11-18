@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import { aiSkills } from '../data/skills/aiSkills';
 import { backendSkills } from '../data/skills/backendSkills';
 import { commonSkills } from '../data/skills/commonSkills';
@@ -63,26 +63,15 @@ export const useCompetencyStore = create<CompetencyState>()(
       hasChanges: false,
       initializeStates: (roleId: string) => {
         const initializedStates = initializeSkillStates(roleId);
-        const storedStates = localStorage.getItem(`competency-storage-${roleId}`);
-        
-        if (storedStates) {
-          const parsedStates = JSON.parse(storedStates);
-          set({
-            currentStates: parsedStates,
-            originalStates: parsedStates,
-            hasChanges: false
-          });
-        } else {
-          set({
-            currentStates: initializedStates,
-            originalStates: initializedStates,
-            hasChanges: false
-          });
-        }
+        set({
+          currentStates: initializedStates,
+          originalStates: initializedStates,
+          hasChanges: false
+        });
       },
       setSkillState: (skillName, level, levelKey, required) =>
         set((state) => {
-          const newCurrentStates = JSON.parse(JSON.stringify(state.currentStates));
+          const newCurrentStates = { ...state.currentStates };
           
           if (!newCurrentStates[skillName]) {
             newCurrentStates[skillName] = {};
@@ -93,36 +82,24 @@ export const useCompetencyStore = create<CompetencyState>()(
             required,
           };
 
-          const hasChanges = JSON.stringify(newCurrentStates) !== JSON.stringify(state.originalStates);
-          
-          // Store the updated state immediately
-          const roleId = window.location.pathname.split('/')[2] || '123';
-          localStorage.setItem(`competency-storage-${roleId}`, JSON.stringify(newCurrentStates));
-
           return {
             currentStates: newCurrentStates,
-            hasChanges,
+            hasChanges: JSON.stringify(newCurrentStates) !== JSON.stringify(state.originalStates),
           };
         }),
-      saveChanges: () => {
-        const state = get();
-        const roleId = window.location.pathname.split('/')[2] || '123';
-        localStorage.setItem(`competency-storage-${roleId}`, JSON.stringify(state.currentStates));
-        
-        set({
-          originalStates: JSON.parse(JSON.stringify(state.currentStates)),
+      saveChanges: () =>
+        set((state) => ({
+          originalStates: { ...state.currentStates },
           hasChanges: false,
-        });
-      },
+        })),
       cancelChanges: () =>
         set((state) => ({
-          currentStates: JSON.parse(JSON.stringify(state.originalStates)),
+          currentStates: { ...state.originalStates },
           hasChanges: false,
         })),
     }),
     {
       name: 'competency-storage',
-      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         currentStates: state.currentStates,
         originalStates: state.originalStates,
