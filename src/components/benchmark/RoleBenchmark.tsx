@@ -7,6 +7,7 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { CompetencyGraph } from "../skills/CompetencyGraph";
 import { Card } from "../ui/card";
 import { create } from "zustand";
 
@@ -33,6 +34,7 @@ const roles = {
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
+  const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
@@ -93,6 +95,15 @@ export const RoleBenchmark = () => {
           onTrackChange={handleTrackChange}
           roles={roles}
         />
+
+        <Separator className="my-6" />
+
+        <Card className="p-6 bg-white space-y-6">
+          <CompetencyGraph 
+            track={currentTrack as "Professional" | "Managerial"}
+            roleId={selectedRole}
+          />
+        </Card>
       </div>
     </div>
   );
