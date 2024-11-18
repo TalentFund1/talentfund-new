@@ -9,7 +9,13 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
-import { SkillGoalSection } from "./SkillGoalSection";
+
+const roles = {
+  "123": "AI Engineer",
+  "124": "Backend Engineer",
+  "125": "Frontend Engineer",
+  "126": "Engineering Manager"
+};
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,34 +27,31 @@ export const BenchmarkAnalysis = () => {
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
-  // Get all toggled skills from the role profile
-  const allSkills = [
+  const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ];
+  ].filter(skill => toggledSkills.has(skill.title));
 
-  // Filter skills that are toggled and marked as required/skill goals
-  const skillGoals = allSkills.filter(skill => {
-    const isToggled = toggledSkills.has(skill.title);
-    const skillState = currentStates[skill.title]?.[selectedLevel.toLowerCase()];
-    return isToggled && skillState?.required === 'required';
+  // Match skills based on role profile skills
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
+    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+    return employeeSkill !== undefined;
   });
 
-  console.log('Skill Goals:', skillGoals.map(s => s.title));
-  console.log('Current States:', currentStates);
-  console.log('Selected Level:', selectedLevel);
-  console.log('Toggled Skills:', Array.from(toggledSkills));
+  const totalSkillsCount = toggledRoleSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
+  const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between">
           <div className="space-y-1">
             <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
               Benchmark Analysis
               <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
-                {skillGoals.length}
+                {matchPercentage}%
               </span>
             </h2>
             <p className="text-sm text-muted-foreground">
@@ -63,12 +66,7 @@ export const BenchmarkAnalysis = () => {
               onRoleChange={setSelectedRole}
               onLevelChange={setSelectedLevel}
               onTrackChange={() => {}}
-              roles={{
-                "123": "AI Engineer",
-                "124": "Backend Engineer",
-                "125": "Frontend Engineer",
-                "126": "Engineering Manager"
-              }}
+              roles={roles}
             />
           </div>
         </div>
@@ -79,27 +77,21 @@ export const BenchmarkAnalysis = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Match</span>
                 <span className="text-sm text-foreground">
-                  {skillGoals.length} out of {allSkills.length}
+                  {matchingSkillsCount} out of {totalSkillsCount}
                 </span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${(skillGoals.length / allSkills.length) * 100}%` }} 
+                  style={{ width: `${matchPercentage}%` }} 
                 />
               </div>
             </div>
           </div>
 
           <CompetencyMatchSection 
-            skills={skillGoals}
+            skills={matchingSkills}
             roleLevel={selectedLevel}
-          />
-
-          <SkillGoalSection 
-            skills={skillGoals}
-            count={skillGoals.length}
-            title="Skill Goals"
           />
         </div>
       </Card>
