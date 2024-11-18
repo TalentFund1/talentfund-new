@@ -9,6 +9,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
+import { SkillGoalSection } from "./SkillGoalSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -27,11 +28,15 @@ export const BenchmarkAnalysis = () => {
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
+  // Get all toggled skills from the role profile
   const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
+
+  console.log('Toggled Skills Count:', toggledRoleSkills.length);
+  console.log('Toggled Skills:', toggledRoleSkills.map(s => s.title));
 
   // Match skills based on role profile skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
@@ -92,6 +97,12 @@ export const BenchmarkAnalysis = () => {
           <CompetencyMatchSection 
             skills={matchingSkills}
             roleLevel={selectedLevel}
+          />
+
+          <SkillGoalSection 
+            skills={toggledRoleSkills}
+            count={toggledRoleSkills.length}
+            title="Skill Goals"
           />
         </div>
       </Card>
