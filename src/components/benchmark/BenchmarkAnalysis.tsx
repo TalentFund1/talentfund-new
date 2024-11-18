@@ -9,6 +9,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
+import { SkillGoalSection } from "./SkillGoalSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -92,6 +93,12 @@ export const BenchmarkAnalysis = () => {
           <CompetencyMatchSection 
             skills={matchingSkills}
             roleLevel={selectedLevel}
+          />
+
+          <SkillGoalSection 
+            skills={toggledRoleSkills}
+            count={toggledRoleSkills.length}
+            title="Skill Goals"
           />
         </div>
       </Card>
