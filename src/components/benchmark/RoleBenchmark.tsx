@@ -7,21 +7,7 @@ import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { Card } from "../ui/card";
-import { create } from "zustand";
-
-interface RoleStore {
-  selectedRole: string;
-  setSelectedRole: (role: string) => void;
-  selectedLevel: string;
-  setSelectedLevel: (level: string) => void;
-}
-
-export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "123",
-  setSelectedRole: (role) => set({ selectedRole: role }),
-  selectedLevel: "p4",
-  setSelectedLevel: (level) => set({ selectedLevel: level }),
-}));
+import { useRoleStore } from "./store/roleStore";
 
 const roles = {
   "123": "AI Engineer",
