@@ -78,36 +78,38 @@ export const BenchmarkMatrixFilters = ({
         placeholder="Search skills..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full pr-8 hidden" // Added hidden class here
+        className="w-full pr-8 hidden"
       />
 
-      {selectedSearchSkills.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {selectedSearchSkills.map((skill, index) => (
-            <Badge 
-              key={index} 
-              variant="secondary"
-              className="flex items-center gap-1 bg-background"
-            >
-              {skill}
-              <button
-                onClick={() => removeSearchSkill(skill)}
-                className="ml-1 hover:text-destructive"
+      <div className="hidden">
+        {selectedSearchSkills.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {selectedSearchSkills.map((skill, index) => (
+              <Badge 
+                key={index} 
+                variant="secondary"
+                className="flex items-center gap-1 bg-background"
               >
-                <X className="h-3 w-3" />
-              </button>
-            </Badge>
-          ))}
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={clearSearch}
-            className="text-sm"
-          >
-            Clear All
-          </Button>
-        </div>
-      )}
+                {skill}
+                <button
+                  onClick={() => removeSearchSkill(skill)}
+                  className="ml-1 hover:text-destructive"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={clearSearch}
+              className="text-sm"
+            >
+              Clear All
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
