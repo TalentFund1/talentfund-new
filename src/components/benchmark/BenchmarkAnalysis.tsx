@@ -7,6 +7,7 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
+import { CompetencyMatchSection } from "./CompetencyMatchSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -75,6 +76,11 @@ export const BenchmarkAnalysis = () => {
               </div>
             </div>
           </div>
+
+          <CompetencyMatchSection 
+            skills={matchingSkills}
+            roleLevel={selectedLevel}
+          />
         </div>
       </Card>
     </div>
