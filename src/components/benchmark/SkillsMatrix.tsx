@@ -10,6 +10,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
+import { Separator } from "@/components/ui/separator";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -157,6 +158,8 @@ export const SkillsMatrix = () => {
           onSave={saveChanges}
           onCancel={cancelChanges}
         />
+        
+        <Separator className="my-4" />
         
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
