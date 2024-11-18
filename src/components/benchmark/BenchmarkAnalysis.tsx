@@ -9,6 +9,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
+import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
 import { SkillGoalSection } from "./SkillGoalSection";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
 
@@ -27,20 +28,24 @@ export const BenchmarkAnalysis = () => {
   const { selectedRole, setSelectedRole, selectedLevel, setSelectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   
+  // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
+  // Get all toggled skills for the role
   const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
 
+  // Calculate matching skills by comparing employee's skills with toggled role requirements
   const matchingSkills = toggledRoleSkills.filter(roleSkill => 
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
   console.log('Matching skills:', matchingSkills.map(skill => skill.title));
 
+  // Calculate skill goals from matching skills that are marked as skill goals in currentStates
   const skillGoals = matchingSkills.filter(skill => {
     const currentSkillState = currentStates[skill.title];
     const isSkillGoal = currentSkillState?.requirement === 'required';
@@ -104,6 +109,11 @@ export const BenchmarkAnalysis = () => {
               </div>
             </div>
           </div>
+
+          <SkillGoalsWidget 
+            totalSkills={totalSkillsCount}
+            skillGoalsCount={skillGoals.length}
+          />
 
           {skillGoals.length > 0 && (
             <SkillGoalSection 
