@@ -58,7 +58,7 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
           {matchingSkills.length}
         </span>
       </div>
-      {matchingSkills.length > 0 ? (
+      {matchingSkills.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {matchingSkills.map((skill) => (
             <Badge 
@@ -70,10 +70,6 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
               <div className={`h-2 w-2 rounded-full bg-primary-accent`} />
             </Badge>
           ))}
-        </div>
-      ) : (
-        <div className="text-sm text-muted-foreground">
-          No competency matches found
         </div>
       )}
     </Card>
