@@ -73,23 +73,13 @@ export const BenchmarkMatrixFilters = ({
         </Select>
       </div>
 
-      <div className="relative">
-        <Input
-          type="text"
-          placeholder="Search skills..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pr-8"
-        />
-        {searchTerm && (
-          <button
-            onClick={() => setSearchTerm("")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
-      </div>
+      <Input
+        type="text"
+        placeholder="Search skills..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full pr-8 hidden" // Added hidden class here
+      />
 
       {selectedSearchSkills.length > 0 && (
         <div className="flex flex-wrap gap-2">
