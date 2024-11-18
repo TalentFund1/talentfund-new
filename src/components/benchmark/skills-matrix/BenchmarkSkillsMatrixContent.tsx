@@ -62,8 +62,6 @@ export const BenchmarkSkillsMatrixContent = ({
         </h2>
       </div>
 
-      <Separator className="mb-6" />
-
       <SkillsMatrixContent 
         filteredSkills={filteredSkills}
         {...props}
