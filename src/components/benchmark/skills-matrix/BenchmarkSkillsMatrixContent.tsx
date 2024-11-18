@@ -4,6 +4,7 @@ import { CategorizedSkills } from "../CategorizedSkills";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
+import { Separator } from "@/components/ui/separator";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -42,6 +43,8 @@ export const BenchmarkSkillsMatrixContent = ({
         employeeId={employeeId}
         selectedLevel={roleLevel}
       />
+
+      <Separator className="my-8" />
 
       <SkillsMatrixContent 
         filteredSkills={filteredSkills}
