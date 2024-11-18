@@ -50,8 +50,6 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
     return isMatch;
   });
 
-  if (matchingSkills.length === 0) return null;
-
   return (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
@@ -60,18 +58,24 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
           {matchingSkills.length}
         </span>
       </div>
-      <div className="flex flex-wrap gap-2">
-        {matchingSkills.map((skill) => (
-          <Badge 
-            key={skill.title}
-            variant="outline" 
-            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-          >
-            {skill.title}
-            <div className={`h-2 w-2 rounded-full bg-primary-accent`} />
-          </Badge>
-        ))}
-      </div>
+      {matchingSkills.length > 0 ? (
+        <div className="flex flex-wrap gap-2">
+          {matchingSkills.map((skill) => (
+            <Badge 
+              key={skill.title}
+              variant="outline" 
+              className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+            >
+              {skill.title}
+              <div className={`h-2 w-2 rounded-full bg-primary-accent`} />
+            </Badge>
+          ))}
+        </div>
+      ) : (
+        <div className="text-sm text-muted-foreground">
+          No competency matches found
+        </div>
+      )}
     </Card>
   );
 };
