@@ -8,7 +8,6 @@ import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
-import { SearchFilter } from "@/components/market/SearchFilter";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 
@@ -158,16 +157,6 @@ export const SkillsMatrix = () => {
           onSave={saveChanges}
           onCancel={cancelChanges}
         />
-        
-        <div className="space-y-4">
-          <SearchFilter
-            label=""
-            placeholder="Search skills..."
-            items={allSkills}
-            selectedItems={matrixSearchSkills}
-            onItemsChange={setMatrixSearchSkills}
-          />
-        </div>
         
         <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
