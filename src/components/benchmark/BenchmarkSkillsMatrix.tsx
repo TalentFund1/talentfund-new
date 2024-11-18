@@ -115,21 +115,21 @@ export const BenchmarkSkillsMatrix = () => {
       return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
     })
     .sort((a, b) => {
-      // Sort by Employee Skills level first
-      const aLevel = currentStates[a.title]?.level || a.level || 'unspecified';
-      const bLevel = currentStates[b.title]?.level || b.level || 'unspecified';
+      const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
+      const bCompetencyState = getSkillCompetencyState(b.title, roleLevel.toLowerCase());
       
+      const aLevel = aCompetencyState?.level || 'unspecified';
+      const bLevel = bCompetencyState?.level || 'unspecified';
+      
+      const aRequired = aCompetencyState?.required || 'preferred';
+      const bRequired = bCompetencyState?.required || 'preferred';
+
       const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
-      // If levels are the same, sort by requirement
-      const aRequired = currentStates[a.title]?.requirement || a.requirement || 'preferred';
-      const bRequired = currentStates[b.title]?.requirement || b.requirement || 'preferred';
-      
       const requirementDiff = getRequirementPriority(aRequired) - getRequirementPriority(bRequired);
       if (requirementDiff !== 0) return requirementDiff;
 
-      // If requirements are the same, sort alphabetically
       return a.title.localeCompare(b.title);
     });
 
