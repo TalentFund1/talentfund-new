@@ -35,12 +35,10 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
 
   useEffect(() => {
-    // Update track when savedTrack changes
     setTrack(savedTrack);
   }, [savedTrack]);
 
   useEffect(() => {
-    // Initialize competency states when component mounts or roleId changes
     initializeStates(currentRoleId);
   }, [currentRoleId, initializeStates]);
 
@@ -107,16 +105,43 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     
     return {
       level: skill.level || "-",
-      required: "required" // Default to required for now
+      required: "required"
     };
+  };
+
+  const countAdvancedLevels = (skillName: string, levels: string[]) => {
+    let advancedCount = 0;
+    levels.forEach(level => {
+      const skillState = useCompetencyStore.getState().currentStates[skillName]?.[level.toLowerCase()];
+      if (skillState?.level?.toLowerCase() === 'advanced') {
+        advancedCount++;
+      }
+    });
+    return advancedCount;
   };
 
   const skills = getSkillsByCategory();
   const levels = getLevelsForTrack();
-  const uniqueSkills = skills.map(skill => skill.title).sort();
+
+  // Sort skills based on the number of advanced levels
+  const sortedSkills = skills
+    .map(skill => ({
+      ...skill,
+      advancedCount: countAdvancedLevels(skill.title, levels)
+    }))
+    .sort((a, b) => {
+      // Sort by advanced count first
+      const advancedDiff = b.advancedCount - a.advancedCount;
+      if (advancedDiff !== 0) return advancedDiff;
+      
+      // If advanced counts are equal, sort alphabetically
+      return a.title.localeCompare(b.title);
+    })
+    .map(skill => skill.title);
 
   console.log('Current track:', track);
   console.log('Levels for track:', levels);
+  console.log('Sorted skills by advanced count:', sortedSkills);
 
   return (
     <div className="space-y-6">
@@ -169,7 +194,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
             </TableRow>
           </TableHeader>
           <TableBody>
-            {uniqueSkills.map((skillName) => (
+            {sortedSkills.map((skillName) => (
               <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
                 <TableCell className="font-medium border-r border-border">
                   {skillName}
