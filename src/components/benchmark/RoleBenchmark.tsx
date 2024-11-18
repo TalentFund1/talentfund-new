@@ -13,6 +13,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
 import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
 
 interface RoleStore {
   selectedRole: string;
@@ -38,7 +39,6 @@ const roles = {
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
@@ -50,26 +50,16 @@ export const RoleBenchmark = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
   useEffect(() => {
-    if (currentTrack === "Professional" && roleLevel.toLowerCase().startsWith("m")) {
-      setRoleLevel("p4");
-    } else if (currentTrack === "Managerial" && roleLevel.toLowerCase().startsWith("p")) {
-      setRoleLevel("m3");
-    }
-  }, [currentTrack]);
-
-  const selectedRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-
-  useEffect(() => {
     const allSkills = [
-      ...(selectedRoleSkills.specialized || []),
-      ...(selectedRoleSkills.common || []),
-      ...(selectedRoleSkills.certifications || [])
+      ...(currentRoleSkills.specialized || []),
+      ...(currentRoleSkills.common || []),
+      ...(currentRoleSkills.certifications || [])
     ]
     .map(skill => skill.title)
     .filter(skillTitle => toggledSkills.has(skillTitle));
     
     setBenchmarkSearchSkills(allSkills);
-  }, [selectedRole, selectedRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
+  }, [selectedRole, currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
@@ -77,20 +67,15 @@ export const RoleBenchmark = () => {
     ...currentRoleSkills.certifications
   ];
 
-  const matchingSkills = allRoleSkills.filter(roleSkill => {
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    return employeeSkill !== undefined && toggledSkills.has(roleSkill.title);
+    return employeeSkill !== undefined;
   });
 
-  const matchPercentage = Math.round((matchingSkills.length / allRoleSkills.length) * 100);
-
-  const handleSeeSkillProfile = () => {
-    navigate(`/skills/${selectedRole}`);
-  };
-
-  const handleTrackChange = (value: string) => {
-    setTrackForRole(selectedRole, value as "Professional" | "Managerial");
-  };
+  const totalToggledSkills = toggledRoleSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
+  const matchPercentage = Math.round((matchingSkillsCount / totalToggledSkills) * 100) || 0;
 
   return (
     <div className="space-y-6">
@@ -100,7 +85,7 @@ export const RoleBenchmark = () => {
           <Button 
             variant="outline" 
             className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-            onClick={handleSeeSkillProfile}
+            onClick={() => navigate(`/skills/${selectedRole}`)}
           >
             See Skill Profile
           </Button>
@@ -112,7 +97,7 @@ export const RoleBenchmark = () => {
           currentTrack={currentTrack}
           onRoleChange={setSelectedRole}
           onLevelChange={setRoleLevel}
-          onTrackChange={handleTrackChange}
+          onTrackChange={setTrackForRole}
           roles={roles}
         />
 
@@ -139,7 +124,7 @@ export const RoleBenchmark = () => {
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-foreground">Skill Match</span>
                   <span className="text-sm text-foreground">
-                    {matchingSkills.length} out of {allRoleSkills.length}
+                    {matchingSkillsCount} out of {totalToggledSkills}
                   </span>
                 </div>
                 <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
@@ -151,10 +136,32 @@ export const RoleBenchmark = () => {
               </div>
             </div>
 
-            <CompetencyMatchSection 
-              skills={matchingSkills}
-              roleLevel={roleLevel}
-            />
+            <div className="rounded-2xl border border-border bg-white p-6 w-full">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">Competency Match</span>
+                    <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                      {matchingSkillsCount}
+                    </span>
+                  </div>
+                </div>
+                {matchingSkills.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {matchingSkills.map((skill) => (
+                      <Badge 
+                        key={skill.title}
+                        variant="outline" 
+                        className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+                      >
+                        {skill.title}
+                        <div className={`h-2 w-2 rounded-full bg-primary-accent`} />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </Card>
       </div>
