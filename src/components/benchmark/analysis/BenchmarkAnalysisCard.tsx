@@ -15,20 +15,22 @@ export const BenchmarkAnalysisCard = ({
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
-          Benchmark Analysis
-          <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
-            {matchPercentage}%
-          </span>
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          Manage and track employee skills and competencies
-        </p>
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
+            Benchmark Analysis
+            <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
+              {matchPercentage}%
+            </span>
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Manage and track employee skills and competencies
+          </p>
+        </div>
       </div>
 
-      <div className="space-y-3">
-        <div className="rounded-lg border border-[#E5E7EB] bg-white p-6">
+      <div className="space-y-4">
+        <div className="rounded-lg border border-[#CCDBFF] bg-white p-6">
           <BenchmarkProgressBar 
             label="Skill Match"
             current={skillMatch.current}
@@ -36,7 +38,7 @@ export const BenchmarkAnalysisCard = ({
           />
         </div>
         
-        <div className="rounded-lg border border-[#E5E7EB] bg-white p-6">
+        <div className="rounded-lg border border-[#CCDBFF] bg-white p-6">
           <BenchmarkProgressBar 
             label="Competency Match"
             current={competencyMatch.current}
@@ -44,7 +46,7 @@ export const BenchmarkAnalysisCard = ({
           />
         </div>
         
-        <div className="rounded-lg border border-[#E5E7EB] bg-white p-6">
+        <div className="rounded-lg border border-[#CCDBFF] bg-white p-6">
           <BenchmarkProgressBar 
             label="Skill Goal"
             current={skillGoals.current}

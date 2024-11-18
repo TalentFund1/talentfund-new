@@ -14,8 +14,8 @@ export const BenchmarkProgressBar = ({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-[#1F2144]">{label}</span>
-        <span className="text-sm text-[#1F2144]">
+        <span className="text-sm font-medium text-foreground">{label}</span>
+        <span className="text-sm text-foreground font-medium">
           {current} out of {total}
         </span>
       </div>
