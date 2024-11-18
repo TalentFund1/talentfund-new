@@ -35,14 +35,25 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
 
-  console.log('Toggled Skills Count:', toggledRoleSkills.length);
-  console.log('Toggled Skills:', toggledRoleSkills.map(s => s.title));
-
   // Match skills based on role profile skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
   });
+
+  // Filter skill goals from matching skills
+  const skillGoals = matchingSkills.filter(skill => {
+    const skillState = currentStates[skill.title];
+    if (!skillState) return false;
+
+    const levelState = skillState[selectedLevel.toLowerCase()];
+    if (!levelState) return false;
+
+    return levelState.required === 'required' || levelState.required === 'skill_goal';
+  });
+
+  console.log('Skill Goals Count:', skillGoals.length);
+  console.log('Skill Goals:', skillGoals.map(s => s.title));
 
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
@@ -100,8 +111,8 @@ export const BenchmarkAnalysis = () => {
           />
 
           <SkillGoalSection 
-            skills={toggledRoleSkills}
-            count={toggledRoleSkills.length}
+            skills={skillGoals}
+            count={skillGoals.length}
             title="Skill Goals"
           />
         </div>
