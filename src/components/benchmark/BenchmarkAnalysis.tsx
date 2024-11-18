@@ -33,11 +33,10 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
 
+  // Match skills based on role profile skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    const skillState = currentStates[roleSkill.title];
-    
-    return employeeSkill && skillState?.requirement === 'required';
+    return employeeSkill !== undefined;
   });
 
   const totalSkillsCount = toggledRoleSkills.length;

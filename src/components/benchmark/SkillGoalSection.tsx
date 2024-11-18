@@ -32,11 +32,8 @@ export const SkillGoalSection = ({ skills, count }: SkillGoalSectionProps) => {
     }
   };
 
-  // Filter skills to only show those marked as required/skill goals
-  const skillGoals = skills.filter(skill => {
-    const state = currentStates[skill.title];
-    return state?.requirement === 'required';
-  });
+  // Filter skills based on role profile match
+  const skillGoals = skills;
 
   return (
     <Card className="p-6 space-y-4">
