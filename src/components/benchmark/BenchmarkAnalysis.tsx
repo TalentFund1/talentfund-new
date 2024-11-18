@@ -9,7 +9,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
-import { SkillGoalSection } from "./SkillGoalSection";
 
 const roles = {
   "123": "AI Engineer",
@@ -38,15 +37,6 @@ export const BenchmarkAnalysis = () => {
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
-  });
-
-  // Filter skill goals - only show skills that are required and not already matched
-  const skillGoals = toggledRoleSkills.filter(skill => {
-    const currentSkillState = currentStates[skill.title];
-    const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
-    const isRequired = requirement === 'required';
-    const isMatched = matchingSkills.some(matchSkill => matchSkill.title === skill.title);
-    return isRequired && !isMatched;
   });
 
   const totalSkillsCount = toggledRoleSkills.length;
@@ -102,12 +92,6 @@ export const BenchmarkAnalysis = () => {
           <CompetencyMatchSection 
             skills={matchingSkills}
             roleLevel={selectedLevel}
-          />
-
-          <SkillGoalSection 
-            skills={skillGoals}
-            count={skillGoals.length}
-            title="Skill Goals"
           />
         </div>
       </Card>
