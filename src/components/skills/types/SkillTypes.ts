@@ -9,5 +9,3 @@ export interface SkillsTableProps {
   selectedFilter: string;
   setSelectedFilter: (filter: string) => void;
 }
-
-export type Track = "Professional" | "Managerial";
