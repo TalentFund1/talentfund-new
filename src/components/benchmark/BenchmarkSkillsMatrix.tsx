@@ -1,141 +1,99 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { RoleSelection } from "./RoleSelection";
-import { useRoleStore } from "./RoleBenchmark";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { CategorizedSkills } from "./CategorizedSkills";
-import { useTrack } from "../skills/context/TrackContext";
-import { roleSkills } from "../skills/data/roleSkills";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
+import { SkillsMatrixFiltering } from "./skills-matrix/SkillsMatrixFiltering";
 
 const ITEMS_PER_PAGE = 10;
-
-const roles = {
-  "123": "AI Engineer",
-  "124": "Backend Engineer",
-  "125": "Frontend Engineer",
-  "126": "Engineering Manager"
-};
 
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
-  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
-  const [selectedInterest, setSelectedInterest] = useState("all");
+  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
+  
   const { id } = useParams<{ id: string }>();
-  const { benchmarkSearchSkills } = useBenchmarkSearch();
+  const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
-  const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
-  const { toggledSkills } = useToggledSkills();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { getTrackForRole } = useTrack();
 
   const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Filter skills based on search criteria
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
-      if (!toggledSkills.has(skill.title)) {
-        return false;
-      }
-
-      // Search filter
-      const matchesSearch = selectedSearchSkills.length === 0 
-        ? true 
-        : selectedSearchSkills.some(term => 
-            skill.title.toLowerCase().includes(term.toLowerCase()) ||
-            skill.subcategory.toLowerCase().includes(term.toLowerCase())
-          );
-
-      if (!matchesSearch) {
-        return false;
-      }
-
-      // Level filter
       let matchesLevel = true;
-      if (selectedLevel !== 'all') {
-        const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
-        const roleSkillLevel = competencyState?.level || 'unspecified';
-        matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
-      }
+      let matchesSearch = true;
 
-      // Interest filter
-      let matchesInterest = true;
       const currentSkillState = currentStates[skill.title];
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
 
-      if (selectedInterest !== 'all') {
-        switch (selectedInterest.toLowerCase()) {
-          case 'skill_goal':
-            matchesInterest = requirement === 'required' || requirement === 'skill_goal';
-            break;
-          case 'not_interested':
-            matchesInterest = requirement === 'not_interested';
-            break;
-          case 'unknown':
-            matchesInterest = !requirement || requirement === 'unknown';
-            break;
-          default:
-            matchesInterest = requirement === selectedInterest.toLowerCase();
-        }
+      if (selectedLevel !== 'all') {
+        matchesLevel = skillLevel === selectedLevel.toLowerCase();
       }
 
-      return matchesLevel && matchesInterest;
+      if (selectedSearchSkills.length > 0) {
+        matchesSearch = selectedSearchSkills.some(term => 
+          skill.title.toLowerCase().includes(term.toLowerCase())
+        );
+      } else if (searchTerm) {
+        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+
+      return matchesLevel && matchesSearch;
     })
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .sort((a, b) => {
+      const aState = currentStates[a.title];
+      const bState = currentStates[b.title];
+      
+      const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
+      const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
+      
+      const levelPriority: { [key: string]: number } = {
+        'advanced': 0,
+        'intermediate': 1,
+        'beginner': 2,
+        'unspecified': 3
+      };
+      
+      return levelPriority[aLevel] - levelPriority[bLevel];
+    });
 
   useEffect(() => {
-    setVisibleItems(ITEMS_PER_PAGE);
-  }, [selectedSearchSkills, selectedLevel, selectedInterest]);
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
+          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [visibleItems, filteredSkills.length]);
 
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
-          <p className="text-sm text-muted-foreground">
-            Manage and track employee skills and competencies
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <RoleSelection 
-            selectedRole={selectedRole}
-            selectedLevel={roleLevel}
-            currentTrack={getTrackForRole(selectedRole)}
-            onRoleChange={() => {}}
-            onLevelChange={() => {}}
-            onTrackChange={() => {}}
-            roles={roles}
-          />
-        </div>
-
-        <CategorizedSkills 
-          roleId={selectedRole}
-          employeeId={id || ""}
-          selectedLevel={roleLevel}
-        />
-
-        <SkillsMatrixContent 
-          filteredSkills={filteredSkills}
+        <SkillsMatrixFiltering
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedLevel={selectedLevel}
           setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
           selectedSearchSkills={selectedSearchSkills}
           setSelectedSearchSkills={setSelectedSearchSkills}
+        />
+
+        <SkillsMatrixContent 
+          filteredSkills={filteredSkills.slice(0, visibleItems)}
+          observerTarget={observerTarget}
           visibleItems={visibleItems}
-          observerTarget={null}
+          totalItems={filteredSkills.length}
         />
       </Card>
     </div>

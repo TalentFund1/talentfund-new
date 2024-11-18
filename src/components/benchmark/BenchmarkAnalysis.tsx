@@ -87,6 +87,19 @@ export const BenchmarkAnalysis = () => {
                 />
               </div>
             </div>
+
+            <div className="space-y-4 mt-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Competency Match</span>
+                <span className="text-sm text-foreground">12 out of 12</span>
+              </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full" 
+                  style={{ width: `${(12/12) * 100}%` }} 
+                />
+              </div>
+            </div>
           </div>
         </div>
       </Card>
