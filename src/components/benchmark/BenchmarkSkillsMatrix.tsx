@@ -5,7 +5,6 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { RoleSelection } from "./RoleSelection";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
@@ -14,13 +13,6 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixContent } from "./skills-matrix/BenchmarkSkillsMatrixContent";
 
 const ITEMS_PER_PAGE = 10;
-
-const roles = {
-  "123": "AI Engineer",
-  "124": "Backend Engineer",
-  "125": "Frontend Engineer",
-  "126": "Engineering Manager"
-};
 
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,10 +23,9 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
-  const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
+  const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { getTrackForRole } = useTrack();
   const { currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
@@ -111,21 +102,6 @@ export const BenchmarkSkillsMatrix = () => {
       <Card className="p-8 bg-white space-y-8">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold text-foreground">Skills Matrix</h2>
-          <p className="text-sm text-muted-foreground">
-            Manage and track employee skills and competencies
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <RoleSelection 
-            selectedRole={selectedRole}
-            selectedLevel={roleLevel}
-            currentTrack={getTrackForRole(selectedRole)}
-            onRoleChange={setSelectedRole}
-            onLevelChange={setRoleLevel}
-            onTrackChange={() => {}}
-            roles={roles}
-          />
         </div>
 
         <BenchmarkSkillsMatrixContent 
