@@ -76,10 +76,14 @@ export const RoleBenchmark = () => {
     ...currentRoleSkills.certifications
   ];
 
+  // Get all toggled skills for the current role
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+  const totalToggledSkills = toggledRoleSkills.length;
+
   // Skill Match calculation
-  const matchingSkills = allRoleSkills.filter(roleSkill => {
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    return employeeSkill !== undefined && toggledSkills.has(roleSkill.title);
+    return employeeSkill !== undefined;
   });
 
   // Competency Match calculation
@@ -141,15 +145,15 @@ export const RoleBenchmark = () => {
         <BenchmarkAnalysisCard 
           skillMatch={{
             current: matchingSkills.length,
-            total: allRoleSkills.length
+            total: totalToggledSkills
           }}
           competencyMatch={{
             current: competencyMatchingSkills.length,
-            total: matchingSkills.length
+            total: totalToggledSkills
           }}
           skillGoals={{
             current: matchingSkills.length,
-            total: allRoleSkills.length
+            total: totalToggledSkills
           }}
         />
       </div>
