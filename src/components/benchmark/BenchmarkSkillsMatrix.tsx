@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
@@ -14,7 +15,6 @@ import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
-import { SkillsMatrixSearch } from "./skills-matrix/SkillsMatrixSearch";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -26,11 +26,13 @@ const roles = {
 };
 
 export const BenchmarkSkillsMatrix = () => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const { id } = useParams<{ id: string }>();
+  const { benchmarkSearchSkills } = useBenchmarkSearch();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { currentStates } = useSkillsMatrixStore();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
@@ -184,13 +186,10 @@ export const BenchmarkSkillsMatrix = () => {
           />
         )}
 
-        <SkillsMatrixSearch
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-        />
-
         <SkillsMatrixContent 
           filteredSkills={filteredSkills}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
           selectedLevel={selectedLevel}
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
