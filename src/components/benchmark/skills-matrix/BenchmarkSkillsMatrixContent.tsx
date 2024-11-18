@@ -54,12 +54,11 @@ export const BenchmarkSkillsMatrixContent = ({
         selectedLevel={roleLevel}
       />
 
-      <Separator className="my-8" />
-
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-foreground">
           {getRoleTitle(roleId)}: {roleLevel.toUpperCase()}
         </h2>
+        <Separator className="mt-4" />
       </div>
 
       <SkillsMatrixContent 
