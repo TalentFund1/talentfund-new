@@ -17,7 +17,7 @@ export const BenchmarkProgressBar = ({ label, current, total }: BenchmarkProgres
       </div>
       <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
         <div 
-          className="h-full bg-[#1F2144] rounded-full" 
+          className="h-full bg-[#1F2144] rounded-full transition-all duration-300" 
           style={{ width: `${percentage}%` }} 
         />
       </div>
