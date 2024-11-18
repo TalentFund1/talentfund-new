@@ -53,7 +53,13 @@ export const BenchmarkAnalysis = () => {
     return isSkillGoal;
   });
 
-  console.log('Skill goals:', skillGoals.map(skill => skill.title));
+  // New section: All matching skills with skill goals
+  const allMatchingSkillGoals = matchingSkills.map(skill => ({
+    ...skill,
+    isGoal: currentStates[skill.title]?.requirement === 'required'
+  })).filter(skill => skill.isGoal);
+
+  console.log('All matching skill goals:', allMatchingSkillGoals.map(skill => skill.title));
 
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
@@ -109,6 +115,14 @@ export const BenchmarkAnalysis = () => {
             <SkillGoalSection 
               skills={skillGoals}
               count={skillGoals.length}
+            />
+          )}
+
+          {allMatchingSkillGoals.length > 0 && (
+            <SkillGoalSection 
+              skills={allMatchingSkillGoals}
+              count={allMatchingSkillGoals.length}
+              title="All Matching Skill Goals"
             />
           )}
 

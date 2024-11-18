@@ -7,9 +7,10 @@ import { useRoleStore } from "./RoleBenchmark";
 interface SkillGoalSectionProps {
   skills: any[];
   count: number;
+  title?: string;
 }
 
-export const SkillGoalSection = ({ skills, count }: SkillGoalSectionProps) => {
+export const SkillGoalSection = ({ skills, count, title = "Skill Goals" }: SkillGoalSectionProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { selectedLevel } = useRoleStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -35,7 +36,7 @@ export const SkillGoalSection = ({ skills, count }: SkillGoalSectionProps) => {
   return (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">Skill Goals</span>
+        <span className="text-sm font-medium">{title}</span>
         <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
           {count}
         </span>
