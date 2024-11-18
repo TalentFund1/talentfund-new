@@ -11,6 +11,8 @@ import { RoleSelection } from "./RoleSelection";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
 import { SkillGoalSection } from "./SkillGoalSection";
+import { Badge } from "../ui/badge";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 const roles = {
   "123": "AI Engineer",
@@ -26,6 +28,7 @@ export const BenchmarkAnalysis = () => {
   const employeeSkills = getEmployeeSkills(id || "123");
   const { selectedRole, setSelectedRole, selectedLevel, setSelectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   
   // Get all skills for the selected role
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
@@ -62,6 +65,34 @@ export const BenchmarkAnalysis = () => {
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
+
+  // Get competency matching skills
+  const getCompetencyMatchingSkills = () => {
+    return toggledRoleSkills.filter(skill => {
+      const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      if (!roleSkillState) return false;
+
+      const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+      const roleSkillLevel = roleSkillState.level;
+
+      const getLevelPriority = (level: string = 'unspecified') => {
+        const priorities: { [key: string]: number } = {
+          'advanced': 3,
+          'intermediate': 2,
+          'beginner': 1,
+          'unspecified': 0
+        };
+        return priorities[level.toLowerCase()] ?? 0;
+      };
+
+      const employeePriority = getLevelPriority(employeeSkillLevel);
+      const rolePriority = getLevelPriority(roleSkillLevel);
+
+      return employeePriority === rolePriority || employeePriority > rolePriority;
+    });
+  };
+
+  const competencyMatchingSkills = getCompetencyMatchingSkills();
 
   return (
     <div className="space-y-6">
@@ -120,6 +151,29 @@ export const BenchmarkAnalysis = () => {
               count={skillGoals.length}
             />
           )}
+
+          <Card className="p-6 space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Competency Match</span>
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                {competencyMatchingSkills.length}
+              </span>
+            </div>
+            {competencyMatchingSkills.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {competencyMatchingSkills.map((skill) => (
+                  <Badge 
+                    key={skill.title}
+                    variant="outline" 
+                    className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+                  >
+                    {skill.title}
+                    <div className="h-2 w-2 rounded-full bg-primary-accent" />
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </Card>
         </div>
       </Card>
     </div>
