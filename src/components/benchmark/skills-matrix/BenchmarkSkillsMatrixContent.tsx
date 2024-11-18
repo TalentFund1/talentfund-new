@@ -5,6 +5,7 @@ import { SkillGoalSection } from "../SkillGoalSection";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
+import { CompetencyMatchSection } from "../CompetencyMatchSection";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -34,9 +35,34 @@ export const BenchmarkSkillsMatrixContent = ({
 }: BenchmarkSkillsMatrixContentProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
 
   // All toggled skills for skill goals
   const allSkillGoals = filteredSkills.filter(skill => toggledSkills.has(skill.title));
+
+  // Get matching skills for competency match
+  const matchingSkills = allSkillGoals.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
+    if (!roleSkillState) return false;
+
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const roleSkillLevel = roleSkillState.level;
+
+    const getLevelPriority = (level: string = 'unspecified') => {
+      const priorities: { [key: string]: number } = {
+        'advanced': 3,
+        'intermediate': 2,
+        'beginner': 1,
+        'unspecified': 0
+      };
+      return priorities[level.toLowerCase()] ?? 0;
+    };
+
+    const employeePriority = getLevelPriority(employeeSkillLevel);
+    const rolePriority = getLevelPriority(roleSkillLevel);
+
+    return employeePriority === rolePriority || employeePriority > rolePriority;
+  });
 
   return (
     <>
@@ -50,6 +76,11 @@ export const BenchmarkSkillsMatrixContent = ({
         skills={allSkillGoals}
         count={allSkillGoals.length}
         title="Skill Goals"
+      />
+
+      <CompetencyMatchSection 
+        skills={matchingSkills}
+        roleLevel={roleLevel}
       />
 
       <SkillsMatrixContent 
