@@ -38,7 +38,7 @@ export const BenchmarkAnalysisCard = ({
           total={competencyMatch.total}
         />
         <BenchmarkProgressBar 
-          label="Skill Goal"
+          label="Skill Goal Match"
           current={skillGoals.current}
           total={skillGoals.total}
         />
