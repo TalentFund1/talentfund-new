@@ -15,7 +15,7 @@ export const BenchmarkAnalysisCard = ({
   const matchPercentage = Math.round((skillMatch.current / skillMatch.total) * 100);
 
   return (
-    <Card className="p-8 bg-white space-y-8">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
@@ -31,28 +31,22 @@ export const BenchmarkAnalysisCard = ({
       </div>
 
       <div className="space-y-6">
-        <div className="rounded-2xl border border-border bg-white p-6 w-full">
-          <div className="space-y-4">
-            <BenchmarkProgressBar 
-              label="Skill Match"
-              current={skillMatch.current}
-              total={skillMatch.total}
-            />
-            <div className="w-full h-[1px] bg-border my-4" />
-            <BenchmarkProgressBar 
-              label="Competency Match"
-              current={competencyMatch.current}
-              total={competencyMatch.total}
-            />
-            <div className="w-full h-[1px] bg-border my-4" />
-            <BenchmarkProgressBar 
-              label="Skill Goal"
-              current={skillGoals.current}
-              total={skillGoals.total}
-            />
-          </div>
-        </div>
+        <BenchmarkProgressBar 
+          label="Skill Match"
+          current={skillMatch.current}
+          total={skillMatch.total}
+        />
+        <BenchmarkProgressBar 
+          label="Competency Match"
+          current={competencyMatch.current}
+          total={competencyMatch.total}
+        />
+        <BenchmarkProgressBar 
+          label="Skill Goal"
+          current={skillGoals.current}
+          total={skillGoals.total}
+        />
       </div>
-    </Card>
+    </div>
   );
 };
