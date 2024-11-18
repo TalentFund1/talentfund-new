@@ -6,12 +6,12 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { Card } from "../ui/card";
 import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
 
 interface RoleStore {
   selectedRole: string;
@@ -106,9 +106,6 @@ export const RoleBenchmark = () => {
     return employeePriority === rolePriority || employeePriority > rolePriority;
   });
 
-  // Skill Goals calculation (assuming all matching skills are goals)
-  const skillGoals = matchingSkills.length;
-
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
   };
@@ -141,75 +138,20 @@ export const RoleBenchmark = () => {
           roles={roles}
         />
 
-        <Card className="p-8 bg-white space-y-8">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
-                Benchmark Analysis
-                <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
-                  {Math.round((matchingSkills.length / allRoleSkills.length) * 100)}%
-                </span>
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Manage and track employee skills and competencies
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div className="rounded-2xl border border-border bg-white p-6 w-full">
-              <div className="space-y-4">
-                {/* Skill Match */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-foreground">Skill Match</span>
-                    <span className="text-sm text-foreground">
-                      {matchingSkills.length} out of {allRoleSkills.length}
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#1F2144] rounded-full" 
-                      style={{ width: `${(matchingSkills.length / allRoleSkills.length) * 100}%` }} 
-                    />
-                  </div>
-                </div>
-
-                {/* Competency Match */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-foreground">Competency Match</span>
-                    <span className="text-sm text-foreground">
-                      {competencyMatchingSkills.length} out of {matchingSkills.length}
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#1F2144] rounded-full" 
-                      style={{ width: `${(competencyMatchingSkills.length / matchingSkills.length) * 100}%` }} 
-                    />
-                  </div>
-                </div>
-
-                {/* Skill Goals */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-foreground">Skill Goal</span>
-                    <span className="text-sm text-foreground">
-                      {skillGoals} out of {allRoleSkills.length}
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#1F2144] rounded-full" 
-                      style={{ width: `${(skillGoals / allRoleSkills.length) * 100}%` }} 
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
+        <BenchmarkAnalysisCard 
+          skillMatch={{
+            current: matchingSkills.length,
+            total: allRoleSkills.length
+          }}
+          competencyMatch={{
+            current: competencyMatchingSkills.length,
+            total: matchingSkills.length
+          }}
+          skillGoals={{
+            current: matchingSkills.length,
+            total: allRoleSkills.length
+          }}
+        />
       </div>
     </div>
   );
