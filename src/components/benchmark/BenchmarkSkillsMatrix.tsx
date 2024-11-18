@@ -15,6 +15,7 @@ import { SkillGoalSection } from "./SkillGoalSection";
 import { roleSkills } from "../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
 import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
+import { SkillsSearch } from "./skills-matrix/SkillsSearch";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -185,6 +186,14 @@ export const BenchmarkSkillsMatrix = () => {
             count={skillGoals.length}
           />
         )}
+
+        <SkillsSearch
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedSearchSkills={selectedSearchSkills}
+          setSelectedSearchSkills={setSelectedSearchSkills}
+          employeeId={id || ""}
+        />
 
         <SkillsMatrixContent 
           filteredSkills={filteredSkills}
