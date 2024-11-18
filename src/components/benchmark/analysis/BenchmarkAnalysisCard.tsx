@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { BenchmarkProgressBar } from "./BenchmarkProgressBar";
 
 interface BenchmarkAnalysisCardProps {
@@ -30,24 +29,24 @@ export const BenchmarkAnalysisCard = ({
         </div>
       </div>
 
-      <div className="rounded-2xl bg-white p-6 w-full">
-        <div className="space-y-6">
+      <div className="space-y-4">
+        <div className="rounded-lg border border-[#CCDBFF] bg-white p-6">
           <BenchmarkProgressBar 
             label="Skill Match"
             current={skillMatch.current}
             total={skillMatch.total}
           />
-          
-          <div className="w-full h-[1px] bg-[#CCDBFF]" />
-          
+        </div>
+        
+        <div className="rounded-lg border border-[#CCDBFF] bg-white p-6">
           <BenchmarkProgressBar 
             label="Competency Match"
             current={competencyMatch.current}
             total={competencyMatch.total}
           />
-          
-          <div className="w-full h-[1px] bg-[#CCDBFF]" />
-          
+        </div>
+        
+        <div className="rounded-lg border border-[#CCDBFF] bg-white p-6">
           <BenchmarkProgressBar 
             label="Skill Goal"
             current={skillGoals.current}
