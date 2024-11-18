@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
@@ -8,6 +8,8 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useTrack } from "../skills/context/TrackContext";
+import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixContent } from "./skills-matrix/BenchmarkSkillsMatrixContent";
 
 const ITEMS_PER_PAGE = 10;
@@ -27,6 +29,21 @@ export const BenchmarkSkillsMatrix = () => {
   const { currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+
+  useEffect(() => {
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const toggledRoleSkills = allRoleSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .map(skill => skill.title);
+    
+    setSelectedSearchSkills(toggledRoleSkills);
+  }, [selectedRole, toggledSkills, currentRoleSkills]);
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {

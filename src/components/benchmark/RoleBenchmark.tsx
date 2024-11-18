@@ -12,7 +12,6 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
-import { CategorizedSkills } from "./CategorizedSkills";
 
 interface RoleStore {
   selectedRole: string;
@@ -77,14 +76,17 @@ export const RoleBenchmark = () => {
     ...currentRoleSkills.certifications
   ];
 
+  // Get all toggled skills for the current role
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
   const totalToggledSkills = toggledRoleSkills.length;
 
+  // Skill Match calculation
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
   });
 
+  // Competency Match calculation
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
     if (!roleSkillState) return false;
@@ -153,12 +155,6 @@ export const RoleBenchmark = () => {
             current: matchingSkills.length,
             total: totalToggledSkills
           }}
-        />
-
-        <CategorizedSkills 
-          roleId={selectedRole}
-          employeeId={id || ""}
-          selectedLevel={roleLevel}
         />
       </div>
     </div>
