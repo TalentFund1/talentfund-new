@@ -11,8 +11,7 @@ import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { CompetencyMatchSection } from "./CompetencyMatchSection";
-import { Separator } from "../ui/separator";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface RoleStore {
   selectedRole: string;
@@ -38,12 +37,12 @@ const roles = {
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [selectedLevel, setSelectedLevel] = useState<string>("p4");
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
   const { currentStates } = useSkillsMatrixStore();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(id || "123");
 
   const currentTrack = getTrackForRole(selectedRole);
@@ -77,12 +76,38 @@ export const RoleBenchmark = () => {
     ...currentRoleSkills.certifications
   ];
 
+  // Skill Match calculation
   const matchingSkills = allRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined && toggledSkills.has(roleSkill.title);
   });
 
-  const matchPercentage = Math.round((matchingSkills.length / allRoleSkills.length) * 100);
+  // Competency Match calculation
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
+    if (!roleSkillState) return false;
+
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const roleSkillLevel = roleSkillState.level;
+
+    const getLevelPriority = (level: string = 'unspecified') => {
+      const priorities: { [key: string]: number } = {
+        'advanced': 3,
+        'intermediate': 2,
+        'beginner': 1,
+        'unspecified': 0
+      };
+      return priorities[level.toLowerCase()] ?? 0;
+    };
+
+    const employeePriority = getLevelPriority(employeeSkillLevel);
+    const rolePriority = getLevelPriority(roleSkillLevel);
+
+    return employeePriority === rolePriority || employeePriority > rolePriority;
+  });
+
+  // Skill Goals calculation (assuming all matching skills are goals)
+  const skillGoals = matchingSkills.length;
 
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
@@ -116,15 +141,13 @@ export const RoleBenchmark = () => {
           roles={roles}
         />
 
-        <Separator className="my-6" />
-
-        <Card className="p-8 bg-white space-y-8 border-0">
+        <Card className="p-8 bg-white space-y-8">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
                 Benchmark Analysis
                 <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
-                  {matchPercentage}%
+                  {Math.round((matchingSkills.length / allRoleSkills.length) * 100)}%
                 </span>
               </h2>
               <p className="text-sm text-muted-foreground">
@@ -136,25 +159,55 @@ export const RoleBenchmark = () => {
           <div className="space-y-6">
             <div className="rounded-2xl border border-border bg-white p-6 w-full">
               <div className="space-y-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-foreground">Skill Match</span>
-                  <span className="text-sm text-foreground">
-                    {matchingSkills.length} out of {allRoleSkills.length}
-                  </span>
+                {/* Skill Match */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-foreground">Skill Match</span>
+                    <span className="text-sm text-foreground">
+                      {matchingSkills.length} out of {allRoleSkills.length}
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-[#1F2144] rounded-full" 
+                      style={{ width: `${(matchingSkills.length / allRoleSkills.length) * 100}%` }} 
+                    />
+                  </div>
                 </div>
-                <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-[#1F2144] rounded-full" 
-                    style={{ width: `${matchPercentage}%` }} 
-                  />
+
+                {/* Competency Match */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-foreground">Competency Match</span>
+                    <span className="text-sm text-foreground">
+                      {competencyMatchingSkills.length} out of {matchingSkills.length}
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-[#1F2144] rounded-full" 
+                      style={{ width: `${(competencyMatchingSkills.length / matchingSkills.length) * 100}%` }} 
+                    />
+                  </div>
+                </div>
+
+                {/* Skill Goals */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-foreground">Skill Goal</span>
+                    <span className="text-sm text-foreground">
+                      {skillGoals} out of {allRoleSkills.length}
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-[#1F2144] rounded-full" 
+                      style={{ width: `${(skillGoals / allRoleSkills.length) * 100}%` }} 
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-
-            <CompetencyMatchSection 
-              skills={matchingSkills}
-              roleLevel={roleLevel}
-            />
           </div>
         </Card>
       </div>
