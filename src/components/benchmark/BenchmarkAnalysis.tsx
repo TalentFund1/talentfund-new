@@ -8,9 +8,6 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { RoleSelection } from "./RoleSelection";
-import { SkillGoalSection } from "./SkillGoalSection";
-import { SkillGoalsWidget } from "./skills-matrix/SkillGoalsWidget";
-import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 
 const roles = {
   "123": "AI Engineer",
@@ -31,27 +28,18 @@ export const BenchmarkAnalysis = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
   // Get all toggled skills for the role
-  const allRoleSkills = [
+  const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
 
   // Calculate matching skills by comparing employee's skills with toggled role requirements
-  const matchingSkills = allRoleSkills.filter(roleSkill => 
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => 
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
-  // Calculate skill goals
-  const skillGoals = filterSkillsByCategory(employeeSkills, "all")
-    .filter(skill => {
-      if (!toggledSkills.has(skill.title)) return false;
-      const currentSkillState = currentStates[skill.title];
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
-      return requirement === 'required' || requirement === 'skill_goal';
-    });
-
-  const totalSkillsCount = allRoleSkills.length;
+  const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
@@ -100,18 +88,6 @@ export const BenchmarkAnalysis = () => {
               </div>
             </div>
           </div>
-
-          <SkillGoalsWidget 
-            totalSkills={allRoleSkills.length}
-            skillGoalsCount={skillGoals.length}
-          />
-
-          {skillGoals.length > 0 && (
-            <SkillGoalSection 
-              skills={skillGoals}
-              count={skillGoals.length}
-            />
-          )}
         </div>
       </Card>
     </div>

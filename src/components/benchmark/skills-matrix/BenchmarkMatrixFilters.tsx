@@ -11,8 +11,6 @@ interface BenchmarkMatrixFiltersProps {
   setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
-  selectedSkillLevel: string;
-  setSelectedSkillLevel: (level: string) => void;
   selectedSearchSkills: string[];
   removeSearchSkill: (skill: string) => void;
   clearSearch: () => void;
@@ -25,14 +23,10 @@ export const BenchmarkMatrixFilters = ({
   setSelectedLevel,
   selectedInterest,
   setSelectedInterest,
-  selectedSkillLevel,
-  setSelectedSkillLevel,
-  selectedSearchSkills = [], // Provide default empty array
+  selectedSearchSkills,
   removeSearchSkill,
   clearSearch,
 }: BenchmarkMatrixFiltersProps) => {
-  console.log('Selected search skills:', selectedSearchSkills); // Debug log
-
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
@@ -60,19 +54,6 @@ export const BenchmarkMatrixFilters = ({
             <SelectItem value="unknown">Unknown</SelectItem>
           </SelectContent>
         </Select>
-
-        <Select value={selectedSkillLevel} onValueChange={setSelectedSkillLevel}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Level" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Skill Level</SelectItem>
-            <SelectItem value="advanced">Advanced</SelectItem>
-            <SelectItem value="intermediate">Intermediate</SelectItem>
-            <SelectItem value="beginner">Beginner</SelectItem>
-            <SelectItem value="unspecified">Unspecified</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="relative">
@@ -93,7 +74,7 @@ export const BenchmarkMatrixFilters = ({
         )}
       </div>
 
-      {selectedSearchSkills?.length > 0 && (
+      {selectedSearchSkills.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {selectedSearchSkills.map((skill, index) => (
             <Badge 
