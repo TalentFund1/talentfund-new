@@ -7,7 +7,7 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { useRoleStore } from "./RoleBenchmark";
+import { useRoleStore } from "./store/roleStore";
 import { CompetencyMatchSection } from "./CompetencyMatchSection";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
