@@ -1,4 +1,5 @@
 import { BenchmarkProgressBar } from "./BenchmarkProgressBar";
+import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
 
 interface BenchmarkAnalysisCardProps {
   skillMatch: { current: number; total: number };
@@ -8,10 +9,26 @@ interface BenchmarkAnalysisCardProps {
 
 export const BenchmarkAnalysisCard = ({ 
   skillMatch, 
-  competencyMatch, 
+  competencyMatch,
   skillGoals 
 }: BenchmarkAnalysisCardProps) => {
+  const { currentStates } = useSkillsMatrixStore();
+  
+  // Calculate actual skill goals from current states
+  const actualSkillGoals = {
+    current: Object.values(currentStates).filter(state => 
+      state?.requirement === 'required' || state?.requirement === 'skill_goal'
+    ).length,
+    total: skillGoals.total
+  };
+
   const matchPercentage = Math.round((skillMatch.current / skillMatch.total) * 100);
+
+  console.log('BenchmarkAnalysisCard - Skill Goals:', {
+    currentStates,
+    actualSkillGoals,
+    originalSkillGoals: skillGoals
+  });
 
   return (
     <div className="space-y-8">
@@ -39,8 +56,8 @@ export const BenchmarkAnalysisCard = ({
         />
         <BenchmarkProgressBar 
           label="Skill Goal Match"
-          current={skillGoals.current}
-          total={skillGoals.total}
+          current={actualSkillGoals.current}
+          total={actualSkillGoals.total}
         />
       </div>
     </div>
