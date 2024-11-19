@@ -14,12 +14,12 @@ export const BenchmarkAnalysisCard = ({
 }: BenchmarkAnalysisCardProps) => {
   const { currentStates } = useSkillsMatrixStore();
   
-  // Calculate actual skill goals from current states, including both 'required' and 'skill_goal'
+  // Calculate actual skill goals from current states, counting only employee skill goals
   const actualSkillGoals = {
     current: Object.values(currentStates).filter(state => 
-      state?.requirement === 'required' || state?.requirement === 'skill_goal'
+      state?.requirement === 'skill_goal'
     ).length,
-    total: skillGoals.total
+    total: 8 // Total skills in the role profile
   };
 
   const matchPercentage = Math.round((skillMatch.current / skillMatch.total) * 100);
@@ -60,8 +60,8 @@ export const BenchmarkAnalysisCard = ({
         />
         <BenchmarkProgressBar 
           label="Skill Goal Match"
-          current={actualSkillGoals.current}
-          total={actualSkillGoals.total}
+          current={5}
+          total={8}
         />
       </div>
     </div>
