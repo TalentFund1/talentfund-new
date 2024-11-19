@@ -14,10 +14,10 @@ export const BenchmarkAnalysisCard = ({
 }: BenchmarkAnalysisCardProps) => {
   const { currentStates } = useSkillsMatrixStore();
   
-  // Calculate actual skill goals from current states
+  // Calculate actual skill goals from current states, specifically looking for 'skill_goal'
   const actualSkillGoals = {
     current: Object.values(currentStates).filter(state => 
-      state?.requirement === 'required' || state?.requirement === 'skill_goal'
+      state?.requirement === 'skill_goal'
     ).length,
     total: skillGoals.total
   };
@@ -27,7 +27,11 @@ export const BenchmarkAnalysisCard = ({
   console.log('BenchmarkAnalysisCard - Skill Goals:', {
     currentStates,
     actualSkillGoals,
-    originalSkillGoals: skillGoals
+    originalSkillGoals: skillGoals,
+    skillGoalStates: Object.entries(currentStates).map(([key, state]) => ({
+      skill: key,
+      requirement: state?.requirement
+    }))
   });
 
   return (
