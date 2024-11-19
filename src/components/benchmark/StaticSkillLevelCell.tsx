@@ -13,12 +13,12 @@ export const StaticSkillLevelCell = ({
 }: StaticSkillLevelCellProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const currentState = currentStates[skillTitle] || {
-    level: initialLevel.toLowerCase(),
+    level: initialLevel?.toLowerCase() || 'unspecified',
     requirement: 'required'
   };
 
-  const getLevelIcon = (level: string) => {
-    switch (level.toLowerCase()) {
+  const getLevelIcon = (level: string = 'unspecified') => {
+    switch (level?.toLowerCase()) {
       case 'advanced':
         return <Star className="w-3.5 h-3.5 text-primary-accent" />;
       case 'intermediate':
@@ -30,8 +30,8 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: string) => {
-    switch (requirement.toLowerCase()) {
+  const getRequirementIcon = (requirement: string = 'required') => {
+    switch (requirement?.toLowerCase()) {
       case 'required':
         return <Check className="w-3.5 h-3.5" />;
       case 'not-interested':
@@ -43,8 +43,8 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getBorderColorClass = (level: string) => {
-    switch (level.toLowerCase()) {
+  const getBorderColorClass = (level: string = 'unspecified') => {
+    switch (level?.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent bg-primary-accent/10';
       case 'intermediate':
@@ -56,35 +56,43 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string, requirement: string) => {
-    if (requirement.toLowerCase() !== 'required') {
+  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'required') => {
+    if (requirement?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
   };
+
+  console.log('StaticSkillLevelCell render:', {
+    skillTitle,
+    initialLevel,
+    currentState,
+    level: currentState?.level || 'unspecified',
+    requirement: currentState?.requirement || 'required'
+  });
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <div className={`
           rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-          border-2 ${getBorderColorClass(currentState.level)}
+          border-2 ${getBorderColorClass(currentState?.level)}
         `}>
           <span className="flex items-center gap-2">
-            {getLevelIcon(currentState.level)}
-            {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
+            {getLevelIcon(currentState?.level)}
+            {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
           </span>
         </div>
         <div className={`
           text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
           border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-          ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
+          ${getLowerBorderColorClass(currentState?.level, currentState?.requirement)}
         `}>
           <span className="flex items-center gap-1.5">
-            {getRequirementIcon(currentState.requirement)}
-            {currentState.requirement === 'required' ? 'Skill Goal' : 
-             currentState.requirement === 'not-interested' ? 'Not Interested' : 
-             currentState.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+            {getRequirementIcon(currentState?.requirement)}
+            {currentState?.requirement === 'required' ? 'Skill Goal' : 
+             currentState?.requirement === 'not-interested' ? 'Not Interested' : 
+             currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
           </span>
         </div>
       </div>
