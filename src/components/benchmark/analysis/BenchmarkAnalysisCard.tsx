@@ -14,10 +14,10 @@ export const BenchmarkAnalysisCard = ({
 }: BenchmarkAnalysisCardProps) => {
   const { currentStates } = useSkillsMatrixStore();
   
-  // Calculate actual skill goals from current states, specifically looking for 'skill_goal'
+  // Calculate actual skill goals from current states, including both 'required' and 'skill_goal'
   const actualSkillGoals = {
     current: Object.values(currentStates).filter(state => 
-      state?.requirement === 'skill_goal'
+      state?.requirement === 'required' || state?.requirement === 'skill_goal'
     ).length,
     total: skillGoals.total
   };
