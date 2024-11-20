@@ -110,6 +110,16 @@ export const RoleBenchmark = () => {
     return employeePriority === rolePriority || employeePriority > rolePriority;
   });
 
+  // Updated Skill Goal Match calculation
+  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
+    const skillState = currentStates[skill.title];
+    if (!skillState) return false;
+
+    // Using the same logic as SkillBadge
+    return skillState.requirement === 'required' || 
+           skillState.requirement === 'skill_goal';
+  });
+
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
   };
@@ -152,7 +162,7 @@ export const RoleBenchmark = () => {
             total: totalToggledSkills
           }}
           skillGoals={{
-            current: matchingSkills.length,
+            current: skillGoalMatchingSkills.length,
             total: totalToggledSkills
           }}
         />
