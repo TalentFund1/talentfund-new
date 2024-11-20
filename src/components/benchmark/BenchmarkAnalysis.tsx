@@ -41,6 +41,12 @@ export const BenchmarkAnalysis = () => {
   const matchingSkillsCount = matchingSkills.length;
   const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
 
+  console.log('Benchmark Analysis Calculation:', {
+    matchingSkillsCount,
+    totalSkillsCount,
+    matchPercentage
+  });
+
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
