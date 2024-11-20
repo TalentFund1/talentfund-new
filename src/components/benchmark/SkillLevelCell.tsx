@@ -1,7 +1,7 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, Heart, CircleDashed, Check, X } from "lucide-react";
-import { useSkillLevelState } from "./skill-level/SkillLevelState";
+import { useEffect } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillLevelCellProps {
@@ -17,12 +17,25 @@ export const SkillLevelCell = ({
   onLevelChange,
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
-  const { getCurrentState } = useSkillLevelState(skillTitle);
-  const { currentStates, setSkillState } = useSkillsMatrixStore();
+  const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
+
+  useEffect(() => {
+    // Initialize the state when the component mounts
+    initializeState(skillTitle, initialLevel, 'required');
+  }, [skillTitle, initialLevel, initializeState]);
+
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
     requirement: 'required'
   };
+
+  console.log('SkillLevelCell render:', {
+    skillTitle,
+    initialLevel,
+    currentState,
+    level: currentState?.level,
+    requirement: currentState?.requirement
+  });
 
   const getLevelIcon = (level: string = 'unspecified') => {
     switch (level?.toLowerCase()) {
@@ -50,8 +63,7 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getBorderColorClass = (level: string, requirement: string) => {
-    // Always keep seniority-based border colors for the upper section
+  const getBorderColorClass = (level: string) => {
     switch (level?.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent';
@@ -65,12 +77,10 @@ export const SkillLevelCell = ({
   };
 
   const getLowerBorderColorClass = (level: string, requirement: string) => {
-    // For the lower section, use light grey for non-skill goal states
     if (requirement?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
-    // Keep seniority-based colors for skill goals
-    return getBorderColorClass(level, requirement);
+    return getBorderColorClass(level);
   };
 
   const getRequirementBackgroundClass = (requirement: string) => {
@@ -83,14 +93,6 @@ export const SkillLevelCell = ({
         return 'bg-[#F9FAFB]';
     }
   };
-
-  console.log('SkillLevelCell render:', {
-    skillTitle,
-    initialLevel,
-    currentState,
-    level: currentState?.level,
-    requirement: currentState?.requirement
-  });
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
