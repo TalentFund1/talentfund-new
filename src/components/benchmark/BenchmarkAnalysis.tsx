@@ -7,6 +7,7 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 const roles = {
   "123": "AI Engineer",
@@ -22,6 +23,7 @@ export const BenchmarkAnalysis = () => {
   const employeeSkills = getEmployeeSkills(id || "123");
   const { selectedRole, selectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
   
@@ -37,14 +39,57 @@ export const BenchmarkAnalysis = () => {
     return employeeSkill !== undefined;
   });
 
+  // Competency Match calculation
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+    if (!roleSkillState) return false;
+
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const roleSkillLevel = roleSkillState.level;
+
+    const getLevelPriority = (level: string = 'unspecified') => {
+      const priorities: { [key: string]: number } = {
+        'advanced': 3,
+        'intermediate': 2,
+        'beginner': 1,
+        'unspecified': 0
+      };
+      return priorities[level.toLowerCase()] ?? 0;
+    };
+
+    const employeePriority = getLevelPriority(employeeSkillLevel);
+    const rolePriority = getLevelPriority(roleSkillLevel);
+
+    return employeePriority === rolePriority || employeePriority > rolePriority;
+  });
+
+  // Skill Goal Match calculation
+  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
+    const skillState = currentStates[skill.title];
+    if (!skillState) return false;
+    return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
+  });
+
   const totalSkillsCount = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
-  const matchPercentage = Math.round((matchingSkillsCount / totalSkillsCount) * 100);
+  const competencyMatchCount = competencyMatchingSkills.length;
+  const skillGoalMatchCount = skillGoalMatchingSkills.length;
+
+  // Calculate individual percentages
+  const skillMatchPercentage = (matchingSkillsCount / totalSkillsCount) * 100;
+  const competencyMatchPercentage = (competencyMatchCount / totalSkillsCount) * 100;
+  const skillGoalMatchPercentage = (skillGoalMatchCount / totalSkillsCount) * 100;
+
+  // Calculate average percentage
+  const averagePercentage = Math.round(
+    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
+  );
 
   console.log('Benchmark Analysis Calculation:', {
-    matchingSkillsCount,
-    totalSkillsCount,
-    matchPercentage
+    skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
+    competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
+    skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
+    averagePercentage
   });
 
   return (
@@ -55,7 +100,7 @@ export const BenchmarkAnalysis = () => {
             <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
               Benchmark Analysis
               <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
-                {matchPercentage}%
+                {averagePercentage}%
               </span>
             </h2>
             <p className="text-sm text-muted-foreground">
@@ -76,7 +121,7 @@ export const BenchmarkAnalysis = () => {
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${matchPercentage}%` }} 
+                  style={{ width: `${skillMatchPercentage}%` }} 
                 />
               </div>
             </div>
