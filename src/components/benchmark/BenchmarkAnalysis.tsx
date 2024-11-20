@@ -80,9 +80,9 @@ export const BenchmarkAnalysis = () => {
   const competencyMatchPercentage = (competencyMatchCount / totalSkillsCount) * 100;
   const skillGoalMatchPercentage = (skillGoalMatchCount / totalSkillsCount) * 100;
 
-  // Calculate average percentage (58%)
+  // Calculate average percentage
   const averagePercentage = Math.round(
-    (87.5 + 37.5 + 50) / 3
+    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
   );
 
   console.log('Benchmark Analysis Calculation:', {
@@ -97,11 +97,8 @@ export const BenchmarkAnalysis = () => {
       <Card className="p-8 bg-white space-y-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-foreground">
               Benchmark Analysis
-              <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
-                {averagePercentage}%
-              </span>
             </h2>
             <p className="text-sm text-muted-foreground">
               Manage and track employee skills and competencies
