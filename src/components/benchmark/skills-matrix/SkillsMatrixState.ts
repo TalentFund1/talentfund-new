@@ -44,8 +44,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         }
       },
       setSkillState: (skillTitle, level, requirement) => {
-        console.log('Setting skill state:', { skillTitle, level, requirement });
-        
         set((state) => {
           const newStates = {
             ...state.currentStates,
@@ -61,13 +59,10 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         });
       },
       saveChanges: () =>
-        set((state) => {
-          console.log('Saving changes:', state.currentStates);
-          return {
-            originalStates: { ...state.currentStates },
-            hasChanges: false,
-          };
-        }),
+        set((state) => ({
+          originalStates: { ...state.currentStates },
+          hasChanges: false,
+        })),
       cancelChanges: () =>
         set((state) => ({
           currentStates: { ...state.originalStates },
