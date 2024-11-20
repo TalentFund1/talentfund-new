@@ -110,7 +110,7 @@ export const RoleBenchmark = () => {
     return employeePriority === rolePriority || employeePriority > rolePriority;
   });
 
-  // Updated Skill Goal Match calculation
+  // Skill Goal Match calculation
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
@@ -124,8 +124,10 @@ export const RoleBenchmark = () => {
   const competencyMatchPercentage = (competencyMatchingSkills.length / totalToggledSkills) * 100;
   const skillGoalMatchPercentage = (skillGoalMatchingSkills.length / totalToggledSkills) * 100;
 
-  // Calculate the correct average (58%)
-  const averagePercentage = Math.round((87.5 + 37.5 + 50) / 3);
+  // Calculate the actual average from the calculated percentages
+  const averagePercentage = Math.round(
+    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
+  );
 
   console.log('Match Percentages:', {
     skillMatch: skillMatchPercentage,
