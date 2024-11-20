@@ -13,7 +13,6 @@ interface SkillsMatrixState {
   setSkillState: (skillTitle: string, level: string, requirement: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
-  initializeState: (skillTitle: string, initialLevel: string, initialRequirement: string) => void;
 }
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
@@ -22,57 +21,26 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       originalStates: {},
       currentStates: {},
       hasChanges: false,
-      initializeState: (skillTitle, initialLevel, initialRequirement) => {
-        const currentState = get().currentStates[skillTitle];
-        if (!currentState) {
-          console.log('Initializing state for skill:', skillTitle, {
-            level: initialLevel,
-            requirement: initialRequirement
-          });
-          
-          set((state) => ({
-            currentStates: {
-              ...state.currentStates,
-              [skillTitle]: {
-                level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'preferred'
-              }
-            },
-            originalStates: {
-              ...state.originalStates,
-              [skillTitle]: {
-                level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'preferred'
-              }
-            }
-          }));
-        }
-      },
-      setSkillState: (skillTitle, level, requirement) => {
-        console.log('Setting skill state:', { skillTitle, level, requirement });
-        
+      setSkillState: (skillTitle, level, requirement) =>
         set((state) => {
           const newStates = {
             ...state.currentStates,
             [skillTitle]: { level, requirement },
           };
           
+          // Compare stringified versions of the states to detect changes
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
           return { 
             currentStates: newStates,
             hasChanges
           };
-        });
-      },
-      saveChanges: () =>
-        set((state) => {
-          console.log('Saving changes:', state.currentStates);
-          return {
-            originalStates: { ...state.currentStates },
-            hasChanges: false,
-          };
         }),
+      saveChanges: () =>
+        set((state) => ({
+          originalStates: { ...state.currentStates },
+          hasChanges: false,
+        })),
       cancelChanges: () =>
         set((state) => ({
           currentStates: { ...state.originalStates },
