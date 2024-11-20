@@ -20,6 +20,12 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   useEffect(() => {
+    console.log('SkillLevelCell mount:', {
+      skillTitle,
+      initialLevel,
+      currentState: currentStates[skillTitle]
+    });
+    
     // Initialize the state when the component mounts
     initializeState(skillTitle, initialLevel, 'required');
   }, [skillTitle, initialLevel, initializeState]);
@@ -28,14 +34,6 @@ export const SkillLevelCell = ({
     level: initialLevel?.toLowerCase() || 'unspecified',
     requirement: 'required'
   };
-
-  console.log('SkillLevelCell render:', {
-    skillTitle,
-    initialLevel,
-    currentState,
-    level: currentState?.level,
-    requirement: currentState?.requirement
-  });
 
   const getLevelIcon = (level: string = 'unspecified') => {
     switch (level?.toLowerCase()) {
