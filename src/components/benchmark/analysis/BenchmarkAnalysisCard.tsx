@@ -1,3 +1,5 @@
+import { BenchmarkProgressBar } from "./BenchmarkProgressBar";
+
 interface BenchmarkAnalysisCardProps {
   skillMatch: { current: number; total: number };
   competencyMatch: { current: number; total: number };
