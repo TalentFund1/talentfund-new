@@ -11,17 +11,12 @@ export const BenchmarkAnalysisCard = ({
   competencyMatch, 
   skillGoals 
 }: BenchmarkAnalysisCardProps) => {
-  const matchPercentage = Math.round((skillMatch.current / skillMatch.total) * 100);
-
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-foreground">
             Benchmark Analysis
-            <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
-              {matchPercentage}%
-            </span>
           </h2>
         </div>
       </div>
