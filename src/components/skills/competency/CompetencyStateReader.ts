@@ -11,21 +11,26 @@ export const useCompetencyStateReader = () => {
   const { toggledSkills } = useToggledSkills();
 
   const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillCompetencyState | null => {
+    console.log('Reading competency state:', { skillName, levelKey });
+    
     if (!toggledSkills.has(skillName)) {
+      console.log('Skill not toggled:', skillName);
       return null;
     }
 
     const skillState = currentStates[skillName];
     if (!skillState) {
+      console.log('No state found for skill:', skillName);
       return null;
     }
 
-    // Get the specific level state
     const levelState = skillState[levelKey];
     if (!levelState) {
+      console.log('No level state found for skill:', { skillName, levelKey });
       return null;
     }
 
+    console.log('Found competency state:', { skillName, levelKey, state: levelState });
     return {
       level: levelState.level,
       required: levelState.required
@@ -33,6 +38,7 @@ export const useCompetencyStateReader = () => {
   };
 
   const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
+    console.log('Getting all skill states for level:', levelKey);
     const states: Record<string, SkillCompetencyState> = {};
     
     Object.entries(currentStates).forEach(([skillName, skillLevels]) => {
@@ -45,6 +51,7 @@ export const useCompetencyStateReader = () => {
       }
     });
 
+    console.log('Retrieved all skill states:', states);
     return states;
   };
 
