@@ -6,7 +6,7 @@ export const useSkillLevelState = (skillTitle: string) => {
   const getCurrentState = () => {
     const state = currentStates[skillTitle];
     if (state) {
-      console.log(`Getting skill state for ${skillTitle}:`, {
+      console.log(`Getting matrix skill state for ${skillTitle}:`, {
         level: state.level,
         requirement: state.requirement,
         isSkillGoal: state.requirement === 'required'

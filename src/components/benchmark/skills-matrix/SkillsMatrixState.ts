@@ -25,27 +25,27 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       initializeState: (skillTitle, initialLevel, initialRequirement) => {
         const currentState = get().currentStates[skillTitle];
         if (!currentState) {
-          console.log('Initializing skill state:', { skillTitle, initialLevel, initialRequirement });
+          console.log('Initializing matrix skill state:', { skillTitle, initialLevel, initialRequirement });
           set((state) => ({
             currentStates: {
               ...state.currentStates,
               [skillTitle]: {
                 level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'preferred'
+                requirement: initialRequirement || 'required'
               }
             },
             originalStates: {
               ...state.originalStates,
               [skillTitle]: {
                 level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'preferred'
+                requirement: initialRequirement || 'required'
               }
             }
           }));
         }
       },
       setSkillState: (skillTitle, level, requirement) => {
-        console.log('Setting skill state:', { skillTitle, level, requirement });
+        console.log('Setting matrix skill state:', { skillTitle, level, requirement });
         set((state) => {
           const newStates = {
             ...state.currentStates,
@@ -62,7 +62,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       },
       saveChanges: () =>
         set((state) => {
-          console.log('Saving changes to skills matrix');
+          console.log('Saving matrix changes');
           return {
             originalStates: { ...state.currentStates },
             hasChanges: false,
@@ -70,7 +70,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         }),
       cancelChanges: () =>
         set((state) => {
-          console.log('Cancelling changes to skills matrix');
+          console.log('Cancelling matrix changes');
           return {
             currentStates: { ...state.originalStates },
             hasChanges: false,
