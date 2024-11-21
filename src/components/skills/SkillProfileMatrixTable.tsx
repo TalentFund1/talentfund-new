@@ -76,7 +76,7 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </Button>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">
+          <th className="py-4 px-2 text-sm font-medium text-muted-foreground w-[10%]">
             <Button
               variant="ghost"
               className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
@@ -131,7 +131,7 @@ export const SkillProfileMatrixTable = ({
                 ↗ {skill.growth}
               </span>
             </td>
-            <td className="py-3 px-4 text-sm">{skill.salary}</td>
+            <td className="py-3 px-2 text-sm">{skill.salary}</td>
             <td className="py-3 px-8">
               <div className="flex justify-center gap-1">
                 <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
