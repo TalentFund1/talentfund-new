@@ -147,9 +147,9 @@ export const SkillProfileMatrix = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Sort by All</SelectItem>
-                <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
+                <SelectItem value="baseline">Sort by Baseline</SelectItem>
                 <SelectItem value="recommended">Sort by Recommended</SelectItem>
-                <SelectItem value="jobDescription">Sort by Baseline</SelectItem>
+                <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
                 <SelectItem value="occupation">Sort by Occupation</SelectItem>
               </SelectContent>
             </Select>
