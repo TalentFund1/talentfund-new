@@ -69,7 +69,7 @@ export const SkillProfileMatrixTable = ({
                       <div className="space-y-2">
                         <h4 className="font-medium text-left">Projected Growth:</h4>
                         <p className="text-sm text-left font-normal">
-                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
+                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends. This metric helps identify emerging and high-demand skills in the technology sector.
                         </p>
                       </div>
                     </TooltipContent>
@@ -94,9 +94,9 @@ export const SkillProfileMatrixTable = ({
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
-                        <h4 className="font-medium text-left">Salary with Skill:</h4>
+                        <h4 className="font-medium text-left">Skill Pricer:</h4>
                         <p className="text-sm text-left font-normal">
-                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
+                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill. This helps understand the market value and compensation trends associated with specific skills.
                         </p>
                       </div>
                     </TooltipContent>
