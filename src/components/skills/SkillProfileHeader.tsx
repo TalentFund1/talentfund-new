@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Building2, DollarSign } from "lucide-react";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { roleSkills } from './data/roleSkills';
 
 interface SkillProfileHeaderProps {
   id?: string;
@@ -10,12 +12,34 @@ interface SkillProfileHeaderProps {
 
 export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
+  const { toggledSkills } = useToggledSkills();
+  
   const formatTitle = (title: string) => {
     return title.split(' ').map(word => {
       if (word.toLowerCase() === 'ai') return 'AI';
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     }).join(' ');
+  };
+
+  const calculateAveragePrice = () => {
+    const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+    const allSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const toggledSkillsList = Array.from(toggledSkills);
+    const toggledSkillsData = allSkills.filter(skill => toggledSkillsList.includes(skill.title));
+    
+    if (toggledSkillsData.length === 0) return 0;
+
+    const totalPrice = toggledSkillsData.reduce((sum, skill) => {
+      const price = parseFloat(skill.salary.replace(/[^0-9.-]+/g, ""));
+      return sum + price;
+    }, 0);
+
+    return Math.round(totalPrice / toggledSkillsData.length);
   };
 
   const roleDescriptions = {
@@ -26,6 +50,7 @@ export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: Ski
   };
 
   const fullDescription = roleDescriptions[jobTitle as keyof typeof roleDescriptions] || roleDescriptions["AI Engineer"];
+  const averagePrice = calculateAveragePrice();
 
   return (
     <div className="space-y-6">
@@ -65,7 +90,7 @@ export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: Ski
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Market Pricer</span>
-            <p className="font-medium">$130-170K</p>
+            <p className="font-medium">${averagePrice.toLocaleString()}</p>
           </div>
         </div>
       </div>
