@@ -51,7 +51,7 @@ export const SkillProfileMatrixTable = ({
         <tr className="bg-background text-left">
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Skill Title</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
             <Button
               variant="ghost"
               className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
@@ -76,10 +76,10 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </Button>
           </th>
-          <th className="py-4 px-2 text-sm font-medium text-muted-foreground w-[10%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
             <Button
               variant="ghost"
-              className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
+              className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium mx-auto"
               onClick={() => onSort('salary')}
             >
               Skill Pricer
@@ -101,7 +101,7 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </Button>
           </th>
-          <th className="py-4 px-8 text-sm font-medium text-muted-foreground text-center whitespace-nowrap">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[10%] whitespace-nowrap">
             Appears In <ChevronUp className="h-4 w-4 inline-block ml-1" />
           </th>
         </tr>
@@ -131,8 +131,8 @@ export const SkillProfileMatrixTable = ({
                 ↗ {skill.growth}
               </span>
             </td>
-            <td className="py-3 px-2 text-sm">{skill.salary}</td>
-            <td className="py-3 px-8">
+            <td className="py-3 px-4 text-center text-sm">{skill.salary}</td>
+            <td className="py-3 px-4">
               <div className="flex justify-center gap-1">
                 <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
                 <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
