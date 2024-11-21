@@ -1,5 +1,5 @@
 import { Switch } from "@/components/ui/switch";
-import { ChevronUp, HelpCircle } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -58,12 +58,11 @@ export const SkillProfileMatrixTable = ({
               onClick={() => onSort('growth')}
             >
               <div className="flex items-center gap-1">
-                Projected Growth
-                {renderSortArrow('growth')}
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                    <TooltipTrigger className="flex items-center gap-1">
+                      Projected Growth
+                      {renderSortArrow('growth')}
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
@@ -85,12 +84,11 @@ export const SkillProfileMatrixTable = ({
               onClick={() => onSort('salary')}
             >
               <div className="flex items-center gap-1">
-                Skill Pricer
-                {renderSortArrow('salary')}
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                    <TooltipTrigger className="flex items-center gap-1">
+                      Skill Pricer
+                      {renderSortArrow('salary')}
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
