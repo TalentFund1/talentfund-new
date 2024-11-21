@@ -144,7 +144,7 @@ export const SkillsMatrixRow = ({
         )}
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
+        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
           skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
         }`}>
           ↗ {skill.growth}
@@ -152,10 +152,10 @@ export const SkillsMatrixRow = ({
       </TableCell>
       <TableCell className="text-center py-2">
         <div className="flex items-center justify-center space-x-1">
-          <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-[#8073ec] flex items-center justify-center text-sm font-medium">C</span>
-          <span className="w-6 h-6 rounded-full bg-[#4ade80]/20 text-[#16a34a] flex items-center justify-center text-sm font-medium">B</span>
+          <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-[#8073ec] flex items-center justify-center text-sm font-medium">R</span>
+          <span className="w-6 h-6 rounded-full bg-[#4ade80]/20 text-[#16a34a] flex items-center justify-center text-sm font-medium">E</span>
           <span className="w-6 h-6 rounded-full bg-[#fb923c]/20 text-[#ea580c] flex items-center justify-center text-sm font-medium">M</span>
-          <span className="w-6 h-6 rounded-full bg-[#a855f7]/20 text-[#9333ea] flex items-center justify-center text-sm font-medium">O</span>
+          <span className="w-6 h-6 rounded-full bg-[#a855f7]/20 text-[#9333ea] flex items-center justify-center text-sm font-medium">S</span>
         </div>
       </TableCell>
     </TableRow>
