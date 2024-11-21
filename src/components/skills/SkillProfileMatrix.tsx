@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -147,9 +147,9 @@ export const SkillProfileMatrix = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Sort by All</SelectItem>
-                <SelectItem value="critical">Sort by Critical</SelectItem>
-                <SelectItem value="jobDescription">Sort by Baseline</SelectItem>
                 <SelectItem value="benchmark">Sort by Benchmark</SelectItem>
+                <SelectItem value="recommended">Sort by Recommended</SelectItem>
+                <SelectItem value="jobDescription">Sort by Baseline</SelectItem>
                 <SelectItem value="occupation">Sort by Occupation</SelectItem>
               </SelectContent>
             </Select>
