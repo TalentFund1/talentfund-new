@@ -67,14 +67,10 @@ export const SkillProfileMatrixTable = ({
                     <TooltipTrigger>
                       <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                     </TooltipTrigger>
-                    <TooltipContent 
-                      side="top" 
-                      align="start" 
-                      className="max-w-[300px] p-3 text-sm bg-white border border-gray-200 shadow-md rounded-md"
-                    >
-                      <p className="text-foreground">
-                        Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
-                      </p>
+                    <TooltipContent side="top" align="start" className="max-w-[300px] bg-white p-2 text-sm">
+                      Projected Growth:
+                      <br />
+                      Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -97,14 +93,10 @@ export const SkillProfileMatrixTable = ({
                     <TooltipTrigger>
                       <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                     </TooltipTrigger>
-                    <TooltipContent 
-                      side="top" 
-                      align="start" 
-                      className="max-w-[300px] p-3 text-sm bg-white border border-gray-200 shadow-md rounded-md"
-                    >
-                      <p className="text-foreground">
-                        Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
-                      </p>
+                    <TooltipContent side="top" align="start" className="max-w-[300px] bg-white p-2 text-sm">
+                      Skill Pricer:
+                      <br />
+                      Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
