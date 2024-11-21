@@ -152,10 +152,10 @@ export const SkillsMatrixRow = ({
       </TableCell>
       <TableCell className="text-center py-2">
         <div className="flex items-center justify-center space-x-1">
-          <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">R</span>
-          <span className="w-6 h-6 rounded-full bg-[#4ade80]/20 text-[#16a34a] flex items-center justify-center text-sm font-medium">E</span>
-          <span className="w-6 h-6 rounded-full bg-[#fb923c]/20 text-[#ea580c] flex items-center justify-center text-sm font-medium">M</span>
-          <span className="w-6 h-6 rounded-full bg-[#a855f7]/20 text-[#9333ea] flex items-center justify-center text-sm font-medium">S</span>
+          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
+          <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
+          <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">M</span>
+          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-medium">S</span>
         </div>
       </TableCell>
     </TableRow>
