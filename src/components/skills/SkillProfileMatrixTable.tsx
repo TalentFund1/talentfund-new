@@ -126,8 +126,8 @@ export const SkillProfileMatrixTable = ({
                 {skill.subcategory}
               </span>
             </td>
-            <td className="py-3 px-4 text-center">
-              <span className={`inline-flex items-center justify-center bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm`}>
+            <td className="py-3 px-4">
+              <span className={`bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm`}>
                 ↗ {skill.growth}
               </span>
             </td>
