@@ -64,7 +64,7 @@ export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: Ski
         </div>
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
-            <span className="text-sm text-muted-foreground">Advertised Salary</span>
+            <span className="text-sm text-muted-foreground">Market Pricer</span>
             <p className="font-medium">$130-170K</p>
           </div>
         </div>
