@@ -31,6 +31,18 @@ const initializeSkillStates = (roleId: string) => {
     ...certificationSkills
   ];
 
+  // First try to load from localStorage
+  const savedStates = localStorage.getItem(`competency-states-${roleId}`);
+  if (savedStates) {
+    console.log('Found saved states for role:', roleId);
+    try {
+      return JSON.parse(savedStates);
+    } catch (error) {
+      console.error('Error parsing saved states:', error);
+    }
+  }
+
+  // If no saved states, initialize with default values
   allSkills.forEach(skill => {
     states[skill.title] = states[skill.title] || {};
     
@@ -95,8 +107,14 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
       saveChanges: () => {
         console.log('Saving competency changes');
+        const currentStates = get().currentStates;
+        const roleId = localStorage.getItem('currentRoleId') || '123';
+        
+        // Save to localStorage
+        localStorage.setItem(`competency-states-${roleId}`, JSON.stringify(currentStates));
+        
         set((state) => ({
-          originalStates: { ...state.currentStates },
+          originalStates: { ...currentStates },
           hasChanges: false,
         }));
       },
