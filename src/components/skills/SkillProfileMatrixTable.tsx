@@ -85,7 +85,7 @@ export const SkillProfileMatrixTable = ({
               onClick={() => onSort('salary')}
             >
               <div className="flex items-center gap-1">
-                Salary With Skill
+                Skill Pricer
                 {renderSortArrow('salary')}
                 <TooltipProvider>
                   <Tooltip>
