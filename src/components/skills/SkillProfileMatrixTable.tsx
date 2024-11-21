@@ -129,11 +129,11 @@ export const SkillProfileMatrixTable = ({
                   checked={toggledSkills.has(skill.title)}
                   onCheckedChange={() => onToggleSkill(skill.title)}
                 />
-                <span className="text-sm">{skill.title}</span>
+                <span className="text-sm text-left">{skill.title}</span>
               </div>
             </td>
-            <td className="py-3 px-4 text-sm">
-              <span className="block truncate" title={skill.subcategory}>
+            <td className="py-3 px-4">
+              <span className="text-sm text-left block truncate" title={skill.subcategory}>
                 {skill.subcategory}
               </span>
             </td>
