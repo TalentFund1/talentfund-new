@@ -62,16 +62,14 @@ export const SkillProfileMatrixTable = ({
                 {renderSortArrow('growth')}
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span>
-                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                      </span>
+                    <TooltipTrigger>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
                     </TooltipTrigger>
-                    <TooltipContent side="top" align="start" className="w-[300px] p-4">
+                    <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
                         <h4 className="font-medium text-left">Projected Growth:</h4>
                         <p className="text-sm text-left font-normal">
-                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends. This metric helps identify emerging skills and their potential impact on career development.
+                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
                         </p>
                       </div>
                     </TooltipContent>
@@ -87,20 +85,18 @@ export const SkillProfileMatrixTable = ({
               onClick={() => onSort('salary')}
             >
               <div className="flex items-center gap-1">
-                Skill Pricer
+                Salary With Skill
                 {renderSortArrow('salary')}
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span>
-                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                      </span>
+                    <TooltipTrigger>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
                     </TooltipTrigger>
-                    <TooltipContent side="top" align="start" className="w-[300px] p-4">
+                    <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
                         <h4 className="font-medium text-left">Salary with Skill:</h4>
                         <p className="text-sm text-left font-normal">
-                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill. This data helps understand the market value and demand for specific skills in different roles and industries.
+                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
                         </p>
                       </div>
                     </TooltipContent>
@@ -138,9 +134,7 @@ export const SkillProfileMatrixTable = ({
               </span>
             </td>
             <td className="py-3 px-4 text-center">
-              <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
-                skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-              }`}>
+              <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm">
                 ↗ {skill.growth}
               </span>
             </td>
