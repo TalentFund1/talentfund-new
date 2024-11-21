@@ -1,5 +1,5 @@
 import { Switch } from "@/components/ui/switch";
-import { ChevronUp, HelpCircle } from "lucide-react";
+import { ArrowUp, ArrowDown, HelpCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -36,12 +36,12 @@ export const SkillProfileMatrixTable = ({
 }: SkillProfileMatrixTableProps) => {
   const renderSortArrow = (field: 'growth' | 'salary') => {
     if (sortField !== field) {
-      return <ChevronUp className="h-4 w-4 text-muted-foreground opacity-50" />;
+      return <ArrowUp className="h-4 w-4 text-muted-foreground opacity-50" />;
     }
     return sortDirection === 'asc' ? (
-      <ChevronUp className="h-4 w-4 text-primary" />
+      <ArrowUp className="h-4 w-4 text-primary" />
     ) : (
-      <ChevronUp className="h-4 w-4 text-primary rotate-180 transform" />
+      <ArrowDown className="h-4 w-4 text-primary" />
     );
   };
 
@@ -108,7 +108,7 @@ export const SkillProfileMatrixTable = ({
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
               Appears In
-              <ChevronUp className="h-4 w-4" />
+              <ArrowUp className="h-4 w-4" />
             </div>
           </th>
         </tr>
