@@ -62,8 +62,10 @@ export const SkillProfileMatrixTable = ({
                 {renderSortArrow('growth')}
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                    <TooltipTrigger asChild>
+                      <span>
+                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                      </span>
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
@@ -89,8 +91,10 @@ export const SkillProfileMatrixTable = ({
                 {renderSortArrow('salary')}
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                    <TooltipTrigger asChild>
+                      <span>
+                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                      </span>
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
@@ -134,7 +138,9 @@ export const SkillProfileMatrixTable = ({
               </span>
             </td>
             <td className="py-3 px-4 text-center">
-              <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm">
+              <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
+                skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
+              }`}>
                 ↗ {skill.growth}
               </span>
             </td>
