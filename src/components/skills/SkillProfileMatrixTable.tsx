@@ -48,10 +48,10 @@ export const SkillProfileMatrixTable = ({
   return (
     <table className="w-full">
       <thead>
-        <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">
+        <tr className="bg-background">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%] text-left">Skill Title</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%] text-left">Subcategory</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%] text-left">
             <Button
               variant="ghost"
               className="flex items-center justify-start gap-1 hover:bg-transparent w-full"
@@ -80,7 +80,7 @@ export const SkillProfileMatrixTable = ({
               </div>
             </Button>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%] text-left">
             <Button
               variant="ghost"
               className="flex items-center justify-start gap-1 hover:bg-transparent w-full"
@@ -129,20 +129,20 @@ export const SkillProfileMatrixTable = ({
                   checked={toggledSkills.has(skill.title)}
                   onCheckedChange={() => onToggleSkill(skill.title)}
                 />
-                <span className="text-sm text-left">{skill.title}</span>
+                <span className="text-sm">{skill.title}</span>
               </div>
             </td>
             <td className="py-3 px-4">
-              <span className="text-sm text-left block truncate" title={skill.subcategory}>
+              <span className="text-sm block truncate" title={skill.subcategory}>
                 {skill.subcategory}
               </span>
             </td>
-            <td className="py-3 px-4 text-left">
+            <td className="py-3 px-4">
               <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm">
                 ↗ {skill.growth}
               </span>
             </td>
-            <td className="py-3 px-4 text-left text-sm">{skill.salary}</td>
+            <td className="py-3 px-4 text-sm">{skill.salary}</td>
             <td className="py-3 px-4">
               <div className="flex justify-center gap-1">
                 <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
