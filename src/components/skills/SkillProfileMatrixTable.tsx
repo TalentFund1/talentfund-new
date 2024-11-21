@@ -49,9 +49,9 @@ export const SkillProfileMatrixTable = ({
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Skill Title</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">
             <Button
               variant="ghost"
               className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
@@ -76,7 +76,7 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </Button>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">
             <Button
               variant="ghost"
               className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
