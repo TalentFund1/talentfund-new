@@ -1,5 +1,5 @@
 import { Switch } from "@/components/ui/switch";
-import { ChevronUp } from "lucide-react";
+import { ChevronUp, HelpCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -58,17 +58,20 @@ export const SkillProfileMatrixTable = ({
               onClick={() => onSort('growth')}
             >
               <div className="flex items-center gap-1">
+                <span className="flex items-center gap-1">
+                  Projected Growth
+                  {renderSortArrow('growth')}
+                </span>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger className="flex items-center gap-1">
-                      Projected Growth
-                      {renderSortArrow('growth')}
+                    <TooltipTrigger>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
                         <h4 className="font-medium text-left">Projected Growth:</h4>
                         <p className="text-sm text-left font-normal">
-                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends. This metric helps identify emerging and high-demand skills in the technology sector.
+                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
                         </p>
                       </div>
                     </TooltipContent>
@@ -84,17 +87,20 @@ export const SkillProfileMatrixTable = ({
               onClick={() => onSort('salary')}
             >
               <div className="flex items-center gap-1">
+                <span className="flex items-center gap-1">
+                  Skill Pricer
+                  {renderSortArrow('salary')}
+                </span>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger className="flex items-center gap-1">
-                      Skill Pricer
-                      {renderSortArrow('salary')}
+                    <TooltipTrigger>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
                         <h4 className="font-medium text-left">Skill Pricer:</h4>
                         <p className="text-sm text-left font-normal">
-                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill. This helps understand the market value and compensation trends associated with specific skills.
+                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
                         </p>
                       </div>
                     </TooltipContent>
