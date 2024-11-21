@@ -1,12 +1,12 @@
 import { Switch } from "@/components/ui/switch";
-import { ArrowUp, ArrowDown, HelpCircle } from "lucide-react";
+import { ChevronUp, HelpCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface Skill {
   title: string;
@@ -21,68 +21,27 @@ interface SkillProfileMatrixTableProps {
   paginatedSkills: Skill[];
   toggledSkills: Set<string>;
   onToggleSkill: (skillTitle: string) => void;
+  sortField: 'growth' | 'salary' | null;
+  sortDirection: 'asc' | 'desc' | null;
+  onSort: (field: 'growth' | 'salary' | null) => void;
 }
 
 export const SkillProfileMatrixTable = ({ 
-  paginatedSkills: initialSkills, 
+  paginatedSkills, 
   toggledSkills,
-  onToggleSkill
+  onToggleSkill,
+  sortField,
+  sortDirection,
+  onSort
 }: SkillProfileMatrixTableProps) => {
-  const [sortConfig, setSortConfig] = useState<{
-    key: 'growth' | 'salary' | null;
-    direction: 'asc' | 'desc' | null;
-  }>({ key: null, direction: null });
-  const [paginatedSkills, setPaginatedSkills] = useState(initialSkills);
-
-  const handleSort = (key: 'growth' | 'salary') => {
-    let direction: 'asc' | 'desc' | null = 'asc';
-    
-    if (sortConfig.key === key) {
-      if (sortConfig.direction === 'asc') {
-        direction = 'desc';
-      } else if (sortConfig.direction === 'desc') {
-        direction = null;
-      }
+  const renderSortArrow = (field: 'growth' | 'salary') => {
+    if (sortField !== field) {
+      return <ChevronUp className="h-4 w-4 text-muted-foreground opacity-50" />;
     }
-
-    const sortedSkills = [...paginatedSkills].sort((a, b) => {
-      if (direction === null) {
-        return 0; // Reset to original order
-      }
-
-      let aValue = key === 'growth' 
-        ? parseInt(a.growth.replace('%', ''))
-        : parseInt(a.salary.replace('$', '').replace(',', ''));
-      let bValue = key === 'growth'
-        ? parseInt(b.growth.replace('%', ''))
-        : parseInt(b.salary.replace('$', '').replace(',', ''));
-
-      return direction === 'asc' ? aValue - bValue : bValue - aValue;
-    });
-
-    setSortConfig({ key, direction });
-    setPaginatedSkills(direction === null ? initialSkills : sortedSkills);
-  };
-
-  const getSortIcon = (key: 'growth' | 'salary') => {
-    if (sortConfig.key !== key) {
-      return (
-        <div className="flex flex-col">
-          <ArrowUp className="h-3 w-3 text-gray-400 hover:text-gray-600 cursor-pointer" />
-          <ArrowDown className="h-3 w-3 text-gray-400 hover:text-gray-600 cursor-pointer" />
-        </div>
-      );
-    }
-
-    return sortConfig.direction === 'asc' ? (
-      <ArrowUp className="h-4 w-4 text-primary" />
-    ) : sortConfig.direction === 'desc' ? (
-      <ArrowDown className="h-4 w-4 text-primary" />
+    return sortDirection === 'asc' ? (
+      <ChevronUp className="h-4 w-4 text-primary" />
     ) : (
-      <div className="flex flex-col">
-        <ArrowUp className="h-3 w-3 text-gray-400 hover:text-gray-600 cursor-pointer" />
-        <ArrowDown className="h-3 w-3 text-gray-400 hover:text-gray-600 cursor-pointer" />
-      </div>
+      <ChevronUp className="h-4 w-4 text-primary rotate-180 transform" />
     );
   };
 
@@ -93,55 +52,63 @@ export const SkillProfileMatrixTable = ({
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
-            <div className="flex items-center justify-center gap-1">
-              <div className="flex items-center gap-1 cursor-pointer" onClick={() => handleSort('growth')}>
+            <Button
+              variant="ghost"
+              className="flex items-center justify-center gap-1 hover:bg-transparent"
+              onClick={() => onSort('growth')}
+            >
+              <div className="flex items-center gap-1">
                 Projected Growth
+                {renderSortArrow('growth')}
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span><HelpCircle className="h-4 w-4 text-muted-foreground" /></span>
+                    <TooltipTrigger>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
                         <h4 className="font-medium text-left">Projected Growth:</h4>
                         <p className="text-sm text-left font-normal">
-                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
+                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends. This metric helps identify emerging and high-demand skills in the technology sector.
                         </p>
                       </div>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                {getSortIcon('growth')}
               </div>
-            </div>
+            </Button>
           </th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
-            <div className="flex items-center justify-center gap-1">
-              <div className="flex items-center gap-1 cursor-pointer" onClick={() => handleSort('salary')}>
-                Salary With Skill
+            <Button
+              variant="ghost"
+              className="flex items-center justify-center gap-1 hover:bg-transparent"
+              onClick={() => onSort('salary')}
+            >
+              <div className="flex items-center gap-1">
+                Skill Pricer
+                {renderSortArrow('salary')}
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span><HelpCircle className="h-4 w-4 text-muted-foreground" /></span>
+                    <TooltipTrigger>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                       <div className="space-y-2">
-                        <h4 className="font-medium text-left">Salary with Skill:</h4>
+                        <h4 className="font-medium text-left">Skill Pricer:</h4>
                         <p className="text-sm text-left font-normal">
-                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
+                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill. This helps understand the market value and compensation trends associated with specific skills.
                         </p>
                       </div>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                {getSortIcon('salary')}
               </div>
-            </div>
+            </Button>
           </th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
               Appears In
-              <ArrowUp className="h-4 w-4" />
+              <ChevronUp className="h-4 w-4" />
             </div>
           </th>
         </tr>
