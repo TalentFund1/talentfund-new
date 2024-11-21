@@ -142,7 +142,7 @@ export const SkillProfileMatrix = () => {
             </Select>
 
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[180px] bg-white">
+              <SelectTrigger className="w-[220px] bg-white">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
