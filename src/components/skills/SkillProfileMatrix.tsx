@@ -9,9 +9,6 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
 
-type SortDirection = 'asc' | 'desc' | null;
-type SortField = 'growth' | 'salary' | null;
-
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
@@ -19,8 +16,6 @@ export const SkillProfileMatrix = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
-  const [sortField, setSortField] = useState<SortField>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const { toast } = useToast();
   const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
@@ -42,20 +37,6 @@ export const SkillProfileMatrix = () => {
     });
   };
 
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      if (sortDirection === 'asc') {
-        setSortDirection('desc');
-      } else if (sortDirection === 'desc') {
-        setSortField(null);
-        setSortDirection(null);
-      }
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
   // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -75,7 +56,7 @@ export const SkillProfileMatrix = () => {
       skills = currentRoleSkills.certifications;
     }
 
-    let sortedSkills = skills.filter(skill => {
+    return skills.filter(skill => {
       const isInCurrentRole = [
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
@@ -83,24 +64,7 @@ export const SkillProfileMatrix = () => {
       ].some(roleSkill => roleSkill.title === skill.title);
 
       return isInCurrentRole;
-    });
-
-    if (sortField && sortDirection) {
-      sortedSkills = [...sortedSkills].sort((a, b) => {
-        if (sortField === 'growth') {
-          const aGrowth = parseFloat(a.growth);
-          const bGrowth = parseFloat(b.growth);
-          return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
-        } else if (sortField === 'salary') {
-          const aSalary = parseFloat(a.salary.replace(/[^0-9.-]+/g, ""));
-          const bSalary = parseFloat(b.salary.replace(/[^0-9.-]+/g, ""));
-          return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
-        }
-        return 0;
-      });
-    }
-
-    return sortedSkills.sort((a, b) => {
+    }).sort((a, b) => {
       const aIsSaved = toggledSkills.has(a.title);
       const bIsSaved = toggledSkills.has(b.title);
       if (aIsSaved === bIsSaved) return 0;
@@ -160,9 +124,6 @@ export const SkillProfileMatrix = () => {
             paginatedSkills={paginatedSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
-            sortField={sortField}
-            sortDirection={sortDirection}
-            onSort={handleSort}
           />
         </div>
 
