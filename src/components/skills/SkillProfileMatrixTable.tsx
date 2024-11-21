@@ -101,11 +101,8 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </Button>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
-            <div className="flex items-center justify-center gap-1">
-              Appears In
-              <ChevronUp className="h-4 w-4" />
-            </div>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center whitespace-nowrap">
+            Appears In <ChevronUp className="h-4 w-4 inline-block ml-1" />
           </th>
         </tr>
       </thead>
@@ -130,7 +127,7 @@ export const SkillProfileMatrixTable = ({
               </span>
             </td>
             <td className="py-3 px-4">
-              <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm">
+              <span className={`bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm`}>
                 ↗ {skill.growth}
               </span>
             </td>
