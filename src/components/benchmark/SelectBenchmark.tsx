@@ -12,7 +12,7 @@ export const SelectBenchmark = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm text-muted-foreground">Saved Benchmarks</label>
+            <label className="text-sm text-muted-foreground">Custom Benchmark</label>
             <Select defaultValue="nationwide">
               <SelectTrigger className="w-full bg-white">
                 <SelectValue placeholder="Select benchmark" />

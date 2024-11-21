@@ -54,7 +54,7 @@ export const SkillProfileMatrixTable = ({
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">
             <Button
               variant="ghost"
-              className="flex items-center justify-center w-full gap-1 hover:bg-transparent p-0 h-auto font-medium"
+              className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
               onClick={() => onSort('growth')}
             >
               Projected Growth
@@ -126,7 +126,7 @@ export const SkillProfileMatrixTable = ({
                 {skill.subcategory}
               </span>
             </td>
-            <td className="py-3 px-4 text-center">
+            <td className="py-3 px-4">
               <span className={`bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm`}>
                 ↗ {skill.growth}
               </span>
