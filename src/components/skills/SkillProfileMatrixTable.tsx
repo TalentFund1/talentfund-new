@@ -51,62 +51,54 @@ export const SkillProfileMatrixTable = ({
         <tr className="bg-background text-left">
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
             <Button
               variant="ghost"
-              className="flex items-center justify-start gap-1 hover:bg-transparent w-full"
+              className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
               onClick={() => onSort('growth')}
             >
-              <div className="flex items-center gap-1">
-                <span className="flex items-center gap-1">
-                  Projected Growth
-                  {renderSortArrow('growth')}
-                </span>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                    </TooltipTrigger>
-                    <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-left">Projected Growth:</h4>
-                        <p className="text-sm text-left font-normal">
-                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
-                        </p>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
+              Projected Growth
+              {renderSortArrow('growth')}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-left">Projected Growth:</h4>
+                      <p className="text-sm text-left font-normal">
+                        Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
+                      </p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </Button>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-left w-[15%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
             <Button
               variant="ghost"
-              className="flex items-center justify-start gap-1 hover:bg-transparent w-full"
+              className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
               onClick={() => onSort('salary')}
             >
-              <div className="flex items-center gap-1">
-                <span className="flex items-center gap-1">
-                  Skill Pricer
-                  {renderSortArrow('salary')}
-                </span>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                    </TooltipTrigger>
-                    <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-left">Skill Pricer:</h4>
-                        <p className="text-sm text-left font-normal">
-                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
-                        </p>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
+              Skill Pricer
+              {renderSortArrow('salary')}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-left">Skill Pricer:</h4>
+                      <p className="text-sm text-left font-normal">
+                        Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
+                      </p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </Button>
           </th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
@@ -129,20 +121,20 @@ export const SkillProfileMatrixTable = ({
                   checked={toggledSkills.has(skill.title)}
                   onCheckedChange={() => onToggleSkill(skill.title)}
                 />
-                <span className="text-sm text-left">{skill.title}</span>
+                <span className="text-sm">{skill.title}</span>
               </div>
             </td>
             <td className="py-3 px-4">
-              <span className="text-sm text-left block truncate" title={skill.subcategory}>
+              <span className="text-sm block truncate" title={skill.subcategory}>
                 {skill.subcategory}
               </span>
             </td>
-            <td className="py-3 px-4 text-left">
+            <td className="py-3 px-4">
               <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm">
                 ↗ {skill.growth}
               </span>
             </td>
-            <td className="py-3 px-4 text-left text-sm">{skill.salary}</td>
+            <td className="py-3 px-4 text-sm">{skill.salary}</td>
             <td className="py-3 px-4">
               <div className="flex justify-center gap-1">
                 <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
