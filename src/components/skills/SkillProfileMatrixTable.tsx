@@ -14,7 +14,7 @@ interface Skill {
   level: string;
   growth: string;
   salary: string;
-  benchmarks: { J: boolean; B: boolean; O: boolean };
+  benchmarks: { C: boolean; B: boolean; B2: boolean; O: boolean };
 }
 
 interface SkillProfileMatrixTableProps {
@@ -134,7 +134,8 @@ export const SkillProfileMatrixTable = ({
             <td className="py-3 px-2 text-sm">{skill.salary}</td>
             <td className="py-3 px-8">
               <div className="flex justify-center gap-1">
-                <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">J</span>
+                <span className="w-6 h-6 rounded-full bg-[#8073ec]/20 text-primary flex items-center justify-center text-sm font-medium">C</span>
+                <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
                 <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
                 <span className="w-6 h-6 rounded-full bg-primary-icon/10 text-primary-icon flex items-center justify-center text-sm font-medium">O</span>
               </div>
