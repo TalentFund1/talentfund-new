@@ -1,11 +1,12 @@
 import { Switch } from "@/components/ui/switch";
-import { ArrowUp, HelpCircle } from "lucide-react";
+import { ArrowUp, ArrowDown, HelpCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 interface Skill {
   title: string;
@@ -20,13 +21,30 @@ interface SkillProfileMatrixTableProps {
   paginatedSkills: Skill[];
   toggledSkills: Set<string>;
   onToggleSkill: (skillTitle: string) => void;
+  sortField: 'growth' | 'salary' | null;
+  sortDirection: 'asc' | 'desc' | null;
+  onSort: (field: 'growth' | 'salary' | null) => void;
 }
 
 export const SkillProfileMatrixTable = ({ 
   paginatedSkills, 
   toggledSkills,
-  onToggleSkill
+  onToggleSkill,
+  sortField,
+  sortDirection,
+  onSort
 }: SkillProfileMatrixTableProps) => {
+  const renderSortArrow = (field: 'growth' | 'salary') => {
+    if (sortField !== field) {
+      return <ArrowUp className="h-4 w-4 text-muted-foreground opacity-50" />;
+    }
+    return sortDirection === 'asc' ? (
+      <ArrowUp className="h-4 w-4 text-primary" />
+    ) : (
+      <ArrowDown className="h-4 w-4 text-primary" />
+    );
+  };
+
   return (
     <table className="w-full">
       <thead>
@@ -34,44 +52,58 @@ export const SkillProfileMatrixTable = ({
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
-            <div className="flex items-center justify-center gap-1">
-              Projected Growth
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-left">Projected Growth:</h4>
-                      <p className="text-sm text-left font-normal">
-                        Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
-                      </p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+            <Button
+              variant="ghost"
+              className="flex items-center justify-center gap-1 hover:bg-transparent"
+              onClick={() => onSort('growth')}
+            >
+              <div className="flex items-center gap-1">
+                Projected Growth
+                {renderSortArrow('growth')}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-left">Projected Growth:</h4>
+                        <p className="text-sm text-left font-normal">
+                          Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
+                        </p>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </Button>
           </th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
-            <div className="flex items-center justify-center gap-1">
-              Salary With Skill
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-left">Salary with Skill:</h4>
-                      <p className="text-sm text-left font-normal">
-                        Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
-                      </p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+            <Button
+              variant="ghost"
+              className="flex items-center justify-center gap-1 hover:bg-transparent"
+              onClick={() => onSort('salary')}
+            >
+              <div className="flex items-center gap-1">
+                Salary With Skill
+                {renderSortArrow('salary')}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-left">Salary with Skill:</h4>
+                        <p className="text-sm text-left font-normal">
+                          Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
+                        </p>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </Button>
           </th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center w-[15%]">
             <div className="flex items-center justify-center gap-1">
