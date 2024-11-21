@@ -112,7 +112,7 @@ export const SkillProfileMatrixTable = ({
             key={skill.title}
             className="border-t border-border hover:bg-muted/50 transition-colors"
           >
-            <td className="py-3 px-4">
+            <td className="py-4 px-4">
               <div className="flex items-center gap-2">
                 <Switch 
                   checked={toggledSkills.has(skill.title)}
@@ -121,18 +121,22 @@ export const SkillProfileMatrixTable = ({
                 <span className="text-sm">{skill.title}</span>
               </div>
             </td>
-            <td className="py-3 px-4">
+            <td className="py-4 px-4">
               <span className="text-sm block truncate" title={skill.subcategory}>
                 {skill.subcategory}
               </span>
             </td>
-            <td className="py-3 px-4">
-              <span className={`bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm`}>
-                ↗ {skill.growth}
-              </span>
+            <td className="py-4 px-4">
+              <div className="flex justify-center items-center h-full">
+                <span className={`inline-flex items-center justify-center px-3 py-1.5 rounded-full text-sm ${
+                  skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
+                }`}>
+                  ↗ {skill.growth}
+                </span>
+              </div>
             </td>
-            <td className="py-3 px-2 text-sm">{skill.salary}</td>
-            <td className="py-3 px-8">
+            <td className="py-4 px-2 text-sm">{skill.salary}</td>
+            <td className="py-4 px-8">
               <div className="flex justify-center gap-1">
                 <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
                 <span className="w-6 h-6 rounded-full bg-red-100 text-red-800 flex items-center justify-center text-sm font-medium">R</span>
