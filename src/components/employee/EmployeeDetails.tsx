@@ -1,5 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -14,8 +13,6 @@ interface EmployeeDetailsProps {
 }
 
 export const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
-  const isActive = !employee.termDate || employee.termDate === "-";
-  
   return (
     <>
       <Separator className="my-6" />
@@ -42,16 +39,7 @@ export const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Term Date</span>
-          <div className="flex items-center gap-2">
-            <p className="font-medium text-gray-900">
-              {isActive ? "—" : employee.termDate}
-            </p>
-            {isActive && (
-              <Badge variant="secondary" className="bg-green-100 text-green-800 hover:bg-green-100">
-                Active
-              </Badge>
-            )}
-          </div>
+          <p className="font-medium text-gray-900">{employee.termDate}</p>
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
