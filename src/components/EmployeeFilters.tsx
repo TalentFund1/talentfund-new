@@ -47,8 +47,12 @@ export const EmployeeFilters = ({
   // Get unique job titles from employees
   const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
 
-  // Get unique managers from employees
-  const managers = ["Sus Manu"];
+  // Get managers (employees with roles containing 'Manager')
+  const managers = Array.from(new Set(
+    employees
+      .filter(emp => emp.role.toLowerCase().includes('manager'))
+      .map(emp => emp.name)
+  ));
 
   // Determine if the selected role is managerial
   const isManagerialTrack = selectedJobTitle.length > 0 && 
