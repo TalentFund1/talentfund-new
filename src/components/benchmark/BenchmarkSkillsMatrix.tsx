@@ -28,6 +28,13 @@ export const BenchmarkSkillsMatrix = () => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
 
+  console.log('BenchmarkSkillsMatrix render:', {
+    selectedRole,
+    roleLevel,
+    toggledSkills: Array.from(toggledSkills),
+    currentStates
+  });
+
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -163,6 +170,8 @@ export const BenchmarkSkillsMatrix = () => {
       // If all else is equal, sort alphabetically
       return a.title.localeCompare(b.title);
     });
+
+  console.log('Filtered skills:', filteredSkills);
 
   return (
     <div className="space-y-6">
