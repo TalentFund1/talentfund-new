@@ -7,11 +7,17 @@ import { employees, getBaseRole } from './EmployeeTable';
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
   selectedDepartment: string[];
+  onJobTitleChange: (jobTitle: string[]) => void;
+  selectedJobTitle: string[];
 }
 
-export const EmployeeFilters = ({ onDepartmentChange, selectedDepartment }: EmployeeFiltersProps) => {
+export const EmployeeFilters = ({ 
+  onDepartmentChange, 
+  selectedDepartment,
+  onJobTitleChange,
+  selectedJobTitle
+}: EmployeeFiltersProps) => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
@@ -23,7 +29,7 @@ export const EmployeeFilters = ({ onDepartmentChange, selectedDepartment }: Empl
 
   const handleClearAll = () => {
     setSelectedSkills([]);
-    setSelectedJobTitle([]);
+    onJobTitleChange([]);
     setSelectedLevel([]);
     setSelectedOffice([]);
     onDepartmentChange([]);
@@ -49,7 +55,7 @@ export const EmployeeFilters = ({ onDepartmentChange, selectedDepartment }: Empl
           placeholder="Job Title"
           items={jobTitles}
           selectedItems={selectedJobTitle}
-          onItemsChange={setSelectedJobTitle}
+          onItemsChange={onJobTitleChange}
           singleSelect={true}
           className="w-[180px]"
         />
