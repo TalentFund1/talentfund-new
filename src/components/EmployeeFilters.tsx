@@ -44,11 +44,10 @@ export const EmployeeFilters = ({ onDepartmentChange, selectedDepartment }: Empl
           label=""
           placeholder="Job Title"
           items={[
-            "Software Engineer",
-            "Product Manager",
-            "Designer",
-            "Data Scientist",
-            "DevOps Engineer"
+            "AI Engineer",
+            "Backend Engineer",
+            "Frontend Engineer",
+            "Engineering Manager"
           ]}
           selectedItems={selectedJobTitle}
           onItemsChange={setSelectedJobTitle}
