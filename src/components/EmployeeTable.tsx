@@ -18,6 +18,7 @@ interface Employee {
   benchmark: number;
   lastUpdated: string;
   location: string;
+  sex: 'male' | 'female';
 }
 
 const employees: Employee[] = [
@@ -29,7 +30,8 @@ const employees: Employee[] = [
     skillCount: 16,
     benchmark: 89,
     lastUpdated: "10/20/24",
-    location: "Toronto, ON"
+    location: "Toronto, ON",
+    sex: "male"
   },
   {
     id: "124",
@@ -39,7 +41,8 @@ const employees: Employee[] = [
     skillCount: 12,
     benchmark: 85,
     lastUpdated: "10/20/24",
-    location: "Toronto, ON"
+    location: "Toronto, ON",
+    sex: "female"
   },
   {
     id: "125",
@@ -49,7 +52,8 @@ const employees: Employee[] = [
     skillCount: 17,
     benchmark: 74,
     lastUpdated: "10/20/24",
-    location: "Toronto, ON"
+    location: "Toronto, ON",
+    sex: "female"
   },
   {
     id: "126",
@@ -59,7 +63,8 @@ const employees: Employee[] = [
     skillCount: 11,
     benchmark: 68,
     lastUpdated: "10/20/24",
-    location: "Toronto, ON"
+    location: "Toronto, ON",
+    sex: "male"
   }
 ];
 
