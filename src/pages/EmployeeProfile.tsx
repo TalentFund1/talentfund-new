@@ -22,7 +22,7 @@ const employees = {
     location: "Toronto, ON",
     department: "Engineering",
     office: "Toronto",
-    category: "Contract",
+    category: "Full-time",
     manager: "Sarah Chen",
     startDate: "2024-01-01",
     termDate: "-",
