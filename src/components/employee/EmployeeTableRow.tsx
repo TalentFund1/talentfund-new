@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
@@ -27,8 +27,8 @@ export const EmployeeTableRow = ({
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employee.id);
 
-  const isExactMatch = selectedJobTitle.length > 0 && 
-    employee.role.split(':')[0].trim() === selectedJobTitle[0];
+  const isExactRoleMatch = selectedJobTitle.length > 0 && 
+    getBaseRole(employee.role) === selectedJobTitle[0];
 
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
@@ -58,11 +58,16 @@ export const EmployeeTableRow = ({
     return (
       <div className="flex justify-center">
         <span className={`px-2.5 py-1 rounded-full text-sm ${
-          employee.benchmark >= 80 
-            ? 'bg-green-100 text-green-800' 
-            : 'bg-orange-100 text-orange-800'
-        } ${isExactMatch ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
+          isExactRoleMatch
+            ? 'bg-primary-accent/10 text-primary-accent'
+            : employee.benchmark >= 80 
+              ? 'bg-green-100 text-green-800' 
+              : 'bg-orange-100 text-orange-800'
+        }`}>
           {employee.benchmark}%
+          {isExactRoleMatch && (
+            <span className="ml-1 text-xs">(Exact Match)</span>
+          )}
         </span>
       </div>
     );
@@ -70,7 +75,7 @@ export const EmployeeTableRow = ({
 
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
-      isExactMatch ? 'bg-primary/5' : ''
+      isExactRoleMatch ? 'bg-primary-accent/5' : ''
     }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 

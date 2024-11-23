@@ -14,34 +14,39 @@ export const sortEmployeesByRoleMatch = (
   const selectedRole = selectedJobTitle[0];
   const roleId = getSkillProfileId(selectedRole);
 
-  // Calculate benchmarks for all employees against selected role
+  // Calculate benchmark percentages for all employees against the selected role
   const employeesWithBenchmarks = employees.map(employee => {
-    const benchmark = calculateBenchmarkPercentage(
+    const exactMatch = getBaseRole(employee.role) === selectedRole;
+    const benchmarkScore = calculateBenchmarkPercentage(
       employee.id,
       roleId,
-      getLevel(employee.role),
+      getLevel(selectedRole),
       currentStates,
       toggledSkills,
       getSkillCompetencyState
     );
-    return { ...employee, calculatedBenchmark: benchmark };
+
+    return {
+      ...employee,
+      exactMatch,
+      benchmarkScore
+    };
   });
 
-  console.log('Employees with benchmarks:', employeesWithBenchmarks);
+  // Filter out employees with 0% benchmark score
+  const validEmployees = employeesWithBenchmarks.filter(emp => 
+    emp.exactMatch || emp.benchmarkScore > 0
+  );
 
-  return employeesWithBenchmarks
-    .filter(employee => employee.calculatedBenchmark > 0)
-    .sort((a, b) => {
-      const aExactMatch = getBaseRole(a.role) === selectedRole;
-      const bExactMatch = getBaseRole(b.role) === selectedRole;
-
-      // If one is exact match and other isn't, prioritize exact match
-      if (aExactMatch !== bExactMatch) {
-        return aExactMatch ? -1 : 1;
-      }
-
-      // If both are exact matches or both are partial matches,
-      // sort by benchmark score
-      return b.calculatedBenchmark - a.calculatedBenchmark;
-    });
+  // Sort employees:
+  // 1. Exact role matches first
+  // 2. Then by benchmark percentage for partial matches
+  return validEmployees.sort((a, b) => {
+    if (a.exactMatch && !b.exactMatch) return -1;
+    if (!a.exactMatch && b.exactMatch) return 1;
+    
+    // If both are exact matches or both are partial matches,
+    // sort by benchmark score
+    return b.benchmarkScore - a.benchmarkScore;
+  });
 };
