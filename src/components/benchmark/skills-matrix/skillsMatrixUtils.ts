@@ -51,8 +51,7 @@ export const filterAndSortSkills = (
 
   return skills
     .filter(skill => {
-      if (!toggledSkills.has(skill.title)) return false;
-
+      // Always include the skill regardless of toggledSkills state
       let matchesLevel = true;
       let matchesInterest = true;
       let matchesSkillLevel = true;

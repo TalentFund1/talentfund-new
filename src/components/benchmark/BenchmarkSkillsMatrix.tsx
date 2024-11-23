@@ -33,28 +33,23 @@ export const BenchmarkSkillsMatrix = () => {
     selectedRole,
     roleLevel,
     toggledSkills: Array.from(toggledSkills),
-    currentStates
+    currentStates,
+    employeeId: id
   });
 
   const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  console.log('Employee skills loaded:', employeeSkills);
 
+  // Initialize skill states for employee skills
   useEffect(() => {
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    const toggledRoleSkills = allRoleSkills
-      .filter(skill => toggledSkills.has(skill.title))
-      .map(skill => skill.title);
-    
-    setSelectedSearchSkills(toggledRoleSkills);
-  }, [selectedRole, toggledSkills, currentRoleSkills]);
+    const { initializeState } = useSkillsMatrixStore.getState();
+    employeeSkills.forEach(skill => {
+      initializeState(skill.title, skill.level, skill.requirement);
+    });
+  }, [employeeSkills]);
 
   const filteredSkills = filterAndSortSkills(
-    filterSkillsByCategory(employeeSkills, "all"),
+    employeeSkills,
     toggledSkills,
     selectedLevel,
     selectedInterest,
@@ -65,6 +60,24 @@ export const BenchmarkSkillsMatrix = () => {
   );
 
   console.log('Filtered skills:', filteredSkills);
+
+  // Infinite scroll logic
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
+          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [visibleItems, filteredSkills.length]);
 
   return (
     <div className="space-y-6">
