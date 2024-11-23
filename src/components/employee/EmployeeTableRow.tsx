@@ -5,6 +5,7 @@ import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Badge } from "@/components/ui/badge";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 interface EmployeeTableRowProps {
   employee: Employee;
