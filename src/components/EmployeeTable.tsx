@@ -99,6 +99,7 @@ interface EmployeeTableProps {
   selectedEmploymentType?: string[];
   selectedSkills?: string[];
   selectedEmployees?: string[];
+  selectedManager?: string[];
 }
 
 export const EmployeeTable = ({ 
@@ -108,7 +109,8 @@ export const EmployeeTable = ({
   selectedOffice = [],
   selectedEmploymentType = [],
   selectedSkills = [],
-  selectedEmployees = []
+  selectedEmployees = [],
+  selectedManager = []
 }: EmployeeTableProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
@@ -133,7 +135,8 @@ export const EmployeeTable = ({
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
-    selectedSkills
+    selectedSkills,
+    selectedManager
   );
 
   // Apply skills filter

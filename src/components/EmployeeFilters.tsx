@@ -20,6 +20,8 @@ interface EmployeeFiltersProps {
   selectedSkills: string[];
   onEmployeeSearch: (employees: string[]) => void;
   selectedEmployees: string[];
+  onManagerChange?: (manager: string[]) => void;
+  selectedManager?: string[];
 }
 
 export const EmployeeFilters = ({ 
@@ -36,12 +38,17 @@ export const EmployeeFilters = ({
   onSkillsChange,
   selectedSkills,
   onEmployeeSearch,
-  selectedEmployees
+  selectedEmployees,
+  onManagerChange = () => {},
+  selectedManager = []
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   
   // Get unique job titles from employees
   const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
+
+  // Get unique managers from employees
+  const managers = ["Sus Manu"];
 
   // Determine if the selected role is managerial
   const isManagerialTrack = selectedJobTitle.length > 0 && 
@@ -68,6 +75,7 @@ export const EmployeeFilters = ({
     onDepartmentChange([]);
     onEmploymentTypeChange([]);
     onEmployeeSearch([]);
+    onManagerChange([]);
   };
 
   return (
@@ -136,6 +144,16 @@ export const EmployeeFilters = ({
           selectedItems={selectedEmploymentType}
           onItemsChange={onEmploymentTypeChange}
           singleSelect={false}
+          className="w-[180px]"
+        />
+
+        <SearchFilter
+          label=""
+          placeholder="Manager"
+          items={managers}
+          selectedItems={selectedManager}
+          onItemsChange={onManagerChange}
+          singleSelect={true}
           className="w-[180px]"
         />
 
