@@ -1,4 +1,5 @@
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -12,7 +13,17 @@ interface EmployeeDetailsProps {
   };
 }
 
+const calculateTenure = (startDate: string, termDate: string): string => {
+  const start = new Date(startDate);
+  const end = termDate ? new Date(termDate) : new Date();
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+  const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+  return diffYears.toFixed(1);
+};
+
 export const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
+  const tenure = calculateTenure(employee.startDate, employee.termDate);
+
   return (
     <>
       <Separator className="my-6" />
@@ -39,11 +50,20 @@ export const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Term Date</span>
-          <p className="font-medium text-gray-900">{employee.termDate}</p>
+          <div className="flex items-center gap-2">
+            <p className="font-medium text-gray-900">
+              {employee.termDate || "—"}
+            </p>
+            {!employee.termDate && (
+              <Badge variant="secondary" className="text-xs">
+                Active
+              </Badge>
+            )}
+          </div>
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
-          <p className="font-medium text-gray-900">{employee.tenure}</p>
+          <p className="font-medium text-gray-900">{tenure}</p>
         </div>
       </div>
     </>
