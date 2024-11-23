@@ -17,7 +17,7 @@ const calculateTenure = (startDate: string, termDate: string | null): string => 
   if (!startDate) return "0.0";
   
   const start = new Date(startDate);
-  const end = termDate ? new Date(termDate) : new Date();
+  const end = termDate && termDate !== "-" ? new Date(termDate) : new Date();
   
   if (isNaN(start.getTime())) return "0.0";
   
@@ -27,7 +27,7 @@ const calculateTenure = (startDate: string, termDate: string | null): string => 
 };
 
 export const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
-  const tenure = calculateTenure(employee.startDate, employee.termDate || null);
+  const tenure = calculateTenure(employee.startDate, employee.termDate === "-" ? null : employee.termDate);
 
   return (
     <>
@@ -59,7 +59,7 @@ export const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
             <p className="font-medium text-gray-900">
               {employee.termDate || "—"}
             </p>
-            {!employee.termDate && (
+            {(!employee.termDate || employee.termDate === "-") && (
               <Badge variant="secondary" className="text-xs">
                 Active
               </Badge>
