@@ -26,11 +26,12 @@ export const employees: Employee[] = [
     role: "AI Engineer: P4",
     department: "Engineering",
     skillCount: getEmployeeSkills("123").length,
-    benchmark: 0, // Will be calculated dynamically
+    benchmark: 0,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "male",
-    category: "Full-time"
+    category: "Full-time",
+    manager: "Sus Manu"
   },
   {
     id: "124",
@@ -42,7 +43,8 @@ export const employees: Employee[] = [
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "female",
-    category: "Contract"
+    category: "Contract",
+    manager: "Sus Manu"
   },
   {
     id: "125",
@@ -54,11 +56,12 @@ export const employees: Employee[] = [
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "female",
-    category: "Part-time"
+    category: "Part-time",
+    manager: "Sus Manu"
   },
   {
     id: "126",
-    name: "Suz Manu",
+    name: "Sus Manu",
     role: "Engineering Manager: M3",
     department: "Engineering",
     skillCount: getEmployeeSkills("126").length,
@@ -99,6 +102,7 @@ interface EmployeeTableProps {
   selectedEmploymentType?: string[];
   selectedSkills?: string[];
   selectedEmployees?: string[];
+  selectedManager?: string[];
 }
 
 export const EmployeeTable = ({ 
@@ -108,7 +112,8 @@ export const EmployeeTable = ({
   selectedOffice = [],
   selectedEmploymentType = [],
   selectedSkills = [],
-  selectedEmployees = []
+  selectedEmployees = [],
+  selectedManager = []
 }: EmployeeTableProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
@@ -133,7 +138,8 @@ export const EmployeeTable = ({
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
-    selectedSkills
+    selectedSkills,
+    selectedManager
   );
 
   // Apply skills filter

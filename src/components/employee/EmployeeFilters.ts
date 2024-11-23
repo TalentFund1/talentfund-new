@@ -1,5 +1,4 @@
 import { Employee } from "../types/employeeTypes";
-import { getBaseRole, getLevel } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],
@@ -9,7 +8,8 @@ export const filterEmployees = (
   selectedLevel: string[],
   selectedOffice: string[],
   selectedEmploymentType: string[],
-  selectedSkills: string[]
+  selectedSkills: string[],
+  selectedManager: string[] = []
 ): Employee[] => {
   return employees.filter(employee => {
     const matchesEmployeeSearch = searchedEmployees.length === 0 || 
@@ -18,12 +18,11 @@ export const filterEmployees = (
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
     
-    const baseRole = getBaseRole(employee.role);
     const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(baseRole);
+      selectedJobTitle.includes(employee.role.split(':')[0].trim());
     
     const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(getLevel(employee.role));
+      selectedLevel.includes(employee.role.split(':')[1].trim());
 
     const matchesOffice = selectedOffice.length === 0 || 
       selectedOffice.includes(employee.location.split(',')[0].trim());
@@ -31,8 +30,10 @@ export const filterEmployees = (
     const matchesEmploymentType = selectedEmploymentType.length === 0 ||
       selectedEmploymentType.includes(employee.category);
 
-    return matchesEmployeeSearch && matchesDepartment && 
-           (matchesJobTitle || employee.benchmark > 0) && 
-           matchesLevel && matchesOffice && matchesEmploymentType;
+    const matchesManager = selectedManager.length === 0 ||
+      (employee.manager && selectedManager.includes(employee.manager));
+
+    return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
+           matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
   });
 };
