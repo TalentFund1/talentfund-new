@@ -4,9 +4,15 @@ interface EmployeeTableHeaderProps {
   onSelectAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isAllSelected: boolean;
   hasEmployees: boolean;
+  hasSelectedSkills?: boolean;
 }
 
-export const EmployeeTableHeader = ({ onSelectAll, isAllSelected, hasEmployees }: EmployeeTableHeaderProps) => {
+export const EmployeeTableHeader = ({ 
+  onSelectAll, 
+  isAllSelected, 
+  hasEmployees,
+  hasSelectedSkills = false 
+}: EmployeeTableHeaderProps) => {
   return (
     <tr className="border-b border-border">
       <th className="h-12 px-4 text-left">
@@ -26,7 +32,9 @@ export const EmployeeTableHeader = ({ onSelectAll, isAllSelected, hasEmployees }
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Current Role</th>
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Department</th>
       <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Count</th>
-      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Role Benchmark</th>
+      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">
+        {hasSelectedSkills ? "Skills Benchmark" : "Role Benchmark"}
+      </th>
       <th className="h-12 px-4 text-right text-sm font-medium text-muted-foreground">Last Updated</th>
     </tr>
   );

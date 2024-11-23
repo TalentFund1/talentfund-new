@@ -159,6 +159,7 @@ export const EmployeeTable = ({
               onSelectAll={(e) => handleSelectAll(filteredEmployees, e)}
               isAllSelected={filteredEmployees.length > 0 && selectedRows.length === filteredEmployees.length}
               hasEmployees={filteredEmployees.length > 0}
+              hasSelectedSkills={selectedSkills.length > 0}
             />
           </thead>
           <tbody>
@@ -176,6 +177,7 @@ export const EmployeeTable = ({
                   isSelected={selectedRows.includes(employee.name)}
                   onSelect={handleSelectEmployee}
                   imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
+                  selectedSkills={selectedSkills}
                 />
               ))
             )}
