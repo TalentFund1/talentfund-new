@@ -40,8 +40,6 @@ export const EmployeeTableRow = ({ employee, isSelected, onSelect, imageUrl }: E
           {employee.role}
         </Link>
       </td>
-      <td className="px-4 py-4 text-sm">{employee.department}</td>
-      <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
       <td className="px-4 py-4">
         <div className="flex justify-center">
           <span className={`px-2.5 py-1 rounded-full text-sm ${
@@ -53,6 +51,8 @@ export const EmployeeTableRow = ({ employee, isSelected, onSelect, imageUrl }: E
           </span>
         </div>
       </td>
+      <td className="px-4 py-4 text-sm">{employee.department}</td>
+      <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
       <td className="px-4 py-4 text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
       </td>
