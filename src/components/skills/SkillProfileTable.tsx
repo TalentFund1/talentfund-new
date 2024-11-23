@@ -8,10 +8,10 @@ export const SkillProfileTable = () => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   
   const rows: SkillProfileRow[] = [
-    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: "2", matches: "0", lastUpdated: "10/20/24" },
-    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: "3", matches: "4", lastUpdated: "10/20/24" },
-    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: "0", matches: "5", lastUpdated: "10/20/24" },
-    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: "2", matches: "5", lastUpdated: "10/20/24" }
+    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: "2", matches: "$180,178", lastUpdated: "10/20/24" },
+    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: "3", matches: "$175,000", lastUpdated: "10/20/24" },
+    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: "0", matches: "$170,000", lastUpdated: "10/20/24" },
+    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: "2", matches: "$190,000", lastUpdated: "10/20/24" }
   ];
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {

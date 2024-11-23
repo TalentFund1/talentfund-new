@@ -17,6 +17,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const employees = {
   "123": {
+    id: "123",
     name: "Victor Smith",
     role: "AI Engineer: P4",
     location: "Toronto, ON",
@@ -30,6 +31,7 @@ const employees = {
     image: "photo-1488590528505-98d2b5aba04b"
   },
   "124": {
+    id: "124",
     name: "Jennie Richards",
     role: "Backend Engineer: P4",
     location: "Toronto, ON",
@@ -43,6 +45,7 @@ const employees = {
     image: "photo-1518770660439-4636190af475"
   },
   "125": {
+    id: "125",
     name: "Anna Vyselva",
     role: "Frontend Developer: P4",
     location: "Toronto, ON",
@@ -56,6 +59,7 @@ const employees = {
     image: "photo-1461749280684-dccba630e2f6"
   },
   "126": {
+    id: "126",
     name: "Suz Manu",
     role: "Engineering Manager: M3",
     location: "Toronto, ON",

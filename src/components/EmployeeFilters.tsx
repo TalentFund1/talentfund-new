@@ -1,115 +1,101 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
-
-const jobTitles = [
-  { id: "123", title: "AI Engineer" },
-  { id: "124", title: "Backend Engineer" },
-  { id: "125", title: "Frontend Engineer" },
-  { id: "126", title: "Engineering Manager" },
-  { id: "127", title: "Software Engineer" },
-  { id: "128", title: "Product Manager" },
-  { id: "129", title: "Designer" },
-  { id: "130", title: "Data Scientist" },
-  { id: "131", title: "DevOps Engineer" }
-];
+import { technicalSkills, softSkills } from './skillsData';
+import { Button } from '@/components/ui/button';
 
 export const EmployeeFilters = () => {
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
-  const [selectedLevel, setSelectedLevel] = useState("");
-  const [selectedOffice, setSelectedOffice] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [selectedEmploymentType, setSelectedEmploymentType] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
+  const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
+  const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
+  const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
+
+  const allSkills = [...technicalSkills, ...softSkills];
 
   const handleClearAll = () => {
+    setSelectedSkills([]);
     setSelectedJobTitle([]);
-    setSelectedLevel("");
-    setSelectedOffice("");
-    setSelectedDepartment("");
-    setSelectedEmploymentType("");
+    setSelectedLevel([]);
+    setSelectedOffice([]);
+    setSelectedDepartment([]);
+    setSelectedEmploymentType([]);
   };
 
   return (
-    <div className="space-y-4">
-      <SearchFilter
-        label=""
-        placeholder="Search skills..."
-        items={[]}
-        selectedItems={[]}
-        onItemsChange={() => {}}
-      />
-      
-      <div className="flex flex-wrap gap-3">
-        <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Job Title" />
-          </SelectTrigger>
-          <SelectContent>
-            {jobTitles.map((job) => (
-              <SelectItem key={job.id} value={job.id}>
-                <Link 
-                  to={`/skills/${job.id}`}
-                  className="text-primary hover:text-primary-accent transition-colors"
-                >
-                  {job.title}
-                </Link>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+    <div className="space-y-0.5">
+      <div className="w-full">
+        <SearchFilter
+          label=""
+          placeholder="Search skills..."
+          items={allSkills}
+          selectedItems={selectedSkills}
+          onItemsChange={setSelectedSkills}
+          singleSelect={false}
+        />
+      </div>
 
-        <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Level" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="p1">P1</SelectItem>
-            <SelectItem value="p2">P2</SelectItem>
-            <SelectItem value="p3">P3</SelectItem>
-            <SelectItem value="p4">P4</SelectItem>
-            <SelectItem value="p5">P5</SelectItem>
-            <SelectItem value="p6">P6</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex flex-wrap items-start gap-3">
+        <SearchFilter
+          label=""
+          placeholder="Job Title"
+          items={[
+            "Software Engineer",
+            "Product Manager",
+            "Designer",
+            "Data Scientist",
+            "DevOps Engineer"
+          ]}
+          selectedItems={selectedJobTitle}
+          onItemsChange={setSelectedJobTitle}
+          singleSelect={true}
+          className="w-[180px]"
+        />
+        
+        <SearchFilter
+          label=""
+          placeholder="Level"
+          items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
+          selectedItems={selectedLevel}
+          onItemsChange={setSelectedLevel}
+          singleSelect={false}
+          className="w-[180px]"
+        />
+        
+        <SearchFilter
+          label=""
+          placeholder="Office"
+          items={["New York", "San Francisco", "London", "Toronto", "Berlin"]}
+          selectedItems={selectedOffice}
+          onItemsChange={setSelectedOffice}
+          singleSelect={false}
+          className="w-[180px]"
+        />
 
-        <Select value={selectedOffice} onValueChange={setSelectedOffice}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Office" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="toronto">Toronto</SelectItem>
-            <SelectItem value="vancouver">Vancouver</SelectItem>
-            <SelectItem value="montreal">Montreal</SelectItem>
-          </SelectContent>
-        </Select>
+        <SearchFilter
+          label=""
+          placeholder="Department"
+          items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
+          selectedItems={selectedDepartment}
+          onItemsChange={setSelectedDepartment}
+          singleSelect={false}
+          className="w-[180px]"
+        />
 
-        <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Department" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="engineering">Engineering</SelectItem>
-            <SelectItem value="design">Design</SelectItem>
-            <SelectItem value="product">Product</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedEmploymentType} onValueChange={setSelectedEmploymentType}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Employment Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="full-time">Full-time</SelectItem>
-            <SelectItem value="part-time">Part-time</SelectItem>
-            <SelectItem value="contract">Contract</SelectItem>
-          </SelectContent>
-        </Select>
+        <SearchFilter
+          label=""
+          placeholder="Employment Type"
+          items={["Full Time", "Part Time", "Contract", "Internship"]}
+          selectedItems={selectedEmploymentType}
+          onItemsChange={setSelectedEmploymentType}
+          singleSelect={false}
+          className="w-[180px]"
+        />
 
         <Button 
           variant="outline" 
           onClick={handleClearAll}
+          className="h-[40px] mt-4"
         >
           Clear All
         </Button>
