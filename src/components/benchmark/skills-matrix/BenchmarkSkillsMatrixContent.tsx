@@ -57,9 +57,14 @@ export const BenchmarkSkillsMatrixContent = ({
       <Separator className="my-8" />
 
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground">
-          {getRoleTitle(roleId)}: {roleLevel.toUpperCase()}
-        </h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-foreground">
+            {getRoleTitle(roleId)}: {roleLevel.toUpperCase()}
+          </h2>
+          <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+            ({filteredSkills.length})
+          </span>
+        </div>
       </div>
 
       <SkillsMatrixContent 
