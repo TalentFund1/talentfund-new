@@ -31,7 +31,8 @@ export const employees: Employee[] = [
     location: "Toronto, ON",
     sex: "male",
     category: "Full-time",
-    manager: "Sus Manu"
+    manager: "Sus Manu",
+    startDate: "2023-05-15"
   },
   {
     id: "124",
@@ -44,7 +45,8 @@ export const employees: Employee[] = [
     location: "Toronto, ON",
     sex: "female",
     category: "Contract",
-    manager: "Sus Manu"
+    manager: "Sus Manu",
+    startDate: "2024-01-10"
   },
   {
     id: "125",
@@ -57,7 +59,8 @@ export const employees: Employee[] = [
     location: "Toronto, ON",
     sex: "female",
     category: "Part-time",
-    manager: "Sus Manu"
+    manager: "Sus Manu",
+    startDate: "2023-08-22"
   },
   {
     id: "126",
@@ -69,9 +72,22 @@ export const employees: Employee[] = [
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "male",
-    category: "Contract"
+    category: "Contract",
+    startDate: "2022-11-01"
   }
 ];
+
+// Function to calculate employees added in the past year
+export const getEmployeesAddedLastYear = () => {
+  const today = new Date();
+  const oneYearAgo = new Date(today.setFullYear(today.getFullYear() - 1));
+  
+  return employees.filter(employee => {
+    if (!employee.startDate) return false;
+    const startDate = new Date(employee.startDate);
+    return startDate >= oneYearAgo;
+  }).length;
+};
 
 export const getSkillProfileId = (role: string) => {
   const roleMap: { [key: string]: string } = {
