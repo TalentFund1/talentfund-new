@@ -18,34 +18,12 @@ export const sortEmployeesByRoleMatch = (
     const aExactMatch = getBaseRole(a.role) === selectedRole;
     const bExactMatch = getBaseRole(b.role) === selectedRole;
 
-    // If one is an exact match and the other isn't, prioritize the exact match
-    if (aExactMatch !== bExactMatch) {
-      return aExactMatch ? -1 : 1;
+    // If both are exact matches or both are partial matches, sort by benchmark
+    if (aExactMatch === bExactMatch) {
+      return b.benchmark - a.benchmark;
     }
 
-    // If neither is an exact match, compare their benchmark percentages
-    const aLevel = getLevel(a.role);
-    const bLevel = getLevel(b.role);
-
-    const aBenchmark = calculateBenchmarkPercentage(
-      a.id,
-      roleId,
-      aLevel,
-      currentStates,
-      toggledSkills,
-      getSkillCompetencyState
-    );
-
-    const bBenchmark = calculateBenchmarkPercentage(
-      b.id,
-      roleId,
-      bLevel,
-      currentStates,
-      toggledSkills,
-      getSkillCompetencyState
-    );
-
-    // Sort by benchmark percentage in descending order
-    return bBenchmark - aBenchmark;
+    // Prioritize exact matches
+    return aExactMatch ? -1 : 1;
   });
 };

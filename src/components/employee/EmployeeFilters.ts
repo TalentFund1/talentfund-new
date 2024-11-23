@@ -18,10 +18,9 @@ export const filterEmployees = (
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
     
-    // Modified to allow partial role matches
+    const baseRole = getBaseRole(employee.role);
     const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(getBaseRole(employee.role)) ||
-      employee.benchmark > 0;
+      selectedJobTitle.includes(baseRole);
     
     const matchesLevel = selectedLevel.length === 0 || 
       selectedLevel.includes(getLevel(employee.role));
@@ -32,7 +31,8 @@ export const filterEmployees = (
     const matchesEmploymentType = selectedEmploymentType.length === 0 ||
       selectedEmploymentType.includes(employee.category);
 
-    return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
+    return matchesEmployeeSearch && matchesDepartment && 
+           (matchesJobTitle || employee.benchmark > 0) && 
            matchesLevel && matchesOffice && matchesEmploymentType;
   });
 };

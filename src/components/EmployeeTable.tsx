@@ -78,15 +78,13 @@ export const getSkillProfileId = (role: string) => {
   };
   
   const baseRole = role.split(":")[0].trim();
-  return roleMap[baseRole] || "123"; // Default to AI Engineer if not found
+  return roleMap[baseRole] || "123";
 };
 
-// Helper function to get base role without level
 export const getBaseRole = (role: string) => {
   return role.split(":")[0].trim();
 };
 
-// Helper function to get level from role
 export const getLevel = (role: string) => {
   const parts = role.split(":");
   return parts.length > 1 ? parts[1].trim() : "";
@@ -118,16 +116,22 @@ export const EmployeeTable = ({
 
   // Calculate benchmark percentages for each employee
   const employeesWithBenchmarks = employees.map(employee => {
-    const roleId = getSkillProfileId(employee.role);
-    const level = getLevel(employee.role);
-    const benchmark = calculateBenchmarkPercentage(
-      employee.id,
-      roleId,
-      level,
-      currentStates,
-      toggledSkills,
-      getSkillCompetencyState
-    );
+    let benchmark = 0;
+    
+    // Only calculate benchmark if a job title is selected
+    if (selectedJobTitle.length > 0) {
+      const roleId = getSkillProfileId(selectedJobTitle[0]);
+      const level = getLevel(employee.role);
+      benchmark = calculateBenchmarkPercentage(
+        employee.id,
+        roleId,
+        level,
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
+    }
+    
     return { ...employee, benchmark };
   });
 
