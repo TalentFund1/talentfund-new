@@ -184,6 +184,7 @@ export const EmployeeTable = ({
                   onSelect={handleSelectEmployee}
                   imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
                   selectedSkills={selectedSkills}
+                  selectedJobTitle={selectedJobTitle}
                 />
               ))
             )}

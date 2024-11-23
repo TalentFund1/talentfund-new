@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { Badge } from "@/components/ui/badge";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -12,6 +12,7 @@ interface EmployeeTableRowProps {
   onSelect: (name: string) => void;
   imageUrl: string;
   selectedSkills?: string[];
+  selectedJobTitle?: string[];
 }
 
 export const EmployeeTableRow = ({ 
@@ -19,11 +20,15 @@ export const EmployeeTableRow = ({
   isSelected, 
   onSelect, 
   imageUrl,
-  selectedSkills = []
+  selectedSkills = [],
+  selectedJobTitle = []
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employee.id);
+
+  const isExactMatch = selectedJobTitle.length > 0 && 
+    getBaseRole(employee.role) === selectedJobTitle[0];
 
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
@@ -35,7 +40,8 @@ export const EmployeeTableRow = ({
 
             const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4");
             const skillState = currentStates[skillName];
-            const isSkillGoal = skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
+            const isSkillGoal = skillState?.requirement === 'required' || 
+                               skillState?.requirement === 'skill_goal';
             
             return (
               <SkillBubble
@@ -64,7 +70,9 @@ export const EmployeeTableRow = ({
   };
 
   return (
-    <tr className="border-t border-border hover:bg-muted/50 transition-colors">
+    <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
+      isExactMatch ? 'bg-blue-50/50' : ''
+    }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
           type="checkbox" 
@@ -80,9 +88,16 @@ export const EmployeeTableRow = ({
             alt={employee.name}
             className="w-6 h-6 rounded-full object-cover"
           />
-          <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
-            {employee.name}
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
+              {employee.name}
+            </Link>
+            {isExactMatch && (
+              <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-800 hover:bg-blue-100">
+                Exact Match
+              </Badge>
+            )}
+          </div>
         </div>
       </td>
       <td className="px-4 py-4 w-[250px]">
