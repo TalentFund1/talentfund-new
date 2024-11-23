@@ -85,7 +85,7 @@ export const EmployeeTableRow = ({
           </Link>
         </div>
       </td>
-      <td className="px-4 py-4 w-[200px]">
+      <td className="px-4 py-4 w-[250px]">
         <Link 
           to={`/skills/${getSkillProfileId(employee.role)}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
@@ -95,7 +95,7 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 w-[100px] text-center text-sm">{employee.skillCount}</td>
-      <td className="py-4 min-w-[300px]">
+      <td className="py-4 w-[200px] text-center">
         {renderBenchmark()}
       </td>
       <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
