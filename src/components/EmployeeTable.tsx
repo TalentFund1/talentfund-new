@@ -76,7 +76,7 @@ const getSkillProfileId = (role: string) => {
   return roleMap[baseRole] || "123"; // Default to AI Engineer if not found
 };
 
-export const EmployeeTable = () => {
+export const EmployeeTable = ({ selectedDepartment }: { selectedDepartment: string[] }) => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,6 +96,11 @@ export const EmployeeTable = () => {
     });
   };
 
+  // Filter employees based on selected department
+  const filteredEmployees = employees.filter(employee => 
+    selectedDepartment.length === 0 || selectedDepartment.includes(employee.department)
+  );
+
   return (
     <div className="bg-white rounded-lg">
       <div className="relative">
@@ -106,7 +111,7 @@ export const EmployeeTable = () => {
                 <input 
                   type="checkbox" 
                   className="rounded border-gray-300"
-                  checked={selectedEmployees.length === employees.length}
+                  checked={selectedEmployees.length === filteredEmployees.length}
                   onChange={handleSelectAll}
                 />
               </th>
@@ -123,7 +128,7 @@ export const EmployeeTable = () => {
             </tr>
           </thead>
           <tbody>
-            {employees.map((employee, index) => (
+            {filteredEmployees.map((employee, index) => (
               <tr key={employee.id} className="border-t border-border hover:bg-muted/50 transition-colors">
                 <td className="px-4 py-4">
                   <input 
@@ -136,7 +141,7 @@ export const EmployeeTable = () => {
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-2">
                     <img 
-                      src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index]}?auto=format&fit=crop&w=24&h=24`}
+                      src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
                       alt={employee.name}
                       className="w-6 h-6 rounded-full object-cover"
                     />

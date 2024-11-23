@@ -3,12 +3,16 @@ import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
 
-export const EmployeeFilters = () => {
+interface EmployeeFiltersProps {
+  onDepartmentChange: (department: string[]) => void;
+  selectedDepartment: string[];
+}
+
+export const EmployeeFilters = ({ onDepartmentChange, selectedDepartment }: EmployeeFiltersProps) => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
-  const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
 
   const allSkills = [...technicalSkills, ...softSkills];
@@ -18,7 +22,7 @@ export const EmployeeFilters = () => {
     setSelectedJobTitle([]);
     setSelectedLevel([]);
     setSelectedOffice([]);
-    setSelectedDepartment([]);
+    onDepartmentChange([]);
     setSelectedEmploymentType([]);
   };
 
@@ -77,7 +81,7 @@ export const EmployeeFilters = () => {
           placeholder="Department"
           items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
           selectedItems={selectedDepartment}
-          onItemsChange={setSelectedDepartment}
+          onItemsChange={onDepartmentChange}
           singleSelect={false}
           className="w-[180px]"
         />

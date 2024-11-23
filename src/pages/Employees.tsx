@@ -7,8 +7,11 @@ import { Sidebar } from "@/components/Sidebar";
 import { EmployeeFilters } from "@/components/EmployeeFilters";
 import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
+import { useState } from "react";
 
 const Employees = () => {
+  const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -23,7 +26,10 @@ const Employees = () => {
           </div>
 
           <Card className="p-6">
-            <EmployeeFilters />
+            <EmployeeFilters 
+              onDepartmentChange={setSelectedDepartment}
+              selectedDepartment={selectedDepartment}
+            />
           </Card>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -50,7 +56,7 @@ const Employees = () => {
           </div>
 
           <Card className="p-6">
-            <EmployeeTable />
+            <EmployeeTable selectedDepartment={selectedDepartment} />
             <Separator className="my-4" />
             <TablePagination />
           </Card>
