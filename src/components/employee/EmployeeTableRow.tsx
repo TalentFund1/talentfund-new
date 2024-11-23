@@ -32,7 +32,6 @@ export const EmployeeTableRow = ({ employee, isSelected, onSelect, imageUrl }: E
           </Link>
         </div>
       </td>
-      <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
       <td className="px-4 py-4">
         <Link 
           to={`/skills/${getSkillProfileId(employee.role)}`} 
@@ -42,6 +41,7 @@ export const EmployeeTableRow = ({ employee, isSelected, onSelect, imageUrl }: E
         </Link>
       </td>
       <td className="px-4 py-4 text-sm">{employee.department}</td>
+      <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
       <td className="px-4 py-4">
         <div className="flex justify-center">
           <span className={`px-2.5 py-1 rounded-full text-sm ${

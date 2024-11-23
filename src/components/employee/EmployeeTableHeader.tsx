@@ -23,9 +23,9 @@ export const EmployeeTableHeader = ({ onSelectAll, isAllSelected, hasEmployees }
           Employee Name <ChevronDown className="h-4 w-4" />
         </div>
       </th>
-      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Count</th>
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Current Role</th>
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Department</th>
+      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Count</th>
       <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Benchmark</th>
       <th className="h-12 px-4 text-right text-sm font-medium text-muted-foreground">Last Updated</th>
     </tr>
