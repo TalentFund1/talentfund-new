@@ -103,6 +103,16 @@ export const EmployeeFilters = ({
       <div className="flex flex-wrap items-start gap-3">
         <SearchFilter
           label=""
+          placeholder="Manager"
+          items={managers}
+          selectedItems={selectedManager}
+          onItemsChange={onManagerChange}
+          singleSelect={true}
+          className="w-[180px]"
+        />
+
+        <SearchFilter
+          label=""
           placeholder="Job Title"
           items={jobTitles}
           selectedItems={selectedJobTitle}
@@ -148,16 +158,6 @@ export const EmployeeFilters = ({
           selectedItems={selectedEmploymentType}
           onItemsChange={onEmploymentTypeChange}
           singleSelect={false}
-          className="w-[180px]"
-        />
-
-        <SearchFilter
-          label=""
-          placeholder="Manager"
-          items={managers}
-          selectedItems={selectedManager}
-          onItemsChange={onManagerChange}
-          singleSelect={true}
           className="w-[180px]"
         />
 
