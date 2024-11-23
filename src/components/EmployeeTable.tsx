@@ -70,6 +70,32 @@ export const employees: Employee[] = [
     location: "Toronto, ON",
     sex: "male",
     category: "Contract"
+  },
+  {
+    id: "127",
+    name: "John Backend",
+    role: "AI Engineer: P3",
+    department: "Engineering",
+    skillCount: getEmployeeSkills("123").length,
+    benchmark: 0,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "male",
+    category: "Full-time",
+    manager: "Sus Manu"
+  },
+  {
+    id: "128",
+    name: "Sarah Tech",
+    role: "Frontend Engineer: P4",
+    department: "Engineering",
+    skillCount: getEmployeeSkills("124").length,
+    benchmark: 0,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "female",
+    category: "Full-time",
+    manager: "Sus Manu"
   }
 ];
 
