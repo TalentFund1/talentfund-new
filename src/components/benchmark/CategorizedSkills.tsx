@@ -55,6 +55,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const requiredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      console.log('Checking required skill:', skill.title, competencyState);
       return competencyState?.required === 'required' && toggledSkills.has(skill.title);
     })
     .sort((a, b) => {
@@ -66,6 +67,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const preferredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      console.log('Checking preferred skill:', skill.title, competencyState);
       return competencyState?.required === 'preferred' && toggledSkills.has(skill.title);
     })
     .sort((a, b) => {
@@ -102,6 +104,10 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
         return "bg-gray-300";
     }
   };
+
+  console.log('Required Skills:', requiredSkills);
+  console.log('Preferred Skills:', preferredSkills);
+  console.log('Missing Skills:', missingSkills);
 
   const SkillSection = ({ title, skills, count }: { title: string, skills: any[], count: number }) => (
     <Card className="p-6 space-y-4">
