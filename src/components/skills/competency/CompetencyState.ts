@@ -24,28 +24,6 @@ const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
 
 const initializeSkillStates = (roleId: string) => {
   console.log('Initializing competency states for role:', roleId);
-  
-  const storageKey = getStorageKey(roleId);
-  const savedStates = localStorage.getItem(storageKey);
-  
-  if (savedStates) {
-    console.log('Found saved states for role:', roleId);
-    try {
-      const parsedStates = JSON.parse(savedStates);
-      if (parsedStates?.state?.currentStates && typeof parsedStates.state.currentStates === 'object') {
-        console.log('Successfully loaded saved states:', parsedStates.state);
-        return {
-          currentStates: parsedStates.state.currentStates,
-          originalStates: parsedStates.state.originalStates || parsedStates.state.currentStates,
-          hasChanges: false
-        };
-      }
-    } catch (error) {
-      console.error('Error parsing saved states:', error);
-    }
-  }
-
-  console.log('Initializing with default states');
   const states: Record<string, Record<string, SkillState>> = {};
   
   const allSkills = [
@@ -55,6 +33,25 @@ const initializeSkillStates = (roleId: string) => {
     ...certificationSkills
   ];
 
+  // First try to load from localStorage
+  const storageKey = getStorageKey(roleId);
+  const savedStates = localStorage.getItem(storageKey);
+  
+  if (savedStates) {
+    console.log('Found saved states for role:', roleId);
+    try {
+      const parsedStates = JSON.parse(savedStates);
+      if (parsedStates && typeof parsedStates === 'object') {
+        console.log('Successfully loaded saved states:', parsedStates);
+        return parsedStates;
+      }
+    } catch (error) {
+      console.error('Error parsing saved states:', error);
+    }
+  }
+
+  // If no saved states or invalid data, initialize with default values
+  console.log('Initializing with default states');
   allSkills.forEach(skill => {
     states[skill.title] = states[skill.title] || {};
     
@@ -77,11 +74,9 @@ const initializeSkillStates = (roleId: string) => {
     }
   });
 
-  return {
-    currentStates: states,
-    originalStates: states,
-    hasChanges: false
-  };
+  // Save initial states to localStorage
+  localStorage.setItem(storageKey, JSON.stringify(states));
+  return states;
 };
 
 export const useCompetencyStore = create<CompetencyState>()(
@@ -93,7 +88,11 @@ export const useCompetencyStore = create<CompetencyState>()(
       initializeStates: (roleId: string) => {
         const initializedStates = initializeSkillStates(roleId);
         console.log('Setting initial competency states:', initializedStates);
-        set(initializedStates);
+        set({
+          currentStates: initializedStates,
+          originalStates: initializedStates,
+          hasChanges: false
+        });
       },
       setSkillState: (skillName, level, levelKey, required) => {
         console.log('Setting competency state:', { skillName, level, levelKey, required });
@@ -111,15 +110,22 @@ export const useCompetencyStore = create<CompetencyState>()(
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
-          return { 
+          return {
             currentStates: newStates,
-            hasChanges
+            hasChanges,
           };
         });
       },
       saveChanges: () => {
         console.log('Saving competency changes');
         const currentStates = get().currentStates;
+        const roleId = localStorage.getItem('currentRoleId') || '123';
+        const storageKey = getStorageKey(roleId);
+        
+        // Save to localStorage with role-specific key
+        localStorage.setItem(storageKey, JSON.stringify(currentStates));
+        console.log('Saved states to localStorage with key:', storageKey);
+        
         set({
           originalStates: { ...currentStates },
           hasChanges: false,
@@ -135,42 +141,11 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      storage: {
-        getItem: (name) => {
-          const roleId = localStorage.getItem('currentRoleId') || '123';
-          const storageKey = getStorageKey(roleId);
-          try {
-            const value = localStorage.getItem(storageKey);
-            console.log('Retrieved from storage:', { key: storageKey, value });
-            if (!value) return null;
-            const parsed = JSON.parse(value);
-            return parsed;
-          } catch (error) {
-            console.error('Error retrieving from storage:', error);
-            return null;
-          }
-        },
-        setItem: (name, value) => {
-          const roleId = localStorage.getItem('currentRoleId') || '123';
-          const storageKey = getStorageKey(roleId);
-          try {
-            localStorage.setItem(storageKey, JSON.stringify(value));
-            console.log('Saved to storage:', { key: storageKey, value });
-          } catch (error) {
-            console.error('Error saving to storage:', error);
-          }
-        },
-        removeItem: (name) => {
-          const roleId = localStorage.getItem('currentRoleId') || '123';
-          const storageKey = getStorageKey(roleId);
-          try {
-            localStorage.removeItem(storageKey);
-            console.log('Removed from storage:', storageKey);
-          } catch (error) {
-            console.error('Error removing from storage:', error);
-          }
-        }
-      }
+      skipHydration: true, // Skip automatic hydration since we handle it manually
+      partialize: (state) => ({
+        originalStates: state.originalStates,
+        currentStates: state.currentStates,
+      }),
     }
   )
 );
