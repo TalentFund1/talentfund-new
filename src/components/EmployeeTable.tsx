@@ -48,7 +48,7 @@ export const employees: Employee[] = [
   {
     id: "125",
     name: "Anna Vyselva",
-    role: "Frontend Developer: P4",
+    role: "Frontend Engineer: P4",
     department: "Engineering",
     skillCount: getEmployeeSkills("125").length,
     benchmark: 74,
@@ -74,12 +74,17 @@ const getSkillProfileId = (role: string) => {
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
     "Backend Engineer": "124",
-    "Frontend Developer": "125",
+    "Frontend Engineer": "125",
     "Engineering Manager": "126"
   };
   
   const baseRole = role.split(":")[0].trim();
   return roleMap[baseRole] || "123"; // Default to AI Engineer if not found
+};
+
+// Helper function to get base role without level
+export const getBaseRole = (role: string) => {
+  return role.split(":")[0].trim();
 };
 
 export const EmployeeTable = ({ selectedDepartment }: { selectedDepartment: string[] }) => {

@@ -2,6 +2,7 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
+import { employees, getBaseRole } from './EmployeeTable';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -16,6 +17,9 @@ export const EmployeeFilters = ({ onDepartmentChange, selectedDepartment }: Empl
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
 
   const allSkills = [...technicalSkills, ...softSkills];
+  
+  // Get unique job titles from employees
+  const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
 
   const handleClearAll = () => {
     setSelectedSkills([]);
@@ -43,12 +47,7 @@ export const EmployeeFilters = ({ onDepartmentChange, selectedDepartment }: Empl
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={[
-            "AI Engineer",
-            "Backend Engineer",
-            "Frontend Engineer",
-            "Engineering Manager"
-          ]}
+          items={jobTitles}
           selectedItems={selectedJobTitle}
           onItemsChange={setSelectedJobTitle}
           singleSelect={true}
