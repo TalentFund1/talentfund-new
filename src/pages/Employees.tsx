@@ -9,6 +9,9 @@ import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 
+// Import employees data from EmployeeTable
+import { employees } from "@/components/EmployeeTable";
+
 const Employees = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
 
