@@ -4,6 +4,7 @@ import { getSkillProfileId } from "../EmployeeTable";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -21,6 +22,7 @@ export const EmployeeTableRow = ({
   selectedSkills = []
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employee.id);
 
   const renderBenchmark = () => {
@@ -32,13 +34,15 @@ export const EmployeeTableRow = ({
             if (!employeeSkill) return null;
 
             const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4");
+            const skillState = currentStates[skillName];
+            const isSkillGoal = skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
             
             return (
               <SkillBubble
                 key={skillName}
                 skillName={skillName}
                 level={competencyState?.level || employeeSkill.level}
-                isRequired={competencyState?.required === 'required'}
+                isRequired={isSkillGoal}
               />
             );
           })}
