@@ -28,7 +28,7 @@ export const EmployeeTableRow = ({
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
       return (
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
           {selectedSkills.map(skillName => {
             const employeeSkill = employeeSkills.find(s => s.title === skillName);
             if (!employeeSkill) return null;
@@ -65,7 +65,7 @@ export const EmployeeTableRow = ({
 
   return (
     <tr className="border-t border-border hover:bg-muted/50 transition-colors">
-      <td className="px-4 py-4">
+      <td className="px-4 py-4 w-[48px]">
         <input 
           type="checkbox" 
           className="rounded border-gray-300"
@@ -73,7 +73,7 @@ export const EmployeeTableRow = ({
           onChange={() => onSelect(employee.name)}
         />
       </td>
-      <td className="px-4 py-4">
+      <td className="px-4 py-4 w-[200px]">
         <div className="flex items-center gap-2">
           <img 
             src={imageUrl}
@@ -85,7 +85,7 @@ export const EmployeeTableRow = ({
           </Link>
         </div>
       </td>
-      <td className="px-4 py-4">
+      <td className="px-4 py-4 w-[200px]">
         <Link 
           to={`/skills/${getSkillProfileId(employee.role)}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
@@ -93,12 +93,12 @@ export const EmployeeTableRow = ({
           {employee.role}
         </Link>
       </td>
-      <td className="px-4 py-4 text-sm">{employee.department}</td>
-      <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
-      <td className="px-4 py-4">
+      <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
+      <td className="px-4 py-4 w-[100px] text-center text-sm">{employee.skillCount}</td>
+      <td className="py-4 min-w-[300px]">
         {renderBenchmark()}
       </td>
-      <td className="px-4 py-4 text-right text-sm text-muted-foreground">
+      <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
       </td>
     </tr>
