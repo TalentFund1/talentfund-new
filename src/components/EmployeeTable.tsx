@@ -21,7 +21,7 @@ interface Employee {
   sex: 'male' | 'female';
 }
 
-const employees: Employee[] = [
+export const employees: Employee[] = [
   {
     id: "123",
     name: "Victor Smith",
