@@ -8,6 +8,7 @@ import { EmployeeFilters } from "@/components/EmployeeFilters";
 import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
+import { employees } from "@/data/employeesData";
 
 const Employees = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
@@ -42,7 +43,7 @@ const Employees = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               title="Total Number of Employees"
-              value="112"
+              value={employees.length.toString()}
               icon={<Users className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
