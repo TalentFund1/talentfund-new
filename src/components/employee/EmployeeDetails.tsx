@@ -33,6 +33,8 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const employeeSkills = getEmployeeSkills(id);
   const totalSkills = employeeSkills.length;
 
+  console.log(`Employee ${id} has ${totalSkills} skills:`, employeeSkills);
+
   return (
     <>
       <Separator className="my-6" />
@@ -69,7 +71,7 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Skill Count</span>
-          <p className="font-medium text-primary">{totalSkills}</p>
+          <p className="font-medium text-gray-900">{totalSkills}</p>
         </div>
       </div>
     </>
