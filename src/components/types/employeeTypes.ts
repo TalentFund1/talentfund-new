@@ -9,5 +9,4 @@ export interface Employee {
   location: string;
   sex: 'male' | 'female';
   category: string;
-  manager?: string;
 }

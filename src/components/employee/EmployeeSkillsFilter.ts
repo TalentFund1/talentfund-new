@@ -6,8 +6,7 @@ export const filterEmployeesBySkills = (employees: Employee[], selectedSkills: s
 
   return employees.filter(employee => {
     const employeeSkills = getEmployeeSkills(employee.id);
-    // Changed from every to some to match any skill instead of all skills
-    return selectedSkills.some(selectedSkill =>
+    return selectedSkills.every(selectedSkill =>
       employeeSkills.some(empSkill => 
         empSkill.title.toLowerCase().includes(selectedSkill.toLowerCase())
       )
