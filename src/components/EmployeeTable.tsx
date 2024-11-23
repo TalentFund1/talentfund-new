@@ -5,11 +5,11 @@ import { EmployeeTableRow } from "./employee/EmployeeTableRow";
 import { useSkillsMatrixStore } from "./benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./skills/competency/CompetencyStateReader";
-import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
-import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
+import { useEmployeeTableState } from "./employee/EmployeeTableState";
+import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -109,48 +109,19 @@ export const EmployeeTable = ({
   selectedSkills = [],
   selectedEmployees = []
 }: EmployeeTableProps) => {
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
 
   // Calculate benchmark percentages for each employee
-  const employeesWithBenchmarks = employees.map(employee => {
-    let benchmark = 0;
-    
-    // Only calculate benchmark if a job title is selected
-    if (selectedJobTitle.length > 0) {
-      const roleId = getSkillProfileId(selectedJobTitle[0]);
-      const level = getLevel(employee.role);
-      benchmark = calculateBenchmarkPercentage(
-        employee.id,
-        roleId,
-        level,
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      );
-    }
-    
-    return { ...employee, benchmark };
-  });
-
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedRows(filteredEmployees.map(emp => emp.name));
-    } else {
-      setSelectedRows([]);
-    }
-  };
-
-  const handleSelectEmployee = (name: string) => {
-    setSelectedRows(prev => {
-      if (prev.includes(name)) {
-        return prev.filter(n => n !== name);
-      }
-      return [...prev, name];
-    });
-  };
+  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+    employees,
+    selectedJobTitle,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
+  );
 
   // Filter employees based on all criteria including skills and employee search
   const preFilteredEmployees = filterEmployees(
@@ -184,7 +155,7 @@ export const EmployeeTable = ({
         <table className="w-full">
           <thead>
             <EmployeeTableHeader 
-              onSelectAll={handleSelectAll}
+              onSelectAll={(e) => handleSelectAll(filteredEmployees, e)}
               isAllSelected={filteredEmployees.length > 0 && selectedRows.length === filteredEmployees.length}
               hasEmployees={filteredEmployees.length > 0}
             />
