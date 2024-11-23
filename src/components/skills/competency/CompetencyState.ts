@@ -166,7 +166,8 @@ export const useCompetencyStore = create<CompetencyState>()(
           try {
             const value = localStorage.getItem(storageKey);
             console.log('Retrieved from storage:', { key: storageKey, value });
-            return value;
+            if (!value) return null;
+            return JSON.parse(value);
           } catch (error) {
             console.error('Error retrieving from storage:', error);
             return null;
