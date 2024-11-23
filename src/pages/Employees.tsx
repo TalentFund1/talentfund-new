@@ -8,12 +8,11 @@ import { EmployeeFilters } from "@/components/EmployeeFilters";
 import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
-
-// Import employees data from EmployeeTable
 import { employees } from "@/components/EmployeeTable";
 
 const Employees = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
+  const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
 
   // Calculate female percentage from the employees data
   const calculateFemalePercentage = () => {
@@ -39,6 +38,8 @@ const Employees = () => {
             <EmployeeFilters 
               onDepartmentChange={setSelectedDepartment}
               selectedDepartment={selectedDepartment}
+              onJobTitleChange={setSelectedJobTitle}
+              selectedJobTitle={selectedJobTitle}
             />
           </Card>
 
@@ -66,7 +67,10 @@ const Employees = () => {
           </div>
 
           <Card className="p-6">
-            <EmployeeTable selectedDepartment={selectedDepartment} />
+            <EmployeeTable 
+              selectedDepartment={selectedDepartment}
+              selectedJobTitle={selectedJobTitle}
+            />
             <Separator className="my-4" />
             <TablePagination />
           </Card>

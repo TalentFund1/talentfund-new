@@ -81,7 +81,7 @@ interface EmployeeTableProps {
   selectedJobTitle: string[];
 }
 
-export const EmployeeTable = ({ selectedDepartment, selectedJobTitle }: EmployeeTableProps) => {
+export const EmployeeTable = ({ selectedDepartment = [], selectedJobTitle = [] }: EmployeeTableProps) => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {

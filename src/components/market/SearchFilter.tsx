@@ -19,8 +19,8 @@ interface SearchFilterProps {
 export const SearchFilter = ({ 
   label, 
   placeholder, 
-  items = [], 
-  selectedItems, 
+  items = [], // Provide default empty array
+  selectedItems = [], // Provide default empty array
   onItemsChange,
   singleSelect = false,
   required = false,
@@ -69,7 +69,7 @@ export const SearchFilter = ({
     }
   };
 
-  const filteredItems = items.filter(item => 
+  const filteredItems = (items || []).filter(item => 
     item.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
