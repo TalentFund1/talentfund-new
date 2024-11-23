@@ -76,12 +76,23 @@ export const getBaseRole = (role: string) => {
   return role.split(":")[0].trim();
 };
 
+// Helper function to get level from role
+export const getLevel = (role: string) => {
+  const parts = role.split(":");
+  return parts.length > 1 ? parts[1].trim() : "";
+};
+
 interface EmployeeTableProps {
   selectedDepartment: string[];
   selectedJobTitle: string[];
+  selectedLevel?: string[];
 }
 
-export const EmployeeTable = ({ selectedDepartment = [], selectedJobTitle = [] }: EmployeeTableProps) => {
+export const EmployeeTable = ({ 
+  selectedDepartment = [], 
+  selectedJobTitle = [],
+  selectedLevel = []
+}: EmployeeTableProps) => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,12 +112,22 @@ export const EmployeeTable = ({ selectedDepartment = [], selectedJobTitle = [] }
     });
   };
 
-  // Filter employees based on selected department and job title
+  // Filter employees based on selected department, job title, and level
   const filteredEmployees = employees.filter(employee => {
-    const matchesDepartment = selectedDepartment.length === 0 || selectedDepartment.includes(employee.department);
-    const matchesJobTitle = selectedJobTitle.length === 0 || selectedJobTitle.includes(getBaseRole(employee.role));
-    return matchesDepartment && matchesJobTitle;
+    const matchesDepartment = selectedDepartment.length === 0 || 
+      selectedDepartment.includes(employee.department);
+    
+    const matchesJobTitle = selectedJobTitle.length === 0 || 
+      selectedJobTitle.includes(getBaseRole(employee.role));
+    
+    const matchesLevel = selectedLevel.length === 0 || 
+      selectedLevel.includes(getLevel(employee.role));
+
+    return matchesDepartment && matchesJobTitle && matchesLevel;
   });
+
+  console.log('Filtered employees:', filteredEmployees);
+  console.log('Selected level:', selectedLevel);
 
   return (
     <div className="bg-white rounded-lg">

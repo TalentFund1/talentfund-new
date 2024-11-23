@@ -9,16 +9,19 @@ interface EmployeeFiltersProps {
   selectedDepartment: string[];
   onJobTitleChange: (jobTitle: string[]) => void;
   selectedJobTitle: string[];
+  onLevelChange: (level: string[]) => void;
+  selectedLevel: string[];
 }
 
 export const EmployeeFilters = ({ 
   onDepartmentChange, 
   selectedDepartment,
   onJobTitleChange,
-  selectedJobTitle
+  selectedJobTitle,
+  onLevelChange,
+  selectedLevel
 }: EmployeeFiltersProps) => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
 
@@ -41,13 +44,13 @@ export const EmployeeFilters = ({
 
   // Reset level selection when track changes
   useEffect(() => {
-    setSelectedLevel([]);
-  }, [selectedJobTitle]);
+    onLevelChange([]);
+  }, [selectedJobTitle, onLevelChange]);
 
   const handleClearAll = () => {
     setSelectedSkills([]);
     onJobTitleChange([]);
-    setSelectedLevel([]);
+    onLevelChange([]);
     setSelectedOffice([]);
     onDepartmentChange([]);
     setSelectedEmploymentType([]);
@@ -55,6 +58,7 @@ export const EmployeeFilters = ({
 
   console.log('Current track:', isManagerialTrack ? 'Managerial' : 'Professional');
   console.log('Available levels:', getLevelsForTrack());
+  console.log('Selected level:', selectedLevel);
 
   return (
     <div className="space-y-0.5">
@@ -85,7 +89,7 @@ export const EmployeeFilters = ({
           placeholder="Level"
           items={getLevelsForTrack()}
           selectedItems={selectedLevel}
-          onItemsChange={setSelectedLevel}
+          onItemsChange={onLevelChange}
           singleSelect={false}
           className="w-[180px]"
         />
