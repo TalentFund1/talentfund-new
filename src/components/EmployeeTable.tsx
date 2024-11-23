@@ -8,6 +8,7 @@ import { useCompetencyStateReader } from "./skills/competency/CompetencyStateRea
 import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
+import { filterEmployees } from "./employee/EmployeeFilters";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -97,6 +98,7 @@ interface EmployeeTableProps {
   selectedOffice?: string[];
   selectedEmploymentType?: string[];
   selectedSkills?: string[];
+  selectedEmployees?: string[];
 }
 
 export const EmployeeTable = ({ 
@@ -105,9 +107,10 @@ export const EmployeeTable = ({
   selectedLevel = [],
   selectedOffice = [],
   selectedEmploymentType = [],
-  selectedSkills = []
+  selectedSkills = [],
+  selectedEmployees = []
 }: EmployeeTableProps) => {
-  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -129,14 +132,14 @@ export const EmployeeTable = ({
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedEmployees(filteredEmployees.map(emp => emp.name));
+      setSelectedRows(filteredEmployees.map(emp => emp.name));
     } else {
-      setSelectedEmployees([]);
+      setSelectedRows([]);
     }
   };
 
   const handleSelectEmployee = (name: string) => {
-    setSelectedEmployees(prev => {
+    setSelectedRows(prev => {
       if (prev.includes(name)) {
         return prev.filter(n => n !== name);
       }
@@ -144,29 +147,20 @@ export const EmployeeTable = ({
     });
   };
 
-  // Filter employees based on all criteria including skills
-  const filteredEmployees = filterEmployeesBySkills(
-    employeesWithBenchmarks.filter(employee => {
-      const matchesDepartment = selectedDepartment.length === 0 || 
-        selectedDepartment.includes(employee.department);
-      
-      const matchesJobTitle = selectedJobTitle.length === 0 || 
-        selectedJobTitle.includes(getBaseRole(employee.role));
-      
-      const matchesLevel = selectedLevel.length === 0 || 
-        selectedLevel.includes(getLevel(employee.role));
-
-      const matchesOffice = selectedOffice.length === 0 || 
-        selectedOffice.includes(employee.location.split(',')[0].trim());
-
-      const matchesEmploymentType = selectedEmploymentType.length === 0 ||
-        selectedEmploymentType.includes(employee.category);
-
-      return matchesDepartment && matchesJobTitle && matchesLevel && 
-             matchesOffice && matchesEmploymentType;
-    }),
+  // Filter employees based on all criteria including skills and employee search
+  const preFilteredEmployees = filterEmployees(
+    employeesWithBenchmarks,
+    selectedEmployees,
+    selectedDepartment,
+    selectedJobTitle,
+    selectedLevel,
+    selectedOffice,
+    selectedEmploymentType,
     selectedSkills
   );
+
+  // Apply skills filter
+  const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
   console.log('Filtered employees with benchmarks:', filteredEmployees);
 
@@ -177,7 +171,7 @@ export const EmployeeTable = ({
           <thead>
             <EmployeeTableHeader 
               onSelectAll={handleSelectAll}
-              isAllSelected={filteredEmployees.length > 0 && selectedEmployees.length === filteredEmployees.length}
+              isAllSelected={filteredEmployees.length > 0 && selectedRows.length === filteredEmployees.length}
               hasEmployees={filteredEmployees.length > 0}
             />
           </thead>
@@ -193,7 +187,7 @@ export const EmployeeTable = ({
                 <EmployeeTableRow
                   key={employee.id}
                   employee={employee}
-                  isSelected={selectedEmployees.includes(employee.name)}
+                  isSelected={selectedRows.includes(employee.name)}
                   onSelect={handleSelectEmployee}
                   imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
                 />

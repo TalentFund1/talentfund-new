@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
 import { employees, getBaseRole } from './EmployeeTable';
+import { EmployeeSearch } from './employee/EmployeeSearch';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -17,6 +18,8 @@ interface EmployeeFiltersProps {
   selectedEmploymentType: string[];
   onSkillsChange: (skills: string[]) => void;
   selectedSkills: string[];
+  onEmployeeSearch: (employees: string[]) => void;
+  selectedEmployees: string[];
 }
 
 export const EmployeeFilters = ({ 
@@ -31,7 +34,9 @@ export const EmployeeFilters = ({
   onEmploymentTypeChange,
   selectedEmploymentType,
   onSkillsChange,
-  selectedSkills
+  selectedSkills,
+  onEmployeeSearch,
+  selectedEmployees
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   
@@ -62,10 +67,16 @@ export const EmployeeFilters = ({
     onOfficeChange([]);
     onDepartmentChange([]);
     onEmploymentTypeChange([]);
+    onEmployeeSearch([]);
   };
 
   return (
     <div className="space-y-0.5">
+      <EmployeeSearch 
+        onEmployeeSearch={onEmployeeSearch}
+        selectedEmployees={selectedEmployees}
+      />
+
       <div className="w-full">
         <SearchFilter
           label=""
