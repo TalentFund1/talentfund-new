@@ -10,4 +10,5 @@ export interface Employee {
   sex: 'male' | 'female';
   category: string;
   manager?: string;
+  startDate: string;
 }
