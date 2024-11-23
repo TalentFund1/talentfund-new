@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -27,7 +28,7 @@ export const employees: Employee[] = [
     name: "Victor Smith",
     role: "AI Engineer: P4",
     department: "Engineering",
-    skillCount: 11, // Updated: 6 specialized + 2 common + 3 certifications
+    skillCount: getEmployeeSkills("123").length,
     benchmark: 89,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
@@ -38,7 +39,7 @@ export const employees: Employee[] = [
     name: "Jennie Richards",
     role: "Backend Engineer: P4",
     department: "Engineering",
-    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
+    skillCount: getEmployeeSkills("124").length,
     benchmark: 85,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
@@ -49,7 +50,7 @@ export const employees: Employee[] = [
     name: "Anna Vyselva",
     role: "Frontend Developer: P4",
     department: "Engineering",
-    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
+    skillCount: getEmployeeSkills("125").length,
     benchmark: 74,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
@@ -60,7 +61,7 @@ export const employees: Employee[] = [
     name: "Suz Manu",
     role: "Engineering Manager: M3",
     department: "Engineering",
-    skillCount: 10, // Updated: 3 specialized + 4 common + 3 certifications
+    skillCount: getEmployeeSkills("126").length,
     benchmark: 68,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
