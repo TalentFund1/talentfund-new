@@ -111,9 +111,9 @@ export const useCompetencyStore = create<CompetencyState>()(
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
-          return {
+          return { 
             currentStates: newStates,
-            hasChanges,
+            hasChanges
           };
         });
       },
@@ -123,7 +123,6 @@ export const useCompetencyStore = create<CompetencyState>()(
         const roleId = localStorage.getItem('currentRoleId') || '123';
         const storageKey = getStorageKey(roleId);
         
-        // Save to localStorage with role-specific key
         localStorage.setItem(storageKey, JSON.stringify(currentStates));
         console.log('Saved states to localStorage with key:', storageKey);
         
@@ -146,8 +145,6 @@ export const useCompetencyStore = create<CompetencyState>()(
         originalStates: state.originalStates,
         currentStates: state.currentStates,
       }),
-      // Enable storage synchronization
-      skipHydration: false,
       storage: {
         getItem: (name) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
@@ -155,14 +152,7 @@ export const useCompetencyStore = create<CompetencyState>()(
           const value = localStorage.getItem(storageKey);
           if (!value) return null;
           try {
-            const parsed = JSON.parse(value);
-            return {
-              state: {
-                originalStates: parsed,
-                currentStates: parsed,
-                hasChanges: false
-              }
-            };
+            return JSON.parse(value);
           } catch {
             return null;
           }
@@ -170,8 +160,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         setItem: (name, value) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
-          const state = JSON.parse(value).state;
-          localStorage.setItem(storageKey, JSON.stringify(state.currentStates));
+          localStorage.setItem(storageKey, JSON.stringify(value));
         },
         removeItem: (name) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
