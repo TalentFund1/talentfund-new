@@ -26,22 +26,26 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         const currentState = get().currentStates[skillTitle];
         if (!currentState) {
           console.log('Initializing matrix skill state:', { skillTitle, initialLevel, initialRequirement });
-          set((state) => ({
-            currentStates: {
-              ...state.currentStates,
-              [skillTitle]: {
+          set((state) => {
+            // Only initialize if the state doesn't exist yet
+            if (!state.currentStates[skillTitle]) {
+              const newState = {
                 level: initialLevel || 'unspecified',
                 requirement: initialRequirement || 'required'
-              }
-            },
-            originalStates: {
-              ...state.originalStates,
-              [skillTitle]: {
-                level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'required'
-              }
+              };
+              return {
+                currentStates: {
+                  ...state.currentStates,
+                  [skillTitle]: newState
+                },
+                originalStates: {
+                  ...state.originalStates,
+                  [skillTitle]: newState
+                }
+              };
             }
-          }));
+            return state;
+          });
         }
       },
       setSkillState: (skillTitle, level, requirement) => {
