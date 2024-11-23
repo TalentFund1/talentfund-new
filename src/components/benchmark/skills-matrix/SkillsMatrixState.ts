@@ -25,20 +25,29 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       initializeState: (skillTitle, initialLevel, initialRequirement) => {
         const currentState = get().currentStates[skillTitle];
         if (!currentState) {
-          console.log('Initializing matrix skill state:', { skillTitle, initialLevel, initialRequirement });
+          console.log('Initializing matrix skill state:', { 
+            skillTitle, 
+            initialLevel: initialLevel || 'unspecified',
+            initialRequirement: initialRequirement || 'required'
+          });
+          
+          // Ensure we have valid values
+          const level = initialLevel?.toLowerCase() || 'unspecified';
+          const requirement = initialRequirement?.toLowerCase() || 'required';
+          
           set((state) => ({
             currentStates: {
               ...state.currentStates,
               [skillTitle]: {
-                level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'required'
+                level,
+                requirement
               }
             },
             originalStates: {
               ...state.originalStates,
               [skillTitle]: {
-                level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'required'
+                level,
+                requirement
               }
             }
           }));
@@ -49,7 +58,10 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => {
           const newStates = {
             ...state.currentStates,
-            [skillTitle]: { level, requirement },
+            [skillTitle]: { 
+              level: level?.toLowerCase() || 'unspecified', 
+              requirement: requirement?.toLowerCase() || 'required' 
+            },
           };
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
