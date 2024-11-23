@@ -16,6 +16,7 @@ const Employees = () => {
   const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
 
   // Calculate female percentage from the employees data
   const calculateFemalePercentage = () => {
@@ -49,6 +50,8 @@ const Employees = () => {
               selectedOffice={selectedOffice}
               onEmploymentTypeChange={setSelectedEmploymentType}
               selectedEmploymentType={selectedEmploymentType}
+              onSkillsChange={setSelectedSkills}
+              selectedSkills={selectedSkills}
             />
           </Card>
 
@@ -82,6 +85,7 @@ const Employees = () => {
               selectedLevel={selectedLevel}
               selectedOffice={selectedOffice}
               selectedEmploymentType={selectedEmploymentType}
+              selectedSkills={selectedSkills}
             />
             <Separator className="my-4" />
             <TablePagination />
