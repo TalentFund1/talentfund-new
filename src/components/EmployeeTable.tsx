@@ -7,6 +7,7 @@ import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./skills/competency/CompetencyStateReader";
 import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
+import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
