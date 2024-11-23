@@ -81,7 +81,7 @@ export const EmployeeTable = ({ selectedDepartment }: { selectedDepartment: stri
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedEmployees(employees.map(emp => emp.name));
+      setSelectedEmployees(filteredEmployees.map(emp => emp.name));
     } else {
       setSelectedEmployees([]);
     }
@@ -111,8 +111,9 @@ export const EmployeeTable = ({ selectedDepartment }: { selectedDepartment: stri
                 <input 
                   type="checkbox" 
                   className="rounded border-gray-300"
-                  checked={selectedEmployees.length === filteredEmployees.length}
+                  checked={filteredEmployees.length > 0 && selectedEmployees.length === filteredEmployees.length}
                   onChange={handleSelectAll}
+                  disabled={filteredEmployees.length === 0}
                 />
               </th>
               <th className="h-12 px-4 text-left">
@@ -128,7 +129,14 @@ export const EmployeeTable = ({ selectedDepartment }: { selectedDepartment: stri
             </tr>
           </thead>
           <tbody>
-            {filteredEmployees.map((employee, index) => (
+            {filteredEmployees.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="text-center py-4 text-muted-foreground">
+                  No employees found
+                </td>
+              </tr>
+            ) : (
+              filteredEmployees.map((employee, index) => (
               <tr key={employee.id} className="border-t border-border hover:bg-muted/50 transition-colors">
                 <td className="px-4 py-4">
                   <input 
@@ -175,7 +183,8 @@ export const EmployeeTable = ({ selectedDepartment }: { selectedDepartment: stri
                   {employee.lastUpdated}
                 </td>
               </tr>
-            ))}
+              ))
+            )}
           </tbody>
         </table>
       </div>
