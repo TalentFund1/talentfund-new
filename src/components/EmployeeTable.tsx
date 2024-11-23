@@ -46,7 +46,7 @@ export const employees: Employee[] = [
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "female",
-    category: "Contract"
+    category: "Part-time"
   },
   {
     id: "126",
