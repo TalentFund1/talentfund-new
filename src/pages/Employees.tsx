@@ -8,7 +8,7 @@ import { EmployeeFilters } from "@/components/EmployeeFilters";
 import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
-import { employees } from "@/components/EmployeeTable";
+import { employees, getBaseRole } from "@/components/EmployeeTable";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 
 const Employees = () => {
@@ -21,7 +21,7 @@ const Employees = () => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [selectedManager, setSelectedManager] = useState<string[]>([]);
 
-  // Get filtered employees count
+  // Get filtered employees
   const filteredEmployees = filterEmployees(
     employees,
     selectedEmployees,
@@ -34,7 +34,10 @@ const Employees = () => {
     selectedManager
   );
 
-  const totalEmployees = filteredEmployees.length;
+  // Calculate total employees based on exact role matches when job title is selected
+  const totalEmployees = selectedJobTitle.length > 0
+    ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0]).length
+    : filteredEmployees.length;
 
   // Calculate female percentage from the employees data
   const calculateFemalePercentage = () => {
