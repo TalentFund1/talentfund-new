@@ -5,7 +5,7 @@ import { Users, UserPlus, Equal, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { EmployeeFilters } from "@/components/EmployeeFilters";
-import { EmployeeTable, employees, getEmployeesAddedLastYear } from "@/components/EmployeeTable";
+import { EmployeeTable, employees, getEmployeesAddedLastYear, getBaseRole } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
