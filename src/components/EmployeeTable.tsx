@@ -39,7 +39,7 @@ export const employees: Employee[] = [
   {
     id: "125",
     name: "Anna Vyselva",
-    role: "Frontend Engineer: P4",
+    role: "Frontend Engineer: P5",
     department: "Engineering",
     skillCount: getEmployeeSkills("125").length,
     benchmark: 74,
