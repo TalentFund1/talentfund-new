@@ -27,7 +27,7 @@ export const employees: Employee[] = [
     name: "Victor Smith",
     role: "AI Engineer: P4",
     department: "Engineering",
-    skillCount: 11, // Updated: 6 specialized + 2 common + 3 certifications
+    skillCount: 16,
     benchmark: 89,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
@@ -38,7 +38,7 @@ export const employees: Employee[] = [
     name: "Jennie Richards",
     role: "Backend Engineer: P4",
     department: "Engineering",
-    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
+    skillCount: 12,
     benchmark: 85,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
@@ -49,7 +49,7 @@ export const employees: Employee[] = [
     name: "Anna Vyselva",
     role: "Frontend Developer: P4",
     department: "Engineering",
-    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
+    skillCount: 17,
     benchmark: 74,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
@@ -60,7 +60,7 @@ export const employees: Employee[] = [
     name: "Suz Manu",
     role: "Engineering Manager: M3",
     department: "Engineering",
-    skillCount: 10, // Updated: 3 specialized + 4 common + 3 certifications
+    skillCount: 11,
     benchmark: 68,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
