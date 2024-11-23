@@ -2,10 +2,9 @@ import { Separator } from "@/components/ui/separator";
 
 interface EmployeeDetailsProps {
   employee: {
-    id: string;
-    name: string;
-    role: string;
     department: string;
+    office: string;
+    category: string;
     manager: string;
     startDate: string;
     termDate: string;
@@ -17,10 +16,18 @@ export const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
   return (
     <>
       <Separator className="my-6" />
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-4 gap-x-8 gap-y-6">
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Department</span>
           <p className="font-medium text-gray-900">{employee.department}</p>
+        </div>
+        <div className="space-y-1">
+          <span className="text-sm text-gray-500">Office</span>
+          <p className="font-medium text-gray-900">{employee.office}</p>
+        </div>
+        <div className="space-y-1">
+          <span className="text-sm text-gray-500">Category</span>
+          <p className="font-medium text-gray-900">{employee.category}</p>
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Manager</span>
