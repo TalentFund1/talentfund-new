@@ -168,7 +168,17 @@ export const BenchmarkSkillsMatrix = () => {
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
         <div className="space-y-1">
-          <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+            <div className="flex items-center gap-2">
+              <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+                {filteredSkills.length}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                skills in matrix
+              </span>
+            </div>
+          </div>
         </div>
 
         <BenchmarkSkillsMatrixContent 
