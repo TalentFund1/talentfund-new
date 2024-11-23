@@ -32,9 +32,13 @@ const initializeSkillStates = (roleId: string) => {
     console.log('Found saved states for role:', roleId);
     try {
       const parsedStates = JSON.parse(savedStates);
-      if (parsedStates && typeof parsedStates === 'object') {
-        console.log('Successfully loaded saved states:', parsedStates);
-        return parsedStates;
+      if (parsedStates?.state?.currentStates && typeof parsedStates.state.currentStates === 'object') {
+        console.log('Successfully loaded saved states:', parsedStates.state);
+        return {
+          currentStates: parsedStates.state.currentStates,
+          originalStates: parsedStates.state.originalStates || parsedStates.state.currentStates,
+          hasChanges: false
+        };
       }
     } catch (error) {
       console.error('Error parsing saved states:', error);
@@ -73,15 +77,11 @@ const initializeSkillStates = (roleId: string) => {
     }
   });
 
-  // Save initial states to localStorage
-  try {
-    localStorage.setItem(storageKey, JSON.stringify(states));
-    console.log('Saved initial states to localStorage:', states);
-  } catch (error) {
-    console.error('Error saving initial states:', error);
-  }
-
-  return states;
+  return {
+    currentStates: states,
+    originalStates: states,
+    hasChanges: false
+  };
 };
 
 export const useCompetencyStore = create<CompetencyState>()(
@@ -93,11 +93,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       initializeStates: (roleId: string) => {
         const initializedStates = initializeSkillStates(roleId);
         console.log('Setting initial competency states:', initializedStates);
-        set({
-          currentStates: initializedStates,
-          originalStates: initializedStates,
-          hasChanges: false
-        });
+        set(initializedStates);
       },
       setSkillState: (skillName, level, levelKey, required) => {
         console.log('Setting competency state:', { skillName, level, levelKey, required });
@@ -115,16 +111,6 @@ export const useCompetencyStore = create<CompetencyState>()(
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
-          // Save to localStorage immediately
-          const roleId = localStorage.getItem('currentRoleId') || '123';
-          const storageKey = getStorageKey(roleId);
-          try {
-            localStorage.setItem(storageKey, JSON.stringify(newStates));
-            console.log('Saved updated states to localStorage:', newStates);
-          } catch (error) {
-            console.error('Error saving states:', error);
-          }
-          
           return { 
             currentStates: newStates,
             hasChanges
@@ -134,20 +120,10 @@ export const useCompetencyStore = create<CompetencyState>()(
       saveChanges: () => {
         console.log('Saving competency changes');
         const currentStates = get().currentStates;
-        const roleId = localStorage.getItem('currentRoleId') || '123';
-        const storageKey = getStorageKey(roleId);
-        
-        try {
-          localStorage.setItem(storageKey, JSON.stringify(currentStates));
-          console.log('Saved states to localStorage with key:', storageKey);
-          
-          set({
-            originalStates: { ...currentStates },
-            hasChanges: false,
-          });
-        } catch (error) {
-          console.error('Error saving changes:', error);
-        }
+        set({
+          originalStates: { ...currentStates },
+          hasChanges: false,
+        });
       },
       cancelChanges: () => {
         console.log('Cancelling competency changes');
@@ -167,7 +143,8 @@ export const useCompetencyStore = create<CompetencyState>()(
             const value = localStorage.getItem(storageKey);
             console.log('Retrieved from storage:', { key: storageKey, value });
             if (!value) return null;
-            return JSON.parse(value);
+            const parsed = JSON.parse(value);
+            return parsed;
           } catch (error) {
             console.error('Error retrieving from storage:', error);
             return null;
