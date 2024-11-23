@@ -18,9 +18,7 @@ export const StaticSkillLevelCell = ({
   useEffect(() => {
     if (!currentStates[skillTitle]) {
       console.log('Initializing skill state:', { skillTitle, initialLevel });
-      // Ensure the level is properly formatted
-      const formattedLevel = initialLevel?.toLowerCase() || 'unspecified';
-      initializeState(skillTitle, formattedLevel, 'required');
+      initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'required');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
@@ -28,14 +26,6 @@ export const StaticSkillLevelCell = ({
     level: initialLevel?.toLowerCase() || 'unspecified',
     requirement: 'required'
   };
-
-  console.log('StaticSkillLevelCell render:', {
-    skillTitle,
-    initialLevel,
-    currentState,
-    level: currentState?.level || 'unspecified',
-    requirement: currentState?.requirement || 'required'
-  });
 
   const getLevelIcon = (level: string = 'unspecified') => {
     switch (level.toLowerCase()) {
@@ -82,6 +72,14 @@ export const StaticSkillLevelCell = ({
     }
     return getBorderColorClass(level).split(' ')[0];
   };
+
+  console.log('StaticSkillLevelCell render:', {
+    skillTitle,
+    initialLevel,
+    currentState,
+    level: currentState?.level || 'unspecified',
+    requirement: currentState?.requirement || 'required'
+  });
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
