@@ -56,7 +56,7 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
           <span className="text-sm text-gray-500">Manager</span>
           <Link 
             to="/employee/126" 
-            className="font-medium text-primary hover:text-primary-accent transition-colors"
+            className="font-medium text-primary hover:text-primary-accent transition-colors block"
           >
             Sus Manu
           </Link>
