@@ -14,19 +14,23 @@ export const sortEmployeesByRoleMatch = (
   const selectedRole = selectedJobTitle[0];
   const roleId = getSkillProfileId(selectedRole);
 
-  // First, calculate benchmarks for all employees
-  const employeesWithBenchmarks = employees.map(employee => ({
-    ...employee,
-    isExactMatch: getBaseRole(employee.role) === selectedRole,
-    benchmark: calculateBenchmarkPercentage(
+  // Calculate benchmarks for all employees
+  const employeesWithBenchmarks = employees.map(employee => {
+    const benchmark = calculateBenchmarkPercentage(
       employee.id,
       roleId,
       getLevel(employee.role),
       currentStates,
       toggledSkills,
       getSkillCompetencyState
-    )
-  }));
+    );
+
+    return {
+      ...employee,
+      isExactMatch: getBaseRole(employee.role) === selectedRole,
+      benchmark
+    };
+  });
 
   console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
