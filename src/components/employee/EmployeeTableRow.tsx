@@ -28,7 +28,7 @@ export const EmployeeTableRow = ({
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
       return (
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="flex flex-wrap gap-1.5 py-1.5 px-2 min-h-[40px] items-center justify-start w-full">
           {selectedSkills.map(skillName => {
             const employeeSkill = employeeSkills.find(s => s.title === skillName);
             if (!employeeSkill) return null;
