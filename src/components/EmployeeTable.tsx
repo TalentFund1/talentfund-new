@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Employee } from "./types/employeeTypes";
-import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
 import { EmployeeTableHeader } from "./employee/EmployeeTableHeader";
 import { EmployeeTableRow } from "./employee/EmployeeTableRow";
 import { useSkillsMatrixStore } from "./benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./skills/competency/CompetencyStateReader";
-import { roleSkills } from "./skills/data/roleSkills";
+import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
+import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -14,76 +14,6 @@ const EMPLOYEE_IMAGES = [
   "photo-1461749280684-dccba630e2f6",
   "photo-1486312338219-ce68d2c6f44d"
 ];
-
-// Helper function to calculate benchmark percentage for an employee
-const calculateBenchmarkPercentage = (
-  employeeId: string, 
-  roleId: string, 
-  level: string,
-  currentStates: any,
-  toggledSkills: Set<string>,
-  getSkillCompetencyState: any
-) => {
-  const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-  
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
-  // Get all toggled skills for the current role
-  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
-  const totalToggledSkills = toggledRoleSkills.length;
-
-  if (totalToggledSkills === 0) return 100; // Default to 100% if no skills are toggled
-
-  // Skill Match calculation
-  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
-    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    return employeeSkill !== undefined;
-  });
-
-  // Competency Match calculation
-  const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
-    if (!roleSkillState) return false;
-
-    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
-    const roleSkillLevel = roleSkillState.level;
-
-    const getLevelPriority = (level: string = 'unspecified') => {
-      const priorities: { [key: string]: number } = {
-        'advanced': 3,
-        'intermediate': 2,
-        'beginner': 1,
-        'unspecified': 0
-      };
-      return priorities[level.toLowerCase()] ?? 0;
-    };
-
-    const employeePriority = getLevelPriority(employeeSkillLevel);
-    const rolePriority = getLevelPriority(roleSkillLevel);
-
-    return employeePriority >= rolePriority;
-  });
-
-  // Skill Goal Match calculation
-  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    if (!skillState) return false;
-    return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
-  });
-
-  // Calculate match percentages
-  const skillMatchPercentage = (matchingSkills.length / totalToggledSkills) * 100;
-  const competencyMatchPercentage = (competencyMatchingSkills.length / totalToggledSkills) * 100;
-  const skillGoalMatchPercentage = (skillGoalMatchingSkills.length / totalToggledSkills) * 100;
-
-  // Calculate the actual average from the calculated percentages
-  return Math.round((skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3);
-};
 
 export const employees: Employee[] = [
   {
@@ -165,6 +95,7 @@ interface EmployeeTableProps {
   selectedLevel?: string[];
   selectedOffice?: string[];
   selectedEmploymentType?: string[];
+  selectedSkills?: string[];
 }
 
 export const EmployeeTable = ({ 
@@ -172,7 +103,8 @@ export const EmployeeTable = ({
   selectedJobTitle = [],
   selectedLevel = [],
   selectedOffice = [],
-  selectedEmploymentType = []
+  selectedEmploymentType = [],
+  selectedSkills = []
 }: EmployeeTableProps) => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const { currentStates } = useSkillsMatrixStore();
@@ -211,25 +143,29 @@ export const EmployeeTable = ({
     });
   };
 
-  // Filter employees based on selected department, job title, level, office, and employment type
-  const filteredEmployees = employeesWithBenchmarks.filter(employee => {
-    const matchesDepartment = selectedDepartment.length === 0 || 
-      selectedDepartment.includes(employee.department);
-    
-    const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(getBaseRole(employee.role));
-    
-    const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(getLevel(employee.role));
+  // Filter employees based on all criteria including skills
+  const filteredEmployees = filterEmployeesBySkills(
+    employeesWithBenchmarks.filter(employee => {
+      const matchesDepartment = selectedDepartment.length === 0 || 
+        selectedDepartment.includes(employee.department);
+      
+      const matchesJobTitle = selectedJobTitle.length === 0 || 
+        selectedJobTitle.includes(getBaseRole(employee.role));
+      
+      const matchesLevel = selectedLevel.length === 0 || 
+        selectedLevel.includes(getLevel(employee.role));
 
-    const matchesOffice = selectedOffice.length === 0 || 
-      selectedOffice.includes(employee.location.split(',')[0].trim());
+      const matchesOffice = selectedOffice.length === 0 || 
+        selectedOffice.includes(employee.location.split(',')[0].trim());
 
-    const matchesEmploymentType = selectedEmploymentType.length === 0 ||
-      selectedEmploymentType.includes(employee.category);
+      const matchesEmploymentType = selectedEmploymentType.length === 0 ||
+        selectedEmploymentType.includes(employee.category);
 
-    return matchesDepartment && matchesJobTitle && matchesLevel && matchesOffice && matchesEmploymentType;
-  });
+      return matchesDepartment && matchesJobTitle && matchesLevel && 
+             matchesOffice && matchesEmploymentType;
+    }),
+    selectedSkills
+  );
 
   console.log('Filtered employees with benchmarks:', filteredEmployees);
 

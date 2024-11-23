@@ -15,6 +15,8 @@ interface EmployeeFiltersProps {
   selectedOffice: string[];
   onEmploymentTypeChange: (employmentType: string[]) => void;
   selectedEmploymentType: string[];
+  onSkillsChange: (skills: string[]) => void;
+  selectedSkills: string[];
 }
 
 export const EmployeeFilters = ({ 
@@ -27,10 +29,10 @@ export const EmployeeFilters = ({
   onOfficeChange,
   selectedOffice,
   onEmploymentTypeChange,
-  selectedEmploymentType
+  selectedEmploymentType,
+  onSkillsChange,
+  selectedSkills
 }: EmployeeFiltersProps) => {
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-
   const allSkills = [...technicalSkills, ...softSkills];
   
   // Get unique job titles from employees
@@ -54,7 +56,7 @@ export const EmployeeFilters = ({
   }, [selectedJobTitle, onLevelChange]);
 
   const handleClearAll = () => {
-    setSelectedSkills([]);
+    onSkillsChange([]);
     onJobTitleChange([]);
     onLevelChange([]);
     onOfficeChange([]);
@@ -70,7 +72,7 @@ export const EmployeeFilters = ({
           placeholder="Search skills..."
           items={allSkills}
           selectedItems={selectedSkills}
-          onItemsChange={setSelectedSkills}
+          onItemsChange={onSkillsChange}
           singleSelect={false}
         />
       </div>
