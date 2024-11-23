@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Employee } from "./types/employeeTypes";
 import { EmployeeTableHeader } from "./employee/EmployeeTableHeader";
 import { EmployeeTableRow } from "./employee/EmployeeTableRow";
@@ -10,110 +9,10 @@ import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
-import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
+import { EMPLOYEE_IMAGES, employees } from "./employee/EmployeeData";
+import { getEmployeesAddedLastYear } from "./employee/EmployeeUtils";
 
-const EMPLOYEE_IMAGES = [
-  "photo-1488590528505-98d2b5aba04b",
-  "photo-1518770660439-4636190af475",
-  "photo-1461749280684-dccba630e2f6",
-  "photo-1486312338219-ce68d2c6f44d"
-];
-
-export const employees: Employee[] = [
-  {
-    id: "123",
-    name: "Victor Smith",
-    role: "AI Engineer: P4",
-    department: "Engineering",
-    skillCount: getEmployeeSkills("123").length,
-    benchmark: 0,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
-    sex: "male",
-    category: "Full-time",
-    manager: "Sus Manu",
-    startDate: "2023-05-15"
-  },
-  {
-    id: "124",
-    name: "Jennie Richards",
-    role: "Backend Engineer: P4",
-    department: "Engineering",
-    skillCount: getEmployeeSkills("124").length,
-    benchmark: 0,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
-    sex: "female",
-    category: "Contract",
-    manager: "Sus Manu",
-    startDate: "2024-01-10"
-  },
-  {
-    id: "125",
-    name: "Anna Vyselva",
-    role: "Frontend Engineer: P5",
-    department: "Engineering",
-    skillCount: getEmployeeSkills("125").length,
-    benchmark: 0,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
-    sex: "female",
-    category: "Part-time",
-    manager: "Sus Manu",
-    startDate: "2023-08-22"
-  },
-  {
-    id: "126",
-    name: "Sus Manu",
-    role: "Engineering Manager: M3",
-    department: "Engineering",
-    skillCount: getEmployeeSkills("126").length,
-    benchmark: 0,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
-    sex: "male",
-    category: "Contract",
-    startDate: "2022-11-01"
-  }
-];
-
-// Function to calculate employees added in the past year
-export const getEmployeesAddedLastYear = () => {
-  const today = new Date();
-  const oneYearAgo = new Date();
-  oneYearAgo.setFullYear(today.getFullYear() - 1);
-  
-  console.log('Calculating employees added in the last year...');
-  console.log('One year ago:', oneYearAgo.toISOString());
-  
-  return employees.filter(employee => {
-    if (!employee.startDate) return false;
-    const startDate = new Date(employee.startDate);
-    console.log(`Employee ${employee.name} start date:`, startDate.toISOString());
-    return startDate >= oneYearAgo;
-  }).length;
-};
-
-export const getSkillProfileId = (role: string) => {
-  const roleMap: { [key: string]: string } = {
-    "AI Engineer": "123",
-    "Backend Engineer": "124",
-    "Frontend Engineer": "125",
-    "Engineering Manager": "126"
-  };
-  
-  const baseRole = role.split(":")[0].trim();
-  return roleMap[baseRole] || "123";
-};
-
-export const getBaseRole = (role: string) => {
-  return role.split(":")[0].trim();
-};
-
-export const getLevel = (role: string) => {
-  const parts = role.split(":");
-  return parts.length > 1 ? parts[1].trim() : "";
-};
+export { employees, getEmployeesAddedLastYear };
 
 interface EmployeeTableProps {
   selectedDepartment: string[];
