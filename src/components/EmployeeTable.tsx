@@ -1,13 +1,71 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Employee, employees } from "@/data/employeesData";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
   "photo-1518770660439-4636190af475",
   "photo-1461749280684-dccba630e2f6",
   "photo-1486312338219-ce68d2c6f44d"
+];
+
+interface Employee {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  skillCount: number;
+  benchmark: number;
+  lastUpdated: string;
+  location: string;
+  sex: 'male' | 'female';
+}
+
+export const employees: Employee[] = [
+  {
+    id: "123",
+    name: "Victor Smith",
+    role: "AI Engineer: P4",
+    department: "Engineering",
+    skillCount: 11, // Updated: 6 specialized + 2 common + 3 certifications
+    benchmark: 89,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "male"
+  },
+  {
+    id: "124",
+    name: "Jennie Richards",
+    role: "Backend Engineer: P4",
+    department: "Engineering",
+    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
+    benchmark: 85,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "female"
+  },
+  {
+    id: "125",
+    name: "Anna Vyselva",
+    role: "Frontend Developer: P4",
+    department: "Engineering",
+    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
+    benchmark: 74,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "female"
+  },
+  {
+    id: "126",
+    name: "Suz Manu",
+    role: "Engineering Manager: M3",
+    department: "Engineering",
+    skillCount: 10, // Updated: 3 specialized + 4 common + 3 certifications
+    benchmark: 68,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "male"
+  }
 ];
 
 // Helper function to get skill profile ID from role
