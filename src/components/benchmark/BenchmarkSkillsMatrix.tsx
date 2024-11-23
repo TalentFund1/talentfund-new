@@ -125,40 +125,27 @@ export const BenchmarkSkillsMatrix = () => {
 
       return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
     })
+    .map(skill => ({
+      ...skill,
+      employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
+      roleLevel: getSkillCompetencyState(skill.title, roleLevel.toLowerCase())?.level || 'unspecified',
+      requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
+    }))
     .sort((a, b) => {
       // First, sort by role skill level
-      const aCompetencyState = getSkillCompetencyState(a.title, roleLevel.toLowerCase());
-      const bCompetencyState = getSkillCompetencyState(b.title, roleLevel.toLowerCase());
-      
-      const aRoleLevel = aCompetencyState?.level || 'unspecified';
-      const bRoleLevel = bCompetencyState?.level || 'unspecified';
+      const aRoleLevel = a.roleLevel;
+      const bRoleLevel = b.roleLevel;
       
       const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
-      // Then, sort by requirement status
-      const aRequired = aCompetencyState?.required || 'preferred';
-      const bRequired = bCompetencyState?.required || 'preferred';
-      
-      const requirementDiff = getRequirementPriority(aRequired) - getRequirementPriority(bRequired);
-      if (requirementDiff !== 0) return requirementDiff;
-
-      // Next, sort by employee skill level
-      const aState = currentStates[a.title];
-      const bState = currentStates[b.title];
-      
-      const aEmployeeLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
-      const bEmployeeLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
-      
-      const employeeLevelDiff = getLevelPriority(aEmployeeLevel) - getLevelPriority(bEmployeeLevel);
+      // Then, sort by employee skill level
+      const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
       if (employeeLevelDiff !== 0) return employeeLevelDiff;
 
-      // Finally, sort by skill goal status
-      const aSkillGoal = (aState?.requirement || a.requirement || 'unknown').toLowerCase();
-      const bSkillGoal = (bState?.requirement || b.requirement || 'unknown').toLowerCase();
-      
-      const skillGoalDiff = getSkillGoalPriority(aSkillGoal) - getSkillGoalPriority(bSkillGoal);
-      if (skillGoalDiff !== 0) return skillGoalDiff;
+      // Finally, sort by requirement status
+      const requirementDiff = getSkillGoalPriority(a.requirement) - getSkillGoalPriority(b.requirement);
+      if (requirementDiff !== 0) return requirementDiff;
 
       // If all else is equal, sort alphabetically
       return a.title.localeCompare(b.title);
@@ -167,10 +154,6 @@ export const BenchmarkSkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
-        <div className="space-y-1">
-          <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
-        </div>
-
         <BenchmarkSkillsMatrixContent 
           roleId={selectedRole}
           employeeId={id || ""}

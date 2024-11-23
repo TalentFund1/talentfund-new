@@ -32,9 +32,7 @@ export const BenchmarkSkillsMatrixContent = ({
   filteredSkills,
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
-  const { currentStates } = useSkillsMatrixStore();
-  const { toggledSkills } = useToggledSkills();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
+  console.log('Rendering BenchmarkSkillsMatrixContent with skills:', filteredSkills);
 
   const getRoleTitle = (id: string) => {
     const roleTitles: { [key: string]: string } = {

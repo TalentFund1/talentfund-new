@@ -35,6 +35,8 @@ export const SkillsMatrixContent = ({
   visibleItems,
   observerTarget
 }: SkillsMatrixContentProps) => {
+  console.log('Rendering SkillsMatrixContent with skills:', filteredSkills);
+
   const removeSearchSkill = (skill: string) => {
     setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
   };
