@@ -7,8 +7,9 @@ import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./skills/competency/CompetencyStateReader";
 import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
-import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
 import { filterEmployees } from "./employee/EmployeeFilters";
+import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
+import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -160,9 +161,18 @@ export const EmployeeTable = ({
   );
 
   // Apply skills filter
-  const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
-  console.log('Filtered employees with benchmarks:', filteredEmployees);
+  // Sort employees by role match and benchmark percentage
+  const filteredEmployees = sortEmployeesByRoleMatch(
+    skillFilteredEmployees,
+    selectedJobTitle,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
+  );
+
+  console.log('Filtered and sorted employees:', filteredEmployees);
 
   return (
     <div className="bg-white rounded-lg">
