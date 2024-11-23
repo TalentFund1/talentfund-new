@@ -1,6 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { Link } from "react-router-dom";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -53,7 +54,12 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Manager</span>
-          <p className="font-medium text-gray-900">{employee.manager}</p>
+          <Link 
+            to="/employee/126" 
+            className="font-medium text-primary hover:text-primary-accent transition-colors"
+          >
+            Sus Manu
+          </Link>
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Start Date</span>
