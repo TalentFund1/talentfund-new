@@ -1,6 +1,5 @@
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -12,7 +11,6 @@ interface EmployeeDetailsProps {
     termDate: string;
     tenure: string;
   };
-  id: string;
 }
 
 const calculateTenure = (startDate: string, termDate: string | null): string => {
@@ -28,10 +26,8 @@ const calculateTenure = (startDate: string, termDate: string | null): string => 
   return diffYears.toFixed(1);
 };
 
-export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
+export const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
   const tenure = calculateTenure(employee.startDate, employee.termDate === "-" ? null : employee.termDate);
-  const employeeSkills = getEmployeeSkills(id);
-  const totalSkills = employeeSkills.length;
 
   return (
     <>
@@ -66,10 +62,6 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
           <p className="font-medium text-gray-900">{tenure}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Skill Count</span>
-          <p className="font-medium text-primary">{totalSkills}</p>
         </div>
       </div>
     </>
