@@ -18,48 +18,53 @@ interface Employee {
   benchmark: number;
   lastUpdated: string;
   location: string;
+  sex: 'male' | 'female';
 }
 
-const employees: Employee[] = [
+export const employees: Employee[] = [
   {
     id: "123",
     name: "Victor Smith",
     role: "AI Engineer: P4",
     department: "Engineering",
-    skillCount: 16,
+    skillCount: 11, // Updated: 6 specialized + 2 common + 3 certifications
     benchmark: 89,
     lastUpdated: "10/20/24",
-    location: "Toronto, ON"
+    location: "Toronto, ON",
+    sex: "male"
   },
   {
     id: "124",
     name: "Jennie Richards",
     role: "Backend Engineer: P4",
     department: "Engineering",
-    skillCount: 12,
+    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
     benchmark: 85,
     lastUpdated: "10/20/24",
-    location: "Toronto, ON"
+    location: "Toronto, ON",
+    sex: "female"
   },
   {
     id: "125",
     name: "Anna Vyselva",
     role: "Frontend Developer: P4",
     department: "Engineering",
-    skillCount: 17,
+    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
     benchmark: 74,
     lastUpdated: "10/20/24",
-    location: "Toronto, ON"
+    location: "Toronto, ON",
+    sex: "female"
   },
   {
     id: "126",
     name: "Suz Manu",
     role: "Engineering Manager: M3",
     department: "Engineering",
-    skillCount: 11,
+    skillCount: 10, // Updated: 3 specialized + 4 common + 3 certifications
     benchmark: 68,
     lastUpdated: "10/20/24",
-    location: "Toronto, ON"
+    location: "Toronto, ON",
+    sex: "male"
   }
 ];
 

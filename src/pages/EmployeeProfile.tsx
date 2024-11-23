@@ -124,7 +124,7 @@ const EmployeeProfile = () => {
 
           <Card className="p-8 bg-white">
             <EmployeeHeader id={id || ""} employee={employee} />
-            <EmployeeDetails employee={employee} />
+            <EmployeeDetails employee={employee} id={id || ""} />
           </Card>
 
           <TrackProvider>
