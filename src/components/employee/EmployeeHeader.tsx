@@ -1,7 +1,6 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
-import { roleSkills } from "../skills/data/roleSkills";
 
 interface EmployeeHeaderProps {
   id: string;
@@ -14,20 +13,6 @@ interface EmployeeHeaderProps {
 }
 
 export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
-  // Calculate total skills for the employee based on their ID
-  const calculateTotalSkills = (employeeId: string) => {
-    const skills = roleSkills[employeeId as keyof typeof roleSkills];
-    if (!skills) return 0;
-    
-    return (
-      skills.specialized.length +
-      skills.common.length +
-      skills.certifications.length
-    );
-  };
-
-  const totalSkills = calculateTotalSkills(id);
-
   return (
     <div className="flex items-start justify-between mb-8">
       <div className="flex gap-6">
@@ -46,17 +31,9 @@ export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
             </div>
             <h2 className="text-lg text-gray-700">{employee.role}</h2>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-gray-600">
-              <MapPin className="h-4 w-4" />
-              <span>{employee.location}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-primary">Total Skills:</span>
-              <span className="text-sm bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
-                {totalSkills}
-              </span>
-            </div>
+          <div className="flex items-center gap-2 text-gray-600">
+            <MapPin className="h-4 w-4" />
+            <span>{employee.location}</span>
           </div>
         </div>
       </div>
