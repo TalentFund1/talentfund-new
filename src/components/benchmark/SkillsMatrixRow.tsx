@@ -16,7 +16,6 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
     requirement?: string;
-    employeeLevel?: string;
   };
   showCompanySkill?: boolean;
   isRoleBenchmark?: boolean;
@@ -70,31 +69,6 @@ export const SkillsMatrixRow = ({
 
   const roleSkillState = getRoleSkillState();
 
-  const getLevelIcon = (level: string = 'unspecified') => {
-    switch (level.toLowerCase()) {
-      case 'advanced':
-        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
-      case 'intermediate':
-        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
-      case 'beginner':
-        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
-      default:
-        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
-    }
-  };
-
-  const getEmployeeSkillLevel = () => {
-    // First try to get from currentStates
-    const currentState = currentStates[skill.title];
-    if (currentState?.level) {
-      return currentState.level;
-    }
-    // Otherwise use the employeeLevel from the skill data
-    return skill.employeeLevel || 'unspecified';
-  };
-
-  const employeeLevel = getEmployeeSkillLevel();
-
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
@@ -122,7 +96,10 @@ export const SkillsMatrixRow = ({
               border-2 ${getBorderColorClass(roleSkillState.level)}
             `}>
               <span className="flex items-center gap-2">
-                {getLevelIcon(roleSkillState.level)}
+                {roleSkillState.level === 'advanced' ? <Star className="w-3.5 h-3.5 text-primary-accent" /> :
+                 roleSkillState.level === 'intermediate' ? <Shield className="w-3.5 h-3.5 text-primary-icon" /> :
+                 roleSkillState.level === 'beginner' ? <Target className="w-3.5 h-3.5 text-[#008000]" /> :
+                 <CircleDashed className="w-3.5 h-3.5 text-gray-400" />}
                 {roleSkillState.level.charAt(0).toUpperCase() + roleSkillState.level.slice(1)}
               </span>
             </div>
@@ -132,32 +109,39 @@ export const SkillsMatrixRow = ({
               ${getLowerBorderColorClass(roleSkillState.level, roleSkillState.required)}
             `}>
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5" />
-                Skill Goal
+                {roleSkillState.required === 'required' ? <Check className="w-3.5 h-3.5" /> :
+                 roleSkillState.required === 'preferred' ? <CircleDashed className="w-3.5 h-3.5" /> :
+                 <CircleDashed className="w-3.5 h-3.5" />}
+                {roleSkillState.required === 'required' ? 'Required' : 
+                 roleSkillState.required === 'preferred' ? 'Preferred' : 'Preferred'}
               </span>
             </div>
           </div>
         </TableCell>
       )}
-      <TableCell className="text-center border-r border-blue-200 py-2 p-0">
-        <div className={`
-          rounded-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-          border-2 ${getBorderColorClass(employeeLevel)}
-        `}>
-          <span className="flex items-center gap-2">
-            {getLevelIcon(employeeLevel)}
-            {employeeLevel.charAt(0).toUpperCase() + employeeLevel.slice(1)}
-          </span>
-        </div>
-      </TableCell>
+      {isRoleBenchmark ? (
+        <StaticSkillLevelCell 
+          initialLevel={skill.level || 'unspecified'}
+          skillTitle={skill.title}
+        />
+      ) : (
+        <SkillLevelCell 
+          initialLevel={skill.level || 'unspecified'}
+          skillTitle={skill.title}
+        />
+      )}
       <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${
-          skill.confidence === 'high' ? 'bg-green-100 text-green-800' :
-          skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
-          'bg-red-100 text-red-800'
-        }`}>
-          {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
-        </span>
+        {skill.confidence === 'n/a' ? (
+          <span className="text-gray-500 text-sm">n/a</span>
+        ) : (
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${
+            skill.confidence === 'high' ? 'bg-green-100 text-green-800' :
+            skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
+            'bg-red-100 text-red-800'
+          }`}>
+            {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
+          </span>
+        )}
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
         <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
