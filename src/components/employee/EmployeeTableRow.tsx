@@ -6,6 +6,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Badge } from "@/components/ui/badge";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { CheckCircle2 } from "lucide-react";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -94,7 +95,11 @@ export const EmployeeTableRow = ({
               {employee.name}
             </Link>
             {isExactMatch && (
-              <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-800 hover:bg-blue-100">
+              <Badge 
+                variant="secondary" 
+                className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
+              >
+                <CheckCircle2 className="w-3 h-3" />
                 Exact Match
               </Badge>
             )}
