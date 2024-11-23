@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToggledSkillsProvider } from "./components/skills/context/ToggledSkillsContext";
 import Index from "./pages/Index";
 import SkillsProfile from "./pages/SkillsProfile";
@@ -12,14 +12,7 @@ import SkillProfileDetail from "./pages/SkillProfileDetail";
 import MarketData from "./pages/MarketData";
 import TalentMarketplace from "./pages/TalentMarketplace";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -27,7 +20,7 @@ const App = () => (
       <ToggledSkillsProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter basename="/">
+        <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/skills" element={<SkillsProfile />} />
@@ -36,7 +29,6 @@ const App = () => (
             <Route path="/employee/:id" element={<EmployeeProfile />} />
             <Route path="/market" element={<MarketData />} />
             <Route path="/marketplace" element={<TalentMarketplace />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
       </ToggledSkillsProvider>
