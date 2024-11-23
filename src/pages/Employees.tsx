@@ -39,11 +39,16 @@ const Employees = () => {
     ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0]).length
     : filteredEmployees.length;
 
-  // Calculate female percentage from the employees data
+  // Calculate female percentage from the filtered employees
   const calculateFemalePercentage = () => {
-    const femaleCount = employees.filter(emp => emp.sex === 'female').length;
-    const totalCount = employees.length;
-    return Math.round((femaleCount / totalCount) * 100);
+    const relevantEmployees = selectedJobTitle.length > 0
+      ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0])
+      : filteredEmployees;
+
+    if (relevantEmployees.length === 0) return 0;
+    
+    const femaleCount = relevantEmployees.filter(emp => emp.sex === 'female').length;
+    return Math.round((femaleCount / relevantEmployees.length) * 100);
   };
 
   return (
