@@ -9,18 +9,8 @@ import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 
-// Import employees data from EmployeeTable
-import { employees } from "@/components/EmployeeTable";
-
 const Employees = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
-
-  // Calculate female percentage from the employees data
-  const calculateFemalePercentage = () => {
-    const femaleCount = employees.filter(emp => emp.sex === 'female').length;
-    const totalCount = employees.length;
-    return Math.round((femaleCount / totalCount) * 100);
-  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -55,7 +45,7 @@ const Employees = () => {
             />
             <StatCard
               title="Share of Female Employees"
-              value={`${calculateFemalePercentage()}%`}
+              value="38%"
               icon={<Equal className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
