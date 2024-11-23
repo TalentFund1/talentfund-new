@@ -8,15 +8,6 @@ import { useCompetencyStateReader } from "./skills/competency/CompetencyStateRea
 import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
-import { EmployeeSearch } from "./employee/EmployeeSearch";
-import {
-  filterEmployeesByName,
-  filterEmployeesByDepartment,
-  filterEmployeesByJobTitle,
-  filterEmployeesByLevel,
-  filterEmployeesByOffice,
-  filterEmployeesByEmploymentType
-} from "./employee/EmployeeFilters";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -32,7 +23,7 @@ export const employees: Employee[] = [
     role: "AI Engineer: P4",
     department: "Engineering",
     skillCount: getEmployeeSkills("123").length,
-    benchmark: 0,
+    benchmark: 0, // Will be calculated dynamically
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "male",
@@ -88,10 +79,12 @@ export const getSkillProfileId = (role: string) => {
   return roleMap[baseRole] || "123"; // Default to AI Engineer if not found
 };
 
+// Helper function to get base role without level
 export const getBaseRole = (role: string) => {
   return role.split(":")[0].trim();
 };
 
+// Helper function to get level from role
 export const getLevel = (role: string) => {
   const parts = role.split(":");
   return parts.length > 1 ? parts[1].trim() : "";
@@ -115,7 +108,6 @@ export const EmployeeTable = ({
   selectedSkills = []
 }: EmployeeTableProps) => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -152,35 +144,35 @@ export const EmployeeTable = ({
     });
   };
 
-  // Apply all filters in sequence
+  // Filter employees based on all criteria including skills
   const filteredEmployees = filterEmployeesBySkills(
-    filterEmployeesByEmploymentType(
-      filterEmployeesByOffice(
-        filterEmployeesByLevel(
-          filterEmployeesByJobTitle(
-            filterEmployeesByDepartment(
-              filterEmployeesByName(employeesWithBenchmarks, searchQuery),
-              selectedDepartment
-            ),
-            selectedJobTitle,
-            getBaseRole
-          ),
-          selectedLevel,
-          getLevel
-        ),
-        selectedOffice
-      ),
-      selectedEmploymentType
-    ),
+    employeesWithBenchmarks.filter(employee => {
+      const matchesDepartment = selectedDepartment.length === 0 || 
+        selectedDepartment.includes(employee.department);
+      
+      const matchesJobTitle = selectedJobTitle.length === 0 || 
+        selectedJobTitle.includes(getBaseRole(employee.role));
+      
+      const matchesLevel = selectedLevel.length === 0 || 
+        selectedLevel.includes(getLevel(employee.role));
+
+      const matchesOffice = selectedOffice.length === 0 || 
+        selectedOffice.includes(employee.location.split(',')[0].trim());
+
+      const matchesEmploymentType = selectedEmploymentType.length === 0 ||
+        selectedEmploymentType.includes(employee.category);
+
+      return matchesDepartment && matchesJobTitle && matchesLevel && 
+             matchesOffice && matchesEmploymentType;
+    }),
     selectedSkills
   );
 
-  console.log('Filtered employees:', filteredEmployees);
+  console.log('Filtered employees with benchmarks:', filteredEmployees);
 
   return (
     <div className="bg-white rounded-lg">
       <div className="relative">
-        <EmployeeSearch onSearch={setSearchQuery} />
         <table className="w-full">
           <thead>
             <EmployeeTableHeader 
