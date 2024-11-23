@@ -25,7 +25,6 @@ const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
 const initializeSkillStates = (roleId: string) => {
   console.log('Initializing competency states for role:', roleId);
   
-  // First try to load from localStorage
   const storageKey = getStorageKey(roleId);
   const savedStates = localStorage.getItem(storageKey);
   
@@ -42,7 +41,6 @@ const initializeSkillStates = (roleId: string) => {
     }
   }
 
-  // If no saved states or invalid data, initialize with default values
   console.log('Initializing with default states');
   const states: Record<string, Record<string, SkillState>> = {};
   
@@ -75,8 +73,6 @@ const initializeSkillStates = (roleId: string) => {
     }
   });
 
-  // Save initial states to localStorage
-  localStorage.setItem(storageKey, JSON.stringify(states));
   return states;
 };
 
