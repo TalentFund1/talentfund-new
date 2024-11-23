@@ -14,16 +14,33 @@ export const sortEmployeesByRoleMatch = (
   const selectedRole = selectedJobTitle[0];
   const roleId = getSkillProfileId(selectedRole);
 
-  return [...employees].sort((a, b) => {
-    const aExactMatch = getBaseRole(a.role) === selectedRole;
-    const bExactMatch = getBaseRole(b.role) === selectedRole;
+  // First, calculate benchmarks for all employees
+  const employeesWithBenchmarks = employees.map(employee => ({
+    ...employee,
+    isExactMatch: getBaseRole(employee.role) === selectedRole,
+    benchmark: calculateBenchmarkPercentage(
+      employee.id,
+      roleId,
+      getLevel(employee.role),
+      currentStates,
+      toggledSkills,
+      getSkillCompetencyState
+    )
+  }));
 
-    // If both are exact matches or both are partial matches, sort by benchmark
-    if (aExactMatch === bExactMatch) {
-      return b.benchmark - a.benchmark;
-    }
+  console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
-    // Prioritize exact matches
-    return aExactMatch ? -1 : 1;
+  // Filter to keep only employees with benchmark > 0 or exact role matches
+  const matchingEmployees = employeesWithBenchmarks.filter(
+    employee => employee.isExactMatch || employee.benchmark > 0
+  );
+
+  console.log('Matching employees:', matchingEmployees);
+
+  // Sort by exact match first, then by benchmark score
+  return matchingEmployees.sort((a, b) => {
+    if (a.isExactMatch && !b.isExactMatch) return -1;
+    if (!a.isExactMatch && b.isExactMatch) return 1;
+    return b.benchmark - a.benchmark;
   });
 };
