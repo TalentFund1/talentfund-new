@@ -1,5 +1,5 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
 import { employees, getBaseRole } from './EmployeeTable';
@@ -27,6 +27,23 @@ export const EmployeeFilters = ({
   // Get unique job titles from employees
   const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
 
+  // Determine if the selected role is managerial
+  const isManagerialTrack = selectedJobTitle.length > 0 && 
+    selectedJobTitle[0].toLowerCase().includes('manager');
+
+  // Get appropriate levels based on track
+  const getLevelsForTrack = () => {
+    if (isManagerialTrack) {
+      return ["M3", "M4", "M5", "M6"];
+    }
+    return ["P1", "P2", "P3", "P4", "P5", "P6"];
+  };
+
+  // Reset level selection when track changes
+  useEffect(() => {
+    setSelectedLevel([]);
+  }, [selectedJobTitle]);
+
   const handleClearAll = () => {
     setSelectedSkills([]);
     onJobTitleChange([]);
@@ -35,6 +52,9 @@ export const EmployeeFilters = ({
     onDepartmentChange([]);
     setSelectedEmploymentType([]);
   };
+
+  console.log('Current track:', isManagerialTrack ? 'Managerial' : 'Professional');
+  console.log('Available levels:', getLevelsForTrack());
 
   return (
     <div className="space-y-0.5">
@@ -63,7 +83,7 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Level"
-          items={["P1", "P2", "P3", "P4", "P5", "M1", "M2", "M3"]}
+          items={getLevelsForTrack()}
           selectedItems={selectedLevel}
           onItemsChange={setSelectedLevel}
           singleSelect={false}
