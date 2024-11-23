@@ -55,16 +55,9 @@ export const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Term Date</span>
-          <div className="flex items-center gap-2">
-            <p className="font-medium text-gray-900">
-              {employee.termDate || "—"}
-            </p>
-            {(!employee.termDate || employee.termDate === "-") && (
-              <Badge variant="secondary" className="text-xs">
-                Active
-              </Badge>
-            )}
-          </div>
+          <p className="font-medium text-gray-900">
+            {employee.termDate || "—"}
+          </p>
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
