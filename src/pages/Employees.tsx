@@ -13,6 +13,7 @@ import { employees } from "@/components/EmployeeTable";
 const Employees = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
   const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
+  const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
 
   // Calculate female percentage from the employees data
   const calculateFemalePercentage = () => {
@@ -40,6 +41,8 @@ const Employees = () => {
               selectedDepartment={selectedDepartment}
               onJobTitleChange={setSelectedJobTitle}
               selectedJobTitle={selectedJobTitle}
+              onLevelChange={setSelectedLevel}
+              selectedLevel={selectedLevel}
             />
           </Card>
 
@@ -70,6 +73,7 @@ const Employees = () => {
             <EmployeeTable 
               selectedDepartment={selectedDepartment}
               selectedJobTitle={selectedJobTitle}
+              selectedLevel={selectedLevel}
             />
             <Separator className="my-4" />
             <TablePagination />
