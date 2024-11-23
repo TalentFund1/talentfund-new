@@ -11,6 +11,8 @@ interface EmployeeFiltersProps {
   selectedJobTitle: string[];
   onLevelChange: (level: string[]) => void;
   selectedLevel: string[];
+  onOfficeChange: (office: string[]) => void;
+  selectedOffice: string[];
 }
 
 export const EmployeeFilters = ({ 
@@ -19,10 +21,11 @@ export const EmployeeFilters = ({
   onJobTitleChange,
   selectedJobTitle,
   onLevelChange,
-  selectedLevel
+  selectedLevel,
+  onOfficeChange,
+  selectedOffice
 }: EmployeeFiltersProps) => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
 
   const allSkills = [...technicalSkills, ...softSkills];
@@ -51,14 +54,10 @@ export const EmployeeFilters = ({
     setSelectedSkills([]);
     onJobTitleChange([]);
     onLevelChange([]);
-    setSelectedOffice([]);
+    onOfficeChange([]);
     onDepartmentChange([]);
     setSelectedEmploymentType([]);
   };
-
-  console.log('Current track:', isManagerialTrack ? 'Managerial' : 'Professional');
-  console.log('Available levels:', getLevelsForTrack());
-  console.log('Selected level:', selectedLevel);
 
   return (
     <div className="space-y-0.5">
@@ -99,7 +98,7 @@ export const EmployeeFilters = ({
           placeholder="Office"
           items={["Toronto", "New York", "San Francisco", "London", "Berlin"]}
           selectedItems={selectedOffice}
-          onItemsChange={setSelectedOffice}
+          onItemsChange={onOfficeChange}
           singleSelect={false}
           className="w-[180px]"
         />

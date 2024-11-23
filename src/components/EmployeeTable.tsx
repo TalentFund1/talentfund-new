@@ -86,12 +86,14 @@ interface EmployeeTableProps {
   selectedDepartment: string[];
   selectedJobTitle: string[];
   selectedLevel?: string[];
+  selectedOffice?: string[];
 }
 
 export const EmployeeTable = ({ 
   selectedDepartment = [], 
   selectedJobTitle = [],
-  selectedLevel = []
+  selectedLevel = [],
+  selectedOffice = []
 }: EmployeeTableProps) => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
 
@@ -112,7 +114,7 @@ export const EmployeeTable = ({
     });
   };
 
-  // Filter employees based on selected department, job title, and level
+  // Filter employees based on selected department, job title, level, and office
   const filteredEmployees = employees.filter(employee => {
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
@@ -123,11 +125,14 @@ export const EmployeeTable = ({
     const matchesLevel = selectedLevel.length === 0 || 
       selectedLevel.includes(getLevel(employee.role));
 
-    return matchesDepartment && matchesJobTitle && matchesLevel;
+    const matchesOffice = selectedOffice.length === 0 || 
+      selectedOffice.includes(employee.location.split(',')[0].trim());
+
+    return matchesDepartment && matchesJobTitle && matchesLevel && matchesOffice;
   });
 
   console.log('Filtered employees:', filteredEmployees);
-  console.log('Selected level:', selectedLevel);
+  console.log('Selected office:', selectedOffice);
 
   return (
     <div className="bg-white rounded-lg">
