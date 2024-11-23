@@ -13,6 +13,8 @@ interface EmployeeFiltersProps {
   selectedLevel: string[];
   onOfficeChange: (office: string[]) => void;
   selectedOffice: string[];
+  onEmploymentTypeChange: (employmentType: string[]) => void;
+  selectedEmploymentType: string[];
 }
 
 export const EmployeeFilters = ({ 
@@ -23,10 +25,11 @@ export const EmployeeFilters = ({
   onLevelChange,
   selectedLevel,
   onOfficeChange,
-  selectedOffice
+  selectedOffice,
+  onEmploymentTypeChange,
+  selectedEmploymentType
 }: EmployeeFiltersProps) => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
 
   const allSkills = [...technicalSkills, ...softSkills];
   
@@ -56,7 +59,7 @@ export const EmployeeFilters = ({
     onLevelChange([]);
     onOfficeChange([]);
     onDepartmentChange([]);
-    setSelectedEmploymentType([]);
+    onEmploymentTypeChange([]);
   };
 
   return (
@@ -118,7 +121,7 @@ export const EmployeeFilters = ({
           placeholder="Employment Type"
           items={["Full-time", "Part-time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
-          onItemsChange={setSelectedEmploymentType}
+          onItemsChange={onEmploymentTypeChange}
           singleSelect={false}
           className="w-[180px]"
         />

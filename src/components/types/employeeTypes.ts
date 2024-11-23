@@ -8,4 +8,5 @@ export interface Employee {
   lastUpdated: string;
   location: string;
   sex: 'male' | 'female';
+  category: string;
 }

@@ -21,7 +21,8 @@ export const employees: Employee[] = [
     benchmark: 89,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
-    sex: "male"
+    sex: "male",
+    category: "Full-time"
   },
   {
     id: "124",
@@ -32,7 +33,8 @@ export const employees: Employee[] = [
     benchmark: 85,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
-    sex: "female"
+    sex: "female",
+    category: "Full-time"
   },
   {
     id: "125",
@@ -43,7 +45,8 @@ export const employees: Employee[] = [
     benchmark: 74,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
-    sex: "female"
+    sex: "female",
+    category: "Part-time"
   },
   {
     id: "126",
@@ -54,7 +57,8 @@ export const employees: Employee[] = [
     benchmark: 68,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
-    sex: "male"
+    sex: "male",
+    category: "Contract"
   }
 ];
 
@@ -87,13 +91,15 @@ interface EmployeeTableProps {
   selectedJobTitle: string[];
   selectedLevel?: string[];
   selectedOffice?: string[];
+  selectedEmploymentType?: string[];
 }
 
 export const EmployeeTable = ({ 
   selectedDepartment = [], 
   selectedJobTitle = [],
   selectedLevel = [],
-  selectedOffice = []
+  selectedOffice = [],
+  selectedEmploymentType = []
 }: EmployeeTableProps) => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
 
@@ -114,7 +120,7 @@ export const EmployeeTable = ({
     });
   };
 
-  // Filter employees based on selected department, job title, level, and office
+  // Filter employees based on selected department, job title, level, office, and employment type
   const filteredEmployees = employees.filter(employee => {
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
@@ -128,11 +134,14 @@ export const EmployeeTable = ({
     const matchesOffice = selectedOffice.length === 0 || 
       selectedOffice.includes(employee.location.split(',')[0].trim());
 
-    return matchesDepartment && matchesJobTitle && matchesLevel && matchesOffice;
+    const matchesEmploymentType = selectedEmploymentType.length === 0 ||
+      selectedEmploymentType.includes(employee.category);
+
+    return matchesDepartment && matchesJobTitle && matchesLevel && matchesOffice && matchesEmploymentType;
   });
 
   console.log('Filtered employees:', filteredEmployees);
-  console.log('Selected office:', selectedOffice);
+  console.log('Selected employment type:', selectedEmploymentType);
 
   return (
     <div className="bg-white rounded-lg">
