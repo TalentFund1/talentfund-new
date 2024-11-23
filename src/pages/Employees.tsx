@@ -9,6 +9,7 @@ import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { employees } from "@/components/EmployeeTable";
+import { filterEmployees } from "@/components/employee/EmployeeFilters";
 
 const Employees = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
@@ -19,6 +20,21 @@ const Employees = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [selectedManager, setSelectedManager] = useState<string[]>([]);
+
+  // Get filtered employees count
+  const filteredEmployees = filterEmployees(
+    employees,
+    selectedEmployees,
+    selectedDepartment,
+    selectedJobTitle,
+    selectedLevel,
+    selectedOffice,
+    selectedEmploymentType,
+    selectedSkills,
+    selectedManager
+  );
+
+  const totalEmployees = filteredEmployees.length;
 
   // Calculate female percentage from the employees data
   const calculateFemalePercentage = () => {
@@ -64,7 +80,7 @@ const Employees = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               title="Total Number of Employees"
-              value="112"
+              value={totalEmployees}
               icon={<Users className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
