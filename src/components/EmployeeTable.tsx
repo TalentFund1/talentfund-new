@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { roleSkills } from "./skills/data/roleSkills";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -14,59 +15,11 @@ interface Employee {
   name: string;
   role: string;
   department: string;
-  skillCount: number;
   benchmark: number;
   lastUpdated: string;
   location: string;
   sex: 'male' | 'female';
 }
-
-export const employees: Employee[] = [
-  {
-    id: "123",
-    name: "Victor Smith",
-    role: "AI Engineer: P4",
-    department: "Engineering",
-    skillCount: 11, // Updated: 6 specialized + 2 common + 3 certifications
-    benchmark: 89,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
-    sex: "male"
-  },
-  {
-    id: "124",
-    name: "Jennie Richards",
-    role: "Backend Engineer: P4",
-    department: "Engineering",
-    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
-    benchmark: 85,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
-    sex: "female"
-  },
-  {
-    id: "125",
-    name: "Anna Vyselva",
-    role: "Frontend Developer: P4",
-    department: "Engineering",
-    skillCount: 11, // Updated: 5 specialized + 3 common + 3 certifications
-    benchmark: 74,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
-    sex: "female"
-  },
-  {
-    id: "126",
-    name: "Suz Manu",
-    role: "Engineering Manager: M3",
-    department: "Engineering",
-    skillCount: 10, // Updated: 3 specialized + 4 common + 3 certifications
-    benchmark: 68,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
-    sex: "male"
-  }
-];
 
 // Helper function to get skill profile ID from role
 const getSkillProfileId = (role: string) => {
@@ -80,6 +33,61 @@ const getSkillProfileId = (role: string) => {
   const baseRole = role.split(":")[0].trim();
   return roleMap[baseRole] || "123"; // Default to AI Engineer if not found
 };
+
+// Helper function to calculate total skills for a role
+const calculateSkillCount = (roleId: string) => {
+  const skills = roleSkills[roleId as keyof typeof roleSkills];
+  if (!skills) return 0;
+  
+  return (
+    (skills.specialized?.length || 0) +
+    (skills.common?.length || 0) +
+    (skills.certifications?.length || 0)
+  );
+};
+
+export const employees: Employee[] = [
+  {
+    id: "123",
+    name: "Victor Smith",
+    role: "AI Engineer: P4",
+    department: "Engineering",
+    benchmark: 89,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "male"
+  },
+  {
+    id: "124",
+    name: "Jennie Richards",
+    role: "Backend Engineer: P4",
+    department: "Engineering",
+    benchmark: 85,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "female"
+  },
+  {
+    id: "125",
+    name: "Anna Vyselva",
+    role: "Frontend Developer: P4",
+    department: "Engineering",
+    benchmark: 74,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "female"
+  },
+  {
+    id: "126",
+    name: "Suz Manu",
+    role: "Engineering Manager: M3",
+    department: "Engineering",
+    benchmark: 68,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "male"
+  }
+];
 
 export const EmployeeTable = ({ selectedDepartment }: { selectedDepartment: string[] }) => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
@@ -141,54 +149,59 @@ export const EmployeeTable = ({ selectedDepartment }: { selectedDepartment: stri
                 </td>
               </tr>
             ) : (
-              filteredEmployees.map((employee, index) => (
-              <tr key={employee.id} className="border-t border-border hover:bg-muted/50 transition-colors">
-                <td className="px-4 py-4">
-                  <input 
-                    type="checkbox" 
-                    className="rounded border-gray-300"
-                    checked={selectedEmployees.includes(employee.name)}
-                    onChange={() => handleSelectEmployee(employee.name)}
-                  />
-                </td>
-                <td className="px-4 py-4">
-                  <div className="flex items-center gap-2">
-                    <img 
-                      src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
-                      alt={employee.name}
-                      className="w-6 h-6 rounded-full object-cover"
-                    />
-                    <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
-                      {employee.name}
-                    </Link>
-                  </div>
-                </td>
-                <td className="px-4 py-4">
-                  <Link 
-                    to={`/skills/${getSkillProfileId(employee.role)}`} 
-                    className="text-sm text-primary hover:text-primary-accent transition-colors"
-                  >
-                    {employee.role}
-                  </Link>
-                </td>
-                <td className="px-4 py-4 text-sm">{employee.department}</td>
-                <td className="px-4 py-4 text-center text-sm">{employee.skillCount}</td>
-                <td className="px-4 py-4">
-                  <div className="flex justify-center">
-                    <span className={`px-2.5 py-1 rounded-full text-sm ${
-                      employee.benchmark >= 80 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-orange-100 text-orange-800'
-                    }`}>
-                      {employee.benchmark}%
-                    </span>
-                  </div>
-                </td>
-                <td className="px-4 py-4 text-right text-sm text-muted-foreground">
-                  {employee.lastUpdated}
-                </td>
-              </tr>
-              ))
+              filteredEmployees.map((employee, index) => {
+                const roleId = getSkillProfileId(employee.role);
+                const skillCount = calculateSkillCount(roleId);
+                
+                return (
+                  <tr key={employee.id} className="border-t border-border hover:bg-muted/50 transition-colors">
+                    <td className="px-4 py-4">
+                      <input 
+                        type="checkbox" 
+                        className="rounded border-gray-300"
+                        checked={selectedEmployees.includes(employee.name)}
+                        onChange={() => handleSelectEmployee(employee.name)}
+                      />
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
+                          alt={employee.name}
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
+                        <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
+                          {employee.name}
+                        </Link>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4">
+                      <Link 
+                        to={`/skills/${roleId}`} 
+                        className="text-sm text-primary hover:text-primary-accent transition-colors"
+                      >
+                        {employee.role}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-4 text-sm">{employee.department}</td>
+                    <td className="px-4 py-4 text-center text-sm">{skillCount}</td>
+                    <td className="px-4 py-4">
+                      <div className="flex justify-center">
+                        <span className={`px-2.5 py-1 rounded-full text-sm ${
+                          employee.benchmark >= 80 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-orange-100 text-orange-800'
+                        }`}>
+                          {employee.benchmark}%
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 text-right text-sm text-muted-foreground">
+                      {employee.lastUpdated}
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
