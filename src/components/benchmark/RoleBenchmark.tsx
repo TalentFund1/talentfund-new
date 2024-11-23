@@ -12,6 +12,8 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
+import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
+import { employees } from "../EmployeeTable";
 
 interface RoleStore {
   selectedRole: string;
@@ -36,14 +38,28 @@ const roles = {
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { id } = useParams<{ id: string }>();
   const employeeSkills = getEmployeeSkills(id || "123");
+
+  // Find the employee and get their role
+  const employee = employees.find(emp => emp.id === id);
+  
+  // Set initial role and level based on employee's role
+  useEffect(() => {
+    if (employee) {
+      const profileId = getSkillProfileId(employee.role);
+      const level = getLevel(employee.role).toLowerCase();
+      console.log('Setting initial role and level:', { profileId, level });
+      setSelectedRole(profileId);
+      setRoleLevel(level);
+    }
+  }, [employee, setSelectedRole, setRoleLevel]);
 
   const currentTrack = getTrackForRole(selectedRole);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
