@@ -65,7 +65,7 @@ export const EmployeeFilters = () => {
         <SearchFilter
           label=""
           placeholder="Office"
-          items={["New York", "San Francisco", "London", "Toronto", "Berlin"]}
+          items={["Toronto", "New York", "San Francisco", "London", "Berlin"]}
           selectedItems={selectedOffice}
           onItemsChange={setSelectedOffice}
           singleSelect={false}
@@ -85,7 +85,7 @@ export const EmployeeFilters = () => {
         <SearchFilter
           label=""
           placeholder="Employment Type"
-          items={["Full Time", "Part Time", "Contract", "Internship"]}
+          items={["Full-time", "Part-time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
           onItemsChange={setSelectedEmploymentType}
           singleSelect={false}
