@@ -12,6 +12,7 @@ interface EmployeeTableRowProps {
   onSelect: (name: string) => void;
   imageUrl: string;
   selectedSkills?: string[];
+  selectedJobTitle?: string[];
 }
 
 export const EmployeeTableRow = ({ 
@@ -19,11 +20,15 @@ export const EmployeeTableRow = ({
   isSelected, 
   onSelect, 
   imageUrl,
-  selectedSkills = []
+  selectedSkills = [],
+  selectedJobTitle = []
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employee.id);
+
+  const isExactMatch = selectedJobTitle.length > 0 && 
+    employee.role.split(':')[0].trim() === selectedJobTitle[0];
 
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
@@ -56,7 +61,7 @@ export const EmployeeTableRow = ({
           employee.benchmark >= 80 
             ? 'bg-green-100 text-green-800' 
             : 'bg-orange-100 text-orange-800'
-        }`}>
+        } ${isExactMatch ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
           {employee.benchmark}%
         </span>
       </div>
@@ -64,7 +69,9 @@ export const EmployeeTableRow = ({
   };
 
   return (
-    <tr className="border-t border-border hover:bg-muted/50 transition-colors">
+    <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
+      isExactMatch ? 'bg-primary/5' : ''
+    }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
           type="checkbox" 
