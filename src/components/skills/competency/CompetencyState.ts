@@ -18,10 +18,12 @@ interface CompetencyState {
   setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
-  resetToDefaults: () => void;
 }
 
-const getDefaultState = () => {
+const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
+
+const initializeSkillStates = (roleId: string) => {
+  console.log('Initializing competency states for role:', roleId);
   const states: Record<string, Record<string, SkillState>> = {};
   
   const allSkills = [
@@ -31,35 +33,50 @@ const getDefaultState = () => {
     ...certificationSkills
   ];
 
+  // First try to load from localStorage
+  const storageKey = getStorageKey(roleId);
+  const savedStates = localStorage.getItem(storageKey);
+  
+  if (savedStates) {
+    console.log('Found saved states for role:', roleId);
+    try {
+      const parsedStates = JSON.parse(savedStates);
+      if (parsedStates && typeof parsedStates === 'object') {
+        console.log('Successfully loaded saved states:', parsedStates);
+        return parsedStates;
+      }
+    } catch (error) {
+      console.error('Error parsing saved states:', error);
+    }
+  }
+
+  // If no saved states or invalid data, initialize with default values
+  console.log('Initializing with default states');
   allSkills.forEach(skill => {
-    states[skill.title] = {};
+    states[skill.title] = states[skill.title] || {};
     
-    // Initialize all levels with default values
     if (skill.professionalTrack) {
-      Object.keys(skill.professionalTrack).forEach(level => {
+      Object.entries(skill.professionalTrack).forEach(([level, state]) => {
         states[skill.title][level.toLowerCase()] = {
-          level: 'unspecified',
-          required: 'preferred'
+          level: state.level,
+          required: state.requirement
         };
       });
     }
     
     if (skill.managerialTrack) {
-      Object.keys(skill.managerialTrack).forEach(level => {
+      Object.entries(skill.managerialTrack).forEach(([level, state]) => {
         states[skill.title][level.toLowerCase()] = {
-          level: 'unspecified',
-          required: 'preferred'
+          level: state.level,
+          required: state.requirement
         };
       });
     }
   });
 
+  // Save initial states to localStorage
+  localStorage.setItem(storageKey, JSON.stringify(states));
   return states;
-};
-
-const initializeSkillStates = (roleId: string) => {
-  console.log('Initializing competency states for role:', roleId);
-  return getDefaultState();
 };
 
 export const useCompetencyStore = create<CompetencyState>()(
@@ -101,10 +118,18 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
       saveChanges: () => {
         console.log('Saving competency changes');
-        set((state) => ({
-          originalStates: { ...state.currentStates },
+        const currentStates = get().currentStates;
+        const roleId = localStorage.getItem('currentRoleId') || '123';
+        const storageKey = getStorageKey(roleId);
+        
+        // Save to localStorage with role-specific key
+        localStorage.setItem(storageKey, JSON.stringify(currentStates));
+        console.log('Saved states to localStorage with key:', storageKey);
+        
+        set({
+          originalStates: { ...currentStates },
           hasChanges: false,
-        }));
+        });
       },
       cancelChanges: () => {
         console.log('Cancelling competency changes');
@@ -113,19 +138,10 @@ export const useCompetencyStore = create<CompetencyState>()(
           hasChanges: false,
         }));
       },
-      resetToDefaults: () => {
-        console.log('Resetting to default states');
-        const defaultStates = getDefaultState();
-        set({
-          currentStates: defaultStates,
-          originalStates: defaultStates,
-          hasChanges: false
-        });
-      }
     }),
     {
       name: 'competency-storage',
-      skipHydration: true,
+      skipHydration: true, // Skip automatic hydration since we handle it manually
       partialize: (state) => ({
         originalStates: state.originalStates,
         currentStates: state.currentStates,

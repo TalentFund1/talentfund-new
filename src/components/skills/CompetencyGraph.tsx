@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -21,19 +21,26 @@ interface CompetencyGraphProps {
 
 export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: CompetencyGraphProps) => {
   const { toggledSkills } = useToggledSkills();
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+    const savedCategory = localStorage.getItem('selectedCategory');
+    return savedCategory || "all";
+  });
   const { getTrackForRole } = useTrack();
-  const { saveChanges, cancelChanges, hasChanges, initializeStates, resetToDefaults } = useCompetencyStore();
+  const { saveChanges, cancelChanges, hasChanges, initializeStates } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
 
   const currentRoleId = propRoleId || urlRoleId || "123";
   const savedTrack = getTrackForRole(currentRoleId);
+  const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
 
   useEffect(() => {
-    // Reset to defaults when component mounts
-    resetToDefaults();
+    setTrack(savedTrack);
+  }, [savedTrack]);
+
+  useEffect(() => {
     initializeStates(currentRoleId);
-  }, [currentRoleId, initializeStates, resetToDefaults]);
+  }, [currentRoleId, initializeStates]);
 
   const handleSave = () => {
     saveChanges();
