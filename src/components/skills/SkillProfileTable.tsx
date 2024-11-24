@@ -3,12 +3,6 @@ import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import type { SkillProfileRow } from "./types";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
@@ -16,8 +10,6 @@ interface SkillProfileTableProps {
 
 export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [selectedJobTitles, setSelectedJobTitles] = useState<string[]>([]);
-  const [open, setOpen] = useState(false);
   
   const rows: SkillProfileRow[] = [
     { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: "2", matches: "$180,178", lastUpdated: "10/20/24" },
@@ -25,8 +17,6 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
     { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: "0", matches: "$170,000", lastUpdated: "10/20/24" },
     { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: "2", matches: "$190,000", lastUpdated: "10/20/24" }
   ];
-
-  const jobTitles = rows.map(row => row.name);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSelection = e.target.checked ? rows.map(row => row.id) : [];
@@ -42,6 +32,7 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
     });
   };
 
+  // Filter rows based on selected function
   const filteredRows = selectedFunction 
     ? rows.filter(row => row.function.toLowerCase() === selectedFunction.toLowerCase())
     : rows;
@@ -51,76 +42,6 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="justify-between w-[200px]"
-            >
-              {selectedJobTitles.length > 0
-                ? `${selectedJobTitles.length} selected`
-                : "Select job titles..."}
-              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
-            <Command>
-              <CommandInput placeholder="Search job titles..." />
-              <CommandEmpty>No job title found.</CommandEmpty>
-              <CommandGroup>
-                {jobTitles.map((title) => (
-                  <CommandItem
-                    key={title}
-                    onSelect={() => {
-                      setSelectedJobTitles((prev) => {
-                        const newSelection = prev.includes(title)
-                          ? prev.filter((t) => t !== title)
-                          : [...prev, title];
-                        return newSelection;
-                      });
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selectedJobTitles.includes(title) ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    {title}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
-        {selectedJobTitles.length > 0 && (
-          <div className="flex gap-1 flex-wrap">
-            {selectedJobTitles.map((title) => (
-              <Badge
-                key={title}
-                variant="secondary"
-                className="flex items-center gap-1"
-              >
-                {title}
-                <button
-                  className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  onClick={() => {
-                    setSelectedJobTitles((prev) =>
-                      prev.filter((t) => t !== title)
-                    );
-                  }}
-                >
-                  ×
-                </button>
-              </Badge>
-            ))}
-          </div>
-        )}
-      </div>
-
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent border-b border-border">
@@ -134,7 +55,7 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
             </TableHead>
             <TableHead className="w-[22%] h-12">
               <div className="flex items-center gap-1">
-                Job Title <ChevronDown className="h-4 w-4" />
+                Role Name <ChevronDown className="h-4 w-4" />
               </div>
             </TableHead>
             <TableHead className="w-[18%] h-12">Function</TableHead>
