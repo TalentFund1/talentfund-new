@@ -1,8 +1,15 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { StatCard } from "@/components/StatCard";
-import { Users, Briefcase, Equal, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Sidebar } from "@/components/Sidebar";
+import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
+import { roleSkills } from '@/components/skills/data/roleSkills';
+import { jobTitles } from '@/components/skills/competency/skillProfileData';
+import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
+import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -10,14 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Sidebar } from "@/components/Sidebar";
-import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
-import { SearchFilter } from '@/components/market/SearchFilter';
-import { technicalSkills, softSkills } from '@/components/skillsData';
-import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
-import { roleSkills } from '@/components/skills/data/roleSkills';
-import { jobTitles } from '@/components/skills/competency/skillProfileData';
 
 // Define company functions/departments
 const companyFunctions = [
@@ -39,39 +38,8 @@ const SkillsProfile = () => {
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
 
-  // Get all job titles from the roleSkills data
   const availableJobTitles = Object.keys(jobTitles).map(id => jobTitles[id]);
-
-  // Filter skills to only show toggled ones
   const toggledSkillsList = Array.from(toggledSkills);
-
-  // Filter profiles based on selected skills and other filters
-  const filterProfiles = (profiles: any[]) => {
-    return profiles.filter(profile => {
-      const matchesFunction = !selectedFunction || profile.function.toLowerCase() === selectedFunction.toLowerCase();
-      const matchesJobTitle = !selectedJobTitle || profile.name.toLowerCase() === selectedJobTitle.toLowerCase();
-      
-      // Check if profile has any of the selected skills
-      const profileSkillsData = roleSkills[profile.id as keyof typeof roleSkills];
-      if (!profileSkillsData || Array.isArray(profileSkillsData)) {
-        return false;
-      }
-
-      const allProfileSkills = [
-        ...(profileSkillsData.specialized || []),
-        ...(profileSkillsData.common || []),
-        ...(profileSkillsData.certifications || [])
-      ];
-
-      const hasSelectedSkills = selectedSkills.length === 0 || selectedSkills.some(skill => 
-        allProfileSkills.some(profileSkill => 
-          profileSkill.title.toLowerCase().includes(skill.toLowerCase())
-        )
-      );
-
-      return matchesFunction && matchesJobTitle && hasSelectedSkills;
-    });
-  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -86,79 +54,19 @@ const SkillsProfile = () => {
             </div>
           </div>
 
-          <Card className="p-6">
-            <div className="space-y-4">
-              <SearchFilter
-                label=""
-                placeholder="Search skills..."
-                items={toggledSkillsList}
-                selectedItems={selectedSkills}
-                onItemsChange={setSelectedSkills}
-              />
-              
-              <div className="flex flex-wrap gap-3">
-                <Select value={selectedJobTitle} onValueChange={setSelectedJobTitle}>
-                  <SelectTrigger className="w-[180px] bg-white">
-                    <SelectValue placeholder="Job Title" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableJobTitles.map((title) => (
-                      <SelectItem key={title} value={title.toLowerCase()}>
-                        {title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                
-                <Select value={selectedFunction} onValueChange={setSelectedFunction}>
-                  <SelectTrigger className="w-[180px] bg-white">
-                    <SelectValue placeholder="Function" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {companyFunctions.map((func) => (
-                      <SelectItem key={func} value={func.toLowerCase()}>
-                        {func}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <SkillProfileFilters
+            selectedSkills={selectedSkills}
+            setSelectedSkills={setSelectedSkills}
+            selectedFunction={selectedFunction}
+            setSelectedFunction={setSelectedFunction}
+            selectedJobTitle={selectedJobTitle}
+            setSelectedJobTitle={setSelectedJobTitle}
+            toggledSkillsList={toggledSkillsList}
+            availableJobTitles={availableJobTitles}
+            companyFunctions={companyFunctions}
+          />
 
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setSelectedSkills([]);
-                    setSelectedFunction("");
-                    setSelectedJobTitle("");
-                  }}
-                >
-                  Clear All
-                </Button>
-              </div>
-            </div>
-          </Card>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard
-              title="Total number of Profiles"
-              value="56"
-              icon={<Users className="h-6 w-6 text-primary-icon" />}
-            />
-            <StatCard
-              title="Open Roles"
-              value="5"
-              icon={<Briefcase className="h-6 w-6 text-primary-icon" />}
-            />
-            <StatCard
-              title="Share of Female Employees"
-              value="50%"
-              icon={<Equal className="h-6 w-6 text-primary-icon" />}
-            />
-            <StatCard
-              title="Average Tenure (Years)"
-              value="1.09"
-              icon={<Clock className="h-6 w-6 text-primary-icon" />}
-            />
-          </div>
+          <SkillProfileStats />
 
           <Card className="p-6">
             <SkillProfileTable 
