@@ -5,6 +5,8 @@ import { useState } from "react";
 import type { SkillProfileRow } from "./types";
 import { roleSkills } from './data/roleSkills';
 import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { employees } from "../employee/EmployeeData";
+import { getBaseRole } from "../EmployeeTable";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
@@ -20,11 +22,16 @@ export const SkillProfileTable = ({
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { toggledSkills } = useToggledSkills();
   
+  // Get exact role matches for each profile
+  const getExactRoleMatches = (roleName: string) => {
+    return employees.filter(emp => getBaseRole(emp.role) === roleName).length;
+  };
+  
   const rows: SkillProfileRow[] = [
-    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: "2", matches: "$180,178", lastUpdated: "10/20/24" },
-    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: "3", matches: "$175,000", lastUpdated: "10/20/24" },
-    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: "0", matches: "$170,000", lastUpdated: "10/20/24" },
-    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: "2", matches: "$190,000", lastUpdated: "10/20/24" }
+    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: String(getExactRoleMatches("AI Engineer")), matches: "$180,178", lastUpdated: "10/20/24" },
+    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: String(getExactRoleMatches("Backend Engineer")), matches: "$175,000", lastUpdated: "10/20/24" },
+    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: String(getExactRoleMatches("Frontend Engineer")), matches: "$170,000", lastUpdated: "10/20/24" },
+    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: String(getExactRoleMatches("Engineering Manager")), matches: "$190,000", lastUpdated: "10/20/24" }
   ];
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
