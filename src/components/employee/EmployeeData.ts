@@ -16,15 +16,14 @@ export const employees: Employee[] = [
     department: "Engineering",
     skillCount: getEmployeeSkills("123").length,
     benchmark: 0,
-    lastUpdated: "01/15/24",
+    lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "male",
     category: "Full-time",
     manager: "Sus Manu",
     startDate: "2023-05-15",
     office: "Toronto",
-    termDate: "-",
-    addedPastYear: "NO"
+    termDate: "-"
   },
   {
     id: "124",
@@ -33,15 +32,14 @@ export const employees: Employee[] = [
     department: "Engineering",
     skillCount: getEmployeeSkills("124").length,
     benchmark: 0,
-    lastUpdated: "01/10/24",
+    lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "female",
     category: "Contract",
     manager: "Sus Manu",
     startDate: "2024-01-10",
     office: "Toronto",
-    termDate: "-",
-    addedPastYear: "YES"
+    termDate: "-"
   },
   {
     id: "125",
@@ -50,15 +48,14 @@ export const employees: Employee[] = [
     department: "Engineering",
     skillCount: getEmployeeSkills("125").length,
     benchmark: 0,
-    lastUpdated: "01/20/24",
+    lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "female",
     category: "Part-time",
     manager: "Sus Manu",
-    startDate: "2024-06-01",
+    startDate: "2023-08-22",
     office: "Toronto",
-    termDate: "-",
-    addedPastYear: "YES"
+    termDate: "-"
   },
   {
     id: "126",
@@ -67,14 +64,13 @@ export const employees: Employee[] = [
     department: "Engineering",
     skillCount: getEmployeeSkills("126").length,
     benchmark: 0,
-    lastUpdated: "01/15/24",
+    lastUpdated: "10/20/24",
     location: "Toronto, ON",
     sex: "male",
     category: "Contract",
     manager: "Sarah Chen",
     startDate: "2022-11-01",
     office: "Toronto",
-    termDate: "-",
-    addedPastYear: "NO"
+    termDate: "-"
   }
 ];

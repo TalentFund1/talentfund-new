@@ -13,7 +13,7 @@ const Index = () => {
             <h1 className="text-3xl font-bold text-foreground">Skills Intelligence Dashboard</h1>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
               title="Total Employees"
               value="124"
@@ -25,6 +25,12 @@ const Index = () => {
               value="87%"
               description="Above industry average"
               icon={<Target className="h-6 w-6 text-primary-icon" />}
+            />
+            <StatCard
+              title="Growth Rate"
+              value="+15%"
+              description="Year over year"
+              icon={<TrendingUp className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Skill Score"

@@ -5,11 +5,10 @@ import { Users, UserPlus, Equal, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { EmployeeFilters } from "@/components/EmployeeFilters";
-import { EmployeeTable, employees, getBaseRole } from "@/components/EmployeeTable";
+import { EmployeeTable, employees, getEmployeesAddedLastYear, getBaseRole } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
-import { getEmployeesAddedLastYear } from "@/components/employee/EmployeeUtils";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -128,7 +127,7 @@ const Employees = () => {
             />
             <StatCard
               title="Added in Past 1 year"
-              value={getEmployeesAddedLastYear(filteredEmployees)}
+              value={getEmployeesAddedLastYear()}
               icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard

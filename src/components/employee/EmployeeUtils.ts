@@ -1,47 +1,17 @@
-export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
-  console.log('Calculating employees added in the last year from filtered employees:', {
-    totalFilteredEmployees: filteredEmployees.length,
-    employeeDetails: filteredEmployees.map(e => ({
-      name: e.name,
-      startDate: e.startDate,
-      addedPastYear: e.addedPastYear
-    }))
-  });
-  
-  // Get current date and date 1 year ago
-  const now = new Date();
+import { employees } from "./EmployeeData";
+
+export const getEmployeesAddedLastYear = () => {
+  const today = new Date();
   const oneYearAgo = new Date();
-  oneYearAgo.setFullYear(now.getFullYear() - 1);
+  oneYearAgo.setFullYear(today.getFullYear() - 1);
   
-  console.log('Reference dates:', {
-    now: now.toISOString(),
-    oneYearAgo: oneYearAgo.toISOString()
-  });
-
-  // Filter employees based on start date being within the last year
-  // but only from the already filtered employee list
-  const employeesAddedLastYear = filteredEmployees.filter(employee => {
+  console.log('Calculating employees added in the last year...');
+  console.log('One year ago:', oneYearAgo.toISOString());
+  
+  return employees.filter(employee => {
     if (!employee.startDate) return false;
-    
     const startDate = new Date(employee.startDate);
-    const wasAddedLastYear = startDate > oneYearAgo;
-    
-    console.log('Employee start date check:', {
-      name: employee.name,
-      startDate: employee.startDate,
-      wasAddedLastYear
-    });
-    
-    return wasAddedLastYear;
-  });
-
-  console.log('Employees added in last year:', {
-    count: employeesAddedLastYear.length,
-    employees: employeesAddedLastYear.map(e => ({
-      name: e.name,
-      startDate: e.startDate
-    }))
-  });
-  
-  return employeesAddedLastYear.length;
+    console.log(`Employee ${employee.name} start date:`, startDate.toISOString());
+    return startDate >= oneYearAgo;
+  }).length;
 };

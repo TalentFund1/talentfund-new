@@ -12,17 +12,14 @@ export const filterEmployees = (
   selectedSkills: string[],
   selectedManager: string[] = []
 ): Employee[] => {
-  console.log('Starting employee filtering with:', {
-    totalEmployees: employees.length,
-    filters: {
-      searchedEmployees,
-      selectedDepartment,
-      selectedJobTitle,
-      selectedLevel,
-      selectedOffice,
-      selectedEmploymentType,
-      selectedManager
-    }
+  console.log('Filtering employees with criteria:', {
+    searchedEmployees,
+    selectedDepartment,
+    selectedJobTitle,
+    selectedLevel,
+    selectedOffice,
+    selectedEmploymentType,
+    selectedManager
   });
 
   return employees.filter(employee => {
@@ -32,14 +29,12 @@ export const filterEmployees = (
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
     
-    const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(getBaseRole(employee.role));
-    
+    // Remove exact role match requirement to allow partial matches
     const matchesLevel = selectedLevel.length === 0 || 
       selectedLevel.includes(getLevel(employee.role));
 
     const matchesOffice = selectedOffice.length === 0 || 
-      selectedOffice.includes(employee.office);
+      selectedOffice.includes(employee.location.split(',')[0].trim());
 
     const matchesEmploymentType = selectedEmploymentType.length === 0 ||
       selectedEmploymentType.includes(employee.category);
@@ -47,24 +42,10 @@ export const filterEmployees = (
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
 
-    const matches = matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
-                   matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
+    // If job title is selected, we'll handle matching in the sorter
+    const matchesJobTitle = selectedJobTitle.length === 0 || true;
 
-    if (!matches) {
-      console.log('Employee filtered out:', {
-        name: employee.name,
-        reason: {
-          employeeSearch: !matchesEmployeeSearch,
-          department: !matchesDepartment,
-          jobTitle: !matchesJobTitle,
-          level: !matchesLevel,
-          office: !matchesOffice,
-          employmentType: !matchesEmploymentType,
-          manager: !matchesManager
-        }
-      });
-    }
-
-    return matches;
+    return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
+           matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
   });
 };
