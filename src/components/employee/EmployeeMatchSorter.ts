@@ -14,12 +14,6 @@ export const sortEmployeesByRoleMatch = (
   const selectedRole = selectedJobTitle[0];
   const roleId = getSkillProfileId(selectedRole);
 
-  console.log('Sorting employees by role match:', {
-    selectedRole,
-    roleId,
-    employeeCount: employees.length
-  });
-
   // Calculate benchmarks for all employees
   const employeesWithBenchmarks = employees.map(employee => {
     const benchmark = calculateBenchmarkPercentage(
@@ -31,44 +25,23 @@ export const sortEmployeesByRoleMatch = (
       getSkillCompetencyState
     );
 
-    const isExactMatch = getBaseRole(employee.role) === selectedRole;
-    const isPartialMatch = !isExactMatch && benchmark > 0;
-
-    console.log('Employee benchmark calculation:', {
-      employeeId: employee.id,
-      employeeName: employee.name,
-      employeeRole: employee.role,
-      benchmark,
-      isExactMatch,
-      isPartialMatch
-    });
-
     return {
       ...employee,
-      isExactMatch,
-      isPartialMatch,
+      isExactMatch: getBaseRole(employee.role) === selectedRole,
       benchmark
     };
   });
 
-  // Include all employees with either:
-  // 1. Exact role matches
-  // 2. Partial matches (any benchmark score > 0)
-  const matchingEmployees = employeesWithBenchmarks;
+  console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
-  console.log('Matching employees:', {
-    total: matchingEmployees.length,
-    matches: matchingEmployees.map(emp => ({
-      name: emp.name,
-      isExactMatch: emp.isExactMatch,
-      isPartialMatch: emp.isPartialMatch,
-      benchmark: emp.benchmark
-    }))
-  });
+  // Filter to keep only employees with benchmark > 0 or exact role matches
+  const matchingEmployees = employeesWithBenchmarks.filter(
+    employee => employee.isExactMatch || employee.benchmark > 0
+  );
 
-  // Sort by:
-  // 1. Exact matches first
-  // 2. Then by benchmark score
+  console.log('Matching employees:', matchingEmployees);
+
+  // Sort by exact match first, then by benchmark score
   return matchingEmployees.sort((a, b) => {
     if (a.isExactMatch && !b.isExactMatch) return -1;
     if (!a.isExactMatch && b.isExactMatch) return 1;

@@ -10,7 +10,6 @@ import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { getEmployeesAddedLastYear } from "@/components/employee/EmployeeUtils";
-import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -39,7 +38,7 @@ const Employees = () => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [selectedManager, setSelectedManager] = useState<string[]>([]);
 
-  // Get filtered employees based on all criteria
+  // Get filtered employees
   const filteredEmployees = filterEmployees(
     employees,
     selectedEmployees,
@@ -52,20 +51,15 @@ const Employees = () => {
     selectedManager
   );
 
-  // Apply skills filter to get exact matches
-  const skillFilteredEmployees = filterEmployeesBySkills(filteredEmployees, selectedSkills);
-
-  // Get relevant employees based on job title and skills
+  // Get relevant employees based on job title filter
   const relevantEmployees = selectedJobTitle.length > 0
-    ? skillFilteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0])
-    : skillFilteredEmployees;
+    ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0])
+    : filteredEmployees;
 
   console.log('Calculating stats for employees:', {
     totalFiltered: filteredEmployees.length,
-    skillFiltered: skillFilteredEmployees.length,
     relevantCount: relevantEmployees.length,
     jobTitleFilter: selectedJobTitle,
-    skillsFilter: selectedSkills,
     employeeDetails: relevantEmployees.map(emp => ({
       name: emp.name,
       role: emp.role,
@@ -76,6 +70,7 @@ const Employees = () => {
 
   // Calculate stats using the relevant employees list
   const totalEmployees = relevantEmployees.length;
+  
   const addedLastYear = getEmployeesAddedLastYear(relevantEmployees);
 
   // Calculate female percentage from the relevant employees
