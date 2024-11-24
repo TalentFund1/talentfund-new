@@ -76,7 +76,7 @@ const SkillsProfile = () => {
                 onItemsChange={setSelectedSkills}
               />
               
-              <div className="flex flex-wrap items-center gap-3 mt-4">
+              <div className="flex flex-wrap gap-3">
                 <SearchFilter
                   label=""
                   placeholder="Job Title"
