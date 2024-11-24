@@ -14,73 +14,40 @@ import { EmployeeHeader } from "@/components/employee/EmployeeHeader";
 import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { employees } from "@/components/employee/EmployeeData";
 
-const employees = {
-  "123": {
-    name: "Victor Smith",
-    role: "AI Engineer: P4",
-    location: "Toronto, ON",
-    department: "Engineering",
-    office: "Toronto",
-    category: "Full-time",
-    manager: "Sus Manu",
-    startDate: "2024-01-01",
-    termDate: "-",
-    tenure: "1.9",
-    image: "photo-1488590528505-98d2b5aba04b"
-  },
-  "124": {
-    name: "Jennie Richards",
-    role: "Backend Engineer: P4",
-    location: "Toronto, ON",
-    department: "Engineering",
-    office: "Toronto",
-    category: "Contract",
-    manager: "Sus Manu",
-    startDate: "2024-01-01",
-    termDate: "-",
-    tenure: "1.9",
-    image: "photo-1518770660439-4636190af475"
-  },
-  "125": {
-    name: "Anna Vyselva",
-    role: "Frontend Developer: P5",
-    location: "Toronto, ON",
-    department: "Engineering",
-    office: "Toronto",
-    category: "Part-time",
-    manager: "Sus Manu",
-    startDate: "2024-01-01",
-    termDate: "-",
-    tenure: "1.9",
-    image: "photo-1461749280684-dccba630e2f6"
-  },
-  "126": {
-    name: "Suz Manu",
-    role: "Engineering Manager: M3",
-    location: "Toronto, ON",
-    department: "Engineering",
-    office: "Toronto",
-    category: "Contract",
-    manager: "Sarah Chen",
-    startDate: "2024-01-01",
-    termDate: "-",
-    tenure: "1.9",
-    image: "photo-1486312338219-ce68d2c6f44d"
-  }
+const employeeImages = {
+  "123": "photo-1488590528505-98d2b5aba04b",
+  "124": "photo-1518770660439-4636190af475",
+  "125": "photo-1461749280684-dccba630e2f6",
+  "126": "photo-1486312338219-ce68d2c6f44d"
 };
 
 const EmployeeProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const employee = employees[id as keyof typeof employees];
+  const employee = employees.find(emp => emp.id === id);
 
   if (!employee) {
     return <div>Employee not found</div>;
   }
 
+  const employeeData = {
+    name: employee.name,
+    role: employee.role,
+    location: employee.location,
+    department: employee.department,
+    office: employee.office,
+    category: employee.category,
+    manager: employee.manager,
+    startDate: employee.startDate,
+    termDate: employee.termDate,
+    tenure: "1.9",
+    image: employeeImages[id as keyof typeof employeeImages]
+  };
+
   const handleNavigation = (direction: 'prev' | 'next') => {
-    const employeeIds = Object.keys(employees);
+    const employeeIds = employees.map(emp => emp.id);
     const currentIndex = employeeIds.indexOf(id || "123");
     
     let newIndex;
@@ -93,8 +60,14 @@ const EmployeeProfile = () => {
     navigate(`/employee/${employeeIds[newIndex]}`);
   };
 
-  const currentIndex = Object.keys(employees).indexOf(id || "123") + 1;
-  const totalEmployees = Object.keys(employees).length;
+  const currentIndex = employees.findIndex(emp => emp.id === id) + 1;
+  const totalEmployees = employees.length;
+
+  console.log('Employee Profile Data:', {
+    id,
+    employee: employeeData,
+    startDate: employee.startDate
+  });
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -123,8 +96,8 @@ const EmployeeProfile = () => {
           </div>
 
           <Card className="p-8 bg-white">
-            <EmployeeHeader id={id || ""} employee={employee} />
-            <EmployeeDetails employee={employee} id={id || ""} />
+            <EmployeeHeader id={id || ""} employee={employeeData} />
+            <EmployeeDetails employee={employeeData} id={id || ""} />
           </Card>
 
           <TrackProvider>
