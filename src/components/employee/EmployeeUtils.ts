@@ -1,5 +1,9 @@
 export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
   console.log('Calculating employees added in the last year...');
+  console.log('All filtered employees:', filteredEmployees.map(e => ({
+    name: e.name,
+    addedPastYear: e.addedPastYear
+  })));
   
   const employeesAddedLastYear = filteredEmployees.filter(employee => {
     const wasAddedLastYear = employee.addedPastYear === 'YES';
