@@ -54,21 +54,14 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   // Filter and sort skills based on requirement and employee possession
   const requiredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
-      // Check if the skill is required in the role definition
-      const isRequiredInRole = skill.requirement?.toLowerCase() === 'required';
-      
-      // Also check competency state
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      const isRequiredInCompetency = competencyState?.required === 'required';
-      
       console.log('Checking required skill:', {
         skill: skill.title,
-        roleRequirement: skill.requirement,
         competencyState,
         isToggled: toggledSkills.has(skill.title)
       });
       
-      return (isRequiredInRole || isRequiredInCompetency) && toggledSkills.has(skill.title);
+      return competencyState?.required === 'required' && toggledSkills.has(skill.title);
     })
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
@@ -78,21 +71,14 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
 
   const preferredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
-      // Check if the skill is preferred in the role definition
-      const isPreferredInRole = skill.requirement?.toLowerCase() === 'preferred';
-      
-      // Also check competency state
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      const isPreferredInCompetency = competencyState?.required === 'preferred';
-      
       console.log('Checking preferred skill:', {
         skill: skill.title,
-        roleRequirement: skill.requirement,
         competencyState,
         isToggled: toggledSkills.has(skill.title)
       });
       
-      return (isPreferredInRole || isPreferredInCompetency) && 
+      return competencyState?.required === 'preferred' && 
              toggledSkills.has(skill.title) && 
              !requiredSkills.some(req => req.title === skill.title);
     })
