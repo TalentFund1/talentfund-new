@@ -1,69 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { aiSkills } from '../data/skills/aiSkills';
-import { backendSkills } from '../data/skills/backendSkills';
-import { commonSkills } from '../data/skills/commonSkills';
-import { certificationSkills } from '../data/skills/certificationSkills';
-
-interface SkillState {
-  level: string;
-  required: string;
-}
-
-interface CompetencyState {
-  originalStates: Record<string, Record<string, SkillState>>;
-  currentStates: Record<string, Record<string, SkillState>>;
-  hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, levelKey: string, requirement: string) => void;
-  saveChanges: () => void;
-  cancelChanges: () => void;
-  initializeStates: (roleId: string) => void;
-}
-
-interface StorageValue<T> {
-  state: T;
-  version: number;
-}
-
-const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
-
-const initializeSkillStates = (roleId: string) => {
-  console.log('Initializing competency states for role:', roleId);
-  
-  const states: Record<string, Record<string, SkillState>> = {};
-  
-  const allSkills = [
-    ...aiSkills,
-    ...backendSkills,
-    ...commonSkills,
-    ...certificationSkills
-  ];
-
-  allSkills.forEach(skill => {
-    states[skill.title] = {};
-    
-    if (skill.professionalTrack) {
-      Object.entries(skill.professionalTrack).forEach(([level, state]) => {
-        states[skill.title][level.toLowerCase()] = {
-          level: state.level,
-          required: state.requirement
-        };
-      });
-    }
-    
-    if (skill.managerialTrack) {
-      Object.entries(skill.managerialTrack).forEach(([level, state]) => {
-        states[skill.title][level.toLowerCase()] = {
-          level: state.level,
-          required: state.requirement
-        };
-      });
-    }
-  });
-
-  console.log('Initialized default states:', states);
-  return states;
-};
+import { CompetencyState, StorageValue } from './types/CompetencyTypes';
+import { getStorageKey, saveToStorage, loadFromStorage } from './utils/storageUtils';
+import { initializeSkillStates } from './utils/stateInitializer';
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -76,12 +15,11 @@ export const useCompetencyStore = create<CompetencyState>()(
         const storageKey = getStorageKey(roleId);
         
         try {
-          const storedValue = localStorage.getItem(storageKey);
+          const storedValue = loadFromStorage(storageKey);
           let initializedStates;
           
-          if (storedValue) {
-            const parsed = JSON.parse(storedValue);
-            initializedStates = parsed.state?.currentStates || initializeSkillStates(roleId);
+          if (storedValue?.state?.currentStates) {
+            initializedStates = storedValue.state.currentStates;
             console.log('Found stored states:', initializedStates);
           } else {
             initializedStates = initializeSkillStates(roleId);
@@ -135,7 +73,6 @@ export const useCompetencyStore = create<CompetencyState>()(
               currentStates: state.currentStates,
               originalStates: state.currentStates,
               hasChanges: false,
-              // Add empty function implementations for the methods
               setSkillState: () => {},
               saveChanges: () => {},
               cancelChanges: () => {},
@@ -144,16 +81,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             version: 1
           };
           
-          try {
-            localStorage.setItem(storageKey, JSON.stringify(stateToSave));
-            console.log('Successfully saved states to storage:', { 
-              roleId, 
-              storageKey, 
-              savedState: stateToSave.state.currentStates 
-            });
-          } catch (error) {
-            console.error('Error saving states:', error);
-          }
+          saveToStorage(storageKey, stateToSave);
           
           return {
             currentStates: state.currentStates,
@@ -176,27 +104,12 @@ export const useCompetencyStore = create<CompetencyState>()(
         getItem: async (name): Promise<StorageValue<CompetencyState> | null> => {
           const roleId = localStorage.getItem('currentRoleId') || '126';
           const storageKey = getStorageKey(roleId);
-          const value = localStorage.getItem(storageKey);
-          console.log('Loading stored competency states:', { roleId, storageKey, value });
-          
-          if (!value) return null;
-          
-          try {
-            return JSON.parse(value) as StorageValue<CompetencyState>;
-          } catch (error) {
-            console.error('Error parsing stored value:', error);
-            return null;
-          }
+          return loadFromStorage(storageKey);
         },
         setItem: async (name, value: StorageValue<CompetencyState>) => {
           const roleId = localStorage.getItem('currentRoleId') || '126';
           const storageKey = getStorageKey(roleId);
-          console.log('Persisting competency states:', { 
-            roleId, 
-            storageKey, 
-            currentStates: value.state.currentStates 
-          });
-          localStorage.setItem(storageKey, JSON.stringify(value));
+          saveToStorage(storageKey, value);
         },
         removeItem: async (name) => {
           const roleId = localStorage.getItem('currentRoleId') || '126';
