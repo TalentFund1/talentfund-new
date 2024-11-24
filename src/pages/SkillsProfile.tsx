@@ -16,8 +16,23 @@ import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { technicalSkills, softSkills } from '@/components/skillsData';
 
+// Define company functions/departments
+const companyFunctions = [
+  "Engineering",
+  "Product",
+  "Design",
+  "Marketing",
+  "Sales",
+  "Finance",
+  "Human Resources",
+  "Operations",
+  "Legal",
+  "Customer Success"
+];
+
 const SkillsProfile = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedFunction, setSelectedFunction] = useState<string>("");
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
@@ -54,19 +69,25 @@ const SkillsProfile = () => {
                   </SelectContent>
                 </Select>
                 
-                <Select>
+                <Select value={selectedFunction} onValueChange={setSelectedFunction}>
                   <SelectTrigger className="w-[180px] bg-white">
                     <SelectValue placeholder="Function" />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
-                    <SelectItem value="engineering">Engineering</SelectItem>
-                    <SelectItem value="design">Design</SelectItem>
+                    {companyFunctions.map((func) => (
+                      <SelectItem key={func} value={func.toLowerCase()}>
+                        {func}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
 
                 <Button 
                   variant="outline" 
-                  onClick={() => setSelectedSkills([])}
+                  onClick={() => {
+                    setSelectedSkills([]);
+                    setSelectedFunction("");
+                  }}
                 >
                   Clear All
                 </Button>
