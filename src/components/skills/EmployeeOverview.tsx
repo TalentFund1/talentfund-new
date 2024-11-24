@@ -1,7 +1,7 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { employees } from "../employee/EmployeeData";
+import { employees, EMPLOYEE_IMAGES } from "../employee/EmployeeData";
 import { getBaseRole } from "../EmployeeTable";
 import { useNavigate, useParams } from "react-router-dom";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
