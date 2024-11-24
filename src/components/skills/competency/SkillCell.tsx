@@ -25,15 +25,20 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
 
   useEffect(() => {
     if (!currentStates[roleId]?.[skillName]?.[levelKey]) {
-      setSkillState(
-        roleId,
-        skillName,
-        "unspecified",
-        levelKey,
-        "preferred"
-      );
+      console.log('Initializing skill state:', { roleId, skillName, levelKey });
+      setSkillState(roleId, skillName, "unspecified", levelKey, "preferred");
     }
   }, [skillName, currentStates, setSkillState, levelKey, roleId]);
+
+  const handleLevelChange = (value: string) => {
+    console.log('Setting level:', { roleId, skillName, level: value, levelKey, required: currentState.required });
+    setSkillState(roleId, skillName, value, levelKey, currentState.required);
+  };
+
+  const handleRequirementChange = (value: string) => {
+    console.log('Setting requirement:', { roleId, skillName, level: currentState.level, levelKey, required: value });
+    setSkillState(roleId, skillName, currentState.level, levelKey, value);
+  };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -95,7 +100,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
       <div className="flex flex-col items-center gap-0">
         <Select 
           value={currentState.level}
-          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required)}
+          onValueChange={handleLevelChange}
         >
           <SelectTrigger 
             className={`${getLevelStyles(currentState.level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
@@ -137,7 +142,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
 
         <Select 
           value={currentState.required}
-          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value)}
+          onValueChange={handleRequirementChange}
         >
           <SelectTrigger 
             className={`${getRequirementStyles(currentState.required, currentState.level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
