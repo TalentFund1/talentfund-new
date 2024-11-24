@@ -10,7 +10,9 @@ export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
   
   const employeesAddedLastYear = filteredEmployees.filter(employee => {
+    if (!employee.startDate) return false;
     const startDate = new Date(employee.startDate);
+    if (isNaN(startDate.getTime())) return false;
     const wasAddedLastYear = startDate > oneYearAgo;
     console.log(`Employee ${employee.name} start date: ${employee.startDate}, was added last year: ${wasAddedLastYear}`);
     return wasAddedLastYear;
