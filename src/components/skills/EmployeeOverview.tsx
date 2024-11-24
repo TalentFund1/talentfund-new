@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { employees } from "../employee/EmployeeData";
 import { getBaseRole } from "../EmployeeTable";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
@@ -18,6 +18,7 @@ const EMPLOYEE_IMAGES = [
 
 export const EmployeeOverview = () => {
   const { id: roleId } = useParams();
+  const navigate = useNavigate();
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -44,6 +45,10 @@ export const EmployeeOverview = () => {
     return benchmark > 0;
   });
 
+  const handleEmployeeClick = (employeeId: string) => {
+    navigate(`/employee/${employeeId}`);
+  };
+
   const renderEmployeeList = (employee: typeof employees[0], index: number) => {
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
@@ -67,7 +72,10 @@ export const EmployeeOverview = () => {
           />
         </Avatar>
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-primary truncate group-hover:text-primary-accent transition-colors">
+          <p 
+            onClick={() => handleEmployeeClick(employee.id)}
+            className="font-medium text-primary truncate group-hover:text-primary-accent transition-colors cursor-pointer hover:underline"
+          >
             {employee.name}
           </p>
           <p className="text-sm text-muted-foreground truncate">
