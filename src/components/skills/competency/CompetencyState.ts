@@ -155,18 +155,26 @@ export const useCompetencyStore = create<CompetencyState>()(
     {
       name: 'competency-storage',
       storage: {
-        getItem: async (name): Promise<string | null> => {
+        getItem: async (name): Promise<StorageValue<CompetencyState> | null> => {
           const roleId = localStorage.getItem('currentRoleId') || '126';
           const storageKey = getStorageKey(roleId);
           const value = localStorage.getItem(storageKey);
           console.log('Loading stored competency states:', { roleId, storageKey, value });
-          return value;
+          
+          if (!value) return null;
+          
+          try {
+            return JSON.parse(value) as StorageValue<CompetencyState>;
+          } catch (error) {
+            console.error('Error parsing stored value:', error);
+            return null;
+          }
         },
-        setItem: async (name, value) => {
+        setItem: async (name, value: StorageValue<CompetencyState>) => {
           const roleId = localStorage.getItem('currentRoleId') || '126';
           const storageKey = getStorageKey(roleId);
           console.log('Persisting competency states:', { roleId, storageKey, value });
-          localStorage.setItem(storageKey, value);
+          localStorage.setItem(storageKey, JSON.stringify(value));
         },
         removeItem: async (name) => {
           const roleId = localStorage.getItem('currentRoleId') || '126';
@@ -178,3 +186,8 @@ export const useCompetencyStore = create<CompetencyState>()(
     }
   )
 );
+
+type StorageValue<T> = {
+  state: T;
+  version: number;
+};
