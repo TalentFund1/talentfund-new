@@ -1,32 +1,10 @@
 export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
-  // Create dates in UTC using current date
-  const now = new Date();
-  const oneYearAgo = new Date(now);
-  oneYearAgo.setFullYear(now.getFullYear() - 1);
-  
-  // Normalize dates to start of day for accurate comparison
-  now.setUTCHours(0, 0, 0, 0);
-  oneYearAgo.setUTCHours(0, 0, 0, 0);
-  
   console.log('Calculating employees added in the last year...');
-  console.log('One year ago:', oneYearAgo.toISOString());
-  console.log('Today:', now.toISOString());
   
   const employeesAddedLastYear = filteredEmployees.filter(employee => {
-    if (!employee.startDate) return false;
-    
-    // Create date in UTC
-    const startDate = new Date(employee.startDate);
-    startDate.setUTCHours(0, 0, 0, 0);
-    
-    console.log(`Employee ${employee.name} start date:`, startDate.toISOString());
-    console.log(`One year ago date for comparison:`, oneYearAgo.toISOString());
-    
-    // Check if start date is after one year ago (exclusive)
-    const isInLastYear = startDate > oneYearAgo;
-    console.log(`${employee.name} start date > one year ago:`, isInLastYear);
-    
-    return isInLastYear;
+    const wasAddedLastYear = employee.addedPastYear === 'YES';
+    console.log(`Employee ${employee.name} added past year:`, wasAddedLastYear);
+    return wasAddedLastYear;
   });
 
   console.log('Employees added in last year:', employeesAddedLastYear.map(e => e.name));

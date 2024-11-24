@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
-import { Users, Equal, Clock } from "lucide-react";
+import { Users, UserPlus, Equal, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { EmployeeFilters } from "@/components/EmployeeFilters";
@@ -9,6 +9,7 @@ import { EmployeeTable, employees, getBaseRole } from "@/components/EmployeeTabl
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
+import { getEmployeesAddedLastYear } from "@/components/employee/EmployeeUtils";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -119,11 +120,16 @@ const Employees = () => {
             />
           </Card>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               title="Total Number of Employees"
               value={totalEmployees}
               icon={<Users className="h-6 w-6 text-primary-icon" />}
+            />
+            <StatCard
+              title="Added in Past 1 year"
+              value={getEmployeesAddedLastYear(filteredEmployees)}
+              icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Share of Female Employees"

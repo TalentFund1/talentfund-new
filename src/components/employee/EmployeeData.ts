@@ -23,7 +23,8 @@ export const employees: Employee[] = [
     manager: "Sus Manu",
     startDate: "2023-05-15",
     office: "Toronto",
-    termDate: "-"
+    termDate: "-",
+    addedPastYear: "NO"
   },
   {
     id: "124",
@@ -39,7 +40,8 @@ export const employees: Employee[] = [
     manager: "Sus Manu",
     startDate: "2024-01-10",
     office: "Toronto",
-    termDate: "-"
+    termDate: "-",
+    addedPastYear: "YES"
   },
   {
     id: "125",
@@ -55,7 +57,8 @@ export const employees: Employee[] = [
     manager: "Sus Manu",
     startDate: "2023-08-22",
     office: "Toronto",
-    termDate: "-"
+    termDate: "-",
+    addedPastYear: "NO"
   },
   {
     id: "126",
@@ -71,6 +74,7 @@ export const employees: Employee[] = [
     manager: "Sarah Chen",
     startDate: "2022-11-01",
     office: "Toronto",
-    termDate: "-"
+    termDate: "-",
+    addedPastYear: "NO"
   }
 ];
