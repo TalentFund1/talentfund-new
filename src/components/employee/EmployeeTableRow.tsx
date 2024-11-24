@@ -30,8 +30,11 @@ export const EmployeeTableRow = ({
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employee.id);
 
-  // Get the role ID for the current employee's role
-  const roleId = getSkillProfileId(employee.role);
+  // Get the role ID for the selected job title or current employee's role
+  const roleId = selectedJobTitle.length > 0 
+    ? getSkillProfileId(selectedJobTitle[0])
+    : getSkillProfileId(employee.role);
+    
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
   const isExactMatch = selectedJobTitle.length > 0 && 
@@ -41,32 +44,35 @@ export const EmployeeTableRow = ({
   const getMatchingSkillsCount = () => {
     if (!currentRoleSkills) return '0 / 0';
 
+    // Get all skills for the role being compared against
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
 
-    const matchingSkills = allRoleSkills.filter(roleSkill => {
+    // Filter to only required skills
+    const requiredSkills = allRoleSkills.filter(skill => 
+      skill.requirement === 'required'
+    );
+
+    // Count matching required skills
+    const matchingSkills = requiredSkills.filter(roleSkill => {
       const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
       return employeeSkill !== undefined;
     });
 
-    // Special case for Frontend Engineer (Anna)
-    if (employee.id === "125" && employee.role.includes("Frontend Engineer")) {
-      return "2 / 3";
-    }
+    console.log('Skill match calculation:', {
+      employeeName: employee.name,
+      roleId,
+      totalRequired: requiredSkills.length,
+      matching: matchingSkills.length,
+      employeeSkills: employeeSkills.map(s => s.title),
+      requiredSkills: requiredSkills.map(s => s.title)
+    });
 
-    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+    return `${matchingSkills.length} / ${requiredSkills.length}`;
   };
-
-  console.log('Employee row rendered:', {
-    employeeId: employee.id,
-    role: employee.role,
-    mappedRoleId: roleId,
-    isExactMatch,
-    skillCount: getMatchingSkillsCount()
-  });
 
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
