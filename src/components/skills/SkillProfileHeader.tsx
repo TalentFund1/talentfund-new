@@ -4,15 +4,17 @@ import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { roleSkills } from './data/roleSkills';
+import { useParams } from 'react-router-dom';
 
 interface SkillProfileHeaderProps {
-  id?: string;
   jobTitle: string;
 }
 
-export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
+export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { toggledSkills } = useToggledSkills();
+  const { id } = useParams<{ id: string }>();
+  const currentRoleId = id || '';
   
   const formatTitle = (title: string) => {
     return title.split(' ').map(word => {
@@ -22,7 +24,12 @@ export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: Ski
   };
 
   const calculateAveragePrice = () => {
-    const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
+    if (!currentRoleSkills) {
+      console.warn('No skills found for role:', currentRoleId);
+      return 0;
+    }
+
     const allSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
@@ -58,7 +65,7 @@ export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: Ski
         <div className="space-y-1">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-semibold text-foreground">{formatTitle(jobTitle)}</h1>
-            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: {id}</span>
+            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: {currentRoleId}</span>
           </div>
         </div>
 
