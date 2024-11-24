@@ -40,7 +40,6 @@ const initializeSkillStates = (roleId: string) => {
     }
   }
 
-  // Initialize with default values if no saved states
   console.log('Initializing with default states');
   const states: Record<string, Record<string, SkillState>> = {};
   
@@ -120,20 +119,16 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
       saveChanges: () => {
-        set((state) => {
-          return {
-            originalStates: { ...state.currentStates },
-            hasChanges: false,
-          };
-        });
+        set((state) => ({
+          originalStates: { ...state.currentStates },
+          hasChanges: false,
+        }));
       },
       cancelChanges: () => {
-        set((state) => {
-          return {
-            currentStates: { ...state.originalStates },
-            hasChanges: false,
-          };
-        });
+        set((state) => ({
+          currentStates: { ...state.originalStates },
+          hasChanges: false,
+        }));
       },
     }),
     {
@@ -148,7 +143,9 @@ export const useCompetencyStore = create<CompetencyState>()(
           if (!value) return null;
           
           try {
-            return JSON.parse(value) as StorageValue;
+            const parsed = JSON.parse(value);
+            console.log('Successfully parsed stored value:', parsed);
+            return parsed as StorageValue;
           } catch (error) {
             console.error('Error parsing stored value:', error);
             return null;
