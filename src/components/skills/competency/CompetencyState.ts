@@ -27,7 +27,7 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       setCurrentRole: (roleId: string) => {
         console.log('Setting current role:', roleId);
-        const existingStates = get().currentStates[roleId] || initializeSkillStates(roleId);
+        const existingStates = get().currentStates[roleId] || { [roleId]: initializeSkillStates(roleId) };
         
         set({
           currentRoleId: roleId,
@@ -37,25 +37,29 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
 
-      setSkillState: (skillTitle, level, levelKey, required) => {
+      setSkillState: (skillTitle, level, levelKey, requirement) => {
         const state = get();
         if (!state.currentRoleId) {
           console.error('No current role ID set');
           return;
         }
 
-        console.log('Setting skill state:', { skillTitle, level, levelKey, required });
+        console.log('Setting skill state:', { skillTitle, level, levelKey, requirement });
         
         set((state) => {
+          const roleId = state.currentRoleId!;
           const newStates = {
             ...state.currentStates,
-            [skillTitle]: {
-              ...(state.currentStates[skillTitle] || {}),
-              [levelKey]: { level, required },
-            },
+            [roleId]: {
+              ...(state.currentStates[roleId] || {}),
+              [skillTitle]: {
+                ...(state.currentStates[roleId]?.[skillTitle] || {}),
+                [levelKey]: { level, required: requirement }
+              }
+            }
           };
-          
-          return { 
+
+          return {
             currentStates: newStates,
             hasChanges: JSON.stringify(newStates) !== JSON.stringify(state.originalStates)
           };
@@ -63,16 +67,11 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       saveChanges: () => {
-        const state = get();
-        if (!state.currentRoleId) {
-          console.error('No current role ID set');
-          return;
-        }
-
         console.log('Saving changes');
-        set({ 
+        const state = get();
+        set({
           originalStates: { ...state.currentStates },
-          hasChanges: false 
+          hasChanges: false
         });
       },
 
@@ -81,7 +80,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         const state = get();
         set({
           currentStates: { ...state.originalStates },
-          hasChanges: false,
+          hasChanges: false
         });
       },
 
@@ -89,8 +88,12 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Initializing states for role:', roleId);
         const state = get();
         
-        if (state.currentRoleId !== roleId || !state.currentStates[roleId]) {
-          const initializedStates = initializeSkillStates(roleId);
+        if (!state.currentStates[roleId]) {
+          const initializedStates = {
+            ...state.currentStates,
+            [roleId]: initializeSkillStates(roleId)
+          };
+          
           set({
             currentRoleId: roleId,
             currentStates: initializedStates,

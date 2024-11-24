@@ -8,7 +8,9 @@ export interface SkillState {
 }
 
 export interface RoleCompetencyState {
-  [skillName: string]: SkillState;
+  [roleId: string]: {
+    [skillName: string]: SkillState;
+  };
 }
 
 export interface CompetencyStorage {
