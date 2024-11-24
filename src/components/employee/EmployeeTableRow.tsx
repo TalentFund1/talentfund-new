@@ -113,9 +113,12 @@ export const EmployeeTableRow = ({
 
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
 
+  const shouldShowExactMatch = (isExactSkillMatch || isExactMatch) && 
+    (selectedSkills.length > 0 || selectedJobTitle.length > 0);
+
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
-      isExactMatch || isExactSkillMatch ? 'bg-blue-50/50' : ''
+      shouldShowExactMatch ? 'bg-blue-50/50' : ''
     }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
@@ -136,7 +139,7 @@ export const EmployeeTableRow = ({
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
-            {isExactSkillMatch && selectedSkills.length > 0 && (
+            {shouldShowExactMatch && (
               <Badge 
                 variant="secondary" 
                 className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
@@ -149,23 +152,12 @@ export const EmployeeTableRow = ({
         </div>
       </td>
       <td className="px-4 py-4 w-[250px]">
-        <div className="flex items-center gap-2">
-          <Link 
-            to={`/skills/${roleId}`} 
-            className="text-sm text-primary hover:text-primary-accent transition-colors"
-          >
-            {employee.role}
-          </Link>
-          {isExactMatch && (
-            <Badge 
-              variant="secondary" 
-              className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
-            >
-              <CheckCircle2 className="w-3 h-3" />
-              Exact Match
-            </Badge>
-          )}
-        </div>
+        <Link 
+          to={`/skills/${roleId}`} 
+          className="text-sm text-primary hover:text-primary-accent transition-colors"
+        >
+          {employee.role}
+        </Link>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
