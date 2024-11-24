@@ -41,18 +41,28 @@ export const EmployeeTableRow = ({
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
 
+  // Updated getMatchingSkillsCount to handle exact matches
   const getMatchingSkillsCount = () => {
+    // If specific skills are selected, count matches against those
     if (selectedSkills.length > 0) {
       const matchingSkills = selectedSkills.filter(skillName => {
         return employeeSkills.some(empSkill => empSkill.title === skillName);
       });
       
+      console.log('Selected skills match calculation:', {
+        employeeName: employee.name,
+        selectedSkills,
+        employeeSkills: employeeSkills.map(s => s.title),
+        matchingCount: matchingSkills.length
+      });
+
       return {
         count: `${matchingSkills.length} / ${selectedSkills.length}`,
         isExactSkillMatch: matchingSkills.length === selectedSkills.length && selectedSkills.length > 0
       };
     }
 
+    // Default behavior when no specific skills are selected
     if (!currentRoleSkills) return { count: '0 / 0', isExactSkillMatch: false };
 
     const allRoleSkills = [
@@ -115,7 +125,7 @@ export const EmployeeTableRow = ({
 
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
-      isExactMatch || isExactSkillMatch ? 'bg-blue-50/50' : ''
+      isExactMatch ? 'bg-blue-50/50' : ''
     }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
@@ -136,7 +146,7 @@ export const EmployeeTableRow = ({
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
-            {isExactSkillMatch && selectedSkills.length > 0 && (
+            {isExactMatch && (
               <Badge 
                 variant="secondary" 
                 className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
@@ -156,7 +166,7 @@ export const EmployeeTableRow = ({
           >
             {employee.role}
           </Link>
-          {isExactMatch && (
+          {isExactSkillMatch && selectedSkills.length > 0 && (
             <Badge 
               variant="secondary" 
               className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
