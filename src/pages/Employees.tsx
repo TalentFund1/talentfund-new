@@ -127,7 +127,16 @@ const Employees = () => {
             />
             <StatCard
               title="Added in Past 1 year"
-              value={getEmployeesAddedLastYear()}
+              value={getEmployeesAddedLastYear(
+                selectedEmployees,
+                selectedDepartment,
+                selectedJobTitle,
+                selectedLevel,
+                selectedOffice,
+                selectedEmploymentType,
+                selectedSkills,
+                selectedManager
+              )}
               icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
