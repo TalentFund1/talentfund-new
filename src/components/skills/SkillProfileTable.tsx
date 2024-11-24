@@ -66,42 +66,31 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredRows.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={7} className="h-32 text-center">
-                <div className="flex flex-col items-center justify-center text-muted-foreground">
-                  <p className="text-sm">No skill profiles found for the selected function.</p>
-                  <p className="text-sm mt-1">Try selecting a different function or clearing the filters.</p>
-                </div>
+          {filteredRows.map((row) => (
+            <TableRow key={row.id} className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+              <TableCell className="align-middle">
+                <input 
+                  type="checkbox" 
+                  className="rounded border-gray-300"
+                  checked={selectedRows.includes(row.id)}
+                  onChange={() => handleSelectRow(row.id)}
+                />
               </TableCell>
+              <TableCell className="align-middle font-medium">
+                <Link 
+                  to={`/skills/${row.id}`} 
+                  className="text-primary hover:text-primary-accent transition-colors no-underline"
+                >
+                  {row.name}
+                </Link>
+              </TableCell>
+              <TableCell className="align-middle">{row.function}</TableCell>
+              <TableCell className="text-center align-middle">{row.skillCount}</TableCell>
+              <TableCell className="text-center align-middle">{row.employees}</TableCell>
+              <TableCell className="text-center align-middle">{row.matches}</TableCell>
+              <TableCell className="text-right align-middle text-muted-foreground">{row.lastUpdated}</TableCell>
             </TableRow>
-          ) : (
-            filteredRows.map((row) => (
-              <TableRow key={row.id} className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
-                <TableCell className="align-middle">
-                  <input 
-                    type="checkbox" 
-                    className="rounded border-gray-300"
-                    checked={selectedRows.includes(row.id)}
-                    onChange={() => handleSelectRow(row.id)}
-                  />
-                </TableCell>
-                <TableCell className="align-middle font-medium">
-                  <Link 
-                    to={`/skills/${row.id}`} 
-                    className="text-primary hover:text-primary-accent transition-colors no-underline"
-                  >
-                    {row.name}
-                  </Link>
-                </TableCell>
-                <TableCell className="align-middle">{row.function}</TableCell>
-                <TableCell className="text-center align-middle">{row.skillCount}</TableCell>
-                <TableCell className="text-center align-middle">{row.employees}</TableCell>
-                <TableCell className="text-center align-middle">{row.matches}</TableCell>
-                <TableCell className="text-right align-middle text-muted-foreground">{row.lastUpdated}</TableCell>
-              </TableRow>
-            ))
-          )}
+          ))}
         </TableBody>
       </Table>
     </div>
