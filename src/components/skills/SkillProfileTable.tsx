@@ -55,7 +55,7 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
             </TableHead>
             <TableHead className="w-[22%] h-12">
               <div className="flex items-center gap-1">
-                Role Name <ChevronDown className="h-4 w-4" />
+                Job Title <ChevronDown className="h-4 w-4" />
               </div>
             </TableHead>
             <TableHead className="w-[18%] h-12">Function</TableHead>
