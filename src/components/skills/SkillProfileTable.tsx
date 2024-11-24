@@ -32,7 +32,7 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
     });
   };
 
-  // Filter rows based on selected function only if a function is selected
+  // Filter rows based on selected function
   const filteredRows = selectedFunction 
     ? rows.filter(row => row.function.toLowerCase() === selectedFunction.toLowerCase())
     : rows;
