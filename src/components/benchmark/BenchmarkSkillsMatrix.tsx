@@ -151,14 +151,40 @@ export const BenchmarkSkillsMatrix = () => {
       return a.title.localeCompare(b.title);
     });
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        // Only trigger if we haven't shown all items yet
+        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
+          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [visibleItems, filteredSkills.length]);
+
+  const paginatedSkills = filteredSkills.slice(0, visibleItems);
+  const hasMoreItems = visibleItems < filteredSkills.length;
+
   return (
     <div className="space-y-6">
-      <Card className="p-8 bg-white space-y-8">
+      <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <BenchmarkSkillsMatrixContent 
           roleId={selectedRole}
           employeeId={id || ""}
           roleLevel={roleLevel}
-          filteredSkills={filteredSkills}
+          filteredSkills={paginatedSkills}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedLevel={selectedLevel}
