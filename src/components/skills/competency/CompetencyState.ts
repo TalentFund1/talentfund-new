@@ -4,28 +4,14 @@ import { aiSkills } from '../data/skills/aiSkills';
 import { backendSkills } from '../data/skills/backendSkills';
 import { commonSkills } from '../data/skills/commonSkills';
 import { certificationSkills } from '../data/skills/certificationSkills';
-
-interface SkillState {
-  level: string;
-  required: string;
-}
-
-interface CompetencyState {
-  originalStates: Record<string, Record<string, SkillState>>;
-  currentStates: Record<string, Record<string, SkillState>>;
-  hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, levelKey: string, requirement: string) => void;
-  saveChanges: () => void;
-  cancelChanges: () => void;
-  initializeStates: (roleId: string) => void;
-}
+import { CompetencyState, SkillLevel, RequirementType, RoleCompetencyState } from '../types/CompetencyTypes';
 
 const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
 
-const initializeSkillStates = (roleId: string) => {
+const initializeSkillStates = (roleId: string): RoleCompetencyState => {
   console.log('Initializing competency states for role:', roleId);
   
-  const states: Record<string, Record<string, SkillState>> = {};
+  const states: RoleCompetencyState = {};
   
   const allSkills = [
     ...aiSkills,
@@ -41,8 +27,8 @@ const initializeSkillStates = (roleId: string) => {
     if (skill.professionalTrack) {
       Object.entries(skill.professionalTrack).forEach(([level, state]) => {
         states[skill.title][level.toLowerCase()] = {
-          level: state.level,
-          required: state.requirement
+          level: "unspecified",
+          required: "preferred"
         };
       });
     }
@@ -50,8 +36,8 @@ const initializeSkillStates = (roleId: string) => {
     if (skill.managerialTrack) {
       Object.entries(skill.managerialTrack).forEach(([level, state]) => {
         states[skill.title][level.toLowerCase()] = {
-          level: state.level,
-          required: state.requirement
+          level: "unspecified",
+          required: "preferred"
         };
       });
     }
@@ -77,15 +63,26 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
         console.log('States initialized:', initializedStates);
       },
-      setSkillState: (skillName, level, levelKey, required) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, required });
+      resetToDefaults: () => {
+        console.log('Resetting all states to defaults');
+        const roleId = localStorage.getItem('currentRoleId') || '123';
+        const initializedStates = initializeSkillStates(roleId);
+        set({
+          currentStates: initializedStates,
+          originalStates: initializedStates,
+          hasChanges: false
+        });
+        console.log('States reset to defaults:', initializedStates);
+      },
+      setSkillState: (skillTitle: string, level: SkillLevel, levelKey: string, requirement: RequirementType) => {
+        console.log('Setting skill state:', { skillTitle, level, levelKey, requirement });
         
         set((state) => {
           const newStates = {
             ...state.currentStates,
-            [skillName]: {
-              ...(state.currentStates[skillName] || {}),
-              [levelKey]: { level, required },
+            [skillTitle]: {
+              ...(state.currentStates[skillTitle] || {}),
+              [levelKey]: { level, required: requirement },
             },
           };
           
