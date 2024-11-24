@@ -103,7 +103,7 @@ export const SkillProfileTable = ({
             </TableHead>
             <TableHead className="w-[18%] h-12">Function</TableHead>
             <TableHead className="w-[15%] text-center h-12">Skill Count</TableHead>
-            <TableHead className="w-[15%] text-center h-12">Employees</TableHead>
+            <TableHead className="w-[15%] text-center h-12">Employee Match</TableHead>
             <TableHead className="w-[15%] text-center h-12">Market Pricer</TableHead>
             <TableHead className="w-[10%] text-right whitespace-nowrap h-12">Last Updated</TableHead>
           </TableRow>
