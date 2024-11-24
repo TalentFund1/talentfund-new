@@ -27,7 +27,6 @@ export const SkillProfileTable = ({
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
-  // Get exact role matches for each profile
   const getExactRoleMatches = (roleName: string) => {
     return employees.filter(emp => getBaseRole(emp.role) === roleName).length;
   };
@@ -51,7 +50,13 @@ export const SkillProfileTable = ({
     const sum = benchmarks.reduce((acc, val) => acc + val, 0);
     return Math.round(sum / benchmarks.length);
   };
-  
+
+  const getBenchmarkColor = (benchmark: number) => {
+    if (benchmark >= 90) return 'bg-green-100 text-green-800';
+    if (benchmark >= 70) return 'bg-orange-100 text-orange-800';
+    return 'bg-red-100 text-red-800';
+  };
+
   const rows: SkillProfileRow[] = [
     { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: String(getExactRoleMatches("AI Engineer")), matches: `${calculateAverageBenchmark("123", "AI Engineer")}%`, lastUpdated: "10/20/24" },
     { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: String(getExactRoleMatches("Backend Engineer")), matches: `${calculateAverageBenchmark("124", "Backend Engineer")}%`, lastUpdated: "10/20/24" },
@@ -73,26 +78,10 @@ export const SkillProfileTable = ({
     });
   };
 
-  // Calculate toggled skills count for a role
-  const getToggledSkillsCount = (roleId: string) => {
-    const profileSkills = roleSkills[roleId as keyof typeof roleSkills];
-    if (!profileSkills) return 0;
-
-    const allProfileSkills = [
-      ...profileSkills.specialized,
-      ...profileSkills.common,
-      ...profileSkills.certifications
-    ];
-
-    return allProfileSkills.filter(skill => toggledSkills.has(skill.title)).length;
-  };
-
-  // Filter rows based on selected criteria
   const filteredRows = rows.filter(row => {
     const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
     const matchesJobTitle = !selectedJobTitle || row.name.toLowerCase() === selectedJobTitle.toLowerCase();
     
-    // Check if profile has any of the selected skills
     const profileSkills = roleSkills[row.id as keyof typeof roleSkills] || { specialized: [], common: [], certifications: [] };
     const allProfileSkills = [
       ...profileSkills.specialized,
@@ -108,9 +97,6 @@ export const SkillProfileTable = ({
 
     return matchesFunction && matchesJobTitle && hasSelectedSkills;
   });
-
-  console.log('Filtering profiles with:', { selectedFunction, selectedSkills, selectedJobTitle });
-  console.log('Filtered rows:', filteredRows);
 
   return (
     <div className="space-y-4">
@@ -168,9 +154,7 @@ export const SkillProfileTable = ({
                 <TableCell className="text-center align-middle">{row.employees}</TableCell>
                 <TableCell className="text-center align-middle">
                   <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
-                    parseInt(row.matches) >= 90 ? 'bg-green-100 text-green-800' : 
-                    parseInt(row.matches) >= 70 ? 'bg-yellow-100 text-yellow-800' : 
-                    'bg-red-100 text-red-800'
+                    getBenchmarkColor(parseInt(row.matches))
                   }`}>
                     {row.matches}
                   </span>
