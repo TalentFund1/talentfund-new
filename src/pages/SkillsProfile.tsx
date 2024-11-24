@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { StatCard } from "@/components/StatCard";
-import { Users, Briefcase, Equal, Clock, ChevronLeft, ChevronRight } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
-import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { technicalSkills, softSkills } from '@/components/skillsData';
-import { jobTitles } from '@/components/skills/competency/skillProfileData';
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Define company functions/departments
 const companyFunctions = [
@@ -48,11 +44,6 @@ const SkillsProfile = () => {
     return selectedJobTitles.some(title => project.title.toLowerCase() === title.toLowerCase());
   });
 
-  console.log('Available job titles:', jobTitleOptions);
-  console.log('Selected job titles:', selectedJobTitles);
-  console.log('Selected skills:', selectedSkills);
-  console.log('Filtered projects:', filteredProjects);
-
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -67,7 +58,7 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
-            <div className="space-y-4">
+            <div className="space-y-3">
               <SearchFilter
                 label=""
                 placeholder="Search skills..."
