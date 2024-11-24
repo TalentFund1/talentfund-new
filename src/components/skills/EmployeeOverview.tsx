@@ -42,12 +42,6 @@ export const EmployeeOverview = () => {
     navigate(`/employee/${employeeId}?tab=benchmark`);
   };
 
-  const getBenchmarkColor = (benchmark: number) => {
-    if (benchmark >= 90) return 'bg-green-100 text-green-800';
-    if (benchmark >= 70) return 'bg-primary-icon/10 text-primary-icon';
-    return 'bg-red-100 text-red-800';
-  };
-
   const renderEmployeeList = (employee: typeof employees[0], index: number) => {
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
@@ -81,7 +75,7 @@ export const EmployeeOverview = () => {
             {employee.role}
           </p>
         </div>
-        <span className={`text-sm px-2.5 py-1 rounded-full font-medium ${getBenchmarkColor(benchmark)}`}>
+        <span className="text-sm px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-medium">
           {Math.round(benchmark)}%
         </span>
       </div>
