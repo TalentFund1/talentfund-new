@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { SkillCell } from "./competency/SkillCell";
@@ -14,8 +15,6 @@ import { roleSkills } from "./data/roleSkills";
 import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
 import { CompetencyGraphHeader } from "./competency/CompetencyGraphHeader";
 import { CompetencyGraphTable } from "./competency/CompetencyGraphTable";
-import { SkillProgressionChart } from "./competency/SkillProgressionChart";
-import { Card } from "@/components/ui/card";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -93,22 +92,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
           </Button>
         </div>
       </div>
-
-      <Card className="p-6 mb-8">
-        <div className="mb-4">
-          <h4 className="text-lg font-semibold text-foreground">Skills Progression Overview</h4>
-          <p className="text-sm text-muted-foreground">
-            Visualization of skill levels and requirements across career progression
-          </p>
-        </div>
-        <div className="h-[400px]">
-          <SkillProgressionChart 
-            track={track} 
-            currentRoleId={currentRoleId}
-            toggledSkills={toggledSkills}
-          />
-        </div>
-      </Card>
 
       <CategorySection 
         selectedCategory={selectedCategory}
