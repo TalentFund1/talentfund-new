@@ -7,10 +7,12 @@ export interface SkillState {
   [levelKey: string]: SkillLevelState;
 }
 
+export interface RoleSkillState {
+  [skillName: string]: SkillState;
+}
+
 export interface RoleCompetencyState {
-  [roleId: string]: {
-    [skillName: string]: SkillState;
-  };
+  [roleId: string]: RoleSkillState;
 }
 
 export interface CompetencyStorage {

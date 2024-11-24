@@ -10,12 +10,18 @@ interface CompetencyState {
   hasChanges: boolean;
   setCurrentRole: (roleId: string) => void;
   setSkillState: (skillTitle: string, level: string, levelKey: string, requirement: string) => void;
+  resetAllStates: () => void;
   saveChanges: () => void;
   cancelChanges: () => void;
   initializeStates: (roleId: string) => void;
 }
 
 const STORAGE_KEY = 'competency-matrix-storage';
+
+const DEFAULT_SKILL_STATE = {
+  level: 'unspecified',
+  required: 'preferred'
+};
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -63,6 +69,32 @@ export const useCompetencyStore = create<CompetencyState>()(
             currentStates: newStates,
             hasChanges: JSON.stringify(newStates) !== JSON.stringify(state.originalStates)
           };
+        });
+      },
+
+      resetAllStates: () => {
+        const state = get();
+        if (!state.currentRoleId) {
+          console.error('No current role ID set');
+          return;
+        }
+
+        console.log('Resetting all states to default');
+        
+        const currentSkills = state.currentStates[state.currentRoleId] || {};
+        const resetStates: RoleCompetencyState = {
+          [state.currentRoleId]: Object.keys(currentSkills).reduce((acc, skillTitle) => {
+            acc[skillTitle] = Object.keys(currentSkills[skillTitle] || {}).reduce((levelAcc, levelKey) => {
+              levelAcc[levelKey] = { ...DEFAULT_SKILL_STATE };
+              return levelAcc;
+            }, {} as Record<string, typeof DEFAULT_SKILL_STATE>);
+            return acc;
+          }, {} as Record<string, Record<string, typeof DEFAULT_SKILL_STATE>>)
+        };
+
+        set({
+          currentStates: resetStates,
+          hasChanges: true
         });
       },
 
