@@ -12,34 +12,34 @@ export const LevelFilter = ({ onLevelChange, selectedLevel, selectedJobTitle }: 
 
   const getLevelsForTrack = () => {
     if (isManagerialTrack) {
-      return ["M3", "M4", "M5", "M6"];
+      return [
+        "M3 - Manager",
+        "M4 - Senior Manager",
+        "M5 - Director",
+        "M6 - Senior Director"
+      ];
     }
-    return ["P1", "P2", "P3", "P4", "P5", "P6"];
+    return [
+      "P1 - Entry",
+      "P2 - Developing",
+      "P3 - Career",
+      "P4 - Senior",
+      "P5 - Expert",
+      "P6 - Principal"
+    ];
   };
 
-  const getLevelDescription = (level: string) => {
-    const descriptions: Record<string, string> = {
-      "P1": "Entry",
-      "P2": "Developing",
-      "P3": "Career",
-      "P4": "Senior",
-      "P5": "Expert",
-      "P6": "Principal",
-      "M3": "Manager",
-      "M4": "Senior Manager",
-      "M5": "Director",
-      "M6": "Senior Director"
-    };
-    return descriptions[level] || level;
+  const formatLevel = (level: string) => {
+    return level.split(' - ')[0];
   };
 
   return (
     <SearchFilter
       label=""
       placeholder="Level"
-      items={getLevelsForTrack().map(level => `${level} - ${getLevelDescription(level)}`)}
+      items={getLevelsForTrack()}
       selectedItems={selectedLevel}
-      onItemsChange={onLevelChange}
+      onItemsChange={(items) => onLevelChange(items.map(formatLevel))}
       singleSelect={false}
       className="w-[180px]"
     />
