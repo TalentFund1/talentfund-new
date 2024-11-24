@@ -68,12 +68,17 @@ const Employees = () => {
   };
 
   // Calculate average tenure for matching profiles
-  const averageTenure = calculateAverageTenure(filteredEmployees);
+  const relevantEmployeesForTenure = selectedJobTitle.length > 0
+    ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0])
+    : filteredEmployees;
+  
+  const averageTenure = calculateAverageTenure(relevantEmployeesForTenure);
 
   console.log('Calculating average tenure:', {
-    filteredEmployees: filteredEmployees.length,
+    totalEmployees: filteredEmployees.length,
+    relevantEmployees: relevantEmployeesForTenure.length,
     averageTenure,
-    employeeTenures: filteredEmployees.map(emp => ({
+    employeeTenures: relevantEmployeesForTenure.map(emp => ({
       name: emp.name,
       startDate: emp.startDate,
       tenure: calculateAverageTenure([emp])
