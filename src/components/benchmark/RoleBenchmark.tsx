@@ -23,7 +23,7 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "123",
+  selectedRole: "",  // Remove hardcoded "123"
   setSelectedRole: (role) => set({ selectedRole: role }),
   selectedLevel: "p4",
   setSelectedLevel: (level) => set({ selectedLevel: level }),
@@ -45,7 +45,7 @@ export const RoleBenchmark = () => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { id } = useParams<{ id: string }>();
-  const employeeSkills = getEmployeeSkills(id || "123");
+  const employeeSkills = getEmployeeSkills(id || "");
 
   // Find the employee and get their role
   const employee = employees.find(emp => emp.id === id);
@@ -62,7 +62,11 @@ export const RoleBenchmark = () => {
   }, [employee, setSelectedRole, setRoleLevel]);
 
   const currentTrack = getTrackForRole(selectedRole);
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  if (!currentRoleSkills) {
+    console.error('No role skills found for role:', selectedRole);
+    return null;
+  }
 
   useEffect(() => {
     if (currentTrack === "Professional" && roleLevel.toLowerCase().startsWith("m")) {

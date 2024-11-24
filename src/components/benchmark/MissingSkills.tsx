@@ -15,7 +15,12 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useCompetencyStore();
   const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  
+  if (!currentRoleSkills) {
+    console.error('No role skills found for role:', roleId);
+    return null;
+  }
 
   // Get all required and preferred skills for the role
   const allRoleSkills = [
