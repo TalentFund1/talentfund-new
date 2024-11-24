@@ -32,7 +32,6 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employee.id);
 
-  // Get the role ID for the selected job title or current employee's role
   const roleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
@@ -42,30 +41,36 @@ export const EmployeeTableRow = ({
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
 
-  // Calculate matching skills count using the same logic as benchmark analysis
+  // Updated getMatchingSkillsCount to handle selected skills
   const getMatchingSkillsCount = () => {
+    // If specific skills are selected, count matches against those
+    if (selectedSkills.length > 0) {
+      const matchingSkills = selectedSkills.filter(skillName => {
+        return employeeSkills.some(empSkill => empSkill.title === skillName);
+      });
+      
+      console.log('Selected skills match calculation:', {
+        employeeName: employee.name,
+        selectedSkills,
+        employeeSkills: employeeSkills.map(s => s.title),
+        matchingCount: matchingSkills.length
+      });
+
+      return `${matchingSkills.length} / ${selectedSkills.length}`;
+    }
+
+    // Default behavior when no specific skills are selected
     if (!currentRoleSkills) return '0 / 0';
 
-    // Get all role skills that are toggled
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ].filter(skill => toggledSkills.has(skill.title));
 
-    // Count matching skills
     const matchingSkills = allRoleSkills.filter(roleSkill => {
       const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
       return employeeSkill !== undefined;
-    });
-
-    console.log('Skill match calculation:', {
-      employeeName: employee.name,
-      roleId,
-      totalSkills: allRoleSkills.length,
-      matching: matchingSkills.length,
-      employeeSkills: employeeSkills.map(s => s.title),
-      roleSkills: allRoleSkills.map(s => s.title)
     });
 
     return `${matchingSkills.length} / ${allRoleSkills.length}`;
