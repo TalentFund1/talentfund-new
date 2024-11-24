@@ -45,44 +45,25 @@ export const SkillProgressionChart = ({ track, currentRoleId, toggledSkills }: S
     return dataPoint;
   });
 
-  // Updated color palette to match website theme
   const colors = [
-    "#8073ec", // Primary accent
-    "#ff8256", // Primary icon
-    "#1F2144", // Primary
-    "#6B7280", // Muted text
-    "#9333EA", // Additional purple
-    "#4F46E5", // Additional indigo
-    "#2563EB", // Additional blue
-    "#0EA5E9", // Additional light blue
+    "#8073ec", "#FF6B6B", "#4ECDC4", "#45B7D1", 
+    "#96CEB4", "#FFEEAD", "#D4A5A5", "#9B5DE5",
+    "#F15BB5", "#00BBF9", "#00F5D4", "#FEE440"
   ];
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart 
-        data={chartData} 
-        margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-        className="font-inter"
-      >
-        <CartesianGrid 
-          strokeDasharray="3 3" 
-          className="stroke-border/30" 
-          horizontal={true}
-          vertical={false}
-        />
+      <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
+        <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
         <XAxis 
           dataKey="level" 
           stroke="#1F2144"
           fontSize={12}
-          tickLine={false}
-          axisLine={{ stroke: '#CCDBFF' }}
         />
         <YAxis 
           stroke="#1F2144"
           fontSize={12}
           ticks={[0, 1, 2, 3]}
-          tickLine={false}
-          axisLine={{ stroke: '#CCDBFF' }}
           tickFormatter={(value) => {
             const labels = ['Unspecified', 'Beginner', 'Intermediate', 'Advanced'];
             return labels[value] || '';
@@ -92,52 +73,19 @@ export const SkillProgressionChart = ({ track, currentRoleId, toggledSkills }: S
           contentStyle={{ 
             background: 'white',
             border: '1px solid #CCDBFF',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-            padding: '12px'
-          }}
-          itemStyle={{
-            color: '#1F2144',
-            fontSize: '12px',
-            fontWeight: 500
-          }}
-          labelStyle={{
-            color: '#1F2144',
-            fontSize: '12px',
-            fontWeight: 600,
-            marginBottom: '4px'
+            borderRadius: '6px'
           }}
         />
-        <Legend 
-          verticalAlign="bottom" 
-          height={36}
-          iconType="circle"
-          iconSize={8}
-          wrapperStyle={{
-            paddingTop: '20px',
-            fontSize: '12px',
-            color: '#1F2144'
-          }}
-        />
+        <Legend />
         {skills.map((skill, index) => (
           <Line
             key={skill.title}
             type="monotone"
             dataKey={skill.title}
             stroke={colors[index % colors.length]}
-            strokeWidth={2.5}
-            dot={{ 
-              r: 4, 
-              strokeWidth: 2,
-              fill: 'white',
-              stroke: colors[index % colors.length]
-            }}
-            activeDot={{ 
-              r: 6,
-              strokeWidth: 2,
-              fill: colors[index % colors.length],
-              stroke: 'white'
-            }}
+            strokeWidth={2}
+            dot={{ r: 4 }}
+            activeDot={{ r: 6 }}
           />
         ))}
       </LineChart>
