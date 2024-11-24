@@ -4,6 +4,13 @@ import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
 import { employees, getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { HelpCircle } from "lucide-react";
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -43,22 +50,16 @@ export const EmployeeFilters = ({
   selectedManager = []
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
-  
-  // Get unique job titles from employees
   const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
-
-  // Get managers (employees with roles containing 'Manager')
   const managers = Array.from(new Set(
     employees
       .filter(emp => emp.role.toLowerCase().includes('manager'))
       .map(emp => emp.name)
   ));
 
-  // Determine if the selected role is managerial
   const isManagerialTrack = selectedJobTitle.length > 0 && 
     selectedJobTitle[0].toLowerCase().includes('manager');
 
-  // Get appropriate levels based on track
   const getLevelsForTrack = () => {
     if (isManagerialTrack) {
       return ["M3", "M4", "M5", "M6"];
@@ -66,7 +67,22 @@ export const EmployeeFilters = ({
     return ["P1", "P2", "P3", "P4", "P5", "P6"];
   };
 
-  // Reset level selection when track changes
+  const getLevelDescription = (level: string) => {
+    const descriptions: Record<string, string> = {
+      "P1": "Entry",
+      "P2": "Developing",
+      "P3": "Career",
+      "P4": "Senior",
+      "P5": "Expert",
+      "P6": "Principal",
+      "M3": "Manager",
+      "M4": "Senior Manager",
+      "M5": "Director",
+      "M6": "Senior Director"
+    };
+    return descriptions[level] || level;
+  };
+
   useEffect(() => {
     onLevelChange([]);
   }, [selectedJobTitle, onLevelChange]);
@@ -121,15 +137,49 @@ export const EmployeeFilters = ({
           className="w-[180px]"
         />
         
-        <SearchFilter
-          label=""
-          placeholder="Level"
-          items={getLevelsForTrack()}
-          selectedItems={selectedLevel}
-          onItemsChange={onLevelChange}
-          singleSelect={false}
-          className="w-[180px]"
-        />
+        <div className="relative">
+          <SearchFilter
+            label=""
+            placeholder="Level"
+            items={getLevelsForTrack().map(level => `${level} - ${getLevelDescription(level)}`)}
+            selectedItems={selectedLevel}
+            onItemsChange={onLevelChange}
+            singleSelect={false}
+            className="w-[180px]"
+          />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="absolute right-8 top-2.5 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent side="right" align="start" className="p-4">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <p className="font-medium">Professional Track:</p>
+                    <ul className="text-sm space-y-1">
+                      <li><span className="font-medium">P1</span> - Entry</li>
+                      <li><span className="font-medium">P2</span> - Developing</li>
+                      <li><span className="font-medium">P3</span> - Career</li>
+                      <li><span className="font-medium">P4</span> - Senior</li>
+                      <li><span className="font-medium">P5</span> - Expert</li>
+                      <li><span className="font-medium">P6</span> - Principal</li>
+                    </ul>
+                  </div>
+                  <div className="h-px bg-border" />
+                  <div className="space-y-2">
+                    <p className="font-medium">Managerial Track:</p>
+                    <ul className="text-sm space-y-1">
+                      <li><span className="font-medium">M3</span> - Manager</li>
+                      <li><span className="font-medium">M4</span> - Senior Manager</li>
+                      <li><span className="font-medium">M5</span> - Director</li>
+                      <li><span className="font-medium">M6</span> - Senior Director</li>
+                    </ul>
+                  </div>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
         
         <SearchFilter
           label=""
