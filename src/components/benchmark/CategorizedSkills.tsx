@@ -41,6 +41,15 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     ...currentRoleSkills.certifications
   ];
 
+  console.log('Processing role skills:', { 
+    roleId, 
+    selectedLevel,
+    allRoleSkills: allRoleSkills.map(s => ({
+      title: s.title,
+      requirement: s.requirement
+    }))
+  });
+
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
@@ -55,13 +64,18 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const requiredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      const isRequired = skill.requirement === 'required' || competencyState?.required === 'required';
+      const isToggled = toggledSkills.has(skill.title);
+      
       console.log('Checking required skill:', {
         skill: skill.title,
+        requirement: skill.requirement,
         competencyState,
-        isToggled: toggledSkills.has(skill.title)
+        isToggled,
+        isRequired
       });
       
-      return competencyState?.required === 'required' && toggledSkills.has(skill.title);
+      return isRequired && isToggled;
     })
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
@@ -72,15 +86,20 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const preferredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      const isPreferred = skill.requirement === 'preferred' || competencyState?.required === 'preferred';
+      const isToggled = toggledSkills.has(skill.title);
+      const notRequired = !requiredSkills.some(req => req.title === skill.title);
+      
       console.log('Checking preferred skill:', {
         skill: skill.title,
+        requirement: skill.requirement,
         competencyState,
-        isToggled: toggledSkills.has(skill.title)
+        isToggled,
+        isPreferred,
+        notRequired
       });
       
-      return competencyState?.required === 'preferred' && 
-             toggledSkills.has(skill.title) && 
-             !requiredSkills.some(req => req.title === skill.title);
+      return isPreferred && isToggled && notRequired;
     })
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
