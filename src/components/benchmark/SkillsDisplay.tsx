@@ -16,21 +16,11 @@ export const SkillsDisplay = ({
   selectedLevel 
 }: SkillsDisplayProps) => {
   const { getTrackForRole } = useTrack();
-  
-  if (!roleId) {
-    console.error('No role ID provided to SkillsDisplay');
-    return null;
-  }
-
   const track = getTrackForRole(roleId);
   const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
 
   const getSkillsForCategory = () => {
-    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-    if (!currentRoleSkills) {
-      console.error('No skills found for role:', roleId);
-      return [];
-    }
+    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
     
     const filteredSkills = [
       ...(currentRoleSkills.specialized || []),

@@ -18,17 +18,7 @@ export const CategoryCards = ({
 }: CategoryCardsProps) => {
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  
-  if (!roleId) {
-    console.error('No role ID provided to CategoryCards');
-    return null;
-  }
-
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-  if (!currentRoleSkills) {
-    console.error('No skills found for role:', roleId);
-    return null;
-  }
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
   const getSkillsByCategory = (category: string) => {
     const allSkills = [
