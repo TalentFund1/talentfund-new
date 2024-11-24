@@ -22,7 +22,12 @@ export const CompetencyGraphTable = ({
   };
 
   const getSkillsByCategory = () => {
-    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
+    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
+    
+    if (!currentRoleSkills) {
+      console.error('No role skills found for role:', currentRoleId);
+      return [];
+    }
     
     const filterSkillsByCategory = (category: 'specialized' | 'common' | 'certifications') => {
       return currentRoleSkills[category]?.filter(skill => toggledSkills.has(skill.title)) || [];
