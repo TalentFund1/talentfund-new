@@ -114,7 +114,9 @@ export const EmployeeTableRow = ({
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
 
   return (
-    <tr className="border-t border-border hover:bg-muted/50 transition-colors">
+    <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
+      isExactMatch || isExactSkillMatch ? 'bg-blue-50/50' : ''
+    }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
           type="checkbox" 
