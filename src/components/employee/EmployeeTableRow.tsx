@@ -5,8 +5,8 @@ import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Badge } from "@/components/ui/badge";
-import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { CheckCircle2 } from "lucide-react";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -29,8 +29,18 @@ export const EmployeeTableRow = ({
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employee.id);
 
+  // Get the role ID for the current employee's role
+  const roleId = getSkillProfileId(employee.role);
+  
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
+
+  console.log('Employee row rendered:', {
+    employeeId: employee.id,
+    role: employee.role,
+    mappedRoleId: roleId,
+    isExactMatch
+  });
 
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
@@ -108,7 +118,7 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[250px]">
         <Link 
-          to={`/skills/${getSkillProfileId(employee.role)}`} 
+          to={`/skills/${roleId}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
         >
           {employee.role}
