@@ -21,22 +21,6 @@ export const CompetencyGraphTable = ({
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
   };
 
-  const getLevelDescription = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'p1': return 'Entry';
-      case 'p2': return 'Developing';
-      case 'p3': return 'Career';
-      case 'p4': return 'Senior';
-      case 'p5': return 'Expert';
-      case 'p6': return 'Principal';
-      case 'm3': return 'Manager';
-      case 'm4': return 'Senior Manager';
-      case 'm5': return 'Director';
-      case 'm6': return 'Senior Director';
-      default: return '';
-    }
-  };
-
   const getSkillsByCategory = () => {
     const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
     
@@ -127,9 +111,7 @@ export const CompetencyGraphTable = ({
                 key={level} 
                 className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
               >
-                <div className="font-semibold">
-                  {level.toUpperCase()} - {getLevelDescription(level)}
-                </div>
+                <div className="font-semibold">{level.toUpperCase()}</div>
               </TableHead>
             ))}
           </TableRow>
