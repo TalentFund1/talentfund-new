@@ -29,7 +29,7 @@ export const BenchmarkSkillsMatrix = () => {
   const { currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
   useEffect(() => {
     const allRoleSkills = [
