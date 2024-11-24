@@ -68,10 +68,8 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
         <TableBody>
           {filteredRows.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="h-32 text-center">
-                <span className="text-base text-muted-foreground">
-                  No profile found
-                </span>
+              <TableCell colSpan={7} className="text-center py-4 text-muted-foreground">
+                No profile found
               </TableCell>
             </TableRow>
           ) : (
