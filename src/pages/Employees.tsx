@@ -10,6 +10,23 @@ import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 
+const calculateAverageTenure = (employeeList: any[]) => {
+  if (employeeList.length === 0) return 0;
+
+  const tenures = employeeList.map(emp => {
+    if (!emp.startDate) return 0;
+    const start = new Date(emp.startDate);
+    const end = emp.termDate && emp.termDate !== "-" ? new Date(emp.termDate) : new Date();
+    if (isNaN(start.getTime())) return 0;
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+    return diffYears;
+  });
+
+  const totalTenure = tenures.reduce((sum, tenure) => sum + tenure, 0);
+  return Number((totalTenure / employeeList.length).toFixed(1));
+};
+
 const Employees = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
   const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
@@ -49,6 +66,19 @@ const Employees = () => {
     const femaleCount = relevantEmployees.filter(emp => emp.sex === 'female').length;
     return Math.round((femaleCount / relevantEmployees.length) * 100);
   };
+
+  // Calculate average tenure for matching profiles
+  const averageTenure = calculateAverageTenure(filteredEmployees);
+
+  console.log('Calculating average tenure:', {
+    filteredEmployees: filteredEmployees.length,
+    averageTenure,
+    employeeTenures: filteredEmployees.map(emp => ({
+      name: emp.name,
+      startDate: emp.startDate,
+      tenure: calculateAverageTenure([emp])
+    }))
+  });
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -102,7 +132,7 @@ const Employees = () => {
             />
             <StatCard
               title="Average Tenure (Years)"
-              value="1.9"
+              value={averageTenure}
               icon={<Clock className="h-6 w-6 text-primary-icon" />}
             />
           </div>
