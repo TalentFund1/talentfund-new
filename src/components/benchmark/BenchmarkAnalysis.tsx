@@ -9,23 +9,20 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
-const roles = {
-  "123": "AI Engineer",
-  "124": "Backend Engineer",
-  "125": "Frontend Engineer",
-  "126": "Engineering Manager"
-};
-
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
-  const employeeSkills = getEmployeeSkills(id || "123");
+  const employeeSkills = getEmployeeSkills(id || "");
   const { selectedRole, selectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  if (!currentRoleSkills) {
+    console.error('No role skills found for role:', selectedRole);
+    return null;
+  }
   
   const toggledRoleSkills = [
     ...currentRoleSkills.specialized,

@@ -20,8 +20,12 @@ export const useCompetencyStateReader = () => {
       return null;
     }
 
-    const currentRoleId = roleId || "123";
-    const roleStates = currentStates[currentRoleId];
+    if (!roleId) {
+      console.error('No role ID provided');
+      return null;
+    }
+
+    const roleStates = currentStates[roleId];
     if (!roleStates || !roleStates[skillName]) {
       console.log('No state found for skill:', skillName);
       return null;
@@ -43,8 +47,13 @@ export const useCompetencyStateReader = () => {
   const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
     console.log('Getting all skill states for level:', levelKey);
     const states: Record<string, SkillCompetencyState> = {};
-    const currentRoleId = roleId || "123";
-    const roleStates = currentStates[currentRoleId];
+    
+    if (!roleId) {
+      console.error('No role ID provided');
+      return states;
+    }
+
+    const roleStates = currentStates[roleId];
     
     if (roleStates) {
       Object.entries(roleStates).forEach(([skillName, skillLevels]) => {
