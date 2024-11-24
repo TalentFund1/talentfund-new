@@ -17,6 +17,7 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 import { roleSkills } from '@/components/skills/data/roleSkills';
+import { jobTitles } from '@/components/skills/competency/skillProfileData';
 
 // Define company functions/departments
 const companyFunctions = [
@@ -37,7 +38,9 @@ const SkillsProfile = () => {
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
-  const allSkills = [...technicalSkills, ...softSkills];
+
+  // Get all job titles from the roleSkills data
+  const availableJobTitles = Object.keys(jobTitles).map(id => jobTitles[id]);
 
   // Filter skills to only show toggled ones
   const toggledSkillsList = Array.from(toggledSkills);
@@ -99,9 +102,9 @@ const SkillsProfile = () => {
                     <SelectValue placeholder="Job Title" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(roleSkills).map((_, index) => (
-                      <SelectItem key={index} value={`Role ${index + 1}`}>
-                        Role {index + 1}
+                    {availableJobTitles.map((title) => (
+                      <SelectItem key={title} value={title.toLowerCase()}>
+                        {title}
                       </SelectItem>
                     ))}
                   </SelectContent>
