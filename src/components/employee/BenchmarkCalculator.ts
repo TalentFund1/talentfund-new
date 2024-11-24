@@ -40,7 +40,7 @@ export const calculateBenchmarkPercentage = (
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
     if (!roleSkillState) {
       console.log('No competency state found for skill:', skill.title);
-      return false;
+      return true; // For manager roles, if no competency state is found, consider it a match
     }
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
@@ -49,14 +49,8 @@ export const calculateBenchmarkPercentage = (
     console.log('Comparing skill levels:', {
       skill: skill.title,
       employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      required: roleSkillState.required
+      roleLevel: roleSkillLevel
     });
-
-    // Count both required and preferred skills
-    if (roleSkillState.required !== 'required' && roleSkillState.required !== 'preferred') {
-      return false;
-    }
 
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
@@ -79,10 +73,10 @@ export const calculateBenchmarkPercentage = (
     const skillState = currentStates[skill.title];
     if (!skillState) {
       console.log('No skill state found for skill:', skill.title);
-      return false;
+      return true; // For manager roles, if no skill state is found, consider it a match
     }
     return skillState.requirement === 'required' || 
-           skillState.requirement === 'preferred';
+           skillState.requirement === 'skill_goal';
   });
 
   // Calculate individual percentages
