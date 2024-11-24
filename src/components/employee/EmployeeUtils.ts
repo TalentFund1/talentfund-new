@@ -1,9 +1,9 @@
 export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
   const today = new Date();
-  const oneYearAgo = new Date();
+  const oneYearAgo = new Date(today);
   oneYearAgo.setFullYear(today.getFullYear() - 1);
   
-  // Normalize dates to start of day
+  // Normalize dates to start of day for accurate comparison
   today.setHours(0, 0, 0, 0);
   oneYearAgo.setHours(0, 0, 0, 0);
   
@@ -13,12 +13,16 @@ export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
   
   const employeesAddedLastYear = filteredEmployees.filter(employee => {
     if (!employee.startDate) return false;
+    
     const startDate = new Date(employee.startDate);
-    startDate.setHours(0, 0, 0, 0); // Normalize employee start date
+    startDate.setHours(0, 0, 0, 0); // Normalize start date
     
     console.log(`Employee ${employee.name} start date:`, startDate.toISOString());
-    const isInLastYear = startDate >= oneYearAgo && startDate <= today;
-    console.log(`${employee.name} added in last year:`, isInLastYear);
+    console.log(`One year ago date for comparison:`, oneYearAgo.toISOString());
+    
+    // Check if start date is after one year ago (exclusive)
+    const isInLastYear = startDate > oneYearAgo;
+    console.log(`${employee.name} start date > one year ago:`, isInLastYear);
     
     return isInLastYear;
   });
