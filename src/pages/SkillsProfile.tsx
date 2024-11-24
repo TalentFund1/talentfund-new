@@ -50,6 +50,7 @@ const SkillsProfile = () => {
 
   console.log('Available job titles:', jobTitleOptions);
   console.log('Selected job titles:', selectedJobTitles);
+  console.log('Selected skills:', selectedSkills);
   console.log('Filtered projects:', filteredProjects);
 
   return (
@@ -136,6 +137,7 @@ const SkillsProfile = () => {
             <SkillProfileTable 
               selectedFunction={selectedFunction}
               selectedJobTitles={selectedJobTitles}
+              selectedSkills={selectedSkills}
             />
 
             <Separator className="my-4" />

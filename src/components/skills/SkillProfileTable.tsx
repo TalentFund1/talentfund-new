@@ -3,15 +3,18 @@ import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import type { SkillProfileRow } from "./types";
+import { roleSkills } from './data/roleSkills';
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
   selectedJobTitles?: string[];
+  selectedSkills?: string[];
 }
 
 export const SkillProfileTable = ({ 
   selectedFunction,
-  selectedJobTitles = []
+  selectedJobTitles = [],
+  selectedSkills = []
 }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   
@@ -36,7 +39,27 @@ export const SkillProfileTable = ({
     });
   };
 
-  // Filter rows based on selected function and job titles
+  // Helper function to check if a profile has the selected skills
+  const hasSelectedSkills = (roleId: string) => {
+    if (selectedSkills.length === 0) return true;
+
+    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+    if (!currentRoleSkills) return false;
+
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    return selectedSkills.some(selectedSkill =>
+      allRoleSkills.some(roleSkill => 
+        roleSkill.title.toLowerCase().includes(selectedSkill.toLowerCase())
+      )
+    );
+  };
+
+  // Filter rows based on selected function, job titles, and skills
   const filteredRows = rows.filter(row => {
     const matchesFunction = selectedFunction 
       ? row.function.toLowerCase() === selectedFunction.toLowerCase()
@@ -46,11 +69,14 @@ export const SkillProfileTable = ({
       ? selectedJobTitles.some(title => row.name.toLowerCase() === title.toLowerCase())
       : true;
 
-    return matchesFunction && matchesJobTitle;
+    const matchesSkills = hasSelectedSkills(row.id);
+
+    return matchesFunction && matchesJobTitle && matchesSkills;
   });
 
   console.log('Filtering skill profiles by function:', selectedFunction);
   console.log('Filtering skill profiles by job titles:', selectedJobTitles);
+  console.log('Filtering skill profiles by skills:', selectedSkills);
   console.log('Filtered rows:', filteredRows);
 
   return (
