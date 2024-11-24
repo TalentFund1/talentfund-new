@@ -70,8 +70,7 @@ const Employees = () => {
       name: emp.name,
       role: emp.role,
       startDate: emp.startDate,
-      sex: emp.sex,
-      skills: emp.skills
+      sex: emp.sex
     }))
   });
 
