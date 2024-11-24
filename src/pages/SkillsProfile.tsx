@@ -15,6 +15,8 @@ import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { technicalSkills, softSkills } from '@/components/skillsData';
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
+import { roleSkills } from '@/components/skills/data/roleSkills';
 
 // Define company functions/departments
 const companyFunctions = [
@@ -33,7 +35,29 @@ const companyFunctions = [
 const SkillsProfile = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
+  const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
+  const { toggledSkills } = useToggledSkills();
   const allSkills = [...technicalSkills, ...softSkills];
+
+  // Filter skills to only show toggled ones
+  const toggledSkillsList = Array.from(toggledSkills);
+
+  // Filter profiles based on selected skills and other filters
+  const filterProfiles = (profiles: any[]) => {
+    return profiles.filter(profile => {
+      const matchesFunction = !selectedFunction || profile.function.toLowerCase() === selectedFunction.toLowerCase();
+      const matchesJobTitle = !selectedJobTitle || profile.name.toLowerCase() === selectedJobTitle.toLowerCase();
+      
+      // Check if profile has any of the selected skills
+      const profileSkills = roleSkills[profile.id as keyof typeof roleSkills] || [];
+      const hasSelectedSkills = selectedSkills.length === 0 || selectedSkills.some(skill => 
+        [...(profileSkills.specialized || []), ...(profileSkills.common || []), ...(profileSkills.certifications || [])]
+          .some(profileSkill => profileSkill.title.toLowerCase().includes(skill.toLowerCase()))
+      );
+
+      return matchesFunction && matchesJobTitle && hasSelectedSkills;
+    });
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -53,19 +77,22 @@ const SkillsProfile = () => {
               <SearchFilter
                 label=""
                 placeholder="Search skills..."
-                items={allSkills}
+                items={toggledSkillsList}
                 selectedItems={selectedSkills}
                 onItemsChange={setSelectedSkills}
               />
               
               <div className="flex flex-wrap gap-3">
-                <Select>
+                <Select value={selectedJobTitle} onValueChange={setSelectedJobTitle}>
                   <SelectTrigger className="w-[180px] bg-white">
                     <SelectValue placeholder="Job Title" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    <SelectItem value="junior">Junior</SelectItem>
-                    <SelectItem value="senior">Senior</SelectItem>
+                  <SelectContent>
+                    {Object.values(roleSkills).map((_, index) => (
+                      <SelectItem key={index} value={`Role ${index + 1}`}>
+                        Role {index + 1}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 
@@ -73,7 +100,7 @@ const SkillsProfile = () => {
                   <SelectTrigger className="w-[180px] bg-white">
                     <SelectValue placeholder="Function" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white">
+                  <SelectContent>
                     {companyFunctions.map((func) => (
                       <SelectItem key={func} value={func.toLowerCase()}>
                         {func}
@@ -87,6 +114,7 @@ const SkillsProfile = () => {
                   onClick={() => {
                     setSelectedSkills([]);
                     setSelectedFunction("");
+                    setSelectedJobTitle("");
                   }}
                 >
                   Clear All
@@ -119,12 +147,16 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
-            <SkillProfileTable selectedFunction={selectedFunction} />
+            <SkillProfileTable 
+              selectedFunction={selectedFunction} 
+              selectedSkills={selectedSkills}
+              selectedJobTitle={selectedJobTitle}
+            />
 
             <Separator className="my-4" />
             
             <div className="flex justify-between items-center">
-              <Select>
+              <Select defaultValue="10">
                 <SelectTrigger className="w-[100px]">
                   <SelectValue placeholder="10 rows" />
                 </SelectTrigger>

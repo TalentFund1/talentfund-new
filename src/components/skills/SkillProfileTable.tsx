@@ -3,12 +3,19 @@ import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import type { SkillProfileRow } from "./types";
+import { roleSkills } from './data/roleSkills';
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
+  selectedSkills: string[];
+  selectedJobTitle?: string;
 }
 
-export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) => {
+export const SkillProfileTable = ({ 
+  selectedFunction,
+  selectedSkills,
+  selectedJobTitle 
+}: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   
   const rows: SkillProfileRow[] = [
@@ -19,7 +26,7 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
   ];
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSelection = e.target.checked ? rows.map(row => row.id) : [];
+    const newSelection = e.target.checked ? filteredRows.map(row => row.id) : [];
     setSelectedRows(newSelection);
   };
 
@@ -32,12 +39,29 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
     });
   };
 
-  // Filter rows based on selected function
-  const filteredRows = selectedFunction 
-    ? rows.filter(row => row.function.toLowerCase() === selectedFunction.toLowerCase())
-    : rows;
+  // Filter rows based on selected criteria
+  const filteredRows = rows.filter(row => {
+    const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
+    const matchesJobTitle = !selectedJobTitle || row.name.toLowerCase() === selectedJobTitle.toLowerCase();
+    
+    // Check if profile has any of the selected skills
+    const profileSkills = roleSkills[row.id as keyof typeof roleSkills] || { specialized: [], common: [], certifications: [] };
+    const allProfileSkills = [
+      ...profileSkills.specialized,
+      ...profileSkills.common,
+      ...profileSkills.certifications
+    ];
+    
+    const hasSelectedSkills = selectedSkills.length === 0 || selectedSkills.some(skill => 
+      allProfileSkills.some(profileSkill => 
+        profileSkill.title.toLowerCase().includes(skill.toLowerCase())
+      )
+    );
 
-  console.log('Filtering skill profiles by function:', selectedFunction);
+    return matchesFunction && matchesJobTitle && hasSelectedSkills;
+  });
+
+  console.log('Filtering profiles with:', { selectedFunction, selectedSkills, selectedJobTitle });
   console.log('Filtered rows:', filteredRows);
 
   return (
