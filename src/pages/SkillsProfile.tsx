@@ -37,16 +37,16 @@ const projects = [
 const SkillsProfile = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
-  const [selectedJobTitles, setSelectedJobTitles] = useState<string[]>([]);
+  const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
   const allSkills = [...technicalSkills, ...softSkills];
 
   // Convert jobTitles object to array of titles
   const jobTitleOptions = Object.values(jobTitles);
 
-  // Filter projects based on selected job titles
+  // Filter projects based on selected job title
   const filteredProjects = projects.filter(project => {
-    if (selectedJobTitles.length === 0) return true;
-    return selectedJobTitles.some(title => project.title.toLowerCase() === title.toLowerCase());
+    if (!selectedJobTitle) return true;
+    return project.title.toLowerCase() === selectedJobTitle.toLowerCase();
   });
 
   return (
@@ -70,6 +70,7 @@ const SkillsProfile = () => {
                 items={allSkills}
                 selectedItems={selectedSkills}
                 onItemsChange={setSelectedSkills}
+                className="hidden"
               />
               
               <div className="flex flex-wrap gap-3">
@@ -77,8 +78,9 @@ const SkillsProfile = () => {
                   label=""
                   placeholder="Job Title"
                   items={jobTitleOptions}
-                  selectedItems={selectedJobTitles}
-                  onItemsChange={setSelectedJobTitles}
+                  selectedItems={selectedJobTitle ? [selectedJobTitle] : []}
+                  onItemsChange={(items) => setSelectedJobTitle(items[0] || "")}
+                  singleSelect={true}
                   className="w-[180px]"
                 />
                 
@@ -97,7 +99,7 @@ const SkillsProfile = () => {
                   onClick={() => {
                     setSelectedSkills([]);
                     setSelectedFunction("");
-                    setSelectedJobTitles([]);
+                    setSelectedJobTitle("");
                   }}
                 >
                   Clear All
@@ -132,7 +134,7 @@ const SkillsProfile = () => {
           <Card className="p-6">
             <SkillProfileTable 
               selectedFunction={selectedFunction}
-              selectedJobTitles={selectedJobTitles}
+              selectedJobTitles={selectedJobTitle ? [selectedJobTitle] : []}
               selectedSkills={selectedSkills}
             />
 
