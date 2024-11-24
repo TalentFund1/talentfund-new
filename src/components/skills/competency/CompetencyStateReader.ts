@@ -6,9 +6,12 @@ export const useCompetencyStateReader = () => {
   const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
 
-  const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillLevelState | null => {
+  const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillLevelState => {
     if (!toggledSkills.has(skillName)) {
-      return null;
+      return {
+        level: "unspecified",
+        required: "preferred"
+      };
     }
 
     const skillState = currentStates[skillName];

@@ -90,7 +90,7 @@ export const SkillCell = ({
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
                 {getLevelIcon(currentState.level)}
-                {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
+                {currentState.level}
               </span>
             </SelectValue>
           </SelectTrigger>

@@ -21,12 +21,21 @@ export const useCompetencyStore = create<CompetencyState>()(
         const savedState = localStorage.getItem(storageKey);
         
         if (savedState) {
-          const parsed = JSON.parse(savedState);
-          set({
-            currentStates: parsed.state.currentStates || {},
-            originalStates: parsed.state.originalStates || {},
-            hasChanges: false
-          });
+          try {
+            const parsed = JSON.parse(savedState);
+            set({
+              currentStates: parsed.state.currentStates || {},
+              originalStates: parsed.state.originalStates || {},
+              hasChanges: false
+            });
+          } catch (e) {
+            console.error('Error parsing saved state:', e);
+            set({
+              currentStates: {},
+              originalStates: {},
+              hasChanges: false
+            });
+          }
         } else {
           set({
             currentStates: {},
@@ -46,7 +55,7 @@ export const useCompetencyStore = create<CompetencyState>()(
           }
           
           if (!newStates[skillTitle][levelKey]) {
-            newStates[skillTitle][levelKey] = {};
+            newStates[skillTitle][levelKey] = initializeSkillState();
           }
           
           newStates[skillTitle][levelKey] = {
@@ -104,20 +113,20 @@ export const useCompetencyStore = create<CompetencyState>()(
     {
       name: 'competency-storage',
       storage: {
-        getItem: async (name) => {
+        getItem: (name) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           const value = localStorage.getItem(storageKey);
           console.log('Getting stored value:', { roleId, storageKey, value });
           return value ? JSON.parse(value) : null;
         },
-        setItem: async (name, value) => {
+        setItem: (name, value) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           console.log('Setting stored value:', { roleId, storageKey, value });
           localStorage.setItem(storageKey, JSON.stringify(value));
         },
-        removeItem: async (name) => {
+        removeItem: (name) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           localStorage.removeItem(storageKey);

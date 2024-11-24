@@ -19,8 +19,8 @@ export interface RoleCompetencyState {
 }
 
 export interface CompetencyState {
-  originalStates: RoleCompetencyState;
   currentStates: RoleCompetencyState;
+  originalStates: RoleCompetencyState;
   hasChanges: boolean;
   setSkillState: (skillTitle: string, level: SkillLevel, levelKey: string, requirement: RequirementType) => void;
   saveChanges: () => void;
