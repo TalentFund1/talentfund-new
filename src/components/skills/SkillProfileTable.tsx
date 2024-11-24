@@ -6,9 +6,13 @@ import type { SkillProfileRow } from "./types";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
+  selectedJobTitles?: string[];
 }
 
-export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) => {
+export const SkillProfileTable = ({ 
+  selectedFunction,
+  selectedJobTitles = []
+}: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   
   const rows: SkillProfileRow[] = [
@@ -19,7 +23,7 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
   ];
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSelection = e.target.checked ? rows.map(row => row.id) : [];
+    const newSelection = e.target.checked ? filteredRows.map(row => row.id) : [];
     setSelectedRows(newSelection);
   };
 
@@ -32,12 +36,21 @@ export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) 
     });
   };
 
-  // Filter rows based on selected function
-  const filteredRows = selectedFunction 
-    ? rows.filter(row => row.function.toLowerCase() === selectedFunction.toLowerCase())
-    : rows;
+  // Filter rows based on selected function and job titles
+  const filteredRows = rows.filter(row => {
+    const matchesFunction = selectedFunction 
+      ? row.function.toLowerCase() === selectedFunction.toLowerCase()
+      : true;
+      
+    const matchesJobTitle = selectedJobTitles.length > 0
+      ? selectedJobTitles.some(title => row.name.toLowerCase() === title.toLowerCase())
+      : true;
+
+    return matchesFunction && matchesJobTitle;
+  });
 
   console.log('Filtering skill profiles by function:', selectedFunction);
+  console.log('Filtering skill profiles by job titles:', selectedJobTitles);
   console.log('Filtered rows:', filteredRows);
 
   return (

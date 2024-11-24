@@ -133,7 +133,10 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
-            <SkillProfileTable selectedFunction={selectedFunction} />
+            <SkillProfileTable 
+              selectedFunction={selectedFunction}
+              selectedJobTitles={selectedJobTitles}
+            />
 
             <Separator className="my-4" />
             
