@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { SkillCell } from "./competency/SkillCell";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { CategorySection } from "./competency/CategorySection";
 import { useCompetencyStore } from "./competency/CompetencyState";
@@ -12,8 +13,6 @@ import { jobTitles } from "./competency/skillProfileData";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
 import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
-import { sortSkillsByAdvancedCount } from "./competency/CompetencyUtils";
-import { CompetencyTable } from "./competency/CompetencyTable";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -93,9 +92,52 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return [];
   };
 
+  const getSkillDetails = (skillName: string, level: string) => {
+    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
+    const allSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+    
+    const skill = allSkills.find(s => s.title === skillName);
+    if (!skill) return { level: "-", required: "-" };
+    
+    return {
+      level: skill.level || "-",
+      required: "required"
+    };
+  };
+
+  const countAdvancedLevels = (skillName: string, levels: string[]) => {
+    let advancedCount = 0;
+    levels.forEach(level => {
+      const skillState = useCompetencyStore.getState().currentStates[skillName]?.[level.toLowerCase()];
+      if (skillState?.level?.toLowerCase() === 'advanced') {
+        advancedCount++;
+      }
+    });
+    return advancedCount;
+  };
+
   const skills = getSkillsByCategory();
   const levels = getLevelsForTrack();
-  const sortedSkills = sortSkillsByAdvancedCount(skills, levels);
+
+  // Sort skills based on the number of advanced levels
+  const sortedSkills = skills
+    .map(skill => ({
+      ...skill,
+      advancedCount: countAdvancedLevels(skill.title, levels)
+    }))
+    .sort((a, b) => {
+      // Sort by advanced count first
+      const advancedDiff = b.advancedCount - a.advancedCount;
+      if (advancedDiff !== 0) return advancedDiff;
+      
+      // If advanced counts are equal, sort alphabetically
+      return a.title.localeCompare(b.title);
+    })
+    .map(skill => skill.title);
 
   console.log('Current track:', track);
   console.log('Levels for track:', levels);
@@ -134,13 +176,43 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         setSelectedCategory={setSelectedCategory}
       />
 
-      <Card className="rounded-lg border border-border bg-white overflow-hidden">
-        <CompetencyTable 
-          levels={levels}
-          sortedSkills={sortedSkills}
-          currentRoleId={currentRoleId}
-        />
-      </Card>
+      <div className="rounded-lg border border-border bg-white overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-[200px] font-semibold bg-background/80 border-r border-border">
+                Skill
+              </TableHead>
+              {levels.map((level, index) => (
+                <TableHead 
+                  key={level} 
+                  className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
+                >
+                  <div className="font-semibold">{level.toUpperCase()}</div>
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sortedSkills.map((skillName) => (
+              <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
+                <TableCell className="font-medium border-r border-border">
+                  {skillName}
+                </TableCell>
+                {levels.map((level, index) => (
+                  <SkillCell 
+                    key={level}
+                    skillName={skillName}
+                    details={getSkillDetails(skillName, level)}
+                    isLastColumn={index === levels.length - 1}
+                    levelKey={level}
+                  />
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

@@ -10,20 +10,12 @@ interface SkillState {
   required: string;
 }
 
-interface RoleSkillStates {
-  [roleId: string]: {
-    [skillName: string]: {
-      [levelKey: string]: SkillState;
-    };
-  };
-}
-
 interface CompetencyState {
-  currentStates: RoleSkillStates;
-  originalStates: RoleSkillStates;
+  currentStates: Record<string, Record<string, SkillState>>;
+  originalStates: Record<string, Record<string, SkillState>>;
   hasChanges: boolean;
   initializeStates: (roleId: string) => void;
-  setSkillState: (roleId: string, skillName: string, level: string, levelKey: string, required: string) => void;
+  setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -32,7 +24,7 @@ const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
 
 const initializeSkillStates = (roleId: string) => {
   console.log('Initializing competency states for role:', roleId);
-  const states: RoleSkillStates = {};
+  const states: Record<string, Record<string, SkillState>> = {};
   
   const allSkills = [
     ...aiSkills,
@@ -60,14 +52,12 @@ const initializeSkillStates = (roleId: string) => {
 
   // If no saved states or invalid data, initialize with default values
   console.log('Initializing with default states');
-  states[roleId] = {};
-  
   allSkills.forEach(skill => {
-    states[roleId][skill.title] = states[roleId][skill.title] || {};
+    states[skill.title] = states[skill.title] || {};
     
     if (skill.professionalTrack) {
       Object.entries(skill.professionalTrack).forEach(([level, state]) => {
-        states[roleId][skill.title][level.toLowerCase()] = {
+        states[skill.title][level.toLowerCase()] = {
           level: state.level,
           required: state.requirement
         };
@@ -76,7 +66,7 @@ const initializeSkillStates = (roleId: string) => {
     
     if (skill.managerialTrack) {
       Object.entries(skill.managerialTrack).forEach(([level, state]) => {
-        states[roleId][skill.title][level.toLowerCase()] = {
+        states[skill.title][level.toLowerCase()] = {
           level: state.level,
           required: state.requirement
         };
@@ -104,19 +94,16 @@ export const useCompetencyStore = create<CompetencyState>()(
           hasChanges: false
         });
       },
-      setSkillState: (roleId, skillName, level, levelKey, required) => {
-        console.log('Setting competency state:', { roleId, skillName, level, levelKey, required });
+      setSkillState: (skillName, level, levelKey, required) => {
+        console.log('Setting competency state:', { skillName, level, levelKey, required });
         set((state) => {
           const newStates = {
             ...state.currentStates,
-            [roleId]: {
-              ...(state.currentStates[roleId] || {}),
-              [skillName]: {
-                ...(state.currentStates[roleId]?.[skillName] || {}),
-                [levelKey]: {
-                  level,
-                  required,
-                },
+            [skillName]: {
+              ...(state.currentStates[skillName] || {}),
+              [levelKey]: {
+                level,
+                required,
               },
             },
           };
@@ -154,7 +141,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      skipHydration: true,
+      skipHydration: true, // Skip automatic hydration since we handle it manually
       partialize: (state) => ({
         originalStates: state.originalStates,
         currentStates: state.currentStates,
