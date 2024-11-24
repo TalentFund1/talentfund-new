@@ -18,13 +18,13 @@ export const useCompetencyStateReader = () => {
       return null;
     }
 
-    const skillState = currentStates[skillName];
-    if (!skillState) {
+    const roleStates = currentStates["123"]; // Default role ID
+    if (!roleStates || !roleStates[skillName]) {
       console.log('No state found for skill:', skillName);
       return null;
     }
 
-    const levelState = skillState[levelKey];
+    const levelState = roleStates[skillName][levelKey.toLowerCase()];
     if (!levelState) {
       console.log('No level state found for skill:', { skillName, levelKey });
       return null;
@@ -32,24 +32,27 @@ export const useCompetencyStateReader = () => {
 
     console.log('Found competency state:', { skillName, levelKey, state: levelState });
     return {
-      level: levelState.level,
-      required: levelState.required
+      level: levelState.level || 'unspecified',
+      required: levelState.required || 'preferred'
     };
   };
 
   const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
     console.log('Getting all skill states for level:', levelKey);
     const states: Record<string, SkillCompetencyState> = {};
+    const roleStates = currentStates["123"]; // Default role ID
     
-    Object.entries(currentStates).forEach(([skillName, skillLevels]) => {
-      const levelState = skillLevels[levelKey.toLowerCase()];
-      if (levelState) {
-        states[skillName] = {
-          level: levelState.level,
-          required: levelState.required
-        };
-      }
-    });
+    if (roleStates) {
+      Object.entries(roleStates).forEach(([skillName, skillLevels]) => {
+        const levelState = skillLevels[levelKey.toLowerCase()];
+        if (levelState) {
+          states[skillName] = {
+            level: levelState.level || 'unspecified',
+            required: levelState.required || 'preferred'
+          };
+        }
+      });
+    }
 
     console.log('Retrieved all skill states:', states);
     return states;
