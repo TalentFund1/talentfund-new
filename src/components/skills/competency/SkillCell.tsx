@@ -3,6 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
 import { useEffect } from "react";
 import { useCompetencyStore } from "./CompetencyState";
+import { SkillLevelState } from "./types/StorageTypes";
 
 interface SkillCellProps {
   skillName: string;

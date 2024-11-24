@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleCompetencyState } from './types/StorageTypes';
+import { RoleCompetencyState, SkillLevelState } from './types/StorageTypes';
 import { initializeSkillStates } from './utils/stateInitializer';
 
 interface CompetencyState {
@@ -18,7 +18,7 @@ interface CompetencyState {
 
 const STORAGE_KEY = 'competency-matrix-storage';
 
-const DEFAULT_SKILL_STATE = {
+const DEFAULT_SKILL_STATE: SkillLevelState = {
   level: 'unspecified',
   required: 'preferred'
 };
@@ -33,12 +33,12 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       setCurrentRole: (roleId: string) => {
         console.log('Setting current role:', roleId);
-        const existingStates = get().currentStates[roleId] || { [roleId]: initializeSkillStates(roleId) };
+        const existingStates = get().currentStates[roleId] || initializeSkillStates(roleId);
         
         set({
           currentRoleId: roleId,
-          currentStates: existingStates,
-          originalStates: existingStates,
+          currentStates: { [roleId]: existingStates },
+          originalStates: { [roleId]: existingStates },
           hasChanges: false
         });
       },
@@ -87,9 +87,9 @@ export const useCompetencyStore = create<CompetencyState>()(
             acc[skillTitle] = Object.keys(currentSkills[skillTitle] || {}).reduce((levelAcc, levelKey) => {
               levelAcc[levelKey] = { ...DEFAULT_SKILL_STATE };
               return levelAcc;
-            }, {} as Record<string, typeof DEFAULT_SKILL_STATE>);
+            }, {} as Record<string, SkillLevelState>);
             return acc;
-          }, {} as Record<string, Record<string, typeof DEFAULT_SKILL_STATE>>)
+          }, {} as RoleSkillState)
         };
 
         set({
@@ -121,15 +121,12 @@ export const useCompetencyStore = create<CompetencyState>()(
         const state = get();
         
         if (!state.currentStates[roleId]) {
-          const initializedStates = {
-            ...state.currentStates,
-            [roleId]: initializeSkillStates(roleId)
-          };
+          const initializedStates = initializeSkillStates(roleId);
           
           set({
             currentRoleId: roleId,
-            currentStates: initializedStates,
-            originalStates: initializedStates,
+            currentStates: { [roleId]: initializedStates },
+            originalStates: { [roleId]: initializedStates },
             hasChanges: false
           });
         }
