@@ -25,24 +25,22 @@ const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
 const initializeSkillStates = (roleId: string) => {
   console.log('Initializing competency states for role:', roleId);
   
-  // First try to load from localStorage
   const storageKey = getStorageKey(roleId);
   const savedStates = localStorage.getItem(storageKey);
   
   if (savedStates) {
-    console.log('Found saved states for role:', roleId);
     try {
       const parsedStates = JSON.parse(savedStates);
-      if (parsedStates && typeof parsedStates === 'object') {
+      if (parsedStates && typeof parsedStates === 'object' && parsedStates.currentStates) {
         console.log('Successfully loaded saved states:', parsedStates);
-        return parsedStates;
+        return parsedStates.currentStates;
       }
     } catch (error) {
       console.error('Error parsing saved states:', error);
     }
   }
 
-  // If no saved states or invalid data, initialize with default values
+  // Initialize with default values if no saved states
   console.log('Initializing with default states');
   const states: Record<string, Record<string, SkillState>> = {};
   
@@ -54,7 +52,7 @@ const initializeSkillStates = (roleId: string) => {
   ];
 
   allSkills.forEach(skill => {
-    states[skill.title] = states[skill.title] || {};
+    states[skill.title] = {};
     
     if (skill.professionalTrack) {
       Object.entries(skill.professionalTrack).forEach(([level, state]) => {
@@ -86,7 +84,6 @@ export const useCompetencyStore = create<CompetencyState>()(
       hasChanges: false,
       initializeStates: (roleId: string) => {
         const initializedStates = initializeSkillStates(roleId);
-        console.log('Setting initial competency states:', initializedStates);
         set({
           currentStates: initializedStates,
           originalStates: initializedStates,
@@ -95,26 +92,24 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
       setSkillState: (skillName, level, levelKey, required) => {
         console.log('Setting competency state:', { skillName, level, levelKey, required });
+        const roleId = localStorage.getItem('currentRoleId') || '123';
+        const storageKey = getStorageKey(roleId);
+        
         set((state) => {
-          const roleId = localStorage.getItem('currentRoleId') || '123';
-          const storageKey = getStorageKey(roleId);
-          
           const newStates = {
             ...state.currentStates,
             [skillName]: {
               ...(state.currentStates[skillName] || {}),
-              [levelKey]: {
-                level,
-                required,
-              },
+              [levelKey]: { level, required },
             },
           };
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
           // Save to localStorage immediately
-          localStorage.setItem(storageKey, JSON.stringify(newStates));
-          console.log('Saved updated states to localStorage:', newStates);
+          const stateToSave = { currentStates: newStates, originalStates: state.originalStates };
+          localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+          console.log('Saved states to localStorage:', stateToSave);
           
           return {
             currentStates: newStates,
@@ -123,29 +118,37 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
       saveChanges: () => {
-        console.log('Saving competency changes');
-        const currentStates = get().currentStates;
-        const roleId = localStorage.getItem('currentRoleId') || '123';
-        const storageKey = getStorageKey(roleId);
-        
-        // Save to localStorage
-        localStorage.setItem(storageKey, JSON.stringify(currentStates));
-        console.log('Saved states to localStorage with key:', storageKey);
-        
-        // Update originalStates to match currentStates
-        set((state) => ({
-          originalStates: { ...state.currentStates },
-          hasChanges: false,
-        }));
-      },
-      cancelChanges: () => {
-        console.log('Cancelling competency changes');
         const roleId = localStorage.getItem('currentRoleId') || '123';
         const storageKey = getStorageKey(roleId);
         
         set((state) => {
-          // Restore from originalStates
-          localStorage.setItem(storageKey, JSON.stringify(state.originalStates));
+          const stateToSave = {
+            currentStates: state.currentStates,
+            originalStates: state.currentStates // Update originalStates to match currentStates
+          };
+          
+          localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+          console.log('Saved changes to localStorage:', stateToSave);
+          
+          return {
+            originalStates: { ...state.currentStates },
+            hasChanges: false,
+          };
+        });
+      },
+      cancelChanges: () => {
+        const roleId = localStorage.getItem('currentRoleId') || '123';
+        const storageKey = getStorageKey(roleId);
+        
+        set((state) => {
+          const stateToSave = {
+            currentStates: state.originalStates,
+            originalStates: state.originalStates
+          };
+          
+          localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+          console.log('Cancelled changes, restored from originalStates:', stateToSave);
+          
           return {
             currentStates: { ...state.originalStates },
             hasChanges: false,
@@ -155,24 +158,19 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      skipHydration: false, // Enable hydration to load saved states
-      partialize: (state) => ({
-        currentStates: state.currentStates,
-        originalStates: state.originalStates,
-      }),
       storage: {
         getItem: (name) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           const value = localStorage.getItem(storageKey);
-          console.log('Loading stored competency states:', { roleId, value });
-          return value ? Promise.resolve(JSON.parse(value)) : null;
+          console.log('Loading stored competency states:', { roleId, storageKey, value });
+          return Promise.resolve(value);
         },
         setItem: (name, value) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
-          console.log('Storing competency states:', { roleId, value });
-          localStorage.setItem(storageKey, JSON.stringify(value));
+          console.log('Persisting competency states:', { roleId, storageKey, value });
+          localStorage.setItem(storageKey, value);
           return Promise.resolve();
         },
         removeItem: (name) => {
