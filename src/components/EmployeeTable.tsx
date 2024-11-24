@@ -14,6 +14,12 @@ import { getEmployeesAddedLastYear } from "./employee/EmployeeUtils";
 
 // Export utility functions
 export const getSkillProfileId = (role: string) => {
+  // First check if the input is already a valid profile ID
+  const validProfileIds = ["123", "124", "125", "126"];
+  if (validProfileIds.includes(role)) {
+    return role;
+  }
+
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
     "Backend Engineer": "124",
