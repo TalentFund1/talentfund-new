@@ -74,7 +74,7 @@ export const EmployeeTableRow = ({
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
       return (
-        <div className="flex flex-wrap items-start gap-2 min-w-[300px] pl-4">
+        <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
           {selectedSkills.map(skillName => {
             const employeeSkill = employeeSkills.find(s => s.title === skillName);
             if (!employeeSkill) return null;
@@ -98,7 +98,7 @@ export const EmployeeTableRow = ({
     }
 
     return (
-      <div className="flex justify-start pl-4">
+      <div className="flex justify-center">
         <span className={`px-2.5 py-1 rounded-full text-sm ${
           employee.benchmark >= 80 
             ? 'bg-green-100 text-green-800' 
@@ -154,8 +154,8 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      <td className="px-8 py-4 w-[100px] text-center text-sm">{getMatchingSkillsCount()}</td>
-      <td className="py-4 w-[200px]">
+      <td className="px-4 py-4 w-[100px] text-center text-sm">{getMatchingSkillsCount()}</td>
+      <td className="py-4 w-[200px] text-center">
         {renderBenchmark()}
       </td>
       <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
