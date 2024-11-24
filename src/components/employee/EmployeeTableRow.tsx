@@ -7,6 +7,7 @@ import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { roleSkills } from "../skills/data/roleSkills";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -31,15 +32,35 @@ export const EmployeeTableRow = ({
 
   // Get the role ID for the current employee's role
   const roleId = getSkillProfileId(employee.role);
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
+
+  // Calculate matching skills count
+  const getMatchingSkillsCount = () => {
+    if (!currentRoleSkills) return '0';
+
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const matchingSkills = allRoleSkills.filter(roleSkill => {
+      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+      return employeeSkill !== undefined;
+    });
+
+    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+  };
 
   console.log('Employee row rendered:', {
     employeeId: employee.id,
     role: employee.role,
     mappedRoleId: roleId,
-    isExactMatch
+    isExactMatch,
+    skillCount: getMatchingSkillsCount()
   });
 
   const renderBenchmark = () => {
@@ -125,7 +146,7 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      <td className="px-4 py-4 w-[100px] text-center text-sm">{employee.skillCount}</td>
+      <td className="px-4 py-4 w-[100px] text-center text-sm">{getMatchingSkillsCount()}</td>
       <td className="py-4 w-[200px] text-center">
         {renderBenchmark()}
       </td>
