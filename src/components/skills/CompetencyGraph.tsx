@@ -26,7 +26,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return savedCategory || "all";
   });
   const { getTrackForRole } = useTrack();
-  const { saveChanges, cancelChanges, hasChanges, initializeStates, resetAllStates } = useCompetencyStore();
+  const { saveChanges, cancelChanges, hasChanges, initializeStates } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
 
@@ -41,14 +41,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   useEffect(() => {
     initializeStates(currentRoleId);
   }, [currentRoleId, initializeStates]);
-
-  const handleReset = () => {
-    resetAllStates();
-    toast({
-      title: "States Reset",
-      description: "All skill states have been reset to default values.",
-    });
-  };
 
   const handleSave = () => {
     saveChanges();
@@ -121,7 +113,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     let advancedCount = 0;
     levels.forEach(level => {
       const skillState = useCompetencyStore.getState().currentStates[skillName]?.[level.toLowerCase()];
-      if (skillState && skillState.level === 'advanced') {
+      if (skillState?.level?.toLowerCase() === 'advanced') {
         advancedCount++;
       }
     });
@@ -147,17 +139,15 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     })
     .map(skill => skill.title);
 
+  console.log('Current track:', track);
+  console.log('Levels for track:', levels);
+  console.log('Sorted skills by advanced count:', sortedSkills);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            onClick={handleReset}
-          >
-            Reset All
-          </Button>
           <Button 
             variant="outline" 
             onClick={handleCancel}

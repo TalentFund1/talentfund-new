@@ -3,7 +3,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
 import { useEffect } from "react";
 import { useCompetencyStore } from "./CompetencyState";
-import { SkillLevelState } from "./types/StorageTypes";
 
 interface SkillCellProps {
   skillName: string;
@@ -20,7 +19,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
   const currentState = currentStates[skillName]?.[levelKey] || {
     level: "unspecified",
     required: "preferred",
-  } as SkillLevelState;
+  };
 
   useEffect(() => {
     if (!currentStates[skillName]?.[levelKey]) {
@@ -33,8 +32,8 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
     }
   }, [skillName, currentStates, setSkillState, levelKey]);
 
-  const getLevelIcon = (level: SkillLevelState['level']) => {
-    switch (level) {
+  const getLevelIcon = (level: string) => {
+    switch (level.toLowerCase()) {
       case 'advanced':
         return <Star className="w-4 h-4 text-primary-accent" />;
       case 'intermediate':
@@ -42,15 +41,16 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
       case 'beginner':
         return <Target className="w-4 h-4 text-[#008000]" />;
       case 'unspecified':
+        return <CircleDashed className="w-4 h-4 text-gray-400" />;
       default:
         return <CircleDashed className="w-4 h-4 text-gray-400" />;
     }
   };
 
-  const getLevelStyles = (level: SkillLevelState['level']) => {
+  const getLevelStyles = (level: string) => {
     const baseStyles = 'rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]';
 
-    switch (level) {
+    switch (level.toLowerCase()) {
       case 'advanced':
         return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
       case 'intermediate':
@@ -58,23 +58,24 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
       case 'beginner':
         return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
       case 'unspecified':
+        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
       default:
         return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
     }
   };
 
-  const getRequirementStyles = (requirement: SkillLevelState['required'], level: SkillLevelState['level']) => {
-    const borderColor = level === 'advanced' 
+  const getRequirementStyles = (requirement: string, level: string) => {
+    const borderColor = level.toLowerCase() === 'advanced' 
       ? 'border-primary-accent'
-      : level === 'intermediate'
+      : level.toLowerCase() === 'intermediate'
         ? 'border-primary-icon'
-        : level === 'beginner'
+        : level.toLowerCase() === 'beginner'
           ? 'border-[#008000]'
           : 'border-gray-400';
 
     const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
-    switch (requirement) {
+    switch (requirement.toLowerCase()) {
       case 'required':
         return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
       case 'preferred':
@@ -84,10 +85,6 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
     }
   };
 
-  const formatLevel = (level: SkillLevelState['level']) => {
-    return level.charAt(0).toUpperCase() + level.slice(1);
-  };
-
   return (
     <TableCell 
       className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
@@ -95,7 +92,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
       <div className="flex flex-col items-center gap-0">
         <Select 
           value={currentState.level}
-          onValueChange={(value: SkillLevelState['level']) => setSkillState(skillName, value, levelKey, currentState.required)}
+          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required)}
         >
           <SelectTrigger 
             className={`${getLevelStyles(currentState.level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
@@ -103,7 +100,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
                 {getLevelIcon(currentState.level)}
-                {formatLevel(currentState.level)}
+                {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -137,7 +134,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
 
         <Select 
           value={currentState.required}
-          onValueChange={(value: SkillLevelState['required']) => setSkillState(skillName, currentState.level, levelKey, value)}
+          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value)}
         >
           <SelectTrigger 
             className={`${getRequirementStyles(currentState.required, currentState.level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}

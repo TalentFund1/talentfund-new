@@ -1,6 +1,5 @@
 import { useCompetencyStore } from "./CompetencyState";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { SkillLevelState } from "./types/StorageTypes";
 
 interface SkillCompetencyState {
   level: string;
@@ -33,8 +32,8 @@ export const useCompetencyStateReader = () => {
 
     console.log('Found competency state:', { skillName, levelKey, state: levelState });
     return {
-      level: String(levelState.level || 'unspecified'),
-      required: String(levelState.required || 'preferred')
+      level: levelState.level,
+      required: levelState.required
     };
   };
 
@@ -46,8 +45,8 @@ export const useCompetencyStateReader = () => {
       const levelState = skillLevels[levelKey.toLowerCase()];
       if (levelState) {
         states[skillName] = {
-          level: String(levelState.level || 'unspecified'),
-          required: String(levelState.required || 'preferred')
+          level: levelState.level,
+          required: levelState.required
         };
       }
     });
