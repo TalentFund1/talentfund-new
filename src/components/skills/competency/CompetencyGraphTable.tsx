@@ -68,35 +68,52 @@ export const CompetencyGraphTable = ({
     };
   };
 
-  const countAdvancedLevels = (skillName: string, levels: string[]) => {
-    let advancedCount = 0;
+  const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
+    let count = 0;
     levels.forEach(level => {
       const skillState = useCompetencyStore.getState().currentStates[currentRoleId]?.[skillName]?.[level.toLowerCase()];
-      if (skillState?.level?.toLowerCase() === 'advanced') {
-        advancedCount++;
+      if (skillState?.level?.toLowerCase() === targetLevel.toLowerCase()) {
+        count++;
       }
     });
-    return advancedCount;
+    return count;
   };
 
   const skills = getSkillsByCategory();
   const levels = getLevelsForTrack();
 
-  // Sort skills based on the number of advanced levels
+  // Sort skills based on the count of different levels
   const sortedSkills = skills
     .map(skill => ({
       ...skill,
-      advancedCount: countAdvancedLevels(skill.title, levels)
+      advancedCount: countSkillLevels(skill.title, levels, 'advanced'),
+      intermediateCount: countSkillLevels(skill.title, levels, 'intermediate'),
+      beginnerCount: countSkillLevels(skill.title, levels, 'beginner'),
+      unspecifiedCount: countSkillLevels(skill.title, levels, 'unspecified')
     }))
     .sort((a, b) => {
-      // Sort by advanced count first
+      // First sort by advanced count
       const advancedDiff = b.advancedCount - a.advancedCount;
       if (advancedDiff !== 0) return advancedDiff;
       
-      // If advanced counts are equal, sort alphabetically
+      // Then sort by intermediate count
+      const intermediateDiff = b.intermediateCount - a.intermediateCount;
+      if (intermediateDiff !== 0) return intermediateDiff;
+      
+      // Then sort by beginner count
+      const beginnerDiff = b.beginnerCount - a.beginnerCount;
+      if (beginnerDiff !== 0) return beginnerDiff;
+      
+      // Finally sort by unspecified count (reverse order)
+      const unspecifiedDiff = a.unspecifiedCount - b.unspecifiedCount;
+      if (unspecifiedDiff !== 0) return unspecifiedDiff;
+      
+      // If all counts are equal, sort alphabetically
       return a.title.localeCompare(b.title);
     })
     .map(skill => skill.title);
+
+  console.log('Sorted skills:', sortedSkills);
 
   return (
     <div className="rounded-lg border border-border bg-white overflow-hidden">
