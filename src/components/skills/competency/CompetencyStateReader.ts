@@ -1,48 +1,57 @@
 import { useCompetencyStore } from "./CompetencyState";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { SkillLevelState } from "../types/CompetencyTypes";
+
+interface SkillCompetencyState {
+  level: string;
+  required: string;
+}
 
 export const useCompetencyStateReader = () => {
   const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
 
-  const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillLevelState => {
+  const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillCompetencyState | null => {
+    console.log('Reading competency state:', { skillName, levelKey });
+    
     if (!toggledSkills.has(skillName)) {
-      return {
-        level: "unspecified",
-        required: "preferred"
-      };
+      console.log('Skill not toggled:', skillName);
+      return null;
     }
 
     const skillState = currentStates[skillName];
     if (!skillState) {
-      return {
-        level: "unspecified",
-        required: "preferred"
-      };
+      console.log('No state found for skill:', skillName);
+      return null;
     }
 
     const levelState = skillState[levelKey];
     if (!levelState) {
-      return {
-        level: "unspecified",
-        required: "preferred"
-      };
+      console.log('No level state found for skill:', { skillName, levelKey });
+      return null;
     }
 
-    return levelState;
+    console.log('Found competency state:', { skillName, levelKey, state: levelState });
+    return {
+      level: levelState.level,
+      required: levelState.required
+    };
   };
 
-  const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillLevelState> => {
-    const states: Record<string, SkillLevelState> = {};
+  const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
+    console.log('Getting all skill states for level:', levelKey);
+    const states: Record<string, SkillCompetencyState> = {};
     
     Object.entries(currentStates).forEach(([skillName, skillLevels]) => {
-      const levelState = skillLevels[levelKey];
+      const levelState = skillLevels[levelKey.toLowerCase()];
       if (levelState) {
-        states[skillName] = levelState;
+        states[skillName] = {
+          level: levelState.level,
+          required: levelState.required
+        };
       }
     });
 
+    console.log('Retrieved all skill states:', states);
     return states;
   };
 
