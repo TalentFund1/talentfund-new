@@ -114,7 +114,9 @@ export const EmployeeTableRow = ({
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
 
   return (
-    <tr className="border-t border-border hover:bg-muted/50 transition-colors">
+    <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
+      isExactMatch || isExactSkillMatch ? 'bg-blue-50/50' : ''
+    }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
           type="checkbox" 
@@ -134,7 +136,7 @@ export const EmployeeTableRow = ({
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
-            {isExactMatch && (
+            {isExactSkillMatch && selectedSkills.length > 0 && (
               <Badge 
                 variant="secondary" 
                 className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
@@ -154,6 +156,15 @@ export const EmployeeTableRow = ({
           >
             {employee.role}
           </Link>
+          {isExactMatch && (
+            <Badge 
+              variant="secondary" 
+              className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
+            >
+              <CheckCircle2 className="w-3 h-3" />
+              Exact Match
+            </Badge>
+          )}
         </div>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
