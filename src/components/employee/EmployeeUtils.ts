@@ -21,9 +21,7 @@ export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
     console.log('Employee start date check:', {
       name: employee.name,
       startDate: employee.startDate,
-      wasAddedLastYear,
-      startDateObj: startDate.toISOString(),
-      comparison: `${startDate.getTime()} > ${oneYearAgo.getTime()} = ${wasAddedLastYear}`
+      wasAddedLastYear
     });
     
     return wasAddedLastYear;
