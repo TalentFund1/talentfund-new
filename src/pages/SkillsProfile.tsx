@@ -25,6 +25,14 @@ const companyFunctions = [
   "Customer Success"
 ];
 
+// Sample projects data - in a real app this would come from an API
+const projects = [
+  { id: "123", title: "AI Engineer", function: "Engineering", skillCount: 16, employees: 2, matches: "$180,178", lastUpdated: "10/20/24" },
+  { id: "124", title: "Backend Engineer", function: "Engineering", skillCount: 12, employees: 3, matches: "$175,000", lastUpdated: "10/20/24" },
+  { id: "125", title: "Frontend Engineer", function: "Engineering", skillCount: 17, employees: 0, matches: "$170,000", lastUpdated: "10/20/24" },
+  { id: "126", title: "Engineering Manager", function: "Engineering", skillCount: 11, employees: 2, matches: "$190,000", lastUpdated: "10/20/24" }
+];
+
 const SkillsProfile = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
@@ -34,8 +42,15 @@ const SkillsProfile = () => {
   // Convert jobTitles object to array of titles
   const jobTitleOptions = Object.values(jobTitles);
 
+  // Filter projects based on selected job titles
+  const filteredProjects = projects.filter(project => {
+    if (selectedJobTitles.length === 0) return true;
+    return selectedJobTitles.some(title => project.title.toLowerCase() === title.toLowerCase());
+  });
+
   console.log('Available job titles:', jobTitleOptions);
   console.log('Selected job titles:', selectedJobTitles);
+  console.log('Filtered projects:', filteredProjects);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -97,12 +112,12 @@ const SkillsProfile = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               title="Total number of Profiles"
-              value="56"
+              value={filteredProjects.length.toString()}
               icon={<Users className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Open Roles"
-              value="5"
+              value={filteredProjects.filter(p => p.employees === 0).length.toString()}
               icon={<Briefcase className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
