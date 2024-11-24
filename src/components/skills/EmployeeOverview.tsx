@@ -1,4 +1,3 @@
-import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { employees } from "../employee/EmployeeData";
@@ -7,7 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
@@ -46,7 +45,7 @@ export const EmployeeOverview = () => {
   });
 
   const handleEmployeeClick = (employeeId: string) => {
-    navigate(`/employee/${employeeId}`);
+    navigate(`/employee/${employeeId}?tab=benchmark`);
   };
 
   const renderEmployeeList = (employee: typeof employees[0], index: number) => {
