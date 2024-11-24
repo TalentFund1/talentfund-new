@@ -69,6 +69,19 @@ const Employees = () => {
   // Calculate average tenure for filtered employees
   const averageTenure = calculateAverageTenure(filteredEmployees);
 
+  // Calculate employees added in the last year based on filtered results
+  const calculateAddedLastYear = () => {
+    const today = new Date();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(today.getFullYear() - 1);
+    
+    return filteredEmployees.filter(employee => {
+      if (!employee.startDate) return false;
+      const startDate = new Date(employee.startDate);
+      return startDate >= oneYearAgo;
+    }).length;
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -111,16 +124,7 @@ const Employees = () => {
             />
             <StatCard
               title="Added in Past 1 year"
-              value={getEmployeesAddedLastYear(
-                selectedEmployees,
-                selectedDepartment,
-                selectedJobTitle,
-                selectedLevel,
-                selectedOffice,
-                selectedEmploymentType,
-                selectedSkills,
-                selectedManager
-              )}
+              value={calculateAddedLastYear()}
               icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
