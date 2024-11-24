@@ -6,17 +6,7 @@ export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
     addedPastYear: e.addedPastYear
   })));
   
-  const oneYearAgo = new Date();
-  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-  
-  const employeesAddedLastYear = filteredEmployees.filter(employee => {
-    if (!employee.startDate) return false;
-    const startDate = new Date(employee.startDate);
-    if (isNaN(startDate.getTime())) return false;
-    const wasAddedLastYear = startDate > oneYearAgo;
-    console.log(`Employee ${employee.name} start date: ${employee.startDate}, was added last year: ${wasAddedLastYear}`);
-    return wasAddedLastYear;
-  });
+  const employeesAddedLastYear = filteredEmployees.filter(employee => employee.addedPastYear === "YES");
 
   console.log('Employees added in last year:', employeesAddedLastYear.map(e => e.name));
   return employeesAddedLastYear.length;
