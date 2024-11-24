@@ -32,7 +32,7 @@ const companyFunctions = [
 
 const SkillsProfile = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [selectedFunction, setSelectedFunction] = useState<string>("");
+  const [selectedFunctions, setSelectedFunctions] = useState<string[]>([]);
   const allSkills = [...technicalSkills, ...softSkills];
 
   return (
@@ -69,24 +69,21 @@ const SkillsProfile = () => {
                   </SelectContent>
                 </Select>
                 
-                <Select value={selectedFunction} onValueChange={setSelectedFunction}>
-                  <SelectTrigger className="w-[180px] bg-white">
-                    <SelectValue placeholder="Function" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    {companyFunctions.map((func) => (
-                      <SelectItem key={func} value={func.toLowerCase()}>
-                        {func}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <SearchFilter
+                  label=""
+                  placeholder="Function"
+                  items={companyFunctions}
+                  selectedItems={selectedFunctions}
+                  onItemsChange={setSelectedFunctions}
+                  singleSelect={false}
+                  className="w-[180px]"
+                />
 
                 <Button 
                   variant="outline" 
                   onClick={() => {
                     setSelectedSkills([]);
-                    setSelectedFunction("");
+                    setSelectedFunctions([]);
                   }}
                 >
                   Clear All
@@ -119,7 +116,7 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
-            <SkillProfileTable selectedFunction={selectedFunction} />
+            <SkillProfileTable selectedFunction={selectedFunctions.length === 1 ? selectedFunctions[0] : ""} />
 
             <Separator className="my-4" />
             
