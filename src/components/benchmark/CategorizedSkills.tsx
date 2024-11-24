@@ -51,40 +51,58 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     return priorities[level.toLowerCase()] ?? 3;
   };
 
-  // Filter and sort skills based on requirement and competency state
-  const getSkillsWithCompetencyState = () => {
-    return filterSkillsByCategory(allRoleSkills)
-      .filter(skill => toggledSkills.has(skill.title))
-      .map(skill => {
-        const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-        return {
-          ...skill,
-          competencyState
-        };
+  // Filter and sort skills based on requirement and employee possession
+  const requiredSkills = filterSkillsByCategory(allRoleSkills
+    .filter(skill => {
+      // Check if the skill is required in the role definition
+      const isRequiredInRole = skill.requirement?.toLowerCase() === 'required';
+      
+      // Also check competency state
+      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      const isRequiredInCompetency = competencyState?.required === 'required';
+      
+      console.log('Checking required skill:', {
+        skill: skill.title,
+        roleRequirement: skill.requirement,
+        competencyState,
+        isToggled: toggledSkills.has(skill.title)
       });
-  };
-
-  const sortedSkills = getSkillsWithCompetencyState();
-
-  // Separate required and preferred skills
-  const requiredSkills = sortedSkills
-    .filter(skill => skill.competencyState?.required === 'required')
+      
+      return (isRequiredInRole || isRequiredInCompetency) && toggledSkills.has(skill.title);
+    })
     .sort((a, b) => {
-      const aLevel = a.competencyState?.level || 'unspecified';
-      const bLevel = b.competencyState?.level || 'unspecified';
-      return getLevelPriority(aLevel) - getLevelPriority(bLevel);
-    });
+      const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
+      const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
+      return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
+    }));
 
-  const preferredSkills = sortedSkills
-    .filter(skill => skill.competencyState?.required === 'preferred')
+  const preferredSkills = filterSkillsByCategory(allRoleSkills
+    .filter(skill => {
+      // Check if the skill is preferred in the role definition
+      const isPreferredInRole = skill.requirement?.toLowerCase() === 'preferred';
+      
+      // Also check competency state
+      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      const isPreferredInCompetency = competencyState?.required === 'preferred';
+      
+      console.log('Checking preferred skill:', {
+        skill: skill.title,
+        roleRequirement: skill.requirement,
+        competencyState,
+        isToggled: toggledSkills.has(skill.title)
+      });
+      
+      return (isPreferredInRole || isPreferredInCompetency) && 
+             toggledSkills.has(skill.title) && 
+             !requiredSkills.some(req => req.title === skill.title);
+    })
     .sort((a, b) => {
-      const aLevel = a.competencyState?.level || 'unspecified';
-      const bLevel = b.competencyState?.level || 'unspecified';
-      return getLevelPriority(aLevel) - getLevelPriority(bLevel);
-    });
+      const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
+      const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
+      return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
+    }));
 
-  // Get missing skills (skills that employee doesn't have)
-  const missingSkills = filterSkillsByCategory(allRoleSkills)
+  const missingSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
       return !hasSkill && toggledSkills.has(skill.title);
@@ -92,10 +110,8 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
       const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
-      const aLevel = aState?.level || 'unspecified';
-      const bLevel = bState?.level || 'unspecified';
-      return getLevelPriority(aLevel) - getLevelPriority(bLevel);
-    });
+      return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
+    }));
 
   const getLevelColor = (skillTitle: string) => {
     const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase());
