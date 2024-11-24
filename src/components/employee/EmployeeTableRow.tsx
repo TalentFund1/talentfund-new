@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { roleSkills } from "../skills/data/roleSkills";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -28,6 +29,7 @@ export const EmployeeTableRow = ({
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employee.id);
 
   // Get the role ID for the selected job title or current employee's role
@@ -40,24 +42,19 @@ export const EmployeeTableRow = ({
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
 
-  // Calculate matching skills count
+  // Calculate matching skills count using the same logic as benchmark analysis
   const getMatchingSkillsCount = () => {
     if (!currentRoleSkills) return '0 / 0';
 
-    // Get all skills for the role being compared against
+    // Get all role skills that are toggled
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
-    ];
+    ].filter(skill => toggledSkills.has(skill.title));
 
-    // Filter to only required skills
-    const requiredSkills = allRoleSkills.filter(skill => 
-      skill.requirement === 'required'
-    );
-
-    // Count matching required skills
-    const matchingSkills = requiredSkills.filter(roleSkill => {
+    // Count matching skills
+    const matchingSkills = allRoleSkills.filter(roleSkill => {
       const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
       return employeeSkill !== undefined;
     });
@@ -65,13 +62,13 @@ export const EmployeeTableRow = ({
     console.log('Skill match calculation:', {
       employeeName: employee.name,
       roleId,
-      totalRequired: requiredSkills.length,
+      totalSkills: allRoleSkills.length,
       matching: matchingSkills.length,
       employeeSkills: employeeSkills.map(s => s.title),
-      requiredSkills: requiredSkills.map(s => s.title)
+      roleSkills: allRoleSkills.map(s => s.title)
     });
 
-    return `${matchingSkills.length} / ${requiredSkills.length}`;
+    return `${matchingSkills.length} / ${allRoleSkills.length}`;
   };
 
   const renderBenchmark = () => {
