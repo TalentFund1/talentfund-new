@@ -2,8 +2,7 @@ export const jobTitles: { [key: string]: string } = {
   "123": "AI Engineer",
   "124": "Backend Engineer",
   "125": "Frontend Engineer",
-  "126": "Engineering Manager",
-  "127": "DevOps Engineer"
+  "126": "Engineering Manager"
 };
 
 export const specializedSkillsByProfile: { [key: string]: string[] } = {
@@ -20,9 +19,6 @@ export const specializedSkillsByProfile: { [key: string]: string[] } = {
   ],
   "126": [ // Engineering Manager
     "System Design", "Technical Architecture", "Risk Management"
-  ],
-  "127": [ // DevOps Engineer
-    "Kubernetes", "Docker", "AWS", "Terraform", "Jenkins"
   ]
 };
 
@@ -30,8 +26,7 @@ export const commonSkillsByProfile: { [key: string]: string[] } = {
   "123": ["Python", "Problem Solving", "Technical Writing"],
   "124": ["Problem Solving", "Code Review", "Agile Methodologies"],
   "125": ["Cross-browser Compatibility", "Responsive Design", "Problem Solving"],
-  "126": ["Team Leadership", "Project Management", "Strategic Planning", "Stakeholder Management"],
-  "127": ["Linux", "Git", "Python", "Problem Solving"]
+  "126": ["Team Leadership", "Project Management", "Strategic Planning", "Stakeholder Management"]
 };
 
 export const certificationSkillsByProfile: { [key: string]: string[] } = {
@@ -54,10 +49,5 @@ export const certificationSkillsByProfile: { [key: string]: string[] } = {
     "Project Management Professional (PMP)",
     "Certified Scrum Master (CSM)",
     "ITIL Foundation"
-  ],
-  "127": [
-    "AWS Certified DevOps Engineer - Professional",
-    "Certified Kubernetes Administrator (CKA)",
-    "HashiCorp Certified: Terraform Associate"
   ]
 };

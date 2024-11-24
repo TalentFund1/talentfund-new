@@ -25,7 +25,7 @@ export const roleSkills = {
       { title: "Database Design", subcategory: "Data Management", level: "advanced", growth: "15%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "API Development", subcategory: "Backend Development", level: "advanced", growth: "25%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "System Architecture", subcategory: "Software Architecture", level: "intermediate", growth: "30%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
-      { title: "Kubernetes", subcategory: "Container Orchestration", level: "advanced", growth: "28%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+      { title: "Kubernetes", subcategory: "Container Orchestration", level: "advanced", growth: "28%", salary: "$178,208", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     common: [
       { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
@@ -73,26 +73,6 @@ export const roleSkills = {
       { title: "Project Management Professional (PMP)", subcategory: "Management Certification", level: "advanced", growth: "25%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "Certified Scrum Master (CSM)", subcategory: "Agile Certification", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
       { title: "ITIL Foundation", subcategory: "IT Service Management", level: "intermediate", growth: "15%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
-    ]
-  },
-  "127": { // DevOps Engineer
-    specialized: [
-      { title: "Kubernetes", subcategory: "Container Orchestration", level: "advanced", growth: "28%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Docker", subcategory: "Containerization", level: "advanced", growth: "25%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "AWS", subcategory: "Cloud Platform", level: "advanced", growth: "30%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Terraform", subcategory: "Infrastructure as Code", level: "advanced", growth: "32%", salary: "$176,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Jenkins", subcategory: "CI/CD", level: "advanced", growth: "22%", salary: "$174,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
-    ],
-    common: [
-      { title: "Linux", subcategory: "Operating Systems", level: "advanced", growth: "18%", salary: "$170,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Git", subcategory: "Version Control", level: "advanced", growth: "15%", salary: "$168,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Python", subcategory: "Programming Languages", level: "intermediate", growth: "20%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
-      { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
-    ],
-    certifications: [
-      { title: "AWS Certified DevOps Engineer - Professional", subcategory: "Cloud Certification", level: "advanced", growth: "35%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Certified Kubernetes Administrator (CKA)", subcategory: "Container Certification", level: "advanced", growth: "30%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" },
-      { title: "HashiCorp Certified: Terraform Associate", subcategory: "IaC Certification", level: "intermediate", growth: "28%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "preferred" }
     ]
   }
 };
