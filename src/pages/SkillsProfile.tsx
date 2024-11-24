@@ -36,7 +36,7 @@ const projects = [
 const SkillsProfile = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
-  const [selectedJobTitles, setSelectedJobTitles] = useState<string[]>(["Backend Engineer"]);
+  const [selectedJobTitles, setSelectedJobTitles] = useState<string[]>([]);
   const allSkills = [...technicalSkills, ...softSkills];
 
   // Convert jobTitles object to array of titles
