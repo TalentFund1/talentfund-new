@@ -113,9 +113,12 @@ export const EmployeeTableRow = ({
 
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
 
+  const shouldShowExactMatch = (isExactSkillMatch || isExactMatch) && 
+    (selectedSkills.length > 0 || selectedJobTitle.length > 0);
+
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
-      isExactMatch || isExactSkillMatch ? 'bg-blue-50/50' : ''
+      shouldShowExactMatch ? 'bg-blue-50/50' : ''
     }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
@@ -136,7 +139,7 @@ export const EmployeeTableRow = ({
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
-            {(isExactSkillMatch || isExactMatch) && (
+            {shouldShowExactMatch && (
               <Badge 
                 variant="secondary" 
                 className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
