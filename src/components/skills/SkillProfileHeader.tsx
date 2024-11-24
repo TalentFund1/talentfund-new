@@ -10,7 +10,7 @@ interface SkillProfileHeaderProps {
   jobTitle: string;
 }
 
-export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
+export const SkillProfileHeader = ({ id = "", jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { toggledSkills } = useToggledSkills();
   
@@ -22,7 +22,12 @@ export const SkillProfileHeader = ({ id = "123", jobTitle = "AI Engineer" }: Ski
   };
 
   const calculateAveragePrice = () => {
-    const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+    const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
+    if (!currentRoleSkills) {
+      console.error('No role skills found for role:', id);
+      return 0;
+    }
+
     const allSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,

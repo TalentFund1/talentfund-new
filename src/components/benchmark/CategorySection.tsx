@@ -21,7 +21,12 @@ export const CategorySection = ({
   toggledSkills
 }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
+  
+  if (!currentRoleSkills) {
+    console.error('No role skills found for role:', id);
+    return null;
+  }
 
   const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
     return skills.filter(skill => toggledSkills.has(skill.title)).length;
