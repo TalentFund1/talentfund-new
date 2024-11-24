@@ -1,6 +1,4 @@
-import { employees } from "./EmployeeData";
-
-export const getEmployeesAddedLastYear = () => {
+export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
   const today = new Date();
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(today.getFullYear() - 1);
@@ -8,7 +6,7 @@ export const getEmployeesAddedLastYear = () => {
   console.log('Calculating employees added in the last year...');
   console.log('One year ago:', oneYearAgo.toISOString());
   
-  return employees.filter(employee => {
+  return filteredEmployees.filter(employee => {
     if (!employee.startDate) return false;
     const startDate = new Date(employee.startDate);
     console.log(`Employee ${employee.name} start date:`, startDate.toISOString());
