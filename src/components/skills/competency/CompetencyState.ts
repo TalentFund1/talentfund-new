@@ -1,95 +1,97 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyState, StorageValue } from './types/CompetencyTypes';
-import { getStorageKey, saveToStorage, loadFromStorage } from './utils/storageUtils';
+import { RoleCompetencyState, SkillLevelState } from './types/StorageTypes';
+import { saveToStorage, loadRoleState, getStorageKey } from './utils/storageUtils';
 import { initializeSkillStates } from './utils/stateInitializer';
+
+interface CompetencyState {
+  currentRoleId: string | null;
+  currentStates: RoleCompetencyState;
+  originalStates: RoleCompetencyState;
+  hasChanges: boolean;
+  setCurrentRole: (roleId: string) => void;
+  setSkillState: (skillTitle: string, level: string, levelKey: string, requirement: string) => void;
+  saveChanges: () => void;
+  cancelChanges: () => void;
+  initializeStates: (roleId: string) => void;
+}
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
     (set, get) => ({
+      currentRoleId: null,
       currentStates: {},
       originalStates: {},
       hasChanges: false,
-      initializeStates: (roleId: string) => {
-        console.log('Initializing states for role:', roleId);
-        const storageKey = getStorageKey(roleId);
+
+      setCurrentRole: (roleId: string) => {
+        console.log('Setting current role:', roleId);
+        const existingState = loadRoleState(roleId);
         
-        try {
-          const storedValue = loadFromStorage(storageKey);
-          let initializedStates;
-          
-          if (storedValue?.state?.currentStates) {
-            initializedStates = storedValue.state.currentStates;
-            console.log('Found stored states:', initializedStates);
-          } else {
-            initializedStates = initializeSkillStates(roleId);
-            console.log('No stored states found, using default:', initializedStates);
-          }
-          
+        if (existingState) {
+          console.log('Found existing state for role:', roleId);
           set({
+            currentRoleId: roleId,
+            currentStates: existingState,
+            originalStates: existingState,
+            hasChanges: false
+          });
+        } else {
+          console.log('Initializing new state for role:', roleId);
+          const initializedStates = initializeSkillStates(roleId);
+          set({
+            currentRoleId: roleId,
             currentStates: initializedStates,
             originalStates: initializedStates,
             hasChanges: false
           });
-        } catch (error) {
-          console.error('Error initializing states:', error);
-          const defaultStates = initializeSkillStates(roleId);
-          set({
-            currentStates: defaultStates,
-            originalStates: defaultStates,
-            hasChanges: false
-          });
         }
       },
-      setSkillState: (skillName, level, levelKey, required) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, required });
+
+      setSkillState: (skillTitle, level, levelKey, required) => {
+        const { currentRoleId } = get();
+        if (!currentRoleId) {
+          console.error('No current role ID set');
+          return;
+        }
+
+        console.log('Setting skill state:', { skillTitle, level, levelKey, required, roleId: currentRoleId });
         
         set((state) => {
           const newStates = {
             ...state.currentStates,
-            [skillName]: {
-              ...(state.currentStates[skillName] || {}),
+            [skillTitle]: {
+              ...(state.currentStates[skillTitle] || {}),
               [levelKey]: { level, required },
             },
           };
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
-          console.log('New states:', newStates);
-          console.log('Has changes:', hasChanges);
           
-          return {
+          return { 
             currentStates: newStates,
-            hasChanges,
+            hasChanges
           };
         });
       },
+
       saveChanges: () => {
-        const roleId = localStorage.getItem('currentRoleId') || '126';
-        const storageKey = getStorageKey(roleId);
+        const { currentRoleId, currentStates } = get();
+        if (!currentRoleId) {
+          console.error('No current role ID set');
+          return;
+        }
+
+        console.log('Saving changes for role:', currentRoleId);
         
-        set((state) => {
-          const stateToSave: StorageValue<CompetencyState> = {
-            state: {
-              currentStates: state.currentStates,
-              originalStates: state.currentStates,
-              hasChanges: false,
-              setSkillState: () => {},
-              saveChanges: () => {},
-              cancelChanges: () => {},
-              initializeStates: () => {},
-            },
-            version: 1
-          };
-          
-          saveToStorage(storageKey, stateToSave);
-          
-          return {
-            currentStates: state.currentStates,
-            originalStates: state.currentStates,
-            hasChanges: false
-          };
+        saveToStorage(currentRoleId, { [currentRoleId]: currentStates });
+        
+        set({
+          originalStates: currentStates,
+          hasChanges: false
         });
       },
+
       cancelChanges: () => {
         console.log('Cancelling changes');
         set((state) => ({
@@ -97,25 +99,45 @@ export const useCompetencyStore = create<CompetencyState>()(
           hasChanges: false,
         }));
       },
+
+      initializeStates: (roleId: string) => {
+        console.log('Initializing states for role:', roleId);
+        set({ currentRoleId: roleId });
+        
+        const existingState = loadRoleState(roleId);
+        
+        if (existingState) {
+          console.log('Found existing state:', existingState);
+          set({
+            currentStates: existingState,
+            originalStates: existingState,
+            hasChanges: false
+          });
+        } else {
+          console.log('Creating new state');
+          const initializedStates = initializeSkillStates(roleId);
+          set({
+            currentStates: initializedStates,
+            originalStates: initializedStates,
+            hasChanges: false
+          });
+        }
+      },
     }),
     {
-      name: 'competency-storage',
+      name: getStorageKey(),
       storage: {
-        getItem: async (name): Promise<StorageValue<CompetencyState> | null> => {
-          const roleId = localStorage.getItem('currentRoleId') || '126';
-          const storageKey = getStorageKey(roleId);
-          return loadFromStorage(storageKey);
+        getItem: async (name) => {
+          return loadFromStorage();
         },
-        setItem: async (name, value: StorageValue<CompetencyState>) => {
-          const roleId = localStorage.getItem('currentRoleId') || '126';
-          const storageKey = getStorageKey(roleId);
-          saveToStorage(storageKey, value);
+        setItem: async (name, value) => {
+          const { currentRoleId } = useCompetencyStore.getState();
+          if (currentRoleId && value.state) {
+            saveToStorage(currentRoleId, value.state);
+          }
         },
         removeItem: async (name) => {
-          const roleId = localStorage.getItem('currentRoleId') || '126';
-          const storageKey = getStorageKey(roleId);
-          localStorage.removeItem(storageKey);
-          console.log('Removed stored state for role:', roleId);
+          localStorage.removeItem(getStorageKey());
         },
       },
     }

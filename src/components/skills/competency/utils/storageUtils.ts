@@ -1,13 +1,28 @@
-import { CompetencyState, StorageValue } from '../types/CompetencyTypes';
+import { CompetencyStorage, StorageValue } from '../types/StorageTypes';
 
-export const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
+const STORAGE_KEY = 'competency-storage';
+const CURRENT_VERSION = 1;
 
-export const saveToStorage = (storageKey: string, value: StorageValue<CompetencyState>) => {
+export const getStorageKey = () => STORAGE_KEY;
+
+export const saveToStorage = (roleId: string, state: CompetencyStorage): boolean => {
   try {
-    localStorage.setItem(storageKey, JSON.stringify(value));
+    // Get existing storage
+    const existingStorage = loadFromStorage();
+    
+    // Update with new state for this role
+    const newStorage: StorageValue = {
+      state: {
+        ...existingStorage?.state,
+        [roleId]: state[roleId]
+      },
+      version: CURRENT_VERSION
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newStorage));
     console.log('Successfully saved states to storage:', {
-      storageKey,
-      savedState: value.state.currentStates
+      roleId,
+      savedState: newStorage.state[roleId]
     });
     return true;
   } catch (error) {
@@ -16,13 +31,18 @@ export const saveToStorage = (storageKey: string, value: StorageValue<Competency
   }
 };
 
-export const loadFromStorage = (storageKey: string): StorageValue<CompetencyState> | null => {
+export const loadFromStorage = (): StorageValue | null => {
   try {
-    const value = localStorage.getItem(storageKey);
+    const value = localStorage.getItem(STORAGE_KEY);
     if (!value) return null;
-    return JSON.parse(value) as StorageValue<CompetencyState>;
+    return JSON.parse(value) as StorageValue;
   } catch (error) {
     console.error('Error loading states:', error);
     return null;
   }
+};
+
+export const loadRoleState = (roleId: string) => {
+  const storage = loadFromStorage();
+  return storage?.state[roleId] || null;
 };
