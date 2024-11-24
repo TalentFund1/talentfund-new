@@ -3,13 +3,6 @@ import { useCompetencyStore } from "./CompetencyState";
 import { SkillCell } from "./SkillCell";
 import { roleSkills } from "../data/roleSkills";
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { HelpCircle } from "lucide-react";
 
 interface CompetencyGraphTableProps {
   currentRoleId: string;
@@ -26,22 +19,6 @@ export const CompetencyGraphTable = ({
 }: CompetencyGraphTableProps) => {
   const getLevelsForTrack = () => {
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
-  };
-
-  const getLevelDescription = (level: string): string => {
-    const descriptions: { [key: string]: string } = {
-      'P1': 'Entry Level - Beginning professional role, learning fundamentals',
-      'P2': 'Developing - Building experience and growing technical skills',
-      'P3': 'Career - Established professional with solid expertise',
-      'P4': 'Senior - Advanced expertise and leadership capabilities',
-      'P5': 'Expert - Deep domain knowledge and strategic impact',
-      'P6': 'Principal - Highest level of technical leadership',
-      'M3': 'Manager - Team leadership and operational management',
-      'M4': 'Senior Manager - Department leadership and strategic planning',
-      'M5': 'Director - Organizational leadership and vision setting',
-      'M6': 'Senior Director - Executive leadership and enterprise strategy'
-    };
-    return descriptions[level] || level;
   };
 
   const getSkillsByCategory = () => {
@@ -134,19 +111,7 @@ export const CompetencyGraphTable = ({
                 key={level} 
                 className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
               >
-                <div className="font-semibold flex items-center justify-center gap-1">
-                  <span>{level.toUpperCase()}</span>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                      </TooltipTrigger>
-                      <TooltipContent side="top" align="center" className="max-w-[200px] p-2">
-                        <p className="text-sm">{getLevelDescription(level)}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
+                <div className="font-semibold">{level.toUpperCase()}</div>
               </TableHead>
             ))}
           </TableRow>
