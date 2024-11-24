@@ -31,38 +31,44 @@ export const sortEmployeesByRoleMatch = (
       getSkillCompetencyState
     );
 
+    const isExactMatch = getBaseRole(employee.role) === selectedRole;
+    const isPartialMatch = !isExactMatch && benchmark > 0;
+
     console.log('Employee benchmark calculation:', {
       employeeId: employee.id,
       employeeName: employee.name,
       employeeRole: employee.role,
       benchmark,
-      isExactMatch: getBaseRole(employee.role) === selectedRole
+      isExactMatch,
+      isPartialMatch
     });
 
     return {
       ...employee,
-      isExactMatch: getBaseRole(employee.role) === selectedRole,
+      isExactMatch,
+      isPartialMatch,
       benchmark
     };
   });
 
   // Include all employees with either:
   // 1. Exact role matches
-  // 2. Any benchmark score > 0
-  const matchingEmployees = employeesWithBenchmarks.filter(
-    employee => employee.isExactMatch || employee.benchmark > 0
-  );
+  // 2. Partial matches (any benchmark score > 0)
+  const matchingEmployees = employeesWithBenchmarks;
 
   console.log('Matching employees:', {
     total: matchingEmployees.length,
     matches: matchingEmployees.map(emp => ({
       name: emp.name,
       isExactMatch: emp.isExactMatch,
+      isPartialMatch: emp.isPartialMatch,
       benchmark: emp.benchmark
     }))
   });
 
-  // Sort by exact match first, then by benchmark score
+  // Sort by:
+  // 1. Exact matches first
+  // 2. Then by benchmark score
   return matchingEmployees.sort((a, b) => {
     if (a.isExactMatch && !b.isExactMatch) return -1;
     if (!a.isExactMatch && b.isExactMatch) return 1;
