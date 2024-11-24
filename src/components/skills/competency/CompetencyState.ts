@@ -11,13 +11,13 @@ interface SkillState {
 }
 
 interface CompetencyState {
-  currentStates: Record<string, Record<string, SkillState>>;
   originalStates: Record<string, Record<string, SkillState>>;
+  currentStates: Record<string, Record<string, SkillState>>;
   hasChanges: boolean;
-  initializeStates: (roleId: string) => void;
-  setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
+  setSkillState: (skillTitle: string, level: string, levelKey: string, requirement: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
+  initializeStates: (roleId: string) => void;
 }
 
 const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
@@ -76,10 +76,14 @@ const initializeSkillStates = (roleId: string) => {
   return states;
 };
 
-type StorageValue = {
-  state: CompetencyState;
+interface StorageValue {
+  state: {
+    currentStates: Record<string, Record<string, SkillState>>;
+    originalStates: Record<string, Record<string, SkillState>>;
+    hasChanges: boolean;
+  };
   version?: number;
-};
+}
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -164,14 +168,14 @@ export const useCompetencyStore = create<CompetencyState>()(
     {
       name: 'competency-storage',
       storage: {
-        getItem: async (name): Promise<string | null> => {
+        getItem: async (name): Promise<StorageValue | null> => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           const value = localStorage.getItem(storageKey);
           console.log('Loading stored competency states:', { roleId, storageKey, value });
-          return value;
+          return value ? JSON.parse(value) : null;
         },
-        setItem: async (name, value) => {
+        setItem: async (name, value: StorageValue) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           console.log('Persisting competency states:', { roleId, storageKey, value });
