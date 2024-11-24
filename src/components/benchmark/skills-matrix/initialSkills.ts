@@ -69,6 +69,7 @@ export const initialSkills = {
     { title: "Certified Scrum Master (CSM)", subcategory: "Agile Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "ITIL Foundation", subcategory: "IT Service Management", level: "intermediate", growth: "15%", confidence: "medium", requirement: "preferred", isCompanySkill: true }
   ],
+
   "127": [
     // Specialized Skills
     { title: "PyTorch", subcategory: "ML Frameworks", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
