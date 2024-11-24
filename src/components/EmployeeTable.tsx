@@ -68,6 +68,17 @@ export const EmployeeTable = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
 
+  console.log('Initial filtering params:', {
+    selectedDepartment,
+    selectedJobTitle,
+    selectedLevel,
+    selectedOffice,
+    selectedEmploymentType,
+    selectedSkills,
+    selectedManager,
+    totalEmployees: employees.length
+  });
+
   // Calculate benchmark percentages for each employee
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
     employees,
@@ -90,8 +101,25 @@ export const EmployeeTable = ({
     selectedManager
   );
 
+  console.log('After initial filtering:', {
+    preFilteredCount: preFilteredEmployees.length,
+    filters: {
+      department: selectedDepartment,
+      jobTitle: selectedJobTitle,
+      level: selectedLevel,
+      office: selectedOffice,
+      employmentType: selectedEmploymentType,
+      manager: selectedManager
+    }
+  });
+
   // Apply skills filter
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+
+  console.log('After skills filtering:', {
+    skillFilteredCount: skillFilteredEmployees.length,
+    selectedSkills
+  });
 
   // Sort employees by role match and benchmark percentage
   const filteredEmployees = sortEmployeesByRoleMatch(
@@ -102,7 +130,13 @@ export const EmployeeTable = ({
     getSkillCompetencyState
   );
 
-  console.log('Filtered and sorted employees:', filteredEmployees);
+  console.log('Final filtered employees:', {
+    finalCount: filteredEmployees.length,
+    employees: filteredEmployees.map(e => ({
+      name: e.name,
+      role: e.role
+    }))
+  });
 
   return (
     <div className="bg-white rounded-lg">
