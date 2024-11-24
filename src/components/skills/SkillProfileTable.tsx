@@ -3,19 +3,12 @@ import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import type { SkillProfileRow } from "./types";
-import { roleSkills } from './data/roleSkills';
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
-  selectedJobTitles?: string[];
-  selectedSkills?: string[];
 }
 
-export const SkillProfileTable = ({ 
-  selectedFunction,
-  selectedJobTitles = [],
-  selectedSkills = []
-}: SkillProfileTableProps) => {
+export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   
   const rows: SkillProfileRow[] = [
@@ -26,7 +19,7 @@ export const SkillProfileTable = ({
   ];
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSelection = e.target.checked ? filteredRows.map(row => row.id) : [];
+    const newSelection = e.target.checked ? rows.map(row => row.id) : [];
     setSelectedRows(newSelection);
   };
 
@@ -39,44 +32,12 @@ export const SkillProfileTable = ({
     });
   };
 
-  // Helper function to check if a profile has the selected skills
-  const hasSelectedSkills = (roleId: string) => {
-    if (selectedSkills.length === 0) return true;
-
-    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-    if (!currentRoleSkills) return false;
-
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    return selectedSkills.some(selectedSkill =>
-      allRoleSkills.some(roleSkill => 
-        roleSkill.title.toLowerCase().includes(selectedSkill.toLowerCase())
-      )
-    );
-  };
-
-  // Filter rows based on selected function, job titles, and skills
-  const filteredRows = rows.filter(row => {
-    const matchesFunction = selectedFunction 
-      ? row.function.toLowerCase() === selectedFunction.toLowerCase()
-      : true;
-      
-    const matchesJobTitle = selectedJobTitles.length > 0
-      ? selectedJobTitles.some(title => row.name.toLowerCase() === title.toLowerCase())
-      : true;
-
-    const matchesSkills = hasSelectedSkills(row.id);
-
-    return matchesFunction && matchesJobTitle && matchesSkills;
-  });
+  // Filter rows based on selected function
+  const filteredRows = selectedFunction 
+    ? rows.filter(row => row.function.toLowerCase() === selectedFunction.toLowerCase())
+    : rows;
 
   console.log('Filtering skill profiles by function:', selectedFunction);
-  console.log('Filtering skill profiles by job titles:', selectedJobTitles);
-  console.log('Filtering skill profiles by skills:', selectedSkills);
   console.log('Filtered rows:', filteredRows);
 
   return (
