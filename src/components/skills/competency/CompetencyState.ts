@@ -24,15 +24,7 @@ const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
 
 const initializeSkillStates = (roleId: string) => {
   console.log('Initializing competency states for role:', roleId);
-  const states: Record<string, Record<string, SkillState>> = {};
   
-  const allSkills = [
-    ...aiSkills,
-    ...backendSkills,
-    ...commonSkills,
-    ...certificationSkills
-  ];
-
   // First try to load from localStorage
   const storageKey = getStorageKey(roleId);
   const savedStates = localStorage.getItem(storageKey);
@@ -52,6 +44,15 @@ const initializeSkillStates = (roleId: string) => {
 
   // If no saved states or invalid data, initialize with default values
   console.log('Initializing with default states');
+  const states: Record<string, Record<string, SkillState>> = {};
+  
+  const allSkills = [
+    ...aiSkills,
+    ...backendSkills,
+    ...commonSkills,
+    ...certificationSkills
+  ];
+
   allSkills.forEach(skill => {
     states[skill.title] = states[skill.title] || {};
     
@@ -126,10 +127,11 @@ export const useCompetencyStore = create<CompetencyState>()(
         localStorage.setItem(storageKey, JSON.stringify(currentStates));
         console.log('Saved states to localStorage with key:', storageKey);
         
-        set({
-          originalStates: { ...currentStates },
+        // Update originalStates to match currentStates
+        set((state) => ({
+          originalStates: { ...state.currentStates },
           hasChanges: false,
-        });
+        }));
       },
       cancelChanges: () => {
         console.log('Cancelling competency changes');
