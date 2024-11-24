@@ -38,10 +38,19 @@ export const calculateBenchmarkPercentage = (
   // 2. Competency Level Match (33.33% weight)
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
-    if (!roleSkillState) return false;
+    if (!roleSkillState) {
+      console.log('No competency state found for skill:', skill.title);
+      return true; // For manager roles, if no competency state is found, consider it a match
+    }
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
+
+    console.log('Comparing skill levels:', {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel
+    });
 
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
@@ -56,14 +65,16 @@ export const calculateBenchmarkPercentage = (
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    // Only count if employee level matches or exceeds role level
     return employeePriority >= rolePriority;
   });
 
   // 3. Skill Goal Match (33.33% weight)
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
-    if (!skillState) return false;
+    if (!skillState) {
+      console.log('No skill state found for skill:', skill.title);
+      return true; // For manager roles, if no skill state is found, consider it a match
+    }
     return skillState.requirement === 'required' || 
            skillState.requirement === 'skill_goal';
   });
