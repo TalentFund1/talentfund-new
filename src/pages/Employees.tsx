@@ -9,6 +9,7 @@ import { EmployeeTable, employees, getEmployeesAddedLastYear, getBaseRole } from
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
+import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -38,7 +39,7 @@ const Employees = () => {
   const [selectedManager, setSelectedManager] = useState<string[]>([]);
 
   // Get filtered employees
-  const filteredEmployees = filterEmployees(
+  const preFilteredEmployees = filterEmployees(
     employees,
     selectedEmployees,
     selectedDepartment,
@@ -50,40 +51,23 @@ const Employees = () => {
     selectedManager
   );
 
-  // Calculate total employees based on exact role matches when job title is selected
-  const totalEmployees = selectedJobTitle.length > 0
-    ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0]).length
-    : filteredEmployees.length;
+  // Apply skills filter
+  const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+
+  console.log('Filtered employees count:', filteredEmployees.length);
+
+  // Calculate total employees based on filtered results
+  const totalEmployees = filteredEmployees.length;
 
   // Calculate female percentage from the filtered employees
   const calculateFemalePercentage = () => {
-    const relevantEmployees = selectedJobTitle.length > 0
-      ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0])
-      : filteredEmployees;
-
-    if (relevantEmployees.length === 0) return 0;
-    
-    const femaleCount = relevantEmployees.filter(emp => emp.sex === 'female').length;
-    return Math.round((femaleCount / relevantEmployees.length) * 100);
+    if (filteredEmployees.length === 0) return 0;
+    const femaleCount = filteredEmployees.filter(emp => emp.sex === 'female').length;
+    return Math.round((femaleCount / filteredEmployees.length) * 100);
   };
 
-  // Calculate average tenure for matching profiles
-  const relevantEmployeesForTenure = selectedJobTitle.length > 0
-    ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0])
-    : filteredEmployees;
-  
-  const averageTenure = calculateAverageTenure(relevantEmployeesForTenure);
-
-  console.log('Calculating average tenure:', {
-    totalEmployees: filteredEmployees.length,
-    relevantEmployees: relevantEmployeesForTenure.length,
-    averageTenure,
-    employeeTenures: relevantEmployeesForTenure.map(emp => ({
-      name: emp.name,
-      startDate: emp.startDate,
-      tenure: calculateAverageTenure([emp])
-    }))
-  });
+  // Calculate average tenure for filtered employees
+  const averageTenure = calculateAverageTenure(filteredEmployees);
 
   return (
     <div className="flex min-h-screen bg-background">
