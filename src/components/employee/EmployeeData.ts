@@ -21,7 +21,7 @@ export const employees: Employee[] = [
     sex: "male",
     category: "Full-time",
     manager: "Sus Manu",
-    startDate: "2023-05-15",
+    startDate: "2022-05-15", // More than a year ago
     office: "Toronto",
     termDate: "-",
     addedPastYear: "NO"
@@ -38,10 +38,10 @@ export const employees: Employee[] = [
     sex: "female",
     category: "Contract",
     manager: "Sus Manu",
-    startDate: "2024-01-10",
+    startDate: "2022-01-10", // More than a year ago
     office: "Toronto",
     termDate: "-",
-    addedPastYear: "YES"
+    addedPastYear: "NO"
   },
   {
     id: "125",
@@ -55,10 +55,10 @@ export const employees: Employee[] = [
     sex: "female",
     category: "Part-time",
     manager: "Sus Manu",
-    startDate: "2024-06-01",
+    startDate: "2022-06-01", // More than a year ago
     office: "Toronto",
     termDate: "-",
-    addedPastYear: "YES"
+    addedPastYear: "NO"
   },
   {
     id: "126",
@@ -72,7 +72,7 @@ export const employees: Employee[] = [
     sex: "male",
     category: "Contract",
     manager: "Sarah Chen",
-    startDate: "2022-11-01",
+    startDate: "2022-11-01", // More than a year ago
     office: "Toronto",
     termDate: "-",
     addedPastYear: "NO"
