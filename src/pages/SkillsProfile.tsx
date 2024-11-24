@@ -49,10 +49,21 @@ const SkillsProfile = () => {
       const matchesJobTitle = !selectedJobTitle || profile.name.toLowerCase() === selectedJobTitle.toLowerCase();
       
       // Check if profile has any of the selected skills
-      const profileSkills = roleSkills[profile.id as keyof typeof roleSkills] || [];
+      const profileSkillsData = roleSkills[profile.id as keyof typeof roleSkills];
+      if (!profileSkillsData || Array.isArray(profileSkillsData)) {
+        return false;
+      }
+
+      const allProfileSkills = [
+        ...(profileSkillsData.specialized || []),
+        ...(profileSkillsData.common || []),
+        ...(profileSkillsData.certifications || [])
+      ];
+
       const hasSelectedSkills = selectedSkills.length === 0 || selectedSkills.some(skill => 
-        [...(profileSkills.specialized || []), ...(profileSkills.common || []), ...(profileSkills.certifications || [])]
-          .some(profileSkill => profileSkill.title.toLowerCase().includes(skill.toLowerCase()))
+        allProfileSkills.some(profileSkill => 
+          profileSkill.title.toLowerCase().includes(skill.toLowerCase())
+        )
       );
 
       return matchesFunction && matchesJobTitle && hasSelectedSkills;
