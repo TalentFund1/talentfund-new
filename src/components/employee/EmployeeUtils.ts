@@ -1,11 +1,12 @@
 export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
+  // Create dates in UTC to avoid timezone issues
   const today = new Date();
   const oneYearAgo = new Date(today);
   oneYearAgo.setFullYear(today.getFullYear() - 1);
   
   // Normalize dates to start of day for accurate comparison
-  today.setHours(0, 0, 0, 0);
-  oneYearAgo.setHours(0, 0, 0, 0);
+  today.setUTCHours(0, 0, 0, 0);
+  oneYearAgo.setUTCHours(0, 0, 0, 0);
   
   console.log('Calculating employees added in the last year...');
   console.log('One year ago:', oneYearAgo.toISOString());
@@ -14,8 +15,9 @@ export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
   const employeesAddedLastYear = filteredEmployees.filter(employee => {
     if (!employee.startDate) return false;
     
+    // Create date in UTC
     const startDate = new Date(employee.startDate);
-    startDate.setHours(0, 0, 0, 0); // Normalize start date
+    startDate.setUTCHours(0, 0, 0, 0);
     
     console.log(`Employee ${employee.name} start date:`, startDate.toISOString());
     console.log(`One year ago date for comparison:`, oneYearAgo.toISOString());
