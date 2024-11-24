@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleCompetencyState, CompetencyStorage } from './types/StorageTypes';
+import { RoleCompetencyState } from './types/StorageTypes';
 import { initializeSkillStates } from './utils/stateInitializer';
 
 interface CompetencyState {
@@ -27,8 +27,7 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       setCurrentRole: (roleId: string) => {
         console.log('Setting current role:', roleId);
-        const state = get();
-        const existingStates = state.currentStates[roleId] || initializeSkillStates(roleId);
+        const existingStates = get().currentStates[roleId] || initializeSkillStates(roleId);
         
         set({
           currentRoleId: roleId,
@@ -103,7 +102,6 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: STORAGE_KEY,
-      // Only persist the states and currentRoleId
       partialize: (state) => ({ 
         currentStates: state.currentStates,
         currentRoleId: state.currentRoleId,
