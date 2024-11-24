@@ -11,4 +11,6 @@ export interface Employee {
   category: string;
   manager?: string;
   startDate?: string;
+  office: string;
+  termDate: string;
 }
