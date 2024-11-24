@@ -136,7 +136,7 @@ export const EmployeeTableRow = ({
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
-            {isExactMatch && selectedJobTitle.length > 0 && (
+            {isExactSkillMatch && selectedSkills.length > 0 && (
               <Badge 
                 variant="secondary" 
                 className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
@@ -156,7 +156,7 @@ export const EmployeeTableRow = ({
           >
             {employee.role}
           </Link>
-          {isExactSkillMatch && selectedSkills.length > 0 && (
+          {isExactMatch && (
             <Badge 
               variant="secondary" 
               className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
