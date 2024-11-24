@@ -33,8 +33,8 @@ export const useCompetencyStateReader = () => {
 
     console.log('Found competency state:', { skillName, levelKey, state: levelState });
     return {
-      level: levelState.level || 'unspecified',
-      required: levelState.required || 'preferred'
+      level: String(levelState.level || 'unspecified'),
+      required: String(levelState.required || 'preferred')
     };
   };
 
@@ -46,8 +46,8 @@ export const useCompetencyStateReader = () => {
       const levelState = skillLevels[levelKey.toLowerCase()];
       if (levelState) {
         states[skillName] = {
-          level: levelState.level || 'unspecified',
-          required: levelState.required || 'preferred'
+          level: String(levelState.level || 'unspecified'),
+          required: String(levelState.required || 'preferred')
         };
       }
     });

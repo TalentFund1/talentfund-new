@@ -1,6 +1,6 @@
 export interface SkillLevelState {
-  level: string;
-  required: string;
+  level: 'unspecified' | 'beginner' | 'intermediate' | 'advanced';
+  required: 'required' | 'preferred';
 }
 
 export interface SkillState {

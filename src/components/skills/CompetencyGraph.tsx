@@ -121,7 +121,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     let advancedCount = 0;
     levels.forEach(level => {
       const skillState = useCompetencyStore.getState().currentStates[skillName]?.[level.toLowerCase()];
-      if (skillState?.level === 'advanced') {
+      if (skillState && skillState.level === 'advanced') {
         advancedCount++;
       }
     });
