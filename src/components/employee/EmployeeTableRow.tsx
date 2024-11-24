@@ -41,9 +41,7 @@ export const EmployeeTableRow = ({
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
 
-  // Updated getMatchingSkillsCount to handle selected skills
   const getMatchingSkillsCount = () => {
-    // If specific skills are selected, count matches against those
     if (selectedSkills.length > 0) {
       const matchingSkills = selectedSkills.filter(skillName => {
         return employeeSkills.some(empSkill => empSkill.title === skillName);
@@ -56,11 +54,14 @@ export const EmployeeTableRow = ({
         matchingCount: matchingSkills.length
       });
 
-      return `${matchingSkills.length} / ${selectedSkills.length}`;
+      return {
+        matching: matchingSkills.length,
+        total: selectedSkills.length,
+        isExactSkillMatch: matchingSkills.length === selectedSkills.length && selectedSkills.length > 0
+      };
     }
 
-    // Default behavior when no specific skills are selected
-    if (!currentRoleSkills) return '0 / 0';
+    if (!currentRoleSkills) return { matching: 0, total: 0, isExactSkillMatch: false };
 
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
@@ -73,7 +74,11 @@ export const EmployeeTableRow = ({
       return employeeSkill !== undefined;
     });
 
-    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+    return {
+      matching: matchingSkills.length,
+      total: allRoleSkills.length,
+      isExactSkillMatch: matchingSkills.length === allRoleSkills.length && allRoleSkills.length > 0
+    };
   };
 
   const renderBenchmark = () => {
@@ -114,6 +119,8 @@ export const EmployeeTableRow = ({
       </div>
     );
   };
+
+  const skillsMatch = getMatchingSkillsCount();
 
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
@@ -159,7 +166,20 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      <td className="px-4 py-4 w-[100px] text-center text-sm">{getMatchingSkillsCount()}</td>
+      <td className="px-4 py-4 w-[100px] text-center text-sm">
+        <div className="flex items-center justify-center gap-2">
+          <span>{`${skillsMatch.matching} / ${skillsMatch.total}`}</span>
+          {skillsMatch.isExactSkillMatch && skillsMatch.total > 0 && (
+            <Badge 
+              variant="secondary" 
+              className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
+            >
+              <CheckCircle2 className="w-3 h-3" />
+              Exact Match
+            </Badge>
+          )}
+        </div>
+      </td>
       <td className="py-4 w-[200px] text-center">
         {renderBenchmark()}
       </td>
