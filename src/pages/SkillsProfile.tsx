@@ -119,7 +119,7 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
-            <SkillProfileTable />
+            <SkillProfileTable selectedFunction={selectedFunction} />
 
             <Separator className="my-4" />
             

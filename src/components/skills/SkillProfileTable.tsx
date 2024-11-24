@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import type { SkillProfileRow } from "./types";
 
-export const SkillProfileTable = () => {
+interface SkillProfileTableProps {
+  selectedFunction?: string;
+}
+
+export const SkillProfileTable = ({ selectedFunction }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   
   const rows: SkillProfileRow[] = [
@@ -28,6 +32,14 @@ export const SkillProfileTable = () => {
     });
   };
 
+  // Filter rows based on selected function
+  const filteredRows = selectedFunction 
+    ? rows.filter(row => row.function.toLowerCase() === selectedFunction.toLowerCase())
+    : rows;
+
+  console.log('Filtering skill profiles by function:', selectedFunction);
+  console.log('Filtered rows:', filteredRows);
+
   return (
     <div className="space-y-4">
       <Table>
@@ -38,7 +50,7 @@ export const SkillProfileTable = () => {
                 type="checkbox" 
                 className="rounded border-gray-300"
                 onChange={handleSelectAll}
-                checked={selectedRows.length === rows.length && rows.length > 0}
+                checked={selectedRows.length === filteredRows.length && filteredRows.length > 0}
               />
             </TableHead>
             <TableHead className="w-[22%] h-12">
@@ -54,7 +66,7 @@ export const SkillProfileTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {rows.map((row) => (
+          {filteredRows.map((row) => (
             <TableRow key={row.id} className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
               <TableCell className="align-middle">
                 <input 
