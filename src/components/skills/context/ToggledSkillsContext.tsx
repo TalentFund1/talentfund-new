@@ -35,18 +35,13 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   });
 
   // Get the current role's toggled skills
-  const toggledSkills = skillsByRole[id || ''] || new Set<string>();
+  const toggledSkills = skillsByRole[id || '123'] || new Set<string>();
 
   // Update skills for the current role
   const setToggledSkills = (newSkills: Set<string>) => {
-    if (!id) {
-      console.error('No role ID provided');
-      return;
-    }
-    
     setSkillsByRole(prev => ({
       ...prev,
-      [id]: newSkills
+      [id || '123']: newSkills
     }));
   };
 
