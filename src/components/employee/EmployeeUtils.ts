@@ -1,5 +1,12 @@
 export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
-  console.log('Calculating employees added in the last year...');
+  console.log('Calculating employees added in the last year from filtered employees:', {
+    totalFilteredEmployees: filteredEmployees.length,
+    employeeDetails: filteredEmployees.map(e => ({
+      name: e.name,
+      startDate: e.startDate,
+      addedPastYear: e.addedPastYear
+    }))
+  });
   
   // Get current date and date 1 year ago
   const now = new Date();
@@ -12,6 +19,7 @@ export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
   });
 
   // Filter employees based on start date being within the last year
+  // but only from the already filtered employee list
   const employeesAddedLastYear = filteredEmployees.filter(employee => {
     if (!employee.startDate) return false;
     
@@ -27,10 +35,13 @@ export const getEmployeesAddedLastYear = (filteredEmployees: any[]) => {
     return wasAddedLastYear;
   });
 
-  console.log('Employees added in last year:', employeesAddedLastYear.map(e => ({
-    name: e.name,
-    startDate: e.startDate
-  })));
+  console.log('Employees added in last year:', {
+    count: employeesAddedLastYear.length,
+    employees: employeesAddedLastYear.map(e => ({
+      name: e.name,
+      startDate: e.startDate
+    }))
+  });
   
   return employeesAddedLastYear.length;
 };
