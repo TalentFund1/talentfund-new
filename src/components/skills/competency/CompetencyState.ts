@@ -77,6 +77,7 @@ const initializeSkillStates = (roleId: string) => {
 
   // Save initial states to localStorage
   localStorage.setItem(storageKey, JSON.stringify(states));
+  console.log('Initialized and saved default states:', states);
   return states;
 };
 
@@ -111,6 +112,12 @@ export const useCompetencyStore = create<CompetencyState>()(
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
+          // Save to localStorage immediately after state change
+          const roleId = localStorage.getItem('currentRoleId') || '123';
+          const storageKey = getStorageKey(roleId);
+          localStorage.setItem(storageKey, JSON.stringify(newStates));
+          console.log('Saved updated states to localStorage:', newStates);
+          
           return {
             currentStates: newStates,
             hasChanges,
@@ -123,7 +130,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         const roleId = localStorage.getItem('currentRoleId') || '123';
         const storageKey = getStorageKey(roleId);
         
-        // Save to localStorage with role-specific key
+        // Save to localStorage
         localStorage.setItem(storageKey, JSON.stringify(currentStates));
         console.log('Saved states to localStorage with key:', storageKey);
         
@@ -135,10 +142,17 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
       cancelChanges: () => {
         console.log('Cancelling competency changes');
-        set((state) => ({
-          currentStates: { ...state.originalStates },
-          hasChanges: false,
-        }));
+        const roleId = localStorage.getItem('currentRoleId') || '123';
+        const storageKey = getStorageKey(roleId);
+        
+        set((state) => {
+          // Restore from originalStates
+          localStorage.setItem(storageKey, JSON.stringify(state.originalStates));
+          return {
+            currentStates: { ...state.originalStates },
+            hasChanges: false,
+          };
+        });
       },
     }),
     {
