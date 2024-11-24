@@ -18,7 +18,10 @@ export const useCompetencyStateReader = () => {
 
     const levelState = skillState[levelKey];
     if (!levelState) {
-      return null;
+      return {
+        level: "unspecified",
+        required: "preferred"
+      };
     }
 
     return levelState;
