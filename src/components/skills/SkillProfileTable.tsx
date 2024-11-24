@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import type { SkillProfileRow } from "./types";
 import { roleSkills } from './data/roleSkills';
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
@@ -17,6 +18,7 @@ export const SkillProfileTable = ({
   selectedJobTitle 
 }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const { toggledSkills } = useToggledSkills();
   
   const rows: SkillProfileRow[] = [
     { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: "2", matches: "$180,178", lastUpdated: "10/20/24" },
@@ -39,6 +41,20 @@ export const SkillProfileTable = ({
     });
   };
 
+  // Calculate toggled skills count for a role
+  const getToggledSkillsCount = (roleId: string) => {
+    const profileSkills = roleSkills[roleId as keyof typeof roleSkills];
+    if (!profileSkills) return 0;
+
+    const allProfileSkills = [
+      ...profileSkills.specialized,
+      ...profileSkills.common,
+      ...profileSkills.certifications
+    ];
+
+    return allProfileSkills.filter(skill => toggledSkills.has(skill.title)).length;
+  };
+
   // Filter rows based on selected criteria
   const filteredRows = rows.filter(row => {
     const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
@@ -59,7 +75,10 @@ export const SkillProfileTable = ({
     );
 
     return matchesFunction && matchesJobTitle && hasSelectedSkills;
-  });
+  }).map(row => ({
+    ...row,
+    skillCount: String(getToggledSkillsCount(row.id))
+  }));
 
   console.log('Filtering profiles with:', { selectedFunction, selectedSkills, selectedJobTitle });
   console.log('Filtered rows:', filteredRows);
