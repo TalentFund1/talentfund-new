@@ -13,7 +13,10 @@ export const useCompetencyStateReader = () => {
 
     const skillState = currentStates[skillName];
     if (!skillState) {
-      return null;
+      return {
+        level: "unspecified",
+        required: "preferred"
+      };
     }
 
     const levelState = skillState[levelKey];

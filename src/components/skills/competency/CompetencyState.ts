@@ -46,7 +46,7 @@ export const useCompetencyStore = create<CompetencyState>()(
           }
           
           if (!newStates[skillTitle][levelKey]) {
-            newStates[skillTitle][levelKey] = initializeSkillState();
+            newStates[skillTitle][levelKey] = {};
           }
           
           newStates[skillTitle][levelKey] = {
@@ -71,7 +71,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         
         const stateToSave = {
           currentStates: state.currentStates,
-          originalStates: state.currentStates, // Update original states to match current
+          originalStates: state.currentStates,
           hasChanges: false
         };
         
