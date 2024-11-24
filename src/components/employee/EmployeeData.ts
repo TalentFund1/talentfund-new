@@ -53,7 +53,7 @@ export const employees: Employee[] = [
     sex: "female",
     category: "Part-time",
     manager: "Sus Manu",
-    startDate: "2023-08-22",
+    startDate: "2024-06-01",
     office: "Toronto",
     termDate: "-"
   },
