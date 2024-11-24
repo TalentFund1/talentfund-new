@@ -3,18 +3,12 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
 import { Users, Briefcase, Equal, Clock, ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { technicalSkills, softSkills } from '@/components/skillsData';
+import { jobTitles } from '@/components/skills/competency/skillProfileData';
 
 // Define company functions/departments
 const companyFunctions = [
@@ -33,7 +27,14 @@ const companyFunctions = [
 const SkillsProfile = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
+  const [selectedJobTitles, setSelectedJobTitles] = useState<string[]>([]);
   const allSkills = [...technicalSkills, ...softSkills];
+
+  // Convert jobTitles object to array of titles
+  const jobTitleOptions = Object.values(jobTitles);
+
+  console.log('Available job titles:', jobTitleOptions);
+  console.log('Selected job titles:', selectedJobTitles);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -59,34 +60,31 @@ const SkillsProfile = () => {
               />
               
               <div className="flex flex-wrap gap-3">
-                <Select>
-                  <SelectTrigger className="w-[180px] bg-white">
-                    <SelectValue placeholder="Job Title" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    <SelectItem value="junior">Junior</SelectItem>
-                    <SelectItem value="senior">Senior</SelectItem>
-                  </SelectContent>
-                </Select>
+                <SearchFilter
+                  label=""
+                  placeholder="Job Title"
+                  items={jobTitleOptions}
+                  selectedItems={selectedJobTitles}
+                  onItemsChange={setSelectedJobTitles}
+                  className="w-[180px]"
+                />
                 
-                <Select value={selectedFunction} onValueChange={setSelectedFunction}>
-                  <SelectTrigger className="w-[180px] bg-white">
-                    <SelectValue placeholder="Function" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    {companyFunctions.map((func) => (
-                      <SelectItem key={func} value={func.toLowerCase()}>
-                        {func}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <SearchFilter
+                  label=""
+                  placeholder="Function"
+                  items={companyFunctions}
+                  selectedItems={selectedFunction ? [selectedFunction] : []}
+                  onItemsChange={(items) => setSelectedFunction(items[0] || "")}
+                  singleSelect={true}
+                  className="w-[180px]"
+                />
 
                 <Button 
                   variant="outline" 
                   onClick={() => {
                     setSelectedSkills([]);
                     setSelectedFunction("");
+                    setSelectedJobTitles([]);
                   }}
                 >
                   Clear All
@@ -124,7 +122,7 @@ const SkillsProfile = () => {
             <Separator className="my-4" />
             
             <div className="flex justify-between items-center">
-              <Select>
+              <Select defaultValue="10">
                 <SelectTrigger className="w-[100px]">
                   <SelectValue placeholder="10 rows" />
                 </SelectTrigger>
@@ -134,16 +132,15 @@ const SkillsProfile = () => {
                   <SelectItem value="50">50 rows</SelectItem>
                 </SelectContent>
               </Select>
+              
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">1-5 of 5</span>
-                <div className="flex gap-1">
-                  <Button variant="outline" size="icon" className="w-8 h-8">
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" size="icon" className="w-8 h-8">
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
+                <span className="text-sm text-muted-foreground">1-5 of 5</span>
+                <Button variant="outline" size="icon" className="w-8 h-8">
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" className="w-8 h-8">
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </Card>
