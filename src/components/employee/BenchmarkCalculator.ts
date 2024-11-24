@@ -43,11 +43,6 @@ export const calculateBenchmarkPercentage = (
       return false;
     }
 
-    // Only count skills that are marked as required
-    if (roleSkillState.required !== 'required') {
-      return false;
-    }
-
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
