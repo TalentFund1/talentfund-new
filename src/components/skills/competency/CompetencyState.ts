@@ -68,7 +68,6 @@ export const useCompetencyStore = create<CompetencyState>()(
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
-          // Immediately save to storage when state changes
           const storageData: CompetencyStorage = {
             [state.currentRoleId!]: newStates
           };
