@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/StatCard";
+import { Users, Briefcase, Equal, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
+import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
+import { technicalSkills, softSkills } from '@/components/skillsData';
+import { jobTitles } from '@/components/skills/competency/skillProfileData';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 
 // Define company functions/departments
 const companyFunctions = [
