@@ -25,8 +25,8 @@ export const calculateBenchmarkPercentage = (
   const totalToggledSkills = toggledRoleSkills.length;
 
   if (totalToggledSkills === 0) {
-    console.log('No toggled skills found, returning 100%');
-    return 100;
+    console.log('No toggled skills found, returning 0%');
+    return 0;
   }
 
   // 1. Basic Skill Match (33.33% weight)
@@ -90,6 +90,9 @@ export const calculateBenchmarkPercentage = (
   );
 
   console.log('Benchmark calculation results:', {
+    employeeId,
+    roleId,
+    level,
     totalSkills: totalToggledSkills,
     matchingSkills: matchingSkills.length,
     competencyMatches: competencyMatchingSkills.length,
