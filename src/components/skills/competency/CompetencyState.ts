@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleCompetencyState, SkillLevelState } from './types/StorageTypes';
+import { RoleCompetencyState, SkillLevelState, CompetencyStorage } from './types/StorageTypes';
 import { saveToStorage, loadRoleState, getStorageKey } from './utils/storageUtils';
 import { initializeSkillStates } from './utils/stateInitializer';
 
@@ -84,7 +84,11 @@ export const useCompetencyStore = create<CompetencyState>()(
 
         console.log('Saving changes for role:', currentRoleId);
         
-        saveToStorage(currentRoleId, { [currentRoleId]: currentStates });
+        const storageData: CompetencyStorage = {
+          [currentRoleId]: currentStates
+        };
+        
+        saveToStorage(currentRoleId, storageData);
         
         set({
           originalStates: currentStates,
@@ -128,12 +132,16 @@ export const useCompetencyStore = create<CompetencyState>()(
       name: getStorageKey(),
       storage: {
         getItem: async (name) => {
-          return loadFromStorage();
+          const storage = loadRoleState(get().currentRoleId || '');
+          return storage ? { state: storage } : null;
         },
         setItem: async (name, value) => {
-          const { currentRoleId } = useCompetencyStore.getState();
+          const { currentRoleId } = get();
           if (currentRoleId && value.state) {
-            saveToStorage(currentRoleId, value.state);
+            const storageData: CompetencyStorage = {
+              [currentRoleId]: value.state
+            };
+            saveToStorage(currentRoleId, storageData);
           }
         },
         removeItem: async (name) => {
