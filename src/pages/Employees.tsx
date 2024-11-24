@@ -50,37 +50,39 @@ const Employees = () => {
     selectedManager
   );
 
-  // Calculate metrics based on filtered employees
-  const totalEmployees = filteredEmployees.length;
+  // Calculate total employees based on exact role matches when job title is selected
+  const totalEmployees = selectedJobTitle.length > 0
+    ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0]).length
+    : filteredEmployees.length;
 
-  // Calculate added in past year from filtered employees
-  const addedLastYear = getEmployeesAddedLastYear(
-    selectedEmployees,
-    selectedDepartment,
-    selectedJobTitle,
-    selectedLevel,
-    selectedOffice,
-    selectedEmploymentType,
-    selectedSkills,
-    selectedManager
-  );
-
-  // Calculate female percentage from filtered employees
+  // Calculate female percentage from the filtered employees
   const calculateFemalePercentage = () => {
-    if (filteredEmployees.length === 0) return 0;
-    const femaleCount = filteredEmployees.filter(emp => emp.sex === 'female').length;
-    return Math.round((femaleCount / filteredEmployees.length) * 100);
+    const relevantEmployees = selectedJobTitle.length > 0
+      ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0])
+      : filteredEmployees;
+
+    if (relevantEmployees.length === 0) return 0;
+    
+    const femaleCount = relevantEmployees.filter(emp => emp.sex === 'female').length;
+    return Math.round((femaleCount / relevantEmployees.length) * 100);
   };
 
-  // Calculate average tenure for filtered employees
-  const averageTenure = calculateAverageTenure(filteredEmployees);
+  // Calculate average tenure for matching profiles
+  const relevantEmployeesForTenure = selectedJobTitle.length > 0
+    ? filteredEmployees.filter(emp => getBaseRole(emp.role) === selectedJobTitle[0])
+    : filteredEmployees;
+  
+  const averageTenure = calculateAverageTenure(relevantEmployeesForTenure);
 
-  console.log('Stats calculation:', {
-    totalEmployees,
-    addedLastYear,
-    femalePercentage: calculateFemalePercentage(),
+  console.log('Calculating average tenure:', {
+    totalEmployees: filteredEmployees.length,
+    relevantEmployees: relevantEmployeesForTenure.length,
     averageTenure,
-    filteredEmployees: filteredEmployees.map(e => e.name)
+    employeeTenures: relevantEmployeesForTenure.map(emp => ({
+      name: emp.name,
+      startDate: emp.startDate,
+      tenure: calculateAverageTenure([emp])
+    }))
   });
 
   return (
@@ -125,7 +127,16 @@ const Employees = () => {
             />
             <StatCard
               title="Added in Past 1 year"
-              value={addedLastYear}
+              value={getEmployeesAddedLastYear(
+                selectedEmployees,
+                selectedDepartment,
+                selectedJobTitle,
+                selectedLevel,
+                selectedOffice,
+                selectedEmploymentType,
+                selectedSkills,
+                selectedManager
+              )}
               icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
