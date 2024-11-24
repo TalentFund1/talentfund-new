@@ -1,5 +1,6 @@
 import { useCompetencyStore } from "./CompetencyState";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
+import { useParams } from "react-router-dom";
 
 interface SkillCompetencyState {
   level: string;
@@ -9,16 +10,18 @@ interface SkillCompetencyState {
 export const useCompetencyStateReader = () => {
   const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
+  const { id: roleId } = useParams<{ id: string }>();
 
   const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillCompetencyState | null => {
-    console.log('Reading competency state:', { skillName, levelKey });
+    console.log('Reading competency state:', { skillName, levelKey, roleId });
     
     if (!toggledSkills.has(skillName)) {
       console.log('Skill not toggled:', skillName);
       return null;
     }
 
-    const roleStates = currentStates["123"]; // Default role ID
+    const currentRoleId = roleId || "123";
+    const roleStates = currentStates[currentRoleId];
     if (!roleStates || !roleStates[skillName]) {
       console.log('No state found for skill:', skillName);
       return null;
@@ -40,7 +43,8 @@ export const useCompetencyStateReader = () => {
   const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
     console.log('Getting all skill states for level:', levelKey);
     const states: Record<string, SkillCompetencyState> = {};
-    const roleStates = currentStates["123"]; // Default role ID
+    const currentRoleId = roleId || "123";
+    const roleStates = currentStates[currentRoleId];
     
     if (roleStates) {
       Object.entries(roleStates).forEach(([skillName, skillLevels]) => {

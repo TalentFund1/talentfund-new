@@ -18,22 +18,23 @@ interface SkillCellProps {
 export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillCellProps) => {
   const { id: roleId } = useParams<{ id: string }>();
   const { currentStates, setSkillState } = useCompetencyStore();
-  const currentState = currentStates[roleId || "123"]?.[skillName]?.[levelKey] || {
+  const currentRoleId = roleId || "123";
+  const currentState = currentStates[currentRoleId]?.[skillName]?.[levelKey] || {
     level: "unspecified",
     required: "preferred",
   };
 
   useEffect(() => {
-    if (!currentStates[roleId || "123"]?.[skillName]?.[levelKey]) {
+    if (!currentStates[currentRoleId]?.[skillName]?.[levelKey]) {
       setSkillState(
         skillName,
         "unspecified",
         levelKey,
         "preferred",
-        roleId || "123"
+        currentRoleId
       );
     }
-  }, [skillName, currentStates, setSkillState, levelKey, roleId]);
+  }, [skillName, currentStates, setSkillState, levelKey, currentRoleId]);
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -95,7 +96,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
       <div className="flex flex-col items-center gap-0">
         <Select 
           value={currentState.level}
-          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required, roleId || "123")}
+          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required, currentRoleId)}
         >
           <SelectTrigger 
             className={`${getLevelStyles(currentState.level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
@@ -137,7 +138,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
 
         <Select 
           value={currentState.required}
-          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value, roleId || "123")}
+          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value, currentRoleId)}
         >
           <SelectTrigger 
             className={`${getRequirementStyles(currentState.required, currentState.level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
