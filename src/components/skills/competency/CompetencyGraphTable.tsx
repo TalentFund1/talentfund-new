@@ -141,14 +141,12 @@ export const CompetencyGraphTable = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button 
-          onClick={handleGenerateWithAI}
-          className="bg-primary hover:bg-primary/90"
-        >
-          Generate with AI
-        </Button>
-      </div>
+      <Button 
+        onClick={handleGenerateWithAI}
+        className="bg-primary hover:bg-primary/90 ml-auto block"
+      >
+        Generate with AI
+      </Button>
       
       <div className="rounded-lg border border-border bg-white overflow-hidden">
         <Table>
