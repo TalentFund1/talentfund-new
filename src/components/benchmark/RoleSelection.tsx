@@ -1,6 +1,13 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { professionalLevels, managerialLevels } from "./data/levelData";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { HelpCircle } from "lucide-react";
 
 interface RoleSelectionProps {
   selectedRole: string;
@@ -21,23 +28,36 @@ export const RoleSelection = ({
   onTrackChange,
   roles
 }: RoleSelectionProps) => {
-  const getLevelDescription = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'p1': return 'Entry';
-      case 'p2': return 'Developing';
-      case 'p3': return 'Career';
-      case 'p4': return 'Senior';
-      case 'p5': return 'Expert';
-      case 'p6': return 'Principal';
-      case 'm3': return 'Manager';
-      case 'm4': return 'Senior Manager';
-      case 'm5': return 'Director';
-      case 'm6': return 'Senior Director';
-      default: return '';
-    }
-  };
-
   const levels = currentTrack === "Managerial" ? managerialLevels : professionalLevels;
+
+  const getLevelDescription = (track: "Professional" | "Managerial") => {
+    if (track === "Professional") {
+      return (
+        <div className="space-y-2">
+          <p className="font-medium">Professional Track Levels:</p>
+          <ul className="text-sm space-y-1">
+            <li><span className="font-medium">P1</span> - Entry</li>
+            <li><span className="font-medium">P2</span> - Developing</li>
+            <li><span className="font-medium">P3</span> - Career</li>
+            <li><span className="font-medium">P4</span> - Senior</li>
+            <li><span className="font-medium">P5</span> - Expert</li>
+            <li><span className="font-medium">P6</span> - Principal</li>
+          </ul>
+        </div>
+      );
+    }
+    return (
+      <div className="space-y-2">
+        <p className="font-medium">Managerial Track Levels:</p>
+        <ul className="text-sm space-y-1">
+          <li><span className="font-medium">M3</span> - Manager</li>
+          <li><span className="font-medium">M4</span> - Senior Manager</li>
+          <li><span className="font-medium">M5</span> - Director</li>
+          <li><span className="font-medium">M6</span> - Senior Director</li>
+        </ul>
+      </div>
+    );
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -60,26 +80,38 @@ export const RoleSelection = ({
           </SelectContent>
         </Select>
 
-        <Select
-          value={selectedLevel}
-          onValueChange={onLevelChange}
-        >
-          <SelectTrigger className="w-[200px] bg-white">
-            <SelectValue placeholder="Select Level">
-              {levels[selectedLevel.toLowerCase() as keyof typeof levels]} - {getLevelDescription(selectedLevel)}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(levels).map(([id, title]) => (
-              <SelectItem key={id} value={id}>
-                <span className="flex items-center justify-between w-full">
-                  <span>{title}</span>
-                  <span className="text-muted-foreground ml-2">- {getLevelDescription(id)}</span>
-                </span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <Select
+            value={selectedLevel}
+            onValueChange={onLevelChange}
+          >
+            <SelectTrigger className="w-[200px] bg-white">
+              <SelectValue placeholder="Select Level">
+                {levels[selectedLevel.toLowerCase() as keyof typeof levels]}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(levels).map(([id, title]) => (
+                <SelectItem key={id} value={id}>
+                  {title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <HelpCircle className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+              </TooltipTrigger>
+              <TooltipContent side="right" align="start" className="p-4">
+                <div className="space-y-4">
+                  {getLevelDescription(currentTrack === "Managerial" ? "Managerial" : "Professional")}
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </div>
       <Separator className="my-2" />
     </div>
