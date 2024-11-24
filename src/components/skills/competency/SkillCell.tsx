@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
 import { useEffect } from "react";
 import { useCompetencyStore } from "./CompetencyState";
-import { SkillLevel, RequirementType, SkillLevelState } from "../types/CompetencyTypes";
+import { SkillLevel, RequirementType } from "../types/CompetencyTypes";
 
 interface SkillCellProps {
   skillName: string;
@@ -90,7 +90,7 @@ export const SkillCell = ({
             <SelectValue>
               <span className="flex items-center gap-2 justify-center text-[15px]">
                 {getLevelIcon(currentState.level)}
-                {currentState.level}
+                {String(currentState.level)}
               </span>
             </SelectValue>
           </SelectTrigger>
