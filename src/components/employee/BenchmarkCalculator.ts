@@ -35,7 +35,7 @@ export const calculateBenchmarkPercentage = (
     return employeeSkill !== undefined;
   });
 
-  // 2. Competency Level Match (33.33% weight)
+  // 2. Competency Level Match (33.33% weight) - Only checking level match
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
     if (!roleSkillState) {
