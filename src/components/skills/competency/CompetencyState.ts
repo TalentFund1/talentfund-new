@@ -149,19 +149,19 @@ export const useCompetencyStore = create<CompetencyState>()(
       name: getStorageKey(),
       storage: {
         getItem: async (name) => {
-          const { currentRoleId } = get();
-          if (!currentRoleId) return null;
+          const state = get();
+          if (!state.currentRoleId) return null;
           
-          const storage = loadRoleState(currentRoleId);
+          const storage = loadRoleState(state.currentRoleId);
           return storage ? { state: storage } : null;
         },
         setItem: async (name, value) => {
-          const { currentRoleId } = get();
-          if (currentRoleId && value.state) {
+          const state = get();
+          if (state.currentRoleId && value.state) {
             const storageData: CompetencyStorage = {
-              [currentRoleId]: value.state
+              [state.currentRoleId]: value.state
             };
-            saveToStorage(currentRoleId, storageData);
+            saveToStorage(state.currentRoleId, storageData);
           }
         },
         removeItem: async (name) => {
