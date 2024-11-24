@@ -105,7 +105,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     let advancedCount = 0;
     levels.forEach(level => {
       const skillState = useCompetencyStore.getState().currentStates[skillName]?.[level.toLowerCase()];
-      if (skillState?.level?.toLowerCase() === 'advanced') {
+      if (skillState?.level === 'advanced') {
         advancedCount++;
       }
     });
@@ -172,15 +172,15 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
             </TableRow>
           </TableHeader>
           <TableBody>
-            {skills.map((skillName) => (
-              <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
+            {skills.map((skill) => (
+              <TableRow key={skill.title} className="hover:bg-background/30 transition-colors">
                 <TableCell className="font-medium border-r border-border">
-                  {skillName}
+                  {skill.title}
                 </TableCell>
                 {levels.map((level, index) => (
                   <SkillCell 
                     key={level}
-                    skillName={skillName}
+                    skillName={skill.title}
                     levelKey={level.toLowerCase()}
                     isLastColumn={index === levels.length - 1}
                   />
