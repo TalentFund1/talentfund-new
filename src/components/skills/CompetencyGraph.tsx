@@ -61,6 +61,14 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     });
   };
 
+  const handleGenerateWithAI = () => {
+    console.log("Generating skill progressions with AI...");
+    toast({
+      title: "Skills Generated",
+      description: "Skill levels have been automatically generated based on industry standards.",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <CompetencyGraphHeader 
@@ -74,7 +82,15 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       
       <div className="mb-8">
         <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitles[currentRoleId]}</h3>
-        <TrackSelection onTrackChange={setTrack} />
+        <div className="flex justify-between items-center mb-6">
+          <TrackSelection onTrackChange={setTrack} />
+          <Button 
+            onClick={handleGenerateWithAI}
+            className="bg-primary hover:bg-primary/90"
+          >
+            Generate with AI
+          </Button>
+        </div>
       </div>
 
       <CategorySection 

@@ -1,11 +1,9 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { useCompetencyStore } from "./CompetencyState";
 import { SkillCell } from "./SkillCell";
 import { roleSkills } from "../data/roleSkills";
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
 import { generateSkillProgression } from "./autoFillUtils";
-import { useToast } from "@/components/ui/use-toast";
 
 interface CompetencyGraphTableProps {
   currentRoleId: string;
@@ -20,7 +18,6 @@ export const CompetencyGraphTable = ({
   selectedCategory,
   toggledSkills
 }: CompetencyGraphTableProps) => {
-  const { toast } = useToast();
   const { setSkillState } = useCompetencyStore();
 
   const getLevelsForTrack = () => {
@@ -55,32 +52,6 @@ export const CompetencyGraphTable = ({
     }
     
     return [];
-  };
-
-  const handleGenerateWithAI = () => {
-    console.log("Generating skill progressions with AI...");
-    const skills = getSkillsByCategory();
-    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
-
-    skills.forEach(skill => {
-      let category = "common";
-      if (currentRoleSkills.specialized.some(s => s.title === skill.title)) {
-        category = "specialized";
-      } else if (currentRoleSkills.certifications.some(s => s.title === skill.title)) {
-        category = "certification";
-      }
-
-      const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
-      
-      Object.entries(progression).forEach(([level, state]) => {
-        setSkillState(skill.title, state.level, level, state.requirement, currentRoleId);
-      });
-    });
-
-    toast({
-      title: "Skills Generated",
-      description: "Skill levels have been automatically generated based on industry standards.",
-    });
   };
 
   const getSkillDetails = (skillName: string, level: string) => {
@@ -140,53 +111,42 @@ export const CompetencyGraphTable = ({
     .map(skill => skill.title);
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button 
-          onClick={handleGenerateWithAI}
-          className="bg-primary hover:bg-primary/90"
-        >
-          Generate with AI
-        </Button>
-      </div>
-      
-      <div className="rounded-lg border border-border bg-white overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-[200px] font-semibold bg-background/80 border-r border-border">
-                Skill
+    <div className="rounded-lg border border-border bg-white overflow-hidden">
+      <Table>
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead className="w-[200px] font-semibold bg-background/80 border-r border-border">
+              Skill
+            </TableHead>
+            {levels.map((level, index) => (
+              <TableHead 
+                key={level} 
+                className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
+              >
+                <div className="font-semibold">{level.toUpperCase()}</div>
               </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedSkills.map((skillName) => (
+            <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
+              <TableCell className="font-medium border-r border-border">
+                {skillName}
+              </TableCell>
               {levels.map((level, index) => (
-                <TableHead 
-                  key={level} 
-                  className={`text-center bg-background/80 ${index !== levels.length - 1 ? 'border-r' : ''} border-border`}
-                >
-                  <div className="font-semibold">{level.toUpperCase()}</div>
-                </TableHead>
+                <SkillCell 
+                  key={level}
+                  skillName={skillName}
+                  details={getSkillDetails(skillName, level)}
+                  isLastColumn={index === levels.length - 1}
+                  levelKey={level}
+                />
               ))}
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedSkills.map((skillName) => (
-              <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
-                <TableCell className="font-medium border-r border-border">
-                  {skillName}
-                </TableCell>
-                {levels.map((level, index) => (
-                  <SkillCell 
-                    key={level}
-                    skillName={skillName}
-                    details={getSkillDetails(skillName, level)}
-                    isLastColumn={index === levels.length - 1}
-                    levelKey={level}
-                  />
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
