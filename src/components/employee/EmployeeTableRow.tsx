@@ -154,7 +154,7 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      <td className="px-4 py-4 w-[100px] text-center text-sm">{getMatchingSkillsCount()}</td>
+      <td className="px-8 py-4 w-[100px] text-center text-sm">{getMatchingSkillsCount()}</td>
       <td className="py-4 w-[200px]">
         {renderBenchmark()}
       </td>
