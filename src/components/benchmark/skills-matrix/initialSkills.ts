@@ -1,7 +1,6 @@
 // Individual employee skills data
 export const initialSkills = {
   "124": [
-    // Specialized Skills
     { title: "Node.js", subcategory: "Backend Development", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Database Design", subcategory: "Data Management", level: "advanced", growth: "15%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "API Development", subcategory: "Backend Development", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
@@ -17,7 +16,6 @@ export const initialSkills = {
     { title: "MongoDB Professional Developer", subcategory: "Database Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "preferred", isCompanySkill: true }
   ],
   "123": [
-    // Specialized Skills
     { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Deep Learning", subcategory: "AI & ML", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
@@ -33,7 +31,6 @@ export const initialSkills = {
     { title: "Google Cloud Professional Machine Learning Engineer", subcategory: "Cloud Certification", level: "advanced", growth: "28%", confidence: "high", requirement: "preferred", isCompanySkill: true }
   ],
   "125": [
-    // Specialized Skills
     { title: "React", subcategory: "Frontend Frameworks", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "TypeScript", subcategory: "Programming Languages", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Next.js", subcategory: "Frontend Frameworks", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
@@ -59,7 +56,6 @@ export const initialSkills = {
     { title: "Accessibility Certification (IAAP)", subcategory: "Web Accessibility", level: "intermediate", growth: "21%", confidence: "medium", requirement: "preferred", isCompanySkill: true }
   ],
   "126": [
-    // Specialized Skills
     { title: "System Design", subcategory: "Architecture", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Technical Architecture", subcategory: "Architecture", level: "advanced", growth: "30%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Risk Management", subcategory: "Management", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
@@ -72,6 +68,22 @@ export const initialSkills = {
     { title: "Project Management Professional (PMP)", subcategory: "Management Certification", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Certified Scrum Master (CSM)", subcategory: "Agile Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "ITIL Foundation", subcategory: "IT Service Management", level: "intermediate", growth: "15%", confidence: "medium", requirement: "preferred", isCompanySkill: true }
+  ],
+  "127": [
+    // Specialized Skills
+    { title: "PyTorch", subcategory: "ML Frameworks", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Computer Vision", subcategory: "AI Applications", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "MLOps", subcategory: "AI & ML", level: "advanced", growth: "30%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Reinforcement Learning", subcategory: "AI & ML", level: "advanced", growth: "22%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Neural Networks", subcategory: "AI & ML", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
+    // Common Skills
+    { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "12%", confidence: "medium", requirement: "preferred", isCompanySkill: true },
+    // Certifications
+    { title: "Google Cloud Professional Machine Learning Engineer", subcategory: "Cloud Certification", level: "advanced", growth: "28%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "PyTorch Developer Certificate", subcategory: "AI Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Azure AI Engineer Associate", subcategory: "Cloud Certification", level: "advanced", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true }
   ]
 };
 

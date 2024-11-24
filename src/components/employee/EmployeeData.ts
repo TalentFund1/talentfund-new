@@ -5,7 +5,8 @@ export const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
   "photo-1518770660439-4636190af475",
   "photo-1461749280684-dccba630e2f6",
-  "photo-1486312338219-ce68d2c6f44d"
+  "photo-1486312338219-ce68d2c6f44d",
+  "photo-1488590528505-98d2b5aba04b"
 ];
 
 export const employees: Employee[] = [
@@ -70,6 +71,22 @@ export const employees: Employee[] = [
     category: "Contract",
     manager: "Sarah Chen",
     startDate: "2022-11-01",
+    office: "Toronto",
+    termDate: "-"
+  },
+  {
+    id: "127",
+    name: "Elena Chen",
+    role: "AI Engineer: P5",
+    department: "Engineering",
+    skillCount: getEmployeeSkills("123").length,
+    benchmark: 0,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
+    sex: "female",
+    category: "Full-time",
+    manager: "Sus Manu",
+    startDate: "2023-08-15",
     office: "Toronto",
     termDate: "-"
   }
