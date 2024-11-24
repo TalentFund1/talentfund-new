@@ -101,7 +101,13 @@ export const CompetencyGraphTable = ({
       }
       
       levels.forEach(level => {
-        const autoFillLevel = getAutoFillLevel(level, category);
+        const autoFillLevel = getAutoFillLevel(level, category, currentRoleId);
+        console.log('Setting skill state:', { 
+          skill: skill.title, 
+          level: autoFillLevel.level, 
+          required: autoFillLevel.required 
+        });
+        
         setSkillState(
           skill.title,
           autoFillLevel.level,
