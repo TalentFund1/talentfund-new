@@ -68,6 +68,13 @@ export const useCompetencyStore = create<CompetencyState>()(
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
+          // Immediately save to storage when state changes
+          const storageData: CompetencyStorage = {
+            [currentRoleId]: newStates
+          };
+          saveToStorage(currentRoleId, storageData);
+          console.log('Saved state to storage:', { skillTitle, level, levelKey, required });
+          
           return { 
             currentStates: newStates,
             hasChanges
@@ -89,6 +96,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         };
         
         saveToStorage(currentRoleId, storageData);
+        console.log('Successfully saved all changes to storage');
         
         set({
           originalStates: currentStates,
@@ -98,6 +106,15 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       cancelChanges: () => {
         console.log('Cancelling changes');
+        const { currentRoleId, originalStates } = get();
+        
+        if (currentRoleId) {
+          const storageData: CompetencyStorage = {
+            [currentRoleId]: originalStates
+          };
+          saveToStorage(currentRoleId, storageData);
+        }
+        
         set((state) => ({
           currentStates: { ...state.originalStates },
           hasChanges: false,
@@ -132,7 +149,10 @@ export const useCompetencyStore = create<CompetencyState>()(
       name: getStorageKey(),
       storage: {
         getItem: async (name) => {
-          const storage = loadRoleState(get().currentRoleId || '');
+          const { currentRoleId } = get();
+          if (!currentRoleId) return null;
+          
+          const storage = loadRoleState(currentRoleId);
           return storage ? { state: storage } : null;
         },
         setItem: async (name, value) => {
