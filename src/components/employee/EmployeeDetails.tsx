@@ -29,12 +29,25 @@ const calculateTenure = (startDate: string, termDate: string | null): string => 
   return diffYears.toFixed(1);
 };
 
+const isAddedLastYear = (startDate: string): boolean => {
+  if (!startDate) return false;
+  
+  const start = new Date(startDate);
+  const now = new Date();
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(now.getFullYear() - 1);
+  
+  return start > oneYearAgo;
+};
+
 export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const tenure = calculateTenure(employee.startDate, employee.termDate === "-" ? null : employee.termDate);
   const employeeSkills = getEmployeeSkills(id);
   const totalSkills = employeeSkills.length;
+  const addedLastYear = isAddedLastYear(employee.startDate);
 
   console.log(`Employee ${id} has ${totalSkills} skills:`, employeeSkills);
+  console.log('Added last year:', addedLastYear);
 
   return (
     <>
@@ -72,6 +85,10 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Skill Count</span>
           <p className="font-medium text-gray-900">{totalSkills}</p>
+        </div>
+        <div className="space-y-1">
+          <span className="text-sm text-gray-500">Added Past Year</span>
+          <p className="font-medium text-gray-900">{addedLastYear ? "YES" : "NO"}</p>
         </div>
       </div>
     </>
