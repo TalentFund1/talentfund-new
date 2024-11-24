@@ -1,5 +1,3 @@
-import { Set } from 'typescript';
-
 interface FilteredSkillsParams {
   employeeSkills: any[];
   toggledSkills: Set<string>;
