@@ -34,7 +34,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
   }, [skillName, currentStates, setSkillState, levelKey]);
 
   const getLevelIcon = (level: string) => {
-    switch (level.toLowerCase()) {
+    switch (level) {
       case 'advanced':
         return <Star className="w-4 h-4 text-primary-accent" />;
       case 'intermediate':
@@ -42,7 +42,6 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
       case 'beginner':
         return <Target className="w-4 h-4 text-[#008000]" />;
       case 'unspecified':
-        return <CircleDashed className="w-4 h-4 text-gray-400" />;
       default:
         return <CircleDashed className="w-4 h-4 text-gray-400" />;
     }
