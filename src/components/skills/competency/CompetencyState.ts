@@ -76,6 +76,11 @@ const initializeSkillStates = (roleId: string) => {
   return states;
 };
 
+type StorageValue = {
+  state: CompetencyState;
+  version?: number;
+};
+
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
     (set, get) => ({
@@ -124,7 +129,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         set((state) => {
           const stateToSave = {
             currentStates: state.currentStates,
-            originalStates: state.currentStates // Update originalStates to match currentStates
+            originalStates: state.currentStates
           };
           
           localStorage.setItem(storageKey, JSON.stringify(stateToSave));
@@ -159,25 +164,23 @@ export const useCompetencyStore = create<CompetencyState>()(
     {
       name: 'competency-storage',
       storage: {
-        getItem: (name) => {
+        getItem: async (name): Promise<string | null> => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           const value = localStorage.getItem(storageKey);
           console.log('Loading stored competency states:', { roleId, storageKey, value });
-          return Promise.resolve(value);
+          return value;
         },
-        setItem: (name, value) => {
+        setItem: async (name, value) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           console.log('Persisting competency states:', { roleId, storageKey, value });
-          localStorage.setItem(storageKey, value);
-          return Promise.resolve();
+          localStorage.setItem(storageKey, JSON.stringify(value));
         },
-        removeItem: (name) => {
+        removeItem: async (name) => {
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           localStorage.removeItem(storageKey);
-          return Promise.resolve();
         },
       },
     }
