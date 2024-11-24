@@ -3,6 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
 import { useEffect } from "react";
 import { useCompetencyStore } from "./CompetencyState";
+import { useParams } from "react-router-dom";
 
 interface SkillCellProps {
   skillName: string;
@@ -15,22 +16,24 @@ interface SkillCellProps {
 }
 
 export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillCellProps) => {
+  const { id: roleId } = useParams<{ id: string }>();
   const { currentStates, setSkillState } = useCompetencyStore();
-  const currentState = currentStates[skillName]?.[levelKey] || {
+  const currentState = currentStates[roleId || "123"]?.[skillName]?.[levelKey] || {
     level: "unspecified",
     required: "preferred",
   };
 
   useEffect(() => {
-    if (!currentStates[skillName]?.[levelKey]) {
+    if (!currentStates[roleId || "123"]?.[skillName]?.[levelKey]) {
       setSkillState(
         skillName,
         "unspecified",
         levelKey,
-        "preferred"
+        "preferred",
+        roleId || "123"
       );
     }
-  }, [skillName, currentStates, setSkillState, levelKey]);
+  }, [skillName, currentStates, setSkillState, levelKey, roleId]);
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -92,7 +95,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
       <div className="flex flex-col items-center gap-0">
         <Select 
           value={currentState.level}
-          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required)}
+          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required, roleId || "123")}
         >
           <SelectTrigger 
             className={`${getLevelStyles(currentState.level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
@@ -134,7 +137,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
 
         <Select 
           value={currentState.required}
-          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value)}
+          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value, roleId || "123")}
         >
           <SelectTrigger 
             className={`${getRequirementStyles(currentState.required, currentState.level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
