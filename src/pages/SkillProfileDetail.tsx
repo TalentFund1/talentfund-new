@@ -79,7 +79,7 @@ const SkillProfileDetail = () => {
                 </div>
 
                 <Card className="p-8 bg-white">
-                  <SkillProfileHeader id={id} jobTitle={jobTitle} />
+                  <SkillProfileHeader jobTitle={jobTitle} />
                 </Card>
 
                 <EmployeeOverview />
