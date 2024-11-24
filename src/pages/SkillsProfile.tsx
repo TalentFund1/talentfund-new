@@ -67,7 +67,7 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
-            <div className="space-y-6">
+            <div className="space-y-4">
               <SearchFilter
                 label=""
                 placeholder="Search skills..."
@@ -76,7 +76,7 @@ const SkillsProfile = () => {
                 onItemsChange={setSelectedSkills}
               />
               
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap items-center gap-3 mt-4">
                 <SearchFilter
                   label=""
                   placeholder="Job Title"
