@@ -65,7 +65,10 @@ export const SkillProfileTable = () => {
                 />
               </TableCell>
               <TableCell className="align-middle font-medium">
-                <Link to={`/skills/${row.id}`} className="text-primary hover:underline">
+                <Link 
+                  to={`/skills/${row.id}`} 
+                  className="text-primary hover:text-primary-accent transition-colors no-underline"
+                >
                   {row.name}
                 </Link>
               </TableCell>
