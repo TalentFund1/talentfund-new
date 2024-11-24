@@ -49,13 +49,13 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       setSkillState: (skillTitle, level, levelKey, required) => {
-        const { currentRoleId } = get();
-        if (!currentRoleId) {
+        const state = get();
+        if (!state.currentRoleId) {
           console.error('No current role ID set');
           return;
         }
 
-        console.log('Setting skill state:', { skillTitle, level, levelKey, required, roleId: currentRoleId });
+        console.log('Setting skill state:', { skillTitle, level, levelKey, required, roleId: state.currentRoleId });
         
         set((state) => {
           const newStates = {
@@ -70,9 +70,9 @@ export const useCompetencyStore = create<CompetencyState>()(
           
           // Immediately save to storage when state changes
           const storageData: CompetencyStorage = {
-            [currentRoleId]: newStates
+            [state.currentRoleId!]: newStates
           };
-          saveToStorage(currentRoleId, storageData);
+          saveToStorage(state.currentRoleId!, storageData);
           console.log('Saved state to storage:', { skillTitle, level, levelKey, required });
           
           return { 
@@ -83,36 +83,36 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       saveChanges: () => {
-        const { currentRoleId, currentStates } = get();
-        if (!currentRoleId) {
+        const state = get();
+        if (!state.currentRoleId) {
           console.error('No current role ID set');
           return;
         }
 
-        console.log('Saving changes for role:', currentRoleId);
+        console.log('Saving changes for role:', state.currentRoleId);
         
         const storageData: CompetencyStorage = {
-          [currentRoleId]: currentStates
+          [state.currentRoleId]: state.currentStates
         };
         
-        saveToStorage(currentRoleId, storageData);
+        saveToStorage(state.currentRoleId, storageData);
         console.log('Successfully saved all changes to storage');
         
         set({
-          originalStates: currentStates,
+          originalStates: state.currentStates,
           hasChanges: false
         });
       },
 
       cancelChanges: () => {
         console.log('Cancelling changes');
-        const { currentRoleId, originalStates } = get();
+        const state = get();
         
-        if (currentRoleId) {
+        if (state.currentRoleId) {
           const storageData: CompetencyStorage = {
-            [currentRoleId]: originalStates
+            [state.currentRoleId]: state.originalStates
           };
-          saveToStorage(currentRoleId, storageData);
+          saveToStorage(state.currentRoleId, storageData);
         }
         
         set((state) => ({
