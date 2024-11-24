@@ -82,6 +82,45 @@ export const EmployeeTableRow = ({
     };
   };
 
+  const renderBenchmark = () => {
+    if (selectedSkills.length > 0) {
+      return (
+        <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
+          {selectedSkills.map(skillName => {
+            const employeeSkill = employeeSkills.find(s => s.title === skillName);
+            if (!employeeSkill) return null;
+
+            const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4");
+            const skillState = currentStates[skillName];
+            const isSkillGoal = skillState?.requirement === 'required' || 
+                               skillState?.requirement === 'skill_goal';
+            
+            return (
+              <SkillBubble
+                key={skillName}
+                skillName={skillName}
+                level={competencyState?.level || employeeSkill.level}
+                isRequired={isSkillGoal}
+              />
+            );
+          })}
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex justify-center">
+        <span className={`px-2.5 py-1 rounded-full text-sm ${
+          employee.benchmark >= 80 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-orange-100 text-orange-800'
+        }`}>
+          {employee.benchmark}%
+        </span>
+      </div>
+    );
+  };
+
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
 
   return (
