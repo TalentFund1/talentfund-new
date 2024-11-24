@@ -4,7 +4,7 @@ export const countAdvancedLevels = (skillName: string, levels: string[]) => {
   let advancedCount = 0;
   levels.forEach(level => {
     const skillState = useCompetencyStore.getState().currentStates[skillName]?.[level.toLowerCase()];
-    if (skillState?.level?.toLowerCase() === 'advanced') {
+    if (skillState?.level && skillState.level.toLowerCase() === 'advanced') {
       advancedCount++;
     }
   });
