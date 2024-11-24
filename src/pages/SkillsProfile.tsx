@@ -9,6 +9,7 @@ import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { jobTitles } from '@/components/skills/competency/skillProfileData';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Define company functions/departments
 const companyFunctions = [
