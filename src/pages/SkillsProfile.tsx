@@ -67,7 +67,7 @@ const SkillsProfile = () => {
           </div>
 
           <Card className="p-6">
-            <div className="space-y-4">
+            <div className="space-y-6">
               <SearchFilter
                 label=""
                 placeholder="Search skills..."
