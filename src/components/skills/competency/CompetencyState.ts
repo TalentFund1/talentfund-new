@@ -24,19 +24,19 @@ const initializeSkillStates = (roleId: string): RoleCompetencyState => {
     states[skill.title] = {};
     
     if (skill.professionalTrack) {
-      Object.entries(skill.professionalTrack).forEach(([level]) => {
+      Object.entries(skill.professionalTrack).forEach(([level, defaultState]) => {
         states[skill.title][level.toLowerCase()] = {
-          level: "unspecified" as SkillLevel,
-          required: "preferred" as RequirementType
+          level: defaultState.level as SkillLevel,
+          required: defaultState.requirement as RequirementType
         };
       });
     }
     
     if (skill.managerialTrack) {
-      Object.entries(skill.managerialTrack).forEach(([level]) => {
+      Object.entries(skill.managerialTrack).forEach(([level, defaultState]) => {
         states[skill.title][level.toLowerCase()] = {
-          level: "unspecified" as SkillLevel,
-          required: "preferred" as RequirementType
+          level: defaultState.level as SkillLevel,
+          required: defaultState.requirement as RequirementType
         };
       });
     }
@@ -47,38 +47,45 @@ const initializeSkillStates = (roleId: string): RoleCompetencyState => {
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       currentStates: {},
       originalStates: {},
       hasChanges: false,
       initializeStates: (roleId: string) => {
+        console.log('Initializing states for role:', roleId);
         const initializedStates = initializeSkillStates(roleId);
         set({
           currentStates: initializedStates,
-          originalStates: initializedStates,
+          originalStates: JSON.parse(JSON.stringify(initializedStates)), // Deep clone
           hasChanges: false
         });
       },
       resetToDefaults: () => {
+        console.log('Resetting to defaults');
         const roleId = localStorage.getItem('currentRoleId') || '123';
         const initializedStates = initializeSkillStates(roleId);
         set({
           currentStates: initializedStates,
-          originalStates: initializedStates,
+          originalStates: JSON.parse(JSON.stringify(initializedStates)), // Deep clone
           hasChanges: false
         });
       },
       setSkillState: (skillTitle: string, level: SkillLevel, levelKey: string, requirement: RequirementType) => {
+        console.log('Setting skill state:', { skillTitle, level, levelKey, requirement });
         set((state) => {
-          const newStates = {
-            ...state.currentStates,
-            [skillTitle]: {
-              ...(state.currentStates[skillTitle] || {}),
-              [levelKey]: { level, required: requirement } as SkillLevelState,
-            },
+          const newStates = JSON.parse(JSON.stringify(state.currentStates)); // Deep clone current states
+          
+          if (!newStates[skillTitle]) {
+            newStates[skillTitle] = {};
+          }
+          
+          newStates[skillTitle][levelKey] = {
+            level,
+            required: requirement
           };
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
+          console.log('State updated:', { newStates, hasChanges });
           
           return {
             currentStates: newStates,
@@ -87,14 +94,19 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
       saveChanges: () => {
-        set((state) => ({
-          originalStates: { ...state.currentStates },
-          hasChanges: false,
-        }));
+        console.log('Saving changes');
+        set((state) => {
+          const newOriginalStates = JSON.parse(JSON.stringify(state.currentStates)); // Deep clone
+          return {
+            originalStates: newOriginalStates,
+            hasChanges: false,
+          };
+        });
       },
       cancelChanges: () => {
+        console.log('Cancelling changes');
         set((state) => ({
-          currentStates: { ...state.originalStates },
+          currentStates: JSON.parse(JSON.stringify(state.originalStates)), // Deep clone
           hasChanges: false,
         }));
       },
@@ -106,6 +118,8 @@ export const useCompetencyStore = create<CompetencyState>()(
           const roleId = localStorage.getItem('currentRoleId') || '123';
           const storageKey = getStorageKey(roleId);
           const value = localStorage.getItem(storageKey);
+          
+          console.log('Getting stored value:', { roleId, value });
           
           if (!value) return null;
           
@@ -129,6 +143,7 @@ export const useCompetencyStore = create<CompetencyState>()(
           const storageKey = getStorageKey(roleId);
           
           try {
+            console.log('Storing value:', { roleId, newValue });
             const serialized = JSON.stringify(newValue);
             localStorage.setItem(storageKey, serialized);
           } catch (error) {
@@ -141,6 +156,10 @@ export const useCompetencyStore = create<CompetencyState>()(
           localStorage.removeItem(storageKey);
         },
       },
+      partialize: (state) => ({
+        currentStates: state.currentStates,
+        originalStates: state.originalStates,
+      }),
     }
   )
 );
