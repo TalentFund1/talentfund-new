@@ -30,7 +30,7 @@ export const SkillBubble = ({ skillName, level = 'unspecified', isRequired = fal
       <div className="flex items-center gap-1.5">
         <div className={`h-2 w-2 rounded-full ${getLevelColor(level)}`} />
         {isRequired && (
-          <Heart className="w-3 h-3 text-[#1f2144] fill-current" />
+          <Heart className="w-3 h-3 text-[#1f2144]" />
         )}
       </div>
     </Badge>

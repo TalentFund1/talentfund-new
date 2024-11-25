@@ -35,13 +35,11 @@ export const SkillBadge = ({
   };
 
   const shouldShowGoal = () => {
-    // For role benchmark view, show heart for required skills
-    if (isRoleBenchmark) {
-      return skillState?.requirement === 'required';
-    }
+    // Don't show heart in role benchmark view
+    if (isRoleBenchmark) return false;
     
     // If explicitly passed as a prop
-    if (isSkillGoal !== undefined) return isSkillGoal;
+    if (isSkillGoal) return true;
     
     // If it's in the current states
     if (skillState) {
@@ -67,7 +65,7 @@ export const SkillBadge = ({
             getLevelColor(skillState?.level || level || "unspecified")
           }`} />
           {shouldShowGoal() && (
-            <Heart className="w-3 h-3 text-[#1f2144] fill-current" />
+            <Heart className="w-3 h-3 text-[#1f2144]" />
           )}
         </div>
       )}
