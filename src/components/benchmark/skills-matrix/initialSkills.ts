@@ -3,37 +3,36 @@ import { EmployeeSkill } from "../../types/employeeTypes";
 export const initialSkills: { [key: string]: EmployeeSkill[] } = {
   "130": [
     // Specialized Skills
-    { title: "Programming Proficiency", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Machine Learning", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Data Structures & Algorithms", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Statistical Analysis", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "AI Model Deployment", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Big Data Handling", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Deep Learning", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Natural Language Processing (NLP)", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Computer Vision", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "AI Optimization", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Reinforcement Learning", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Edge AI", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "AI Ethics", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Explainable AI", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "AI Security", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Cloud AI Services", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "unknown" },
+    { title: "Programming Proficiency", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Machine Learning", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Data Structures & Algorithms", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Statistical Analysis", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "AI Model Deployment", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Big Data Handling", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Deep Learning", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Natural Language Processing (NLP)", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Computer Vision", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "AI Optimization", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Reinforcement Learning", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Edge AI", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "AI Ethics", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Explainable AI", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "AI Security", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Cloud AI Services", subcategory: "AI & Machine Learning", level: "unspecified", growth: "0%", requirement: "required" },
     
     // Common Skills
-    { title: "Problem Solving", subcategory: "Common Skills", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "API Development", subcategory: "Common Skills", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Collaboration", subcategory: "Common Skills", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Version Control", subcategory: "Common Skills", level: "unspecified", growth: "0%", requirement: "unknown" },
+    { title: "Problem Solving", subcategory: "Common Skills", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "API Development", subcategory: "Common Skills", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Collaboration", subcategory: "Common Skills", level: "unspecified", growth: "0%", requirement: "required" },
+    { title: "Version Control", subcategory: "Common Skills", level: "unspecified", growth: "0%", requirement: "required" },
     
     // Certifications
-    { title: "Certified Machine Learning Specialist", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "TensorFlow Developer Certification", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Google Professional Data Engineer", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Microsoft Certified: Azure AI Engineer Associate", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "unknown" },
-    { title: "Certified Ethical AI Engineer", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "unknown" }
+    { title: "Certified Machine Learning Specialist", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "preferred" },
+    { title: "TensorFlow Developer Certification", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "preferred" },
+    { title: "Google Professional Data Engineer", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "preferred" },
+    { title: "Microsoft Certified: Azure AI Engineer Associate", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "preferred" },
+    { title: "Certified Ethical AI Engineer", subcategory: "Certifications", level: "unspecified", growth: "0%", requirement: "preferred" }
   ],
-  // Employee with id "123"
   "123": [
     { title: "Machine Learning", subcategory: "AI & Machine Learning", level: "advanced", growth: "30%", requirement: "required" },
     { title: "Deep Learning", subcategory: "AI & Machine Learning", level: "advanced", growth: "25%", requirement: "required" },
