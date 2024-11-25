@@ -103,7 +103,9 @@ export const EmployeeTableRow = ({
         <span className={`px-2.5 py-1 rounded-full text-sm ${
           employee.benchmark >= 80 
             ? 'bg-green-100 text-green-800' 
-            : 'bg-orange-100 text-orange-800'
+            : employee.benchmark >= 60
+            ? 'bg-orange-100 text-orange-800'
+            : 'bg-red-100 text-red-800'
         }`}>
           {employee.benchmark}%
         </span>
