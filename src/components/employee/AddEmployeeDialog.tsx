@@ -9,10 +9,11 @@ import { calculateEmployeeBenchmarks } from "./EmployeeBenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { useNavigate } from "react-router-dom";
 
 export const AddEmployeeDialog = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
   const employees = useEmployeeStore((state) => state.employees);
@@ -57,10 +58,6 @@ export const AddEmployeeDialog = () => {
       // Process employee data
       const newEmployee = processEmployeeData(formData);
       console.log('Processed employee data:', newEmployee);
-
-      // Initialize skills for the new employee
-      const roleSkills = getEmployeeSkills(newEmployee.id);
-      console.log('Initialized role skills:', roleSkills);
       
       // Add employee to store
       addEmployee(newEmployee);
@@ -83,6 +80,10 @@ export const AddEmployeeDialog = () => {
       });
       
       setOpen(false);
+      // Navigate to the new employee's profile
+      navigate(`/employee/${newEmployee.id}`);
+      
+      // Reset form
       setFormData({
         id: "",
         name: "",
