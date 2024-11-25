@@ -30,28 +30,38 @@ export const CompetencyGraphTable = ({
     const filterSkillsByCategory = (category: 'specialized' | 'common' | 'certifications') => {
       return currentRoleSkills[category]?.filter(skill => toggledSkills.has(skill.title)) || [];
     };
+
+    const allSkills = [
+      ...filterSkillsByCategory('specialized'),
+      ...filterSkillsByCategory('common'),
+      ...filterSkillsByCategory('certifications')
+    ];
     
-    if (selectedCategory === "all") {
-      return [
-        ...filterSkillsByCategory('specialized'),
-        ...filterSkillsByCategory('common'),
-        ...filterSkillsByCategory('certifications')
-      ];
+    switch (selectedCategory) {
+      case "all":
+        return allSkills;
+      case "specialized":
+        return filterSkillsByCategory('specialized');
+      case "common":
+        return filterSkillsByCategory('common');
+      case "certification":
+        return filterSkillsByCategory('certifications');
+      case "critical":
+        return allSkills.filter(skill => 
+          currentRoleSkills.specialized.some(s => s.title === skill.title)
+        );
+      case "technical":
+        return allSkills.filter(skill => 
+          !skill.title.toLowerCase().includes('soft')
+        );
+      case "necessary":
+        return allSkills.filter(skill => 
+          skill.title.toLowerCase().includes('soft') ||
+          currentRoleSkills.certifications.some(s => s.title === skill.title)
+        );
+      default:
+        return [];
     }
-    
-    if (selectedCategory === "specialized") {
-      return filterSkillsByCategory('specialized');
-    }
-    
-    if (selectedCategory === "common") {
-      return filterSkillsByCategory('common');
-    }
-    
-    if (selectedCategory === "certification") {
-      return filterSkillsByCategory('certifications');
-    }
-    
-    return [];
   };
 
   const getSkillDetails = (skillName: string, level: string) => {
