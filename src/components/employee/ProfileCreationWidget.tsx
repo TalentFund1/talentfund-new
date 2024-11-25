@@ -16,7 +16,7 @@ export const ProfileCreationWidget = () => {
     role: "",
     department: "Engineering",
     location: "Toronto, ON",
-    sex: "male",
+    sex: "male" as 'male' | 'female',
     category: "Full-time",
     manager: "Sus Manu",
     startDate: "",
@@ -119,7 +119,7 @@ export const ProfileCreationWidget = () => {
             <Label htmlFor="sex">Sex</Label>
             <Select
               value={formData.sex}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, sex: value as 'male' | 'female' }))}
+              onValueChange={(value: 'male' | 'female') => setFormData(prev => ({ ...prev, sex: value }))}
             >
               <SelectTrigger>
                 <SelectValue />

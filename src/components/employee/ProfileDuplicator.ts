@@ -1,6 +1,6 @@
 import { Employee } from "../types/employeeTypes";
 import { initialSkills, getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { roleSkills } from "../data/roleSkills";
+import { roleSkills } from "../skills/data/roleSkills";
 
 export const createNewProfile = (profileData: {
   id: string;
