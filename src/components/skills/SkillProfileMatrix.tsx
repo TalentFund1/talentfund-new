@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,7 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
 import { SkillCategoryCards } from './sections/SkillCategoryCards';
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
-
-type SortDirection = 'asc' | 'desc' | null;
-type SortField = 'growth' | 'salary' | null;
+import { SkillProfileMatrixTable } from "./table/SkillProfileMatrixTable";
 
 const categorizeSkill = (skill: any) => {
   // Critical skills are those with high growth and required status
@@ -33,14 +30,14 @@ export const SkillProfileMatrix = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
-  const [sortField, setSortField] = useState<SortField>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [sortField, setSortField] = useState<'growth' | 'salary' | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  
   const { toast } = useToast();
   const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
-  // Get current role skills
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   // Get all skills for the current role
@@ -59,6 +56,7 @@ export const SkillProfileMatrix = () => {
   };
 
   const handleToggleSkill = (skillTitle: string) => {
+    console.log('Toggling skill:', skillTitle);
     const newToggledSkills = new Set(toggledSkills);
     if (newToggledSkills.has(skillTitle)) {
       newToggledSkills.delete(skillTitle);
@@ -70,7 +68,7 @@ export const SkillProfileMatrix = () => {
     
     toast({
       title: "Skill Updated",
-      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
+      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`
     });
   };
 
