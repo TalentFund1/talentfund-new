@@ -41,7 +41,8 @@ export const BenchmarkAnalysis = () => {
     const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const employeeSkillState = currentStates[skill.title];
+    const employeeSkillLevel = employeeSkillState?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     const getLevelPriority = (level: string = 'unspecified') => {
