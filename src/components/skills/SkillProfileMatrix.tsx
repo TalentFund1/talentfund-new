@@ -58,7 +58,6 @@ export const SkillProfileMatrix = () => {
   };
 
   const handleToggleSkill = (skillTitle: string) => {
-    console.log('Toggling skill:', skillTitle);
     const newToggledSkills = new Set(toggledSkills);
     if (newToggledSkills.has(skillTitle)) {
       newToggledSkills.delete(skillTitle);
@@ -66,12 +65,7 @@ export const SkillProfileMatrix = () => {
       newToggledSkills.add(skillTitle);
     }
     setToggledSkills(newToggledSkills);
-    setIsDirty(true);
-    
-    toast({
-      title: "Skill Updated",
-      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`
-    });
+    console.log('Toggled skill:', skillTitle, 'New state:', Array.from(newToggledSkills));
   };
 
   const handleSort = (field: SortField) => {
