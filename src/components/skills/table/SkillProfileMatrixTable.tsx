@@ -46,6 +46,8 @@ export const SkillProfileMatrixTable = ({
     );
   };
 
+  console.log('Current toggled skills:', Array.from(toggledSkills));
+
   return (
     <table className="w-full">
       <thead>
@@ -117,7 +119,10 @@ export const SkillProfileMatrixTable = ({
               <div className="flex items-center gap-2">
                 <Switch 
                   checked={toggledSkills.has(skill.title)}
-                  onCheckedChange={() => onToggleSkill(skill.title)}
+                  onCheckedChange={() => {
+                    console.log('Toggle clicked for skill:', skill.title);
+                    onToggleSkill(skill.title);
+                  }}
                 />
                 <span className="text-sm">{skill.title}</span>
               </div>
@@ -132,7 +137,7 @@ export const SkillProfileMatrixTable = ({
                 ↗ {skill.growth}
               </span>
             </td>
-            <td className="py-3 px-2 text-sm">${skill.salary}</td>
+            <td className="py-3 px-2 text-sm">{skill.salary}</td>
             <td className="py-3 px-8">
               <div className="flex justify-center gap-1">
                 <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
