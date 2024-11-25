@@ -17,8 +17,6 @@ interface SkillsMatrixState {
   initializeState: (employeeId: string, skillTitle: string, initialLevel: string, initialRequirement: string) => void;
 }
 
-const getStorageKey = (employeeId: string) => `skills-matrix-${employeeId}`;
-
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set, get) => ({
@@ -40,10 +38,12 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             }
           };
           
+          const employeeStates = newStates[employeeId] || {};
+          
           return {
             states: newStates,
-            currentStates: newStates[employeeId] || {},
-            originalStates: { ...newStates[employeeId] } || {},
+            currentStates: employeeStates,
+            originalStates: { ...employeeStates },
             hasChanges: false
           };
         });
