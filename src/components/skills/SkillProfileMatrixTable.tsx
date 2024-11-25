@@ -14,7 +14,7 @@ interface Skill {
   level: string;
   growth: string;
   salary: string;
-  benchmarks: { C: boolean; B: boolean; B2: boolean; O: boolean };
+  benchmarks?: { C: boolean; B: boolean; B2: boolean; O: boolean };
 }
 
 interface SkillProfileMatrixTableProps {

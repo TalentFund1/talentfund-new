@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
 import { SkillCategoryCards } from './sections/SkillCategoryCards';
-import { SkillProfileMatrixTable } from "./table/SkillProfileMatrixTable";
+import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
