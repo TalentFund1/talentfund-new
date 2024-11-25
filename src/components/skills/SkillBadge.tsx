@@ -49,8 +49,8 @@ export const SkillBadge = ({
     }
     
     // For all skill levels, show goal by default
-    const currentLevel = (skillState?.level || level || '').toLowerCase();
-    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
+    const currentLevel = skillState?.level || level || '';
+    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel.toLowerCase());
   };
 
   return (
