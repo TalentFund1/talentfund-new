@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { roleSkills } from './data/roleSkills';
 import { useParams } from 'react-router-dom';
+import { getCategoryForSkill } from './utils/skillCountUtils';
 
 interface SkillProfileHeaderProps {
   jobTitle: string;
@@ -37,7 +38,15 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
     ];
 
     const toggledSkillsList = Array.from(toggledSkills);
-    const toggledSkillsData = allSkills.filter(skill => toggledSkillsList.includes(skill.title));
+    const toggledSkillsData = allSkills.filter(skill => 
+      toggledSkillsList.includes(skill.title) && 
+      getCategoryForSkill(skill, currentRoleId) === 'critical'
+    );
+    
+    console.log('Calculating average price for critical skills:', {
+      toggledSkillsData,
+      totalSkills: toggledSkillsData.length
+    });
     
     if (toggledSkillsData.length === 0) return 0;
 
