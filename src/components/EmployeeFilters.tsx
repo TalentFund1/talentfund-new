@@ -114,7 +114,7 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Office"
-          items={["Toronto", "New York", "San Francisco"]}
+          items={["Toronto", "New York", "San Francisco", "London", "Singapore"]}
           selectedItems={selectedOffice}
           onItemsChange={onOfficeChange}
           singleSelect={false}
