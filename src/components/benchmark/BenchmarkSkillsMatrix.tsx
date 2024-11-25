@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
@@ -29,15 +29,9 @@ export const BenchmarkSkillsMatrix = () => {
   const { currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Initialize selected search skills based on toggled skills
   useEffect(() => {
-    if (!currentRoleSkills) {
-      console.error('No role skills found for role:', selectedRole);
-      return;
-    }
-
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
@@ -48,7 +42,6 @@ export const BenchmarkSkillsMatrix = () => {
       .filter(skill => toggledSkills.has(skill.title))
       .map(skill => skill.title);
     
-    console.log('Setting toggled skills for role:', selectedRole, toggledRoleSkills);
     setSelectedSearchSkills(toggledRoleSkills);
   }, [selectedRole, toggledSkills, currentRoleSkills]);
 
@@ -62,28 +55,36 @@ export const BenchmarkSkillsMatrix = () => {
     return priorities[level.toLowerCase()] ?? 3;
   };
 
+  const getRequirementPriority = (required: string = 'preferred') => {
+    const priorities: { [key: string]: number } = {
+      'required': 0,
+      'preferred': 1
+    };
+    return priorities[required.toLowerCase()] ?? 1;
+  };
+
+  const getSkillGoalPriority = (requirement: string = 'unknown') => {
+    const priorities: { [key: string]: number } = {
+      'skill_goal': 0,
+      'required': 0,
+      'preferred': 1,
+      'not_interested': 2,
+      'unknown': 3
+    };
+    return priorities[requirement.toLowerCase()] ?? 3;
+  };
+
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
-      // First check if skill is toggled
-      if (!toggledSkills.has(skill.title)) {
-        console.log('Skill not toggled:', skill.title);
-        return false;
-      }
-
-      console.log('Processing skill:', skill.title);
+      if (!toggledSkills.has(skill.title)) return false;
 
       let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
       let matchesSkillLevel = true;
 
-      // Get competency state for the current role level
       const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
-      console.log('Competency state for skill:', skill.title, competencyState);
-      
-      // Use the competency state to determine role skill level and requirement
       const roleSkillLevel = competencyState?.level || 'unspecified';
-      const roleRequirement = competencyState?.required || 'preferred';
 
       if (selectedLevel !== 'all') {
         matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
@@ -122,19 +123,7 @@ export const BenchmarkSkillsMatrix = () => {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      const shouldInclude = matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
-      console.log('Skill filter result:', {
-        skill: skill.title,
-        shouldInclude,
-        matchesLevel,
-        matchesInterest,
-        matchesSearch,
-        matchesSkillLevel,
-        roleLevel: roleSkillLevel,
-        requirement: roleRequirement
-      });
-
-      return shouldInclude;
+      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
     })
     .map(skill => ({
       ...skill,
@@ -143,20 +132,29 @@ export const BenchmarkSkillsMatrix = () => {
       requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
     }))
     .sort((a, b) => {
+      // First, sort by role skill level
       const aRoleLevel = a.roleLevel;
       const bRoleLevel = b.roleLevel;
       
       const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
+      // Then, sort by employee skill level
+      const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
+      if (employeeLevelDiff !== 0) return employeeLevelDiff;
+
+      // Finally, sort by requirement status
+      const requirementDiff = getSkillGoalPriority(a.requirement) - getSkillGoalPriority(b.requirement);
+      if (requirementDiff !== 0) return requirementDiff;
+
+      // If all else is equal, sort alphabetically
       return a.title.localeCompare(b.title);
     });
-
-  console.log('Final filtered skills:', filteredSkills);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
+        // Only trigger if we haven't shown all items yet
         if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
           setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
         }
