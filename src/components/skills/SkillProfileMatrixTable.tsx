@@ -61,8 +61,10 @@ export const SkillProfileMatrixTable = ({
               {renderSortArrow('growth')}
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                  <TooltipTrigger asChild>
+                    <span>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                    </span>
                   </TooltipTrigger>
                   <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                     <div className="space-y-2">
@@ -86,8 +88,10 @@ export const SkillProfileMatrixTable = ({
               {renderSortArrow('salary')}
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                  <TooltipTrigger asChild>
+                    <span>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                    </span>
                   </TooltipTrigger>
                   <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                     <div className="space-y-2">
@@ -117,6 +121,7 @@ export const SkillProfileMatrixTable = ({
                 <Switch 
                   checked={toggledSkills.has(skill.title)}
                   onCheckedChange={() => onToggleSkill(skill.title)}
+                  className="data-[state=checked]:bg-primary"
                 />
                 <span className="text-sm">{skill.title}</span>
               </div>
