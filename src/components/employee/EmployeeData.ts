@@ -8,7 +8,7 @@ export const EMPLOYEE_IMAGES = [
   "photo-1486312338219-ce68d2c6f44d"
 ];
 
-export const employees: Employee[] = [
+export let employees: Employee[] = [
   {
     id: "123",
     name: "Victor Smith",
