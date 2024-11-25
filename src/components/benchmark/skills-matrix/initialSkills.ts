@@ -12,7 +12,7 @@ export const initialSkills = {
     // Common Skills
     { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", confidence: "high", requirement: "required", isCompanySkill: true },
-    { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "12%", confidence: "medium", requirement: "preferred", isCompanySkill: true },
+    { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "12%", confidence: "medium", requirement: "required", isCompanySkill: true },
     
     // Certifications
     { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud Certification", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
