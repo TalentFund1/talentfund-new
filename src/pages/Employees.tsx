@@ -11,7 +11,7 @@ import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
-import { useEmployeeStore } from "@/components/employee/AddEmployeeDialog";
+import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -163,3 +163,4 @@ const Employees = () => {
 };
 
 export default Employees;
+

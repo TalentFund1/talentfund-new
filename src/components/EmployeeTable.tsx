@@ -10,7 +10,7 @@ import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
-import { useEmployeeStore } from "./employee/AddEmployeeDialog";
+import { useEmployeeStore } from "./employee/store/employeeStore";
 
 // Export utility functions
 export const getSkillProfileId = (role: string) => {

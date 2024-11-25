@@ -1,5 +1,5 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { useEmployeeStore } from './AddEmployeeDialog';
+import { useEmployeeStore } from './store/employeeStore';
 
 interface EmployeeSearchProps {
   onEmployeeSearch: (employees: string[]) => void;

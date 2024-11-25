@@ -10,7 +10,7 @@ import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
-import { useEmployeeStore } from "../employee/AddEmployeeDialog";
+import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 
 interface RoleStore {

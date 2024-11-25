@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
-import { useEmployeeStore } from './employee/AddEmployeeDialog';
+import { useEmployeeStore } from './employee/store/employeeStore';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
