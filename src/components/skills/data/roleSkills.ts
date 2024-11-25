@@ -67,5 +67,68 @@ export const roleSkills = {
       { title: "Stakeholder Management", subcategory: "Leadership", level: "advanced", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     certifications: []
+  },
+  "127": { // Data Engineer
+    specialized: [
+      { title: "Data Pipeline Development", subcategory: "Data Engineering", level: "advanced", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Big Data Technologies", subcategory: "Data Processing", level: "advanced", growth: "28%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "ETL Processes", subcategory: "Data Integration", level: "advanced", growth: "22%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ],
+    common: [
+      { title: "SQL", subcategory: "Database", level: "advanced", growth: "15%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Python", subcategory: "Programming", level: "advanced", growth: "20%", salary: "$170,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Data Modeling", subcategory: "Data Design", level: "advanced", growth: "18%", salary: "$168,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ],
+    certifications: [
+      { title: "AWS Data Analytics Specialty", subcategory: "Cloud", level: "advanced", growth: "25%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Google Cloud Professional Data Engineer", subcategory: "Cloud", level: "advanced", growth: "28%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ]
+  },
+  "128": { // DevOps Engineer
+    specialized: [
+      { title: "CI/CD", subcategory: "DevOps", level: "advanced", growth: "30%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Infrastructure as Code", subcategory: "DevOps", level: "advanced", growth: "28%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Container Orchestration", subcategory: "DevOps", level: "advanced", growth: "25%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ],
+    common: [
+      { title: "Linux Administration", subcategory: "Systems", level: "advanced", growth: "15%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Shell Scripting", subcategory: "Programming", level: "advanced", growth: "12%", salary: "$160,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Cloud Platforms", subcategory: "Cloud", level: "advanced", growth: "30%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ],
+    certifications: [
+      { title: "AWS DevOps Engineer Professional", subcategory: "Cloud", level: "advanced", growth: "28%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Certified Kubernetes Administrator", subcategory: "Container", level: "advanced", growth: "25%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ]
+  },
+  "129": { // Product Manager
+    specialized: [
+      { title: "Product Strategy", subcategory: "Product Management", level: "advanced", growth: "25%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Market Research", subcategory: "Product Management", level: "advanced", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Product Analytics", subcategory: "Analytics", level: "advanced", growth: "28%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ],
+    common: [
+      { title: "Stakeholder Management", subcategory: "Leadership", level: "advanced", growth: "15%", salary: "$170,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Agile Methodologies", subcategory: "Project Management", level: "advanced", growth: "18%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "User Experience", subcategory: "Design", level: "intermediate", growth: "22%", salary: "$168,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ],
+    certifications: [
+      { title: "Professional Scrum Product Owner", subcategory: "Product Management", level: "advanced", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ]
+  },
+  "130": { // Technical Lead
+    specialized: [
+      { title: "Technical Architecture", subcategory: "Architecture", level: "advanced", growth: "30%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "System Design", subcategory: "Architecture", level: "advanced", growth: "28%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Code Review", subcategory: "Development", level: "advanced", growth: "20%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ],
+    common: [
+      { title: "Team Leadership", subcategory: "Leadership", level: "advanced", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Mentoring", subcategory: "Leadership", level: "advanced", growth: "22%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Project Planning", subcategory: "Management", level: "advanced", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ],
+    certifications: [
+      { title: "AWS Solutions Architect Professional", subcategory: "Cloud", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Google Cloud Professional Architect", subcategory: "Cloud", level: "advanced", growth: "25%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+    ]
   }
 };

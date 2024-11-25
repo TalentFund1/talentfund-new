@@ -31,13 +31,29 @@ export const useCompetencyStateReader = () => {
       return null;
     }
 
-    const levelState = roleStates[skillName][levelKey.toLowerCase()];
+    // Normalize level key to lowercase for consistency
+    const normalizedLevelKey = levelKey.toLowerCase();
+    const levelState = roleStates[skillName][normalizedLevelKey];
+
     if (!levelState) {
-      console.log('No level state found for skill:', { skillName, levelKey });
+      console.log('No level state found for skill:', { skillName, levelKey: normalizedLevelKey });
+      
+      // Try to find closest matching level if exact match not found
+      const availableLevels = Object.keys(roleStates[skillName]);
+      if (availableLevels.length > 0) {
+        // Get default level state
+        const defaultLevel = availableLevels[0];
+        console.log('Using default level state:', { skillName, defaultLevel });
+        return {
+          level: roleStates[skillName][defaultLevel].level || 'unspecified',
+          required: roleStates[skillName][defaultLevel].required || 'preferred'
+        };
+      }
+      
       return null;
     }
 
-    console.log('Found competency state:', { skillName, levelKey, state: levelState });
+    console.log('Found competency state:', { skillName, levelKey: normalizedLevelKey, state: levelState });
     return {
       level: levelState.level || 'unspecified',
       required: levelState.required || 'preferred'
