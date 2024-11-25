@@ -125,22 +125,23 @@ export const roleSkills = {
       { title: "Certified Product Manager", subcategory: "Product Management", level: "advanced", growth: "25%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ]
   },
-  "130": { // Technical Lead
+  "130": { // Senior Backend Engineer
     specialized: [
-      { title: "Technical Architecture", subcategory: "Architecture", level: "advanced", growth: "30%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "System Design", subcategory: "Architecture", level: "advanced", growth: "28%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Code Review", subcategory: "Development", level: "advanced", growth: "20%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Team Leadership", subcategory: "Leadership", level: "advanced", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Mentoring", subcategory: "Leadership", level: "advanced", growth: "22%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+      { title: "System Architecture", subcategory: "Architecture", level: "advanced", growth: "30%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Database Design", subcategory: "Data Management", level: "advanced", growth: "25%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "API Development", subcategory: "Backend Development", level: "advanced", growth: "28%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Microservices", subcategory: "Architecture", level: "advanced", growth: "32%", salary: "$192,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Performance Optimization", subcategory: "Backend Development", level: "advanced", growth: "25%", salary: "$186,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     common: [
       { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Agile Methodologies", subcategory: "Project Management", level: "advanced", growth: "15%", salary: "$162,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Strategic Planning", subcategory: "Management", level: "advanced", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+      { title: "Code Review", subcategory: "Development Practices", level: "advanced", growth: "20%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Technical Leadership", subcategory: "Leadership", level: "advanced", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Mentoring", subcategory: "Leadership", level: "advanced", growth: "22%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     certifications: [
-      { title: "AWS Solutions Architect Professional", subcategory: "Cloud", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Google Cloud Professional Architect", subcategory: "Cloud", level: "advanced", growth: "25%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
+      { title: "AWS Solutions Architect Professional", subcategory: "Cloud Certification", level: "advanced", growth: "30%", salary: "$195,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Kubernetes Administrator (CKA)", subcategory: "Container Certification", level: "advanced", growth: "28%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ]
   }
 };

@@ -29,7 +29,7 @@ export const getSkillProfileId = (role: string) => {
     "Data Engineer": "127",
     "DevOps Engineer": "128",
     "Product Manager": "129",
-    "Technical Lead": "130"
+    "Senior Backend Engineer": "130"  // Updated this line
   };
   
   const baseRole = role.split(":")[0].trim();
