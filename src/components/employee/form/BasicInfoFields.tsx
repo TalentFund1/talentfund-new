@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FormData } from "../types/FormData";
 
 interface BasicInfoFieldsProps {
@@ -8,6 +9,14 @@ interface BasicInfoFieldsProps {
 }
 
 export const BasicInfoFields = ({ formData, onChange }: BasicInfoFieldsProps) => {
+  const offices = [
+    "Toronto",
+    "New York",
+    "San Francisco",
+    "London",
+    "Singapore"
+  ];
+
   return (
     <>
       <div className="space-y-2">
@@ -42,12 +51,21 @@ export const BasicInfoFields = ({ formData, onChange }: BasicInfoFieldsProps) =>
 
       <div className="space-y-2">
         <Label htmlFor="office">Office</Label>
-        <Input
-          id="office"
+        <Select
           value={formData.office}
-          onChange={(e) => onChange({ office: e.target.value })}
-          placeholder="e.g., Toronto"
-        />
+          onValueChange={(value) => onChange({ office: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select office" />
+          </SelectTrigger>
+          <SelectContent>
+            {offices.map((office) => (
+              <SelectItem key={office} value={office}>
+                {office}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </>
   );
