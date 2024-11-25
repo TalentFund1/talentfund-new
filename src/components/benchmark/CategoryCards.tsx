@@ -32,17 +32,7 @@ export const CategoryCards = ({
     const categoryMap: { [key: string]: string[] } = {
       specialized: currentRoleSkills.specialized?.map(s => s.title) || [],
       common: currentRoleSkills.common?.map(s => s.title) || [],
-      certification: currentRoleSkills.certifications?.map(s => s.title) || [],
-      critical: currentRoleSkills.specialized?.map(s => s.title) || [], // Critical skills are specialized skills
-      technical: [...(currentRoleSkills.specialized?.map(s => s.title) || []), 
-                 ...(currentRoleSkills.common?.map(s => s.title) || [])].filter(
-                   title => !title.toLowerCase().includes('soft')
-                 ),
-      necessary: [...(currentRoleSkills.common?.map(s => s.title) || []),
-                  ...(currentRoleSkills.certifications?.map(s => s.title) || [])].filter(
-                    title => title.toLowerCase().includes('soft') || 
-                            currentRoleSkills.certifications?.some(cert => cert.title === title)
-                  )
+      certification: currentRoleSkills.certifications?.map(s => s.title) || []
     };
 
     return allSkills.filter(skill => categoryMap[category]?.includes(skill.title));
@@ -61,22 +51,15 @@ export const CategoryCards = ({
     return { required, preferred };
   };
 
-  const skillTypeCategories = [
+  const categories = [
     { id: "all", title: "All Skill Type" },
     { id: "specialized", title: "Specialized Skills" },
     { id: "common", title: "Common Skills" },
     { id: "certification", title: "Certification" }
   ];
 
-  const skillImportanceCategories = [
-    { id: "all_categories", title: "All Categories" },
-    { id: "critical", title: "Critical Skills" },
-    { id: "technical", title: "Technical Skills" },
-    { id: "necessary", title: "Necessary Skills" }
-  ];
-
-  const renderCategoryRow = (categories: Array<{ id: string, title: string }>) => (
-    <div className="grid grid-cols-4 gap-4">
+  return (
+    <div className="grid grid-cols-4 gap-4 mb-6">
       {categories.map((category) => {
         const counts = getCounts(category.id);
         const total = counts.required + counts.preferred;
@@ -111,13 +94,6 @@ export const CategoryCards = ({
           </button>
         );
       })}
-    </div>
-  );
-
-  return (
-    <div className="space-y-4">
-      {renderCategoryRow(skillTypeCategories)}
-      {renderCategoryRow(skillImportanceCategories)}
     </div>
   );
 };
