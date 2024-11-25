@@ -15,7 +15,7 @@ interface CategoryCardsProps {
 
 export const CategoryCards = ({ selectedCategory, onCategorySelect, skillCount }: CategoryCardsProps) => {
   const categories = [
-    { id: "all", name: "All Categories", count: skillCount.all },
+    { id: "all", name: "All Skill Type", count: skillCount.all },
     { id: "critical", name: "Critical Skills", count: skillCount.critical },
     { id: "technical", name: "Technical Skills", count: skillCount.technical },
     { id: "necessary", name: "Necessary Skills", count: skillCount.necessary }
