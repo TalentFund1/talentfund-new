@@ -10,17 +10,22 @@ import { getBaseRole } from "../EmployeeTable";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
+import { filterSkillsByCategory } from "./utils/skillFiltering";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
   selectedSkills: string[];
   selectedJobTitle?: string;
+  selectedCategory: string;
+  roleId: string;
 }
 
 export const SkillProfileTable = ({ 
   selectedFunction,
   selectedSkills,
-  selectedJobTitle 
+  selectedJobTitle,
+  selectedCategory,
+  roleId
 }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { toggledSkills } = useToggledSkills();
@@ -64,39 +69,29 @@ export const SkillProfileTable = ({
     { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: String(getExactRoleMatches("Engineering Manager")), matches: `${calculateAverageBenchmark("126", "Engineering Manager")}%`, lastUpdated: "10/20/24" }
   ];
 
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSelection = e.target.checked ? filteredRows.map(row => row.id) : [];
-    setSelectedRows(newSelection);
-  };
+  const filteredRows = filterSkillsByCategory(
+    rows.filter(row => {
+      const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
+      const matchesJobTitle = !selectedJobTitle || row.name.toLowerCase() === selectedJobTitle.toLowerCase();
+      
+      const profileSkills = roleSkills[row.id as keyof typeof roleSkills] || { specialized: [], common: [], certifications: [] };
+      const allProfileSkills = [
+        ...profileSkills.specialized,
+        ...profileSkills.common,
+        ...profileSkills.certifications
+      ];
+      
+      const hasSelectedSkills = selectedSkills.length === 0 || selectedSkills.some(skill => 
+        allProfileSkills.some(profileSkill => 
+          profileSkill.title.toLowerCase().includes(skill.toLowerCase())
+        )
+      );
 
-  const handleSelectRow = (id: string) => {
-    setSelectedRows(prev => {
-      const newSelection = prev.includes(id) 
-        ? prev.filter(rowId => rowId !== id)
-        : [...prev, id];
-      return newSelection;
-    });
-  };
-
-  const filteredRows = rows.filter(row => {
-    const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
-    const matchesJobTitle = !selectedJobTitle || row.name.toLowerCase() === selectedJobTitle.toLowerCase();
-    
-    const profileSkills = roleSkills[row.id as keyof typeof roleSkills] || { specialized: [], common: [], certifications: [] };
-    const allProfileSkills = [
-      ...profileSkills.specialized,
-      ...profileSkills.common,
-      ...profileSkills.certifications
-    ];
-    
-    const hasSelectedSkills = selectedSkills.length === 0 || selectedSkills.some(skill => 
-      allProfileSkills.some(profileSkill => 
-        profileSkill.title.toLowerCase().includes(skill.toLowerCase())
-      )
-    );
-
-    return matchesFunction && matchesJobTitle && hasSelectedSkills;
-  });
+      return matchesFunction && matchesJobTitle && hasSelectedSkills;
+    }),
+    selectedCategory,
+    roleId
+  );
 
   return (
     <div className="space-y-4">
@@ -107,7 +102,7 @@ export const SkillProfileTable = ({
               <input 
                 type="checkbox" 
                 className="rounded border-gray-300"
-                onChange={handleSelectAll}
+                onChange={(e) => handleSelectAll(e)}
                 checked={selectedRows.length === filteredRows.length && filteredRows.length > 0}
               />
             </TableHead>
