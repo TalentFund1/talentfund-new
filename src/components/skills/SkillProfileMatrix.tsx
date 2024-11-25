@@ -1,7 +1,5 @@
 import { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
@@ -10,6 +8,8 @@ import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
+import { SkillMappingHeader } from './header/SkillMappingHeader';
+import { SkillTypeFilters } from './filters/SkillTypeFilters';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -18,8 +18,6 @@ export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
   const [sortField, setSortField] = useState<SortField>(null);
@@ -28,8 +26,6 @@ export const SkillProfileMatrix = () => {
   const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
-
-  console.log('Current toggled skills:', Array.from(toggledSkills));
 
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
@@ -138,25 +134,16 @@ export const SkillProfileMatrix = () => {
     return sortedSkills;
   })();
 
-  // Calculate skill counts using the utility function
   const skillCounts = calculateSkillCounts(id || "123");
+  const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
+    filteredSkills.some(fs => fs.title === skill)
+  ).length;
 
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold text-foreground">Skill Mapping</h2>
-            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium flex items-center gap-1">
-              {Array.from(toggledSkills).filter(skill => 
-                filteredSkills.some(fs => fs.title === skill)
-              ).length}
-              <span className="text-[#1F2144]/80">Skills Added</span>
-            </span>
-          </div>
-          <Button>Add Skill</Button>
-        </div>
-
+        <SkillMappingHeader skillCount={toggledSkillCount} />
+        
         <Separator className="my-4" />
 
         <CategoryCards
@@ -165,34 +152,12 @@ export const SkillProfileMatrix = () => {
           skillCount={skillCounts}
         />
 
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex gap-2">
-            <Select value={skillType} onValueChange={setSkillType}>
-              <SelectTrigger className="w-[180px] bg-white">
-                <SelectValue placeholder="All Skill Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Skill Type</SelectItem>
-                <SelectItem value="specialized">Specialized Skills</SelectItem>
-                <SelectItem value="common">Common Skills</SelectItem>
-                <SelectItem value="certification">Certification</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[220px] bg-white">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Sort by All</SelectItem>
-                <SelectItem value="baseline">Sort by Baseline</SelectItem>
-                <SelectItem value="recommended">Sort by Recommended</SelectItem>
-                <SelectItem value="benchmark">Sort by Market Benchmark</SelectItem>
-                <SelectItem value="occupation">Sort by Occupation</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <SkillTypeFilters
+          skillType={skillType}
+          setSkillType={setSkillType}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
