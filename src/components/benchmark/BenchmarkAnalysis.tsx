@@ -9,6 +9,11 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
+interface SkillState {
+  level: string | { level: string };
+  requirement: string | { requirement: string };
+}
+
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
@@ -62,8 +67,8 @@ export const BenchmarkAnalysis = () => {
 
   // Skill Goal Match calculation
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    if (!skillState) return false;
+    const skillState = currentStates[skill.title] as SkillState | undefined;
+    if (!skillState?.requirement) return false;
 
     const requirement = typeof skillState.requirement === 'string' 
       ? skillState.requirement 

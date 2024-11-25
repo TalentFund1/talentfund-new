@@ -19,10 +19,10 @@ export const SkillBadge = ({
   isRoleBenchmark = false 
 }: SkillBadgeProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const skillState = currentStates[skill.name];
+  const skillState = currentStates[skill.name] as SkillState | undefined;
 
   const getLevelColor = (level: string) => {
-    switch (level?.toLowerCase()) {
+    switch (level.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
@@ -35,21 +35,16 @@ export const SkillBadge = ({
   };
 
   const shouldShowGoal = () => {
-    // Don't show heart in role benchmark view
     if (isRoleBenchmark) return false;
-    
-    // If explicitly passed as a prop
     if (isSkillGoal) return true;
     
-    // If it's in the current states
-    if (skillState) {
+    if (skillState?.requirement) {
       const requirement = typeof skillState.requirement === 'string' 
         ? skillState.requirement 
         : skillState.requirement?.requirement;
       return requirement === 'required' || requirement === 'skill_goal';
     }
     
-    // For all skill levels, show goal by default
     const currentLevel = skillState?.level || level || '';
     const levelStr = typeof currentLevel === 'string' ? currentLevel : currentLevel?.level;
     return ['advanced', 'intermediate', 'beginner'].includes(levelStr?.toLowerCase() || '');

@@ -10,6 +10,11 @@ import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
 
+interface SkillState {
+  level: string | { level: string };
+  requirement: string | { requirement: string } | null;
+}
+
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
     'advanced': 0,
@@ -70,7 +75,7 @@ export const SkillsSummary = () => {
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
     return skills
       .map(skill => {
-        const currentState = currentStates[skill.title];
+        const currentState = currentStates[skill.title] as SkillState | undefined;
         const level = currentState?.level 
           ? (typeof currentState.level === 'string' ? currentState.level : currentState.level?.level)
           : skill.level;
