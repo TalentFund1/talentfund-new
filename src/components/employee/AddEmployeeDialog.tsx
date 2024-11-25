@@ -22,7 +22,9 @@ export const useEmployeeStore = create<EmployeeStore>((set) => ({
   employees: defaultEmployees,
   addEmployee: (employee) => set((state) => {
     console.log('Adding new employee to store:', employee);
-    return { employees: [...state.employees, employee] };
+    const newEmployees = [...state.employees, employee];
+    console.log('Updated employees list:', newEmployees);
+    return { employees: newEmployees };
   }),
 }));
 
@@ -67,8 +69,8 @@ export const AddEmployeeDialog = () => {
       return;
     }
 
-    // Check for duplicate employee ID
-    const isDuplicateId = employees.some(emp => emp.id === formData.id);
+    // Check for duplicate employee ID (now handling both string and number IDs)
+    const isDuplicateId = employees.some(emp => emp.id === formData.id || emp.id === String(formData.id));
     if (isDuplicateId) {
       console.log('Form validation failed - Duplicate employee ID:', formData.id);
       toast({
@@ -86,7 +88,7 @@ export const AddEmployeeDialog = () => {
 
     // Create new employee with all required data
     const newEmployee: Employee = {
-      id: formData.id,
+      id: String(formData.id), // Ensure ID is stored as string
       name: formData.name,
       role: `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`,
       department: formData.department,
