@@ -15,28 +15,12 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
   
   const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
 
-  console.log('Role and Level Fields State:', {
-    currentRole: formData.role,
-    currentLevel: formData.level,
-    isManagerialRole,
+  console.log('Role and Level Selection:', {
+    selectedRole: formData.role,
+    selectedLevel: formData.level,
+    isManagerial: isManagerialRole,
     availableLevels: levelOptions
   });
-
-  const getLevelDescription = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'p1': return 'Entry';
-      case 'p2': return 'Developing';
-      case 'p3': return 'Career';
-      case 'p4': return 'Senior';
-      case 'p5': return 'Expert';
-      case 'p6': return 'Principal';
-      case 'm3': return 'Manager';
-      case 'm4': return 'Senior Manager';
-      case 'm5': return 'Director';
-      case 'm6': return 'Senior Director';
-      default: return '';
-    }
-  };
 
   return (
     <>
@@ -67,10 +51,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
         <label className="text-sm font-medium">Level</label>
         <Select 
           value={formData.level} 
-          onValueChange={(value) => {
-            console.log('Level selected:', value);
-            handleInputChange('level', value);
-          }}
+          onValueChange={(value) => handleInputChange('level', value)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select level" />
@@ -78,7 +59,16 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
           <SelectContent>
             {Object.entries(levelOptions).map(([key, value]) => (
               <SelectItem key={key} value={key}>
-                {value} - {getLevelDescription(key)}
+                {value} - {key === 'p1' ? 'Entry' :
+                          key === 'p2' ? 'Developing' :
+                          key === 'p3' ? 'Career' :
+                          key === 'p4' ? 'Senior' :
+                          key === 'p5' ? 'Expert' :
+                          key === 'p6' ? 'Principal' :
+                          key === 'm3' ? 'Manager' :
+                          key === 'm4' ? 'Senior Manager' :
+                          key === 'm5' ? 'Director' :
+                          key === 'm6' ? 'Senior Director' : ''}
               </SelectItem>
             ))}
           </SelectContent>
