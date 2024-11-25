@@ -87,7 +87,7 @@ const Employees = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
+        <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold text-foreground">Employees</h1>
             <div className="space-x-2">
@@ -98,7 +98,7 @@ const Employees = () => {
 
           <ProfileCreationWidget />
 
-          <Card className="p-6">
+          <Card className="p-6 bg-white">
             <EmployeeFilters 
               onDepartmentChange={setSelectedDepartment}
               selectedDepartment={selectedDepartment}
@@ -117,8 +117,10 @@ const Employees = () => {
               onManagerChange={setSelectedManager}
               selectedManager={selectedManager}
             />
+          </Card>
 
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="p-6 bg-white">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               <StatCard
                 title="Total Number of Employees"
                 value={totalEmployees}
@@ -142,6 +144,7 @@ const Employees = () => {
             </div>
 
             <Separator className="my-4" />
+            
             <EmployeeTable 
               selectedDepartment={selectedDepartment}
               selectedJobTitle={selectedJobTitle}
