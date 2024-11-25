@@ -9,7 +9,6 @@ import { CheckCircle2 } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -33,21 +32,10 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employee.id);
 
-  // Determine which role ID to use for benchmark
-  const getRoleIdForBenchmark = () => {
-    // 1. If job titles are selected, use that
-    if (selectedJobTitle.length > 0) {
-      console.log('Using selected job title for benchmark:', selectedJobTitle[0]);
-      return getSkillProfileId(selectedJobTitle[0]);
-    }
+  const roleId = selectedJobTitle.length > 0 
+    ? getSkillProfileId(selectedJobTitle[0])
+    : getSkillProfileId(employee.role);
     
-    // 2. Use employee's assigned role
-    const employeeRoleId = getSkillProfileId(employee.role);
-    console.log('Using employee assigned role for benchmark:', employeeRoleId);
-    return employeeRoleId;
-  };
-
-  const roleId = getRoleIdForBenchmark();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
   const isExactMatch = selectedJobTitle.length > 0 && 
@@ -101,18 +89,6 @@ export const EmployeeTableRow = ({
     };
   };
 
-  const getBenchmarkPercentage = () => {
-    const level = employee.role.split(":")[1]?.trim() || "P4";
-    return calculateBenchmarkPercentage(
-      employee.id,
-      roleId,
-      level,
-      currentStates,
-      toggledSkills,
-      getSkillCompetencyState
-    );
-  };
-
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
       return (
@@ -139,17 +115,16 @@ export const EmployeeTableRow = ({
       );
     }
 
-    const benchmarkPercentage = getBenchmarkPercentage();
     return (
       <div className="flex justify-center">
         <span className={`px-2.5 py-1 rounded-full text-sm ${
-          benchmarkPercentage >= 80 
+          employee.benchmark >= 80 
             ? 'bg-green-100 text-green-800' 
-            : benchmarkPercentage >= 60
+            : employee.benchmark >= 60
             ? 'bg-orange-100 text-orange-800'
             : 'bg-red-100 text-red-800'
         }`}>
-          {benchmarkPercentage}%
+          {employee.benchmark}%
         </span>
       </div>
     );
