@@ -3,6 +3,11 @@ import { Heart } from "lucide-react";
 import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
+interface SkillState {
+  level: string | { level: string };
+  requirement: string | { requirement: string } | null;
+}
+
 interface SkillBadgeProps {
   skill: BaseSkill;
   showLevel?: boolean;
