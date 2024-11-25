@@ -20,7 +20,12 @@ export const OrganizationFields = ({ formData, onChange }: OrganizationFieldsPro
     "Product",
     "Design",
     "Marketing",
-    "Sales"
+    "Sales",
+    "Finance",
+    "Human Resources",
+    "Operations",
+    "Legal",
+    "Customer Success"
   ];
 
   return (

@@ -124,7 +124,18 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Department"
-          items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
+          items={[
+            "Engineering",
+            "Product",
+            "Design",
+            "Marketing",
+            "Sales",
+            "Finance",
+            "Human Resources",
+            "Operations",
+            "Legal",
+            "Customer Success"
+          ]}
           selectedItems={selectedDepartment}
           onItemsChange={onDepartmentChange}
           singleSelect={false}
