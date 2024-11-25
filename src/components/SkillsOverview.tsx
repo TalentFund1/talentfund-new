@@ -3,82 +3,73 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 
+const categorizeSkill = (skill: any) => {
+  // Critical skills are those with high proficiency
+  if (skill.proficiency >= 85) {
+    return "critical";
+  }
+  // Technical skills are those related to technical categories
+  if (["Software Development", "AI & Machine Learning"].includes(skill.category)) {
+    return "technical";
+  }
+  // Necessary skills are the remaining skills
+  return "necessary";
+};
+
 const data = [
   {
     category: "Software Development",
     subcategory: "Programming Languages",
     skill: "Python",
     proficiency: 85,
-    color: "#FFD699"
+    type: "critical"
   },
   {
     category: "Software Development",
     subcategory: "Web Development",
     skill: "React",
     proficiency: 78,
-    color: "#FFD699"
+    type: "technical"
   },
   {
     category: "AI & Machine Learning",
     subcategory: "Deep Learning",
     skill: "Neural Networks",
     proficiency: 92,
-    color: "#FF9999"
+    type: "critical"
   },
   {
     category: "AI & Machine Learning",
     subcategory: "NLP",
     skill: "Text Processing",
     proficiency: 75,
-    color: "#FF9999"
+    type: "technical"
   },
   {
     category: "Design & UX",
     subcategory: "UI Design",
     skill: "Figma",
     proficiency: 88,
-    color: "#99D6B9"
+    type: "necessary"
   },
   {
     category: "Design & UX",
     subcategory: "User Research",
     skill: "Usability Testing",
     proficiency: 82,
-    color: "#99D6B9"
+    type: "necessary"
   }
-];
+].map(skill => ({
+  ...skill,
+  type: categorizeSkill(skill)
+}));
 
 export const SkillsOverview = () => {
-  const [selectedView, setSelectedView] = useState<"category" | "subcategory" | "skill">("category");
+  const [selectedView, setSelectedView] = useState<"critical" | "technical" | "necessary">("critical");
 
   const getChartData = () => {
-    if (selectedView === "category") {
-      const categoryData = data.reduce((acc, curr) => {
-        const existingCategory = acc.find(item => item.name === curr.category);
-        if (existingCategory) {
-          existingCategory.proficiency = (existingCategory.proficiency + curr.proficiency) / 2;
-        } else {
-          acc.push({ name: curr.category, proficiency: curr.proficiency });
-        }
-        return acc;
-      }, [] as { name: string; proficiency: number }[]);
-      return categoryData;
-    }
-
-    if (selectedView === "subcategory") {
-      const subcategoryData = data.reduce((acc, curr) => {
-        const existingSubcategory = acc.find(item => item.name === curr.subcategory);
-        if (existingSubcategory) {
-          existingSubcategory.proficiency = (existingSubcategory.proficiency + curr.proficiency) / 2;
-        } else {
-          acc.push({ name: curr.subcategory, proficiency: curr.proficiency });
-        }
-        return acc;
-      }, [] as { name: string; proficiency: number }[]);
-      return subcategoryData;
-    }
-
-    return data.map(item => ({
+    const filteredData = data.filter(item => item.type === selectedView);
+    return filteredData.map(item => ({
       name: item.skill,
       proficiency: item.proficiency
     }));
@@ -91,11 +82,11 @@ export const SkillsOverview = () => {
         Here you can find an overview of skills in your organization, categorized into three levels. Check the Employee tab to explore further.
       </p>
 
-      <Tabs defaultValue="category" className="w-full mb-6" onValueChange={(value) => setSelectedView(value as "category" | "subcategory" | "skill")}>
+      <Tabs defaultValue="critical" className="w-full mb-6" onValueChange={(value) => setSelectedView(value as "critical" | "technical" | "necessary")}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="category">Category</TabsTrigger>
-          <TabsTrigger value="subcategory">Subcategory</TabsTrigger>
-          <TabsTrigger value="skill">Skill Title</TabsTrigger>
+          <TabsTrigger value="critical">Critical Skills</TabsTrigger>
+          <TabsTrigger value="technical">Technical Skills</TabsTrigger>
+          <TabsTrigger value="necessary">Necessary Skills</TabsTrigger>
         </TabsList>
       </Tabs>
 
