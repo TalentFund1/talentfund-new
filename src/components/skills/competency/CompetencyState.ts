@@ -12,6 +12,7 @@ interface SkillState {
 
 interface CompetencyState {
   states: Record<string, Record<string, Record<string, SkillState>>>;
+  currentStates: Record<string, Record<string, Record<string, SkillState>>>;
   hasChanges: boolean;
   initializeStates: (employeeId: string) => void;
   setSkillState: (skillName: string, level: string, levelKey: string, required: string, employeeId: string) => void;
@@ -82,6 +83,7 @@ export const useCompetencyStore = create<CompetencyState>()(
   persist(
     (set, get) => ({
       states: {},
+      currentStates: {},
       hasChanges: false,
       initializeStates: (employeeId: string) => {
         const initializedStates = initializeSkillStates(employeeId);
@@ -89,6 +91,10 @@ export const useCompetencyStore = create<CompetencyState>()(
         set((state) => ({
           states: {
             ...state.states,
+            [employeeId]: initializedStates
+          },
+          currentStates: {
+            ...state.currentStates,
             [employeeId]: initializedStates
           },
           hasChanges: false
@@ -113,6 +119,7 @@ export const useCompetencyStore = create<CompetencyState>()(
           
           return {
             states: newStates,
+            currentStates: newStates,
             hasChanges: true,
           };
         });
@@ -137,6 +144,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       name: 'competency-storage',
       partialize: (state) => ({
         states: state.states,
+        currentStates: state.currentStates,
       }),
     }
   )
