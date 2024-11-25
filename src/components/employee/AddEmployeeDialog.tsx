@@ -12,6 +12,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { employees as defaultEmployees } from "./EmployeeData";
+import { categorizeSkills } from "../skills/competency/skillCategories";
 
 interface EmployeeStore {
   employees: Employee[];
@@ -82,10 +83,21 @@ export const AddEmployeeDialog = () => {
       return;
     }
 
+    // Process skills
+    const skillsList = formData.skills
+      .split(',')
+      .map(skill => skill.trim())
+      .filter(skill => skill.length > 0);
+
+    console.log('Processing skills:', skillsList);
+
     // Get role-specific skills
     const roleId = getSkillProfileId(formData.role);
     const roleSkills = getEmployeeSkills(roleId);
-    console.log('Initializing role-specific skills for new employee:', roleSkills);
+    
+    // Categorize skills
+    const categorizedSkills = categorizeSkills(skillsList, roleId);
+    console.log('Categorized skills:', categorizedSkills);
 
     // Create new employee with all required data
     const newEmployee: Employee = {
@@ -93,7 +105,7 @@ export const AddEmployeeDialog = () => {
       name: formData.name,
       role: `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`,
       department: formData.department,
-      skillCount: roleSkills.length,
+      skillCount: skillsList.length || roleSkills.length,
       benchmark: 0, // Will be calculated after creation
       lastUpdated: new Date().toLocaleDateString(),
       location: formData.location,
