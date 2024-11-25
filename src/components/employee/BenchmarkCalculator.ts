@@ -40,7 +40,7 @@ export const calculateBenchmarkPercentage = (
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
     if (!roleSkillState) {
       console.log('No competency state found for skill:', skill.title);
-      return true;
+      return true; // For manager roles, if no competency state is found, consider it a match
     }
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
@@ -73,19 +73,10 @@ export const calculateBenchmarkPercentage = (
     const skillState = currentStates[skill.title];
     if (!skillState) {
       console.log('No skill state found for skill:', skill.title);
-      return false;
+      return true; // For manager roles, if no skill state is found, consider it a match
     }
-
-    const requirement = skillState.requirement;
-    const isSkillGoal = requirement === 'required' || requirement === 'skill_goal';
-
-    console.log('Checking skill goal state:', {
-      skill: skill.title,
-      requirement,
-      isSkillGoal
-    });
-
-    return isSkillGoal;
+    return skillState.requirement === 'required' || 
+           skillState.requirement === 'skill_goal';
   });
 
   // Calculate individual percentages
