@@ -16,6 +16,7 @@ interface CompetencyState {
   hasChanges: boolean;
   initializeStates: (roleId: string) => void;
   setSkillState: (skillName: string, level: string, levelKey: string, required: string, roleId: string) => void;
+  setSkillProgression: (skillName: string, progression: Record<string, SkillState>) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -33,7 +34,6 @@ const initializeSkillStates = (roleId: string) => {
     ...certificationSkills
   ];
 
-  // First try to load from localStorage
   const storageKey = getStorageKey(roleId);
   const savedStates = localStorage.getItem(storageKey);
   
@@ -50,7 +50,6 @@ const initializeSkillStates = (roleId: string) => {
     }
   }
 
-  // If no saved states or invalid data, initialize with default values
   console.log('Initializing with default states for role:', roleId);
   allSkills.forEach(skill => {
     states[skill.title] = states[skill.title] || {};
@@ -74,7 +73,6 @@ const initializeSkillStates = (roleId: string) => {
     }
   });
 
-  // Save initial states to localStorage with role-specific key
   localStorage.setItem(storageKey, JSON.stringify(states));
   return states;
 };
@@ -122,6 +120,24 @@ export const useCompetencyStore = create<CompetencyState>()(
           return {
             currentStates: newStates,
             hasChanges,
+          };
+        });
+      },
+      setSkillProgression: (skillName, progression) => {
+        console.log('Setting skill progression:', { skillName, progression });
+        set((state) => {
+          const roleId = Object.keys(state.currentStates)[0];
+          if (!roleId) return state;
+
+          return {
+            currentStates: {
+              ...state.currentStates,
+              [roleId]: {
+                ...state.currentStates[roleId],
+                [skillName]: progression,
+              },
+            },
+            hasChanges: true,
           };
         });
       },
