@@ -18,6 +18,7 @@ interface EmployeeStore {
   addEmployee: (employee: Employee) => void;
 }
 
+// Initialize store with persisted state if available
 export const useEmployeeStore = create<EmployeeStore>((set) => ({
   employees: defaultEmployees,
   addEmployee: (employee) => set((state) => {
@@ -69,7 +70,7 @@ export const AddEmployeeDialog = () => {
       return;
     }
 
-    // Check for duplicate employee ID (now handling both string and number IDs)
+    // Check for duplicate employee ID (handling both string and number IDs)
     const isDuplicateId = employees.some(emp => emp.id === formData.id || emp.id === String(formData.id));
     if (isDuplicateId) {
       console.log('Form validation failed - Duplicate employee ID:', formData.id);
