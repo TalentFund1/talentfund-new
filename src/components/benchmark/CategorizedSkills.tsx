@@ -6,7 +6,6 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
 import { useState } from "react";
-import { Heart } from "lucide-react";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -118,10 +117,14 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     }
   };
 
-  const isSkillGoal = (skillTitle: string) => {
-    const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase());
-    return competencyState?.required === 'required' && competencyState?.level !== undefined;
-  };
+  console.log('Skills Summary:', {
+    required: requiredSkills.length,
+    preferred: preferredSkills.length,
+    missing: missingSkills.length,
+    requiredSkills,
+    preferredSkills,
+    missingSkills
+  });
 
   const SkillSection = ({ title, skills, count }: { title: string, skills: any[], count: number }) => (
     <Card className="p-6 space-y-4">
@@ -132,37 +135,19 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => {
-          const showHeartIcon = isSkillGoal(skill.title);
-          
-          return (
-            <Badge 
-              key={skill.title}
-              variant="outline" 
-              className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-            >
-              {skill.title}
-              <div className="flex items-center gap-1.5">
-                <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
-                {showHeartIcon && (
-                  <Heart className="w-3 h-3 text-[#1f2144]" />
-                )}
-              </div>
-            </Badge>
-          );
-        })}
+        {skills.map((skill) => (
+          <Badge 
+            key={skill.title}
+            variant="outline" 
+            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+          >
+            {skill.title}
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
+          </Badge>
+        ))}
       </div>
     </Card>
   );
-
-  console.log('Skills Summary:', {
-    required: requiredSkills.length,
-    preferred: preferredSkills.length,
-    missing: missingSkills.length,
-    requiredSkills,
-    preferredSkills,
-    missingSkills
-  });
 
   return (
     <div className="space-y-4">
