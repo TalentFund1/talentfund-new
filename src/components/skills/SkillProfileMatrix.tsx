@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { SkillProfileTable } from "./SkillProfileTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { SkillCategoryCards } from "./SkillCategoryCards";
+import { SkillProfileTable } from "./SkillProfileTable";
 
 const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
@@ -18,7 +18,6 @@ const SkillProfileMatrix = () => {
   const [sortField, setSortField] = useState(null);
   const [sortDirection, setSortDirection] = useState(null);
   const { toast } = useToast();
-  const observerTarget = useRef(null);
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
   const handleToggleSkill = (skillTitle: string) => {
@@ -37,20 +36,6 @@ const SkillProfileMatrix = () => {
     });
   };
 
-  const filterSkillsByCategory = (skills: any[]) => {
-    if (selectedCategory === 'all') return skills;
-
-    const categoryMap: { [key: string]: string[] } = {
-      critical: ['Machine Learning', 'Deep Learning', 'Natural Language Processing', 'Computer Vision', 'TensorFlow'],
-      technical: ['Python', 'Technical Writing'],
-      necessary: ['Problem Solving', 'AWS Certified Machine Learning - Specialty', 'TensorFlow Developer Certificate']
-    };
-
-    return skills.filter(skill => 
-      categoryMap[selectedCategory]?.includes(skill.title)
-    );
-  };
-
   const mockSkills = [
     { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", salary: "$180,256" },
     { title: "Deep Learning", subcategory: "AI & ML", level: "intermediate", growth: "28%", salary: "$182,000" },
@@ -63,8 +48,6 @@ const SkillProfileMatrix = () => {
     { title: "AWS Certified Machine Learning - Specialty", subcategory: "Certification", level: "advanced", growth: "30%", salary: "$110,000" },
     { title: "TensorFlow Developer Certificate", subcategory: "Certification", level: "intermediate", growth: "30%", salary: "$110,000" }
   ];
-
-  const filteredSkills = filterSkillsByCategory(mockSkills);
 
   return (
     <div className="space-y-6">
@@ -116,7 +99,7 @@ const SkillProfileMatrix = () => {
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileTable 
-            skills={filteredSkills}
+            skills={mockSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
             sortField={sortField}
@@ -132,11 +115,14 @@ const SkillProfileMatrix = () => {
             }}
             selectedCategory={selectedCategory}
             roleId="123"
+            selectedFunction=""
+            selectedSkills={[]}
+            selectedJobTitle=""
           />
         </div>
 
         {hasMore && (
-          <div ref={observerTarget} className="h-10" />
+          <div className="h-10" />
         )}
       </Card>
     </div>
