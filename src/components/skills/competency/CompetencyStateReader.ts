@@ -67,7 +67,7 @@ export const useCompetencyStateReader = () => {
     };
   };
 
-  const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
+  const getAllSkillStatesForLevel = (levelKey: string = 'p4'): Record<string, SkillCompetencyState> => {
     console.log('Getting all skill states for level:', levelKey);
     const states: Record<string, SkillCompetencyState> = {};
     
