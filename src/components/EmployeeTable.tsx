@@ -10,7 +10,6 @@ import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
-import { getEmployeesAddedLastYear } from "./employee/EmployeeUtils";
 import { useEmployeeStore } from "./employee/AddEmployeeDialog";
 
 // Export utility functions
@@ -65,7 +64,10 @@ export const EmployeeTable = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
-  const employees = useEmployeeStore((state) => state.employees);
+  const employees = useEmployeeStore((state) => {
+    console.log('Current employees in store:', state.employees);
+    return state.employees;
+  });
 
   // Calculate benchmark percentages for each employee
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
@@ -75,6 +77,8 @@ export const EmployeeTable = ({
     toggledSkills,
     getSkillCompetencyState
   );
+
+  console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
   // Filter employees based on all criteria including skills and employee search
   const preFilteredEmployees = filterEmployees(
@@ -89,8 +93,12 @@ export const EmployeeTable = ({
     selectedManager
   );
 
+  console.log('Pre-filtered employees:', preFilteredEmployees);
+
   // Apply skills filter
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+
+  console.log('Skill filtered employees:', skillFilteredEmployees);
 
   // Sort employees by role match and benchmark percentage
   const filteredEmployees = sortEmployeesByRoleMatch(
@@ -101,7 +109,7 @@ export const EmployeeTable = ({
     getSkillCompetencyState
   );
 
-  console.log('Filtered and sorted employees:', filteredEmployees);
+  console.log('Final filtered and sorted employees:', filteredEmployees);
 
   return (
     <div className="bg-white rounded-lg">
