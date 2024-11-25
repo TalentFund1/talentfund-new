@@ -12,6 +12,7 @@ import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -94,7 +95,9 @@ const Employees = () => {
             <h1 className="text-3xl font-bold text-foreground">Employees</h1>
             <div className="space-x-2">
               <Button variant="outline">Export Data</Button>
-              <AddEmployeeDialog />
+              <ToggledSkillsProvider>
+                <AddEmployeeDialog />
+              </ToggledSkillsProvider>
             </div>
           </div>
 
@@ -163,4 +166,3 @@ const Employees = () => {
 };
 
 export default Employees;
-
