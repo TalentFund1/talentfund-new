@@ -3,90 +3,59 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
-import { roleSkills } from "./skills/data/roleSkills";
-
-const categorizeSkill = (skill: any) => {
-  // Critical skills are those with high level and required status
-  if (skill.level === 'advanced' && skill.requirement === 'required') {
-    return "critical";
-  }
-  // Technical skills are those related to technical categories
-  if (["AI & ML", "Programming Languages", "Backend Development", "Frontend Development", "Data Management", "Cloud & DevOps"].includes(skill.subcategory)) {
-    return "technical";
-  }
-  // Necessary skills are the remaining skills
-  return "necessary";
-};
-
-const countSkillUsage = (skillTitle: string) => {
-  let count = 0;
-  Object.values(roleSkills).forEach(role => {
-    if (role.specialized.some(s => s.title === skillTitle)) count++;
-    if (role.common.some(s => s.title === skillTitle)) count++;
-    if (role.certifications.some(s => s.title === skillTitle)) count++;
-  });
-  return count;
-};
-
-const getSkillColor = (level: string) => {
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return '#8073ec';
-    case 'intermediate':
-      return '#33C3F0';
-    default:
-      return '#FEC6A1';
-  }
-};
+import { countSkillUsage, SkillUsage } from "./skills/utils/skillDistributionUtils";
 
 export const SkillsOverview = () => {
-  const [selectedView, setSelectedView] = useState<"critical" | "technical" | "necessary">("critical");
+  const [selectedView, setSelectedView] = useState<"category" | "subcategory" | "skill">("category");
   const { toggledSkills } = useToggledSkills();
 
   const getChartData = () => {
-    // Get all toggled skills and their data
-    const toggledSkillsData = Array.from(toggledSkills).map(skillTitle => {
-      // Find the skill in roleSkills to get its details
-      let skillDetails = { subcategory: "", level: "intermediate", requirement: "preferred" };
-      Object.values(roleSkills).some(role => {
-        const found = [...role.specialized, ...role.common, ...role.certifications]
-          .find(s => s.title === skillTitle);
-        if (found) {
-          skillDetails = {
-            subcategory: found.subcategory,
-            level: found.level,
-            requirement: found.requirement
-          };
-          return true;
+    const skillsData = countSkillUsage(toggledSkills);
+    
+    if (selectedView === "category") {
+      const categoryData = skillsData.reduce((acc, curr) => {
+        const existingCategory = acc.find(item => item.name === curr.category);
+        if (existingCategory) {
+          existingCategory.proficiency = Math.round((existingCategory.proficiency + curr.proficiency) / 2);
+          existingCategory.count += 1;
+        } else {
+          acc.push({ 
+            name: curr.category, 
+            proficiency: curr.proficiency,
+            count: 1 
+          });
         }
-        return false;
-      });
+        return acc;
+      }, [] as { name: string; proficiency: number; count: number }[]);
+      
+      return categoryData.sort((a, b) => b.count - a.count);
+    }
 
-      return {
-        skill: skillTitle,
-        level: skillDetails.level,
-        subcategory: skillDetails.subcategory,
-        requirement: skillDetails.requirement,
-        usageCount: countSkillUsage(skillTitle),
-        type: categorizeSkill(skillDetails)
-      };
-    });
+    if (selectedView === "subcategory") {
+      const subcategoryData = skillsData.reduce((acc, curr) => {
+        const existingSubcategory = acc.find(item => item.name === curr.subcategory);
+        if (existingSubcategory) {
+          existingSubcategory.proficiency = Math.round((existingSubcategory.proficiency + curr.proficiency) / 2);
+          existingSubcategory.count += 1;
+        } else {
+          acc.push({ 
+            name: curr.subcategory, 
+            proficiency: curr.proficiency,
+            count: 1 
+          });
+        }
+        return acc;
+      }, [] as { name: string; proficiency: number; count: number }[]);
+      
+      return subcategoryData.sort((a, b) => b.count - a.count);
+    }
 
-    // Filter by selected type and sort by usage count
-    const filteredData = toggledSkillsData
-      .filter(item => item.type === selectedView)
-      .sort((a, b) => b.usageCount - a.usageCount);
-
-    return filteredData.map(item => ({
-      name: item.skill,
-      value: item.level === 'advanced' ? 90 : item.level === 'intermediate' ? 60 : 30,
-      usageCount: item.usageCount,
-      level: item.level,
-      subcategory: item.subcategory
+    return skillsData.map(item => ({
+      name: item.name,
+      proficiency: item.proficiency,
+      count: item.usageCount
     }));
   };
-
-  const chartData = getChartData();
 
   return (
     <Card className="p-6 animate-fade-in border-border border bg-white">
@@ -95,32 +64,17 @@ export const SkillsOverview = () => {
         Here you can find an overview of skills in your organization, categorized into three levels. Check the Employee tab to explore further.
       </p>
 
-      <Tabs defaultValue="critical" className="w-full mb-6" onValueChange={(value) => setSelectedView(value as "critical" | "technical" | "necessary")}>
+      <Tabs defaultValue="category" className="w-full mb-6" onValueChange={(value) => setSelectedView(value as "category" | "subcategory" | "skill")}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="critical">
-            <div className="flex flex-col items-center">
-              <span>Critical Skills</span>
-              <span className="text-xs text-muted-foreground">({chartData.length})</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger value="technical">
-            <div className="flex flex-col items-center">
-              <span>Technical Skills</span>
-              <span className="text-xs text-muted-foreground">({chartData.length})</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger value="necessary">
-            <div className="flex flex-col items-center">
-              <span>Necessary Skills</span>
-              <span className="text-xs text-muted-foreground">({chartData.length})</span>
-            </div>
-          </TabsTrigger>
+          <TabsTrigger value="category">Category</TabsTrigger>
+          <TabsTrigger value="subcategory">Subcategory</TabsTrigger>
+          <TabsTrigger value="skill">Skill Title</TabsTrigger>
         </TabsList>
       </Tabs>
 
       <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+          <BarChart data={getChartData()} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
             <XAxis 
               dataKey="name" 
@@ -130,22 +84,16 @@ export const SkillsOverview = () => {
               interval={0}
               tick={{ fontSize: 12 }}
             />
-            <YAxis 
-              label={{ value: 'Proficiency Level (%)', angle: -90, position: 'insideLeft' }}
-            />
+            <YAxis />
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-white p-4 border border-border rounded shadow-sm space-y-2">
-                      <p className="font-medium text-foreground">{data.name}</p>
-                      <div className="space-y-1 text-sm">
-                        <p><span className="font-medium">Level:</span> {data.level}</p>
-                        <p><span className="font-medium">Category:</span> {data.subcategory}</p>
-                        <p><span className="font-medium">Usage Count:</span> {data.usageCount} roles</p>
-                        <p><span className="font-medium">Proficiency:</span> {data.value}%</p>
-                      </div>
+                    <div className="bg-white p-2 border border-border rounded shadow-sm">
+                      <p className="font-medium">{data.name}</p>
+                      <p className="text-sm font-medium">Proficiency: {data.proficiency}%</p>
+                      <p className="text-sm font-medium">Usage Count: {data.count}</p>
                     </div>
                   );
                 }
@@ -153,11 +101,10 @@ export const SkillsOverview = () => {
               }}
             />
             <Bar
-              dataKey="value"
+              dataKey="proficiency"
               fill="#8073ec"
               radius={[4, 4, 0, 0]}
               barSize={40}
-              fillOpacity={0.8}
             />
           </BarChart>
         </ResponsiveContainer>
