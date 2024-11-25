@@ -43,9 +43,18 @@ export const EmployeeTableRow = ({
 
   const getMatchingSkillsCount = () => {
     if (selectedSkills.length > 0) {
-      const matchingSkills = selectedSkills.filter(skillName => {
-        return employeeSkills.some(empSkill => empSkill.title === skillName);
+      console.log(`Calculating skill matches for ${employee.name}:`, {
+        selectedSkills,
+        employeeSkills: employeeSkills.map(s => s.title)
       });
+
+      const matchingSkills = selectedSkills.filter(skillName => 
+        employeeSkills.some(empSkill => 
+          empSkill.title.toLowerCase() === skillName.toLowerCase()
+        )
+      );
+      
+      console.log(`Found ${matchingSkills.length} matching skills for ${employee.name}:`, matchingSkills);
       
       return {
         count: `${matchingSkills.length} / ${selectedSkills.length}`,
@@ -62,8 +71,16 @@ export const EmployeeTableRow = ({
     ].filter(skill => toggledSkills.has(skill.title));
 
     const matchingSkills = allRoleSkills.filter(roleSkill => {
-      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+      const employeeSkill = employeeSkills.find(empSkill => 
+        empSkill.title.toLowerCase() === roleSkill.title.toLowerCase()
+      );
       return employeeSkill !== undefined;
+    });
+
+    console.log(`Role skill matches for ${employee.name}:`, {
+      total: allRoleSkills.length,
+      matching: matchingSkills.length,
+      skills: matchingSkills.map(s => s.title)
     });
 
     return {
