@@ -23,12 +23,6 @@ export const OrganizationFields = ({ formData, onChange }: OrganizationFieldsPro
     "Sales"
   ];
 
-  const offices = [
-    "Toronto",
-    "New York",
-    "San Francisco"
-  ];
-
   return (
     <>
       <div className="space-y-2">
@@ -44,25 +38,6 @@ export const OrganizationFields = ({ formData, onChange }: OrganizationFieldsPro
             {departments.map((dept) => (
               <SelectItem key={dept} value={dept}>
                 {dept}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="office">Office</Label>
-        <Select
-          value={formData.office}
-          onValueChange={(value) => onChange({ office: value })}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select office" />
-          </SelectTrigger>
-          <SelectContent>
-            {offices.map((office) => (
-              <SelectItem key={office} value={office}>
-                {office}
               </SelectItem>
             ))}
           </SelectContent>

@@ -89,10 +89,8 @@ export const ProfileCreationWidget = () => {
     <Card className="p-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
-          {/* Basic Info - ID, Name, Location */}
+          {/* Basic Info - ID, Name, Location, Office */}
           <BasicInfoFields formData={formData} onChange={handleFormChange} />
-          
-          {/* Office */}
           <OrganizationFields formData={formData} onChange={handleFormChange} />
           
           {/* Role and Level */}
