@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
@@ -29,9 +29,15 @@ export const BenchmarkSkillsMatrix = () => {
   const { currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
+  // Initialize selected search skills based on toggled skills
   useEffect(() => {
+    if (!currentRoleSkills) {
+      console.error('No role skills found for role:', selectedRole);
+      return;
+    }
+
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
@@ -42,7 +48,7 @@ export const BenchmarkSkillsMatrix = () => {
       .filter(skill => toggledSkills.has(skill.title))
       .map(skill => skill.title);
     
-    console.log('Setting toggled skills:', toggledRoleSkills);
+    console.log('Setting toggled skills for role:', selectedRole, toggledRoleSkills);
     setSelectedSearchSkills(toggledRoleSkills);
   }, [selectedRole, toggledSkills, currentRoleSkills]);
 
@@ -71,10 +77,13 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesSearch = true;
       let matchesSkillLevel = true;
 
+      // Get competency state for the current role level
       const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
       console.log('Competency state for skill:', skill.title, competencyState);
       
+      // Use the competency state to determine role skill level and requirement
       const roleSkillLevel = competencyState?.level || 'unspecified';
+      const roleRequirement = competencyState?.required || 'preferred';
 
       if (selectedLevel !== 'all') {
         matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
@@ -120,7 +129,9 @@ export const BenchmarkSkillsMatrix = () => {
         matchesLevel,
         matchesInterest,
         matchesSearch,
-        matchesSkillLevel
+        matchesSkillLevel,
+        roleLevel: roleSkillLevel,
+        requirement: roleRequirement
       });
 
       return shouldInclude;
