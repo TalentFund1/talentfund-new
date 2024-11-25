@@ -59,6 +59,7 @@ export const AddEmployeeDialog = () => {
       
       // Add employee to store
       addEmployee(newEmployee);
+      console.log('Employee added to store:', newEmployee);
 
       // Calculate initial benchmark
       const employeesWithBenchmarks = calculateEmployeeBenchmarks(

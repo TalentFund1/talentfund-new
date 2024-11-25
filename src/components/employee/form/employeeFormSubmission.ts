@@ -20,6 +20,8 @@ interface FormData {
 }
 
 export const validateFormData = (formData: FormData, existingEmployees: Employee[]) => {
+  console.log('Validating form data:', formData);
+  
   // Required fields
   const requiredFields = ['id', 'name', 'office', 'department', 'role', 'startDate', 'sex', 'category'];
   for (const field of requiredFields) {
