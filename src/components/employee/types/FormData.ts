@@ -11,4 +11,5 @@ export interface FormData {
   startDate: string;
   termDate: string;
   office: string;
+  skills: string;
 }

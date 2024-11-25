@@ -8,6 +8,7 @@ import { BasicInfoFields } from "./form/BasicInfoFields";
 import { RoleLevelFields } from "./form/RoleLevelFields";
 import { OrganizationFields } from "./form/OrganizationFields";
 import { EmploymentFields } from "./form/EmploymentFields";
+import { SkillsFields } from "./form/SkillsFields";
 import { useState } from "react";
 import { FormData } from "./types/FormData";
 
@@ -25,7 +26,8 @@ export const ProfileCreationWidget = () => {
     manager: "Sus Manu",
     startDate: "",
     termDate: "",
-    office: "Toronto"
+    office: "Toronto",
+    skills: ""
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -70,7 +72,8 @@ export const ProfileCreationWidget = () => {
         manager: "Sus Manu",
         startDate: "",
         termDate: "",
-        office: "Toronto"
+        office: "Toronto",
+        skills: ""
       });
     } catch (error) {
       console.error('Error creating profile:', error);
@@ -94,6 +97,7 @@ export const ProfileCreationWidget = () => {
           <RoleLevelFields formData={formData} onChange={handleFormChange} />
           <OrganizationFields formData={formData} onChange={handleFormChange} />
           <EmploymentFields formData={formData} onChange={handleFormChange} />
+          <SkillsFields formData={formData} onChange={handleFormChange} />
         </div>
 
         <div className="flex justify-end">
