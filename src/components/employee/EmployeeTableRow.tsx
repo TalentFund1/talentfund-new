@@ -83,7 +83,9 @@ export const EmployeeTableRow = ({
             const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4");
             const skillState = currentStates[skillName];
             const isSkillGoal = skillState?.requirement === 'required' || 
-                               skillState?.requirement === 'skill_goal';
+                               (typeof skillState?.requirement === 'object' && skillState?.requirement.requirement === 'required') ||
+                               skillState?.requirement === 'skill_goal' || 
+                               (typeof skillState?.requirement === 'object' && skillState?.requirement.requirement === 'skill_goal');
             
             return (
               <SkillBubble

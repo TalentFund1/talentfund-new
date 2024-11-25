@@ -54,7 +54,7 @@ export const BenchmarkAnalysis = () => {
       return priorities[level.toLowerCase()] ?? 0;
     };
 
-    const employeePriority = getLevelPriority(employeeSkillLevel);
+    const employeePriority = getLevelPriority(typeof employeeSkillLevel === 'string' ? employeeSkillLevel : employeeSkillLevel.level);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
     return employeePriority === rolePriority || employeePriority > rolePriority;
@@ -64,7 +64,9 @@ export const BenchmarkAnalysis = () => {
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
-    return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
+
+    const requirement = typeof skillState.requirement === 'string' ? skillState.requirement : skillState.requirement.requirement;
+    return requirement === 'required' || requirement === 'skill_goal';
   });
 
   const totalSkillsCount = toggledRoleSkills.length;
@@ -86,7 +88,9 @@ export const BenchmarkAnalysis = () => {
     skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
     competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
     skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
-    averagePercentage
+    averagePercentage,
+    totalSkills: totalSkillsCount,
+    toggledSkills: Array.from(toggledSkills)
   });
 
   return (
