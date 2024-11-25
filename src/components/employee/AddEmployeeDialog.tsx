@@ -3,32 +3,12 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { EmployeeFormFields } from "./form/EmployeeFormFields";
-import { create } from "zustand";
-import { Employee } from "../types/employeeTypes";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { getSkillProfileId } from "../EmployeeTable";
+import { useEmployeeStore } from "./store/employeeStore";
+import { validateFormData, processEmployeeData } from "./form/employeeFormSubmission";
 import { calculateEmployeeBenchmarks } from "./EmployeeBenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { employees as defaultEmployees } from "./EmployeeData";
-import { categorizeSkills } from "../skills/competency/skillCategories";
-
-interface EmployeeStore {
-  employees: Employee[];
-  addEmployee: (employee: Employee) => void;
-}
-
-// Initialize store with persisted state if available
-export const useEmployeeStore = create<EmployeeStore>((set) => ({
-  employees: defaultEmployees,
-  addEmployee: (employee) => set((state) => {
-    console.log('Adding new employee to store:', employee);
-    const newEmployees = [...state.employees, employee];
-    console.log('Updated employees list:', newEmployees);
-    return { employees: newEmployees };
-  }),
-}));
 
 export const AddEmployeeDialog = () => {
   const { toast } = useToast();
@@ -58,68 +38,24 @@ export const AddEmployeeDialog = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    console.log('Form submission - Form data:', formData);
+    console.log('Form submission started - Form data:', formData);
     
-    // Enhanced validation for required fields
-    if (!formData.id || !formData.name || !formData.department || !formData.role || !formData.office || !formData.startDate) {
-      console.log('Form validation failed - Missing required fields');
+    // Validate form data
+    const validation = validateFormData(formData, employees);
+    if (!validation.isValid) {
+      console.log('Validation failed:', validation.error);
       toast({
         title: "Error",
-        description: "Please fill in all required fields: ID, Name, Department, Role, Office, and Start Date",
+        description: validation.error,
         variant: "destructive"
       });
       return;
     }
-
-    // Check for duplicate employee ID (handling both string and number IDs)
-    const isDuplicateId = employees.some(emp => emp.id === formData.id || emp.id === String(formData.id));
-    if (isDuplicateId) {
-      console.log('Form validation failed - Duplicate employee ID:', formData.id);
-      toast({
-        title: "Error",
-        description: "An employee with this ID already exists. Please use a unique ID.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Process skills
-    const skillsList = formData.skills
-      .split(',')
-      .map(skill => skill.trim())
-      .filter(skill => skill.length > 0);
-
-    console.log('Processing skills:', skillsList);
-
-    // Get role-specific skills
-    const roleId = getSkillProfileId(formData.role);
-    const roleSkills = getEmployeeSkills(roleId);
-    
-    // Categorize skills
-    const categorizedSkills = categorizeSkills(skillsList, roleId);
-    console.log('Categorized skills:', categorizedSkills);
-
-    // Create new employee with all required data
-    const newEmployee: Employee = {
-      id: String(formData.id), // Ensure ID is stored as string
-      name: formData.name,
-      role: `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`,
-      department: formData.department,
-      skillCount: skillsList.length || roleSkills.length,
-      benchmark: 0, // Will be calculated after creation
-      lastUpdated: new Date().toLocaleDateString(),
-      location: formData.location,
-      sex: formData.sex as 'male' | 'female',
-      category: formData.category,
-      manager: formData.manager,
-      startDate: formData.startDate,
-      office: formData.office,
-      termDate: formData.termDate || "-"
-    };
-
-    console.log('Creating new employee with data:', newEmployee);
 
     try {
+      // Process employee data
+      const newEmployee = processEmployeeData(formData);
+      
       // Add employee to store
       addEmployee(newEmployee);
 
@@ -172,7 +108,6 @@ export const AddEmployeeDialog = () => {
         [field]: value
       };
 
-      // Reset level when role changes to ensure compatibility
       if (field === 'role') {
         newData.level = '';
       }
