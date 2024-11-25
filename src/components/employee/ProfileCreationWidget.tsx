@@ -7,6 +7,8 @@ import { Card } from "@/components/ui/card";
 import { createNewProfile, validateProfileData } from "./ProfileDuplicator";
 import { useToast } from "@/hooks/use-toast";
 import { employees } from "./EmployeeData";
+import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
+import { jobTitles } from "../skills/competency/skillProfileData";
 
 export const ProfileCreationWidget = () => {
   const { toast } = useToast();
@@ -14,6 +16,7 @@ export const ProfileCreationWidget = () => {
     id: "",
     name: "",
     role: "",
+    level: "",
     department: "Engineering",
     location: "Toronto, ON",
     sex: "male" as 'male' | 'female',
@@ -27,7 +30,14 @@ export const ProfileCreationWidget = () => {
     e.preventDefault();
     console.log('Submitting new profile:', formData);
 
-    if (!validateProfileData(formData)) {
+    // Combine role and level
+    const fullRole = `${jobTitles[formData.role]}: ${formData.level.toUpperCase()}`;
+    const profileDataWithFullRole = {
+      ...formData,
+      role: fullRole
+    };
+
+    if (!validateProfileData(profileDataWithFullRole)) {
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields",
@@ -37,10 +47,9 @@ export const ProfileCreationWidget = () => {
     }
 
     try {
-      const newProfile = createNewProfile(formData);
+      const newProfile = createNewProfile(profileDataWithFullRole);
       console.log('Created new profile:', newProfile);
       
-      // Add to employees array
       employees.push(newProfile);
       
       toast({
@@ -53,6 +62,7 @@ export const ProfileCreationWidget = () => {
         id: "",
         name: "",
         role: "",
+        level: "",
         department: "Engineering",
         location: "Toronto, ON",
         sex: "male",
@@ -70,6 +80,9 @@ export const ProfileCreationWidget = () => {
       });
     }
   };
+
+  const isManagerialRole = formData.role && jobTitles[formData.role].toLowerCase().includes('manager');
+  const levels = isManagerialRole ? managerialLevels : professionalLevels;
 
   return (
     <Card className="p-6">
@@ -97,12 +110,46 @@ export const ProfileCreationWidget = () => {
 
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Input
-              id="role"
+            <Select
               value={formData.role}
-              onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-              placeholder="e.g., Frontend Engineer: P4"
-            />
+              onValueChange={(value) => {
+                setFormData(prev => ({
+                  ...prev,
+                  role: value,
+                  level: "" // Reset level when role changes
+                }));
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(jobTitles).map(([id, title]) => (
+                  <SelectItem key={id} value={id}>
+                    {title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="level">Level</Label>
+            <Select
+              value={formData.level}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, level: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select level" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(levels).map(([id, title]) => (
+                  <SelectItem key={id} value={id}>
+                    {title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
