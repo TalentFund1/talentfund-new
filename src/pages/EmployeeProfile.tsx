@@ -14,9 +14,7 @@ import { EmployeeHeader } from "@/components/employee/EmployeeHeader";
 import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEmployeeStore } from "@/components/employee/store/employeeStore";
-import { useEffect } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { employees } from "@/components/employee/EmployeeData";
 
 const employeeImages = {
   "123": "photo-1488590528505-98d2b5aba04b",
@@ -28,24 +26,10 @@ const employeeImages = {
 const EmployeeProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
-  const employee = getEmployeeById(id || "");
-
-  useEffect(() => {
-    if (!employee) {
-      console.log('Employee not found, redirecting to employees page');
-      toast({
-        title: "Employee Not Found",
-        description: "The requested employee profile does not exist.",
-        variant: "destructive"
-      });
-      navigate('/employees');
-    }
-  }, [employee, navigate, toast]);
+  const employee = employees.find(emp => emp.id === id);
 
   if (!employee) {
-    return null; // Return null while redirecting
+    return <div>Employee not found</div>;
   }
 
   const employeeData = {
@@ -63,7 +47,6 @@ const EmployeeProfile = () => {
   };
 
   const handleNavigation = (direction: 'prev' | 'next') => {
-    const employees = useEmployeeStore.getState().employees;
     const employeeIds = employees.map(emp => emp.id);
     const currentIndex = employeeIds.indexOf(id || "123");
     
@@ -77,8 +60,8 @@ const EmployeeProfile = () => {
     navigate(`/employee/${employeeIds[newIndex]}`);
   };
 
-  const currentIndex = useEmployeeStore.getState().employees.findIndex(emp => emp.id === id) + 1;
-  const totalEmployees = useEmployeeStore.getState().employees.length;
+  const currentIndex = employees.findIndex(emp => emp.id === id) + 1;
+  const totalEmployees = employees.length;
 
   console.log('Employee Profile Data:', {
     id,

@@ -5,10 +5,9 @@ import { employees as defaultEmployees } from "../EmployeeData";
 interface EmployeeStore {
   employees: Employee[];
   addEmployee: (employee: Employee) => void;
-  getEmployeeById: (id: string) => Employee | undefined;
 }
 
-export const useEmployeeStore = create<EmployeeStore>((set, get) => ({
+export const useEmployeeStore = create<EmployeeStore>((set) => ({
   employees: defaultEmployees,
   addEmployee: (employee) => {
     console.log('Adding employee to store:', employee);
@@ -18,8 +17,4 @@ export const useEmployeeStore = create<EmployeeStore>((set, get) => ({
       return { employees: newEmployees };
     });
   },
-  getEmployeeById: (id) => {
-    const state = get();
-    return state.employees.find(emp => emp.id === id);
-  }
 }));
