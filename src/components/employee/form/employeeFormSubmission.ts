@@ -23,7 +23,7 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
   console.log('Validating form data:', formData);
   
   // Required fields
-  const requiredFields = ['id', 'name', 'office', 'department', 'role', 'startDate', 'sex', 'category'];
+  const requiredFields = ['id', 'name', 'office', 'department', 'role', 'level', 'startDate', 'sex', 'category'];
   for (const field of requiredFields) {
     if (!formData[field as keyof FormData]) {
       console.log(`Validation failed: ${field} is required`);
@@ -72,6 +72,7 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
     }
   }
 
+  console.log('Form validation passed');
   return { isValid: true, error: null };
 };
 
