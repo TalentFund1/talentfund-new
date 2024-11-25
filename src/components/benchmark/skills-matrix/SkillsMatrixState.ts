@@ -1,25 +1,55 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { SkillState, SkillsMatrixState } from '../types';
+
+interface SkillState {
+  level: string;
+  requirement: string;
+}
+
+interface SkillsMatrixState {
+  originalStates: Record<string, SkillState>;
+  currentStates: Record<string, SkillState>;
+  hasChanges: boolean;
+  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
+  saveChanges: () => void;
+  cancelChanges: () => void;
+  initializeState: (skillTitle: string, initialLevel: string, initialRequirement: string) => void;
+}
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       originalStates: {},
       currentStates: {},
       hasChanges: false,
-      setSkillState: (skillTitle, level, requirement, employeeId) => {
-        console.log('Setting matrix skill state:', { skillTitle, level, requirement, employeeId });
+      initializeState: (skillTitle, initialLevel, initialRequirement) => {
+        const currentState = get().currentStates[skillTitle];
+        if (!currentState) {
+          console.log('Initializing matrix skill state:', { skillTitle, initialLevel, initialRequirement });
+          set((state) => ({
+            currentStates: {
+              ...state.currentStates,
+              [skillTitle]: {
+                level: initialLevel || 'unspecified',
+                requirement: initialRequirement || 'required'
+              }
+            },
+            originalStates: {
+              ...state.originalStates,
+              [skillTitle]: {
+                level: initialLevel || 'unspecified',
+                requirement: initialRequirement || 'required'
+              }
+            }
+          }));
+        }
+      },
+      setSkillState: (skillTitle, level, requirement) => {
+        console.log('Setting matrix skill state:', { skillTitle, level, requirement });
         set((state) => {
           const newStates = {
             ...state.currentStates,
-            [employeeId]: {
-              ...(state.currentStates[employeeId] || {}),
-              [skillTitle]: {
-                level,
-                requirement
-              }
-            }
+            [skillTitle]: { level, requirement },
           };
           
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
@@ -30,76 +60,22 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           };
         });
       },
-      initializeState: (skillTitle, initialLevel, initialRequirement, employeeId) => {
-        console.log('Initializing matrix skill state:', { skillTitle, initialLevel, initialRequirement, employeeId });
-        
-        set((state) => ({
-          currentStates: {
-            ...state.currentStates,
-            [employeeId]: {
-              ...(state.currentStates[employeeId] || {}),
-              [skillTitle]: {
-                level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'required'
-              }
-            }
-          },
-          originalStates: {
-            ...state.originalStates,
-            [employeeId]: {
-              ...(state.originalStates[employeeId] || {}),
-              [skillTitle]: {
-                level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'required'
-              }
-            }
-          }
-        }));
-      },
-      saveChanges: () => {
-        console.log('Saving matrix changes');
-        set((state) => ({
-          originalStates: { ...state.currentStates },
-          hasChanges: false,
-        }));
-      },
-      cancelChanges: () => {
-        console.log('Cancelling matrix changes');
-        set((state) => ({
-          currentStates: { ...state.originalStates },
-          hasChanges: false,
-        }));
-      },
-      cleanupState: (employeeId) => {
-        console.log('Cleaning up state for employee:', employeeId);
+      saveChanges: () =>
         set((state) => {
-          const { [employeeId]: _, ...remainingCurrentStates } = state.currentStates;
-          const { [employeeId]: __, ...remainingOriginalStates } = state.originalStates;
-          
+          console.log('Saving matrix changes');
           return {
-            currentStates: remainingCurrentStates,
-            originalStates: remainingOriginalStates,
-            hasChanges: false
+            originalStates: { ...state.currentStates },
+            hasChanges: false,
           };
-        });
-      },
-      duplicateState: (sourceEmployeeId, targetEmployeeId) => {
-        console.log('Duplicating state:', { from: sourceEmployeeId, to: targetEmployeeId });
+        }),
+      cancelChanges: () =>
         set((state) => {
-          const sourceState = state.currentStates[sourceEmployeeId] || {};
-          
+          console.log('Cancelling matrix changes');
           return {
-            currentStates: {
-              ...state.currentStates,
-              [targetEmployeeId]: { ...sourceState }
-            },
-            originalStates: {
-              ...state.originalStates,
-              [targetEmployeeId]: { ...sourceState }
-            }
+            currentStates: { ...state.originalStates },
+            hasChanges: false,
           };
-        });
-      }
+        }),
     }),
     {
       name: 'skills-matrix-storage',

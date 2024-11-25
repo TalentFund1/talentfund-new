@@ -19,9 +19,9 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel, 'required', 'default');
+  initializeState(skillTitle, initialLevel, 'required');
 
-  const currentState = currentStates['default']?.[skillTitle] || {
+  const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
     requirement: 'required'
   };
@@ -76,20 +76,20 @@ export const SkillLevelCell = ({
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select 
-          value={currentState.level} 
+          value={currentState?.level || 'unspecified'} 
           onValueChange={(value) => {
-            setSkillState(skillTitle, value, currentState.requirement, 'default');
-            onLevelChange?.(value, currentState.requirement);
+            setSkillState(skillTitle, value, currentState?.requirement || 'required');
+            onLevelChange?.(value, currentState?.requirement || 'required');
           }}
         >
           <SelectTrigger className={`
             rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-            border-2 ${getBorderColorClass(currentState.level)}
+            border-2 ${getBorderColorClass(currentState?.level)}
           `}>
             <SelectValue>
               <span className="flex items-center gap-2">
-                {getLevelIcon(currentState.level)}
-                {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
+                {getLevelIcon(currentState?.level)}
+                {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -122,10 +122,10 @@ export const SkillLevelCell = ({
         </Select>
 
         <Select 
-          value={currentState.requirement}
+          value={currentState?.requirement || 'required'}
           onValueChange={(value) => {
-            setSkillState(skillTitle, currentState.level, value, 'default');
-            onLevelChange?.(currentState.level, value);
+            setSkillState(skillTitle, currentState?.level || 'unspecified', value);
+            onLevelChange?.(currentState?.level || 'unspecified', value);
           }}
         >
           <SelectTrigger className={`

@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { SkillState } from "../benchmark/types";
 
 interface SkillBadgeProps {
   skill: BaseSkill;
@@ -49,8 +48,8 @@ export const SkillBadge = ({
     }
     
     // For all skill levels, show goal by default
-    const currentLevel = skillState?.level || level || '';
-    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel.toLowerCase());
+    const currentLevel = (skillState?.level || level || '').toLowerCase();
+    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
   };
 
   return (
