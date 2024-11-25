@@ -108,8 +108,19 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
         console.log('Generated progression:', { skill: skill.title, progression });
         
-        setSkillProgression(skill.title, progression);
+        // Update each level's state for the skill
+        Object.entries(progression).forEach(([level, state]) => {
+          setSkillProgression(skill.title, {
+            [level]: {
+              level: state.level,
+              required: state.required
+            }
+          });
+        });
       });
+
+      // Force a re-render by saving changes
+      saveChanges();
 
       toast({
         title: "Skills Generated",
