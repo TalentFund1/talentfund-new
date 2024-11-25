@@ -8,13 +8,35 @@ import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
+import { CategoryCards } from './CategoryCards';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
 
+const getCategoryForSkill = (skill: any, roleId: string) => {
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  
+  // Critical skills are specialized skills with high growth
+  if (currentRoleSkills.specialized.some(s => s.title === skill.title) && 
+      parseFloat(skill.growth) >= 25) {
+    return 'critical';
+  }
+  
+  // Technical skills are specialized or common skills related to technical aspects
+  if (currentRoleSkills.specialized.some(s => s.title === skill.title) ||
+      (currentRoleSkills.common.some(s => s.title === skill.title) && 
+       !skill.title.toLowerCase().includes('soft'))) {
+    return 'technical';
+  }
+  
+  // Necessary skills are everything else
+  return 'necessary';
+};
+
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -86,6 +108,14 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
+      // Apply category filter
+      if (selectedCategory !== 'all') {
+        const skillCategory = getCategoryForSkill(skill, id || "123");
+        if (skillCategory !== selectedCategory) {
+          return false;
+        }
+      }
+
       return isInCurrentRole;
     });
 
@@ -127,6 +157,14 @@ export const SkillProfileMatrix = () => {
     return sortedSkills;
   })();
 
+  // Calculate skill counts for each category
+  const skillCounts = {
+    all: filteredSkills.length,
+    critical: filteredSkills.filter(skill => getCategoryForSkill(skill, id || "123") === 'critical').length,
+    technical: filteredSkills.filter(skill => getCategoryForSkill(skill, id || "123") === 'technical').length,
+    necessary: filteredSkills.filter(skill => getCategoryForSkill(skill, id || "123") === 'necessary').length
+  };
+
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
@@ -143,6 +181,12 @@ export const SkillProfileMatrix = () => {
         </div>
 
         <Separator className="my-4" />
+
+        <CategoryCards
+          selectedCategory={selectedCategory}
+          onCategorySelect={setSelectedCategory}
+          skillCount={skillCounts}
+        />
 
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
