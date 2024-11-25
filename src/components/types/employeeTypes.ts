@@ -14,3 +14,12 @@ export interface Employee {
   office: string;
   termDate: string;
 }
+
+export interface EmployeeSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence?: string;
+  requirement?: 'required' | 'preferred' | 'skill_goal';
+}
