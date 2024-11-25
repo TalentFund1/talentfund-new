@@ -53,7 +53,6 @@ export const SkillBadge = ({
         : skillState.requirement?.requirement;
         
       // Only show heart for 'required' or 'skill_goal' requirements
-      // Do not show for 'not-interested' or other states
       return requirement === 'required' || requirement === 'skill_goal';
     }
     
