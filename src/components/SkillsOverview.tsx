@@ -2,6 +2,8 @@ import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
+import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
+import { roleSkills } from "./skills/data/roleSkills";
 
 const categorizeSkill = (skill: any) => {
   // Critical skills are those with high proficiency
@@ -16,62 +18,56 @@ const categorizeSkill = (skill: any) => {
   return "necessary";
 };
 
-const data = [
-  {
-    category: "Software Development",
-    subcategory: "Programming Languages",
-    skill: "Python",
-    proficiency: 85,
-    type: "critical"
-  },
-  {
-    category: "Software Development",
-    subcategory: "Web Development",
-    skill: "React",
-    proficiency: 78,
-    type: "technical"
-  },
-  {
-    category: "AI & Machine Learning",
-    subcategory: "Deep Learning",
-    skill: "Neural Networks",
-    proficiency: 92,
-    type: "critical"
-  },
-  {
-    category: "AI & Machine Learning",
-    subcategory: "NLP",
-    skill: "Text Processing",
-    proficiency: 75,
-    type: "technical"
-  },
-  {
-    category: "Design & UX",
-    subcategory: "UI Design",
-    skill: "Figma",
-    proficiency: 88,
-    type: "necessary"
-  },
-  {
-    category: "Design & UX",
-    subcategory: "User Research",
-    skill: "Usability Testing",
-    proficiency: 82,
-    type: "necessary"
-  }
-].map(skill => ({
-  ...skill,
-  type: categorizeSkill(skill)
-}));
+const countSkillUsage = (skillTitle: string) => {
+  let count = 0;
+  Object.values(roleSkills).forEach(role => {
+    if (role.specialized.some(s => s.title === skillTitle)) count++;
+    if (role.common.some(s => s.title === skillTitle)) count++;
+    if (role.certifications.some(s => s.title === skillTitle)) count++;
+  });
+  return count;
+};
 
 export const SkillsOverview = () => {
   const [selectedView, setSelectedView] = useState<"critical" | "technical" | "necessary">("critical");
+  const { toggledSkills } = useToggledSkills();
 
   const getChartData = () => {
-    const filteredData = data.filter(item => item.type === selectedView);
+    // Get all toggled skills and their data
+    const toggledSkillsData = Array.from(toggledSkills).map(skillTitle => {
+      // Find the skill in roleSkills to get its details
+      let skillDetails = { category: "", proficiency: 0 };
+      Object.values(roleSkills).some(role => {
+        const found = [...role.specialized, ...role.common, ...role.certifications]
+          .find(s => s.title === skillTitle);
+        if (found) {
+          skillDetails = {
+            category: found.category || "Software Development",
+            proficiency: found.proficiency || 75
+          };
+          return true;
+        }
+        return false;
+      });
+
+      return {
+        skill: skillTitle,
+        proficiency: skillDetails.proficiency,
+        category: skillDetails.category,
+        usageCount: countSkillUsage(skillTitle),
+        type: categorizeSkill({ ...skillDetails, title: skillTitle })
+      };
+    });
+
+    // Filter by selected type and sort by usage count
+    const filteredData = toggledSkillsData
+      .filter(item => item.type === selectedView)
+      .sort((a, b) => b.usageCount - a.usageCount);
+
     return filteredData.map(item => ({
       name: item.skill,
-      proficiency: item.proficiency
+      proficiency: item.proficiency,
+      usageCount: item.usageCount
     }));
   };
 
@@ -104,6 +100,7 @@ export const SkillsOverview = () => {
                     <div className="bg-white p-2 border border-border rounded shadow-sm">
                       <p className="font-medium">{data.name}</p>
                       <p className="text-sm font-medium">Proficiency: {data.proficiency}%</p>
+                      <p className="text-sm font-medium">Usage Count: {data.usageCount}</p>
                     </div>
                   );
                 }
