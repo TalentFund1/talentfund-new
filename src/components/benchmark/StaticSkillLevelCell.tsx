@@ -30,7 +30,7 @@ export const StaticSkillLevelCell = ({
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {
-    switch (level.toLowerCase()) {
+    switch (level?.toLowerCase()) {
       case 'advanced':
         return <Star className="w-3.5 h-3.5 text-primary-accent" />;
       case 'intermediate':
@@ -75,6 +75,11 @@ export const StaticSkillLevelCell = ({
     return getBorderColorClass(level).split(' ')[0];
   };
 
+  const getDisplayText = (text: string = 'unspecified') => {
+    if (!text) return 'Unspecified';
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
+
   console.log('StaticSkillLevelCell render:', {
     skillTitle,
     initialLevel,
@@ -83,28 +88,31 @@ export const StaticSkillLevelCell = ({
     requirement: currentState?.requirement || 'required'
   });
 
+  const level = currentState?.level || 'unspecified';
+  const requirement = currentState?.requirement || 'required';
+
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <div className={`
           rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-          border-2 ${getBorderColorClass(currentState?.level)}
+          border-2 ${getBorderColorClass(level)}
         `}>
           <span className="flex items-center gap-2">
-            {getLevelIcon(currentState?.level)}
-            {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
+            {getLevelIcon(level)}
+            {getDisplayText(level)}
           </span>
         </div>
         <div className={`
           text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
           border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-          ${getLowerBorderColorClass(currentState?.level, currentState?.requirement)}
+          ${getLowerBorderColorClass(level, requirement)}
         `}>
           <span className="flex items-center gap-1.5">
-            {getRequirementIcon(currentState?.requirement)}
-            {currentState?.requirement === 'required' ? 'Skill Goal' : 
-             currentState?.requirement === 'not-interested' ? 'Not Interested' : 
-             currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+            {getRequirementIcon(requirement)}
+            {requirement === 'required' ? 'Skill Goal' : 
+             requirement === 'not-interested' ? 'Not Interested' : 
+             requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
           </span>
         </div>
       </div>
