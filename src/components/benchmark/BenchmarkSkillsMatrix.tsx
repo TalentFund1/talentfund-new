@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
@@ -30,23 +30,19 @@ export const BenchmarkSkillsMatrix = () => {
 
   console.log('Current Role Level:', roleLevel);
   console.log('Toggled Skills:', Array.from(toggledSkills));
+  console.log('Selected Role:', selectedRole);
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  useEffect(() => {
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
+  // Get all skills for the current role
+  const allRoleSkills = [
+    ...(currentRoleSkills.specialized || []),
+    ...(currentRoleSkills.common || []),
+    ...(currentRoleSkills.certifications || [])
+  ];
 
-    const toggledRoleSkills = allRoleSkills
-      .filter(skill => toggledSkills.has(skill.title))
-      .map(skill => skill.title);
-    
-    setSelectedSearchSkills(toggledRoleSkills);
-  }, [selectedRole, toggledSkills, currentRoleSkills]);
+  console.log('All Role Skills:', allRoleSkills.map(s => s.title));
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -58,7 +54,8 @@ export const BenchmarkSkillsMatrix = () => {
     return priorities[level.toLowerCase()] ?? 3;
   };
 
-  const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
+  // Filter based on the role's skills instead of employee skills
+  const filteredSkills = allRoleSkills
     .filter(skill => {
       // First check if skill is toggled
       if (!toggledSkills.has(skill.title)) return false;
