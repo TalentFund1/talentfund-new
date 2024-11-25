@@ -22,7 +22,7 @@ interface FormData {
 export const validateFormData = (formData: FormData, existingEmployees: Employee[]) => {
   console.log('Validating form data:', formData);
   
-  // Required fields validation
+  // Required fields
   const requiredFields = ['id', 'name', 'office', 'department', 'role', 'level', 'startDate', 'sex', 'category'];
   for (const field of requiredFields) {
     if (!formData[field as keyof FormData]) {
@@ -35,7 +35,8 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
   }
 
   // Check for duplicate ID
-  if (existingEmployees.some(emp => emp.id === formData.id)) {
+  const isDuplicateId = existingEmployees.some(emp => emp.id === formData.id);
+  if (isDuplicateId) {
     console.log('Validation failed: Duplicate ID found');
     return {
       isValid: false,
@@ -86,10 +87,6 @@ export const processEmployeeData = (formData: FormData): Employee => {
 
   console.log('Processed skills list:', skillsList);
 
-  // Format role with level
-  const formattedRole = `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`;
-  console.log('Formatted role:', formattedRole);
-
   // Get role-specific skills
   const roleId = getSkillProfileId(formData.role);
   const roleSkills = getEmployeeSkills(roleId);
@@ -101,19 +98,19 @@ export const processEmployeeData = (formData: FormData): Employee => {
   const lastUpdated = new Date().toLocaleDateString();
   console.log('Setting last updated date:', lastUpdated);
 
-  // Create new employee
+  // Create new employee with proper ID handling
   const newEmployee: Employee = {
     id: formData.id,
     name: formData.name,
-    role: formattedRole,
+    role: `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`,
     department: formData.department,
     skillCount: skillsList.length || roleSkills.length,
     benchmark: 0, // Initial benchmark, will be calculated after creation
     lastUpdated: lastUpdated,
-    location: formData.location || formData.office,
+    location: formData.location,
     sex: formData.sex as 'male' | 'female',
     category: formData.category,
-    manager: formData.manager || '',
+    manager: formData.manager,
     startDate: formData.startDate,
     office: formData.office,
     termDate: formData.termDate || "-"
