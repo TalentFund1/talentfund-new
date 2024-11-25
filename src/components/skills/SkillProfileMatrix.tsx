@@ -26,11 +26,15 @@ export const SkillProfileMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
+  console.log('Current toggled skills:', Array.from(toggledSkills)); // Debug log
+
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
     if (newToggledSkills.has(skillTitle)) {
+      console.log('Removing skill:', skillTitle); // Debug log
       newToggledSkills.delete(skillTitle);
     } else {
+      console.log('Adding skill:', skillTitle); // Debug log
       newToggledSkills.add(skillTitle);
     }
     setToggledSkills(newToggledSkills);
@@ -100,15 +104,8 @@ export const SkillProfileMatrix = () => {
       });
     }
 
-    return sortedSkills.sort((a, b) => {
-      const aIsSaved = toggledSkills.has(a.title);
-      const bIsSaved = toggledSkills.has(b.title);
-      if (aIsSaved === bIsSaved) return 0;
-      return aIsSaved ? -1 : 1;
-    });
+    return sortedSkills;
   })();
-
-  const paginatedSkills = filteredSkills;
 
   return (
     <div className="space-y-6">
@@ -158,7 +155,7 @@ export const SkillProfileMatrix = () => {
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
-            paginatedSkills={paginatedSkills}
+            paginatedSkills={filteredSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
             sortField={sortField}

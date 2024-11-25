@@ -44,6 +44,7 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { selectedRole } = useRoleStore();
   const { initializeStates } = useCompetencyStore();
+  const { id } = useParams<{ id: string }>();
   
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
     console.log('Initializing skills by role, selected role:', selectedRole);
@@ -88,29 +89,31 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   // Initialize skills for new roles or when they're empty
   useEffect(() => {
-    if (selectedRole) {
+    const currentRole = id || selectedRole;
+    if (currentRole) {
       setSkillsByRole(prev => {
-        if (!prev[selectedRole] || prev[selectedRole].size === 0) {
-          console.log('Initializing skills for selected role:', selectedRole);
-          const newSkills = getInitialSkillsForRole(selectedRole);
+        if (!prev[currentRole] || prev[currentRole].size === 0) {
+          console.log('Initializing skills for role:', currentRole);
+          const newSkills = getInitialSkillsForRole(currentRole);
           return {
             ...prev,
-            [selectedRole]: newSkills
+            [currentRole]: newSkills
           };
         }
         return prev;
       });
     }
-  }, [selectedRole]);
+  }, [id, selectedRole]);
 
-  const toggledSkills = skillsByRole[selectedRole] || new Set<string>();
+  const currentRole = id || selectedRole;
+  const toggledSkills = currentRole ? (skillsByRole[currentRole] || new Set<string>()) : new Set<string>();
 
   const setToggledSkills = (newSkills: Set<string>) => {
-    console.log('Setting toggled skills for selected role:', selectedRole, Array.from(newSkills));
-    if (selectedRole) {
+    console.log('Setting toggled skills for role:', currentRole, Array.from(newSkills));
+    if (currentRole) {
       setSkillsByRole(prev => ({
         ...prev,
-        [selectedRole]: newSkills
+        [currentRole]: newSkills
       }));
     }
   };
