@@ -10,7 +10,7 @@ import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
-import { employees } from "../EmployeeTable";
+import { useEmployeeStore } from "../employee/AddEmployeeDialog";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 
 interface RoleStore {
@@ -41,6 +41,7 @@ export const RoleBenchmark = () => {
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
   const { id } = useParams<{ id: string }>();
+  const employees = useEmployeeStore((state) => state.employees);
 
   // Find the employee and get their role
   const employee = employees.find(emp => emp.id === id);

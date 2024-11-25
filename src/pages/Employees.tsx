@@ -5,12 +5,13 @@ import { Users, UserPlus, Equal, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { EmployeeFilters } from "@/components/EmployeeFilters";
-import { EmployeeTable, employees } from "@/components/EmployeeTable";
+import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
+import { useEmployeeStore } from "@/components/employee/AddEmployeeDialog";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -38,6 +39,8 @@ const Employees = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [selectedManager, setSelectedManager] = useState<string[]>([]);
+  
+  const employees = useEmployeeStore((state) => state.employees);
 
   // Get filtered employees
   const preFilteredEmployees = filterEmployees(
@@ -60,7 +63,6 @@ const Employees = () => {
   // Calculate total employees based on filtered results
   const totalEmployees = filteredEmployees.length;
 
-  // Calculate female percentage from the filtered employees
   const calculateFemalePercentage = () => {
     if (filteredEmployees.length === 0) return 0;
     const femaleCount = filteredEmployees.filter(emp => emp.sex === 'female').length;
