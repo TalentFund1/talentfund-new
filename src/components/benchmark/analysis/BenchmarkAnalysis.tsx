@@ -30,7 +30,6 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     ...currentRoleSkills.certifications
   ];
 
-  // Get all toggled skills for the current role
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
   const totalToggledSkills = toggledRoleSkills.length;
 
@@ -55,17 +54,24 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
     if (!roleSkillState) {
       console.log(`No competency state found for ${skill.title}`);
-      return false;
+      return true; // If no competency state is found, consider it a match
     }
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
+    const isRequired = roleSkillState.required === 'required';
 
     console.log(`Checking competency match for ${skill.title}:`, {
       employeeLevel: employeeSkillLevel,
       roleLevel: roleSkillLevel,
-      required: roleSkillState.required
+      required: roleSkillState.required,
+      isRequired
     });
+
+    // Only check level match if the skill is required
+    if (!isRequired) {
+      return true;
+    }
 
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
@@ -93,16 +99,26 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   // Skill Goal Match calculation - match based on skill goals and requirements
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
+    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
+    
     if (!skillState) {
       console.log(`No skill state found for ${skill.title}`);
       return false;
     }
 
-    const isMatch = skillState.requirement === 'required' || 
-                   skillState.requirement === 'skill_goal';
+    // Consider it a match if either:
+    // 1. The skill is marked as required/skill_goal by the employee
+    // 2. The skill is required by the role and the employee has it
+    const isEmployeeGoal = skillState.requirement === 'required' || 
+                          skillState.requirement === 'skill_goal';
+    const isRoleRequired = roleSkillState?.required === 'required';
+    const isMatch = isEmployeeGoal || (isRoleRequired && skillState.level);
 
     console.log(`Checking skill goal match for ${skill.title}:`, {
-      requirement: skillState.requirement,
+      employeeRequirement: skillState.requirement,
+      roleRequired: roleSkillState?.required,
+      isEmployeeGoal,
+      isRoleRequired,
       isMatch
     });
 
