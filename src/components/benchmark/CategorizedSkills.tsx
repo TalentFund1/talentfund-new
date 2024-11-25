@@ -78,7 +78,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
         isToggled: toggledSkills.has(skill.title)
       });
       
-      return (competencyState?.required === 'preferred' || competencyState?.required === 'skill_goal') && 
+      return competencyState?.required === 'preferred' && 
              toggledSkills.has(skill.title) && 
              !requiredSkills.some(req => req.title === skill.title);
     })
@@ -117,11 +117,6 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     }
   };
 
-  const isSkillGoal = (skillTitle: string) => {
-    const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase());
-    return competencyState?.required === 'skill_goal' || competencyState?.required === 'required';
-  };
-
   console.log('Skills Summary:', {
     required: requiredSkills.length,
     preferred: preferredSkills.length,
@@ -147,12 +142,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
             className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
           >
             {skill.title}
-            <div className="flex items-center gap-1.5">
-              <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
-              {isSkillGoal(skill.title) && (
-                <Heart className="w-3 h-3 text-[#1f2144]" />
-              )}
-            </div>
+            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
           </Badge>
         ))}
       </div>
