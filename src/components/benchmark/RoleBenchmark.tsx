@@ -36,7 +36,7 @@ const roles = {
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
@@ -59,7 +59,7 @@ export const RoleBenchmark = () => {
     }
   }, [employee, setSelectedRole, setRoleLevel]);
 
-  // Update skills search when role changes
+  // Initialize toggled skills when role changes
   useEffect(() => {
     if (!currentRoleSkills) {
       console.warn('No role skills found for role:', selectedRole);
@@ -70,13 +70,19 @@ export const RoleBenchmark = () => {
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
-    ]
-    .map(skill => skill.title)
-    .filter(skillTitle => toggledSkills.has(skillTitle));
+    ];
+
+    // Initialize all skills as toggled for the selected role
+    const newToggledSkills = new Set(allSkills.map(skill => skill.title));
+    console.log('Initializing toggled skills for role:', {
+      role: selectedRole,
+      skillsCount: newToggledSkills.size,
+      skills: Array.from(newToggledSkills)
+    });
     
-    console.log('Setting benchmark search skills:', allSkills);
-    setBenchmarkSearchSkills(allSkills);
-  }, [selectedRole, currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
+    setToggledSkills(newToggledSkills);
+    setBenchmarkSearchSkills(Array.from(newToggledSkills));
+  }, [selectedRole, currentRoleSkills, setToggledSkills, setBenchmarkSearchSkills]);
 
   // Handle track changes
   useEffect(() => {
