@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { roleSkills } from '../data/roleSkills';
+import { useCompetencyStore } from '../competency/CompetencyState';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -10,23 +11,49 @@ interface ToggledSkillsContextType {
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
 const getInitialSkillsForRole = (roleId: string): Set<string> => {
-  if (!roleId) return new Set();
+  console.log('Getting initial skills for role:', roleId);
+  
+  if (!roleId) {
+    console.log('No role ID provided');
+    return new Set();
+  }
   
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-  if (!currentRoleSkills) return new Set();
+  if (!currentRoleSkills) {
+    console.log('No role skills found for role:', roleId);
+    return new Set();
+  }
 
-  return new Set([
+  const skills = new Set([
     ...(currentRoleSkills.specialized?.map(s => s.title) || []),
     ...(currentRoleSkills.common?.map(s => s.title) || []),
     ...(currentRoleSkills.certifications?.map(s => s.title) || [])
   ]);
+
+  console.log('Initial skills for role:', roleId, Array.from(skills));
+  return skills;
+};
+
+const getRoleIdFromPath = (pathname: string): string | null => {
+  // Extract role ID from various URL patterns
+  const matches = pathname.match(/\/employee\/(\d+)|\/skills\/(\d+)/);
+  if (matches) {
+    return matches[1] || matches[2] || null;
+  }
+  return null;
 };
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { id } = useParams<{ id: string }>();
-  const currentRoleId = id || '';
+  const location = useLocation();
+  const { initializeStates } = useCompetencyStore();
+  
+  // Get role ID from either params or URL
+  const currentRoleId = id || getRoleIdFromPath(location.pathname) || '';
   
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
+    console.log('Initializing skills by role, current role ID:', currentRoleId);
+    
     try {
       const savedSkills = localStorage.getItem('toggledSkillsByRole');
       if (savedSkills) {
@@ -41,8 +68,9 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           }
         });
 
-        // If we have a currentRoleId but no skills for it, initialize them
-        if (currentRoleId && !result[currentRoleId]) {
+        // Always ensure we have skills for the current role
+        if (currentRoleId && (!result[currentRoleId] || result[currentRoleId].size === 0)) {
+          console.log('Initializing missing skills for current role:', currentRoleId);
           result[currentRoleId] = getInitialSkillsForRole(currentRoleId);
         }
         
@@ -57,13 +85,28 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return currentRoleId ? { [currentRoleId]: getInitialSkillsForRole(currentRoleId) } : {};
   });
 
-  // Initialize skills for new roles
+  // Initialize competency states when role changes
   useEffect(() => {
-    if (currentRoleId && !skillsByRole[currentRoleId]) {
-      setSkillsByRole(prev => ({
-        ...prev,
-        [currentRoleId]: getInitialSkillsForRole(currentRoleId)
-      }));
+    if (currentRoleId) {
+      console.log('Initializing competency states for role:', currentRoleId);
+      initializeStates(currentRoleId);
+    }
+  }, [currentRoleId, initializeStates]);
+
+  // Initialize skills for new roles or when they're empty
+  useEffect(() => {
+    if (currentRoleId) {
+      setSkillsByRole(prev => {
+        if (!prev[currentRoleId] || prev[currentRoleId].size === 0) {
+          console.log('Initializing skills for role:', currentRoleId);
+          const newSkills = getInitialSkillsForRole(currentRoleId);
+          return {
+            ...prev,
+            [currentRoleId]: newSkills
+          };
+        }
+        return prev;
+      });
     }
   }, [currentRoleId]);
 
