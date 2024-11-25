@@ -1,4 +1,7 @@
 import { Employee } from "../../types/employeeTypes";
+import { getSkillProfileId } from "../../EmployeeTable";
+import { getEmployeeSkills } from "../../benchmark/skills-matrix/initialSkills";
+import { categorizeSkills } from "../../skills/competency/skillCategories";
 
 interface FormData {
   id: string;
@@ -21,6 +24,7 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
   const requiredFields = ['id', 'name', 'office', 'department', 'role', 'startDate', 'sex', 'category'];
   for (const field of requiredFields) {
     if (!formData[field as keyof FormData]) {
+      console.log(`Validation failed: ${field} is required`);
       return {
         isValid: false,
         error: `${field.charAt(0).toUpperCase() + field.slice(1)} is required`
@@ -31,6 +35,7 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
   // Check for duplicate ID
   const isDuplicateId = existingEmployees.some(emp => emp.id === formData.id);
   if (isDuplicateId) {
+    console.log('Validation failed: Duplicate ID found');
     return {
       isValid: false,
       error: "An employee with this ID already exists"
@@ -40,6 +45,7 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
   // Validate dates
   const startDate = new Date(formData.startDate);
   if (isNaN(startDate.getTime())) {
+    console.log('Validation failed: Invalid start date');
     return {
       isValid: false,
       error: "Invalid start date"
@@ -49,12 +55,14 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
   if (formData.termDate) {
     const termDate = new Date(formData.termDate);
     if (isNaN(termDate.getTime())) {
+      console.log('Validation failed: Invalid term date');
       return {
         isValid: false,
         error: "Invalid term date"
       };
     }
     if (termDate < startDate) {
+      console.log('Validation failed: Term date before start date');
       return {
         isValid: false,
         error: "Term date cannot be earlier than start date"
@@ -66,18 +74,32 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
 };
 
 export const processEmployeeData = (formData: FormData): Employee => {
+  console.log('Processing employee data:', formData);
+  
+  // Process skills
   const skillsList = formData.skills
     .split(',')
     .map(skill => skill.trim())
     .filter(skill => skill.length > 0);
 
-  return {
+  console.log('Processed skills list:', skillsList);
+
+  // Get role-specific skills
+  const roleId = getSkillProfileId(formData.role);
+  const roleSkills = getEmployeeSkills(roleId);
+  
+  // Categorize skills
+  const categorizedSkills = categorizeSkills(skillsList, roleId);
+  console.log('Categorized skills:', categorizedSkills);
+
+  // Create new employee with proper ID handling
+  const newEmployee: Employee = {
     id: formData.id,
     name: formData.name,
     role: `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`,
     department: formData.department,
-    skillCount: skillsList.length,
-    benchmark: 0, // Will be calculated later
+    skillCount: skillsList.length || roleSkills.length,
+    benchmark: 0, // Initial benchmark, will be calculated after creation
     lastUpdated: new Date().toLocaleDateString(),
     location: formData.location,
     sex: formData.sex as 'male' | 'female',
@@ -87,4 +109,7 @@ export const processEmployeeData = (formData: FormData): Employee => {
     office: formData.office,
     termDate: formData.termDate || "-"
   };
+
+  console.log('Created new employee:', newEmployee);
+  return newEmployee;
 };
