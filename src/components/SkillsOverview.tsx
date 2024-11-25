@@ -6,12 +6,12 @@ import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { roleSkills } from "./skills/data/roleSkills";
 
 const categorizeSkill = (skill: any) => {
-  // Critical skills are those with high proficiency
-  if (skill.proficiency >= 85) {
+  // Critical skills are those with high level
+  if (skill.level === 'advanced') {
     return "critical";
   }
   // Technical skills are those related to technical categories
-  if (["Software Development", "AI & Machine Learning"].includes(skill.category)) {
+  if (["Software Development", "AI & Machine Learning"].includes(skill.subcategory)) {
     return "technical";
   }
   // Necessary skills are the remaining skills
@@ -36,14 +36,14 @@ export const SkillsOverview = () => {
     // Get all toggled skills and their data
     const toggledSkillsData = Array.from(toggledSkills).map(skillTitle => {
       // Find the skill in roleSkills to get its details
-      let skillDetails = { category: "", proficiency: 0 };
+      let skillDetails = { subcategory: "", level: "intermediate" };
       Object.values(roleSkills).some(role => {
         const found = [...role.specialized, ...role.common, ...role.certifications]
           .find(s => s.title === skillTitle);
         if (found) {
           skillDetails = {
-            category: found.category || "Software Development",
-            proficiency: found.proficiency || 75
+            subcategory: found.subcategory,
+            level: found.level
           };
           return true;
         }
@@ -52,10 +52,10 @@ export const SkillsOverview = () => {
 
       return {
         skill: skillTitle,
-        proficiency: skillDetails.proficiency,
-        category: skillDetails.category,
+        level: skillDetails.level,
+        subcategory: skillDetails.subcategory,
         usageCount: countSkillUsage(skillTitle),
-        type: categorizeSkill({ ...skillDetails, title: skillTitle })
+        type: categorizeSkill(skillDetails)
       };
     });
 
@@ -66,7 +66,7 @@ export const SkillsOverview = () => {
 
     return filteredData.map(item => ({
       name: item.skill,
-      proficiency: item.proficiency,
+      proficiency: item.level === 'advanced' ? 90 : item.level === 'intermediate' ? 60 : 30,
       usageCount: item.usageCount
     }));
   };
