@@ -9,6 +9,7 @@ import { roleSkills } from '@/components/skills/data/roleSkills';
 import { jobTitles } from '@/components/skills/competency/skillProfileData';
 import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
 import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
+import { ProfileDuplicationWidget } from "@/components/skills/ProfileDuplicationWidget";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Select,
@@ -53,6 +54,8 @@ const SkillsProfile = () => {
               <Button>Add Profile</Button>
             </div>
           </div>
+
+          <ProfileDuplicationWidget />
 
           <SkillProfileFilters
             selectedSkills={selectedSkills}
