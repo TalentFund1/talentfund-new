@@ -96,29 +96,6 @@ const Employees = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard
-              title="Total Number of Employees"
-              value={totalEmployees}
-              icon={<Users className="h-6 w-6 text-primary-icon" />}
-            />
-            <StatCard
-              title="Added in Past 1 year"
-              value={calculateAddedLastYear()}
-              icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
-            />
-            <StatCard
-              title="Share of Female Employees"
-              value={`${calculateFemalePercentage()}%`}
-              icon={<Equal className="h-6 w-6 text-primary-icon" />}
-            />
-            <StatCard
-              title="Average Tenure (Years)"
-              value={averageTenure}
-              icon={<Clock className="h-6 w-6 text-primary-icon" />}
-            />
-          </div>
-
           <ProfileCreationWidget />
 
           <Card className="p-6">
@@ -140,6 +117,30 @@ const Employees = () => {
               onManagerChange={setSelectedManager}
               selectedManager={selectedManager}
             />
+
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatCard
+                title="Total Number of Employees"
+                value={totalEmployees}
+                icon={<Users className="h-6 w-6 text-primary-icon" />}
+              />
+              <StatCard
+                title="Added in Past 1 year"
+                value={calculateAddedLastYear()}
+                icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
+              />
+              <StatCard
+                title="Share of Female Employees"
+                value={`${calculateFemalePercentage()}%`}
+                icon={<Equal className="h-6 w-6 text-primary-icon" />}
+              />
+              <StatCard
+                title="Average Tenure (Years)"
+                value={averageTenure}
+                icon={<Clock className="h-6 w-6 text-primary-icon" />}
+              />
+            </div>
+
             <Separator className="my-4" />
             <EmployeeTable 
               selectedDepartment={selectedDepartment}
