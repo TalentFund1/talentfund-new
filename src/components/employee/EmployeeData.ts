@@ -78,7 +78,7 @@ export const employees: Employee[] = [
     name: "Alex Chen",
     role: "AI Engineer: P5",
     department: "Engineering",
-    skillCount: getEmployeeSkills("123").length, // Using AI Engineer skills template
+    skillCount: getEmployeeSkills("127").length, // Fixed: Now correctly references own skills
     benchmark: 0,
     lastUpdated: "03/15/24",
     location: "Vancouver, BC",
