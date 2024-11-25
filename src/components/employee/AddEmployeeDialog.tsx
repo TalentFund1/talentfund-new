@@ -35,7 +35,7 @@ export const AddEmployeeDialog = () => {
     skills: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     console.log('Form submission started - Form data:', formData);
@@ -45,7 +45,7 @@ export const AddEmployeeDialog = () => {
     if (!validation.isValid) {
       console.log('Validation failed:', validation.error);
       toast({
-        title: "Error",
+        title: "Validation Error",
         description: validation.error,
         variant: "destructive"
       });
@@ -55,6 +55,7 @@ export const AddEmployeeDialog = () => {
     try {
       // Process employee data
       const newEmployee = processEmployeeData(formData);
+      console.log('Processed employee data:', newEmployee);
       
       // Add employee to store
       addEmployee(newEmployee);
@@ -108,8 +109,10 @@ export const AddEmployeeDialog = () => {
         [field]: value
       };
 
+      // Reset level when role changes
       if (field === 'role') {
         newData.level = '';
+        console.log('Role changed, reset level');
       }
 
       console.log(`Field ${field} updated to:`, value);

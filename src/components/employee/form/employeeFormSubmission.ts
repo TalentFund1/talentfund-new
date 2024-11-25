@@ -1,7 +1,4 @@
 import { Employee } from "../../types/employeeTypes";
-import { getSkillProfileId } from "../../EmployeeTable";
-import { getEmployeeSkills } from "../../benchmark/skills-matrix/initialSkills";
-import { categorizeSkills } from "../../skills/competency/skillCategories";
 
 interface FormData {
   id: string;
@@ -20,53 +17,67 @@ interface FormData {
 }
 
 export const validateFormData = (formData: FormData, existingEmployees: Employee[]) => {
-  if (!formData.id || !formData.name || !formData.department || !formData.role || !formData.office || !formData.startDate) {
-    console.log('Form validation failed - Missing required fields');
+  // Required fields
+  const requiredFields = ['id', 'name', 'office', 'department', 'role', 'startDate', 'sex', 'category'];
+  for (const field of requiredFields) {
+    if (!formData[field as keyof FormData]) {
+      return {
+        isValid: false,
+        error: `${field.charAt(0).toUpperCase() + field.slice(1)} is required`
+      };
+    }
+  }
+
+  // Check for duplicate ID
+  const isDuplicateId = existingEmployees.some(emp => emp.id === formData.id);
+  if (isDuplicateId) {
     return {
       isValid: false,
-      error: "Please fill in all required fields: ID, Name, Department, Role, Office, and Start Date"
+      error: "An employee with this ID already exists"
     };
   }
 
-  const isDuplicateId = existingEmployees.some(emp => emp.id === formData.id || emp.id === String(formData.id));
-  if (isDuplicateId) {
-    console.log('Form validation failed - Duplicate employee ID:', formData.id);
+  // Validate dates
+  const startDate = new Date(formData.startDate);
+  if (isNaN(startDate.getTime())) {
     return {
       isValid: false,
-      error: "An employee with this ID already exists. Please use a unique ID."
+      error: "Invalid start date"
     };
+  }
+
+  if (formData.termDate) {
+    const termDate = new Date(formData.termDate);
+    if (isNaN(termDate.getTime())) {
+      return {
+        isValid: false,
+        error: "Invalid term date"
+      };
+    }
+    if (termDate < startDate) {
+      return {
+        isValid: false,
+        error: "Term date cannot be earlier than start date"
+      };
+    }
   }
 
   return { isValid: true, error: null };
 };
 
 export const processEmployeeData = (formData: FormData): Employee => {
-  console.log('Processing employee data:', formData);
-  
-  // Process skills
   const skillsList = formData.skills
     .split(',')
     .map(skill => skill.trim())
     .filter(skill => skill.length > 0);
 
-  console.log('Processed skills list:', skillsList);
-
-  // Get role-specific skills
-  const roleId = getSkillProfileId(formData.role);
-  const roleSkills = getEmployeeSkills(roleId);
-  
-  // Categorize skills
-  const categorizedSkills = categorizeSkills(skillsList, roleId);
-  console.log('Categorized skills:', categorizedSkills);
-
-  // Create new employee
-  const newEmployee: Employee = {
-    id: String(formData.id),
+  return {
+    id: formData.id,
     name: formData.name,
     role: `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`,
     department: formData.department,
-    skillCount: skillsList.length || roleSkills.length,
-    benchmark: 0,
+    skillCount: skillsList.length,
+    benchmark: 0, // Will be calculated later
     lastUpdated: new Date().toLocaleDateString(),
     location: formData.location,
     sex: formData.sex as 'male' | 'female',
@@ -76,7 +87,4 @@ export const processEmployeeData = (formData: FormData): Employee => {
     office: formData.office,
     termDate: formData.termDate || "-"
   };
-
-  console.log('Created new employee:', newEmployee);
-  return newEmployee;
 };
