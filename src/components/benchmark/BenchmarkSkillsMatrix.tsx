@@ -1,16 +1,15 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixContent } from "./skills-matrix/BenchmarkSkillsMatrixContent";
+import { BenchmarkSkillsFilters } from "./skills-matrix/BenchmarkSkillsFilters";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,29 +20,13 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
+  
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
-
-  const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-
-  useEffect(() => {
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    const toggledRoleSkills = allRoleSkills
-      .filter(skill => toggledSkills.has(skill.title))
-      .map(skill => skill.title);
-    
-    setSelectedSearchSkills(toggledRoleSkills);
-  }, [selectedRole, toggledSkills, currentRoleSkills]);
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -73,6 +56,23 @@ export const BenchmarkSkillsMatrix = () => {
     };
     return priorities[requirement.toLowerCase()] ?? 3;
   };
+
+  const employeeSkills = getEmployeeSkills(id || "");
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+
+  useEffect(() => {
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const toggledRoleSkills = allRoleSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .map(skill => skill.title);
+    
+    setSelectedSearchSkills(toggledRoleSkills);
+  }, [selectedRole, toggledSkills, currentRoleSkills]);
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
@@ -175,11 +175,21 @@ export const BenchmarkSkillsMatrix = () => {
   }, [visibleItems, filteredSkills.length]);
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
-  const hasMoreItems = visibleItems < filteredSkills.length;
 
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
+        <BenchmarkSkillsFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedSkillLevel={selectedSkillLevel}
+          setSelectedSkillLevel={setSelectedSkillLevel}
+        />
+        
         <BenchmarkSkillsMatrixContent 
           roleId={selectedRole}
           employeeId={id || ""}
