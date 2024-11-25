@@ -52,7 +52,7 @@ export const CategoryCards = ({
   };
 
   const categories = [
-    { id: "all", title: "All Categories" },
+    { id: "all", title: "All Skill Type" },
     { id: "specialized", title: "Specialized Skills" },
     { id: "common", title: "Common Skills" },
     { id: "certification", title: "Certification" }
