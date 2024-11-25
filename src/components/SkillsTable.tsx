@@ -27,21 +27,31 @@ export const SkillsTable = () => {
   return (
     <div className="space-y-6 bg-white rounded-lg shadow-sm">
       <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-        <SkillsTableHeader 
-          selectedFilter={selectedFilter} 
-          setSelectedFilter={setSelectedFilter} 
-        />
-        <Select value={skillType} onValueChange={setSkillType}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Skill Type</SelectItem>
-            <SelectItem value="defining">Defining Skills</SelectItem>
-            <SelectItem value="soft">Soft Skills</SelectItem>
-            <SelectItem value="certification">Certification</SelectItem>
-          </SelectContent>
-        </Select>
+        <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+        <div className="flex items-center gap-4">
+          <Select value={selectedFilter} onValueChange={setSelectedFilter}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="specialized">Specialized Skills</SelectItem>
+              <SelectItem value="common">Common Skills</SelectItem>
+              <SelectItem value="certification">Certifications</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={skillType} onValueChange={setSkillType}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="All Skill Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Skill Type</SelectItem>
+              <SelectItem value="defining">Defining Skills</SelectItem>
+              <SelectItem value="soft">Soft Skills</SelectItem>
+              <SelectItem value="certification">Certification</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <SkillsTableContent 
         skills={filteredSkills} 
