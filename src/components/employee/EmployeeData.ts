@@ -72,5 +72,21 @@ export const employees: Employee[] = [
     startDate: "2022-11-01",
     office: "Toronto",
     termDate: "-"
+  },
+  {
+    id: "127",
+    name: "Alex Chen",
+    role: "AI Engineer: P5",
+    department: "Engineering",
+    skillCount: getEmployeeSkills("123").length, // Using AI Engineer skills template
+    benchmark: 0,
+    lastUpdated: "03/15/24",
+    location: "Vancouver, BC",
+    sex: "male",
+    category: "Full-time",
+    manager: "Sus Manu",
+    startDate: "2024-03-01",
+    office: "Vancouver",
+    termDate: "-"
   }
 ];
