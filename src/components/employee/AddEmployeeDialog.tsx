@@ -7,7 +7,6 @@ import { employees } from "../employee/EmployeeData";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { create } from "zustand";
 
-// Create a store to manage employees state
 interface EmployeeStore {
   employees: typeof employees;
   addEmployee: (employee: typeof employees[0]) => void;
@@ -17,9 +16,26 @@ export const useEmployeeStore = create<EmployeeStore>((set) => ({
   employees: employees,
   addEmployee: (employee) => set((state) => {
     console.log('Adding new employee to store:', employee);
-    employees.push(employee); // Update the imported array for compatibility
-    const newEmployees = [...state.employees, employee];
+    
+    // Initialize skills for the new employee based on their role
+    const skillProfileId = employee.id;
+    const initialSkills = getEmployeeSkills(skillProfileId);
+    
+    // Create complete employee object with all required properties
+    const completeEmployee = {
+      ...employee,
+      skillCount: initialSkills.length,
+      benchmark: 0, // Will be calculated by EmployeeBenchmarkCalculator
+      lastUpdated: new Date().toLocaleDateString(),
+    };
+
+    console.log('Complete employee object with initialized data:', completeEmployee);
+    
+    // Update both the imported array and store
+    employees.push(completeEmployee);
+    const newEmployees = [...state.employees, completeEmployee];
     console.log('Updated store employees:', newEmployees);
+    
     return { employees: newEmployees };
   }),
 }));
@@ -64,7 +80,7 @@ export const AddEmployeeDialog = () => {
     const newEmployee = {
       id: formData.id,
       name: formData.name,
-      role: `${formData.role}: ${formData.level.toUpperCase()}`,
+      role: `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`,
       department: formData.department,
       skillCount: formData.skills.split(',').length,
       benchmark: 0,
