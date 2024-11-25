@@ -51,12 +51,17 @@ export const BenchmarkSkillsMatrix = () => {
       'beginner': 2,
       'unspecified': 3
     };
-    return priorities[level.toLowerCase()] ?? 3;
+    return priorities[level?.toLowerCase()] ?? 3;
   };
 
   // Filter based on the role's skills instead of employee skills
   const filteredSkills = allRoleSkills
     .filter(skill => {
+      if (!skill?.title) {
+        console.log('Skipping undefined skill:', skill);
+        return false;
+      }
+
       // First check if skill is toggled
       if (!toggledSkills.has(skill.title)) return false;
 
@@ -114,7 +119,7 @@ export const BenchmarkSkillsMatrix = () => {
       if (levelDiff !== 0) return levelDiff;
 
       // If levels are equal, sort alphabetically
-      return a.title.localeCompare(b.title);
+      return (a.title || '').localeCompare(b.title || '');
     });
 
   console.log('Filtered Skills:', filteredSkills);
