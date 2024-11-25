@@ -40,23 +40,19 @@ export const SkillBadge = ({
   };
 
   const shouldShowGoal = () => {
-    // Don't show heart icon in role benchmark view
     if (isRoleBenchmark) return false;
-    
-    // Show heart if explicitly passed as skill goal
     if (isSkillGoal) return true;
     
-    // Check skill state from matrix store
     if (skillState?.requirement) {
       const requirement = typeof skillState.requirement === 'string' 
         ? skillState.requirement 
         : skillState.requirement?.requirement;
-        
-      // Only show heart for 'required' or 'skill_goal' requirements
       return requirement === 'required' || requirement === 'skill_goal';
     }
     
-    return false;
+    const currentLevel = skillState?.level || level || '';
+    const levelStr = typeof currentLevel === 'string' ? currentLevel : currentLevel?.level;
+    return ['advanced', 'intermediate', 'beginner'].includes(levelStr?.toLowerCase() || '');
   };
 
   const getDisplayLevel = () => {
@@ -65,13 +61,6 @@ export const SkillBadge = ({
     }
     return level || 'unspecified';
   };
-
-  console.log('SkillBadge render:', {
-    skillName: skill.name,
-    currentState: skillState,
-    shouldShowGoal: shouldShowGoal(),
-    displayLevel: getDisplayLevel()
-  });
 
   return (
     <Badge 
