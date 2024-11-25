@@ -150,13 +150,25 @@ export const SkillsMatrix = () => {
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
+  const handleSaveChanges = () => {
+    if (id) {
+      saveChanges(id);
+    }
+  };
+
+  const handleCancelChanges = () => {
+    if (id) {
+      cancelChanges(id);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <SkillsMatrixHeader 
           hasChanges={hasChanges}
-          onSave={saveChanges}
-          onCancel={cancelChanges}
+          onSave={handleSaveChanges}
+          onCancel={handleCancelChanges}
         />
         
         <Separator className="my-4" />

@@ -2,6 +2,7 @@ import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useParams } from "react-router-dom";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -16,10 +17,11 @@ export const SkillLevelCell = ({
   onLevelChange,
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
+  const { id } = useParams<{ id: string }>();
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel, 'required');
+  initializeState(id || "", skillTitle, initialLevel, 'required');
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
@@ -78,7 +80,7 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.level || 'unspecified'} 
           onValueChange={(value) => {
-            setSkillState(skillTitle, value, currentState?.requirement || 'required');
+            setSkillState(id || "", skillTitle, value, currentState?.requirement || 'required');
             onLevelChange?.(value, currentState?.requirement || 'required');
           }}
         >
@@ -124,7 +126,7 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.requirement || 'required'}
           onValueChange={(value) => {
-            setSkillState(skillTitle, currentState?.level || 'unspecified', value);
+            setSkillState(id || "", skillTitle, currentState?.level || 'unspecified', value);
             onLevelChange?.(currentState?.level || 'unspecified', value);
           }}
         >
