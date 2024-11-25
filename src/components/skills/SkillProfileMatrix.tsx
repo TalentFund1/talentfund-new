@@ -1,30 +1,16 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
-import { SkillCategoryCards } from './sections/SkillCategoryCards';
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
-
-const categorizeSkill = (skill: any) => {
-  // Critical skills are those with high growth and required status
-  if (skill.growth >= "25%" && skill.requirement === "required") {
-    return "critical";
-  }
-  // Technical skills are those related to technical subcategories
-  if (["AI & ML", "Programming Languages", "ML Frameworks", "AI Applications"].includes(skill.subcategory)) {
-    return "technical";
-  }
-  // Necessary skills are the remaining skills
-  return "necessary";
-};
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
@@ -39,24 +25,6 @@ export const SkillProfileMatrix = () => {
   const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
-
-  // Get current role skills
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-
-  // Get all skills for the current role
-  const allSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
-  // Calculate category counts
-  const categoryCounts = {
-    all: allSkills.length,
-    critical: allSkills.filter(skill => categorizeSkill(skill) === "critical").length,
-    technical: allSkills.filter(skill => categorizeSkill(skill) === "technical").length,
-    necessary: allSkills.filter(skill => categorizeSkill(skill) === "necessary").length
-  };
 
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
@@ -88,33 +56,59 @@ export const SkillProfileMatrix = () => {
     }
   };
 
-  const filteredSkills = (() => {
-    let skills = allSkills;
+  // Get only the skills for the current role
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-    // Filter by category
-    if (skillType !== "all") {
-      skills = skills.filter(skill => categorizeSkill(skill) === skillType);
+  const filteredSkills = (() => {
+    let skills = [];
+    if (skillType === "all") {
+      skills = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ];
+    } else if (skillType === "specialized") {
+      skills = currentRoleSkills.specialized;
+    } else if (skillType === "common") {
+      skills = currentRoleSkills.common;
+    } else if (skillType === "certification") {
+      skills = currentRoleSkills.certifications;
     }
 
-    // Sort skills
+    let sortedSkills = skills.filter(skill => {
+      const isInCurrentRole = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].some(roleSkill => roleSkill.title === skill.title);
+
+      return isInCurrentRole;
+    });
+
     if (sortField && sortDirection) {
-      skills = [...skills].sort((a, b) => {
+      sortedSkills = [...sortedSkills].sort((a, b) => {
         if (sortField === 'growth') {
           const aGrowth = parseFloat(a.growth);
           const bGrowth = parseFloat(b.growth);
           return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+        } else if (sortField === 'salary') {
+          const aSalary = parseFloat(a.salary.replace(/[^0-9.-]+/g, ""));
+          const bSalary = parseFloat(b.salary.replace(/[^0-9.-]+/g, ""));
+          return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
         }
         return 0;
       });
     }
 
-    return skills.sort((a, b) => {
+    return sortedSkills.sort((a, b) => {
       const aIsSaved = toggledSkills.has(a.title);
       const bIsSaved = toggledSkills.has(b.title);
       if (aIsSaved === bIsSaved) return 0;
       return aIsSaved ? -1 : 1;
     });
   })();
+
+  const paginatedSkills = filteredSkills;
 
   return (
     <div className="space-y-6">
@@ -133,30 +127,38 @@ export const SkillProfileMatrix = () => {
 
         <Separator className="my-4" />
 
-        <SkillCategoryCards
-          selectedCategory={skillType}
-          onCategorySelect={setSkillType}
-          categoryCounts={categoryCounts}
-        />
-
         <div className="flex justify-between items-center mb-4">
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-[220px] bg-white">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Sort by All</SelectItem>
-              <SelectItem value="baseline">Sort by Baseline</SelectItem>
-              <SelectItem value="recommended">Sort by Recommended</SelectItem>
-              <SelectItem value="benchmark">Sort by Market Benchmark</SelectItem>
-              <SelectItem value="occupation">Sort by Occupation</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-2">
+            <Select value={skillType} onValueChange={setSkillType}>
+              <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[220px] bg-white">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Sort by All</SelectItem>
+                <SelectItem value="baseline">Sort by Baseline</SelectItem>
+                <SelectItem value="recommended">Sort by Recommended</SelectItem>
+                <SelectItem value="benchmark">Sort by Market Benchmark</SelectItem>
+                <SelectItem value="occupation">Sort by Occupation</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
-            paginatedSkills={filteredSkills}
+            paginatedSkills={paginatedSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
             sortField={sortField}
