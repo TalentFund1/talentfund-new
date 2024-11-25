@@ -12,8 +12,6 @@ import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalcula
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 
-// Export utility functions
-
 export const getSkillProfileId = (role: string) => {
   // Validate role ID format first
   const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
@@ -22,7 +20,7 @@ export const getSkillProfileId = (role: string) => {
     return role;
   }
 
-  // Map role titles to IDs
+  // Map role titles to IDs with consistent structure
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
     "Backend Engineer": "124",
@@ -43,7 +41,7 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId || "123"; // Default to AI Engineer if no match
+  return mappedId || "123";
 };
 
 export const getBaseRole = (role: string) => {
@@ -165,3 +163,4 @@ export const EmployeeTable = ({
     </div>
   );
 };
+

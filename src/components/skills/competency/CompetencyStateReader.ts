@@ -28,7 +28,10 @@ export const useCompetencyStateReader = () => {
     const roleStates = currentStates[roleId];
     if (!roleStates || !roleStates[skillName]) {
       console.log('No state found for skill:', skillName);
-      return null;
+      return {
+        level: 'advanced',
+        required: 'required'
+      };
     }
 
     // Normalize level key to lowercase for consistency
@@ -38,25 +41,17 @@ export const useCompetencyStateReader = () => {
     if (!levelState) {
       console.log('No level state found for skill:', { skillName, levelKey: normalizedLevelKey });
       
-      // Try to find closest matching level if exact match not found
-      const availableLevels = Object.keys(roleStates[skillName]);
-      if (availableLevels.length > 0) {
-        // Get default level state
-        const defaultLevel = availableLevels[0];
-        console.log('Using default level state:', { skillName, defaultLevel });
-        return {
-          level: roleStates[skillName][defaultLevel].level || 'unspecified',
-          required: roleStates[skillName][defaultLevel].required || 'preferred'
-        };
-      }
-      
-      return null;
+      // Default to advanced/required if no state is found
+      return {
+        level: 'advanced',
+        required: 'required'
+      };
     }
 
     console.log('Found competency state:', { skillName, levelKey: normalizedLevelKey, state: levelState });
     return {
-      level: levelState.level || 'unspecified',
-      required: levelState.required || 'preferred'
+      level: levelState.level || 'advanced',
+      required: levelState.required || 'required'
     };
   };
 
@@ -76,8 +71,14 @@ export const useCompetencyStateReader = () => {
         const levelState = skillLevels[levelKey.toLowerCase()];
         if (levelState) {
           states[skillName] = {
-            level: levelState.level || 'unspecified',
-            required: levelState.required || 'preferred'
+            level: levelState.level || 'advanced',
+            required: levelState.required || 'required'
+          };
+        } else {
+          // Default state if none found
+          states[skillName] = {
+            level: 'advanced',
+            required: 'required'
           };
         }
       });
