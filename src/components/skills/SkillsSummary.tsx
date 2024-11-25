@@ -72,11 +72,11 @@ export const SkillsSummary = () => {
       .map(skill => {
         const currentState = currentStates[skill.title];
         const level = currentState?.level 
-          ? (typeof currentState.level === 'string' ? currentState.level : currentState.level.level)
+          ? (typeof currentState.level === 'string' ? currentState.level : currentState.level?.level)
           : skill.level;
         
         const requirement = currentState?.requirement
-          ? (typeof currentState.requirement === 'string' ? currentState.requirement : currentState.requirement.requirement)
+          ? (typeof currentState.requirement === 'string' ? currentState.requirement : currentState.requirement?.requirement)
           : undefined;
 
         return {

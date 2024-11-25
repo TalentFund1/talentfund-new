@@ -43,19 +43,21 @@ export const SkillBadge = ({
     
     // If it's in the current states
     if (skillState) {
-      const requirement = typeof skillState.requirement === 'string' ? skillState.requirement : skillState.requirement.requirement;
+      const requirement = typeof skillState.requirement === 'string' 
+        ? skillState.requirement 
+        : skillState.requirement?.requirement;
       return requirement === 'required' || requirement === 'skill_goal';
     }
     
     // For all skill levels, show goal by default
     const currentLevel = skillState?.level || level || '';
-    const levelStr = typeof currentLevel === 'string' ? currentLevel : currentLevel.level;
-    return ['advanced', 'intermediate', 'beginner'].includes(levelStr.toLowerCase());
+    const levelStr = typeof currentLevel === 'string' ? currentLevel : currentLevel?.level;
+    return ['advanced', 'intermediate', 'beginner'].includes(levelStr?.toLowerCase() || '');
   };
 
   const getDisplayLevel = () => {
     if (skillState?.level) {
-      return typeof skillState.level === 'string' ? skillState.level : skillState.level.level;
+      return typeof skillState.level === 'string' ? skillState.level : skillState.level?.level;
     }
     return level || 'unspecified';
   };

@@ -65,7 +65,10 @@ export const BenchmarkAnalysis = () => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
 
-    const requirement = typeof skillState.requirement === 'string' ? skillState.requirement : skillState.requirement.requirement;
+    const requirement = typeof skillState.requirement === 'string' 
+      ? skillState.requirement 
+      : skillState.requirement?.requirement;
+
     return requirement === 'required' || requirement === 'skill_goal';
   });
 
