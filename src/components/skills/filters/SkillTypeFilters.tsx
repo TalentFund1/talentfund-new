@@ -24,10 +24,10 @@ export const SkillTypeFilters = ({
       <div className="flex gap-3">
         <Select value={skillType} onValueChange={setSkillType}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories" />
+            <SelectValue placeholder="All Skill Type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="all">All Skill Type</SelectItem>
             <SelectItem value="specialized">Specialized Skills</SelectItem>
             <SelectItem value="common">Common Skills</SelectItem>
             <SelectItem value="certification">Certification</SelectItem>
