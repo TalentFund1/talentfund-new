@@ -24,7 +24,7 @@ export const useEmployeeStore = create<EmployeeStore>((set) => ({
     // Create complete employee object with all required properties
     const completeEmployee = {
       ...employee,
-      skillCount: initialSkills.length,
+      skillCount: initialSkills.length || 0,
       benchmark: 0, // Will be calculated by EmployeeBenchmarkCalculator
       lastUpdated: new Date().toLocaleDateString(),
     };
@@ -65,61 +65,74 @@ export const AddEmployeeDialog = () => {
     
     console.log('Form submission - Form data:', formData);
     
-    // Validate required fields
-    if (!formData.id || !formData.name || !formData.department || !formData.role) {
+    // Enhanced validation for required fields
+    if (!formData.id || !formData.name || !formData.department || !formData.role || !formData.office || !formData.startDate) {
       console.log('Form validation failed - Missing required fields');
       toast({
         title: "Error",
-        description: "Please fill in all required fields",
+        description: "Please fill in all required fields: ID, Name, Department, Role, Office, and Start Date",
         variant: "destructive"
       });
       return;
     }
 
-    // Create new employee object
+    // Format dates properly
+    const formattedStartDate = new Date(formData.startDate).toISOString().split('T')[0];
+    const formattedTermDate = formData.termDate ? new Date(formData.termDate).toISOString().split('T')[0] : "-";
+
+    // Create new employee object with proper field mapping
     const newEmployee = {
       id: formData.id,
       name: formData.name,
       role: `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`,
       department: formData.department,
-      skillCount: formData.skills.split(',').length,
+      skillCount: 0, // This will be updated by the store with actual skills
       benchmark: 0,
       lastUpdated: new Date().toLocaleDateString(),
       location: formData.location,
       sex: formData.sex as 'male' | 'female',
       category: formData.category,
       manager: formData.manager,
-      startDate: formData.startDate,
+      startDate: formattedStartDate,
       office: formData.office,
-      termDate: formData.termDate || "-"
+      termDate: formattedTermDate
     };
 
     console.log('Creating new employee:', newEmployee);
 
-    // Add new employee using the store
-    addEmployee(newEmployee);
-    
-    toast({
-      title: "Success",
-      description: "Employee profile created successfully",
-    });
-    
-    setOpen(false);
-    setFormData({
-      id: "",
-      name: "",
-      location: "",
-      office: "",
-      department: "",
-      manager: "",
-      role: "",
-      level: "",
-      startDate: "",
-      termDate: "",
-      sex: "",
-      category: "",
-      skills: ""
-    });
+    try {
+      // Add new employee using the store
+      addEmployee(newEmployee);
+      
+      toast({
+        title: "Success",
+        description: "Employee profile created successfully",
+      });
+      
+      setOpen(false);
+      setFormData({
+        id: "",
+        name: "",
+        location: "",
+        office: "",
+        department: "",
+        manager: "",
+        role: "",
+        level: "",
+        startDate: "",
+        termDate: "",
+        sex: "",
+        category: "",
+        skills: ""
+      });
+    } catch (error) {
+      console.error('Error adding employee:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create employee profile. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -134,6 +147,7 @@ export const AddEmployeeDialog = () => {
         newData.level = '';
       }
 
+      console.log(`Field ${field} updated to:`, value);
       return newData;
     });
   };
