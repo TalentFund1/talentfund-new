@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -11,6 +10,8 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { id } = useParams<{ id: string }>();
+  const currentRoleId = id || '';
+  
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
     const savedSkills = localStorage.getItem('toggledSkillsByRole');
     if (!savedSkills) return {};
@@ -19,6 +20,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       const parsed = JSON.parse(savedSkills);
       const result: Record<string, Set<string>> = {};
       
+      // Convert the parsed arrays back to Sets
       Object.entries(parsed).forEach(([roleId, skills]) => {
         if (Array.isArray(skills)) {
           result[roleId] = new Set(skills.filter(skill => 
@@ -35,44 +37,22 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   });
 
-  // Initialize skills for the current role if not already present
-  useEffect(() => {
-    if (id && !skillsByRole[id]) {
-      console.log('Initializing skills for role:', id);
-      const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
-      
-      if (currentRoleSkills) {
-        const allSkills = [
-          ...currentRoleSkills.specialized,
-          ...currentRoleSkills.common,
-          ...currentRoleSkills.certifications
-        ].map(skill => skill.title);
-
-        setSkillsByRole(prev => ({
-          ...prev,
-          [id]: new Set(allSkills)
-        }));
-      }
-    }
-  }, [id]);
-
   // Get the current role's toggled skills
-  const toggledSkills = id ? skillsByRole[id] || new Set<string>() : new Set<string>();
+  const toggledSkills = skillsByRole[currentRoleId] || new Set<string>();
 
   // Update skills for the current role
   const setToggledSkills = (newSkills: Set<string>) => {
-    if (!id) return;
-    
-    console.log('Setting toggled skills for role:', id, Array.from(newSkills));
+    console.log('Setting toggled skills for role:', currentRoleId, Array.from(newSkills));
     setSkillsByRole(prev => ({
       ...prev,
-      [id]: newSkills
+      [currentRoleId]: newSkills
     }));
   };
 
   // Save to localStorage whenever skillsByRole changes
   useEffect(() => {
     try {
+      // Convert Sets to arrays for JSON serialization
       const serializable = Object.fromEntries(
         Object.entries(skillsByRole).map(([roleId, skills]) => [
           roleId,

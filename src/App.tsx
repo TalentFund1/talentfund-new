@@ -17,8 +17,8 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <BrowserRouter>
-        <ToggledSkillsProvider>
+      <ToggledSkillsProvider>
+        <BrowserRouter>
           <Toaster />
           <Sonner />
           <Routes>
@@ -30,8 +30,8 @@ const App = () => (
             <Route path="/market" element={<MarketData />} />
             <Route path="/marketplace" element={<TalentMarketplace />} />
           </Routes>
-        </ToggledSkillsProvider>
-      </BrowserRouter>
+        </BrowserRouter>
+      </ToggledSkillsProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
