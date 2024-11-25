@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
-import { SkillFilterCards } from './SkillFilterCards';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -16,7 +15,6 @@ type SortField = 'growth' | 'salary' | null;
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -61,39 +59,6 @@ export const SkillProfileMatrix = () => {
   // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  const categorizeSkill = (skill: any) => {
-    // Categorize skills based on their characteristics
-    if (skill.title.includes('Machine Learning') || skill.title.includes('Deep Learning')) {
-      return 'critical';
-    } else if (skill.subcategory === 'Programming Languages' || skill.subcategory === 'ML Frameworks') {
-      return 'technical';
-    } else {
-      return 'necessary';
-    }
-  };
-
-  const getSkillCounts = () => {
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
-
-    const counts = {
-      all: allSkills.length,
-      critical: 0,
-      technical: 0,
-      necessary: 0
-    };
-
-    allSkills.forEach(skill => {
-      const category = categorizeSkill(skill);
-      counts[category]++;
-    });
-
-    return counts;
-  };
-
   const filteredSkills = (() => {
     let skills = [];
     if (skillType === "all") {
@@ -110,20 +75,18 @@ export const SkillProfileMatrix = () => {
       skills = currentRoleSkills.certifications;
     }
 
-    let filteredSkills = skills.filter(skill => {
+    let sortedSkills = skills.filter(skill => {
       const isInCurrentRole = [
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
-      const matchesCategory = selectedCategory === 'all' || categorizeSkill(skill) === selectedCategory;
-
-      return isInCurrentRole && matchesCategory && toggledSkills.has(skill.title);
+      return isInCurrentRole;
     });
 
     if (sortField && sortDirection) {
-      filteredSkills = [...filteredSkills].sort((a, b) => {
+      sortedSkills = [...sortedSkills].sort((a, b) => {
         if (sortField === 'growth') {
           const aGrowth = parseFloat(a.growth);
           const bGrowth = parseFloat(b.growth);
@@ -137,7 +100,7 @@ export const SkillProfileMatrix = () => {
       });
     }
 
-    return filteredSkills.sort((a, b) => {
+    return sortedSkills.sort((a, b) => {
       const aIsSaved = toggledSkills.has(a.title);
       const bIsSaved = toggledSkills.has(b.title);
       if (aIsSaved === bIsSaved) return 0;
@@ -145,7 +108,7 @@ export const SkillProfileMatrix = () => {
     });
   })();
 
-  const skillCounts = getSkillCounts();
+  const paginatedSkills = filteredSkills;
 
   return (
     <div className="space-y-6">
@@ -163,12 +126,6 @@ export const SkillProfileMatrix = () => {
         </div>
 
         <Separator className="my-4" />
-
-        <SkillFilterCards
-          selectedCategory={selectedCategory}
-          onCategorySelect={setSelectedCategory}
-          skillCounts={skillCounts}
-        />
 
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
@@ -201,7 +158,7 @@ export const SkillProfileMatrix = () => {
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
-            paginatedSkills={filteredSkills}
+            paginatedSkills={paginatedSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
             sortField={sortField}
