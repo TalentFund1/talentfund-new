@@ -24,16 +24,10 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
     return new Set();
   }
 
-  // Get all skills for the role
-  const specializedSkills = currentRoleSkills.specialized?.map(s => s.title) || [];
-  const commonSkills = currentRoleSkills.common?.map(s => s.title) || [];
-  const certificationSkills = currentRoleSkills.certifications?.map(s => s.title) || [];
-
-  // Create a set of all skills that should be toggled by default
   const skills = new Set([
-    ...specializedSkills.filter(s => currentRoleSkills.specialized.find(rs => rs.title === s)?.requirement === 'required'),
-    ...commonSkills.filter(s => currentRoleSkills.common.find(rs => rs.title === s)?.requirement === 'required'),
-    ...certificationSkills.filter(s => currentRoleSkills.certifications.find(rs => rs.title === s)?.requirement === 'required')
+    ...(currentRoleSkills.specialized?.map(s => s.title) || []),
+    ...(currentRoleSkills.common?.map(s => s.title) || []),
+    ...(currentRoleSkills.certifications?.map(s => s.title) || [])
   ]);
 
   console.log('Initial skills for role:', roleId, Array.from(skills));
@@ -41,6 +35,7 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
 };
 
 const getRoleIdFromPath = (pathname: string): string | null => {
+  // Extract role ID from various URL patterns
   const matches = pathname.match(/\/employee\/(\d+)|\/skills\/(\d+)/);
   if (matches) {
     return matches[1] || matches[2] || null;
@@ -53,6 +48,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const location = useLocation();
   const { initializeStates } = useCompetencyStore();
   
+  // Get role ID from either params or URL
   const currentRoleId = id || getRoleIdFromPath(location.pathname) || '';
   
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
@@ -85,6 +81,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       console.error('Error loading saved skills:', error);
     }
     
+    // If no saved skills or error, initialize with current role
     return currentRoleId ? { [currentRoleId]: getInitialSkillsForRole(currentRoleId) } : {};
   });
 
@@ -113,8 +110,10 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   }, [currentRoleId]);
 
+  // Get the current role's toggled skills
   const toggledSkills = skillsByRole[currentRoleId] || new Set<string>();
 
+  // Update skills for the current role
   const setToggledSkills = (newSkills: Set<string>) => {
     console.log('Setting toggled skills for role:', currentRoleId, Array.from(newSkills));
     setSkillsByRole(prev => ({
@@ -123,6 +122,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }));
   };
 
+  // Save to localStorage whenever skillsByRole changes
   useEffect(() => {
     try {
       const serializable = Object.fromEntries(

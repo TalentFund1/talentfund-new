@@ -29,13 +29,9 @@ export const useRoleStore = create<RoleStore>((set) => ({
 
 const roles = {
   "123": "AI Engineer",
-  "124": "Backend Engineer", 
+  "124": "Backend Engineer",
   "125": "Frontend Engineer",
-  "126": "Engineering Manager",
-  "127": "Data Engineer",
-  "128": "DevOps Engineer",
-  "129": "Product Manager",
-  "130": "Technical Lead"
+  "126": "Engineering Manager"
 };
 
 export const RoleBenchmark = () => {
