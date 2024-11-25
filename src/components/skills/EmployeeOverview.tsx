@@ -16,42 +16,57 @@ export const EmployeeOverview = () => {
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
-  // Get employees with exact role match
-  const exactMatchEmployees = employees.filter(emp => 
-    getBaseRole(emp.role) === getBaseRole(employees.find(e => e.id === roleId)?.role || "")
-  );
+  // Get employees with exact role match and calculate their benchmarks
+  const exactMatchEmployees = employees
+    .filter(emp => getBaseRole(emp.role) === getBaseRole(employees.find(e => e.id === roleId)?.role || ""))
+    .map(emp => ({
+      ...emp,
+      benchmark: calculateBenchmarkPercentage(
+        emp.id,
+        roleId || "123",
+        "",
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      )
+    }))
+    .sort((a, b) => b.benchmark - a.benchmark); // Sort by benchmark in descending order
 
-  // Get employees with partial matches (skill matches but different role)
-  const partialMatchEmployees = employees.filter(emp => {
-    const isExactMatch = getBaseRole(emp.role) === getBaseRole(employees.find(e => e.id === roleId)?.role || "");
-    if (isExactMatch) return false;
+  // Get employees with partial matches and sort by benchmark
+  const partialMatchEmployees = employees
+    .filter(emp => {
+      const isExactMatch = getBaseRole(emp.role) === getBaseRole(employees.find(e => e.id === roleId)?.role || "");
+      if (isExactMatch) return false;
 
-    const benchmark = calculateBenchmarkPercentage(
-      emp.id,
-      roleId || "123",
-      "",
-      currentStates,
-      toggledSkills,
-      getSkillCompetencyState
-    );
+      const benchmark = calculateBenchmarkPercentage(
+        emp.id,
+        roleId || "123",
+        "",
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
 
-    return benchmark > 0;
-  });
+      return benchmark > 0;
+    })
+    .map(emp => ({
+      ...emp,
+      benchmark: calculateBenchmarkPercentage(
+        emp.id,
+        roleId || "123",
+        "",
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      )
+    }))
+    .sort((a, b) => b.benchmark - a.benchmark); // Sort by benchmark in descending order
 
   const handleEmployeeClick = (employeeId: string) => {
     navigate(`/employee/${employeeId}?tab=benchmark`);
   };
 
-  const renderEmployeeList = (employee: typeof employees[0], index: number) => {
-    const benchmark = calculateBenchmarkPercentage(
-      employee.id,
-      roleId || "123",
-      "",
-      currentStates,
-      toggledSkills,
-      getSkillCompetencyState
-    );
-
+  const renderEmployeeList = (employee: typeof employees[0] & { benchmark: number }, index: number) => {
     return (
       <div 
         key={employee.name} 
@@ -76,7 +91,7 @@ export const EmployeeOverview = () => {
           </p>
         </div>
         <span className="text-sm px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-medium">
-          {Math.round(benchmark)}%
+          {Math.round(employee.benchmark)}%
         </span>
       </div>
     );
