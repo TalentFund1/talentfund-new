@@ -19,11 +19,6 @@ interface EmployeeTableRowProps {
   selectedJobTitle?: string[];
 }
 
-interface SkillState {
-  level: string | { level: string };
-  requirement: string | { requirement: string } | null;
-}
-
 export const EmployeeTableRow = ({ 
   employee, 
   isSelected, 
@@ -86,12 +81,9 @@ export const EmployeeTableRow = ({
             if (!employeeSkill) return null;
 
             const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4");
-            const skillState = currentStates[skillName] as SkillState | undefined;
-            
+            const skillState = currentStates[skillName];
             const isSkillGoal = skillState?.requirement === 'required' || 
-              (skillState?.requirement && typeof skillState.requirement === 'object' && skillState.requirement.requirement === 'required') ||
-              skillState?.requirement === 'skill_goal' || 
-              (skillState?.requirement && typeof skillState.requirement === 'object' && skillState.requirement.requirement === 'skill_goal');
+                               skillState?.requirement === 'skill_goal';
             
             return (
               <SkillBubble

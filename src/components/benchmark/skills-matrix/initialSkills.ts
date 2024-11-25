@@ -1,5 +1,26 @@
-// Individual employee skills data
+// ... keep existing code (previous imports and other employee skills)
+
 export const initialSkills = {
+  "130": [
+    // Specialized Skills
+    { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Deep Learning", subcategory: "AI & ML", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Computer Vision", subcategory: "AI Applications", level: "advanced", growth: "22%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "AI Model Deployment", subcategory: "AI Operations", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Big Data Handling", subcategory: "Data Management", level: "advanced", growth: "24%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "AI Optimization", subcategory: "AI Performance", level: "advanced", growth: "26%", confidence: "high", requirement: "required", isCompanySkill: true },
+    
+    // Common Skills
+    { title: "Programming Proficiency", subcategory: "Development", level: "advanced", growth: "15%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Data Structures & Algorithms", subcategory: "Computer Science", level: "advanced", growth: "18%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Statistical Analysis", subcategory: "Data Science", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", confidence: "high", requirement: "required", isCompanySkill: true },
+    
+    // Certifications
+    { title: "AWS Certified Machine Learning - Specialty", subcategory: "AI Certification", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true }
+  ],
   "124": [
     // Specialized Skills
     { title: "Node.js", subcategory: "Backend Development", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },

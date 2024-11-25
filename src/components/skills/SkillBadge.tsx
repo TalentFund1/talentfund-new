@@ -3,11 +3,6 @@ import { Heart } from "lucide-react";
 import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
-interface SkillState {
-  level: string | { level: string };
-  requirement: string | { requirement: string } | null;
-}
-
 interface SkillBadgeProps {
   skill: BaseSkill;
   showLevel?: boolean;
@@ -24,10 +19,10 @@ export const SkillBadge = ({
   isRoleBenchmark = false 
 }: SkillBadgeProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const skillState = currentStates[skill.name] as SkillState | undefined;
+  const skillState = currentStates[skill.name];
 
   const getLevelColor = (level: string) => {
-    switch (level.toLowerCase()) {
+    switch (level?.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
@@ -40,26 +35,21 @@ export const SkillBadge = ({
   };
 
   const shouldShowGoal = () => {
+    // Don't show heart in role benchmark view
     if (isRoleBenchmark) return false;
+    
+    // If explicitly passed as a prop
     if (isSkillGoal) return true;
     
-    if (skillState?.requirement) {
-      const requirement = typeof skillState.requirement === 'string' 
-        ? skillState.requirement 
-        : skillState.requirement?.requirement;
-      return requirement === 'required' || requirement === 'skill_goal';
+    // If it's in the current states
+    if (skillState) {
+      return skillState.requirement === 'required' || 
+             skillState.requirement === 'skill_goal';
     }
     
-    const currentLevel = skillState?.level || level || '';
-    const levelStr = typeof currentLevel === 'string' ? currentLevel : currentLevel?.level;
-    return ['advanced', 'intermediate', 'beginner'].includes(levelStr?.toLowerCase() || '');
-  };
-
-  const getDisplayLevel = () => {
-    if (skillState?.level) {
-      return typeof skillState.level === 'string' ? skillState.level : skillState.level?.level;
-    }
-    return level || 'unspecified';
+    // For all skill levels, show goal by default
+    const currentLevel = (skillState?.level || level || '').toLowerCase();
+    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
   };
 
   return (
@@ -71,7 +61,9 @@ export const SkillBadge = ({
       {skill.name}
       {(showLevel || skillState) && (
         <div className="flex items-center gap-1.5">
-          <div className={`h-2 w-2 rounded-full ${getLevelColor(getDisplayLevel())}`} />
+          <div className={`h-2 w-2 rounded-full ${
+            getLevelColor(skillState?.level || level || "unspecified")
+          }`} />
           {shouldShowGoal() && (
             <Heart className="w-3 h-3 text-[#1f2144]" />
           )}

@@ -10,11 +10,6 @@ import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
 
-interface SkillState {
-  level: string | { level: string };
-  requirement: string | { requirement: string } | null;
-}
-
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
     'advanced': 0,
@@ -74,22 +69,13 @@ export const SkillsSummary = () => {
 
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
     return skills
-      .map(skill => {
-        const currentState = currentStates[skill.title] as SkillState | undefined;
-        const level = currentState?.level 
-          ? (typeof currentState.level === 'string' ? currentState.level : currentState.level?.level)
-          : skill.level;
-        
-        const requirement = currentState?.requirement
-          ? (typeof currentState.requirement === 'string' ? currentState.requirement : currentState.requirement?.requirement)
-          : undefined;
-
-        return {
-          name: skill.title,
-          level: level || 'unspecified',
-          isSkillGoal: requirement === 'required' || requirement === 'skill_goal' || level === 'advanced'
-        };
-      })
+      .map(skill => ({
+        name: skill.title,
+        level: currentStates[skill.title]?.level || skill.level,
+        isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
+                     currentStates[skill.title]?.requirement === 'skill_goal' ||
+                     skill.level === 'advanced'
+      }))
       .sort((a, b) => {
         const levelA = (a.level || 'unspecified').toLowerCase();
         const levelB = (b.level || 'unspecified').toLowerCase();

@@ -28,9 +28,6 @@ export const BenchmarkSkillsMatrix = () => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
 
-  console.log('Current Role Level:', roleLevel);
-  console.log('Toggled Skills:', Array.from(toggledSkills));
-
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -58,9 +55,27 @@ export const BenchmarkSkillsMatrix = () => {
     return priorities[level.toLowerCase()] ?? 3;
   };
 
+  const getRequirementPriority = (required: string = 'preferred') => {
+    const priorities: { [key: string]: number } = {
+      'required': 0,
+      'preferred': 1
+    };
+    return priorities[required.toLowerCase()] ?? 1;
+  };
+
+  const getSkillGoalPriority = (requirement: string = 'unknown') => {
+    const priorities: { [key: string]: number } = {
+      'skill_goal': 0,
+      'required': 0,
+      'preferred': 1,
+      'not_interested': 2,
+      'unknown': 3
+    };
+    return priorities[requirement.toLowerCase()] ?? 3;
+  };
+
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
-      // First check if skill is toggled
       if (!toggledSkills.has(skill.title)) return false;
 
       let matchesLevel = true;
@@ -68,16 +83,20 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesSearch = true;
       let matchesSkillLevel = true;
 
+      const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
+      const roleSkillLevel = competencyState?.level || 'unspecified';
+
+      if (selectedLevel !== 'all') {
+        matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
+      }
+
       const currentSkillState = currentStates[skill.title];
-      
-      // Get skill level from state or default to skill's level
       const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
       
       if (selectedSkillLevel !== 'all') {
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      // Get requirement from state or default to skill's requirement
       const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
       if (selectedInterest !== 'all') {
@@ -109,22 +128,33 @@ export const BenchmarkSkillsMatrix = () => {
     .map(skill => ({
       ...skill,
       employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
+      roleLevel: getSkillCompetencyState(skill.title, roleLevel.toLowerCase())?.level || 'unspecified',
       requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
     }))
     .sort((a, b) => {
-      // Sort by level priority
-      const levelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
-      if (levelDiff !== 0) return levelDiff;
+      // First, sort by role skill level
+      const aRoleLevel = a.roleLevel;
+      const bRoleLevel = b.roleLevel;
+      
+      const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
+      if (roleLevelDiff !== 0) return roleLevelDiff;
 
-      // If levels are equal, sort alphabetically
+      // Then, sort by employee skill level
+      const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
+      if (employeeLevelDiff !== 0) return employeeLevelDiff;
+
+      // Finally, sort by requirement status
+      const requirementDiff = getSkillGoalPriority(a.requirement) - getSkillGoalPriority(b.requirement);
+      if (requirementDiff !== 0) return requirementDiff;
+
+      // If all else is equal, sort alphabetically
       return a.title.localeCompare(b.title);
     });
-
-  console.log('Filtered Skills:', filteredSkills);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
+        // Only trigger if we haven't shown all items yet
         if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
           setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
         }
@@ -145,6 +175,7 @@ export const BenchmarkSkillsMatrix = () => {
   }, [visibleItems, filteredSkills.length]);
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
+  const hasMoreItems = visibleItems < filteredSkills.length;
 
   return (
     <div className="space-y-6">

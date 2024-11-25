@@ -12,22 +12,35 @@ import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalcula
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 
-// Export utility functions
 export const getSkillProfileId = (role: string) => {
-  const validProfileIds = ["123", "124", "125", "126"];
+  // Validate role ID format first
+  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
   if (validProfileIds.includes(role)) {
+    console.log('Using direct role ID:', role);
     return role;
   }
 
+  // Map role titles to IDs with consistent structure
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
     "Backend Engineer": "124",
     "Frontend Engineer": "125",
-    "Engineering Manager": "126"
+    "Engineering Manager": "126",
+    "Data Engineer": "127",
+    "DevOps Engineer": "128",
+    "Product Manager": "129"
   };
   
   const baseRole = role.split(":")[0].trim();
-  return roleMap[baseRole] || "123";
+  const mappedId = roleMap[baseRole];
+  
+  console.log('Role mapping:', { 
+    originalRole: role,
+    baseRole,
+    mappedId
+  });
+  
+  return mappedId || "123";
 };
 
 export const getBaseRole = (role: string) => {
@@ -149,3 +162,5 @@ export const EmployeeTable = ({
     </div>
   );
 };
+
+
