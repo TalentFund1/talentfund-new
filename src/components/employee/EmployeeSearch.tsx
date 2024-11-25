@@ -19,7 +19,7 @@ export const EmployeeSearch = ({ onEmployeeSearch, selectedEmployees }: Employee
         placeholder="Search Employee..."
         items={employeeNames}
         selectedItems={selectedEmployees}
-        onItemsChange={(items) => onEmployeeSearch(items as string[])}
+        onItemsChange={(items) => onEmployeeSearch(items.map(item => String(item)))}
         singleSelect={false}
       />
     </div>

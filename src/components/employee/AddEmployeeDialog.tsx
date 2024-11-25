@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
@@ -125,6 +125,9 @@ export const AddEmployeeDialog = () => {
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Create Employee Profile</DialogTitle>
+          <DialogDescription>
+            Fill in the employee details below to create a new profile.
+          </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">

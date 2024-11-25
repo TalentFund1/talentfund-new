@@ -81,7 +81,7 @@ export const EmployeeFilters = ({
           placeholder="Search skills..."
           items={allSkills}
           selectedItems={selectedSkills}
-          onItemsChange={(items) => onSkillsChange(items as string[])}
+          onItemsChange={(items) => onSkillsChange(items.map(item => String(item)))}
           singleSelect={false}
         />
       </div>
@@ -92,7 +92,7 @@ export const EmployeeFilters = ({
           placeholder="Manager"
           items={managers}
           selectedItems={selectedManager}
-          onItemsChange={(items) => onManagerChange(items as string[])}
+          onItemsChange={(items) => onManagerChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
         />
@@ -102,7 +102,7 @@ export const EmployeeFilters = ({
           placeholder="Job Title"
           items={jobTitles}
           selectedItems={selectedJobTitle}
-          onItemsChange={(items) => onJobTitleChange(items as string[])}
+          onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
         />
@@ -118,7 +118,7 @@ export const EmployeeFilters = ({
           placeholder="Office"
           items={["Toronto", "New York", "San Francisco"]}
           selectedItems={selectedOffice}
-          onItemsChange={(items) => onOfficeChange(items as string[])}
+          onItemsChange={(items) => onOfficeChange(items.map(item => String(item)))}
           singleSelect={false}
           className="w-[180px]"
         />
@@ -128,7 +128,7 @@ export const EmployeeFilters = ({
           placeholder="Department"
           items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
           selectedItems={selectedDepartment}
-          onItemsChange={(items) => onDepartmentChange(items as string[])}
+          onItemsChange={(items) => onDepartmentChange(items.map(item => String(item)))}
           singleSelect={false}
           className="w-[180px]"
         />
@@ -138,7 +138,7 @@ export const EmployeeFilters = ({
           placeholder="Category"
           items={["Full-time", "Part-time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
-          onItemsChange={(items) => onEmploymentTypeChange(items as string[])}
+          onItemsChange={(items) => onEmploymentTypeChange(items.map(item => String(item)))}
           singleSelect={false}
           className="w-[180px]"
         />
