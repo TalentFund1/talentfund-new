@@ -45,25 +45,27 @@ export const getSkillMatchCount = (
     return { matched: 0, total: 0 };
   }
 
-  const allRoleSkills = [
+  // Only count specialized and common skills, excluding certifications
+  const requiredSkills = [
     ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
+    ...currentRoleSkills.common
   ];
 
-  const matchingSkills = allRoleSkills.filter(roleSkill =>
+  const matchingSkills = requiredSkills.filter(roleSkill =>
     employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
   );
 
   console.log(`Skill match calculation for ${employeeId}:`, {
     matched: matchingSkills.length,
-    total: allRoleSkills.length,
+    total: requiredSkills.length,
     roleId,
-    profileId
+    profileId,
+    employeeSkills: employeeSkills.map(s => s.title),
+    requiredSkills: requiredSkills.map(s => s.title)
   });
 
   return {
     matched: matchingSkills.length,
-    total: allRoleSkills.length
+    total: requiredSkills.length
   };
 };
