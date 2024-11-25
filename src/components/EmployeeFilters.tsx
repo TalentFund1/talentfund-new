@@ -114,7 +114,7 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Office"
-          items={["Toronto", "New York", "San Francisco", "London", "Singapore"]}
+          items={["Toronto", "New York", "San Francisco"]}
           selectedItems={selectedOffice}
           onItemsChange={onOfficeChange}
           singleSelect={false}
@@ -124,18 +124,7 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Department"
-          items={[
-            "Engineering",
-            "Product",
-            "Design",
-            "Marketing",
-            "Sales",
-            "Finance",
-            "Human Resources",
-            "Operations",
-            "Legal",
-            "Customer Success"
-          ]}
+          items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
           selectedItems={selectedDepartment}
           onItemsChange={onDepartmentChange}
           singleSelect={false}
@@ -144,7 +133,7 @@ export const EmployeeFilters = ({
 
         <SearchFilter
           label=""
-          placeholder="Category"
+          placeholder="Employment Type"
           items={["Full-time", "Part-time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
           onItemsChange={onEmploymentTypeChange}

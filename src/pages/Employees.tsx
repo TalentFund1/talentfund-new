@@ -10,7 +10,6 @@ import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
-import { ProfileCreationWidget } from "@/components/employee/ProfileCreationWidget";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -96,8 +95,6 @@ const Employees = () => {
             </div>
           </div>
 
-          <ProfileCreationWidget />
-
           <Card className="p-6">
             <EmployeeFilters 
               onDepartmentChange={setSelectedDepartment}
@@ -117,19 +114,6 @@ const Employees = () => {
               onManagerChange={setSelectedManager}
               selectedManager={selectedManager}
             />
-            <Separator className="my-4" />
-            <EmployeeTable 
-              selectedDepartment={selectedDepartment}
-              selectedJobTitle={selectedJobTitle}
-              selectedLevel={selectedLevel}
-              selectedOffice={selectedOffice}
-              selectedEmploymentType={selectedEmploymentType}
-              selectedSkills={selectedSkills}
-              selectedEmployees={selectedEmployees}
-              selectedManager={selectedManager}
-            />
-            <Separator className="my-4" />
-            <TablePagination />
           </Card>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -154,6 +138,21 @@ const Employees = () => {
               icon={<Clock className="h-6 w-6 text-primary-icon" />}
             />
           </div>
+
+          <Card className="p-6">
+            <EmployeeTable 
+              selectedDepartment={selectedDepartment}
+              selectedJobTitle={selectedJobTitle}
+              selectedLevel={selectedLevel}
+              selectedOffice={selectedOffice}
+              selectedEmploymentType={selectedEmploymentType}
+              selectedSkills={selectedSkills}
+              selectedEmployees={selectedEmployees}
+              selectedManager={selectedManager}
+            />
+            <Separator className="my-4" />
+            <TablePagination />
+          </Card>
         </div>
       </div>
     </div>
