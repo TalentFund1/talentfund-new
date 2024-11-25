@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
+import { roleSkills } from '@/components/skills/data/roleSkills';
 import { jobTitles } from '@/components/skills/competency/skillProfileData';
 import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
 import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
@@ -17,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// Define company functions/departments
 const companyFunctions = [
   "Engineering",
   "Product",
@@ -35,17 +37,9 @@ const SkillsProfile = () => {
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
-  const [sortField, setSortField] = useState(null);
-  const [sortDirection, setSortDirection] = useState(null);
 
   const availableJobTitles = Object.keys(jobTitles).map(id => jobTitles[id]);
   const toggledSkillsList = Array.from(toggledSkills);
-
-  const mockSkills = [
-    { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", salary: "$180,256" },
-    { title: "Deep Learning", subcategory: "AI & ML", level: "intermediate", growth: "28%", salary: "$182,000" },
-    { title: "Natural Language Processing", subcategory: "AI & ML", level: "advanced", growth: "32%", salary: "$175,000" },
-  ];
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -76,30 +70,7 @@ const SkillsProfile = () => {
 
           <Card className="p-6">
             <SkillProfileTable 
-              skills={mockSkills}
-              toggledSkills={toggledSkills}
-              onToggleSkill={(skillTitle: string) => {
-                const newToggledSkills = new Set(toggledSkills);
-                if (newToggledSkills.has(skillTitle)) {
-                  newToggledSkills.delete(skillTitle);
-                } else {
-                  newToggledSkills.add(skillTitle);
-                }
-              }}
-              sortField={sortField}
-              sortDirection={sortDirection}
-              onSort={(field) => {
-                if (sortField === field) {
-                  setSortDirection(sortDirection === 'asc' ? 'desc' : null);
-                  if (sortDirection === 'desc') setSortField(null);
-                } else {
-                  setSortField(field);
-                  setSortDirection('asc');
-                }
-              }}
-              selectedCategory="all"
-              roleId="123"
-              selectedFunction={selectedFunction}
+              selectedFunction={selectedFunction} 
               selectedSkills={selectedSkills}
               selectedJobTitle={selectedJobTitle}
             />

@@ -1,23 +1,29 @@
-import { useState } from "react";
+import React, { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { SkillCategoryCards } from "./SkillCategoryCards";
-import { SkillProfileTable } from "./SkillProfileTable";
+import { useParams } from "react-router-dom";
+import { roleSkills } from './data/roleSkills';
 
-const SkillProfileMatrix = () => {
+type SortDirection = 'asc' | 'desc' | null;
+type SortField = 'growth' | 'salary' | null;
+
+export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
-  const [sortField, setSortField] = useState(null);
-  const [sortDirection, setSortDirection] = useState(null);
+  const [sortField, setSortField] = useState<SortField>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const { toast } = useToast();
+  const observerTarget = useRef(null);
+  const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
   const handleToggleSkill = (skillTitle: string) => {
@@ -36,18 +42,73 @@ const SkillProfileMatrix = () => {
     });
   };
 
-  const mockSkills = [
-    { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", salary: "$180,256" },
-    { title: "Deep Learning", subcategory: "AI & ML", level: "intermediate", growth: "28%", salary: "$182,000" },
-    { title: "Natural Language Processing", subcategory: "AI & ML", level: "advanced", growth: "32%", salary: "$175,000" },
-    { title: "Computer Vision", subcategory: "AI & ML", level: "beginner", growth: "25%", salary: "$160,000" },
-    { title: "TensorFlow", subcategory: "AI Tools", level: "advanced", growth: "30%", salary: "$180,000" },
-    { title: "Python", subcategory: "Programming", level: "advanced", growth: "28%", salary: "$150,000" },
-    { title: "Technical Writing", subcategory: "Documentation", level: "intermediate", growth: "20%", salary: "$70,000" },
-    { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "35%", salary: "$120,000" },
-    { title: "AWS Certified Machine Learning - Specialty", subcategory: "Certification", level: "advanced", growth: "30%", salary: "$110,000" },
-    { title: "TensorFlow Developer Certificate", subcategory: "Certification", level: "intermediate", growth: "30%", salary: "$110,000" }
-  ];
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortField(null);
+        setSortDirection(null);
+      }
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  // Get only the skills for the current role
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+
+  const filteredSkills = (() => {
+    let skills = [];
+    if (skillType === "all") {
+      skills = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ];
+    } else if (skillType === "specialized") {
+      skills = currentRoleSkills.specialized;
+    } else if (skillType === "common") {
+      skills = currentRoleSkills.common;
+    } else if (skillType === "certification") {
+      skills = currentRoleSkills.certifications;
+    }
+
+    let sortedSkills = skills.filter(skill => {
+      const isInCurrentRole = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].some(roleSkill => roleSkill.title === skill.title);
+
+      return isInCurrentRole;
+    });
+
+    if (sortField && sortDirection) {
+      sortedSkills = [...sortedSkills].sort((a, b) => {
+        if (sortField === 'growth') {
+          const aGrowth = parseFloat(a.growth);
+          const bGrowth = parseFloat(b.growth);
+          return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+        } else if (sortField === 'salary') {
+          const aSalary = parseFloat(a.salary.replace(/[^0-9.-]+/g, ""));
+          const bSalary = parseFloat(b.salary.replace(/[^0-9.-]+/g, ""));
+          return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
+        }
+        return 0;
+      });
+    }
+
+    return sortedSkills.sort((a, b) => {
+      const aIsSaved = toggledSkills.has(a.title);
+      const bIsSaved = toggledSkills.has(b.title);
+      if (aIsSaved === bIsSaved) return 0;
+      return aIsSaved ? -1 : 1;
+    });
+  })();
+
+  const paginatedSkills = filteredSkills;
 
   return (
     <div className="space-y-6">
@@ -56,17 +117,15 @@ const SkillProfileMatrix = () => {
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-foreground">Skill Mapping</h2>
             <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-              {Array.from(toggledSkills).length}
+              {Array.from(toggledSkills).filter(skill => 
+                filteredSkills.some(fs => fs.title === skill)
+              ).length}
             </span>
           </div>
           <Button>Add Skill</Button>
         </div>
 
-        <SkillCategoryCards
-          selectedCategory={selectedCategory}
-          onCategorySelect={setSelectedCategory}
-          skills={mockSkills}
-        />
+        <Separator className="my-4" />
 
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
@@ -98,31 +157,18 @@ const SkillProfileMatrix = () => {
         </div>
 
         <div className="rounded-lg border border-border overflow-hidden">
-          <SkillProfileTable 
-            skills={mockSkills}
+          <SkillProfileMatrixTable 
+            paginatedSkills={paginatedSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={handleToggleSkill}
             sortField={sortField}
             sortDirection={sortDirection}
-            onSort={(field) => {
-              if (sortField === field) {
-                setSortDirection(sortDirection === 'asc' ? 'desc' : null);
-                if (sortDirection === 'desc') setSortField(null);
-              } else {
-                setSortField(field);
-                setSortDirection('asc');
-              }
-            }}
-            selectedCategory={selectedCategory}
-            roleId="123"
-            selectedFunction=""
-            selectedSkills={[]}
-            selectedJobTitle=""
+            onSort={handleSort}
           />
         </div>
 
         {hasMore && (
-          <div className="h-10" />
+          <div ref={observerTarget} className="h-10" />
         )}
       </Card>
     </div>

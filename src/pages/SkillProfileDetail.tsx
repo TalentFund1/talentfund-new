@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SkillProfileHeader } from "@/components/skills/SkillProfileHeader";
-import SkillProfileMatrix from "@/components/skills/SkillProfileMatrix";
+import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
 import { EmployeeOverview } from "@/components/skills/EmployeeOverview";
 import { SelectBenchmark } from "@/components/benchmark/SelectBenchmark";
 import { CompetencyGraph } from "@/components/skills/CompetencyGraph";
