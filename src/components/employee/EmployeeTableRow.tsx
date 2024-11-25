@@ -9,6 +9,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { filterEmployeesBySkills, getSkillMatchCount } from "./EmployeeSkillsFilter";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -53,22 +54,11 @@ export const EmployeeTableRow = ({
       };
     }
 
-    if (!currentRoleSkills) return { count: '0 / 0', isExactSkillMatch: false };
-
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
-
-    const matchingSkills = allRoleSkills.filter(roleSkill => {
-      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-      return employeeSkill !== undefined;
-    });
-
+    // Get skill match count for role comparison
+    const { matched, total } = getSkillMatchCount(employee.id, roleId);
     return {
-      count: `${matchingSkills.length} / ${allRoleSkills.length}`,
-      isExactSkillMatch: matchingSkills.length === allRoleSkills.length && allRoleSkills.length > 0
+      count: `${matched} / ${total}`,
+      isExactSkillMatch: matched === total && total > 0
     };
   };
 
