@@ -44,6 +44,7 @@ export const AddEmployeeDialog = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
+  const employees = useEmployeeStore((state) => state.employees);
   const [formData, setFormData] = useState({
     id: "",
     name: "",
@@ -71,6 +72,18 @@ export const AddEmployeeDialog = () => {
       toast({
         title: "Error",
         description: "Please fill in all required fields: ID, Name, Department, Role, Office, and Start Date",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Check for duplicate employee ID
+    const isDuplicateId = employees.some(emp => emp.id === formData.id);
+    if (isDuplicateId) {
+      console.log('Form validation failed - Duplicate employee ID:', formData.id);
+      toast({
+        title: "Error",
+        description: "An employee with this ID already exists. Please use a unique ID.",
         variant: "destructive"
       });
       return;
