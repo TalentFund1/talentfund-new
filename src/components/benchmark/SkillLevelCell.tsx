@@ -19,7 +19,7 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState("default", skillTitle, initialLevel, 'required');
+  initializeState(skillTitle, initialLevel, 'required');
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
@@ -78,7 +78,7 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.level || 'unspecified'} 
           onValueChange={(value) => {
-            setSkillState("default", skillTitle, value, currentState?.requirement || 'required');
+            setSkillState(skillTitle, value, currentState?.requirement || 'required');
             onLevelChange?.(value, currentState?.requirement || 'required');
           }}
         >
@@ -124,7 +124,7 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.requirement || 'required'}
           onValueChange={(value) => {
-            setSkillState("default", skillTitle, currentState?.level || 'unspecified', value);
+            setSkillState(skillTitle, currentState?.level || 'unspecified', value);
             onLevelChange?.(currentState?.level || 'unspecified', value);
           }}
         >
