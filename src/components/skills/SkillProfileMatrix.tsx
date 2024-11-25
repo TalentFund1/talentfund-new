@@ -10,6 +10,8 @@ import { roleSkills } from './data/roleSkills';
 import { SkillCategoryCards } from './sections/SkillCategoryCards';
 import { SkillProfileMatrixTable } from "./table/SkillProfileMatrixTable";
 
+type SortField = 'growth' | 'salary' | null;
+
 const categorizeSkill = (skill: any) => {
   // Critical skills are those with high growth and required status
   if (skill.growth >= "25%" && skill.requirement === "required") {
