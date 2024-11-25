@@ -26,15 +26,15 @@ export const SkillProfileMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
-  console.log('Current toggled skills:', Array.from(toggledSkills)); // Debug log
+  console.log('Current toggled skills:', Array.from(toggledSkills));
 
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
     if (newToggledSkills.has(skillTitle)) {
-      console.log('Removing skill:', skillTitle); // Debug log
+      console.log('Removing skill:', skillTitle);
       newToggledSkills.delete(skillTitle);
     } else {
-      console.log('Adding skill:', skillTitle); // Debug log
+      console.log('Adding skill:', skillTitle);
       newToggledSkills.add(skillTitle);
     }
     setToggledSkills(newToggledSkills);
@@ -89,8 +89,27 @@ export const SkillProfileMatrix = () => {
       return isInCurrentRole;
     });
 
+    // Sort skills based on toggle state first
+    sortedSkills.sort((a, b) => {
+      const aIsToggled = toggledSkills.has(a.title);
+      const bIsToggled = toggledSkills.has(b.title);
+      
+      if (aIsToggled && !bIsToggled) return -1;
+      if (!aIsToggled && bIsToggled) return 1;
+      return 0;
+    });
+
+    // Apply additional sorting if specified
     if (sortField && sortDirection) {
-      sortedSkills = [...sortedSkills].sort((a, b) => {
+      const toggleSortedSkills = [...sortedSkills];
+      toggleSortedSkills.sort((a, b) => {
+        // Preserve toggle-based ordering within each group
+        const aIsToggled = toggledSkills.has(a.title);
+        const bIsToggled = toggledSkills.has(b.title);
+        if (aIsToggled !== bIsToggled) {
+          return aIsToggled ? -1 : 1;
+        }
+
         if (sortField === 'growth') {
           const aGrowth = parseFloat(a.growth);
           const bGrowth = parseFloat(b.growth);
@@ -102,6 +121,7 @@ export const SkillProfileMatrix = () => {
         }
         return 0;
       });
+      sortedSkills = toggleSortedSkills;
     }
 
     return sortedSkills;
