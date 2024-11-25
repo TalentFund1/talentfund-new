@@ -14,15 +14,13 @@ export const StaticSkillLevelCell = ({
 }: StaticSkillLevelCellProps) => {
   const { currentStates, initializeState } = useSkillsMatrixStore();
 
-  // Initialize the skill state with the employee's actual level
   useEffect(() => {
-    if (!currentStates[skillTitle]) {
-      console.log('Initializing skill state:', { skillTitle, initialLevel });
-      initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'required');
+    if (!currentStates['default']?.[skillTitle]) {
+      initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'required', 'default');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
-  const currentState = currentStates[skillTitle] || {
+  const currentState = currentStates['default']?.[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
     requirement: 'required'
   };
@@ -73,36 +71,28 @@ export const StaticSkillLevelCell = ({
     return getBorderColorClass(level).split(' ')[0];
   };
 
-  console.log('StaticSkillLevelCell render:', {
-    skillTitle,
-    initialLevel,
-    currentState,
-    level: currentState?.level || 'unspecified',
-    requirement: currentState?.requirement || 'required'
-  });
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <div className={`
           rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-          border-2 ${getBorderColorClass(currentState?.level)}
+          border-2 ${getBorderColorClass(currentState.level)}
         `}>
           <span className="flex items-center gap-2">
-            {getLevelIcon(currentState?.level)}
-            {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
+            {getLevelIcon(currentState.level)}
+            {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
           </span>
         </div>
         <div className={`
           text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
           border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-          ${getLowerBorderColorClass(currentState?.level, currentState?.requirement)}
+          ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
         `}>
           <span className="flex items-center gap-1.5">
-            {getRequirementIcon(currentState?.requirement)}
-            {currentState?.requirement === 'required' ? 'Skill Goal' : 
-             currentState?.requirement === 'not-interested' ? 'Not Interested' : 
-             currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+            {getRequirementIcon(currentState.requirement)}
+            {currentState.requirement === 'required' ? 'Skill Goal' : 
+             currentState.requirement === 'not-interested' ? 'Not Interested' : 
+             currentState.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
           </span>
         </div>
       </div>

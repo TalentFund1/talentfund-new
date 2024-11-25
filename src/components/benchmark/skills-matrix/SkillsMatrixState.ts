@@ -1,70 +1,38 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-interface SkillState {
-  level: string;
-  requirement: string;
-}
-
-interface SkillsMatrixState {
-  originalStates: Record<string, Record<string, SkillState>>;
-  currentStates: Record<string, Record<string, SkillState>>;
-  hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
-  saveChanges: () => void;
-  cancelChanges: () => void;
-  initializeState: (skillTitle: string, initialLevel: string, initialRequirement: string, employeeId: string) => void;
-  cleanupState: (employeeId: string) => void;
-  duplicateState: (sourceEmployeeId: string, targetEmployeeId: string) => void;
-}
-
-const getStorageKey = (employeeId: string) => `skills-matrix-${employeeId}`;
+import { SkillState, SkillsMatrixState } from '../types';
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       originalStates: {},
       currentStates: {},
       hasChanges: false,
+      setSkillState: (skillTitle, level, requirement, employeeId) => {
+        console.log('Setting matrix skill state:', { skillTitle, level, requirement, employeeId });
+        set((state) => {
+          const newStates = {
+            ...state.currentStates,
+            [employeeId]: {
+              ...(state.currentStates[employeeId] || {}),
+              [skillTitle]: {
+                level,
+                requirement
+              }
+            }
+          };
+          
+          const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
+          
+          return { 
+            currentStates: newStates,
+            hasChanges
+          };
+        });
+      },
       initializeState: (skillTitle, initialLevel, initialRequirement, employeeId) => {
         console.log('Initializing matrix skill state:', { skillTitle, initialLevel, initialRequirement, employeeId });
         
-        const storageKey = getStorageKey(employeeId);
-        const savedState = localStorage.getItem(storageKey);
-        
-        if (savedState) {
-          try {
-            const parsed = JSON.parse(savedState);
-            if (parsed && typeof parsed === 'object') {
-              set((state) => ({
-                currentStates: {
-                  ...state.currentStates,
-                  [employeeId]: {
-                    ...parsed,
-                    [skillTitle]: {
-                      level: initialLevel || 'unspecified',
-                      requirement: initialRequirement || 'required'
-                    }
-                  }
-                },
-                originalStates: {
-                  ...state.originalStates,
-                  [employeeId]: {
-                    ...parsed,
-                    [skillTitle]: {
-                      level: initialLevel || 'unspecified',
-                      requirement: initialRequirement || 'required'
-                    }
-                  }
-                }
-              }));
-              return;
-            }
-          } catch (error) {
-            console.error('Error parsing saved state:', error);
-          }
-        }
-
         set((state) => ({
           currentStates: {
             ...state.currentStates,
@@ -87,22 +55,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             }
           }
         }));
-      },
-      setSkillState: (skillTitle, level, requirement) => {
-        console.log('Setting matrix skill state:', { skillTitle, level, requirement });
-        set((state) => {
-          const newStates = {
-            ...state.currentStates,
-            [skillTitle]: { level, requirement }
-          };
-          
-          const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
-          
-          return { 
-            currentStates: newStates,
-            hasChanges
-          };
-        });
       },
       saveChanges: () => {
         console.log('Saving matrix changes');
