@@ -31,11 +31,7 @@ const roles = {
   "123": "AI Engineer",
   "124": "Backend Engineer", 
   "125": "Frontend Engineer",
-  "126": "Engineering Manager",
-  "127": "Data Engineer",
-  "128": "DevOps Engineer",
-  "129": "Product Manager",
-  "130": "Technical Lead"
+  "126": "Engineering Manager"
 };
 
 export const RoleBenchmark = () => {
@@ -50,7 +46,6 @@ export const RoleBenchmark = () => {
   // Find the employee and get their role
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-  const currentTrack = getTrackForRole(selectedRole);
   
   // Set initial role and level based on employee's role
   useEffect(() => {
@@ -78,6 +73,7 @@ export const RoleBenchmark = () => {
   }, [selectedRole, currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
   useEffect(() => {
+    const currentTrack = getTrackForRole(selectedRole);
     if (currentTrack === "Professional" && roleLevel.toLowerCase().startsWith("m")) {
       setRoleLevel("p4");
     } else if (currentTrack === "Managerial" && roleLevel.toLowerCase().startsWith("p")) {
@@ -115,7 +111,6 @@ export const RoleBenchmark = () => {
         <RoleSelection 
           selectedRole={selectedRole}
           selectedLevel={roleLevel}
-          currentTrack={currentTrack}
           onRoleChange={setSelectedRole}
           onLevelChange={setRoleLevel}
           onTrackChange={handleTrackChange}
