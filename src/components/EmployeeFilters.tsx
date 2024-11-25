@@ -144,7 +144,7 @@ export const EmployeeFilters = ({
 
         <SearchFilter
           label=""
-          placeholder="Employment Type"
+          placeholder="Category"
           items={["Full-time", "Part-time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
           onItemsChange={onEmploymentTypeChange}
