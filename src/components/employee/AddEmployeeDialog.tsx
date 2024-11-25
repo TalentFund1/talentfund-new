@@ -11,6 +11,7 @@ import { calculateEmployeeBenchmarks } from "./EmployeeBenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { employees as defaultEmployees } from "./EmployeeData";
 
 interface EmployeeStore {
   employees: Employee[];
@@ -18,7 +19,7 @@ interface EmployeeStore {
 }
 
 export const useEmployeeStore = create<EmployeeStore>((set) => ({
-  employees: [],
+  employees: defaultEmployees,
   addEmployee: (employee) => set((state) => {
     console.log('Adding new employee to store:', employee);
     return { employees: [...state.employees, employee] };
