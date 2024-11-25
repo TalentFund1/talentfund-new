@@ -26,11 +26,9 @@ export const SkillsMatrixRow = ({
   showCompanySkill = true,
   isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
   const { selectedLevel } = useRoleStore();
-  const { getTrackForRole } = useTrack();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
-  const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
@@ -51,7 +49,7 @@ export const SkillsMatrixRow = ({
   };
 
   const getLowerBorderColorClass = (level: string = '', required: string = '') => {
-    if (required.toLowerCase() !== 'required') {
+    if (required?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
@@ -67,11 +65,27 @@ export const SkillsMatrixRow = ({
     };
   };
 
+  const getSkillGoalState = () => {
+    const currentState = currentStates[skill.title];
+    if (!currentState) return false;
+
+    return currentState.requirement === 'required' || 
+           currentState.requirement === 'skill_goal';
+  };
+
   const roleSkillState = getRoleSkillState();
+  const isSkillGoal = getSkillGoalState();
 
   const capitalizeFirstLetter = (text: string = '') => {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   };
+
+  console.log('Skill Row State:', {
+    skill: skill.title,
+    currentState: currentStates[skill.title],
+    isSkillGoal,
+    roleSkillState
+  });
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -114,10 +128,8 @@ export const SkillsMatrixRow = ({
             `}>
               <span className="flex items-center gap-1.5">
                 {roleSkillState.required === 'required' ? <Check className="w-3.5 h-3.5" /> :
-                 roleSkillState.required === 'preferred' ? <CircleDashed className="w-3.5 h-3.5" /> :
                  <CircleDashed className="w-3.5 h-3.5" />}
-                {roleSkillState.required === 'required' ? 'Required' : 
-                 roleSkillState.required === 'preferred' ? 'Preferred' : 'Preferred'}
+                {roleSkillState.required === 'required' ? 'Required' : 'Preferred'}
               </span>
             </div>
           </div>
