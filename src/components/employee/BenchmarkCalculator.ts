@@ -1,5 +1,6 @@
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
+import { getBaseRole } from "../EmployeeTable";
 
 export const calculateBenchmarkPercentage = (
   employeeId: string, 
@@ -40,7 +41,8 @@ export const calculateBenchmarkPercentage = (
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
     if (!roleSkillState) {
       console.log('No competency state found for skill:', skill.title);
-      return true; // For manager roles, if no competency state is found, consider it a match
+      // For manager roles, consider it a match if they have the skill
+      return getBaseRole(level).toLowerCase().includes('m');
     }
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
@@ -73,7 +75,8 @@ export const calculateBenchmarkPercentage = (
     const skillState = currentStates[skill.title];
     if (!skillState) {
       console.log('No skill state found for skill:', skill.title);
-      return true; // For manager roles, if no skill state is found, consider it a match
+      // For manager roles, consider it a match if they have the skill
+      return getBaseRole(level).toLowerCase().includes('m');
     }
     return skillState.requirement === 'required' || 
            skillState.requirement === 'skill_goal';
