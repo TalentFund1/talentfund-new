@@ -14,7 +14,7 @@ interface SkillsMatrixRowProps {
     subcategory: string;
     level: string;
     growth: string;
-    confidence: string;
+    confidence?: string;
     requirement?: string;
   };
   showCompanySkill?: boolean;
@@ -37,7 +37,7 @@ export const SkillsMatrixRow = ({
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const getBorderColorClass = (level: string) => {
+  const getBorderColorClass = (level: string = 'unspecified') => {
     switch (level.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent bg-primary-accent/10';
@@ -50,8 +50,8 @@ export const SkillsMatrixRow = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string, required: string) => {
-    if (required.toLowerCase() !== 'required') {
+  const getLowerBorderColorClass = (level: string = 'unspecified', required: string = 'unknown') => {
+    if (required?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
@@ -68,6 +68,24 @@ export const SkillsMatrixRow = ({
   };
 
   const roleSkillState = getRoleSkillState();
+
+  const getConfidenceDisplay = (confidence?: string) => {
+    if (!confidence || confidence === 'n/a') {
+      return <span className="text-gray-500 text-sm">n/a</span>;
+    }
+
+    const confidenceLevel = confidence.toLowerCase();
+    const colorClass = 
+      confidenceLevel === 'high' ? 'bg-green-100 text-green-800' :
+      confidenceLevel === 'medium' ? 'bg-orange-100 text-orange-800' :
+      'bg-red-100 text-red-800';
+
+    return (
+      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${colorClass}`}>
+        {confidence.charAt(0).toUpperCase() + confidence.slice(1)}
+      </span>
+    );
+  };
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -131,17 +149,7 @@ export const SkillsMatrixRow = ({
         />
       )}
       <TableCell className="text-center border-r border-blue-200 py-2">
-        {skill.confidence === 'n/a' ? (
-          <span className="text-gray-500 text-sm">n/a</span>
-        ) : (
-          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${
-            skill.confidence === 'high' ? 'bg-green-100 text-green-800' :
-            skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
-            'bg-red-100 text-red-800'
-          }`}>
-            {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
-          </span>
-        )}
+        {getConfidenceDisplay(skill.confidence)}
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
         <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
