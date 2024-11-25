@@ -32,13 +32,15 @@ export const SkillsMatrixRow = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
+  console.log('SkillsMatrixRow render:', { skill, currentStates, selectedLevel });
+
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const getBorderColorClass = (level: string) => {
-    switch (level.toLowerCase()) {
+  const getBorderColorClass = (level: string = 'unspecified') => {
+    switch (level?.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent bg-primary-accent/10';
       case 'intermediate':
@@ -50,29 +52,43 @@ export const SkillsMatrixRow = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string, required: string) => {
-    if (required.toLowerCase() !== 'required') {
+  const getLowerBorderColorClass = (level: string = 'unspecified', required: string = 'preferred') => {
+    if (!required || required.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
   };
 
   const getRoleSkillState = () => {
+    if (!skill.title || !selectedLevel) {
+      console.log('Missing required data for getRoleSkillState:', { title: skill.title, selectedLevel });
+      return null;
+    }
+
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-    if (!competencyState) return null;
+    if (!competencyState) {
+      console.log('No competency state found for:', { title: skill.title, selectedLevel });
+      return null;
+    }
 
     return {
-      level: competencyState.level,
-      required: competencyState.required
+      level: competencyState.level || 'unspecified',
+      required: competencyState.required || 'preferred'
     };
   };
 
   const roleSkillState = getRoleSkillState();
+  console.log('Role skill state:', roleSkillState);
+
+  const getDisplayText = (text: string = 'unspecified') => {
+    if (!text) return 'Unspecified';
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  };
 
   return (
     <TableRow className="group border-b border-gray-200">
-      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
+      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title || 'Untitled'}</TableCell>
+      <TableCell className="border-r border-blue-200 py-2">{skill.subcategory || 'Uncategorized'}</TableCell>
       {showCompanySkill && (
         <TableCell className="text-center border-r border-blue-200 py-2">
           <div className="flex justify-center">
@@ -100,7 +116,7 @@ export const SkillsMatrixRow = ({
                  roleSkillState.level === 'intermediate' ? <Shield className="w-3.5 h-3.5 text-primary-icon" /> :
                  roleSkillState.level === 'beginner' ? <Target className="w-3.5 h-3.5 text-[#008000]" /> :
                  <CircleDashed className="w-3.5 h-3.5 text-gray-400" />}
-                {roleSkillState.level.charAt(0).toUpperCase() + roleSkillState.level.slice(1)}
+                {getDisplayText(roleSkillState.level)}
               </span>
             </div>
             <div className={`
@@ -139,7 +155,7 @@ export const SkillsMatrixRow = ({
             skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
             'bg-red-100 text-red-800'
           }`}>
-            {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
+            {getDisplayText(skill.confidence)}
           </span>
         )}
       </TableCell>
@@ -147,7 +163,7 @@ export const SkillsMatrixRow = ({
         <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
           skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
         }`}>
-          ↗ {skill.growth}
+          ↗ {skill.growth || '0%'}
         </span>
       </TableCell>
       <TableCell className="text-center py-2">
