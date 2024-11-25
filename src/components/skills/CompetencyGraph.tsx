@@ -64,21 +64,30 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleGenerateWithAI = async () => {
-    console.log("Starting AI generation for skills...");
+    console.log("Starting AI generation for skills...", { currentRoleId, track });
     setIsGenerating(true);
     
     try {
       // Get current role skills
       const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
       if (!currentRoleSkills) {
+        console.error('No skills found for current role:', currentRoleId);
         throw new Error('No skills found for current role');
       }
+
+      console.log('Found role skills:', {
+        specialized: currentRoleSkills.specialized?.length || 0,
+        common: currentRoleSkills.common?.length || 0,
+        certifications: currentRoleSkills.certifications?.length || 0
+      });
 
       const allSkills = [
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
         ...currentRoleSkills.certifications
       ];
+
+      console.log('Processing skills generation for:', allSkills.map(s => s.title));
 
       // Generate progression for each skill
       allSkills.forEach(skill => {
@@ -89,7 +98,16 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
           category = "certification";
         }
 
+        console.log('Generating progression for skill:', { 
+          title: skill.title, 
+          category,
+          track,
+          roleId: currentRoleId 
+        });
+
         const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
+        console.log('Generated progression:', { skill: skill.title, progression });
+        
         setSkillProgression(skill.title, progression);
       });
 
