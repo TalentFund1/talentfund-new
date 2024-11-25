@@ -45,10 +45,14 @@ export const getSkillMatchCount = (
     return { matched: 0, total: 0 };
   }
 
-  // Only count specialized and common skills, excluding certifications
-  const requiredSkills = [
+  // For Engineering Manager (126), only count specialized and common skills
+  const requiredSkills = profileId === "126" ? [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common
+  ] : [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
   ];
 
   const matchingSkills = requiredSkills.filter(roleSkill =>
