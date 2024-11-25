@@ -14,11 +14,20 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 
 // Export utility functions
 export const getSkillProfileId = (role: string) => {
+  console.log('Getting skill profile ID for role:', role);
+  
+  // First check if the input is already a valid ID
   const validProfileIds = ["123", "124", "125", "126"];
   if (validProfileIds.includes(role)) {
+    console.log('Role is already a valid profile ID:', role);
     return role;
   }
 
+  // Clean up the role string to handle both formats: "Role: Level" and just "Role"
+  const baseRole = role.split(":")[0].trim();
+  console.log('Base role extracted:', baseRole);
+
+  // Map roles to their corresponding IDs
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
     "Backend Engineer": "124",
@@ -26,8 +35,15 @@ export const getSkillProfileId = (role: string) => {
     "Engineering Manager": "126"
   };
   
-  const baseRole = role.split(":")[0].trim();
-  return roleMap[baseRole] || "123";
+  const profileId = roleMap[baseRole];
+  console.log('Mapped profile ID:', profileId);
+  
+  if (!profileId) {
+    console.warn('No profile ID found for role:', baseRole, 'defaulting to 123');
+    return "123"; // Default to AI Engineer if no match found
+  }
+  
+  return profileId;
 };
 
 export const getBaseRole = (role: string) => {
@@ -149,3 +165,4 @@ export const EmployeeTable = ({
     </div>
   );
 };
+
