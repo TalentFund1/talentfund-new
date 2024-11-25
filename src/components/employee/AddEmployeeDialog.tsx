@@ -3,40 +3,25 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { EmployeeFormFields } from "./form/EmployeeFormFields";
-import { employees } from "../employee/EmployeeData";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { create } from "zustand";
+import { Employee } from "../types/employeeTypes";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { getSkillProfileId } from "../EmployeeTable";
+import { calculateEmployeeBenchmarks } from "./EmployeeBenchmarkCalculator";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface EmployeeStore {
-  employees: typeof employees;
-  addEmployee: (employee: typeof employees[0]) => void;
+  employees: Employee[];
+  addEmployee: (employee: Employee) => void;
 }
 
 export const useEmployeeStore = create<EmployeeStore>((set) => ({
-  employees: employees,
+  employees: [],
   addEmployee: (employee) => set((state) => {
     console.log('Adding new employee to store:', employee);
-    
-    // Initialize skills for the new employee based on their role
-    const skillProfileId = employee.id;
-    const initialSkills = getEmployeeSkills(skillProfileId);
-    
-    // Create complete employee object with all required properties
-    const completeEmployee = {
-      ...employee,
-      skillCount: initialSkills.length || 0,
-      benchmark: 0, // Will be calculated by EmployeeBenchmarkCalculator
-      lastUpdated: new Date().toLocaleDateString(),
-    };
-
-    console.log('Complete employee object with initialized data:', completeEmployee);
-    
-    // Update both the imported array and store
-    employees.push(completeEmployee);
-    const newEmployees = [...state.employees, completeEmployee];
-    console.log('Updated store employees:', newEmployees);
-    
-    return { employees: newEmployees };
+    return { employees: [...state.employees, employee] };
   }),
 }));
 
@@ -45,6 +30,10 @@ export const AddEmployeeDialog = () => {
   const [open, setOpen] = useState(false);
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
   const employees = useEmployeeStore((state) => state.employees);
+  const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+  
   const [formData, setFormData] = useState({
     id: "",
     name: "",
@@ -89,34 +78,46 @@ export const AddEmployeeDialog = () => {
       return;
     }
 
-    // Format dates properly
-    const formattedStartDate = new Date(formData.startDate).toISOString().split('T')[0];
-    const formattedTermDate = formData.termDate ? new Date(formData.termDate).toISOString().split('T')[0] : "-";
+    // Get role-specific skills
+    const roleId = getSkillProfileId(formData.role);
+    const roleSkills = getEmployeeSkills(roleId);
+    console.log('Initializing role-specific skills for new employee:', roleSkills);
 
-    // Create new employee object with proper field mapping
-    const newEmployee = {
+    // Create new employee with all required data
+    const newEmployee: Employee = {
       id: formData.id,
       name: formData.name,
       role: `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`,
       department: formData.department,
-      skillCount: 0, // This will be updated by the store with actual skills
-      benchmark: 0,
+      skillCount: roleSkills.length,
+      benchmark: 0, // Will be calculated after creation
       lastUpdated: new Date().toLocaleDateString(),
       location: formData.location,
       sex: formData.sex as 'male' | 'female',
       category: formData.category,
       manager: formData.manager,
-      startDate: formattedStartDate,
+      startDate: formData.startDate,
       office: formData.office,
-      termDate: formattedTermDate
+      termDate: formData.termDate || "-"
     };
 
-    console.log('Creating new employee:', newEmployee);
+    console.log('Creating new employee with data:', newEmployee);
 
     try {
-      // Add new employee using the store
+      // Add employee to store
       addEmployee(newEmployee);
-      
+
+      // Calculate initial benchmark
+      const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+        [newEmployee],
+        [formData.role],
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
+
+      console.log('Initial benchmark calculation:', employeesWithBenchmarks);
+
       toast({
         title: "Success",
         description: "Employee profile created successfully",
@@ -139,7 +140,7 @@ export const AddEmployeeDialog = () => {
         skills: ""
       });
     } catch (error) {
-      console.error('Error adding employee:', error);
+      console.error('Error creating employee:', error);
       toast({
         title: "Error",
         description: "Failed to create employee profile. Please try again.",
