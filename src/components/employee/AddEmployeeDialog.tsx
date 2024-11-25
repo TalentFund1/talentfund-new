@@ -5,10 +5,26 @@ import { useToast } from "@/components/ui/use-toast";
 import { EmployeeFormFields } from "./form/EmployeeFormFields";
 import { employees } from "../employee/EmployeeData";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { create } from "zustand";
+
+// Create a store to manage employees state
+interface EmployeeStore {
+  employees: typeof employees;
+  addEmployee: (employee: typeof employees[0]) => void;
+}
+
+export const useEmployeeStore = create<EmployeeStore>((set) => ({
+  employees: employees,
+  addEmployee: (employee) => set((state) => {
+    employees.push(employee); // Update the imported array for compatibility
+    return { employees: [...state.employees, employee] };
+  }),
+}));
 
 export const AddEmployeeDialog = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const addEmployee = useEmployeeStore((state) => state.addEmployee);
   const [formData, setFormData] = useState({
     id: "",
     name: "",
@@ -56,8 +72,8 @@ export const AddEmployeeDialog = () => {
       termDate: formData.termDate || "-"
     };
 
-    // Add new employee to the list
-    employees.push(newEmployee);
+    // Add new employee using the store
+    addEmployee(newEmployee);
     
     console.log("New employee added:", newEmployee);
     

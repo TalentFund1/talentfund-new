@@ -9,12 +9,12 @@ import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
-import { EMPLOYEE_IMAGES, employees } from "./employee/EmployeeData";
+import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { getEmployeesAddedLastYear } from "./employee/EmployeeUtils";
+import { useEmployeeStore } from "./employee/AddEmployeeDialog";
 
 // Export utility functions
 export const getSkillProfileId = (role: string) => {
-  // First check if the input is already a valid profile ID
   const validProfileIds = ["123", "124", "125", "126"];
   if (validProfileIds.includes(role)) {
     return role;
@@ -67,6 +67,7 @@ export const EmployeeTable = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
+  const employees = useEmployeeStore((state) => state.employees);
 
   // Calculate benchmark percentages for each employee
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
