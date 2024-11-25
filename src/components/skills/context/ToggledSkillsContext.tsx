@@ -15,7 +15,7 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
   console.log('Getting initial skills for role:', roleId);
   
   if (!roleId) {
-    console.log('No role ID provided');
+    console.log('No role ID provided for initial skills');
     return new Set();
   }
   
@@ -41,7 +41,8 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
   return skills;
 };
 
-const loadSavedSkills = () => {
+const loadSavedSkills = (currentRoleId: string) => {
+  console.log('Loading saved skills for role:', currentRoleId);
   try {
     const savedSkills = localStorage.getItem('toggledSkillsByRole');
     if (savedSkills) {
@@ -56,7 +57,10 @@ const loadSavedSkills = () => {
         }
       });
       
-      console.log('Loaded saved skills:', result);
+      console.log('Loaded saved skills:', {
+        currentRoleId,
+        savedSkills: result[currentRoleId] ? Array.from(result[currentRoleId]) : []
+      });
       return result;
     }
   } catch (error) {
@@ -67,35 +71,38 @@ const loadSavedSkills = () => {
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { selectedRole } = useRoleStore();
+  const { id: urlRoleId } = useParams<{ id: string }>();
   const { initializeStates } = useCompetencyStore();
+  const effectiveRoleId = selectedRole || urlRoleId || "123";
+  
+  console.log('ToggledSkillsProvider - Effective Role ID:', effectiveRoleId);
+
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
-    const savedSkills = loadSavedSkills();
-    if (selectedRole && (!savedSkills[selectedRole] || savedSkills[selectedRole].size === 0)) {
-      savedSkills[selectedRole] = getInitialSkillsForRole(selectedRole);
+    const savedSkills = loadSavedSkills(effectiveRoleId);
+    if (!savedSkills[effectiveRoleId] || savedSkills[effectiveRoleId].size === 0) {
+      savedSkills[effectiveRoleId] = getInitialSkillsForRole(effectiveRoleId);
     }
     return savedSkills;
   });
 
   // Initialize competency states when role changes
   useEffect(() => {
-    if (selectedRole) {
-      console.log('Initializing competency states for selected role:', selectedRole);
-      initializeStates(selectedRole);
-      
-      // If no skills are toggled for this role, initialize them
-      setSkillsByRole(prev => {
-        if (!prev[selectedRole] || prev[selectedRole].size === 0) {
-          const newSkills = getInitialSkillsForRole(selectedRole);
-          console.log('Initializing missing skills for role:', selectedRole, Array.from(newSkills));
-          return {
-            ...prev,
-            [selectedRole]: newSkills
-          };
-        }
-        return prev;
-      });
-    }
-  }, [selectedRole, initializeStates]);
+    console.log('Role changed, initializing states for:', effectiveRoleId);
+    initializeStates(effectiveRoleId);
+    
+    // If no skills are toggled for this role, initialize them
+    setSkillsByRole(prev => {
+      if (!prev[effectiveRoleId] || prev[effectiveRoleId].size === 0) {
+        const newSkills = getInitialSkillsForRole(effectiveRoleId);
+        console.log('Initializing missing skills for role:', effectiveRoleId, Array.from(newSkills));
+        return {
+          ...prev,
+          [effectiveRoleId]: newSkills
+        };
+      }
+      return prev;
+    });
+  }, [effectiveRoleId, initializeStates]);
 
   // Save skills to localStorage whenever they change
   useEffect(() => {
@@ -108,22 +115,23 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       );
       
       localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
-      console.log('Saved toggled skills by role:', serializable);
+      console.log('Saved toggled skills by role:', {
+        effectiveRoleId,
+        skills: serializable[effectiveRoleId] || []
+      });
     } catch (error) {
       console.error('Error saving skills:', error);
     }
-  }, [skillsByRole]);
+  }, [skillsByRole, effectiveRoleId]);
 
-  const toggledSkills = skillsByRole[selectedRole] || new Set<string>();
+  const toggledSkills = skillsByRole[effectiveRoleId] || new Set<string>();
 
   const setToggledSkills = (newSkills: Set<string>) => {
-    console.log('Setting toggled skills for role:', selectedRole, Array.from(newSkills));
-    if (selectedRole) {
-      setSkillsByRole(prev => ({
-        ...prev,
-        [selectedRole]: newSkills
-      }));
-    }
+    console.log('Setting toggled skills for role:', effectiveRoleId, Array.from(newSkills));
+    setSkillsByRole(prev => ({
+      ...prev,
+      [effectiveRoleId]: newSkills
+    }));
   };
 
   return (
