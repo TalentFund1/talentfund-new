@@ -35,7 +35,7 @@ export const SkillsTable = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+        <div className="flex items-center gap-4 px-6 py-4 border-b border-border">
           <Select value={selectedFilter} onValueChange={setSelectedFilter}>
             <SelectTrigger className="w-[180px] bg-white">
               <SelectValue placeholder="Sort by Market Benchmark" />
