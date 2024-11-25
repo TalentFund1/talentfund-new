@@ -38,7 +38,6 @@ const Employees = () => {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [selectedManager, setSelectedManager] = useState<string[]>([]);
 
-  // Get filtered employees
   const preFilteredEmployees = filterEmployees(
     employees,
     selectedEmployees,
@@ -51,10 +50,7 @@ const Employees = () => {
     selectedManager
   );
 
-  // Apply skills filter
   const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
-
-  // Calculate stats based on filtered results
   const totalEmployees = filteredEmployees.length;
   const calculateFemalePercentage = () => {
     if (filteredEmployees.length === 0) return 0;
@@ -89,27 +85,6 @@ const Employees = () => {
             </div>
           </div>
 
-          <Card className="p-6">
-            <EmployeeFilters 
-              onDepartmentChange={setSelectedDepartment}
-              selectedDepartment={selectedDepartment}
-              onJobTitleChange={setSelectedJobTitle}
-              selectedJobTitle={selectedJobTitle}
-              onLevelChange={setSelectedLevel}
-              selectedLevel={selectedLevel}
-              onOfficeChange={setSelectedOffice}
-              selectedOffice={selectedOffice}
-              onEmploymentTypeChange={setSelectedEmploymentType}
-              selectedEmploymentType={selectedEmploymentType}
-              onSkillsChange={setSelectedSkills}
-              selectedSkills={selectedSkills}
-              onEmployeeSearch={setSelectedEmployees}
-              selectedEmployees={selectedEmployees}
-              onManagerChange={setSelectedManager}
-              selectedManager={selectedManager}
-            />
-          </Card>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               title="Total Number of Employees"
@@ -132,6 +107,27 @@ const Employees = () => {
               icon={<Clock className="h-6 w-6 text-primary-icon" />}
             />
           </div>
+
+          <Card className="p-6">
+            <EmployeeFilters 
+              onDepartmentChange={setSelectedDepartment}
+              selectedDepartment={selectedDepartment}
+              onJobTitleChange={setSelectedJobTitle}
+              selectedJobTitle={selectedJobTitle}
+              onLevelChange={setSelectedLevel}
+              selectedLevel={selectedLevel}
+              onOfficeChange={setSelectedOffice}
+              selectedOffice={selectedOffice}
+              onEmploymentTypeChange={setSelectedEmploymentType}
+              selectedEmploymentType={selectedEmploymentType}
+              onSkillsChange={setSelectedSkills}
+              selectedSkills={selectedSkills}
+              onEmployeeSearch={setSelectedEmployees}
+              selectedEmployees={selectedEmployees}
+              onManagerChange={setSelectedManager}
+              selectedManager={selectedManager}
+            />
+          </Card>
 
           <Card className="p-6">
             <EmployeeTable 
