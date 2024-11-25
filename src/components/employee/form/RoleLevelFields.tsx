@@ -13,6 +13,22 @@ export const RoleLevelFields = ({ formData, onChange }: RoleLevelFieldsProps) =>
   const isManagerialRole = formData.role && jobTitles[formData.role].toLowerCase().includes('manager');
   const levels = isManagerialRole ? managerialLevels : professionalLevels;
 
+  const getLevelDescription = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'p1': return 'Entry';
+      case 'p2': return 'Developing';
+      case 'p3': return 'Career';
+      case 'p4': return 'Senior';
+      case 'p5': return 'Expert';
+      case 'p6': return 'Principal';
+      case 'm3': return 'Manager';
+      case 'm4': return 'Senior Manager';
+      case 'm5': return 'Director';
+      case 'm6': return 'Senior Director';
+      default: return '';
+    }
+  };
+
   return (
     <>
       <div className="space-y-2">
@@ -46,7 +62,10 @@ export const RoleLevelFields = ({ formData, onChange }: RoleLevelFieldsProps) =>
           <SelectContent>
             {Object.entries(levels).map(([id, title]) => (
               <SelectItem key={id} value={id}>
-                {title}
+                <span className="flex items-center justify-between w-full">
+                  <span>{title}</span>
+                  <span className="text-muted-foreground ml-2">- {getLevelDescription(id)}</span>
+                </span>
               </SelectItem>
             ))}
           </SelectContent>
