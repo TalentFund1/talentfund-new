@@ -17,6 +17,9 @@ interface SkillProfileTableProps {
   onSort: (field: any) => void;
   selectedCategory: string;
   roleId: string;
+  selectedFunction: string;
+  selectedSkills: string[];
+  selectedJobTitle: string;
 }
 
 export const SkillProfileTable = ({
@@ -27,7 +30,10 @@ export const SkillProfileTable = ({
   sortDirection,
   onSort,
   selectedCategory,
-  roleId
+  roleId,
+  selectedFunction,
+  selectedSkills,
+  selectedJobTitle
 }: SkillProfileTableProps) => {
   return (
     <Table>
