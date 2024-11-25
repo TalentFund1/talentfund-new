@@ -14,17 +14,17 @@ export const StaticSkillLevelCell = ({
 }: StaticSkillLevelCellProps) => {
   const { currentStates, initializeState } = useSkillsMatrixStore();
 
-  // Initialize the skill state with the employee's actual level
+  // Initialize the skill state with unspecified level and unknown requirement
   useEffect(() => {
     if (!currentStates[skillTitle]) {
-      console.log('Initializing skill state:', { skillTitle, initialLevel });
-      initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'required');
+      console.log('Initializing skill state:', { skillTitle, level: 'unspecified', requirement: 'unknown' });
+      initializeState(skillTitle, 'unspecified', 'unknown');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
-    level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'required'
+    level: 'unspecified',
+    requirement: 'unknown'
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {
@@ -40,7 +40,7 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: string = 'required') => {
+  const getRequirementIcon = (requirement: string = 'unknown') => {
     switch (requirement?.toLowerCase()) {
       case 'required':
         return <Check className="w-3.5 h-3.5" />;
@@ -66,7 +66,7 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'required') => {
+  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'unknown') => {
     if (requirement?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
@@ -78,7 +78,7 @@ export const StaticSkillLevelCell = ({
     initialLevel,
     currentState,
     level: currentState?.level || 'unspecified',
-    requirement: currentState?.requirement || 'required'
+    requirement: currentState?.requirement || 'unknown'
   });
 
   return (
@@ -102,7 +102,7 @@ export const StaticSkillLevelCell = ({
             {getRequirementIcon(currentState?.requirement)}
             {currentState?.requirement === 'required' ? 'Skill Goal' : 
              currentState?.requirement === 'not-interested' ? 'Not Interested' : 
-             currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+             currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
           </span>
         </div>
       </div>
