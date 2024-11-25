@@ -14,7 +14,7 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 
 // Export utility functions
 export const getSkillProfileId = (role: string) => {
-  const validProfileIds = ["123", "124", "125", "126", "130"];
+  const validProfileIds = ["123", "124", "125", "126"];
   if (validProfileIds.includes(role)) {
     return role;
   }
