@@ -36,10 +36,10 @@ export const BenchmarkMatrixFilters = ({
       <div className="flex gap-4 mb-4">
         <Select value={selectedLevel} onValueChange={setSelectedLevel}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Type" />
+            <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Skill Type</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
             <SelectItem value="advanced">Advanced</SelectItem>
             <SelectItem value="intermediate">Intermediate</SelectItem>
             <SelectItem value="beginner">Beginner</SelectItem>
