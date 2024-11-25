@@ -5,11 +5,12 @@ import { Users, UserPlus, Equal, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { EmployeeFilters } from "@/components/EmployeeFilters";
-import { EmployeeTable, employees, getEmployeesAddedLastYear, getBaseRole } from "@/components/EmployeeTable";
+import { EmployeeTable, employees } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
+import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -91,7 +92,7 @@ const Employees = () => {
             <h1 className="text-3xl font-bold text-foreground">Employees</h1>
             <div className="space-x-2">
               <Button variant="outline">Export Data</Button>
-              <Button>Add Employee</Button>
+              <AddEmployeeDialog />
             </div>
           </div>
 
