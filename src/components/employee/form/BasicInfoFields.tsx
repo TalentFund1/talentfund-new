@@ -29,6 +29,16 @@ export const BasicInfoFields = ({ formData, onChange }: BasicInfoFieldsProps) =>
           placeholder="Full Name"
         />
       </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="location">Location</Label>
+        <Input
+          id="location"
+          value={formData.location}
+          onChange={(e) => onChange({ location: e.target.value })}
+          placeholder="e.g., Toronto, ON"
+        />
+      </div>
     </>
   );
 };
