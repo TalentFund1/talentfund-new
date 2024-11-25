@@ -28,8 +28,8 @@ export const useRoleStore = create<RoleStore>((set) => ({
 }));
 
 const roles = {
+  "124": "Backend Engineer",
   "123": "AI Engineer",
-  "124": "Backend Engineer", 
   "125": "Frontend Engineer",
   "126": "Engineering Manager"
 };
