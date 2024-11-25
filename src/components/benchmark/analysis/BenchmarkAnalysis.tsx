@@ -15,7 +15,16 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { toggledSkills } = useToggledSkills();
+  
+  console.log('BenchmarkAnalysis - Analyzing for:', {
+    employeeId,
+    selectedRole,
+    roleLevel,
+    currentStates
+  });
+
   const employeeSkills = getEmployeeSkills(employeeId);
+  console.log('Employee skills loaded:', employeeSkills);
 
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   if (!currentRoleSkills) {
@@ -23,15 +32,20 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     return null;
   }
 
+  // Get all toggled skills for the current role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
 
-  // Get all toggled skills for the current role
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
   const totalToggledSkills = toggledRoleSkills.length;
+
+  console.log('Toggled role skills:', {
+    total: totalToggledSkills,
+    skills: toggledRoleSkills.map(s => s.title)
+  });
 
   // Skill Match calculation
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
@@ -70,6 +84,13 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
 
     return skillState.requirement === 'required' || 
            skillState.requirement === 'skill_goal';
+  });
+
+  console.log('Match calculations:', {
+    skillMatches: matchingSkills.length,
+    competencyMatches: competencyMatchingSkills.length,
+    skillGoalMatches: skillGoalMatchingSkills.length,
+    totalSkills: totalToggledSkills
   });
 
   return (
