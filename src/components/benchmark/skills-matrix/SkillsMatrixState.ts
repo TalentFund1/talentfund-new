@@ -6,11 +6,15 @@ interface SkillState {
   requirement: string;
 }
 
+interface EmployeeState {
+  currentStates: Record<string, SkillState>;
+  originalStates: Record<string, SkillState>;
+}
+
 interface SkillsMatrixState {
-  employeeStates: Record<string, {
-    originalStates: Record<string, SkillState>;
-    currentStates: Record<string, SkillState>;
-  }>;
+  employeeStates: Record<string, EmployeeState>;
+  currentStates: Record<string, SkillState>;
+  originalStates: Record<string, SkillState>;
   hasChanges: boolean;
   setSkillState: (employeeId: string, skillTitle: string, level: string, requirement: string) => void;
   saveChanges: (employeeId: string) => void;
@@ -23,6 +27,8 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set, get) => ({
       employeeStates: {},
+      currentStates: {},
+      originalStates: {},
       hasChanges: false,
       initializeState: (employeeId, skillTitle, initialLevel, initialRequirement) => {
         console.log('Initializing matrix skill state:', { employeeId, skillTitle, initialLevel, initialRequirement });
@@ -55,7 +61,10 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             };
 
             return {
-              employeeStates: newEmployeeStates
+              employeeStates: newEmployeeStates,
+              currentStates: newEmployeeStates[employeeId].currentStates,
+              originalStates: newEmployeeStates[employeeId].originalStates,
+              hasChanges: false
             };
           }
           return state;
@@ -86,6 +95,8 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
 
           return {
             employeeStates: newEmployeeStates,
+            currentStates: newEmployeeStates[employeeId].currentStates,
+            originalStates: newEmployeeStates[employeeId].originalStates,
             hasChanges
           };
         });
@@ -97,14 +108,18 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           const employeeState = state.employeeStates[employeeId];
           if (!employeeState) return state;
 
+          const newEmployeeStates = {
+            ...state.employeeStates,
+            [employeeId]: {
+              currentStates: { ...employeeState.currentStates },
+              originalStates: { ...employeeState.currentStates }
+            }
+          };
+
           return {
-            employeeStates: {
-              ...state.employeeStates,
-              [employeeId]: {
-                currentStates: { ...employeeState.currentStates },
-                originalStates: { ...employeeState.currentStates }
-              }
-            },
+            employeeStates: newEmployeeStates,
+            currentStates: newEmployeeStates[employeeId].currentStates,
+            originalStates: newEmployeeStates[employeeId].originalStates,
             hasChanges: false
           };
         });
@@ -116,14 +131,18 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           const employeeState = state.employeeStates[employeeId];
           if (!employeeState) return state;
 
+          const newEmployeeStates = {
+            ...state.employeeStates,
+            [employeeId]: {
+              currentStates: { ...employeeState.originalStates },
+              originalStates: { ...employeeState.originalStates }
+            }
+          };
+
           return {
-            employeeStates: {
-              ...state.employeeStates,
-              [employeeId]: {
-                currentStates: { ...employeeState.originalStates },
-                originalStates: { ...employeeState.originalStates }
-              }
-            },
+            employeeStates: newEmployeeStates,
+            currentStates: newEmployeeStates[employeeId].currentStates,
+            originalStates: newEmployeeStates[employeeId].originalStates,
             hasChanges: false
           };
         });
@@ -138,14 +157,19 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             return state;
           }
 
-          return {
-            employeeStates: {
-              ...state.employeeStates,
-              [targetEmployeeId]: {
-                currentStates: { ...sourceState.currentStates },
-                originalStates: { ...sourceState.originalStates }
-              }
+          const newEmployeeStates = {
+            ...state.employeeStates,
+            [targetEmployeeId]: {
+              currentStates: { ...sourceState.currentStates },
+              originalStates: { ...sourceState.originalStates }
             }
+          };
+
+          return {
+            employeeStates: newEmployeeStates,
+            currentStates: newEmployeeStates[targetEmployeeId].currentStates,
+            originalStates: newEmployeeStates[targetEmployeeId].originalStates,
+            hasChanges: false
           };
         });
       }
