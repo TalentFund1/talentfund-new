@@ -1,41 +1,35 @@
-import { initialSkills } from "./benchmark/skills-matrix/initialSkills";
-
 // Extract unique skills from initialSkills by combining all employee skills
-const matrixSkills = Object.values(initialSkills)
-  .flatMap(skills => skills.map(skill => skill.title));
-
-export const technicalSkills = [
-  ...new Set([
-    ...matrixSkills,
-    // Programming Languages
-    "JavaScript", "TypeScript", "Python", "Java", "C++", "Ruby", "Go", "Rust", "PHP", "Swift",
-    
-    // Web Development
-    "React", "Angular", "Vue.js", "Next.js", "Node.js", "Express.js", "Django", "Flask",
-    "HTML5", "CSS3", "Sass", "Tailwind CSS", "Bootstrap", "Material UI",
-    
-    // Database
-    "SQL", "PostgreSQL", "MongoDB", "Redis", "Elasticsearch", "Oracle", "MySQL",
-    
-    // Cloud & DevOps
-    "AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Jenkins", "GitLab CI",
-    "Terraform", "Ansible", "Linux", "Nginx", "Apache",
-    
-    // AI & ML
-    "TensorFlow", "PyTorch", "Scikit-learn", "Natural Language Processing",
-    "Computer Vision", "Machine Learning", "Deep Learning", "Data Science",
-    
-    // Mobile Development
-    "React Native", "Flutter", "iOS Development", "Android Development",
-    "Kotlin", "SwiftUI", "Mobile App Architecture",
-    
-    // Testing
-    "Jest", "Cypress", "Selenium", "JUnit", "TestNG", "Mocha", "Testing Methodologies",
-    
-    // Version Control
-    "Git", "GitHub", "Bitbucket", "GitLab", "Version Control Best Practices"
-  ])
+const matrixSkills = [
+  // Programming Languages
+  "JavaScript", "TypeScript", "Python", "Java", "C++", "Ruby", "Go", "Rust", "PHP", "Swift",
+  
+  // Web Development
+  "React", "Angular", "Vue.js", "Next.js", "Node.js", "Express.js", "Django", "Flask",
+  "HTML5", "CSS3", "Sass", "Tailwind CSS", "Bootstrap", "Material UI",
+  
+  // Database
+  "SQL", "PostgreSQL", "MongoDB", "Redis", "Elasticsearch", "Oracle", "MySQL",
+  
+  // Cloud & DevOps
+  "AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Jenkins", "GitLab CI",
+  "Terraform", "Ansible", "Linux", "Nginx", "Apache",
+  
+  // AI & ML
+  "TensorFlow", "PyTorch", "Scikit-learn", "Natural Language Processing",
+  "Computer Vision", "Machine Learning", "Deep Learning", "Data Science",
+  
+  // Mobile Development
+  "React Native", "Flutter", "iOS Development", "Android Development",
+  "Kotlin", "SwiftUI", "Mobile App Architecture",
+  
+  // Testing
+  "Jest", "Cypress", "Selenium", "JUnit", "TestNG", "Mocha", "Testing Methodologies",
+  
+  // Version Control
+  "Git", "GitHub", "Bitbucket", "GitLab", "Version Control Best Practices"
 ];
+
+export const technicalSkills = [...new Set(matrixSkills)];
 
 export const softSkills = [
   // Leadership & Management
@@ -106,7 +100,7 @@ export const initialSkills = {
     { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud Certification", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Google Cloud Professional Machine Learning Engineer", subcategory: "Cloud Certification", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true }
-  ],
+  ]
 };
 
 export const getEmployeeSkills = (employeeId: string) => {
