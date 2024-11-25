@@ -29,11 +29,11 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
   const commonSkills = currentRoleSkills.common?.map(s => s.title) || [];
   const certificationSkills = currentRoleSkills.certifications?.map(s => s.title) || [];
 
-  // Create a set of all skills that should be toggled by default
+  // Create a set of all skills - we want all skills to be toggled by default
   const skills = new Set([
-    ...specializedSkills.filter(s => currentRoleSkills.specialized.find(rs => rs.title === s)?.requirement === 'required'),
-    ...commonSkills.filter(s => currentRoleSkills.common.find(rs => rs.title === s)?.requirement === 'required'),
-    ...certificationSkills.filter(s => currentRoleSkills.certifications.find(rs => rs.title === s)?.requirement === 'required')
+    ...specializedSkills,
+    ...commonSkills,
+    ...certificationSkills
   ]);
 
   console.log('Initial skills for role:', roleId, Array.from(skills));
