@@ -31,60 +31,20 @@ export const useCompetencyStateReader = () => {
       return null;
     }
 
-    // Normalize level key to lowercase and ensure it exists
-    const normalizedLevelKey = levelKey.toLowerCase();
-    const levelState = roleStates[skillName][normalizedLevelKey];
-
-    // If no exact level match is found, try to find the closest matching level
+    const levelState = roleStates[skillName][levelKey.toLowerCase()];
     if (!levelState) {
-      console.log('No exact level state found for skill:', { skillName, levelKey });
-      
-      // Get all available levels for this skill
-      const availableLevels = Object.keys(roleStates[skillName]);
-      
-      if (availableLevels.length > 0) {
-        // Find the closest matching level based on the level number
-        const targetLevelNum = parseInt(normalizedLevelKey.replace(/[^0-9]/g, '')) || 4;
-        
-        const closestLevel = availableLevels.reduce((prev, curr) => {
-          const prevNum = parseInt(prev.replace(/[^0-9]/g, '')) || 4;
-          const currNum = parseInt(curr.replace(/[^0-9]/g, '')) || 4;
-          
-          return Math.abs(currNum - targetLevelNum) < Math.abs(prevNum - targetLevelNum) ? curr : prev;
-        });
-        
-        console.log('Using closest matching level:', { 
-          skillName, 
-          requestedLevel: levelKey,
-          closestLevel,
-          state: roleStates[skillName][closestLevel] 
-        });
-        
-        return {
-          level: roleStates[skillName][closestLevel].level || 'unspecified',
-          required: roleStates[skillName][closestLevel].required || 'preferred'
-        };
-      }
-      
-      return {
-        level: 'unspecified',
-        required: 'preferred'
-      };
+      console.log('No level state found for skill:', { skillName, levelKey });
+      return null;
     }
 
-    console.log('Found competency state:', { 
-      skillName, 
-      levelKey, 
-      state: levelState 
-    });
-    
+    console.log('Found competency state:', { skillName, levelKey, state: levelState });
     return {
       level: levelState.level || 'unspecified',
       required: levelState.required || 'preferred'
     };
   };
 
-  const getAllSkillStatesForLevel = (levelKey: string = 'p4'): Record<string, SkillCompetencyState> => {
+  const getAllSkillStatesForLevel = (levelKey: string = 'p3'): Record<string, SkillCompetencyState> => {
     console.log('Getting all skill states for level:', levelKey);
     const states: Record<string, SkillCompetencyState> = {};
     
@@ -97,9 +57,12 @@ export const useCompetencyStateReader = () => {
     
     if (roleStates) {
       Object.entries(roleStates).forEach(([skillName, skillLevels]) => {
-        const competencyState = getSkillCompetencyState(skillName, levelKey);
-        if (competencyState) {
-          states[skillName] = competencyState;
+        const levelState = skillLevels[levelKey.toLowerCase()];
+        if (levelState) {
+          states[skillName] = {
+            level: levelState.level || 'unspecified',
+            required: levelState.required || 'preferred'
+          };
         }
       });
     }
