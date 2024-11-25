@@ -1,6 +1,7 @@
 import { useCompetencyStore } from "./CompetencyState";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
+import { roleSkills } from "../data/roleSkills";
 
 interface SkillCompetencyState {
   level: string;
@@ -12,6 +13,25 @@ export const useCompetencyStateReader = () => {
   const { toggledSkills } = useToggledSkills();
   const { id: roleId } = useParams<{ id: string }>();
 
+  const getDefaultState = (skillName: string): SkillCompetencyState => {
+    if (!roleId) return { level: 'advanced', required: 'required' };
+
+    const roleData = roleSkills[roleId as keyof typeof roleSkills];
+    if (!roleData) return { level: 'advanced', required: 'required' };
+
+    const allSkills = [
+      ...roleData.specialized,
+      ...roleData.common,
+      ...roleData.certifications
+    ];
+
+    const skillData = allSkills.find(skill => skill.title === skillName);
+    return {
+      level: skillData?.level || 'advanced',
+      required: skillData?.requirement || 'required'
+    };
+  };
+
   const getSkillCompetencyState = (skillName: string, levelKey: string = 'p4'): SkillCompetencyState | null => {
     console.log('Reading competency state:', { skillName, levelKey, roleId });
     
@@ -22,16 +42,13 @@ export const useCompetencyStateReader = () => {
 
     if (!roleId) {
       console.error('No role ID provided');
-      return null;
+      return getDefaultState(skillName);
     }
 
     const roleStates = currentStates[roleId];
     if (!roleStates || !roleStates[skillName]) {
       console.log('No state found for skill:', skillName);
-      return {
-        level: 'advanced',
-        required: 'required'
-      };
+      return getDefaultState(skillName);
     }
 
     // Normalize level key to lowercase for consistency
@@ -40,18 +57,13 @@ export const useCompetencyStateReader = () => {
 
     if (!levelState) {
       console.log('No level state found for skill:', { skillName, levelKey: normalizedLevelKey });
-      
-      // Default to advanced/required if no state is found
-      return {
-        level: 'advanced',
-        required: 'required'
-      };
+      return getDefaultState(skillName);
     }
 
     console.log('Found competency state:', { skillName, levelKey: normalizedLevelKey, state: levelState });
     return {
-      level: levelState.level || 'advanced',
-      required: levelState.required || 'required'
+      level: levelState.level || getDefaultState(skillName).level,
+      required: levelState.required || getDefaultState(skillName).required
     };
   };
 
@@ -65,21 +77,21 @@ export const useCompetencyStateReader = () => {
     }
 
     const roleStates = currentStates[roleId];
+    const roleData = roleSkills[roleId as keyof typeof roleSkills];
     
-    if (roleStates) {
-      Object.entries(roleStates).forEach(([skillName, skillLevels]) => {
-        const levelState = skillLevels[levelKey.toLowerCase()];
-        if (levelState) {
-          states[skillName] = {
-            level: levelState.level || 'advanced',
-            required: levelState.required || 'required'
-          };
-        } else {
-          // Default state if none found
-          states[skillName] = {
-            level: 'advanced',
-            required: 'required'
-          };
+    if (roleData) {
+      const allSkills = [
+        ...roleData.specialized,
+        ...roleData.common,
+        ...roleData.certifications
+      ];
+
+      allSkills.forEach(skill => {
+        if (toggledSkills.has(skill.title)) {
+          const competencyState = getSkillCompetencyState(skill.title, levelKey);
+          if (competencyState) {
+            states[skill.title] = competencyState;
+          }
         }
       });
     }

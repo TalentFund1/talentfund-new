@@ -8,7 +8,7 @@ export const roleSkills = {
       { title: "TensorFlow", subcategory: "ML Frameworks", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     common: [
-      { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "15%", salary: "$173,344", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "25%", salary: "$173,344", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
       { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "12%", salary: "$156,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
