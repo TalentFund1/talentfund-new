@@ -1,31 +1,30 @@
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
 
-type SkillProgression = {
+interface SkillState {
   level: string;
-  requirement: string;
-};
+  required: string;
+}
 
 export const generateSkillProgression = (
   skillName: string,
   category: string,
   track: "Professional" | "Managerial",
   roleId: string
-): Record<string, SkillProgression> => {
+): Record<string, SkillState> => {
   console.log(`Generating progression for ${skillName} in ${category} for ${track} track`);
   
   const levels = track === "Professional" ? Object.keys(professionalLevels) : Object.keys(managerialLevels);
-  const progression: Record<string, SkillProgression> = {};
+  const progression: Record<string, SkillState> = {};
 
-  // Define progression patterns based on skill category and importance
   const getProgressionPattern = (category: string, skillName: string): string[] => {
     const specializedPatterns = {
-      "123": { // AI Engineer
+      "123": {
         "Machine Learning": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
         "Deep Learning": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"],
         "Natural Language Processing": ["unspecified", "unspecified", "unspecified", "unspecified", "intermediate", "unspecified"],
         "Computer Vision": ["unspecified", "unspecified", "unspecified", "unspecified", "advanced", "advanced"]
       },
-      "124": { // Backend Engineer
+      "124": {
         "Node.js": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
         "Database Design": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
         "API Development": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
@@ -58,7 +57,6 @@ export const generateSkillProgression = (
       return certificationPatterns[skillName];
     }
 
-    // Default progression if no specific pattern is found
     return ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"];
   };
 
@@ -72,7 +70,7 @@ export const generateSkillProgression = (
     
     progression[level.toLowerCase()] = {
       level: currentLevel,
-      requirement: isRequired ? "required" : "preferred"
+      required: isRequired ? "required" : "preferred"
     };
   });
 
