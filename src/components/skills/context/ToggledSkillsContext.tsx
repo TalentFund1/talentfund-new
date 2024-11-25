@@ -1,8 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { roleSkills } from '../data/roleSkills';
 import { useCompetencyStore } from '../competency/CompetencyState';
-import { useRoleStore } from '../../benchmark/RoleBenchmark';
+import { useRoleIdResolver } from '../../../hooks/useRoleIdResolver';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -68,21 +67,9 @@ const loadSavedSkills = (roleId: string) => {
 };
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
-  const { selectedRole } = useRoleStore();
-  const { id: urlRoleId } = useParams<{ id: string }>();
+  const effectiveRoleId = useRoleIdResolver();
   const { initializeStates } = useCompetencyStore();
   
-  // Get the effective role ID with clear precedence
-  const effectiveRoleId = (() => {
-    const id = urlRoleId || selectedRole || "123";
-    console.log('Determining effective role ID:', {
-      urlRoleId,
-      selectedRole,
-      effectiveId: id
-    });
-    return id;
-  })();
-
   const [skillsByRole, setSkillsByRole] = useState<Set<string>>(() => {
     const savedSkills = loadSavedSkills(effectiveRoleId);
     if (savedSkills.size === 0) {
