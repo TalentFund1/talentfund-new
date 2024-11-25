@@ -29,11 +29,17 @@ export const BenchmarkAnalysis = () => {
     return null;
   }
   
-  const toggledRoleSkills = [
+  // Get all skills for the role
+  const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
+  ];
+
+  // Filter skills based on toggled state
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+
+  console.log('Toggled Role Skills:', toggledRoleSkills.map(s => s.title));
 
   // Match skills based on role profile skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
