@@ -40,7 +40,7 @@ export const calculateBenchmarkPercentage = (
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
     if (!roleSkillState) {
       console.log('No competency state found for skill:', skill.title);
-      return false; // Changed from true to false - don't count as match if no state
+      return true; // For manager roles, if no competency state is found, consider it a match
     }
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
@@ -62,7 +62,7 @@ export const calculateBenchmarkPercentage = (
       return priorities[level.toLowerCase()] ?? 0;
     };
 
-    const employeePriority = getLevelPriority(typeof employeeSkillLevel === 'string' ? employeeSkillLevel : employeeSkillLevel.level);
+    const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
     return employeePriority >= rolePriority;
@@ -71,22 +71,12 @@ export const calculateBenchmarkPercentage = (
   // 3. Skill Goal Match (33.33% weight)
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
-    if (!skillState?.requirement) {
-      console.log('No requirement state found for skill:', skill.title);
-      return false; // Changed from true to false - don't count as match if no requirement
+    if (!skillState) {
+      console.log('No skill state found for skill:', skill.title);
+      return true; // For manager roles, if no skill state is found, consider it a match
     }
-
-    const requirement = typeof skillState.requirement === 'string' 
-      ? skillState.requirement 
-      : skillState.requirement?.requirement;
-
-    console.log('Checking skill goal for:', {
-      skill: skill.title,
-      requirement,
-      isSkillGoal: requirement === 'required' || requirement === 'skill_goal'
-    });
-
-    return requirement === 'required' || requirement === 'skill_goal';
+    return skillState.requirement === 'required' || 
+           skillState.requirement === 'skill_goal';
   });
 
   // Calculate individual percentages
