@@ -2,9 +2,10 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
-import { employees, getBaseRole } from './EmployeeTable';
+import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
+import { useEmployeeStore } from './employee/AddEmployeeDialog';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -44,6 +45,7 @@ export const EmployeeFilters = ({
   selectedManager = []
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
+  const employees = useEmployeeStore((state) => state.employees);
   const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
   const managers = Array.from(new Set(
     employees
@@ -79,7 +81,7 @@ export const EmployeeFilters = ({
           placeholder="Search skills..."
           items={allSkills}
           selectedItems={selectedSkills}
-          onItemsChange={onSkillsChange}
+          onItemsChange={(items) => onSkillsChange(items as string[])}
           singleSelect={false}
         />
       </div>
@@ -90,7 +92,7 @@ export const EmployeeFilters = ({
           placeholder="Manager"
           items={managers}
           selectedItems={selectedManager}
-          onItemsChange={onManagerChange}
+          onItemsChange={(items) => onManagerChange(items as string[])}
           singleSelect={true}
           className="w-[180px]"
         />
@@ -100,7 +102,7 @@ export const EmployeeFilters = ({
           placeholder="Job Title"
           items={jobTitles}
           selectedItems={selectedJobTitle}
-          onItemsChange={onJobTitleChange}
+          onItemsChange={(items) => onJobTitleChange(items as string[])}
           singleSelect={true}
           className="w-[180px]"
         />
@@ -116,7 +118,7 @@ export const EmployeeFilters = ({
           placeholder="Office"
           items={["Toronto", "New York", "San Francisco"]}
           selectedItems={selectedOffice}
-          onItemsChange={onOfficeChange}
+          onItemsChange={(items) => onOfficeChange(items as string[])}
           singleSelect={false}
           className="w-[180px]"
         />
@@ -126,7 +128,7 @@ export const EmployeeFilters = ({
           placeholder="Department"
           items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
           selectedItems={selectedDepartment}
-          onItemsChange={onDepartmentChange}
+          onItemsChange={(items) => onDepartmentChange(items as string[])}
           singleSelect={false}
           className="w-[180px]"
         />
@@ -136,7 +138,7 @@ export const EmployeeFilters = ({
           placeholder="Category"
           items={["Full-time", "Part-time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
-          onItemsChange={onEmploymentTypeChange}
+          onItemsChange={(items) => onEmploymentTypeChange(items as string[])}
           singleSelect={false}
           className="w-[180px]"
         />

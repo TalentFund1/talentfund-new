@@ -1,5 +1,5 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { employees } from '../EmployeeTable';
+import { useEmployeeStore } from './AddEmployeeDialog';
 
 interface EmployeeSearchProps {
   onEmployeeSearch: (employees: string[]) => void;
@@ -7,6 +7,8 @@ interface EmployeeSearchProps {
 }
 
 export const EmployeeSearch = ({ onEmployeeSearch, selectedEmployees }: EmployeeSearchProps) => {
+  const employees = useEmployeeStore((state) => state.employees);
+  
   // Get unique employee names
   const employeeNames = Array.from(new Set(employees.map(emp => emp.name)));
 
@@ -17,7 +19,7 @@ export const EmployeeSearch = ({ onEmployeeSearch, selectedEmployees }: Employee
         placeholder="Search Employee..."
         items={employeeNames}
         selectedItems={selectedEmployees}
-        onItemsChange={onEmployeeSearch}
+        onItemsChange={(items) => onEmployeeSearch(items as string[])}
         singleSelect={false}
       />
     </div>

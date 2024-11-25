@@ -40,8 +40,6 @@ export const getLevel = (role: string) => {
   return parts.length > 1 ? parts[1].trim() : "";
 };
 
-export { employees, getEmployeesAddedLastYear };
-
 interface EmployeeTableProps {
   selectedDepartment: string[];
   selectedJobTitle: string[];
