@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { EmployeeFormFields } from "./form/EmployeeFormFields";
+import { employees } from "../employee/EmployeeData";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
 export const AddEmployeeDialog = () => {
   const { toast } = useToast();
@@ -36,8 +38,28 @@ export const AddEmployeeDialog = () => {
       return;
     }
 
-    // Here you would typically make an API call to create the employee
-    console.log("Creating new employee:", formData);
+    // Create new employee object
+    const newEmployee = {
+      id: formData.id,
+      name: formData.name,
+      role: `${formData.role}: ${formData.level.toUpperCase()}`,
+      department: formData.department,
+      skillCount: formData.skills.split(',').length,
+      benchmark: 0,
+      lastUpdated: new Date().toLocaleDateString(),
+      location: formData.location,
+      sex: formData.sex as 'male' | 'female',
+      category: formData.category,
+      manager: formData.manager,
+      startDate: formData.startDate,
+      office: formData.office,
+      termDate: formData.termDate || "-"
+    };
+
+    // Add new employee to the list
+    employees.push(newEmployee);
+    
+    console.log("New employee added:", newEmployee);
     
     toast({
       title: "Success",
