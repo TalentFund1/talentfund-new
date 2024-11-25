@@ -67,38 +67,5 @@ export const roleSkills = {
       { title: "Stakeholder Management", subcategory: "Leadership", level: "advanced", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     certifications: []
-  },
-  "127": { // Senior AI Engineer
-    specialized: [
-      { title: "Deep Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "28%", salary: "$192,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Computer Vision", subcategory: "AI Applications", level: "advanced", growth: "25%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "AI Optimization", subcategory: "AI & ML", level: "advanced", growth: "22%", salary: "$195,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Reinforcement Learning", subcategory: "AI & ML", level: "advanced", growth: "20%", salary: "$192,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Edge AI", subcategory: "AI Applications", level: "advanced", growth: "25%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "AI Ethics", subcategory: "AI Applications", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Explainable AI", subcategory: "AI Applications", level: "intermediate", growth: "28%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "AI Security", subcategory: "AI Applications", level: "advanced", growth: "30%", salary: "$195,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Cloud AI Services", subcategory: "Cloud Computing", level: "advanced", growth: "25%", salary: "$192,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
-    ],
-    common: [
-      { title: "Programming Proficiency", subcategory: "Development", level: "advanced", growth: "15%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "25%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Data Structures & Algorithms", subcategory: "Development", level: "advanced", growth: "20%", salary: "$180,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Statistical Analysis", subcategory: "Data Science", level: "advanced", growth: "18%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$170,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "AI Model Deployment", subcategory: "DevOps", level: "advanced", growth: "22%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Big Data Handling", subcategory: "Data Engineering", level: "advanced", growth: "20%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "API Development", subcategory: "Development", level: "advanced", growth: "15%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Collaboration", subcategory: "Soft Skills", level: "advanced", growth: "12%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Version Control", subcategory: "Development", level: "advanced", growth: "10%", salary: "$160,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
-    ],
-    certifications: [
-      { title: "Certified Machine Learning Specialist", subcategory: "AI Certification", level: "advanced", growth: "25%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "TensorFlow Developer Certification", subcategory: "AI Certification", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Google Professional Data Engineer", subcategory: "Cloud Certification", level: "advanced", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Microsoft Certified: Azure AI Engineer Associate", subcategory: "Cloud Certification", level: "advanced", growth: "24%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
-      { title: "Certified Ethical AI Engineer", subcategory: "AI Certification", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
-    ]
   }
 };

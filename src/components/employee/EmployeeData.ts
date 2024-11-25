@@ -72,21 +72,5 @@ export const employees: Employee[] = [
     startDate: "2022-11-01",
     office: "Toronto",
     termDate: "-"
-  },
-  {
-    id: "127",
-    name: "Miriam Chen",
-    role: "AI Engineer: P5",
-    department: "Engineering",
-    skillCount: getEmployeeSkills("127").length,
-    benchmark: 0,
-    lastUpdated: "03/14/24",
-    location: "Vancouver, BC",
-    sex: "male",
-    category: "Full-time",
-    manager: "Sue Chen",
-    startDate: "2022-01-01",
-    office: "Vancouver",
-    termDate: "-"
   }
 ];
