@@ -38,7 +38,7 @@ export const SkillsMatrixRow = ({
   };
 
   const getBorderColorClass = (level: string) => {
-    switch (level.toLowerCase()) {
+    switch (level?.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent bg-primary-accent/10';
       case 'intermediate':
@@ -51,7 +51,7 @@ export const SkillsMatrixRow = ({
   };
 
   const getLowerBorderColorClass = (level: string, required: string) => {
-    if (required.toLowerCase() !== 'required') {
+    if (!required || required.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
@@ -62,12 +62,17 @@ export const SkillsMatrixRow = ({
     if (!competencyState) return null;
 
     return {
-      level: competencyState.level,
-      required: competencyState.required
+      level: competencyState.level || 'unspecified',
+      required: competencyState.required || 'preferred'
     };
   };
 
   const roleSkillState = getRoleSkillState();
+
+  const getDisplayText = (text: string | undefined) => {
+    if (!text) return 'Preferred';
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -100,7 +105,7 @@ export const SkillsMatrixRow = ({
                  roleSkillState.level === 'intermediate' ? <Shield className="w-3.5 h-3.5 text-primary-icon" /> :
                  roleSkillState.level === 'beginner' ? <Target className="w-3.5 h-3.5 text-[#008000]" /> :
                  <CircleDashed className="w-3.5 h-3.5 text-gray-400" />}
-                {roleSkillState.level.charAt(0).toUpperCase() + roleSkillState.level.slice(1)}
+                {getDisplayText(roleSkillState.level)}
               </span>
             </div>
             <div className={`
@@ -112,8 +117,7 @@ export const SkillsMatrixRow = ({
                 {roleSkillState.required === 'required' ? <Check className="w-3.5 h-3.5" /> :
                  roleSkillState.required === 'preferred' ? <CircleDashed className="w-3.5 h-3.5" /> :
                  <CircleDashed className="w-3.5 h-3.5" />}
-                {roleSkillState.required === 'required' ? 'Required' : 
-                 roleSkillState.required === 'preferred' ? 'Preferred' : 'Preferred'}
+                {getDisplayText(roleSkillState.required)}
               </span>
             </div>
           </div>
@@ -139,7 +143,7 @@ export const SkillsMatrixRow = ({
             skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
             'bg-red-100 text-red-800'
           }`}>
-            {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
+            {getDisplayText(skill.confidence)}
           </span>
         )}
       </TableCell>
