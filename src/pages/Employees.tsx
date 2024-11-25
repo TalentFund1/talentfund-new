@@ -54,23 +54,17 @@ const Employees = () => {
   // Apply skills filter
   const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
-  console.log('Filtered employees count:', filteredEmployees.length);
-
-  // Calculate total employees based on filtered results
+  // Calculate stats based on filtered results
   const totalEmployees = filteredEmployees.length;
-
-  // Calculate female percentage from the filtered employees
   const calculateFemalePercentage = () => {
     if (filteredEmployees.length === 0) return 0;
     const femaleCount = filteredEmployees.filter(emp => emp.sex === 'female').length;
     return Math.round((femaleCount / filteredEmployees.length) * 100);
   };
-
-  // Calculate average tenure for filtered employees
   const averageTenure = calculateAverageTenure(filteredEmployees);
+  const addedLastYear = calculateAddedLastYear();
 
-  // Calculate employees added in the last year based on filtered results
-  const calculateAddedLastYear = () => {
+  function calculateAddedLastYear() {
     const today = new Date();
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(today.getFullYear() - 1);
@@ -80,7 +74,7 @@ const Employees = () => {
       const startDate = new Date(employee.startDate);
       return startDate >= oneYearAgo;
     }).length;
-  };
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -124,7 +118,7 @@ const Employees = () => {
             />
             <StatCard
               title="Added in Past 1 year"
-              value={calculateAddedLastYear()}
+              value={addedLastYear}
               icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
