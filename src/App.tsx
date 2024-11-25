@@ -12,28 +12,40 @@ import SkillProfileDetail from "./pages/SkillProfileDetail";
 import MarketData from "./pages/MarketData";
 import TalentMarketplace from "./pages/TalentMarketplace";
 
-const queryClient = new QueryClient();
+const App = () => {
+  // Move QueryClient instantiation inside the component
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        retry: 1,
+      },
+    },
+  });
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter>
-        <ToggledSkillsProvider>
-          <Toaster />
-          <Sonner />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/skills" element={<SkillsProfile />} />
-            <Route path="/skills/:id" element={<SkillProfileDetail />} />
-            <Route path="/employees" element={<Employees />} />
-            <Route path="/employee/:id" element={<EmployeeProfile />} />
-            <Route path="/market" element={<MarketData />} />
-            <Route path="/marketplace" element={<TalentMarketplace />} />
-          </Routes>
-        </ToggledSkillsProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  console.log('App component rendering with new QueryClient instance');
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <BrowserRouter>
+          <ToggledSkillsProvider>
+            <Toaster />
+            <Sonner />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/skills" element={<SkillsProfile />} />
+              <Route path="/skills/:id" element={<SkillProfileDetail />} />
+              <Route path="/employees" element={<Employees />} />
+              <Route path="/employee/:id" element={<EmployeeProfile />} />
+              <Route path="/market" element={<MarketData />} />
+              <Route path="/marketplace" element={<TalentMarketplace />} />
+            </Routes>
+          </ToggledSkillsProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
