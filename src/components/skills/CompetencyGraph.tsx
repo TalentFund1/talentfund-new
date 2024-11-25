@@ -16,7 +16,7 @@ import { professionalLevels, managerialLevels } from "../benchmark/data/levelDat
 import { CompetencyGraphHeader } from "./competency/CompetencyGraphHeader";
 import { CompetencyGraphTable } from "./competency/CompetencyGraphTable";
 import { generateSkillProgression } from "./competency/autoFillUtils";
-import { Magic } from "lucide-react";
+import { Brain } from "lucide-react";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -159,7 +159,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
             className="bg-primary hover:bg-primary/90 flex items-center gap-2"
             disabled={isGenerating}
           >
-            <Magic className="h-4 w-4" />
+            <Brain className="h-4 w-4" />
             {isGenerating ? "Generating..." : "Generate with AI"}
           </Button>
         </div>
