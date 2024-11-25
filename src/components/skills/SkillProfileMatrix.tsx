@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -9,29 +9,10 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
+import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
-
-const getCategoryForSkill = (skill: any, roleId: string) => {
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-  
-  // Critical skills are specialized skills with high growth
-  if (currentRoleSkills.specialized.some(s => s.title === skill.title) && 
-      parseFloat(skill.growth) >= 25) {
-    return 'critical';
-  }
-  
-  // Technical skills are specialized or common skills related to technical aspects
-  if (currentRoleSkills.specialized.some(s => s.title === skill.title) ||
-      (currentRoleSkills.common.some(s => s.title === skill.title) && 
-       !skill.title.toLowerCase().includes('soft'))) {
-    return 'technical';
-  }
-  
-  // Necessary skills are everything else
-  return 'necessary';
-};
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
@@ -157,13 +138,8 @@ export const SkillProfileMatrix = () => {
     return sortedSkills;
   })();
 
-  // Calculate skill counts for each category
-  const skillCounts = {
-    all: filteredSkills.length,
-    critical: filteredSkills.filter(skill => getCategoryForSkill(skill, id || "123") === 'critical').length,
-    technical: filteredSkills.filter(skill => getCategoryForSkill(skill, id || "123") === 'technical').length,
-    necessary: filteredSkills.filter(skill => getCategoryForSkill(skill, id || "123") === 'necessary').length
-  };
+  // Calculate skill counts using the utility function
+  const skillCounts = calculateSkillCounts(id || "123");
 
   return (
     <div className="space-y-6">
@@ -235,5 +211,3 @@ export const SkillProfileMatrix = () => {
     </div>
   );
 };
-
-export default SkillProfileMatrix;
