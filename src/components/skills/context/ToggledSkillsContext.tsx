@@ -2,6 +2,8 @@ import { createContext, useContext, useState, ReactNode, useEffect } from 'react
 import { useParams, useLocation } from 'react-router-dom';
 import { roleSkills } from '../data/roleSkills';
 import { useCompetencyStore } from '../competency/CompetencyState';
+import { getSkillProfileId, getBaseRole } from '../../EmployeeTable';
+import { useEmployeeStore } from '../../employee/store/employeeStore';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -52,8 +54,26 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const { initializeStates } = useCompetencyStore();
+  const employees = useEmployeeStore(state => state.employees);
   
-  const currentRoleId = id || getRoleIdFromPath(location.pathname) || '';
+  // Get the actual role ID based on employee's role or direct role ID
+  const getCurrentRoleId = () => {
+    const pathId = id || getRoleIdFromPath(location.pathname);
+    if (!pathId) return '';
+
+    // If viewing an employee, get their role ID
+    if (location.pathname.includes('/employee/')) {
+      const employee = employees.find(emp => emp.id === pathId);
+      if (employee) {
+        return getSkillProfileId(employee.role);
+      }
+    }
+    
+    // If viewing a skill profile directly, use that ID
+    return pathId;
+  };
+  
+  const currentRoleId = getCurrentRoleId();
   
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
     console.log('Initializing skills by role, current role ID:', currentRoleId);
