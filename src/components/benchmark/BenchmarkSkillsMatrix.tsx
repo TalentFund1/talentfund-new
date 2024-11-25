@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
@@ -30,19 +30,23 @@ export const BenchmarkSkillsMatrix = () => {
 
   console.log('Current Role Level:', roleLevel);
   console.log('Toggled Skills:', Array.from(toggledSkills));
-  console.log('Selected Role:', selectedRole);
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all skills for the current role
-  const allRoleSkills = [
-    ...(currentRoleSkills.specialized || []),
-    ...(currentRoleSkills.common || []),
-    ...(currentRoleSkills.certifications || [])
-  ];
+  useEffect(() => {
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
 
-  console.log('All Role Skills:', allRoleSkills.map(s => s.title));
+    const toggledRoleSkills = allRoleSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .map(skill => skill.title);
+    
+    setSelectedSearchSkills(toggledRoleSkills);
+  }, [selectedRole, toggledSkills, currentRoleSkills]);
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -51,17 +55,11 @@ export const BenchmarkSkillsMatrix = () => {
       'beginner': 2,
       'unspecified': 3
     };
-    return priorities[level?.toLowerCase()] ?? 3;
+    return priorities[level.toLowerCase()] ?? 3;
   };
 
-  // Filter based on the role's skills instead of employee skills
-  const filteredSkills = allRoleSkills
+  const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
-      if (!skill?.title) {
-        console.log('Skipping undefined skill:', skill);
-        return false;
-      }
-
       // First check if skill is toggled
       if (!toggledSkills.has(skill.title)) return false;
 
@@ -119,7 +117,7 @@ export const BenchmarkSkillsMatrix = () => {
       if (levelDiff !== 0) return levelDiff;
 
       // If levels are equal, sort alphabetically
-      return (a.title || '').localeCompare(b.title || '');
+      return a.title.localeCompare(b.title);
     });
 
   console.log('Filtered Skills:', filteredSkills);
