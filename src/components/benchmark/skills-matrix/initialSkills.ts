@@ -84,22 +84,6 @@ export const initialSkills = {
     { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud Certification", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
     { title: "Google Cloud Professional Machine Learning Engineer", subcategory: "Cloud Certification", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true }
-  ],
-  "128": [
-    // Specialized Skills
-    { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", confidence: "high", requirement: "required", isCompanySkill: true },
-    { title: "Deep Learning", subcategory: "AI & ML", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
-    { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
-    { title: "Computer Vision", subcategory: "AI Applications", level: "advanced", growth: "22%", confidence: "high", requirement: "required", isCompanySkill: true },
-    { title: "TensorFlow", subcategory: "ML Frameworks", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
-    // Common Skills
-    { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
-    { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", confidence: "high", requirement: "required", isCompanySkill: true },
-    { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "12%", confidence: "medium", requirement: "required", isCompanySkill: true },
-    // Certifications
-    { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud Certification", level: "advanced", growth: "25%", confidence: "high", requirement: "required", isCompanySkill: true },
-    { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "required", isCompanySkill: true },
-    { title: "Google Cloud Professional Machine Learning Engineer", subcategory: "Cloud Certification", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true }
   ]
 };
 

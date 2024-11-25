@@ -26,22 +26,6 @@ export const employees: Employee[] = [
     termDate: "-"
   },
   {
-    id: "128",
-    name: "Maria Chen",
-    role: "AI Engineer: P4",
-    department: "Engineering",
-    skillCount: getEmployeeSkills("123").length,
-    benchmark: 0,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
-    sex: "female",
-    category: "Full-time",
-    manager: "Sus Manu",
-    startDate: "2023-05-15",
-    office: "Toronto",
-    termDate: "-"
-  },
-  {
     id: "124",
     name: "Jennie Richards",
     role: "Backend Engineer: P4",
