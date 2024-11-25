@@ -28,7 +28,7 @@ export const SkillsMatrixFilters = ({
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="all">All Skill Types</SelectItem>
               <SelectItem value="specialized">Specialized Skills</SelectItem>
               <SelectItem value="common">Common Skills</SelectItem>
               <SelectItem value="certification">Certifications</SelectItem>
