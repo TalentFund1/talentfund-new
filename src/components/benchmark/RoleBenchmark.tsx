@@ -42,6 +42,7 @@ export const RoleBenchmark = () => {
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
+  const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">("Professional");
 
   // Find the employee and get their role
   const employee = employees.find(emp => emp.id === id);
@@ -73,13 +74,15 @@ export const RoleBenchmark = () => {
   }, [selectedRole, currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
   useEffect(() => {
-    const currentTrack = getTrackForRole(selectedRole);
-    if (currentTrack === "Professional" && roleLevel.toLowerCase().startsWith("m")) {
+    const track = getTrackForRole(selectedRole);
+    setCurrentTrack(track);
+    
+    if (track === "Professional" && roleLevel.toLowerCase().startsWith("m")) {
       setRoleLevel("p4");
-    } else if (currentTrack === "Managerial" && roleLevel.toLowerCase().startsWith("p")) {
+    } else if (track === "Managerial" && roleLevel.toLowerCase().startsWith("p")) {
       setRoleLevel("m3");
     }
-  }, [currentTrack, roleLevel, setRoleLevel]);
+  }, [selectedRole, roleLevel, setRoleLevel, getTrackForRole]);
 
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
@@ -87,10 +90,11 @@ export const RoleBenchmark = () => {
 
   const handleTrackChange = (value: string) => {
     setTrackForRole(selectedRole, value as "Professional" | "Managerial");
+    setCurrentTrack(value as "Professional" | "Managerial");
   };
 
   if (!currentRoleSkills) {
-    console.error('No role skills found for role:', selectedRole);
+    console.log('No role skills found for role:', selectedRole);
     return null;
   }
 
@@ -111,6 +115,7 @@ export const RoleBenchmark = () => {
         <RoleSelection 
           selectedRole={selectedRole}
           selectedLevel={roleLevel}
+          currentTrack={currentTrack}
           onRoleChange={setSelectedRole}
           onLevelChange={setRoleLevel}
           onTrackChange={handleTrackChange}
