@@ -94,6 +94,9 @@ export const processEmployeeData = (formData: FormData): Employee => {
   const categorizedSkills = categorizeSkills(skillsList, roleId);
   console.log('Categorized skills:', categorizedSkills);
 
+  const lastUpdated = new Date().toLocaleDateString();
+  console.log('Setting last updated date:', lastUpdated);
+
   // Create new employee with proper ID handling
   const newEmployee: Employee = {
     id: formData.id,
@@ -102,7 +105,7 @@ export const processEmployeeData = (formData: FormData): Employee => {
     department: formData.department,
     skillCount: skillsList.length || roleSkills.length,
     benchmark: 0, // Initial benchmark, will be calculated after creation
-    lastUpdated: new Date().toLocaleDateString(),
+    lastUpdated: lastUpdated,
     location: formData.location,
     sex: formData.sex as 'male' | 'female',
     category: formData.category,

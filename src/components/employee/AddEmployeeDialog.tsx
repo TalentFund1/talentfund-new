@@ -9,6 +9,7 @@ import { calculateEmployeeBenchmarks } from "./EmployeeBenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
 export const AddEmployeeDialog = () => {
   const { toast } = useToast();
@@ -56,6 +57,10 @@ export const AddEmployeeDialog = () => {
       // Process employee data
       const newEmployee = processEmployeeData(formData);
       console.log('Processed employee data:', newEmployee);
+
+      // Initialize skills for the new employee
+      const roleSkills = getEmployeeSkills(newEmployee.id);
+      console.log('Initialized role skills:', roleSkills);
       
       // Add employee to store
       addEmployee(newEmployee);
