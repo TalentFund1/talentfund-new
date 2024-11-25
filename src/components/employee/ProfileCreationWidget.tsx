@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { createNewProfile, validateProfileData } from "./ProfileDuplicator";
 import { useToast } from "@/hooks/use-toast";
-import { employees } from "./EmployeeData";
-import { jobTitles } from "../skills/competency/skillProfileData";
 import { BasicInfoFields } from "./form/BasicInfoFields";
 import { RoleLevelFields } from "./form/RoleLevelFields";
 import { OrganizationFields } from "./form/OrganizationFields";
@@ -30,11 +28,15 @@ export const ProfileCreationWidget = () => {
     skills: ""
   });
 
+  const handleFormChange = (updates: Partial<FormData>) => {
+    setFormData(prev => ({ ...prev, ...updates }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Submitting new profile:', formData);
 
-    const fullRole = `${jobTitles[formData.role]}: ${formData.level.toUpperCase()}`;
+    const fullRole = `${formData.role}: ${formData.level.toUpperCase()}`;
     const profileDataWithFullRole = {
       ...formData,
       role: fullRole
@@ -52,8 +54,6 @@ export const ProfileCreationWidget = () => {
     try {
       const newProfile = createNewProfile(profileDataWithFullRole);
       console.log('Created new profile:', newProfile);
-      
-      employees.push(newProfile);
       
       toast({
         title: "Success",
@@ -85,18 +85,23 @@ export const ProfileCreationWidget = () => {
     }
   };
 
-  const handleFormChange = (updates: Partial<FormData>) => {
-    setFormData(prev => ({ ...prev, ...updates }));
-  };
-
   return (
     <Card className="p-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
+          {/* Basic Info - ID, Name, Location */}
           <BasicInfoFields formData={formData} onChange={handleFormChange} />
-          <RoleLevelFields formData={formData} onChange={handleFormChange} />
+          
+          {/* Office */}
           <OrganizationFields formData={formData} onChange={handleFormChange} />
+          
+          {/* Role and Level */}
+          <RoleLevelFields formData={formData} onChange={handleFormChange} />
+          
+          {/* Employment Details - Department, Category, Dates, Sex, Manager */}
           <EmploymentFields formData={formData} onChange={handleFormChange} />
+          
+          {/* Skills */}
           <SkillsFields formData={formData} onChange={handleFormChange} />
         </div>
 
