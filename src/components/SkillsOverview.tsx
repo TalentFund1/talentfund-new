@@ -2,85 +2,58 @@ import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-
-const data = [
-  {
-    category: "Software Development",
-    subcategory: "Programming Languages",
-    skill: "Python",
-    proficiency: 85,
-    color: "#FFD699"
-  },
-  {
-    category: "Software Development",
-    subcategory: "Web Development",
-    skill: "React",
-    proficiency: 78,
-    color: "#FFD699"
-  },
-  {
-    category: "AI & Machine Learning",
-    subcategory: "Deep Learning",
-    skill: "Neural Networks",
-    proficiency: 92,
-    color: "#FF9999"
-  },
-  {
-    category: "AI & Machine Learning",
-    subcategory: "NLP",
-    skill: "Text Processing",
-    proficiency: 75,
-    color: "#FF9999"
-  },
-  {
-    category: "Design & UX",
-    subcategory: "UI Design",
-    skill: "Figma",
-    proficiency: 88,
-    color: "#99D6B9"
-  },
-  {
-    category: "Design & UX",
-    subcategory: "User Research",
-    skill: "Usability Testing",
-    proficiency: 82,
-    color: "#99D6B9"
-  }
-];
+import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
+import { countSkillUsage, SkillUsage } from "./skills/utils/skillDistributionUtils";
 
 export const SkillsOverview = () => {
   const [selectedView, setSelectedView] = useState<"category" | "subcategory" | "skill">("category");
+  const { toggledSkills } = useToggledSkills();
 
   const getChartData = () => {
+    const skillsData = countSkillUsage(toggledSkills);
+    
     if (selectedView === "category") {
-      const categoryData = data.reduce((acc, curr) => {
+      const categoryData = skillsData.reduce((acc, curr) => {
         const existingCategory = acc.find(item => item.name === curr.category);
         if (existingCategory) {
-          existingCategory.proficiency = (existingCategory.proficiency + curr.proficiency) / 2;
+          existingCategory.proficiency = Math.round((existingCategory.proficiency + curr.proficiency) / 2);
+          existingCategory.count += 1;
         } else {
-          acc.push({ name: curr.category, proficiency: curr.proficiency });
+          acc.push({ 
+            name: curr.category, 
+            proficiency: curr.proficiency,
+            count: 1 
+          });
         }
         return acc;
-      }, [] as { name: string; proficiency: number }[]);
-      return categoryData;
+      }, [] as { name: string; proficiency: number; count: number }[]);
+      
+      return categoryData.sort((a, b) => b.count - a.count);
     }
 
     if (selectedView === "subcategory") {
-      const subcategoryData = data.reduce((acc, curr) => {
+      const subcategoryData = skillsData.reduce((acc, curr) => {
         const existingSubcategory = acc.find(item => item.name === curr.subcategory);
         if (existingSubcategory) {
-          existingSubcategory.proficiency = (existingSubcategory.proficiency + curr.proficiency) / 2;
+          existingSubcategory.proficiency = Math.round((existingSubcategory.proficiency + curr.proficiency) / 2);
+          existingSubcategory.count += 1;
         } else {
-          acc.push({ name: curr.subcategory, proficiency: curr.proficiency });
+          acc.push({ 
+            name: curr.subcategory, 
+            proficiency: curr.proficiency,
+            count: 1 
+          });
         }
         return acc;
-      }, [] as { name: string; proficiency: number }[]);
-      return subcategoryData;
+      }, [] as { name: string; proficiency: number; count: number }[]);
+      
+      return subcategoryData.sort((a, b) => b.count - a.count);
     }
 
-    return data.map(item => ({
-      name: item.skill,
-      proficiency: item.proficiency
+    return skillsData.map(item => ({
+      name: item.name,
+      proficiency: item.proficiency,
+      count: item.usageCount
     }));
   };
 
@@ -103,7 +76,14 @@ export const SkillsOverview = () => {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getChartData()} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
-            <XAxis dataKey="name" />
+            <XAxis 
+              dataKey="name" 
+              angle={-45}
+              textAnchor="end"
+              height={80}
+              interval={0}
+              tick={{ fontSize: 12 }}
+            />
             <YAxis />
             <Tooltip
               content={({ active, payload }) => {
@@ -113,6 +93,7 @@ export const SkillsOverview = () => {
                     <div className="bg-white p-2 border border-border rounded shadow-sm">
                       <p className="font-medium">{data.name}</p>
                       <p className="text-sm font-medium">Proficiency: {data.proficiency}%</p>
+                      <p className="text-sm font-medium">Usage Count: {data.count}</p>
                     </div>
                   );
                 }
