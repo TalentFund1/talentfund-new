@@ -16,8 +16,11 @@ interface EmployeeStore {
 export const useEmployeeStore = create<EmployeeStore>((set) => ({
   employees: employees,
   addEmployee: (employee) => set((state) => {
+    console.log('Adding new employee to store:', employee);
     employees.push(employee); // Update the imported array for compatibility
-    return { employees: [...state.employees, employee] };
+    const newEmployees = [...state.employees, employee];
+    console.log('Updated store employees:', newEmployees);
+    return { employees: newEmployees };
   }),
 }));
 
@@ -44,8 +47,11 @@ export const AddEmployeeDialog = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('Form submission - Form data:', formData);
+    
     // Validate required fields
     if (!formData.id || !formData.name || !formData.department || !formData.role) {
+      console.log('Form validation failed - Missing required fields');
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -72,10 +78,10 @@ export const AddEmployeeDialog = () => {
       termDate: formData.termDate || "-"
     };
 
+    console.log('Creating new employee:', newEmployee);
+
     // Add new employee using the store
     addEmployee(newEmployee);
-    
-    console.log("New employee added:", newEmployee);
     
     toast({
       title: "Success",
