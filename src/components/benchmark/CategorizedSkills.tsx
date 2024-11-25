@@ -34,7 +34,6 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     );
   };
 
-  // Get all skills for the role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -51,7 +50,6 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     return priorities[level.toLowerCase()] ?? 3;
   };
 
-  // Filter and sort skills based on requirement and employee possession
   const requiredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
