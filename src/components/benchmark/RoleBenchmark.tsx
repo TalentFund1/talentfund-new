@@ -21,9 +21,9 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "",
+  selectedRole: "123", // Default to AI Engineer
   setSelectedRole: (role) => set({ selectedRole: role }),
-  selectedLevel: "p4",
+  selectedLevel: "p4", // Default to P4
   setSelectedLevel: (level) => set({ selectedLevel: level }),
 }));
 
@@ -53,14 +53,18 @@ export const RoleBenchmark = () => {
     if (employee) {
       const profileId = getSkillProfileId(employee.role);
       const level = getLevel(employee.role).toLowerCase();
-      console.log('Setting initial role and level:', { profileId, level });
+      console.log('Setting initial role and level:', { profileId, level, employeeRole: employee.role });
       setSelectedRole(profileId);
-      setRoleLevel(level);
+      setRoleLevel(level || 'p4'); // Default to p4 if no level found
     }
   }, [employee, setSelectedRole, setRoleLevel]);
 
+  // Update skills search when role changes
   useEffect(() => {
-    if (!currentRoleSkills) return;
+    if (!currentRoleSkills) {
+      console.warn('No role skills found for role:', selectedRole);
+      return;
+    }
 
     const allSkills = [
       ...currentRoleSkills.specialized,
@@ -70,13 +74,17 @@ export const RoleBenchmark = () => {
     .map(skill => skill.title)
     .filter(skillTitle => toggledSkills.has(skillTitle));
     
+    console.log('Setting benchmark search skills:', allSkills);
     setBenchmarkSearchSkills(allSkills);
   }, [selectedRole, currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
+  // Handle track changes
   useEffect(() => {
     if (currentTrack === "Professional" && roleLevel.toLowerCase().startsWith("m")) {
+      console.log('Adjusting level for Professional track:', { from: roleLevel, to: 'p4' });
       setRoleLevel("p4");
     } else if (currentTrack === "Managerial" && roleLevel.toLowerCase().startsWith("p")) {
+      console.log('Adjusting level for Managerial track:', { from: roleLevel, to: 'm3' });
       setRoleLevel("m3");
     }
   }, [currentTrack, roleLevel, setRoleLevel]);
