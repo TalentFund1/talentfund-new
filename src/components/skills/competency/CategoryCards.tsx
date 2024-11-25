@@ -7,7 +7,7 @@ interface CategoryCardsProps {
 
 export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCardsProps) => {
   const categories = [
-    { id: "all", name: "All Categories", count: 28 },
+    { id: "all", name: "All Skill Type", count: 28 },
     { id: "specialized", name: "Specialized Skills", count: 15 },
     { id: "common", name: "Common Skills", count: 10 },
     { id: "certification", name: "Certifications", count: 3 }
