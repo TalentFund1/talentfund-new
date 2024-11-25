@@ -5,7 +5,7 @@ export const SkillProfileStats = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard
-        title="Total Number of Employees"
+        title="Total number of Profiles"
         value="56"
         icon={<Users className="h-6 w-6 text-primary-icon" />}
       />
