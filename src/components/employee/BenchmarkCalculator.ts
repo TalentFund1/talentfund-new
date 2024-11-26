@@ -30,7 +30,7 @@ export const calculateBenchmarkPercentage = (
     return 0;
   }
 
-  // 1. Basic Skill Match (33.33% weight)
+  // 1. Skill Match (33.33% weight)
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
@@ -41,7 +41,6 @@ export const calculateBenchmarkPercentage = (
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
     if (!roleSkillState) {
       console.log('No competency state found for skill:', skill.title);
-      // For manager roles, consider it a match if they have the skill
       return getBaseRole(level).toLowerCase().includes('m');
     }
 
@@ -75,7 +74,6 @@ export const calculateBenchmarkPercentage = (
     const skillState = currentStates[skill.title];
     if (!skillState) {
       console.log('No skill state found for skill:', skill.title);
-      // For manager roles, consider it a match if they have the skill
       return getBaseRole(level).toLowerCase().includes('m');
     }
     return skillState.requirement === 'required' || 
@@ -87,7 +85,7 @@ export const calculateBenchmarkPercentage = (
   const competencyMatchPercentage = (competencyMatchingSkills.length / totalToggledSkills) * 100;
   const skillGoalMatchPercentage = (skillGoalMatchingSkills.length / totalToggledSkills) * 100;
 
-  // Calculate weighted average (equal weights)
+  // Calculate weighted average
   const averagePercentage = Math.round(
     (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
   );
