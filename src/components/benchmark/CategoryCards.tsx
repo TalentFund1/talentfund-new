@@ -28,7 +28,7 @@ export const CategoryCards = ({
         ...(currentRoleSkills.specialized || []),
         ...(currentRoleSkills.common || []),
         ...(currentRoleSkills.certifications || [])
-      ].filter(skill => toggledSkills.has(skill.title));
+      ];
 
       if (category === 'all') return allSkills;
 
@@ -57,11 +57,17 @@ export const CategoryCards = ({
         newCounts[category] = { required, preferred };
       });
 
+      console.log('Updated category counts:', { 
+        roleId, 
+        counts: newCounts, 
+        toggledSkillsCount: toggledSkills.size 
+      });
+
       setCounts(newCounts);
     };
 
     calculateCounts();
-  }, [currentRoleSkills, toggledSkills, selectedLevel, getSkillCompetencyState]);
+  }, [currentRoleSkills, toggledSkills, selectedLevel, getSkillCompetencyState, roleId]);
 
   const categories = [
     { id: "all", title: "All Categories" },
@@ -70,27 +76,35 @@ export const CategoryCards = ({
     { id: "certification", title: "Certification" }
   ];
 
-  console.log('CategoryCards render:', {
-    selectedCategory,
-    toggledSkills: Array.from(toggledSkills),
-    counts,
-    roleId
-  });
-
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
       {categories.map((category) => {
-        const categoryCount = counts[category.id] || { required: 0, preferred: 0 };
-        const total = categoryCount.required + categoryCount.preferred;
-
-        // Get raw count of skills in each category before filtering by toggled state
-        const rawCount = category.id === 'all' 
+        const totalSkills = category.id === 'all' 
           ? [...currentRoleSkills.specialized, ...currentRoleSkills.common, ...currentRoleSkills.certifications].length
           : category.id === 'specialized'
             ? currentRoleSkills.specialized.length
             : category.id === 'common'
               ? currentRoleSkills.common.length
               : currentRoleSkills.certifications.length;
+
+        const toggledCount = Array.from(toggledSkills).filter(skill => {
+          if (category.id === 'all') return true;
+          const skillObj = [...currentRoleSkills.specialized, ...currentRoleSkills.common, ...currentRoleSkills.certifications]
+            .find(s => s.title === skill);
+          
+          if (!skillObj) return false;
+          
+          switch (category.id) {
+            case 'specialized':
+              return currentRoleSkills.specialized.some(s => s.title === skill);
+            case 'common':
+              return currentRoleSkills.common.some(s => s.title === skill);
+            case 'certification':
+              return currentRoleSkills.certifications.some(s => s.title === skill);
+            default:
+              return false;
+          }
+        }).length;
         
         return (
           <button
@@ -115,7 +129,7 @@ export const CategoryCards = ({
                   {category.title}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {rawCount} {rawCount === 1 ? 'skill' : 'skills'}
+                  {toggledCount} / {totalSkills} {totalSkills === 1 ? 'skill' : 'skills'}
                 </span>
               </div>
             </Card>
