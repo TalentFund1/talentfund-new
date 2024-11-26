@@ -10,8 +10,7 @@ export const filterEmployees = (
   selectedOffice: string[],
   selectedEmploymentType: string[],
   selectedSkills: string[],
-  selectedManager: string[] = [],
-  selectedRoleTitle: string[] = []
+  selectedManager: string[] = []
 ): Employee[] => {
   console.log('Filtering employees with criteria:', {
     searchedEmployees,
@@ -20,8 +19,7 @@ export const filterEmployees = (
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
-    selectedManager,
-    selectedRoleTitle
+    selectedManager
   });
 
   return employees.filter(employee => {
@@ -31,6 +29,7 @@ export const filterEmployees = (
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
     
+    // Remove exact role match requirement to allow partial matches
     const matchesLevel = selectedLevel.length === 0 || 
       selectedLevel.includes(getLevel(employee.role));
 
@@ -43,18 +42,10 @@ export const filterEmployees = (
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
 
-    // Match role title with ID
-    const matchesRoleTitle = selectedRoleTitle.length === 0 || 
-      selectedRoleTitle.some(roleTitle => {
-        const roleId = roleTitle.match(/\((\d+)\)$/)?.[1];
-        return roleId === employee.roleId;
-      });
-
     // If job title is selected, we'll handle matching in the sorter
     const matchesJobTitle = selectedJobTitle.length === 0 || true;
 
     return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
-           matchesLevel && matchesOffice && matchesEmploymentType && 
-           matchesManager && matchesRoleTitle;
+           matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
   });
 };
