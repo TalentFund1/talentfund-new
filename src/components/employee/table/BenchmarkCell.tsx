@@ -1,3 +1,5 @@
+import { SkillBubble } from "../../skills/SkillBubble";
+
 interface BenchmarkCellProps {
   benchmark: number;
   selectedSkills: string[];
