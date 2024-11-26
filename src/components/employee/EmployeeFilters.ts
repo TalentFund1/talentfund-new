@@ -42,15 +42,14 @@ export const filterEmployees = (
           matches: employeeRoleId === selectedRoleId
         });
 
-        // Match only by exact role ID
         return employeeRoleId === selectedRoleId;
       });
     
     const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(getBaseRole(employee.role));
+      selectedLevel.includes(getLevel(employee.role));
 
     const matchesOffice = selectedOffice.length === 0 || 
-      selectedOffice.includes(employee.location.split(',')[0].trim());
+      selectedOffice.includes(employee.office);
 
     const matchesEmploymentType = selectedEmploymentType.length === 0 ||
       selectedEmploymentType.includes(employee.category);
@@ -61,7 +60,19 @@ export const filterEmployees = (
     const matches = matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
            matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
 
-    console.log(`Employee ${employee.name} matches:`, matches);
+    console.log(`Employee ${employee.name} matches:`, {
+      matchesEmployeeSearch,
+      matchesDepartment,
+      matchesJobTitle,
+      matchesLevel,
+      matchesOffice,
+      matchesEmploymentType,
+      matchesManager,
+      finalResult: matches
+    });
+    
     return matches;
   });
 };
+
+import { getLevel } from "../EmployeeTable";
