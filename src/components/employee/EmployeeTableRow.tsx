@@ -32,7 +32,9 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employee.id);
 
-  const roleId = getSkillProfileId(employee.role);
+  const roleId = selectedJobTitle.length > 0 
+    ? getSkillProfileId(selectedJobTitle[0])
+    : getSkillProfileId(employee.role);
     
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
@@ -158,9 +160,6 @@ export const EmployeeTableRow = ({
         >
           {employee.role}
         </Link>
-      </td>
-      <td className="px-4 py-4 w-[100px] text-sm text-muted-foreground">
-        {roleId}
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
