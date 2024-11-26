@@ -82,6 +82,15 @@ export const CategoryCards = ({
       {categories.map((category) => {
         const categoryCount = counts[category.id] || { required: 0, preferred: 0 };
         const total = categoryCount.required + categoryCount.preferred;
+
+        // Get raw count of skills in each category before filtering by toggled state
+        const rawCount = category.id === 'all' 
+          ? [...currentRoleSkills.specialized, ...currentRoleSkills.common, ...currentRoleSkills.certifications].length
+          : category.id === 'specialized'
+            ? currentRoleSkills.specialized.length
+            : category.id === 'common'
+              ? currentRoleSkills.common.length
+              : currentRoleSkills.certifications.length;
         
         return (
           <button
@@ -106,7 +115,7 @@ export const CategoryCards = ({
                   {category.title}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {total} {total === 1 ? 'skill' : 'skills'}
+                  {rawCount} {rawCount === 1 ? 'skill' : 'skills'}
                 </span>
               </div>
             </Card>
