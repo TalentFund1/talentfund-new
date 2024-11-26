@@ -41,15 +41,26 @@ export const EmployeeTableRow = ({
   
   const isExactMatch = selectedRoleId.length > 0 && employeeRoleId === selectedRoleId[0];
 
-  const getSkillMatchCount = () => {
+  const getMatchingSkillsCount = () => {
+    console.log('Calculating matching skills for employee:', employee.name);
+    
     if (selectedSkills.length > 0) {
-      const matchingSkills = selectedSkills.filter(skillName => 
-        employeeSkills.some(empSkill => empSkill.title === skillName)
-      );
-      return `${matchingSkills.length} / ${selectedSkills.length}`;
+      const matchingSkills = selectedSkills.filter(skillName => {
+        const hasSkill = employeeSkills.some(empSkill => empSkill.title === skillName);
+        console.log(`Checking skill ${skillName}: ${hasSkill ? 'found' : 'not found'}`);
+        return hasSkill;
+      });
+      
+      return {
+        count: `${matchingSkills.length} / ${selectedSkills.length}`,
+        isExactSkillMatch: matchingSkills.length === selectedSkills.length && selectedSkills.length > 0
+      };
     }
 
-    if (!currentRoleSkills) return '0 / 0';
+    if (!currentRoleSkills) {
+      console.log('No role skills found');
+      return { count: '0 / 0', isExactSkillMatch: false };
+    }
 
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
@@ -57,11 +68,19 @@ export const EmployeeTableRow = ({
       ...currentRoleSkills.certifications
     ].filter(skill => toggledSkills.has(skill.title));
 
-    const matchingSkills = allRoleSkills.filter(roleSkill =>
-      employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
-    );
+    console.log('All role skills:', allRoleSkills.map(s => s.title));
+    console.log('Employee skills:', employeeSkills.map(s => s.title));
 
-    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+    const matchingSkills = allRoleSkills.filter(roleSkill => {
+      const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
+      console.log(`Checking role skill ${roleSkill.title}: ${hasSkill ? 'found' : 'not found'}`);
+      return hasSkill;
+    });
+
+    return {
+      count: `${matchingSkills.length} / ${allRoleSkills.length}`,
+      isExactSkillMatch: matchingSkills.length === allRoleSkills.length && allRoleSkills.length > 0
+    };
   };
 
   const renderBenchmark = () => {
@@ -105,7 +124,10 @@ export const EmployeeTableRow = ({
     );
   };
 
-  const shouldShowExactMatch = (isExactMatch) && selectedRoleId.length > 0;
+  const { count, isExactSkillMatch } = getMatchingSkillsCount();
+
+  const shouldShowExactMatch = (isExactSkillMatch || isExactMatch) && 
+    (selectedSkills.length > 0 || selectedRoleId.length > 0);
 
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
@@ -157,7 +179,9 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      <td className="px-4 py-4 w-[100px] text-center text-sm">{getSkillMatchCount()}</td>
+      {showSkillMatch && (
+        <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
+      )}
       <td className="py-4 w-[200px] text-center">
         {renderBenchmark()}
       </td>

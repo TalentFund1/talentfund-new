@@ -1,6 +1,7 @@
 import { Employee } from "../types/employeeTypes";
 import { EmployeeTableHeader } from "./EmployeeTableHeader";
 import { EmployeeTableRow } from "./EmployeeTableRow";
+import { EMPLOYEE_IMAGES } from "./EmployeeData";
 
 interface EmployeeTableContentProps {
   filteredEmployees: Employee[];
@@ -46,7 +47,7 @@ export const EmployeeTableContent = ({
               employee={employee}
               isSelected={selectedRows.includes(employee.name)}
               onSelect={handleSelectEmployee}
-              imageUrl={`https://images.unsplash.com/${employee.image}?auto=format&fit=crop&w=24&h=24`}
+              imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
               selectedSkills={selectedSkills}
               selectedRoleId={selectedJobTitle}
               showSkillMatch={showSkillMatch}
