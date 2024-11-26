@@ -43,10 +43,19 @@ export const filterEmployees = (
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
 
+    const employeeRoleId = getSkillProfileId(employee.role);
     const matchesRoleId = selectedRoleId.length === 0 ||
-      selectedRoleId.includes(getSkillProfileId(employee.role));
+      selectedRoleId.includes(employeeRoleId);
 
-    const matchesJobTitle = selectedJobTitle.length === 0 || true;
+    console.log('Employee role ID match:', {
+      employeeName: employee.name,
+      employeeRoleId,
+      selectedRoleId,
+      matches: matchesRoleId
+    });
+
+    const matchesJobTitle = selectedJobTitle.length === 0 || 
+      selectedJobTitle.includes(getBaseRole(employee.role));
 
     return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
            matchesLevel && matchesOffice && matchesEmploymentType && 
