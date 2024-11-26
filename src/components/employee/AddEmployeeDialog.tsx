@@ -9,9 +9,34 @@ export const AddEmployeeDialog = () => {
   const [open, setOpen] = useState(false);
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
 
-  const handleSubmit = (data: any) => {
-    console.log('Submitting employee data:', data);
-    addEmployee(data);
+  // Initialize form data
+  const [formData, setFormData] = useState({
+    id: '',
+    name: '',
+    location: '',
+    office: '',
+    department: '',
+    manager: '',
+    role: '',
+    level: '',
+    startDate: '',
+    termDate: '',
+    sex: '',
+    category: '',
+    skills: ''
+  });
+
+  const handleInputChange = (field: string, value: string) => {
+    console.log('Input changed:', field, value);
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSubmit = () => {
+    console.log('Submitting employee data:', formData);
+    addEmployee(formData);
     setOpen(false);
   };
 
@@ -27,7 +52,15 @@ export const AddEmployeeDialog = () => {
         <DialogHeader>
           <DialogTitle>Add New Employee</DialogTitle>
         </DialogHeader>
-        <EmployeeFormFields onSubmit={handleSubmit} />
+        <div className="space-y-4">
+          <EmployeeFormFields 
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+          <Button onClick={handleSubmit} className="w-full">
+            Add Employee
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
