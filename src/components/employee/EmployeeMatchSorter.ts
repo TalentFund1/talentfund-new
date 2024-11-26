@@ -9,21 +9,66 @@ export const sortEmployeesByRoleMatch = (
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ): Employee[] => {
-  if (selectedJobTitle.length === 0) return employees;
+  if (selectedJobTitle.length === 0) {
+    // If no role is selected, benchmark against their own role type (manager vs non-manager)
+    return employees.map(employee => {
+      const isManager = employee.role.toLowerCase().includes('manager');
+      const roleId = isManager ? "126" : getSkillProfileId(employee.role); // 126 is Engineering Manager
+      
+      console.log(`Default role benchmark for ${employee.name}:`, {
+        isManager,
+        roleId,
+        employeeRole: employee.role
+      });
+
+      const benchmark = calculateBenchmarkPercentage(
+        employee.id,
+        roleId,
+        getLevel(employee.role),
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
+
+      return {
+        ...employee,
+        isExactMatch: true, // When comparing against own role type
+        benchmark
+      };
+    });
+  }
 
   const selectedRole = selectedJobTitle[0];
   const roleId = getSkillProfileId(selectedRole);
+  const isManagerRole = selectedRole.toLowerCase().includes('manager');
+
+  console.log('Selected role benchmark parameters:', {
+    selectedRole,
+    roleId,
+    isManagerRole
+  });
 
   // Calculate benchmarks for all employees
   const employeesWithBenchmarks = employees.map(employee => {
-    const benchmark = calculateBenchmarkPercentage(
+    const isEmployeeManager = employee.role.toLowerCase().includes('manager');
+    
+    // Only calculate benchmark if role types match (manager vs non-manager)
+    const shouldCalculateBenchmark = isManagerRole === isEmployeeManager;
+    
+    console.log(`Role match check for ${employee.name}:`, {
+      isEmployeeManager,
+      isManagerRole,
+      shouldCalculateBenchmark
+    });
+
+    const benchmark = shouldCalculateBenchmark ? calculateBenchmarkPercentage(
       employee.id,
       roleId,
       getLevel(employee.role),
       currentStates,
       toggledSkills,
       getSkillCompetencyState
-    );
+    ) : 0;
 
     return {
       ...employee,
