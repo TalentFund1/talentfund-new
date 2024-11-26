@@ -1,6 +1,6 @@
 import { employees } from "./EmployeeData";
 import { filterEmployees } from "./EmployeeFilters";
-import { getBaseRole } from "../EmployeeTable";
+import { getBaseRole } from "../utils/roleUtils";
 
 export const getEmployeesAddedLastYear = (
   selectedEmployees: string[] = [],
