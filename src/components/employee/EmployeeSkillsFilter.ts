@@ -56,12 +56,15 @@ export const getSkillMatchCount = (
   );
 
   console.log(`Skill match calculation for ${employeeId}:`, {
-    matched: matchingSkills.length,
-    total: requiredSkills.length,
     roleId,
     profileId,
+    totalRequired: requiredSkills.length,
+    specializedCount: currentRoleSkills.specialized.length,
+    commonCount: currentRoleSkills.common.length,
+    matched: matchingSkills.length,
     employeeSkills: employeeSkills.map(s => s.title),
-    requiredSkills: requiredSkills.map(s => s.title)
+    requiredSkills: requiredSkills.map(s => s.title),
+    matchingSkills: matchingSkills.map(s => s.title)
   });
 
   return {
