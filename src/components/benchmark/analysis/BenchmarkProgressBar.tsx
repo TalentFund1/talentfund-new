@@ -5,8 +5,10 @@ interface BenchmarkProgressBarProps {
 }
 
 export const BenchmarkProgressBar = ({ label, current, total }: BenchmarkProgressBarProps) => {
-  const percentage = (current / total) * 100;
+  const percentage = total > 0 ? (current / total) * 100 : 0;
   
+  console.log('Rendering progress bar:', { label, current, total, percentage });
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between mb-2">
