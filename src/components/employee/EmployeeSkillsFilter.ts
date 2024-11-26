@@ -37,14 +37,16 @@ export const getSkillMatchCount = (
   roleId: string
 ): { matched: number; total: number } => {
   const employeeSkills = getEmployeeSkills(employeeId);
-  const profileId = getSkillProfileId(roleId);
+  // Get the employee's actual role ID instead of using the passed roleId
+  const profileId = roleId;
   const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
 
   console.log('Getting skill match count:', {
     employeeId,
     roleId,
     profileId,
-    hasRoleSkills: !!currentRoleSkills
+    hasRoleSkills: !!currentRoleSkills,
+    employeeSkills: employeeSkills.map(s => s.title)
   });
 
   if (!currentRoleSkills) {
