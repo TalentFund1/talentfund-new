@@ -8,60 +8,10 @@ import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
-import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { useEffect, useState } from "react";
-
-export const getSkillProfileId = (role: string) => {
-  if (!role) {
-    console.warn('No role provided to getSkillProfileId');
-    return null;
-  }
-
-  // Map role titles to IDs with consistent structure
-  const roleMap: { [key: string]: string } = {
-    "AI Engineer": "123",
-    "Backend Engineer": "124",
-    "Frontend Engineer": "125",
-    "Engineering Manager": "126",
-    "Data Engineer": "127",
-    "DevOps Engineer": "128",
-    "Product Manager": "129"
-  };
-  
-  // First check if it's a direct role ID
-  const validProfileIds = Object.values(roleMap);
-  if (validProfileIds.includes(role)) {
-    console.log('Using direct role ID:', role);
-    return role;
-  }
-
-  const baseRole = role.split(":")[0].trim();
-  const mappedId = roleMap[baseRole];
-  
-  console.log('Role mapping:', { 
-    originalRole: role,
-    baseRole,
-    mappedId
-  });
-  
-  if (!mappedId) {
-    console.warn('No role mapping found for:', role);
-    return null;
-  }
-  
-  return mappedId;
-};
-
-export const getBaseRole = (role: string) => {
-  return role?.split(":")[0].trim() || "";
-};
-
-export const getLevel = (role: string) => {
-  const parts = role?.split(":");
-  return parts?.length > 1 ? parts[1].trim() : "";
-};
+import { getSkillProfileId } from "./utils/roleUtils";
 
 interface EmployeeTableProps {
   selectedDepartment: string[];
@@ -95,10 +45,8 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
-  // Initialize states and check dependencies
   useEffect(() => {
     if (currentStates && toggledSkills && getSkillCompetencyState) {
-      // Validate that we can get role IDs for all employees
       const allRolesValid = employees.every(emp => {
         const roleId = getSkillProfileId(emp.role);
         if (!roleId) {
@@ -119,20 +67,9 @@ export const EmployeeTable = ({
     }
   }, [currentStates, toggledSkills, getSkillCompetencyState, employees]);
 
-  // Calculate benchmark percentages for each employee
-  const employeesWithBenchmarks = isInitialized ? calculateEmployeeBenchmarks(
-    employees,
-    selectedJobTitle,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
-  ) : employees.map(emp => ({ ...emp, benchmark: 0 }));
-
-  console.log('Employees with benchmarks:', employeesWithBenchmarks);
-
   // Filter employees based on all criteria including skills and employee search
   const preFilteredEmployees = filterEmployees(
-    employeesWithBenchmarks,
+    employees,
     selectedEmployees,
     selectedDepartment,
     selectedJobTitle,
