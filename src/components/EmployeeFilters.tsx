@@ -2,7 +2,7 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
-import { getBaseRole } from './EmployeeTable';
+import { getBaseRole, getSkillProfileId } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
@@ -26,16 +26,14 @@ interface EmployeeFiltersProps {
   selectedManager?: string[];
 }
 
-// Map role IDs to titles for display
-const roleIdMap = {
+const roleIdToTitle: { [key: string]: string } = {
   "123": "AI Engineer",
   "124": "Backend Engineer",
   "125": "Frontend Engineer",
   "126": "Engineering Manager",
   "127": "Data Engineer",
   "128": "DevOps Engineer",
-  "129": "Product Manager",
-  "130": "Technical Lead"
+  "129": "Product Manager"
 };
 
 export const EmployeeFilters = ({ 
@@ -58,11 +56,14 @@ export const EmployeeFilters = ({
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
-  const managers = Array.from(new Set(
-    employees
-      .filter(emp => emp.role.toLowerCase().includes('manager'))
-      .map(emp => emp.name)
+  
+  // Get unique role IDs from employees
+  const jobRoleIds = Array.from(new Set(
+    employees.map(emp => getSkillProfileId(emp.role))
   ));
+
+  console.log('Available job role IDs:', jobRoleIds);
+  console.log('Selected job titles:', selectedJobTitle);
 
   useEffect(() => {
     onLevelChange([]);
@@ -79,8 +80,11 @@ export const EmployeeFilters = ({
     onManagerChange([]);
   };
 
-  // Convert role IDs to titles for display in the dropdown
-  const selectedTitles = selectedJobTitle.map(id => roleIdMap[id as keyof typeof roleIdMap] || id);
+  const managers = Array.from(new Set(
+    employees
+      .filter(emp => emp.role.toLowerCase().includes('manager'))
+      .map(emp => emp.name)
+  ));
 
   return (
     <div className="space-y-0.5">
@@ -95,7 +99,7 @@ export const EmployeeFilters = ({
           placeholder="Search skills..."
           items={allSkills}
           selectedItems={selectedSkills}
-          onItemsChange={(items) => onSkillsChange(items)}
+          onItemsChange={(items) => onSkillsChange(items.map(item => String(item)))}
           singleSelect={false}
         />
       </div>
@@ -106,7 +110,7 @@ export const EmployeeFilters = ({
           placeholder="Manager"
           items={managers}
           selectedItems={selectedManager}
-          onItemsChange={(items) => onManagerChange(items)}
+          onItemsChange={(items) => onManagerChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
         />
@@ -114,19 +118,12 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={Object.entries(roleIdMap).map(([id, title]) => ({ id, title }))}
-          selectedItems={selectedTitles}
-          onItemsChange={(items) => {
-            // Convert selected titles back to IDs
-            const selectedIds = items.map(item => {
-              const entry = Object.entries(roleIdMap).find(([_, title]) => title === item);
-              return entry ? entry[0] : item;
-            });
-            onJobTitleChange(selectedIds);
-          }}
+          items={jobRoleIds}
+          selectedItems={selectedJobTitle}
+          onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
-          displayKey="title"
+          itemToString={(item) => roleIdToTitle[item] || item}
         />
         
         <LevelFilter
@@ -140,7 +137,7 @@ export const EmployeeFilters = ({
           placeholder="Office"
           items={["Toronto", "New York", "San Francisco"]}
           selectedItems={selectedOffice}
-          onItemsChange={(items) => onOfficeChange(items)}
+          onItemsChange={(items) => onOfficeChange(items.map(item => String(item)))}
           singleSelect={false}
           className="w-[180px]"
         />
@@ -150,7 +147,7 @@ export const EmployeeFilters = ({
           placeholder="Department"
           items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
           selectedItems={selectedDepartment}
-          onItemsChange={(items) => onDepartmentChange(items)}
+          onItemsChange={(items) => onDepartmentChange(items.map(item => String(item)))}
           singleSelect={false}
           className="w-[180px]"
         />
@@ -160,7 +157,7 @@ export const EmployeeFilters = ({
           placeholder="Category"
           items={["Full-time", "Part-time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
-          onItemsChange={(items) => onEmploymentTypeChange(items)}
+          onItemsChange={(items) => onEmploymentTypeChange(items.map(item => String(item)))}
           singleSelect={false}
           className="w-[180px]"
         />
