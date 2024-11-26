@@ -11,10 +11,11 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixContent } from "./skills-matrix/BenchmarkSkillsMatrixContent";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 const ITEMS_PER_PAGE = 10;
 
-export const BenchmarkSkillsMatrix = () => {
+const BenchmarkSkillsMatrixInner = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
@@ -200,5 +201,13 @@ export const BenchmarkSkillsMatrix = () => {
         />
       </Card>
     </div>
+  );
+};
+
+export const BenchmarkSkillsMatrix = () => {
+  return (
+    <ToggledSkillsProvider>
+      <BenchmarkSkillsMatrixInner />
+    </ToggledSkillsProvider>
   );
 };
