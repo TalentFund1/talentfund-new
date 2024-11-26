@@ -6,20 +6,21 @@ import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 interface CategoryCardsProps {
   selectedCategory: string;
   onCategorySelect: (category: string) => void;
-  skillCount: {
-    critical: number;
-    technical: number;
-    necessary: number;
-    all: number;
-  };
+  roleId: string;
+  selectedLevel: string;
 }
 
-export const CategoryCards = ({ selectedCategory, onCategorySelect, skillCount }: CategoryCardsProps) => {
+export const CategoryCards = ({ 
+  selectedCategory, 
+  onCategorySelect,
+  roleId,
+  selectedLevel 
+}: CategoryCardsProps) => {
   const categories = [
-    { id: "all", name: "All Skill Type", count: skillCount.all },
-    { id: "critical", name: "Critical Skills", count: skillCount.critical },
-    { id: "technical", name: "Technical Skills", count: skillCount.technical },
-    { id: "necessary", name: "Necessary Skills", count: skillCount.necessary }
+    { id: "all", name: "All Skill Type", count: 28 },
+    { id: "specialized", name: "Specialized Skills", count: 15 },
+    { id: "common", name: "Common Skills", count: 10 },
+    { id: "certification", name: "Certifications", count: 3 }
   ];
 
   return (
@@ -44,7 +45,7 @@ export const CategoryCards = ({ selectedCategory, onCategorySelect, skillCount }
                 {category.name}
               </span>
               <span className="text-xs text-muted-foreground">
-                {category.count} {category.count === 1 ? 'skill' : 'skills'}
+                {category.count} skills
               </span>
             </div>
           </button>
