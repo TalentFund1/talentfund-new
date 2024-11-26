@@ -84,7 +84,7 @@ export const calculateBenchmarkPercentage = (
   const competencyMatchPercentage = (competencyMatchingSkills.length / totalToggledSkills) * 100;
   const skillGoalMatchPercentage = (skillGoalMatchingSkills.length / totalToggledSkills) * 100;
 
-  // Calculate weighted average
+  // Calculate weighted average (equal weights)
   const averagePercentage = Math.round(
     (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
   );
