@@ -4,20 +4,21 @@ import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
-  selectedRoleTitle: string[],
+  selectedJobTitle: string[],
   currentStates: any,
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ): Employee[] => {
-  if (selectedRoleTitle.length === 0) return employees;
+  if (selectedJobTitle.length === 0) return employees;
 
-  const selectedRoleId = selectedRoleTitle[0];
+  const selectedRole = selectedJobTitle[0];
+  const roleId = getSkillProfileId(selectedRole);
 
-  // Calculate benchmarks for all employees using selected role ID
+  // Calculate benchmarks for all employees
   const employeesWithBenchmarks = employees.map(employee => {
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
-      selectedRoleId,
+      roleId,
       getLevel(employee.role),
       currentStates,
       toggledSkills,
@@ -26,7 +27,7 @@ export const sortEmployeesByRoleMatch = (
 
     return {
       ...employee,
-      isExactMatch: getBaseRole(employee.role) === selectedRoleId,
+      isExactMatch: getBaseRole(employee.role) === selectedRole,
       benchmark
     };
   });
