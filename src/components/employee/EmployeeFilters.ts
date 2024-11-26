@@ -1,6 +1,5 @@
 import { Employee } from "../types/employeeTypes";
-import { getBaseRole, getLevel } from "../EmployeeTable";
-import { getSkillProfileId } from "../EmployeeTable";
+import { getBaseRole, getLevel, getSkillProfileId } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],
@@ -30,11 +29,26 @@ export const filterEmployees = (
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
 
-    // Match by role ID or base role
+    // Match by role ID and include partial matches based on role title
     const matchesJobTitle = selectedJobTitle.length === 0 || 
       selectedJobTitle.some(title => {
-        const roleId = getSkillProfileId(title);
-        return roleId === getSkillProfileId(employee.role);
+        const selectedRoleId = getSkillProfileId(title);
+        const employeeRoleId = getSkillProfileId(employee.role);
+        const employeeBaseRole = getBaseRole(employee.role);
+        const selectedBaseRole = getBaseRole(title);
+        
+        console.log('Matching job title:', {
+          employee: employee.name,
+          employeeRole: employee.role,
+          employeeRoleId,
+          selectedTitle: title,
+          selectedRoleId,
+          employeeBaseRole,
+          selectedBaseRole
+        });
+
+        // Match either by role ID or base role title
+        return employeeRoleId === selectedRoleId || employeeBaseRole === selectedBaseRole;
       });
     
     const matchesLevel = selectedLevel.length === 0 || 
@@ -49,7 +63,10 @@ export const filterEmployees = (
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
 
-    return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
+    const matches = matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
            matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
+
+    console.log(`Employee ${employee.name} matches:`, matches);
+    return matches;
   });
 };
