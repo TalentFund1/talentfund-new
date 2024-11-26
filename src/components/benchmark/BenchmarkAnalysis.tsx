@@ -38,11 +38,17 @@ export const BenchmarkAnalysis = () => {
   const toggledRoleSkills = useMemo(() => {
     if (!currentRoleSkills) return [];
     
-    return [
+    const allSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
+    ];
+
+    console.log('Filtering toggled skills from:', allSkills.length, 'total skills');
+    const filtered = allSkills.filter(skill => toggledSkills.has(skill.title));
+    console.log('Found', filtered.length, 'toggled skills');
+    
+    return filtered;
   }, [currentRoleSkills, toggledSkills]);
 
   // Calculate matches using useEffect to ensure state updates
@@ -52,6 +58,8 @@ export const BenchmarkAnalysis = () => {
       setMatches({ skillMatch: 0, competencyMatch: 0, skillGoalMatch: 0, total: 0 });
       return;
     }
+
+    console.log('Calculating matches for', toggledRoleSkills.length, 'toggled skills');
 
     // Match skills based on role profile skills
     const matchingSkills = toggledRoleSkills.filter(roleSkill => {
@@ -97,10 +105,10 @@ export const BenchmarkAnalysis = () => {
       total: toggledRoleSkills.length
     };
 
-    console.log('Updating matches:', newMatches);
+    console.log('Setting new matches:', newMatches);
     setMatches(newMatches);
 
-  }, [toggledRoleSkills, employeeSkills, selectedLevel, currentStates, getSkillCompetencyState]);
+  }, [toggledRoleSkills, employeeSkills, selectedLevel, currentStates, getSkillCompetencyState, toggledSkills]);
 
   // Debug effect to track match updates
   useEffect(() => {
