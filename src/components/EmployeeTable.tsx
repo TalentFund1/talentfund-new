@@ -64,7 +64,7 @@ interface EmployeeTableProps {
 
 export const EmployeeTable = ({ 
   selectedDepartment = [], 
-  selectedJobTitle = [], // These are role IDs
+  selectedJobTitle = [],
   selectedLevel = [],
   selectedOffice = [],
   selectedEmploymentType = [],
@@ -81,16 +81,14 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
-  // Calculate benchmark percentages for each employee
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
     employees,
-    selectedJobTitle,  // Using role IDs
+    selectedJobTitle,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
   );
 
-  // Get all skills for the role
   const getRoleSkills = (roleId: string) => {
     const role = roleSkills[roleId as keyof typeof roleSkills];
     if (!role) return [];
@@ -103,12 +101,11 @@ export const EmployeeTable = ({
 
   console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
-  // Filter employees based on all criteria including skills and employee search
   const preFilteredEmployees = filterEmployees(
     employeesWithBenchmarks,
     selectedEmployees,
     selectedDepartment,
-    selectedJobTitle,  // Using role IDs
+    selectedJobTitle,
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
@@ -117,8 +114,9 @@ export const EmployeeTable = ({
   ).map(employee => {
     const roleId = getSkillProfileId(employee.role);
     const allRoleSkills = getRoleSkills(roleId);
+    const employeeSkills = employee.skills || [];
     const matchingSkills = allRoleSkills.filter(skill => 
-      employee.skills?.includes(skill)
+      employeeSkills.includes(skill)
     );
     return {
       ...employee,
@@ -128,15 +126,13 @@ export const EmployeeTable = ({
 
   console.log('Pre-filtered employees:', preFilteredEmployees);
 
-  // Apply skills filter
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
-  // Sort employees by role match and benchmark percentage
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
-    selectedJobTitle,  // Using role IDs
+    selectedJobTitle,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
