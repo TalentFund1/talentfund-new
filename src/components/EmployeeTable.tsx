@@ -14,11 +14,9 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { useEffect, useState } from "react";
 
 export const getSkillProfileId = (role: string) => {
-  // Validate role ID format first
-  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
-  if (validProfileIds.includes(role)) {
-    console.log('Using direct role ID:', role);
-    return role;
+  if (!role) {
+    console.warn('No role provided to getSkillProfileId');
+    return null;
   }
 
   // Map role titles to IDs with consistent structure
@@ -32,6 +30,13 @@ export const getSkillProfileId = (role: string) => {
     "Product Manager": "129"
   };
   
+  // First check if it's a direct role ID
+  const validProfileIds = Object.values(roleMap);
+  if (validProfileIds.includes(role)) {
+    console.log('Using direct role ID:', role);
+    return role;
+  }
+
   const baseRole = role.split(":")[0].trim();
   const mappedId = roleMap[baseRole];
   
@@ -43,18 +48,19 @@ export const getSkillProfileId = (role: string) => {
   
   if (!mappedId) {
     console.warn('No role mapping found for:', role);
+    return null;
   }
   
-  return mappedId || "123";
+  return mappedId;
 };
 
 export const getBaseRole = (role: string) => {
-  return role.split(":")[0].trim();
+  return role?.split(":")[0].trim() || "";
 };
 
 export const getLevel = (role: string) => {
-  const parts = role.split(":");
-  return parts.length > 1 ? parts[1].trim() : "";
+  const parts = role?.split(":");
+  return parts?.length > 1 ? parts[1].trim() : "";
 };
 
 interface EmployeeTableProps {
@@ -92,14 +98,26 @@ export const EmployeeTable = ({
   // Initialize states and check dependencies
   useEffect(() => {
     if (currentStates && toggledSkills && getSkillCompetencyState) {
+      // Validate that we can get role IDs for all employees
+      const allRolesValid = employees.every(emp => {
+        const roleId = getSkillProfileId(emp.role);
+        if (!roleId) {
+          console.warn(`Invalid role mapping for employee ${emp.name}:`, emp.role);
+          return false;
+        }
+        return true;
+      });
+
       console.log('Dependencies initialized:', {
         hasCurrentStates: !!currentStates,
         hasToggledSkills: !!toggledSkills,
-        hasCompetencyReader: !!getSkillCompetencyState
+        hasCompetencyReader: !!getSkillCompetencyState,
+        allRolesValid
       });
-      setIsInitialized(true);
+
+      setIsInitialized(allRolesValid);
     }
-  }, [currentStates, toggledSkills, getSkillCompetencyState]);
+  }, [currentStates, toggledSkills, getSkillCompetencyState, employees]);
 
   // Calculate benchmark percentages for each employee
   const employeesWithBenchmarks = isInitialized ? calculateEmployeeBenchmarks(
