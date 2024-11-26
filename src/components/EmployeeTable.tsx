@@ -19,10 +19,7 @@ export const getSkillProfileId = (role: string) => {
     "AI Engineer": "123",
     "Backend Engineer": "124",
     "Frontend Engineer": "125",
-    "Engineering Manager": "126",
-    "Data Engineer": "127",
-    "DevOps Engineer": "128",
-    "Product Manager": "129"
+    "Engineering Manager": "126"
   };
   
   // First check if the input is already a role ID
