@@ -6,7 +6,6 @@ import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
-import { jobTitles } from './skills/competency/skillProfileData';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -47,14 +46,12 @@ export const EmployeeFilters = ({
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
+  const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
   const managers = Array.from(new Set(
     employees
       .filter(emp => emp.role.toLowerCase().includes('manager'))
       .map(emp => emp.name)
   ));
-
-  // Create an array of role IDs
-  const roleIds = Object.keys(jobTitles);
 
   useEffect(() => {
     onLevelChange([]);
@@ -103,12 +100,11 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={roleIds}
+          items={jobTitles}
           selectedItems={selectedJobTitle}
           onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
-          displayMap={jobTitles}
         />
         
         <LevelFilter
