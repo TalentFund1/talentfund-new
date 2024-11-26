@@ -34,11 +34,12 @@ export const EmployeeTableRow = ({
   const employeeSkills = getEmployeeSkills(employee.id);
 
   // Get the role ID based on either selected job title or employee's current role
-  const roleId = selectedJobTitle.length > 0 
+  const employeeRoleId = getSkillProfileId(getBaseRole(employee.role));
+  const selectedRoleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
-    : getSkillProfileId(getBaseRole(employee.role));
+    : employeeRoleId;
     
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  const currentRoleSkills = roleSkills[selectedRoleId as keyof typeof roleSkills];
   
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
@@ -56,17 +57,16 @@ export const EmployeeTableRow = ({
       };
     }
 
-    // If no specific skills selected, match against role skills
-    const employeeRoleId = getSkillProfileId(getBaseRole(employee.role));
+    // Get skill match count against the appropriate role
     console.log('Getting skill match count for employee:', {
       employee: employee.name,
       employeeRoleId,
-      roleId: selectedJobTitle.length > 0 ? roleId : employeeRoleId
+      roleId: selectedRoleId
     });
 
     const { matched, total } = getSkillMatchCount(
       employee.id,
-      selectedJobTitle.length > 0 ? roleId : employeeRoleId // Use selected role or employee's role
+      selectedRoleId
     );
 
     return {
@@ -159,7 +159,7 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[250px]">
         <Link 
-          to={`/skills/${roleId}`} 
+          to={`/skills/${selectedRoleId}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
         >
           {employee.role}
