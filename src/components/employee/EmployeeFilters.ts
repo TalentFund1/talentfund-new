@@ -25,7 +25,7 @@ export const filterEmployees = (
   });
 
   return employees.filter(employee => {
-    // Get employee's role ID first and check if it matches
+    // Get employee's role ID
     const employeeRoleId = getSkillProfileId(employee.role);
     
     console.log(`Filtering employee ${employee.name}:`, {
@@ -34,10 +34,13 @@ export const filterEmployees = (
       roleMatch: selectedRoleId.length === 0 || selectedRoleId.includes(employeeRoleId)
     });
 
-    // If role ID is selected and doesn't match, exclude the employee immediately
-    if (selectedRoleId.length > 0 && !selectedRoleId.includes(employeeRoleId)) {
-      console.log(`Excluding ${employee.name} due to role ID mismatch`);
-      return false;
+    // Role ID filter - if selected and doesn't match, exclude immediately
+    if (selectedRoleId.length > 0) {
+      const roleMatches = selectedRoleId.includes(employeeRoleId);
+      if (!roleMatches) {
+        console.log(`Excluding ${employee.name} - Role ID ${employeeRoleId} doesn't match selected ${selectedRoleId}`);
+        return false;
+      }
     }
 
     const matchesEmployeeSearch = searchedEmployees.length === 0 || 
