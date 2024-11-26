@@ -31,7 +31,7 @@ const calculateAverageTenure = (employeeList: any[]) => {
   return Number((totalTenure / employeeList.length).toFixed(1));
 };
 
-const Employees = () => {
+const EmployeesContent = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
   const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
@@ -95,9 +95,7 @@ const Employees = () => {
             <h1 className="text-3xl font-bold text-foreground">Employees</h1>
             <div className="space-x-2">
               <Button variant="outline">Export Data</Button>
-              <ToggledSkillsProvider>
-                <AddEmployeeDialog />
-              </ToggledSkillsProvider>
+              <AddEmployeeDialog />
             </div>
           </div>
 
@@ -146,24 +144,30 @@ const Employees = () => {
           </div>
 
           <Card className="p-6">
-            <ToggledSkillsProvider>
-              <EmployeeTable 
-                selectedDepartment={selectedDepartment}
-                selectedJobTitle={selectedJobTitle}
-                selectedLevel={selectedLevel}
-                selectedOffice={selectedOffice}
-                selectedEmploymentType={selectedEmploymentType}
-                selectedSkills={selectedSkills}
-                selectedEmployees={selectedEmployees}
-                selectedManager={selectedManager}
-              />
-            </ToggledSkillsProvider>
+            <EmployeeTable 
+              selectedDepartment={selectedDepartment}
+              selectedJobTitle={selectedJobTitle}
+              selectedLevel={selectedLevel}
+              selectedOffice={selectedOffice}
+              selectedEmploymentType={selectedEmploymentType}
+              selectedSkills={selectedSkills}
+              selectedEmployees={selectedEmployees}
+              selectedManager={selectedManager}
+            />
             <Separator className="my-4" />
             <TablePagination />
           </Card>
         </div>
       </div>
     </div>
+  );
+};
+
+const Employees = () => {
+  return (
+    <ToggledSkillsProvider>
+      <EmployeesContent />
+    </ToggledSkillsProvider>
   );
 };
 
