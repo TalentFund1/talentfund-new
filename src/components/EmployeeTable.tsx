@@ -38,7 +38,7 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId || "123"; // Default to AI Engineer if no match found
+  return mappedId || role; // Return the original role if no mapping found
 };
 
 // Add exports for the utility functions
