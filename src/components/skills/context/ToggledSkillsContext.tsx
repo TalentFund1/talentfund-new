@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { roleSkills } from '../data/roleSkills';
 import { useCompetencyStore } from '../competency/CompetencyState';
 import { useRoleStore } from '../../benchmark/RoleBenchmark';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -26,12 +27,10 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
     return new Set();
   }
 
-  // Get all skills for the role
   const specializedSkills = currentRoleSkills.specialized?.map(s => s.title) || [];
   const commonSkills = currentRoleSkills.common?.map(s => s.title) || [];
   const certificationSkills = currentRoleSkills.certifications?.map(s => s.title) || [];
 
-  // Create a set of all skills
   const skills = new Set([
     ...specializedSkills,
     ...commonSkills,
@@ -46,6 +45,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { selectedRole } = useRoleStore();
   const { initializeStates } = useCompetencyStore();
   const { id } = useParams<{ id: string }>();
+  const { toast } = useToast();
   
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
     console.log('Initializing skills by role, selected role:', selectedRole);
@@ -64,7 +64,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           }
         });
 
-        // Always ensure we have skills for the selected role
         if (selectedRole && (!result[selectedRole] || result[selectedRole].size === 0)) {
           console.log('Initializing missing skills for selected role:', selectedRole);
           result[selectedRole] = getInitialSkillsForRole(selectedRole);
@@ -80,7 +79,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return selectedRole ? { [selectedRole]: getInitialSkillsForRole(selectedRole) } : {};
   });
 
-  // Initialize competency states when role changes
   useEffect(() => {
     if (selectedRole) {
       console.log('Initializing competency states for selected role:', selectedRole);
@@ -88,7 +86,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   }, [selectedRole, initializeStates]);
 
-  // Initialize skills for new roles or when they're empty
   useEffect(() => {
     const currentRole = id || selectedRole;
     if (currentRole) {
@@ -117,7 +114,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           ...prev,
           [currentRole]: newSkills
         };
-        // Save to localStorage immediately
+        
         try {
           const serializable = Object.fromEntries(
             Object.entries(updated).map(([roleId, skills]) => [
@@ -132,8 +129,13 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         }
         return updated;
       });
+
+      // Force a re-render of components using the context
+      setTimeout(() => {
+        initializeStates(currentRole);
+      }, 0);
     }
-  }, [currentRole]);
+  }, [currentRole, initializeStates]);
 
   const toggleSkill = useCallback((skill: string) => {
     if (!currentRole) return;
@@ -145,8 +147,16 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       
       if (newSkills.has(skill)) {
         newSkills.delete(skill);
+        toast({
+          title: "Skill Removed",
+          description: `${skill} has been removed from your skills.`,
+        });
       } else {
         newSkills.add(skill);
+        toast({
+          title: "Skill Added",
+          description: `${skill} has been added to your skills.`,
+        });
       }
 
       const updated = {
@@ -154,7 +164,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         [currentRole]: newSkills
       };
 
-      // Save to localStorage immediately
       try {
         const serializable = Object.fromEntries(
           Object.entries(updated).map(([roleId, skills]) => [
@@ -168,9 +177,14 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         console.error('Error saving skills:', error);
       }
 
+      // Force a re-render of components using the context
+      setTimeout(() => {
+        initializeStates(currentRole);
+      }, 0);
+
       return updated;
     });
-  }, [currentRole]);
+  }, [currentRole, initializeStates, toast]);
 
   const contextValue = {
     toggledSkills,
