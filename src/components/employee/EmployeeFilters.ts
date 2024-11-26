@@ -57,8 +57,12 @@ export const filterEmployees = (
     const matchesJobTitle = selectedJobTitle.length === 0 || 
       selectedJobTitle.includes(getBaseRole(employee.role));
 
-    return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
+    const matches = matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
            matchesLevel && matchesOffice && matchesEmploymentType && 
            matchesManager && matchesRoleId;
+
+    console.log(`Employee ${employee.name} matches:`, matches);
+    
+    return matches;
   });
 };
