@@ -60,54 +60,43 @@ export const EmployeeTableRow = ({
 
     const matchingSkills = allRoleSkills.filter(roleSkill => {
       const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-      return employeeSkill !== undefined;
+      if (!employeeSkill) return false;
+
+      // Check competency level match
+      const roleSkillState = getSkillCompetencyState(roleSkill.title, employee.role.split(":")[1]?.trim() || "P4");
+      if (!roleSkillState) return false;
+
+      const employeeSkillLevel = currentStates[roleSkill.title]?.level || employeeSkill.level || 'unspecified';
+      const roleSkillLevel = roleSkillState.level;
+
+      const getLevelPriority = (level: string = 'unspecified') => {
+        const priorities: { [key: string]: number } = {
+          'advanced': 3,
+          'intermediate': 2,
+          'beginner': 1,
+          'unspecified': 0
+        };
+        return priorities[level.toLowerCase()] ?? 0;
+      };
+
+      const employeePriority = getLevelPriority(employeeSkillLevel);
+      const rolePriority = getLevelPriority(roleSkillLevel);
+
+      return employeePriority >= rolePriority;
+    });
+
+    console.log('Skill match calculation:', {
+      employeeName: employee.name,
+      roleId,
+      totalSkills: allRoleSkills.length,
+      matchingSkills: matchingSkills.length,
+      skills: matchingSkills.map(s => s.title)
     });
 
     return {
       count: `${matchingSkills.length} / ${allRoleSkills.length}`,
       isExactSkillMatch: matchingSkills.length === allRoleSkills.length && allRoleSkills.length > 0
     };
-  };
-
-  const renderBenchmark = () => {
-    if (selectedSkills.length > 0) {
-      return (
-        <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
-          {selectedSkills.map(skillName => {
-            const employeeSkill = employeeSkills.find(s => s.title === skillName);
-            if (!employeeSkill) return null;
-
-            const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4");
-            const skillState = currentStates[skillName];
-            const isSkillGoal = skillState?.requirement === 'required' || 
-                               skillState?.requirement === 'skill_goal';
-            
-            return (
-              <SkillBubble
-                key={skillName}
-                skillName={skillName}
-                level={competencyState?.level || employeeSkill.level}
-                isRequired={isSkillGoal}
-              />
-            );
-          })}
-        </div>
-      );
-    }
-
-    return (
-      <div className="flex justify-center">
-        <span className={`px-2.5 py-1 rounded-full text-sm ${
-          employee.benchmark >= 80 
-            ? 'bg-green-100 text-green-800' 
-            : employee.benchmark >= 60
-            ? 'bg-orange-100 text-orange-800'
-            : 'bg-red-100 text-red-800'
-        }`}>
-          {employee.benchmark}%
-        </span>
-      </div>
-    );
   };
 
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
@@ -164,7 +153,15 @@ export const EmployeeTableRow = ({
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
       <td className="py-4 w-[200px] text-center">
-        {renderBenchmark()}
+        <span className={`px-2.5 py-1 rounded-full text-sm ${
+          parseInt(count.split('/')[0]) / parseInt(count.split('/')[1]) >= 0.8 
+            ? 'bg-green-100 text-green-800' 
+            : parseInt(count.split('/')[0]) / parseInt(count.split('/')[1]) >= 0.6
+            ? 'bg-orange-100 text-orange-800'
+            : 'bg-red-100 text-red-800'
+        }`}>
+          {Math.round((parseInt(count.split('/')[0]) / parseInt(count.split('/')[1])) * 100)}%
+        </span>
       </td>
       <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
