@@ -9,6 +9,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { Avatar } from "@/components/ui/avatar";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -142,11 +143,17 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[200px]">
         <div className="flex items-center gap-2">
-          <img 
-            src={imageUrl}
-            alt={employee.name}
-            className="w-6 h-6 rounded-full object-cover"
-          />
+          <Avatar className="h-8 w-8">
+            <img 
+              src={imageUrl}
+              alt={employee.name}
+              className="h-full w-full object-cover rounded-full"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(employee.name)}&background=random`;
+              }}
+            />
+          </Avatar>
           <div className="flex items-center gap-2">
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
