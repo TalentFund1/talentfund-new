@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole, getLevel } from "../utils/roleUtils";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
