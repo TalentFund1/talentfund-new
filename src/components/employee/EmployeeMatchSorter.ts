@@ -10,13 +10,11 @@ export const sortEmployeesByRoleMatch = (
   getSkillCompetencyState: any
 ): Employee[] => {
   if (selectedJobTitle.length === 0) {
-    // If no role is selected, benchmark against their own role type (manager vs non-manager)
+    // If no role is selected, benchmark against their own assigned role
     return employees.map(employee => {
-      const isManager = employee.role.toLowerCase().includes('manager');
-      const roleId = isManager ? "126" : getSkillProfileId(employee.role); // 126 is Engineering Manager
+      const roleId = getSkillProfileId(employee.role);
       
       console.log(`Default role benchmark for ${employee.name}:`, {
-        isManager,
         roleId,
         employeeRole: employee.role
       });
@@ -32,7 +30,7 @@ export const sortEmployeesByRoleMatch = (
 
       return {
         ...employee,
-        isExactMatch: true, // When comparing against own role type
+        isExactMatch: true, // When comparing against own role
         benchmark
       };
     });
@@ -48,7 +46,7 @@ export const sortEmployeesByRoleMatch = (
     isManagerRole
   });
 
-  // Calculate benchmarks for all employees
+  // Calculate benchmarks for all employees against selected role
   const employeesWithBenchmarks = employees.map(employee => {
     const isEmployeeManager = employee.role.toLowerCase().includes('manager');
     
