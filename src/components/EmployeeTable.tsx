@@ -6,9 +6,7 @@ import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./skills/competency/CompetencyStateReader";
 import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
-import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
-import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 
@@ -82,20 +80,9 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
-  // Calculate benchmark percentages for each employee
-  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
-    employees,
-    selectedJobTitle,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
-  );
-
-  console.log('Employees with benchmarks:', employeesWithBenchmarks);
-
   // Filter employees based on all criteria including skills and employee search
   const preFilteredEmployees = filterEmployees(
-    employeesWithBenchmarks,
+    employees,
     selectedEmployees,
     selectedDepartment,
     selectedJobTitle,
@@ -109,20 +96,9 @@ export const EmployeeTable = ({
   console.log('Pre-filtered employees:', preFilteredEmployees);
 
   // Apply skills filter
-  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+  const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
-  console.log('Skill filtered employees:', skillFilteredEmployees);
-
-  // Sort employees by role match and benchmark percentage
-  const filteredEmployees = sortEmployeesByRoleMatch(
-    skillFilteredEmployees,
-    selectedJobTitle,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
-  );
-
-  console.log('Final filtered and sorted employees:', filteredEmployees);
+  console.log('Filtered employees:', filteredEmployees);
 
   return (
     <div className="bg-white rounded-lg">
@@ -162,5 +138,3 @@ export const EmployeeTable = ({
     </div>
   );
 };
-
-

@@ -62,7 +62,7 @@ export const EmployeeTableRow = ({
     };
   };
 
-  const renderBenchmark = () => {
+  const renderSkills = () => {
     if (selectedSkills.length > 0) {
       return (
         <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
@@ -87,20 +87,7 @@ export const EmployeeTableRow = ({
         </div>
       );
     }
-
-    return (
-      <div className="flex justify-center">
-        <span className={`px-2.5 py-1 rounded-full text-sm ${
-          employee.benchmark >= 80 
-            ? 'bg-green-100 text-green-800' 
-            : employee.benchmark >= 60
-            ? 'bg-orange-100 text-orange-800'
-            : 'bg-red-100 text-red-800'
-        }`}>
-          {employee.benchmark}%
-        </span>
-      </div>
-    );
+    return null;
   };
 
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
@@ -154,7 +141,7 @@ export const EmployeeTableRow = ({
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
       <td className="py-4 w-[200px] text-center">
-        {renderBenchmark()}
+        {renderSkills()}
       </td>
       <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
