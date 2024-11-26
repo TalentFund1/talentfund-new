@@ -8,6 +8,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { calculateSkillMatch } from "../skills/utils/skillMatching";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
 interface EmployeeTableRowContentProps {
   employee: Employee;
