@@ -8,7 +8,7 @@ import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
-import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
+import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 
@@ -81,7 +81,7 @@ export const EmployeeTable = ({
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
   const employees = useEmployeeStore((state) => state.employees);
 
-  console.log('Selected Role Title:', selectedRoleTitle);
+  console.log('Selected Role Title (ID):', selectedRoleTitle);
 
   // Filter employees based on all criteria including role ID
   const preFilteredEmployees = filterEmployees(
@@ -94,7 +94,7 @@ export const EmployeeTable = ({
     selectedEmploymentType,
     selectedSkills,
     selectedManager,
-    selectedRoleTitle
+    selectedRoleTitle // This is now correctly passed as selectedRoleId
   );
 
   // Apply skills filter
@@ -103,27 +103,13 @@ export const EmployeeTable = ({
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
   // Calculate benchmark percentages for filtered employees
-  const employeesWithBenchmarks = skillFilteredEmployees.map(employee => {
-    // Use the employee's current role ID for skill matching
-    const roleId = getSkillProfileId(employee.role);
-    
-    console.log('Calculating benchmark for employee:', {
-      name: employee.name,
-      roleId,
-      currentRole: employee.role
-    });
-
-    const benchmark = calculateBenchmarkPercentage(
-      employee.id,
-      roleId,
-      getLevel(employee.role),
-      currentStates,
-      toggledSkills,
-      getSkillCompetencyState
-    );
-
-    return { ...employee, benchmark };
-  });
+  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+    skillFilteredEmployees,
+    selectedJobTitle,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
+  );
 
   console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
