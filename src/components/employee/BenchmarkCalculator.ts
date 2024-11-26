@@ -36,13 +36,19 @@ export const calculateBenchmarkPercentage = (
     return employeeSkill !== undefined;
   });
 
+  const skillMatchPercentage = (matchingSkills.length / totalToggledSkills) * 100;
+  console.log('Skill match calculation:', {
+    matching: matchingSkills.length,
+    total: totalToggledSkills,
+    percentage: skillMatchPercentage
+  });
+
   // 2. Competency Level Match (33.33% weight)
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
     if (!roleSkillState) {
       console.log('No competency state found for skill:', skill.title);
-      // For manager roles, consider it a match if they have the skill
-      return getBaseRole(level).toLowerCase().includes('m');
+      return false;
     }
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
@@ -70,36 +76,45 @@ export const calculateBenchmarkPercentage = (
     return employeePriority >= rolePriority;
   });
 
+  const competencyMatchPercentage = (competencyMatchingSkills.length / totalToggledSkills) * 100;
+  console.log('Competency match calculation:', {
+    matching: competencyMatchingSkills.length,
+    total: totalToggledSkills,
+    percentage: competencyMatchPercentage
+  });
+
   // 3. Skill Goal Match (33.33% weight)
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) {
       console.log('No skill state found for skill:', skill.title);
-      // For manager roles, consider it a match if they have the skill
-      return getBaseRole(level).toLowerCase().includes('m');
+      return false;
     }
-    return skillState.requirement === 'required' || 
-           skillState.requirement === 'skill_goal';
+    const isMatch = skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
+    console.log('Skill goal check:', {
+      skill: skill.title,
+      requirement: skillState.requirement,
+      isMatch
+    });
+    return isMatch;
   });
 
-  // Calculate individual percentages
-  const skillMatchPercentage = (matchingSkills.length / totalToggledSkills) * 100;
-  const competencyMatchPercentage = (competencyMatchingSkills.length / totalToggledSkills) * 100;
   const skillGoalMatchPercentage = (skillGoalMatchingSkills.length / totalToggledSkills) * 100;
+  console.log('Skill goal match calculation:', {
+    matching: skillGoalMatchingSkills.length,
+    total: totalToggledSkills,
+    percentage: skillGoalMatchPercentage
+  });
 
-  // Calculate weighted average (equal weights)
+  // Calculate weighted average with equal weights
   const averagePercentage = Math.round(
     (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
   );
 
-  console.log('Benchmark calculation results:', {
+  console.log('Final benchmark calculation:', {
     employeeId,
     roleId,
     level,
-    totalSkills: totalToggledSkills,
-    matchingSkills: matchingSkills.length,
-    competencyMatches: competencyMatchingSkills.length,
-    skillGoalMatches: skillGoalMatchingSkills.length,
     skillMatchPercentage,
     competencyMatchPercentage,
     skillGoalMatchPercentage,
