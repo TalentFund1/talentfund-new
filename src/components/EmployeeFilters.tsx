@@ -2,7 +2,7 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
-import { getBaseRole } from './EmployeeTable';
+import { getBaseRole, getSkillProfileId } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
@@ -58,8 +58,8 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Create role titles list with IDs
-  const roleTitles = Object.entries(jobTitles).map(([id, title]) => `${title} (${id})`);
+  // Get unique role IDs from employees
+  const roleIds = Array.from(new Set(employees.map(emp => getSkillProfileId(emp.role))));
 
   useEffect(() => {
     onLevelChange([]);
@@ -118,8 +118,8 @@ export const EmployeeFilters = ({
 
         <SearchFilter
           label=""
-          placeholder="Role Title"
-          items={roleTitles}
+          placeholder="Role ID"
+          items={roleIds}
           selectedItems={selectedRoleTitle}
           onItemsChange={(items) => onRoleTitleChange(items.map(item => String(item)))}
           singleSelect={true}
