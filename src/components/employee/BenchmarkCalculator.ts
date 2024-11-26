@@ -1,4 +1,3 @@
-import { Employee } from "../types/employeeTypes";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 
