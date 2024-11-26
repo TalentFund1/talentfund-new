@@ -1,7 +1,7 @@
 import { Employee } from "../types/employeeTypes";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
-import { getSkillProfileId } from "../EmployeeTable";
+import { getSkillProfileId } from "../utils/roleUtils";
 
 export const filterEmployeesBySkills = (
   employees: Employee[],

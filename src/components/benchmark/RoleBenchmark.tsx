@@ -9,7 +9,7 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole, getLevel } from "../utils/roleUtils";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 
