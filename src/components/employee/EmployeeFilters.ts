@@ -30,9 +30,12 @@ export const filterEmployees = (
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
 
-    // Match by role ID instead of role title
+    // Match by role ID or base role
     const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(employee.id);
+      selectedJobTitle.some(title => {
+        const roleId = getSkillProfileId(title);
+        return roleId === getSkillProfileId(employee.role);
+      });
     
     const matchesLevel = selectedLevel.length === 0 || 
       selectedLevel.includes(getLevel(employee.role));
