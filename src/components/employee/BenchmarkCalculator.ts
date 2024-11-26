@@ -10,17 +10,35 @@ export const calculateBenchmarkPercentage = (
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ) => {
-  console.log('Starting benchmark calculation:', { employeeId, roleId, level });
+  console.log('Starting benchmark calculation:', { 
+    employeeId, 
+    roleId, 
+    level,
+    hasCurrentStates: !!currentStates,
+    hasToggledSkills: !!toggledSkills,
+    hasCompetencyReader: !!getSkillCompetencyState
+  });
   
   // Validation checks
   if (!employeeId || !roleId || !currentStates || !toggledSkills || !getSkillCompetencyState) {
-    console.log('Missing required dependencies for benchmark calculation');
+    console.warn('Missing required dependencies for benchmark calculation:', {
+      employeeId,
+      roleId,
+      hasCurrentStates: !!currentStates,
+      hasToggledSkills: !!toggledSkills,
+      hasCompetencyReader: !!getSkillCompetencyState
+    });
     return 0;
   }
   
   const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
+  if (!currentRoleSkills) {
+    console.warn('No role skills found for role ID:', roleId);
+    return 0;
+  }
+
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -31,7 +49,7 @@ export const calculateBenchmarkPercentage = (
   const totalToggledSkills = toggledRoleSkills.length;
 
   if (totalToggledSkills === 0) {
-    console.log('No toggled skills found, returning 0%');
+    console.log('No toggled skills found for role:', roleId);
     return 0;
   }
 

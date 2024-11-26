@@ -11,6 +11,7 @@ import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
+import { useEffect, useState } from "react";
 
 export const getSkillProfileId = (role: string) => {
   // Validate role ID format first
@@ -39,6 +40,10 @@ export const getSkillProfileId = (role: string) => {
     baseRole,
     mappedId
   });
+  
+  if (!mappedId) {
+    console.warn('No role mapping found for:', role);
+  }
   
   return mappedId || "123";
 };
@@ -77,17 +82,27 @@ export const EmployeeTable = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
+  const [isInitialized, setIsInitialized] = useState(false);
+  
   const employees = useEmployeeStore((state) => {
     console.log('Current employees in store:', state.employees);
     return state.employees;
   });
 
-  // Ensure all required dependencies are initialized
-  const isReady = currentStates && toggledSkills && getSkillCompetencyState;
-  console.log('Employee table dependencies ready:', isReady);
+  // Initialize states and check dependencies
+  useEffect(() => {
+    if (currentStates && toggledSkills && getSkillCompetencyState) {
+      console.log('Dependencies initialized:', {
+        hasCurrentStates: !!currentStates,
+        hasToggledSkills: !!toggledSkills,
+        hasCompetencyReader: !!getSkillCompetencyState
+      });
+      setIsInitialized(true);
+    }
+  }, [currentStates, toggledSkills, getSkillCompetencyState]);
 
   // Calculate benchmark percentages for each employee
-  const employeesWithBenchmarks = isReady ? calculateEmployeeBenchmarks(
+  const employeesWithBenchmarks = isInitialized ? calculateEmployeeBenchmarks(
     employees,
     selectedJobTitle,
     currentStates,
@@ -118,7 +133,7 @@ export const EmployeeTable = ({
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
   // Sort employees by role match and benchmark percentage
-  const filteredEmployees = isReady ? sortEmployeesByRoleMatch(
+  const filteredEmployees = isInitialized ? sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     selectedJobTitle,
     currentStates,
