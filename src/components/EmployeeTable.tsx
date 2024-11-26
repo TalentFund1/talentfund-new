@@ -14,7 +14,6 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { roleSkills } from "./skills/data/roleSkills";
 
 export const getSkillProfileId = (role: string) => {
-  // Map role titles to IDs with consistent structure
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
     "Backend Engineer": "124",
@@ -22,13 +21,11 @@ export const getSkillProfileId = (role: string) => {
     "Engineering Manager": "126"
   };
   
-  // First check if the input is already a role ID
   if (Object.values(roleMap).includes(role)) {
     console.log('Using direct role ID:', role);
     return role;
   }
 
-  // Extract base role from role string (e.g. "Backend Engineer: P4" -> "Backend Engineer")
   const baseRole = getBaseRole(role);
   const mappedId = roleMap[baseRole];
   
@@ -38,22 +35,21 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId || role; // Return the original role if no mapping found
+  return mappedId || role;
 };
 
-// Add exports for the utility functions
 export const getBaseRole = (role: string): string => {
   return role.split(":")[0].trim();
 };
 
 export const getLevel = (role: string): string => {
   const parts = role.split(":");
-  return parts.length > 1 ? parts[1].trim() : "P4"; // Default to P4 if no level specified
+  return parts.length > 1 ? parts[1].trim() : "P4";
 };
 
 interface EmployeeTableProps {
   selectedDepartment: string[];
-  selectedJobTitle: string[];  // These are actually role IDs now
+  selectedJobTitle: string[];
   selectedLevel?: string[];
   selectedOffice?: string[];
   selectedEmploymentType?: string[];
@@ -90,13 +86,19 @@ export const EmployeeTable = ({
   );
 
   const getRoleSkills = (roleId: string) => {
+    console.log('Getting skills for role ID:', roleId);
     const role = roleSkills[roleId as keyof typeof roleSkills];
-    if (!role) return [];
-    return [
+    if (!role) {
+      console.log('No role skills found for ID:', roleId);
+      return [];
+    }
+    const skills = [
       ...role.specialized.map(s => s.title),
       ...role.common.map(s => s.title),
       ...role.certifications.map(s => s.title)
     ];
+    console.log('Found skills for role:', skills);
+    return skills;
   };
 
   console.log('Employees with benchmarks:', employeesWithBenchmarks);
@@ -112,12 +114,30 @@ export const EmployeeTable = ({
     selectedSkills,
     selectedManager
   ).map(employee => {
-    const roleId = getSkillProfileId(employee.role);
-    const allRoleSkills = getRoleSkills(roleId);
+    // If a role is selected in the filter, use that role's ID for comparison
+    // Otherwise, use the employee's own role ID
+    const compareRoleId = selectedJobTitle.length > 0 ? selectedJobTitle[0] : getSkillProfileId(employee.role);
+    console.log('Comparing skills for employee:', {
+      employee: employee.name,
+      compareRoleId,
+      selectedJobTitle,
+      employeeRoleId: getSkillProfileId(employee.role)
+    });
+    
+    const allRoleSkills = getRoleSkills(compareRoleId);
     const employeeSkills = employee.skills || [];
     const matchingSkills = allRoleSkills.filter(skill => 
       employeeSkills.includes(skill)
     );
+
+    console.log('Skill matching results:', {
+      employee: employee.name,
+      totalRoleSkills: allRoleSkills.length,
+      matchingSkills: matchingSkills.length,
+      employeeSkills,
+      roleSkills: allRoleSkills
+    });
+
     return {
       ...employee,
       skillMatch: `${matchingSkills.length} / ${allRoleSkills.length}`
