@@ -1,6 +1,6 @@
 import { Employee } from "../types/employeeTypes";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
-import { getSkillProfileId, getLevel } from "../utils/roleUtils";
+import { getSkillProfileId, getLevel } from "../EmployeeTable";
 
 export const calculateEmployeeBenchmarks = (
   employees: Employee[],
@@ -15,11 +15,6 @@ export const calculateEmployeeBenchmarks = (
     if (selectedJobTitle.length > 0) {
       // Calculate benchmark against selected job title
       const roleId = getSkillProfileId(selectedJobTitle[0]);
-      if (!roleId) {
-        console.warn('Invalid role ID for selected job title:', selectedJobTitle[0]);
-        return { ...employee, benchmark: 0 };
-      }
-      
       const level = getLevel(employee.role);
       benchmark = calculateBenchmarkPercentage(
         employee.id,
@@ -32,11 +27,6 @@ export const calculateEmployeeBenchmarks = (
     } else {
       // Calculate benchmark against employee's current role
       const roleId = getSkillProfileId(employee.role);
-      if (!roleId) {
-        console.warn('Invalid role ID for employee role:', employee.role);
-        return { ...employee, benchmark: 0 };
-      }
-      
       const level = getLevel(employee.role);
       benchmark = calculateBenchmarkPercentage(
         employee.id,

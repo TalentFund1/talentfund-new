@@ -1,58 +1,57 @@
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
+import { getBaseRole } from "../EmployeeTable";
 
 export const calculateBenchmarkPercentage = (
-  employeeId: string,
-  roleId: string | null,
+  employeeId: string, 
+  roleId: string, 
   level: string,
   currentStates: any,
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
-): number => {
-  console.log('Calculating benchmark percentage:', {
-    employeeId,
-    roleId,
-    level,
-    hasCurrentStates: !!currentStates,
-    toggledSkillsCount: toggledSkills.size
+) => {
+  console.log('Calculating benchmark:', { employeeId, roleId, level });
+  
+  const employeeSkills = getEmployeeSkills(employeeId);
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  // Only consider toggled skills for the benchmark
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+  const totalToggledSkills = toggledRoleSkills.length;
+
+  if (totalToggledSkills === 0) {
+    console.log('No toggled skills found, returning 0%');
+    return 0;
+  }
+
+  // 1. Skill Match (33.33% weight)
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
+    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+    return employeeSkill !== undefined;
   });
 
-  if (!roleId || !currentStates || !toggledSkills || !getSkillCompetencyState) {
-    console.warn('Missing required dependencies for benchmark calculation');
-    return 0;
-  }
+  // 2. Competency Level Match (33.33% weight)
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
+    if (!roleSkillState) {
+      console.log('No competency state found for skill:', skill.title);
+      return getBaseRole(level).toLowerCase().includes('m');
+    }
 
-  const employeeSkills = getEmployeeSkills(employeeId);
-  const profileSkills = roleSkills[roleId as keyof typeof roleSkills];
-
-  if (!profileSkills) {
-    console.warn('No role skills found for profile:', roleId);
-    return 0;
-  }
-
-  // Get all skills for the role
-  const allRoleSkills = [
-    ...profileSkills.specialized,
-    ...profileSkills.common,
-    ...profileSkills.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
-
-  if (allRoleSkills.length === 0) {
-    console.log('No toggled skills found for role');
-    return 0;
-  }
-
-  // Calculate matches
-  let matchCount = 0;
-  allRoleSkills.forEach(roleSkill => {
-    const employeeSkill = employeeSkills.find(s => s.title === roleSkill.title);
-    if (!employeeSkill) return;
-
-    const roleSkillState = getSkillCompetencyState(roleSkill.title, level);
-    if (!roleSkillState) return;
-
-    const employeeSkillLevel = currentStates[roleSkill.title]?.level || employeeSkill.level;
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
+
+    console.log('Comparing skill levels:', {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel
+    });
 
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
@@ -67,18 +66,43 @@ export const calculateBenchmarkPercentage = (
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    if (employeePriority >= rolePriority) {
-      matchCount++;
+    return employeePriority >= rolePriority;
+  });
+
+  // 3. Skill Goal Match (33.33% weight)
+  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
+    const skillState = currentStates[skill.title];
+    if (!skillState) {
+      console.log('No skill state found for skill:', skill.title);
+      return getBaseRole(level).toLowerCase().includes('m');
     }
+    return skillState.requirement === 'required' || 
+           skillState.requirement === 'skill_goal';
   });
 
-  const percentage = (matchCount / allRoleSkills.length) * 100;
-  
-  console.log('Benchmark calculation result:', {
-    matchCount,
-    totalSkills: allRoleSkills.length,
-    percentage
+  // Calculate individual percentages
+  const skillMatchPercentage = (matchingSkills.length / totalToggledSkills) * 100;
+  const competencyMatchPercentage = (competencyMatchingSkills.length / totalToggledSkills) * 100;
+  const skillGoalMatchPercentage = (skillGoalMatchingSkills.length / totalToggledSkills) * 100;
+
+  // Calculate weighted average
+  const averagePercentage = Math.round(
+    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
+  );
+
+  console.log('Benchmark calculation results:', {
+    employeeId,
+    roleId,
+    level,
+    totalSkills: totalToggledSkills,
+    matchingSkills: matchingSkills.length,
+    competencyMatches: competencyMatchingSkills.length,
+    skillGoalMatches: skillGoalMatchingSkills.length,
+    skillMatchPercentage,
+    competencyMatchPercentage,
+    skillGoalMatchPercentage,
+    averagePercentage
   });
 
-  return Math.round(percentage);
+  return averagePercentage;
 };

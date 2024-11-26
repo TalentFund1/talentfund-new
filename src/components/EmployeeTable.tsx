@@ -8,10 +8,49 @@ import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
+import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
-import { useEffect, useState } from "react";
-import { getSkillProfileId } from "./utils/roleUtils";
+
+export const getSkillProfileId = (role: string) => {
+  // Validate role ID format first
+  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
+  if (validProfileIds.includes(role)) {
+    console.log('Using direct role ID:', role);
+    return role;
+  }
+
+  // Map role titles to IDs with consistent structure
+  const roleMap: { [key: string]: string } = {
+    "AI Engineer": "123",
+    "Backend Engineer": "124",
+    "Frontend Engineer": "125",
+    "Engineering Manager": "126",
+    "Data Engineer": "127",
+    "DevOps Engineer": "128",
+    "Product Manager": "129"
+  };
+  
+  const baseRole = role.split(":")[0].trim();
+  const mappedId = roleMap[baseRole];
+  
+  console.log('Role mapping:', { 
+    originalRole: role,
+    baseRole,
+    mappedId
+  });
+  
+  return mappedId || "123";
+};
+
+export const getBaseRole = (role: string) => {
+  return role.split(":")[0].trim();
+};
+
+export const getLevel = (role: string) => {
+  const parts = role.split(":");
+  return parts.length > 1 ? parts[1].trim() : "";
+};
 
 interface EmployeeTableProps {
   selectedDepartment: string[];
@@ -38,38 +77,25 @@ export const EmployeeTable = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
-  const [isInitialized, setIsInitialized] = useState(false);
-  
   const employees = useEmployeeStore((state) => {
     console.log('Current employees in store:', state.employees);
     return state.employees;
   });
 
-  useEffect(() => {
-    if (currentStates && toggledSkills && getSkillCompetencyState) {
-      const allRolesValid = employees.every(emp => {
-        const roleId = getSkillProfileId(emp.role);
-        if (!roleId) {
-          console.warn(`Invalid role mapping for employee ${emp.name}:`, emp.role);
-          return false;
-        }
-        return true;
-      });
+  // Calculate benchmark percentages for each employee
+  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+    employees,
+    selectedJobTitle,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
+  );
 
-      console.log('Dependencies initialized:', {
-        hasCurrentStates: !!currentStates,
-        hasToggledSkills: !!toggledSkills,
-        hasCompetencyReader: !!getSkillCompetencyState,
-        allRolesValid
-      });
-
-      setIsInitialized(allRolesValid);
-    }
-  }, [currentStates, toggledSkills, getSkillCompetencyState, employees]);
+  console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
   // Filter employees based on all criteria including skills and employee search
   const preFilteredEmployees = filterEmployees(
-    employees,
+    employeesWithBenchmarks,
     selectedEmployees,
     selectedDepartment,
     selectedJobTitle,
@@ -88,13 +114,13 @@ export const EmployeeTable = ({
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
   // Sort employees by role match and benchmark percentage
-  const filteredEmployees = isInitialized ? sortEmployeesByRoleMatch(
+  const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     selectedJobTitle,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
-  ) : skillFilteredEmployees;
+  );
 
   console.log('Final filtered and sorted employees:', filteredEmployees);
 
@@ -136,3 +162,5 @@ export const EmployeeTable = ({
     </div>
   );
 };
+
+
