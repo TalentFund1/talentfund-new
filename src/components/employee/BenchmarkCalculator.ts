@@ -21,7 +21,6 @@ export const calculateBenchmarkPercentage = (
     ...currentRoleSkills.certifications
   ];
 
-  // Only consider toggled skills for the benchmark
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
   const totalToggledSkills = toggledRoleSkills.length;
 

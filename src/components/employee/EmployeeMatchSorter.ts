@@ -14,7 +14,7 @@ export const sortEmployeesByRoleMatch = (
   const selectedRole = selectedJobTitle[0];
   const roleId = getSkillProfileId(selectedRole);
 
-  // Calculate benchmarks for all employees
+  // Calculate benchmarks for all employees using the same logic as profile view
   const employeesWithBenchmarks = employees.map(employee => {
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
