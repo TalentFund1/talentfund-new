@@ -4,7 +4,7 @@ import { getSkillProfileId, getLevel } from "../EmployeeTable";
 
 export const calculateEmployeeBenchmarks = (
   employees: Employee[],
-  selectedJobTitle: string[],
+  selectedRoleTitle: string[],
   currentStates: any,
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
@@ -12,26 +12,12 @@ export const calculateEmployeeBenchmarks = (
   return employees.map(employee => {
     let benchmark = 0;
     
-    if (selectedJobTitle.length > 0) {
-      // Calculate benchmark against selected job title
-      const roleId = getSkillProfileId(selectedJobTitle[0]);
-      const level = getLevel(employee.role);
+    if (selectedRoleTitle.length > 0) {
+      // Use the selected role ID directly
       benchmark = calculateBenchmarkPercentage(
         employee.id,
-        roleId,
-        level,
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      );
-    } else {
-      // Calculate benchmark against employee's current role
-      const roleId = getSkillProfileId(employee.role);
-      const level = getLevel(employee.role);
-      benchmark = calculateBenchmarkPercentage(
-        employee.id,
-        roleId,
-        level,
+        selectedRoleTitle[0],
+        getLevel(employee.role),
         currentStates,
         toggledSkills,
         getSkillCompetencyState
