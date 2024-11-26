@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useEffect, useState } from "react";
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -18,38 +19,49 @@ export const CategoryCards = ({
 }: CategoryCardsProps) => {
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const [counts, setCounts] = useState<{ [key: string]: { required: number; preferred: number } }>({});
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  const getSkillsByCategory = (category: string) => {
-    const allSkills = [
-      ...(currentRoleSkills.specialized || []),
-      ...(currentRoleSkills.common || []),
-      ...(currentRoleSkills.certifications || [])
-    ].filter(skill => toggledSkills.has(skill.title));
+  useEffect(() => {
+    const getSkillsByCategory = (category: string) => {
+      const allSkills = [
+        ...(currentRoleSkills.specialized || []),
+        ...(currentRoleSkills.common || []),
+        ...(currentRoleSkills.certifications || [])
+      ].filter(skill => toggledSkills.has(skill.title));
 
-    if (category === 'all') return allSkills;
+      if (category === 'all') return allSkills;
 
-    const categoryMap: { [key: string]: string[] } = {
-      specialized: currentRoleSkills.specialized?.map(s => s.title) || [],
-      common: currentRoleSkills.common?.map(s => s.title) || [],
-      certification: currentRoleSkills.certifications?.map(s => s.title) || []
+      const categoryMap: { [key: string]: string[] } = {
+        specialized: currentRoleSkills.specialized?.map(s => s.title) || [],
+        common: currentRoleSkills.common?.map(s => s.title) || [],
+        certification: currentRoleSkills.certifications?.map(s => s.title) || []
+      };
+
+      return allSkills.filter(skill => categoryMap[category]?.includes(skill.title));
     };
 
-    return allSkills.filter(skill => categoryMap[category]?.includes(skill.title));
-  };
+    const calculateCounts = () => {
+      const newCounts: { [key: string]: { required: number; preferred: number } } = {};
+      
+      ['all', 'specialized', 'common', 'certification'].forEach(category => {
+        const skills = getSkillsByCategory(category);
+        let required = 0, preferred = 0;
 
-  const getCounts = (category: string) => {
-    const skills = getSkillsByCategory(category);
-    let required = 0, preferred = 0;
+        skills.forEach(skill => {
+          const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+          if (competencyState?.required === 'required') required++;
+          if (competencyState?.required === 'preferred') preferred++;
+        });
 
-    skills.forEach(skill => {
-      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      if (competencyState?.required === 'required') required++;
-      if (competencyState?.required === 'preferred') preferred++;
-    });
+        newCounts[category] = { required, preferred };
+      });
 
-    return { required, preferred };
-  };
+      setCounts(newCounts);
+    };
+
+    calculateCounts();
+  }, [currentRoleSkills, toggledSkills, selectedLevel, getSkillCompetencyState]);
 
   const categories = [
     { id: "all", title: "All Categories" },
@@ -58,11 +70,18 @@ export const CategoryCards = ({
     { id: "certification", title: "Certification" }
   ];
 
+  console.log('CategoryCards render:', {
+    selectedCategory,
+    toggledSkills: Array.from(toggledSkills),
+    counts,
+    roleId
+  });
+
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
       {categories.map((category) => {
-        const counts = getCounts(category.id);
-        const total = counts.required + counts.preferred;
+        const categoryCount = counts[category.id] || { required: 0, preferred: 0 };
+        const total = categoryCount.required + categoryCount.preferred;
         
         return (
           <button
