@@ -1,10 +1,18 @@
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Link } from "react-router-dom";
-import { Employee } from "../types/employeeTypes";
 
 interface EmployeeDetailsProps {
-  employee: Employee;
+  employee: {
+    department: string;
+    office: string;
+    category: string;
+    manager: string;
+    startDate: string;
+    termDate: string;
+    tenure: string;
+  };
   id: string;
 }
 
@@ -22,7 +30,7 @@ const calculateTenure = (startDate: string, termDate: string | null): string => 
 };
 
 export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
-  const tenure = calculateTenure(employee.startDate || "", employee.termDate === "-" ? null : employee.termDate);
+  const tenure = calculateTenure(employee.startDate, employee.termDate === "-" ? null : employee.termDate);
   const employeeSkills = getEmployeeSkills(id);
   const totalSkills = employeeSkills.length;
 
@@ -50,7 +58,7 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
             to="/employee/126" 
             className="font-medium text-primary hover:text-primary-accent transition-colors block"
           >
-            {employee.manager}
+            Sus Manu
           </Link>
         </div>
         <div className="space-y-1">

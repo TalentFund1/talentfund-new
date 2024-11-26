@@ -1,5 +1,4 @@
 import { BenchmarkProgressBar } from "./BenchmarkProgressBar";
-import { memo } from "react";
 
 interface BenchmarkAnalysisCardProps {
   skillMatch: { current: number; total: number };
@@ -7,27 +6,20 @@ interface BenchmarkAnalysisCardProps {
   skillGoals: { current: number; total: number };
 }
 
-export const BenchmarkAnalysisCard = memo(({ 
+export const BenchmarkAnalysisCard = ({ 
   skillMatch, 
   competencyMatch, 
   skillGoals 
 }: BenchmarkAnalysisCardProps) => {
   // Calculate individual percentages
-  const skillMatchPercentage = Math.round((skillMatch.current / (skillMatch.total || 1)) * 100);
-  const competencyMatchPercentage = Math.round((competencyMatch.current / (competencyMatch.total || 1)) * 100);
-  const skillGoalMatchPercentage = Math.round((skillGoals.current / (skillGoals.total || 1)) * 100);
+  const skillMatchPercentage = Math.round((skillMatch.current / skillMatch.total) * 100);
+  const competencyMatchPercentage = Math.round((competencyMatch.current / competencyMatch.total) * 100);
+  const skillGoalMatchPercentage = Math.round((skillGoals.current / skillGoals.total) * 100);
 
   // Calculate average percentage
   const averagePercentage = Math.round(
     (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
   );
-
-  console.log('Rendering BenchmarkAnalysisCard with values:', {
-    skillMatch,
-    competencyMatch,
-    skillGoals,
-    averagePercentage
-  });
 
   return (
     <div className="space-y-8">
@@ -61,6 +53,4 @@ export const BenchmarkAnalysisCard = memo(({
       </div>
     </div>
   );
-});
-
-BenchmarkAnalysisCard.displayName = 'BenchmarkAnalysisCard';
+};
