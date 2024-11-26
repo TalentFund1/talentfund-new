@@ -13,7 +13,7 @@ export const filterEmployees = (
   selectedManager: string[] = [],
   selectedRoleId: string[] = []
 ): Employee[] => {
-  console.log('Filtering employees with criteria:', {
+  console.log('Starting employee filtering with criteria:', {
     searchedEmployees,
     selectedDepartment,
     selectedJobTitle,
@@ -25,6 +25,20 @@ export const filterEmployees = (
   });
 
   return employees.filter(employee => {
+    // Get employee's role ID first
+    const employeeRoleId = getSkillProfileId(employee.role);
+    
+    console.log(`Checking employee ${employee.name}:`, {
+      employeeRoleId,
+      selectedRoleId,
+      roleMatch: selectedRoleId.length === 0 || selectedRoleId.includes(employeeRoleId)
+    });
+
+    // If role ID is selected, it takes precedence - return false immediately if no match
+    if (selectedRoleId.length > 0 && !selectedRoleId.includes(employeeRoleId)) {
+      return false;
+    }
+
     const matchesEmployeeSearch = searchedEmployees.length === 0 || 
       searchedEmployees.includes(employee.name);
 
@@ -35,7 +49,7 @@ export const filterEmployees = (
       selectedLevel.includes(getLevel(employee.role));
 
     const matchesOffice = selectedOffice.length === 0 || 
-      selectedOffice.includes(employee.location.split(',')[0].trim());
+      selectedOffice.includes(employee.office);
 
     const matchesEmploymentType = selectedEmploymentType.length === 0 ||
       selectedEmploymentType.includes(employee.category);
@@ -43,26 +57,14 @@ export const filterEmployees = (
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
 
-    // Get the employee's role ID and check if it matches the selected role ID
-    const employeeRoleId = getSkillProfileId(employee.role);
-    const matchesRoleId = selectedRoleId.length === 0 || 
-      (employeeRoleId && selectedRoleId.includes(employeeRoleId));
-
-    console.log('Employee role ID match:', {
-      employeeName: employee.name,
-      employeeRoleId,
-      selectedRoleId,
-      matches: matchesRoleId
-    });
-
     const matchesJobTitle = selectedJobTitle.length === 0 || 
       selectedJobTitle.includes(getBaseRole(employee.role));
 
     const matches = matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
            matchesLevel && matchesOffice && matchesEmploymentType && 
-           matchesManager && matchesRoleId;
+           matchesManager;
 
-    console.log(`Employee ${employee.name} matches:`, matches);
+    console.log(`Final match result for ${employee.name}:`, matches);
     
     return matches;
   });
