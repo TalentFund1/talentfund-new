@@ -32,7 +32,7 @@ export const getSkillProfileId = (role: string) => {
   }
 
   // Extract base role from role string (e.g. "Backend Engineer: P4" -> "Backend Engineer")
-  const baseRole = role.split(":")[0].trim();
+  const baseRole = getBaseRole(role);
   const mappedId = roleMap[baseRole];
   
   console.log('Role ID mapping:', { 
@@ -42,6 +42,16 @@ export const getSkillProfileId = (role: string) => {
   });
   
   return mappedId || "123"; // Default to AI Engineer if no match found
+};
+
+// Add exports for the utility functions
+export const getBaseRole = (role: string): string => {
+  return role.split(":")[0].trim();
+};
+
+export const getLevel = (role: string): string => {
+  const parts = role.split(":");
+  return parts.length > 1 ? parts[1].trim() : "P4"; // Default to P4 if no level specified
 };
 
 interface EmployeeTableProps {
