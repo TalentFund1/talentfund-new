@@ -26,6 +26,13 @@ interface EmployeeFiltersProps {
   selectedManager?: string[];
 }
 
+const roleIdMap = {
+  "AI Engineer": "123",
+  "Backend Engineer": "124",
+  "Frontend Engineer": "125",
+  "Engineering Manager": "126"
+};
+
 export const EmployeeFilters = ({ 
   onDepartmentChange, 
   selectedDepartment,
@@ -68,6 +75,12 @@ export const EmployeeFilters = ({
     onManagerChange([]);
   };
 
+  const handleJobTitleChange = (items: string[]) => {
+    // Convert role titles to IDs when sending to parent
+    const roleIds = items.map(title => roleIdMap[title as keyof typeof roleIdMap]);
+    onJobTitleChange(roleIds);
+  };
+
   return (
     <div className="space-y-0.5">
       <EmployeeSearch 
@@ -100,9 +113,13 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={jobTitles}
-          selectedItems={selectedJobTitle}
-          onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
+          items={Object.keys(roleIdMap)}
+          selectedItems={selectedJobTitle.map(id => {
+            // Convert IDs back to titles for display
+            const title = Object.entries(roleIdMap).find(([_, value]) => value === id)?.[0];
+            return title || id;
+          })}
+          onItemsChange={handleJobTitleChange}
           singleSelect={true}
           className="w-[180px]"
         />
