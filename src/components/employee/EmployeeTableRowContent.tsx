@@ -2,15 +2,15 @@ import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
 import { getSkillProfileId } from "../EmployeeTable";
 import { SkillBubble } from "../skills/SkillBubble";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { calculateSkillMatch } from "../skills/utils/skillMatching";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
-interface EmployeeTableRowProps {
+interface EmployeeTableRowContentProps {
   employee: Employee;
   isSelected: boolean;
   onSelect: (name: string) => void;
@@ -19,74 +19,34 @@ interface EmployeeTableRowProps {
   selectedRoleId?: string[];
 }
 
-export const EmployeeTableRow = ({ 
-  employee, 
-  isSelected, 
-  onSelect, 
+export const EmployeeTableRowContent = ({
+  employee,
+  isSelected,
+  onSelect,
   imageUrl,
   selectedSkills = [],
   selectedRoleId = []
-}: EmployeeTableRowProps) => {
+}: EmployeeTableRowContentProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
-  const employeeSkills = getEmployeeSkills(employee.id);
 
   const employeeRoleId = getSkillProfileId(employee.role);
   const roleId = selectedRoleId.length > 0 ? selectedRoleId[0] : employeeRoleId;
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-  
   const isExactMatch = selectedRoleId.length > 0 && employeeRoleId === selectedRoleId[0];
 
-  const getMatchingSkillsCount = () => {
-    console.log('Calculating matching skills for employee:', employee.name);
-    
-    // If specific skills are selected in the filter
-    if (selectedSkills.length > 0) {
-      const matchingSkills = selectedSkills.filter(skillName => {
-        const hasSkill = employeeSkills.some(empSkill => empSkill.title === skillName);
-        console.log(`Checking skill ${skillName}: ${hasSkill ? 'found' : 'not found'}`);
-        return hasSkill;
-      });
-      
-      return {
-        count: `${matchingSkills.length} / ${selectedSkills.length}`,
-        isExactSkillMatch: matchingSkills.length === selectedSkills.length && selectedSkills.length > 0
-      };
-    }
-
-    // If no specific skills selected but role is selected
-    if (!currentRoleSkills) {
-      console.log('No role skills found');
-      return { count: '0 / 0', isExactSkillMatch: false };
-    }
-
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
-
-    console.log('All role skills:', allRoleSkills.map(s => s.title));
-    console.log('Employee skills:', employeeSkills.map(s => s.title));
-
-    const matchingSkills = allRoleSkills.filter(roleSkill => {
-      const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
-      console.log(`Checking role skill ${roleSkill.title}: ${hasSkill ? 'found' : 'not found'}`);
-      return hasSkill;
-    });
-
-    return {
-      count: `${matchingSkills.length} / ${allRoleSkills.length}`,
-      isExactSkillMatch: matchingSkills.length === allRoleSkills.length && allRoleSkills.length > 0
-    };
-  };
+  const { matchingCount, totalCount } = calculateSkillMatch(
+    employee.id,
+    roleId,
+    toggledSkills
+  );
 
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
       return (
         <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
           {selectedSkills.map(skillName => {
+            const employeeSkills = getEmployeeSkills(employee.id);
             const employeeSkill = employeeSkills.find(s => s.title === skillName);
             if (!employeeSkill) return null;
 
@@ -123,9 +83,7 @@ export const EmployeeTableRow = ({
     );
   };
 
-  const { count, isExactSkillMatch } = getMatchingSkillsCount();
-
-  const shouldShowExactMatch = (isExactSkillMatch || isExactMatch) && 
+  const shouldShowExactMatch = (isExactMatch) && 
     (selectedSkills.length > 0 || selectedRoleId.length > 0);
 
   return (
@@ -175,7 +133,7 @@ export const EmployeeTableRow = ({
         {employeeRoleId}
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
+      <td className="px-4 py-4 w-[100px] text-center text-sm">{`${matchingCount} / ${totalCount}`}</td>
       <td className="py-4 w-[200px] text-center">
         {renderBenchmark()}
       </td>
