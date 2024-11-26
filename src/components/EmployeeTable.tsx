@@ -94,10 +94,8 @@ export const EmployeeTable = ({
     selectedEmploymentType,
     selectedSkills,
     selectedManager,
-    selectedRoleTitle
+    selectedRoleTitle // This is now correctly passed as selectedRoleId
   );
-
-  console.log('Pre-filtered employees:', preFilteredEmployees);
 
   // Apply skills filter
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
