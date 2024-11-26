@@ -32,14 +32,11 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employee.id);
 
-  const roleId = selectedJobTitle.length > 0 
-    ? getSkillProfileId(selectedJobTitle[0])
-    : getSkillProfileId(employee.role);
-    
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-  
-  const isExactMatch = selectedJobTitle.length > 0 && 
-    getBaseRole(employee.role) === selectedJobTitle[0];
+  // Check for exact match based on role ID first, then fall back to title match
+  const isExactMatch = selectedJobTitle.length > 0 && (
+    selectedJobTitle[0] === employee.id || 
+    getBaseRole(employee.role) === selectedJobTitle[0]
+  );
 
   const getMatchingSkillsCount = () => {
     if (selectedSkills.length > 0) {
@@ -53,12 +50,10 @@ export const EmployeeTableRow = ({
       };
     }
 
-    if (!currentRoleSkills) return { count: '0 / 0', isExactSkillMatch: false };
-
     const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
+      ...roleSkills[getSkillProfileId(employee.role)].specialized,
+      ...roleSkills[getSkillProfileId(employee.role)].common,
+      ...roleSkills[getSkillProfileId(employee.role)].certifications
     ].filter(skill => toggledSkills.has(skill.title));
 
     const matchingSkills = allRoleSkills.filter(roleSkill => {
@@ -155,7 +150,7 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[250px]">
         <Link 
-          to={`/skills/${roleId}`} 
+          to={`/skills/${getSkillProfileId(employee.role)}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
         >
           {employee.role}
