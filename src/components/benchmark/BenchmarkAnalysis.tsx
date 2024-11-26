@@ -8,6 +8,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useEffect } from "react";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,11 +25,17 @@ export const BenchmarkAnalysis = () => {
     return null;
   }
   
+  // Get only toggled skills from the role skills
   const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
+
+  console.log('Toggled Role Skills:', {
+    total: toggledRoleSkills.length,
+    skills: toggledRoleSkills.map(s => s.title)
+  });
 
   // Match skills based on role profile skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
@@ -83,9 +90,9 @@ export const BenchmarkAnalysis = () => {
   );
 
   console.log('Benchmark Analysis Calculation:', {
-    skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
-    competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
-    skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
+    skillMatch: { count: matchingSkillsCount, total: totalSkillsCount, percentage: skillMatchPercentage },
+    competencyMatch: { count: competencyMatchCount, total: totalSkillsCount, percentage: competencyMatchPercentage },
+    skillGoalMatch: { count: skillGoalMatchCount, total: totalSkillsCount, percentage: skillGoalMatchPercentage },
     averagePercentage
   });
 
