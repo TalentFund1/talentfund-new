@@ -10,8 +10,9 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useNavigate } from "react-router-dom";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
-export const AddEmployeeDialog = () => {
+const AddEmployeeDialogContent = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -152,5 +153,13 @@ export const AddEmployeeDialog = () => {
         </form>
       </DialogContent>
     </Dialog>
+  );
+};
+
+export const AddEmployeeDialog = () => {
+  return (
+    <ToggledSkillsProvider>
+      <AddEmployeeDialogContent />
+    </ToggledSkillsProvider>
   );
 };
