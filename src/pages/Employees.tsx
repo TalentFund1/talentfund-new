@@ -40,7 +40,6 @@ const Employees = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [selectedManager, setSelectedManager] = useState<string[]>([]);
-  const [selectedRoleTitle, setSelectedRoleTitle] = useState<string[]>([]);
   
   const employees = useEmployeeStore((state) => state.employees);
 
@@ -119,8 +118,6 @@ const Employees = () => {
                 selectedEmployees={selectedEmployees}
                 onManagerChange={setSelectedManager}
                 selectedManager={selectedManager}
-                onRoleTitleChange={setSelectedRoleTitle}
-                selectedRoleTitle={selectedRoleTitle}
               />
             </Card>
 
@@ -157,7 +154,6 @@ const Employees = () => {
                 selectedSkills={selectedSkills}
                 selectedEmployees={selectedEmployees}
                 selectedManager={selectedManager}
-                selectedRoleTitle={selectedRoleTitle}
               />
               <Separator className="my-4" />
               <TablePagination />
