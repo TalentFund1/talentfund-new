@@ -7,7 +7,6 @@ import { roleSkills } from './data/roleSkills';
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { employees } from "../employee/EmployeeData";
 import { getBaseRole } from "../utils/roleUtils";
-import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 
@@ -31,37 +30,11 @@ export const SkillProfileTable = ({
     return employees.filter(emp => getBaseRole(emp.role) === roleName).length;
   };
 
-  // Calculate average benchmark for a role
-  const calculateAverageBenchmark = (roleId: string, roleName: string) => {
-    const matchingEmployees = employees.filter(emp => getBaseRole(emp.role) === roleName);
-    if (matchingEmployees.length === 0) return 0;
-
-    const benchmarks = matchingEmployees.map(emp => 
-      calculateBenchmarkPercentage(
-        emp.id,
-        roleId,
-        "",
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      )
-    );
-
-    const sum = benchmarks.reduce((acc, val) => acc + val, 0);
-    return Math.round(sum / benchmarks.length);
-  };
-
-  const getBenchmarkColor = (benchmark: number) => {
-    if (benchmark >= 90) return 'bg-green-100 text-green-800';
-    if (benchmark >= 70) return 'bg-orange-100 text-orange-800';
-    return 'bg-red-100 text-red-800';
-  };
-
   const rows: SkillProfileRow[] = [
-    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: String(getExactRoleMatches("AI Engineer")), matches: `${calculateAverageBenchmark("123", "AI Engineer")}%`, lastUpdated: "10/20/24" },
-    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: String(getExactRoleMatches("Backend Engineer")), matches: `${calculateAverageBenchmark("124", "Backend Engineer")}%`, lastUpdated: "10/20/24" },
-    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: String(getExactRoleMatches("Frontend Engineer")), matches: `${calculateAverageBenchmark("125", "Frontend Engineer")}%`, lastUpdated: "10/20/24" },
-    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: String(getExactRoleMatches("Engineering Manager")), matches: `${calculateAverageBenchmark("126", "Engineering Manager")}%`, lastUpdated: "10/20/24" }
+    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: String(getExactRoleMatches("AI Engineer")), matches: "0%", lastUpdated: "10/20/24" },
+    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: String(getExactRoleMatches("Backend Engineer")), matches: "0%", lastUpdated: "10/20/24" },
+    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: String(getExactRoleMatches("Frontend Engineer")), matches: "0%", lastUpdated: "10/20/24" },
+    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: String(getExactRoleMatches("Engineering Manager")), matches: "0%", lastUpdated: "10/20/24" }
   ];
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,9 +126,7 @@ export const SkillProfileTable = ({
                 <TableCell className="text-center align-middle">{row.skillCount}</TableCell>
                 <TableCell className="text-center align-middle">{row.employees}</TableCell>
                 <TableCell className="text-center align-middle">
-                  <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
-                    getBenchmarkColor(parseInt(row.matches))
-                  }`}>
+                  <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
                     {row.matches}
                   </span>
                 </TableCell>

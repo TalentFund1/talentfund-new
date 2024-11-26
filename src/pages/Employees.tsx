@@ -9,7 +9,6 @@ import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
-import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
@@ -44,7 +43,7 @@ const Employees = () => {
   const employees = useEmployeeStore((state) => state.employees);
 
   // Get filtered employees
-  const preFilteredEmployees = filterEmployees(
+  const filteredEmployees = filterEmployees(
     employees,
     selectedEmployees,
     selectedDepartment,
@@ -55,9 +54,6 @@ const Employees = () => {
     selectedSkills,
     selectedManager
   );
-
-  // Apply skills filter
-  const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
   console.log('Filtered employees count:', filteredEmployees.length);
 
