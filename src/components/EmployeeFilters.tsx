@@ -46,18 +46,7 @@ export const EmployeeFilters = ({
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
-  
-  // Get unique roles with their IDs
-  const roleMap = new Map();
-  employees.forEach(emp => {
-    const baseRole = getBaseRole(emp.role);
-    if (!roleMap.has(baseRole)) {
-      roleMap.set(baseRole, emp.id);
-    }
-  });
-  
-  const jobTitles = Array.from(roleMap.keys());
-  
+  const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
   const managers = Array.from(new Set(
     employees
       .filter(emp => emp.role.toLowerCase().includes('manager'))
@@ -77,19 +66,6 @@ export const EmployeeFilters = ({
     onEmploymentTypeChange([]);
     onEmployeeSearch([]);
     onManagerChange([]);
-  };
-
-  const handleJobTitleChange = (items: string[]) => {
-    // Convert job title to role ID if it exists in our mapping
-    const roleIds = items.map(title => {
-      for (const [roleTitle, roleId] of roleMap.entries()) {
-        if (roleTitle === title) {
-          return roleId;
-        }
-      }
-      return title;
-    });
-    onJobTitleChange(roleIds);
   };
 
   return (
@@ -125,16 +101,8 @@ export const EmployeeFilters = ({
           label=""
           placeholder="Job Title"
           items={jobTitles}
-          selectedItems={selectedJobTitle.map(id => {
-            // Convert role ID back to title for display
-            for (const [title, roleId] of roleMap.entries()) {
-              if (roleId === id) {
-                return title;
-              }
-            }
-            return id;
-          })}
-          onItemsChange={handleJobTitleChange}
+          selectedItems={selectedJobTitle}
+          onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
         />
