@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
-import { roleSkills } from '../skills/data/roleSkills';
-import { useParams } from 'react-router-dom';
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { roleSkills } from "../skills/data/roleSkills";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -16,41 +16,84 @@ export const CategoryCards = ({
   roleId,
   selectedLevel 
 }: CategoryCardsProps) => {
+  const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+
+  const getSkillsByCategory = (category: string) => {
+    const allSkills = [
+      ...(currentRoleSkills.specialized || []),
+      ...(currentRoleSkills.common || []),
+      ...(currentRoleSkills.certifications || [])
+    ].filter(skill => toggledSkills.has(skill.title));
+
+    if (category === 'all') return allSkills;
+
+    const categoryMap: { [key: string]: string[] } = {
+      specialized: currentRoleSkills.specialized?.map(s => s.title) || [],
+      common: currentRoleSkills.common?.map(s => s.title) || [],
+      certification: currentRoleSkills.certifications?.map(s => s.title) || []
+    };
+
+    return allSkills.filter(skill => categoryMap[category]?.includes(skill.title));
+  };
+
+  const getCounts = (category: string) => {
+    const skills = getSkillsByCategory(category);
+    let required = 0, preferred = 0;
+
+    skills.forEach(skill => {
+      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      if (competencyState?.required === 'required') required++;
+      if (competencyState?.required === 'preferred') preferred++;
+    });
+
+    return { required, preferred };
+  };
+
   const categories = [
-    { id: "all", name: "All Skill Type", count: 28 },
-    { id: "specialized", name: "Specialized Skills", count: 15 },
-    { id: "common", name: "Common Skills", count: 10 },
-    { id: "certification", name: "Certifications", count: 3 }
+    { id: "all", title: "All Categories" },
+    { id: "specialized", title: "Specialized Skills" },
+    { id: "common", title: "Common Skills" },
+    { id: "certification", title: "Certification" }
   ];
 
   return (
-    <ToggledSkillsProvider>
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        {categories.map((category) => (
+    <div className="grid grid-cols-4 gap-4 mb-6">
+      {categories.map((category) => {
+        const counts = getCounts(category.id);
+        const total = counts.required + counts.preferred;
+        
+        return (
           <button
             key={category.id}
             onClick={() => onCategorySelect(category.id)}
-            className={`rounded-lg p-4 transition-colors ${
-              selectedCategory === category.id
-                ? 'bg-primary-accent/5 border border-primary-accent'
-                : 'bg-background border border-border hover:border-primary-accent/50'
-            }`}
+            className="w-full text-left"
           >
-            <div className="flex flex-col items-start">
-              <span className={`text-sm font-semibold mb-1 ${
-                selectedCategory === category.id
-                  ? 'text-primary-accent'
-                  : 'text-foreground group-hover:text-primary-accent'
-              }`}>
-                {category.name}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {category.count} skills
-              </span>
-            </div>
+            <Card 
+              className={`
+                p-4 
+                transition-colors 
+                ${selectedCategory === category.id
+                  ? 'bg-primary-accent/5 border border-primary-accent'
+                  : 'bg-background border border-border hover:border-primary-accent/50'
+                }
+              `}
+            >
+              <div className="flex flex-col gap-1">
+                <span className={`text-sm font-semibold ${
+                  selectedCategory === category.id ? 'text-primary-accent' : 'text-foreground'
+                }`}>
+                  {category.title}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {total} {total === 1 ? 'skill' : 'skills'}
+                </span>
+              </div>
+            </Card>
           </button>
-        ))}
-      </div>
-    </ToggledSkillsProvider>
+        );
+      })}
+    </div>
   );
 };

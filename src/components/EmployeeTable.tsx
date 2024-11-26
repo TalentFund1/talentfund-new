@@ -13,6 +13,13 @@ import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 
 export const getSkillProfileId = (role: string) => {
+  // Validate role ID format first
+  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
+  if (validProfileIds.includes(role)) {
+    console.log('Using direct role ID:', role);
+    return role;
+  }
+
   // Map role titles to IDs with consistent structure
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
@@ -33,7 +40,7 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId || "123"; // Default to 123 for AI Engineer roles
+  return mappedId || "123";
 };
 
 export const getBaseRole = (role: string) => {
@@ -132,7 +139,7 @@ export const EmployeeTable = ({
           <tbody>
             {filteredEmployees.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-4 text-muted-foreground">
+                <td colSpan={7} className="text-center py-4 text-muted-foreground">
                   No employees found
                 </td>
               </tr>
@@ -155,3 +162,5 @@ export const EmployeeTable = ({
     </div>
   );
 };
+
+
