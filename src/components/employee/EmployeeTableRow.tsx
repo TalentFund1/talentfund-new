@@ -129,6 +129,17 @@ export const EmployeeTableRow = ({
   const shouldShowExactMatch = (isExactSkillMatch || isExactMatch) && 
     (selectedSkills.length > 0 || selectedRoleId.length > 0);
 
+  const getSkillMatchDisplay = () => {
+    const skillMatchMap: { [key: string]: string } = {
+      "123": "10 / 10",
+      "124": "9 / 9",
+      "125": "8 / 10",
+      "126": "7 / 7",
+      "130": "7 / 10"
+    };
+    return skillMatchMap[employee.id] || "0 / 0";
+  };
+
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
       shouldShowExactMatch ? 'bg-blue-50/50' : ''
@@ -179,8 +190,10 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      {showSkillMatch && (
+      {showSkillMatch ? (
         <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
+      ) : (
+        <td className="px-4 py-4 w-[100px] text-center text-sm">{getSkillMatchDisplay()}</td>
       )}
       <td className="py-4 w-[200px] text-center">
         {renderBenchmark()}
