@@ -37,20 +37,17 @@ export const getSkillMatchCount = (
   roleId: string
 ): { matched: number; total: number } => {
   const employeeSkills = getEmployeeSkills(employeeId);
-  // Use the provided roleId instead of defaulting to "123"
-  const profileId = roleId;
-  const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
 
   console.log('Getting skill match count:', {
     employeeId,
     roleId,
-    profileId,
     hasRoleSkills: !!currentRoleSkills,
     employeeSkills: employeeSkills.map(s => s.title)
   });
 
   if (!currentRoleSkills) {
-    console.warn('No role skills found for profile:', profileId);
+    console.warn('No role skills found for profile:', roleId);
     return { matched: 0, total: 0 };
   }
 
@@ -67,7 +64,6 @@ export const getSkillMatchCount = (
 
   console.log(`Skill match calculation for ${employeeId}:`, {
     roleId,
-    profileId,
     totalRequired: allRequiredSkills.length,
     specializedCount: currentRoleSkills.specialized.length,
     commonCount: currentRoleSkills.common.length,

@@ -72,17 +72,19 @@ export const EmployeeTableRow = ({
       };
     }
 
-    // Get skill match count against the appropriate role
+    // Use the employee's own role ID for skill matching if no job title is selected
+    const roleIdToUse = selectedJobTitle.length > 0 ? selectedRoleId : employeeRoleId;
+
     console.log(`Role skills match for ${employee.name}:`, {
       employee: employee.name,
       employeeRoleId,
-      roleId: selectedRoleId,
+      roleIdToUse,
       matchingAgainst: selectedJobTitle.length > 0 ? selectedJobTitle[0] : employee.role
     });
 
     const { matched, total } = getSkillMatchCount(
       employee.id,
-      selectedRoleId
+      roleIdToUse
     );
 
     console.log(`Skill match results for ${employee.name}:`, {
