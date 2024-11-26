@@ -34,7 +34,7 @@ export const filterEmployees = (
       roleMatch: selectedRoleId.length === 0 || selectedRoleId.includes(employeeRoleId)
     });
 
-    // If role ID is selected and doesn't match, exclude the employee
+    // If role ID is selected and doesn't match, exclude the employee immediately
     if (selectedRoleId.length > 0 && !selectedRoleId.includes(employeeRoleId)) {
       console.log(`Excluding ${employee.name} due to role ID mismatch`);
       return false;

@@ -79,25 +79,13 @@ export const EmployeeTable = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
-  const employees = useEmployeeStore((state) => {
-    console.log('Current employees in store:', state.employees);
-    return state.employees;
-  });
+  const employees = useEmployeeStore((state) => state.employees);
 
-  // Calculate benchmark percentages for each employee
-  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
-    employees,
-    selectedJobTitle,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
-  );
+  console.log('Selected Role Title (ID):', selectedRoleTitle);
 
-  console.log('Employees with benchmarks:', employeesWithBenchmarks);
-
-  // Filter employees based on all criteria including skills and employee search
+  // Filter employees based on all criteria including role ID
   const preFilteredEmployees = filterEmployees(
-    employeesWithBenchmarks,
+    employees,
     selectedEmployees,
     selectedDepartment,
     selectedJobTitle,
@@ -110,16 +98,26 @@ export const EmployeeTable = ({
   );
 
   console.log('Pre-filtered employees:', preFilteredEmployees);
-  console.log('Selected Role Title (ID):', selectedRoleTitle);
 
   // Apply skills filter
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
+  // Calculate benchmark percentages for filtered employees
+  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+    skillFilteredEmployees,
+    selectedJobTitle,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
+  );
+
+  console.log('Employees with benchmarks:', employeesWithBenchmarks);
+
   // Sort employees by role match and benchmark percentage
   const filteredEmployees = sortEmployeesByRoleMatch(
-    skillFilteredEmployees,
+    employeesWithBenchmarks,
     selectedJobTitle,
     currentStates,
     toggledSkills,
