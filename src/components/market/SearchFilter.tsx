@@ -14,20 +14,18 @@ interface SearchFilterProps {
   required?: boolean;
   className?: string;
   disabled?: boolean;
-  displayMap?: { [key: string]: string };
 }
 
 export const SearchFilter = ({ 
   label, 
   placeholder, 
-  items = [],
-  selectedItems = [],
+  items = [], // Provide default empty array
+  selectedItems = [], // Provide default empty array
   onItemsChange,
   singleSelect = false,
   required = false,
   className,
-  disabled = false,
-  displayMap
+  disabled = false
 }: SearchFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -71,12 +69,8 @@ export const SearchFilter = ({
     }
   };
 
-  const getDisplayValue = (item: string) => {
-    return displayMap ? displayMap[item] || item : item;
-  };
-
   const filteredItems = (items || []).filter(item => 
-    getDisplayValue(item).toLowerCase().includes(searchQuery.toLowerCase())
+    item.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -89,7 +83,7 @@ export const SearchFilter = ({
         <div className="flex flex-wrap gap-2 mb-2">
           {selectedItems.map((item) => (
             <Badge key={item} variant="secondary" className="flex items-center gap-1">
-              {getDisplayValue(item)}
+              {item}
               <X 
                 className={cn("h-3 w-3", disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer")}
                 onClick={() => !disabled && removeItem(item)}
@@ -142,7 +136,7 @@ export const SearchFilter = ({
                     onClick={() => handleSelect(item)}
                     className="flex items-center justify-between px-3 py-2 text-sm rounded hover:bg-gray-100 cursor-pointer"
                   >
-                    <span>{getDisplayValue(item)}</span>
+                    <span>{item}</span>
                     {selectedItems.includes(item) && (
                       <Check className="h-4 w-4 text-primary-accent" />
                     )}
