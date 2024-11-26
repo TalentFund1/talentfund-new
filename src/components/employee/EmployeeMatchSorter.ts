@@ -1,6 +1,6 @@
 import { Employee } from "../types/employeeTypes";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
-import { getSkillProfileId, getBaseRole, getLevel } from "../utils/roleUtils";
+import { getSkillProfileId, getBaseRole } from "../utils/roleUtils";
 
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
@@ -22,11 +22,16 @@ export const sortEmployeesByRoleMatch = (
       const benchmark = calculateBenchmarkPercentage(
         employee.id,
         roleId,
-        getLevel(employee.role),
+        getBaseRole(employee.role),
         currentStates,
         toggledSkills,
         getSkillCompetencyState
       );
+
+      console.log(`Calculated benchmark for ${employee.name}:`, {
+        benchmark,
+        againstRole: roleId
+      });
 
       return {
         ...employee,
@@ -62,11 +67,16 @@ export const sortEmployeesByRoleMatch = (
     const benchmark = shouldCalculateBenchmark ? calculateBenchmarkPercentage(
       employee.id,
       roleId,
-      getLevel(employee.role),
+      getBaseRole(employee.role),
       currentStates,
       toggledSkills,
       getSkillCompetencyState
     ) : 0;
+
+    console.log(`Selected role benchmark for ${employee.name}:`, {
+      benchmark,
+      againstRole: roleId
+    });
 
     return {
       ...employee,
