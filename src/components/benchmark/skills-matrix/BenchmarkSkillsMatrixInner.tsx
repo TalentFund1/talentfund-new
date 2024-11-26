@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useBenchmarkSearch } from "../../skills/context/BenchmarkSearchContext";
@@ -9,7 +9,6 @@ import { useRoleStore } from "../RoleBenchmark";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { BenchmarkSkillsMatrixContent } from "./BenchmarkSkillsMatrixContent";
-import { BenchmarkSkillsFilters } from "./BenchmarkSkillsFilters";
 import { getSkillGoalPriority } from "./utils/skillPriorityUtils";
 
 const ITEMS_PER_PAGE = 10;
@@ -119,19 +118,6 @@ export const BenchmarkSkillsMatrixInner = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <BenchmarkSkillsFilters
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
-          selectedSkillLevel={selectedSkillLevel}
-          setSelectedSkillLevel={setSelectedSkillLevel}
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-        />
-
         <BenchmarkSkillsMatrixContent 
           roleId={selectedRole}
           employeeId={id || ""}
