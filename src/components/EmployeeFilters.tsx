@@ -2,7 +2,7 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
-import { getBaseRole, getSkillProfileId } from './EmployeeTable';
+import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
@@ -26,16 +26,6 @@ interface EmployeeFiltersProps {
   selectedManager?: string[];
 }
 
-const roleIdToTitle: { [key: string]: string } = {
-  "123": "AI Engineer",
-  "124": "Backend Engineer",
-  "125": "Frontend Engineer",
-  "126": "Engineering Manager",
-  "127": "Data Engineer",
-  "128": "DevOps Engineer",
-  "129": "Product Manager"
-};
-
 export const EmployeeFilters = ({ 
   onDepartmentChange, 
   selectedDepartment,
@@ -56,14 +46,12 @@ export const EmployeeFilters = ({
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
-  
-  // Get unique role IDs from employees
-  const jobRoleIds = Array.from(new Set(
-    employees.map(emp => getSkillProfileId(emp.role))
+  const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
+  const managers = Array.from(new Set(
+    employees
+      .filter(emp => emp.role.toLowerCase().includes('manager'))
+      .map(emp => emp.name)
   ));
-
-  console.log('Available job role IDs:', jobRoleIds);
-  console.log('Selected job titles:', selectedJobTitle);
 
   useEffect(() => {
     onLevelChange([]);
@@ -79,12 +67,6 @@ export const EmployeeFilters = ({
     onEmployeeSearch([]);
     onManagerChange([]);
   };
-
-  const managers = Array.from(new Set(
-    employees
-      .filter(emp => emp.role.toLowerCase().includes('manager'))
-      .map(emp => emp.name)
-  ));
 
   return (
     <div className="space-y-0.5">
@@ -118,12 +100,11 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={jobRoleIds}
+          items={jobTitles}
           selectedItems={selectedJobTitle}
           onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
-          itemToString={(item) => roleIdToTitle[item] || item}
         />
         
         <LevelFilter
