@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
+import { getSkillProfileId } from "../EmployeeTable";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
@@ -16,7 +16,7 @@ interface EmployeeTableRowProps {
   onSelect: (name: string) => void;
   imageUrl: string;
   selectedSkills?: string[];
-  selectedJobTitle?: string[];
+  selectedRoleId?: string[];
 }
 
 export const EmployeeTableRow = ({ 
@@ -25,21 +25,18 @@ export const EmployeeTableRow = ({
   onSelect, 
   imageUrl,
   selectedSkills = [],
-  selectedJobTitle = []
+  selectedRoleId = []
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employee.id);
 
-  const roleId = selectedJobTitle.length > 0 
-    ? getSkillProfileId(selectedJobTitle[0])
-    : getSkillProfileId(employee.role);
-    
+  const employeeRoleId = getSkillProfileId(employee.role);
+  const roleId = selectedRoleId.length > 0 ? selectedRoleId[0] : employeeRoleId;
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
-  const isExactMatch = selectedJobTitle.length > 0 && 
-    getBaseRole(employee.role) === selectedJobTitle[0];
+  const isExactMatch = selectedRoleId.length > 0 && employeeRoleId === selectedRoleId[0];
 
   const getMatchingSkillsCount = () => {
     if (selectedSkills.length > 0) {
@@ -116,7 +113,7 @@ export const EmployeeTableRow = ({
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
 
   const shouldShowExactMatch = (isExactSkillMatch || isExactMatch) && 
-    (selectedSkills.length > 0 || selectedJobTitle.length > 0);
+    (selectedSkills.length > 0 || selectedRoleId.length > 0);
 
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
@@ -162,7 +159,7 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       <td className="px-4 py-4 w-[100px] text-sm text-muted-foreground">
-        {roleId}
+        {employeeRoleId}
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>

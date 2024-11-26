@@ -1,21 +1,21 @@
 import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
+import { getSkillProfileId } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],
   searchedEmployees: string[],
   selectedDepartment: string[],
-  selectedJobTitle: string[],
+  selectedJobTitle: string[],  // This is actually roleIds now
   selectedLevel: string[],
   selectedOffice: string[],
   selectedEmploymentType: string[],
   selectedSkills: string[],
   selectedManager: string[] = []
 ): Employee[] => {
-  console.log('Starting employee filtering with criteria:', {
+  console.log('Starting employee filtering with roleIds:', {
     searchedEmployees,
     selectedDepartment,
-    selectedJobTitle,
+    selectedRoleIds: selectedJobTitle,
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
@@ -23,15 +23,14 @@ export const filterEmployees = (
   });
 
   return employees.filter(employee => {
-    // Direct role ID matching
     const employeeRoleId = getSkillProfileId(employee.role);
-    const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.some(roleId => roleId === employeeRoleId);
+    const matchesRoleId = selectedJobTitle.length === 0 || 
+      selectedJobTitle.includes(employeeRoleId);
 
     console.log(`Role ID matching for ${employee.name}:`, {
       employeeRoleId,
-      selectedJobTitle,
-      matchesJobTitle
+      selectedRoleIds: selectedJobTitle,
+      matchesRoleId
     });
 
     const matchesEmployeeSearch = searchedEmployees.length === 0 || 
@@ -41,7 +40,7 @@ export const filterEmployees = (
       selectedDepartment.includes(employee.department);
 
     const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(getBaseRole(employee.role));
+      selectedLevel.includes(employeeRoleId);
 
     const matchesOffice = selectedOffice.length === 0 || 
       selectedOffice.includes(employee.office);
@@ -52,13 +51,13 @@ export const filterEmployees = (
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
 
-    const matches = matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
+    const matches = matchesEmployeeSearch && matchesDepartment && matchesRoleId && 
            matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
 
     console.log(`Filter results for ${employee.name}:`, {
       matchesEmployeeSearch,
       matchesDepartment,
-      matchesJobTitle,
+      matchesRoleId,
       matchesLevel,
       matchesOffice,
       matchesEmploymentType,

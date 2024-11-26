@@ -14,13 +14,6 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 
 export const getSkillProfileId = (role: string) => {
-  // Validate role ID format first
-  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
-  if (validProfileIds.includes(role)) {
-    console.log('Using direct role ID:', role);
-    return role;
-  }
-
   // Map role titles to IDs with consistent structure
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
@@ -32,30 +25,28 @@ export const getSkillProfileId = (role: string) => {
     "Product Manager": "129"
   };
   
+  // First check if the input is already a role ID
+  if (Object.values(roleMap).includes(role)) {
+    console.log('Using direct role ID:', role);
+    return role;
+  }
+
+  // Extract base role from role string (e.g. "Backend Engineer: P4" -> "Backend Engineer")
   const baseRole = role.split(":")[0].trim();
   const mappedId = roleMap[baseRole];
   
-  console.log('Role mapping:', { 
+  console.log('Role ID mapping:', { 
     originalRole: role,
     baseRole,
     mappedId
   });
   
-  return mappedId || "123";
-};
-
-export const getBaseRole = (role: string) => {
-  return role.split(":")[0].trim();
-};
-
-export const getLevel = (role: string) => {
-  const parts = role.split(":");
-  return parts.length > 1 ? parts[1].trim() : "";
+  return mappedId || "123"; // Default to AI Engineer if no match found
 };
 
 interface EmployeeTableProps {
   selectedDepartment: string[];
-  selectedJobTitle: string[];
+  selectedJobTitle: string[];  // These are actually role IDs now
   selectedLevel?: string[];
   selectedOffice?: string[];
   selectedEmploymentType?: string[];
@@ -66,7 +57,7 @@ interface EmployeeTableProps {
 
 export const EmployeeTable = ({ 
   selectedDepartment = [], 
-  selectedJobTitle = [],
+  selectedJobTitle = [], // These are role IDs
   selectedLevel = [],
   selectedOffice = [],
   selectedEmploymentType = [],
@@ -86,7 +77,7 @@ export const EmployeeTable = ({
   // Calculate benchmark percentages for each employee
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
     employees,
-    selectedJobTitle,
+    selectedJobTitle,  // Using role IDs
     currentStates,
     toggledSkills,
     getSkillCompetencyState
@@ -99,7 +90,7 @@ export const EmployeeTable = ({
     employeesWithBenchmarks,
     selectedEmployees,
     selectedDepartment,
-    selectedJobTitle,
+    selectedJobTitle,  // Using role IDs
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
@@ -117,7 +108,7 @@ export const EmployeeTable = ({
   // Sort employees by role match and benchmark percentage
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
-    selectedJobTitle,
+    selectedJobTitle,  // Using role IDs
     currentStates,
     toggledSkills,
     getSkillCompetencyState
@@ -126,42 +117,40 @@ export const EmployeeTable = ({
   console.log('Final filtered and sorted employees:', filteredEmployees);
 
   return (
-    <ToggledSkillsProvider>
-      <div className="bg-white rounded-lg">
-        <div className="relative">
-          <table className="w-full">
-            <thead>
-              <EmployeeTableHeader 
-                onSelectAll={(e) => handleSelectAll(filteredEmployees, e)}
-                isAllSelected={filteredEmployees.length > 0 && selectedRows.length === filteredEmployees.length}
-                hasEmployees={filteredEmployees.length > 0}
-                hasSelectedSkills={selectedSkills.length > 0}
-              />
-            </thead>
-            <tbody>
-              {filteredEmployees.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="text-center py-4 text-muted-foreground">
-                    No employees found
-                  </td>
-                </tr>
-              ) : (
-                filteredEmployees.map((employee, index) => (
-                  <EmployeeTableRow
-                    key={employee.id}
-                    employee={employee}
-                    isSelected={selectedRows.includes(employee.name)}
-                    onSelect={handleSelectEmployee}
-                    imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
-                    selectedSkills={selectedSkills}
-                    selectedJobTitle={selectedJobTitle}
-                  />
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+    <div className="bg-white rounded-lg">
+      <div className="relative">
+        <table className="w-full">
+          <thead>
+            <EmployeeTableHeader 
+              onSelectAll={(e) => handleSelectAll(filteredEmployees, e)}
+              isAllSelected={filteredEmployees.length > 0 && selectedRows.length === filteredEmployees.length}
+              hasEmployees={filteredEmployees.length > 0}
+              hasSelectedSkills={selectedSkills.length > 0}
+            />
+          </thead>
+          <tbody>
+            {filteredEmployees.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="text-center py-4 text-muted-foreground">
+                  No employees found
+                </td>
+              </tr>
+            ) : (
+              filteredEmployees.map((employee, index) => (
+                <EmployeeTableRow
+                  key={employee.id}
+                  employee={employee}
+                  isSelected={selectedRows.includes(employee.name)}
+                  onSelect={handleSelectEmployee}
+                  imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
+                  selectedSkills={selectedSkills}
+                  selectedRoleId={selectedJobTitle}
+                />
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
-    </ToggledSkillsProvider>
+    </div>
   );
 };
