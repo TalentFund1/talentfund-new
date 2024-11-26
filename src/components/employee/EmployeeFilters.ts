@@ -35,6 +35,7 @@ export const filterEmployees = (
         const selectedRoleId = getSkillProfileId(title);
         const employeeRoleId = getSkillProfileId(employee.role);
         const employeeBaseRole = getBaseRole(employee.role);
+        const selectedBaseRole = getBaseRole(title);
         
         console.log('Matching job title:', {
           employee: employee.name,
@@ -42,14 +43,12 @@ export const filterEmployees = (
           employeeRoleId,
           selectedTitle: title,
           selectedRoleId,
-          employeeBaseRole
+          employeeBaseRole,
+          selectedBaseRole
         });
 
-        // Match either by exact role ID or base role title
-        const isExactMatch = selectedRoleId === employeeRoleId;
-        const isTitleMatch = employeeBaseRole === getBaseRole(selectedRoleId);
-        
-        return isExactMatch || isTitleMatch;
+        // Match either by role ID or base role title
+        return employeeRoleId === selectedRoleId || employeeBaseRole === selectedBaseRole;
       });
     
     const matchesLevel = selectedLevel.length === 0 || 

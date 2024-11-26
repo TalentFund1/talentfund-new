@@ -44,21 +44,6 @@ export const getSkillProfileId = (role: string) => {
 };
 
 export const getBaseRole = (role: string) => {
-  // If role is an ID, map it back to title
-  const idToTitle: { [key: string]: string } = {
-    "123": "AI Engineer",
-    "124": "Backend Engineer",
-    "125": "Frontend Engineer",
-    "126": "Engineering Manager",
-    "127": "Data Engineer",
-    "128": "DevOps Engineer",
-    "129": "Product Manager"
-  };
-
-  if (idToTitle[role]) {
-    return idToTitle[role];
-  }
-
   return role.split(":")[0].trim();
 };
 
