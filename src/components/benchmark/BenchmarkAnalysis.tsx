@@ -8,8 +8,9 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
+import { useToast } from "@/components/ui/use-toast";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,8 +18,10 @@ export const BenchmarkAnalysis = () => {
   const { currentStates } = useSkillsMatrixStore();
   const { selectedRole, selectedLevel } = useRoleStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { toast } = useToast();
+  const [matches, setMatches] = useState({ skillMatch: 0, competencyMatch: 0, skillGoalMatch: 0, total: 0 });
   
-  // Memoize employee skills to prevent unnecessary recalculations
+  // Memoize employee skills
   const employeeSkills = useMemo(() => getEmployeeSkills(id || ""), [id]);
 
   // Memoize current role skills lookup
@@ -42,11 +45,12 @@ export const BenchmarkAnalysis = () => {
     ].filter(skill => toggledSkills.has(skill.title));
   }, [currentRoleSkills, toggledSkills]);
 
-  // Calculate matches using memoization
-  const matches = useMemo(() => {
+  // Calculate matches using useEffect to ensure state updates
+  useEffect(() => {
     if (!toggledRoleSkills.length) {
       console.log('No toggled skills found');
-      return { skillMatch: 0, competencyMatch: 0, skillGoalMatch: 0, total: 0 };
+      setMatches({ skillMatch: 0, competencyMatch: 0, skillGoalMatch: 0, total: 0 });
+      return;
     }
 
     // Match skills based on role profile skills
@@ -86,12 +90,16 @@ export const BenchmarkAnalysis = () => {
       return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
     });
 
-    return {
+    const newMatches = {
       skillMatch: matchingSkills.length,
       competencyMatch: competencyMatchingSkills.length,
       skillGoalMatch: skillGoalMatchingSkills.length,
       total: toggledRoleSkills.length
     };
+
+    console.log('Updating matches:', newMatches);
+    setMatches(newMatches);
+
   }, [toggledRoleSkills, employeeSkills, selectedLevel, currentStates, getSkillCompetencyState]);
 
   // Debug effect to track match updates
