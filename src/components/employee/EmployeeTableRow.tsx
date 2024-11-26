@@ -39,9 +39,14 @@ export const EmployeeTableRow = ({
   const isExactMatch = selectedRoleId.length > 0 && employeeRoleId === selectedRoleId[0];
 
   const getMatchingSkillsCount = () => {
+    console.log('Calculating matching skills for employee:', employee.name);
+    
+    // If specific skills are selected in the filter
     if (selectedSkills.length > 0) {
       const matchingSkills = selectedSkills.filter(skillName => {
-        return employeeSkills.some(empSkill => empSkill.title === skillName);
+        const hasSkill = employeeSkills.some(empSkill => empSkill.title === skillName);
+        console.log(`Checking skill ${skillName}: ${hasSkill ? 'found' : 'not found'}`);
+        return hasSkill;
       });
       
       return {
@@ -50,7 +55,11 @@ export const EmployeeTableRow = ({
       };
     }
 
-    if (!currentRoleSkills) return { count: '0 / 0', isExactSkillMatch: false };
+    // If no specific skills selected but role is selected
+    if (!currentRoleSkills) {
+      console.log('No role skills found');
+      return { count: '0 / 0', isExactSkillMatch: false };
+    }
 
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
@@ -58,9 +67,13 @@ export const EmployeeTableRow = ({
       ...currentRoleSkills.certifications
     ].filter(skill => toggledSkills.has(skill.title));
 
+    console.log('All role skills:', allRoleSkills.map(s => s.title));
+    console.log('Employee skills:', employeeSkills.map(s => s.title));
+
     const matchingSkills = allRoleSkills.filter(roleSkill => {
-      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-      return employeeSkill !== undefined;
+      const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
+      console.log(`Checking role skill ${roleSkill.title}: ${hasSkill ? 'found' : 'not found'}`);
+      return hasSkill;
     });
 
     return {
