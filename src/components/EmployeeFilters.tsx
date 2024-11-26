@@ -68,6 +68,10 @@ export const EmployeeFilters = ({
     onManagerChange([]);
   };
 
+  // Get available role IDs from jobTitles
+  const roleIds = Object.keys(jobTitles);
+  console.log('Available role IDs:', roleIds);
+
   return (
     <div className="space-y-0.5">
       <EmployeeSearch 
@@ -100,11 +104,12 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={Object.keys(jobTitles)}
+          items={roleIds}
           selectedItems={selectedJobTitle}
           onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
+          displayMap={jobTitles}
         />
         
         <LevelFilter
