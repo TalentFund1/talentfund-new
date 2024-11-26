@@ -37,7 +37,7 @@ export const getSkillMatchCount = (
   roleId: string
 ): { matched: number; total: number } => {
   const employeeSkills = getEmployeeSkills(employeeId);
-  // Get the employee's actual role ID instead of using the passed roleId
+  // Use the provided roleId instead of defaulting to "123"
   const profileId = roleId;
   const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
 
