@@ -15,4 +15,5 @@ export interface Employee {
   termDate: string;
   skills?: string[];
   image?: string;
+  employmentType: string;
 }
