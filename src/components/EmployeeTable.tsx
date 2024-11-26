@@ -8,7 +8,7 @@ import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
-import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
+import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 
