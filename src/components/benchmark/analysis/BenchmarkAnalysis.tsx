@@ -10,19 +10,23 @@ import { useRoleStore } from "../RoleBenchmark";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { BenchmarkProgressBar } from "./BenchmarkProgressBar";
 
-export const BenchmarkAnalysis = () => {
-  const { id } = useParams<{ id: string }>();
+interface BenchmarkAnalysisProps {
+  selectedRole: string;
+  roleLevel: string;
+  employeeId: string;
+}
+
+export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
-  const employeeSkills = getEmployeeSkills(id || "");
-  const { selectedRole, selectedLevel } = useRoleStore();
+  const employeeSkills = getEmployeeSkills(employeeId);
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
   console.log('Starting benchmark analysis with:', {
     selectedRole,
-    roleLevel: selectedLevel,
-    employeeId: id,
+    roleLevel,
+    employeeId,
     toggledSkillsCount: toggledSkills.size,
     toggledSkills: Array.from(toggledSkills)
   });
@@ -56,7 +60,7 @@ export const BenchmarkAnalysis = () => {
 
   // Competency Match calculation (only for toggled skills)
   const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
     if (!roleSkillState) return false;
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
