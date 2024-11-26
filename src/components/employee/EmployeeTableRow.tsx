@@ -44,6 +44,16 @@ export const EmployeeTableRow = ({
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
 
+  console.log(`Skill matching for ${employee.name}:`, {
+    currentRole: employee.role,
+    employeeRoleId,
+    selectedJobTitle: selectedJobTitle[0] || 'none',
+    selectedRoleId,
+    roleBeingMatchedAgainst: selectedJobTitle.length > 0 ? selectedJobTitle[0] : employee.role,
+    employeeSkillsCount: employeeSkills.length,
+    availableRoleSkills: currentRoleSkills ? Object.keys(currentRoleSkills).length : 0
+  });
+
   const getMatchingSkillsCount = () => {
     if (selectedSkills.length > 0) {
       // If specific skills are selected, match against those
@@ -51,6 +61,11 @@ export const EmployeeTableRow = ({
         return employeeSkills.some(empSkill => empSkill.title === skillName);
       });
       
+      console.log(`Selected skills match for ${employee.name}:`, {
+        matchingSkills: matchingSkills.map(s => s),
+        totalSelected: selectedSkills.length
+      });
+
       return {
         count: `${matchingSkills.length} / ${selectedSkills.length}`,
         isExactSkillMatch: matchingSkills.length === selectedSkills.length && selectedSkills.length > 0
@@ -58,16 +73,23 @@ export const EmployeeTableRow = ({
     }
 
     // Get skill match count against the appropriate role
-    console.log('Getting skill match count for employee:', {
+    console.log(`Role skills match for ${employee.name}:`, {
       employee: employee.name,
       employeeRoleId,
-      roleId: selectedRoleId
+      roleId: selectedRoleId,
+      matchingAgainst: selectedJobTitle.length > 0 ? selectedJobTitle[0] : employee.role
     });
 
     const { matched, total } = getSkillMatchCount(
       employee.id,
       selectedRoleId
     );
+
+    console.log(`Skill match results for ${employee.name}:`, {
+      matchedSkills: matched,
+      totalSkills: total,
+      percentage: (matched/total * 100).toFixed(1) + '%'
+    });
 
     return {
       count: `${matched} / ${total}`,
