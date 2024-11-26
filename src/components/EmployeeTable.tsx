@@ -77,7 +77,8 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
-  const showSkillMatch = selectedSkills.length > 0 || selectedJobTitle.length > 0;
+  // Only show skill match when skills are selected, not for role selection
+  const showSkillMatch = selectedSkills.length > 0;
 
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
     employees,
