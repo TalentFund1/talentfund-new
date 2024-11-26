@@ -81,7 +81,7 @@ export const EmployeeTable = ({
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
   const employees = useEmployeeStore((state) => state.employees);
 
-  console.log('Selected Role Title (ID):', selectedRoleTitle);
+  console.log('Selected Role Title:', selectedRoleTitle);
 
   // Filter employees based on all criteria including role ID
   const preFilteredEmployees = filterEmployees(
@@ -102,16 +102,14 @@ export const EmployeeTable = ({
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
-  // Calculate benchmark percentages for filtered employees using current role ID
+  // Calculate benchmark percentages for filtered employees
   const employeesWithBenchmarks = skillFilteredEmployees.map(employee => {
-    const roleId = selectedRoleTitle.length > 0 
-      ? selectedRoleTitle[0]  // Use selected role ID if available
-      : getSkillProfileId(employee.role);  // Otherwise use employee's current role ID
+    // Use the employee's current role ID for skill matching
+    const roleId = getSkillProfileId(employee.role);
     
-    console.log('Using role ID for benchmark:', {
-      employeeName: employee.name,
+    console.log('Calculating benchmark for employee:', {
+      name: employee.name,
       roleId,
-      selectedRoleTitle,
       currentRole: employee.role
     });
 
