@@ -21,7 +21,7 @@ interface SkillsMatrixContentProps {
 }
 
 export const SkillsMatrixContent = ({
-  filteredSkills,
+  filteredSkills = [], // Provide default empty array
   searchTerm,
   setSearchTerm,
   selectedLevel,
@@ -35,11 +35,19 @@ export const SkillsMatrixContent = ({
   visibleItems,
   observerTarget
 }: SkillsMatrixContentProps) => {
-  console.log('Rendering SkillsMatrixContent with skills:', filteredSkills);
+  console.log('Rendering SkillsMatrixContent with skills:', {
+    filteredSkillsCount: filteredSkills.length,
+    visibleItems
+  });
 
   const removeSearchSkill = (skill: string) => {
     setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
   };
+
+  // Ensure we have an array before slicing
+  const visibleSkills = Array.isArray(filteredSkills) 
+    ? filteredSkills.slice(0, visibleItems)
+    : [];
 
   return (
     <>
@@ -64,19 +72,27 @@ export const SkillsMatrixContent = ({
             isRoleBenchmark={true}
           />
           <TableBody>
-            {filteredSkills.slice(0, visibleItems).map((skill) => (
-              <SkillsMatrixRow 
-                key={skill.title} 
-                skill={skill}
-                showCompanySkill={false}
-                isRoleBenchmark={true}
-              />
-            ))}
+            {visibleSkills.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="text-center py-4 text-muted-foreground">
+                  No skills found
+                </td>
+              </tr>
+            ) : (
+              visibleSkills.map((skill) => (
+                <SkillsMatrixRow 
+                  key={skill.title} 
+                  skill={skill}
+                  showCompanySkill={false}
+                  isRoleBenchmark={true}
+                />
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
 
-      {visibleItems < filteredSkills.length && (
+      {visibleItems < (filteredSkills?.length || 0) && (
         <div 
           ref={observerTarget} 
           className="h-10 flex items-center justify-center"
