@@ -3,7 +3,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import { roleSkills } from '../data/roleSkills';
 import { useCompetencyStore } from '../competency/CompetencyState';
 import { useRoleStore } from '../../benchmark/RoleBenchmark';
-import { getSkillProfileId } from '../../utils/roleUtils';
+import { getSkillProfileId, getBaseRole } from '../../utils/roleUtils';
+import { useEmployeeStore } from '../../employee/store/employeeStore';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -46,6 +47,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { selectedRole } = useRoleStore();
   const { initializeStates } = useCompetencyStore();
   const { id } = useParams<{ id: string }>();
+  const employees = useEmployeeStore((state) => state.employees);
   
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
     console.log('Initializing skills by role, selected role:', selectedRole);
@@ -80,14 +82,15 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return selectedRole ? { [selectedRole]: getInitialSkillsForRole(selectedRole) } : {};
   });
 
-  // Initialize competency states for all roles on mount
+  // Initialize competency states and skills for all employees' roles on mount
   useEffect(() => {
-    console.log('Initializing competency states for all roles');
+    console.log('Initializing states for all employees and roles');
+    
+    // First initialize all predefined roles
     Object.keys(roleSkills).forEach(roleId => {
-      console.log('Initializing states for role:', roleId);
+      console.log('Initializing states for predefined role:', roleId);
       initializeStates(roleId);
       
-      // Also ensure we have toggled skills for this role
       setSkillsByRole(prev => {
         if (!prev[roleId] || prev[roleId].size === 0) {
           return {
@@ -98,7 +101,29 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         return prev;
       });
     });
-  }, []); // Run once on mount
+
+    // Then initialize for all employee roles
+    employees.forEach(employee => {
+      const roleId = getSkillProfileId(getBaseRole(employee.role));
+      console.log('Initializing states for employee role:', {
+        employee: employee.name,
+        role: employee.role,
+        roleId
+      });
+      
+      initializeStates(roleId);
+      
+      setSkillsByRole(prev => {
+        if (!prev[roleId] || prev[roleId].size === 0) {
+          return {
+            ...prev,
+            [roleId]: getInitialSkillsForRole(roleId)
+          };
+        }
+        return prev;
+      });
+    });
+  }, [initializeStates, employees]); // Run when employees change
 
   // Initialize skills for new roles or when they're empty
   useEffect(() => {
