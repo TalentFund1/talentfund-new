@@ -53,14 +53,6 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Create a mapping of role IDs to their display titles with role IDs
-  const roleOptions = Object.entries(jobTitles).reduce((acc, [id, title]) => {
-    acc[id] = `${id} - ${title}`;
-    return acc;
-  }, {} as Record<string, string>);
-
-  console.log('Available role options:', roleOptions);
-
   useEffect(() => {
     onLevelChange([]);
   }, [selectedJobTitle, onLevelChange]);
@@ -113,7 +105,6 @@ export const EmployeeFilters = ({
           onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
-          displayMap={roleOptions}
         />
         
         <LevelFilter

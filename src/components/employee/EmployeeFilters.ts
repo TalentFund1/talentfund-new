@@ -1,5 +1,5 @@
 import { Employee } from "../types/employeeTypes";
-import { getBaseRole, getSkillProfileId } from "../EmployeeTable";
+import { getLevel, getSkillProfileId } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],
@@ -31,19 +31,7 @@ export const filterEmployees = (
 
     // Match by role ID only
     const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.some(selectedRoleId => {
-        const employeeRoleId = getSkillProfileId(employee.role);
-        
-        console.log('Matching role ID:', {
-          employee: employee.name,
-          employeeRole: employee.role,
-          employeeRoleId,
-          selectedRoleId,
-          matches: employeeRoleId === selectedRoleId
-        });
-
-        return employeeRoleId === selectedRoleId;
-      });
+      selectedJobTitle.includes(employee.id);
     
     const matchesLevel = selectedLevel.length === 0 || 
       selectedLevel.includes(getLevel(employee.role));
@@ -63,7 +51,11 @@ export const filterEmployees = (
     console.log(`Employee ${employee.name} matches:`, {
       matchesEmployeeSearch,
       matchesDepartment,
-      matchesJobTitle,
+      matchesJobTitle: {
+        employeeId: employee.id,
+        selectedJobTitle,
+        matches: matchesJobTitle
+      },
       matchesLevel,
       matchesOffice,
       matchesEmploymentType,
@@ -74,5 +66,3 @@ export const filterEmployees = (
     return matches;
   });
 };
-
-import { getLevel } from "../EmployeeTable";
