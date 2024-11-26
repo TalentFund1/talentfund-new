@@ -17,6 +17,7 @@ interface EmployeeTableRowProps {
   imageUrl: string;
   selectedSkills?: string[];
   selectedRoleId?: string[];
+  showSkillMatch: boolean;
 }
 
 export const EmployeeTableRow = ({ 
@@ -25,7 +26,8 @@ export const EmployeeTableRow = ({
   onSelect, 
   imageUrl,
   selectedSkills = [],
-  selectedRoleId = []
+  selectedRoleId = [],
+  showSkillMatch
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
@@ -41,7 +43,6 @@ export const EmployeeTableRow = ({
   const getMatchingSkillsCount = () => {
     console.log('Calculating matching skills for employee:', employee.name);
     
-    // If specific skills are selected in the filter
     if (selectedSkills.length > 0) {
       const matchingSkills = selectedSkills.filter(skillName => {
         const hasSkill = employeeSkills.some(empSkill => empSkill.title === skillName);
@@ -55,7 +56,6 @@ export const EmployeeTableRow = ({
       };
     }
 
-    // If no specific skills selected but role is selected
     if (!currentRoleSkills) {
       console.log('No role skills found');
       return { count: '0 / 0', isExactSkillMatch: false };
@@ -175,7 +175,9 @@ export const EmployeeTableRow = ({
         {employeeRoleId}
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
+      {showSkillMatch && (
+        <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
+      )}
       <td className="py-4 w-[200px] text-center">
         {renderBenchmark()}
       </td>

@@ -77,6 +77,8 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
+  const showSkillMatch = selectedSkills.length > 0 || selectedJobTitle.length > 0;
+
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
     employees,
     selectedJobTitle,
@@ -170,6 +172,7 @@ export const EmployeeTable = ({
               isAllSelected={filteredEmployees.length > 0 && selectedRows.length === filteredEmployees.length}
               hasEmployees={filteredEmployees.length > 0}
               hasSelectedSkills={selectedSkills.length > 0}
+              showSkillMatch={showSkillMatch}
             />
           </thead>
           <tbody>
@@ -189,6 +192,7 @@ export const EmployeeTable = ({
                   imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
                   selectedSkills={selectedSkills}
                   selectedRoleId={selectedJobTitle}
+                  showSkillMatch={showSkillMatch}
                 />
               ))
             )}
