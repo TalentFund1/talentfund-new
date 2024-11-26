@@ -116,7 +116,8 @@ export const processEmployeeData = (formData: FormData): Employee => {
     manager: formData.manager || '',
     startDate: formData.startDate,
     office: formData.office,
-    termDate: formData.termDate || "-"
+    termDate: formData.termDate || "-",
+    employmentType: formData.category // Using category as employmentType
   };
 
   console.log('Created new employee:', newEmployee);
