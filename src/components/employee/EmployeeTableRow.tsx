@@ -33,9 +33,10 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employee.id);
 
+  // Get the role ID based on either selected job title or employee's current role
   const roleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
-    : getSkillProfileId(employee.role);
+    : getSkillProfileId(getBaseRole(employee.role));
     
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
@@ -44,6 +45,7 @@ export const EmployeeTableRow = ({
 
   const getMatchingSkillsCount = () => {
     if (selectedSkills.length > 0) {
+      // If specific skills are selected, match against those
       const matchingSkills = selectedSkills.filter(skillName => {
         return employeeSkills.some(empSkill => empSkill.title === skillName);
       });
@@ -54,7 +56,19 @@ export const EmployeeTableRow = ({
       };
     }
 
-    const { matched, total } = getSkillMatchCount(employee.id, roleId);
+    // If no specific skills selected, match against role skills
+    const employeeRoleId = getSkillProfileId(getBaseRole(employee.role));
+    console.log('Getting skill match count for employee:', {
+      employee: employee.name,
+      employeeRoleId,
+      roleId: selectedJobTitle.length > 0 ? roleId : employeeRoleId
+    });
+
+    const { matched, total } = getSkillMatchCount(
+      employee.id,
+      selectedJobTitle.length > 0 ? roleId : employeeRoleId // Use selected role or employee's role
+    );
+
     return {
       count: `${matched} / ${total}`,
       isExactSkillMatch: matched === total && total > 0
@@ -77,9 +91,10 @@ export const EmployeeTableRow = ({
             return (
               <SkillBubble
                 key={skillName}
-                skillName={skillName}
+                skill={{ name: skillName }}
+                showLevel={true}
                 level={competencyState?.level || employeeSkill.level}
-                isRequired={isSkillGoal}
+                isRoleBenchmark={true}
               />
             );
           })}
