@@ -43,9 +43,10 @@ export const filterEmployees = (
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
 
+    // Get the employee's role ID and check if it matches the selected role ID
     const employeeRoleId = getSkillProfileId(employee.role);
-    const matchesRoleId = selectedRoleId.length === 0 ||
-      selectedRoleId.includes(employeeRoleId);
+    const matchesRoleId = selectedRoleId.length === 0 || 
+      (employeeRoleId && selectedRoleId.includes(employeeRoleId));
 
     console.log('Employee role ID match:', {
       employeeName: employee.name,
