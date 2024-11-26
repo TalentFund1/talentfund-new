@@ -3,7 +3,7 @@ export interface Employee {
   name: string;
   role: string;
   department: string;
-  skillCount: string | number;
+  skillCount: number;
   benchmark: number;
   lastUpdated: string;
   location: string;

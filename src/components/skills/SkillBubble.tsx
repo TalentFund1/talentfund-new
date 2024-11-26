@@ -2,20 +2,12 @@ import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 
 interface SkillBubbleProps {
-  skill: {
-    name: string;
-  };
+  skillName: string;
   level?: string;
-  showLevel?: boolean;
-  isRoleBenchmark?: boolean;
+  isRequired?: boolean;
 }
 
-export const SkillBubble = ({ 
-  skill, 
-  level = 'unspecified', 
-  showLevel = false,
-  isRoleBenchmark = false 
-}: SkillBubbleProps) => {
+export const SkillBubble = ({ skillName, level = 'unspecified', isRequired = false }: SkillBubbleProps) => {
   const getLevelColor = (level: string) => {
     switch (level.toLowerCase()) {
       case "advanced":
@@ -34,15 +26,13 @@ export const SkillBubble = ({
       variant="outline" 
       className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
     >
-      {skill.name}
-      {showLevel && (
-        <div className="flex items-center gap-1.5">
-          <div className={`h-2 w-2 rounded-full ${getLevelColor(level)}`} />
-          {!isRoleBenchmark && (
-            <Heart className="w-3 h-3 text-[#1f2144]" />
-          )}
-        </div>
-      )}
+      {skillName}
+      <div className="flex items-center gap-1.5">
+        <div className={`h-2 w-2 rounded-full ${getLevelColor(level)}`} />
+        {isRequired && (
+          <Heart className="w-3 h-3 text-[#1f2144]" />
+        )}
+      </div>
     </Badge>
   );
 };

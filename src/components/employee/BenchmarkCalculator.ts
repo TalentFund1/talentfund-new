@@ -1,11 +1,10 @@
-import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId, getLevel, getBaseRole } from "../utils/roleUtils";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
+import { getBaseRole } from "../EmployeeTable";
 
 export const calculateBenchmarkPercentage = (
-  employeeId: string,
-  roleId: string,
+  employeeId: string, 
+  roleId: string, 
   level: string,
   currentStates: any,
   toggledSkills: Set<string>,
@@ -14,14 +13,8 @@ export const calculateBenchmarkPercentage = (
   console.log('Calculating benchmark:', { employeeId, roleId, level });
   
   const employeeSkills = getEmployeeSkills(employeeId);
-  const profileId = getSkillProfileId(roleId);
-  const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   
-  if (!currentRoleSkills) {
-    console.error('No role skills found for profile:', profileId);
-    return 0;
-  }
-
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -37,7 +30,7 @@ export const calculateBenchmarkPercentage = (
     return 0;
   }
 
-  // 1. Skill Match (33.33% weight)
+  // 1. Basic Skill Match (33.33% weight)
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
@@ -46,10 +39,20 @@ export const calculateBenchmarkPercentage = (
   // 2. Competency Level Match (33.33% weight)
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
-    if (!roleSkillState) return false;
+    if (!roleSkillState) {
+      console.log('No competency state found for skill:', skill.title);
+      // For manager roles, consider it a match if they have the skill
+      return getBaseRole(level).toLowerCase().includes('m');
+    }
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
+
+    console.log('Comparing skill levels:', {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel
+    });
 
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
@@ -70,7 +73,11 @@ export const calculateBenchmarkPercentage = (
   // 3. Skill Goal Match (33.33% weight)
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
-    if (!skillState) return false;
+    if (!skillState) {
+      console.log('No skill state found for skill:', skill.title);
+      // For manager roles, consider it a match if they have the skill
+      return getBaseRole(level).toLowerCase().includes('m');
+    }
     return skillState.requirement === 'required' || 
            skillState.requirement === 'skill_goal';
   });
@@ -80,7 +87,7 @@ export const calculateBenchmarkPercentage = (
   const competencyMatchPercentage = (competencyMatchingSkills.length / totalToggledSkills) * 100;
   const skillGoalMatchPercentage = (skillGoalMatchingSkills.length / totalToggledSkills) * 100;
 
-  // Calculate weighted average
+  // Calculate weighted average (equal weights)
   const averagePercentage = Math.round(
     (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
   );
@@ -88,7 +95,6 @@ export const calculateBenchmarkPercentage = (
   console.log('Benchmark calculation results:', {
     employeeId,
     roleId,
-    profileId,
     level,
     totalSkills: totalToggledSkills,
     matchingSkills: matchingSkills.length,
@@ -101,52 +107,4 @@ export const calculateBenchmarkPercentage = (
   });
 
   return averagePercentage;
-};
-
-export const calculateEmployeeBenchmarks = (
-  employees: Employee[],
-  selectedJobTitle: string[],
-  currentStates: any,
-  toggledSkills: Set<string>,
-  getSkillCompetencyState: any
-): Employee[] => {
-  return employees.map(employee => {
-    let benchmark = 0;
-    
-    if (selectedJobTitle.length > 0) {
-      // Calculate benchmark against selected job title
-      const roleId = getSkillProfileId(selectedJobTitle[0]);
-      const level = getLevel(employee.role);
-      benchmark = calculateBenchmarkPercentage(
-        employee.id,
-        roleId,
-        level,
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      );
-    } else {
-      // Calculate benchmark against employee's current role
-      const roleId = getSkillProfileId(getBaseRole(employee.role));
-      const level = getLevel(employee.role);
-      
-      console.log('Calculating benchmark for employee against own role:', {
-        employee: employee.name,
-        roleId,
-        level,
-        baseRole: getBaseRole(employee.role)
-      });
-      
-      benchmark = calculateBenchmarkPercentage(
-        employee.id,
-        roleId,
-        level,
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      );
-    }
-    
-    return { ...employee, benchmark };
-  });
 };

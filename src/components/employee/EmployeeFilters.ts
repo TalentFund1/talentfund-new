@@ -1,5 +1,5 @@
 import { Employee } from "../types/employeeTypes";
-import { getBaseRole, getLevel } from "../utils/roleUtils";
+import { getBaseRole, getLevel } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],

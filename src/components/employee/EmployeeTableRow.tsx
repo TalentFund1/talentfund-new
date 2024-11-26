@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId, getBaseRole } from "../utils/roleUtils";
+import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
@@ -9,7 +9,6 @@ import { CheckCircle2 } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { filterEmployeesBySkills, getSkillMatchCount } from "./EmployeeSkillsFilter";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -33,73 +32,47 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employee.id);
 
-  // Get the role ID based on either selected job title or employee's current role
-  const employeeRoleId = getSkillProfileId(getBaseRole(employee.role));
-  const selectedRoleId = selectedJobTitle.length > 0 
+  const roleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
-    : employeeRoleId;
+    : getSkillProfileId(employee.role);
     
-  const currentRoleSkills = roleSkills[selectedRoleId as keyof typeof roleSkills];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
 
-  console.log(`Skill matching for ${employee.name}:`, {
-    currentRole: employee.role,
-    employeeRoleId,
-    selectedJobTitle: selectedJobTitle[0] || 'none',
-    selectedRoleId,
-    roleBeingMatchedAgainst: selectedJobTitle.length > 0 ? selectedJobTitle[0] : employee.role,
-    employeeSkillsCount: employeeSkills.length,
-    availableRoleSkills: currentRoleSkills ? Object.keys(currentRoleSkills).length : 0
-  });
-
   const getMatchingSkillsCount = () => {
     if (selectedSkills.length > 0) {
-      // If specific skills are selected, match against those
       const matchingSkills = selectedSkills.filter(skillName => {
         return employeeSkills.some(empSkill => empSkill.title === skillName);
       });
       
-      console.log(`Selected skills match for ${employee.name}:`, {
-        matchingSkills: matchingSkills.map(s => s),
-        totalSelected: selectedSkills.length
-      });
-
       return {
         count: `${matchingSkills.length} / ${selectedSkills.length}`,
         isExactSkillMatch: matchingSkills.length === selectedSkills.length && selectedSkills.length > 0
       };
     }
 
-    // Use the employee's own role ID for skill matching if no job title is selected
-    const roleIdToUse = selectedJobTitle.length > 0 ? selectedRoleId : employeeRoleId;
+    if (!currentRoleSkills) return { count: '0 / 0', isExactSkillMatch: false };
 
-    console.log(`Role skills match for ${employee.name}:`, {
-      employee: employee.name,
-      employeeRoleId,
-      roleIdToUse,
-      matchingAgainst: selectedJobTitle.length > 0 ? selectedJobTitle[0] : employee.role
-    });
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ].filter(skill => toggledSkills.has(skill.title));
 
-    const { matched, total } = getSkillMatchCount(
-      employee.id,
-      roleIdToUse
-    );
-
-    console.log(`Skill match results for ${employee.name}:`, {
-      matchedSkills: matched,
-      totalSkills: total,
-      percentage: (matched/total * 100).toFixed(1) + '%'
+    const matchingSkills = allRoleSkills.filter(roleSkill => {
+      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+      return employeeSkill !== undefined;
     });
 
     return {
-      count: `${matched} / ${total}`,
-      isExactSkillMatch: matched === total && total > 0
+      count: `${matchingSkills.length} / ${allRoleSkills.length}`,
+      isExactSkillMatch: matchingSkills.length === allRoleSkills.length && allRoleSkills.length > 0
     };
   };
 
-  const renderContent = () => {
+  const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
       return (
         <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
@@ -115,10 +88,9 @@ export const EmployeeTableRow = ({
             return (
               <SkillBubble
                 key={skillName}
-                skill={{ name: skillName }}
-                showLevel={true}
+                skillName={skillName}
                 level={competencyState?.level || employeeSkill.level}
-                isRoleBenchmark={true}
+                isRequired={isSkillGoal}
               />
             );
           })}
@@ -183,19 +155,16 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[250px]">
         <Link 
-          to={`/skills/${selectedRoleId}`} 
+          to={`/skills/${roleId}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
         >
           {employee.role}
         </Link>
       </td>
-      <td className="px-4 py-4 w-[100px] text-sm">
-        {employeeRoleId}
-      </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
       <td className="py-4 w-[200px] text-center">
-        {renderContent()}
+        {renderBenchmark()}
       </td>
       <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
