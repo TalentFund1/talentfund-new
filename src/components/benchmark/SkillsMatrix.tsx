@@ -1,6 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
+import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 
 export const SkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,8 +13,11 @@ export const SkillsMatrix = () => {
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const observerTarget = useRef<HTMLDivElement>(null);
 
-  // Initialize with empty array if no filtered skills yet
-  const [filteredSkills, setFilteredSkills] = useState<any[]>([]);
+  // Initialize filtered skills with actual data
+  const [filteredSkills, setFilteredSkills] = useState(() => {
+    const initialSkills = filterSkillsByCategory(getEmployeeSkills(""), "all");
+    return initialSkills;
+  });
 
   console.log('SkillsMatrix render:', {
     searchTerm,

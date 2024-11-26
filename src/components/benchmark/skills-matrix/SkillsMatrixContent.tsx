@@ -5,7 +5,13 @@ import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
 import { useRef } from "react";
 
 interface SkillsMatrixContentProps {
-  filteredSkills: any[];
+  filteredSkills: Array<{
+    title: string;
+    subcategory: string;
+    level: string;
+    growth: string;
+    confidence: string;
+  }>;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedLevel: string;
@@ -21,7 +27,7 @@ interface SkillsMatrixContentProps {
 }
 
 export const SkillsMatrixContent = ({
-  filteredSkills = [], // Provide default empty array
+  filteredSkills = [],
   searchTerm,
   setSearchTerm,
   selectedLevel,
@@ -36,7 +42,7 @@ export const SkillsMatrixContent = ({
   observerTarget
 }: SkillsMatrixContentProps) => {
   console.log('Rendering SkillsMatrixContent with skills:', {
-    filteredSkillsCount: filteredSkills.length,
+    filteredSkillsCount: filteredSkills?.length || 0,
     visibleItems
   });
 
@@ -72,7 +78,7 @@ export const SkillsMatrixContent = ({
             isRoleBenchmark={true}
           />
           <TableBody>
-            {visibleSkills.length === 0 ? (
+            {!visibleSkills.length ? (
               <tr>
                 <td colSpan={6} className="text-center py-4 text-muted-foreground">
                   No skills found
