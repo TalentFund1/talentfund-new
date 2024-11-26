@@ -10,7 +10,13 @@ export const calculateBenchmarkPercentage = (
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ) => {
-  console.log('Calculating benchmark:', { employeeId, roleId, level });
+  console.log('Starting benchmark calculation:', { employeeId, roleId, level });
+  
+  // Validation checks
+  if (!employeeId || !roleId || !currentStates || !toggledSkills || !getSkillCompetencyState) {
+    console.log('Missing required dependencies for benchmark calculation');
+    return 0;
+  }
   
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];

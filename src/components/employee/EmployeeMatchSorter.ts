@@ -9,10 +9,22 @@ export const sortEmployeesByRoleMatch = (
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ): Employee[] => {
+  // Validation checks
+  if (!currentStates || !toggledSkills || !getSkillCompetencyState) {
+    console.log('Missing required dependencies for employee sorting');
+    return employees;
+  }
+
   if (selectedJobTitle.length === 0) return employees;
 
   const selectedRole = selectedJobTitle[0];
   const roleId = getSkillProfileId(selectedRole);
+
+  console.log('Sorting employees by role match:', {
+    selectedRole,
+    roleId,
+    employeeCount: employees.length
+  });
 
   // Calculate benchmarks for all employees using the same logic as profile view
   const employeesWithBenchmarks = employees.map(employee => {

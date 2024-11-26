@@ -82,14 +82,18 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
+  // Ensure all required dependencies are initialized
+  const isReady = currentStates && toggledSkills && getSkillCompetencyState;
+  console.log('Employee table dependencies ready:', isReady);
+
   // Calculate benchmark percentages for each employee
-  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+  const employeesWithBenchmarks = isReady ? calculateEmployeeBenchmarks(
     employees,
     selectedJobTitle,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
-  );
+  ) : employees.map(emp => ({ ...emp, benchmark: 0 }));
 
   console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
@@ -114,13 +118,13 @@ export const EmployeeTable = ({
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
   // Sort employees by role match and benchmark percentage
-  const filteredEmployees = sortEmployeesByRoleMatch(
+  const filteredEmployees = isReady ? sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     selectedJobTitle,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
-  );
+  ) : skillFilteredEmployees;
 
   console.log('Final filtered and sorted employees:', filteredEmployees);
 
@@ -162,5 +166,3 @@ export const EmployeeTable = ({
     </div>
   );
 };
-
-
