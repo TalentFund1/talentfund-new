@@ -89,62 +89,64 @@ const Employees = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <ToggledSkillsProvider>
-        <div className="flex-1 p-6 ml-16 transition-all duration-300">
-          <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
-            <div className="flex justify-between items-center">
-              <h1 className="text-3xl font-bold text-foreground">Employees</h1>
-              <div className="space-x-2">
-                <Button variant="outline">Export Data</Button>
+      <div className="flex-1 p-6 ml-16 transition-all duration-300">
+        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-foreground">Employees</h1>
+            <div className="space-x-2">
+              <Button variant="outline">Export Data</Button>
+              <ToggledSkillsProvider>
                 <AddEmployeeDialog />
-              </div>
+              </ToggledSkillsProvider>
             </div>
+          </div>
 
-            <Card className="p-6">
-              <EmployeeFilters 
-                onDepartmentChange={setSelectedDepartment}
-                selectedDepartment={selectedDepartment}
-                onJobTitleChange={setSelectedJobTitle}
-                selectedJobTitle={selectedJobTitle}
-                onLevelChange={setSelectedLevel}
-                selectedLevel={selectedLevel}
-                onOfficeChange={setSelectedOffice}
-                selectedOffice={selectedOffice}
-                onEmploymentTypeChange={setSelectedEmploymentType}
-                selectedEmploymentType={selectedEmploymentType}
-                onSkillsChange={setSelectedSkills}
-                selectedSkills={selectedSkills}
-                onEmployeeSearch={setSelectedEmployees}
-                selectedEmployees={selectedEmployees}
-                onManagerChange={setSelectedManager}
-                selectedManager={selectedManager}
-              />
-            </Card>
+          <Card className="p-6">
+            <EmployeeFilters 
+              onDepartmentChange={setSelectedDepartment}
+              selectedDepartment={selectedDepartment}
+              onJobTitleChange={setSelectedJobTitle}
+              selectedJobTitle={selectedJobTitle}
+              onLevelChange={setSelectedLevel}
+              selectedLevel={selectedLevel}
+              onOfficeChange={setSelectedOffice}
+              selectedOffice={selectedOffice}
+              onEmploymentTypeChange={setSelectedEmploymentType}
+              selectedEmploymentType={selectedEmploymentType}
+              onSkillsChange={setSelectedSkills}
+              selectedSkills={selectedSkills}
+              onEmployeeSearch={setSelectedEmployees}
+              selectedEmployees={selectedEmployees}
+              onManagerChange={setSelectedManager}
+              selectedManager={selectedManager}
+            />
+          </Card>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatCard
-                title="Total Number of Employees"
-                value={totalEmployees}
-                icon={<Users className="h-6 w-6 text-primary-icon" />}
-              />
-              <StatCard
-                title="Added in Past 1 year"
-                value={calculateAddedLastYear()}
-                icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
-              />
-              <StatCard
-                title="Share of Female Employees"
-                value={`${calculateFemalePercentage()}%`}
-                icon={<Equal className="h-6 w-6 text-primary-icon" />}
-              />
-              <StatCard
-                title="Average Tenure (Years)"
-                value={averageTenure}
-                icon={<Clock className="h-6 w-6 text-primary-icon" />}
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard
+              title="Total Number of Employees"
+              value={totalEmployees}
+              icon={<Users className="h-6 w-6 text-primary-icon" />}
+            />
+            <StatCard
+              title="Added in Past 1 year"
+              value={calculateAddedLastYear()}
+              icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
+            />
+            <StatCard
+              title="Share of Female Employees"
+              value={`${calculateFemalePercentage()}%`}
+              icon={<Equal className="h-6 w-6 text-primary-icon" />}
+            />
+            <StatCard
+              title="Average Tenure (Years)"
+              value={averageTenure}
+              icon={<Clock className="h-6 w-6 text-primary-icon" />}
+            />
+          </div>
 
-            <Card className="p-6">
+          <Card className="p-6">
+            <ToggledSkillsProvider>
               <EmployeeTable 
                 selectedDepartment={selectedDepartment}
                 selectedJobTitle={selectedJobTitle}
@@ -155,12 +157,12 @@ const Employees = () => {
                 selectedEmployees={selectedEmployees}
                 selectedManager={selectedManager}
               />
-              <Separator className="my-4" />
-              <TablePagination />
-            </Card>
-          </div>
+            </ToggledSkillsProvider>
+            <Separator className="my-4" />
+            <TablePagination />
+          </Card>
         </div>
-      </ToggledSkillsProvider>
+      </div>
     </div>
   );
 };
