@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { employees, EMPLOYEE_IMAGES } from "../employee/EmployeeData";
 import { getBaseRole } from "../utils/roleUtils";
 import { useNavigate, useParams } from "react-router-dom";
+import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
@@ -15,26 +16,51 @@ export const EmployeeOverview = () => {
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
-  // Get employees with exact role match
+  // Get employees with exact role match and calculate their benchmarks
   const exactMatchEmployees = employees
     .filter(emp => getBaseRole(emp.role) === getBaseRole(employees.find(e => e.id === roleId)?.role || ""))
     .map(emp => ({
       ...emp,
-      benchmark: 0
+      benchmark: calculateBenchmarkPercentage(
+        emp.id,
+        roleId || "123",
+        "",
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      )
     }))
-    .sort((a, b) => b.benchmark - a.benchmark);
+    .sort((a, b) => b.benchmark - a.benchmark); // Sort by benchmark in descending order
 
-  // Get employees with partial matches
+  // Get employees with partial matches and sort by benchmark
   const partialMatchEmployees = employees
     .filter(emp => {
       const isExactMatch = getBaseRole(emp.role) === getBaseRole(employees.find(e => e.id === roleId)?.role || "");
-      return !isExactMatch;
+      if (isExactMatch) return false;
+
+      const benchmark = calculateBenchmarkPercentage(
+        emp.id,
+        roleId || "123",
+        "",
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
+
+      return benchmark > 0;
     })
     .map(emp => ({
       ...emp,
-      benchmark: 0
+      benchmark: calculateBenchmarkPercentage(
+        emp.id,
+        roleId || "123",
+        "",
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      )
     }))
-    .sort((a, b) => b.benchmark - a.benchmark);
+    .sort((a, b) => b.benchmark - a.benchmark); // Sort by benchmark in descending order
 
   const handleEmployeeClick = (employeeId: string) => {
     navigate(`/employee/${employeeId}?tab=benchmark`);
@@ -64,7 +90,7 @@ export const EmployeeOverview = () => {
             {employee.role}
           </p>
         </div>
-        <span className="text-sm px-2.5 py-1 bg-gray-100 text-gray-800 rounded-full font-medium">
+        <span className="text-sm px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-medium">
           {Math.round(employee.benchmark)}%
         </span>
       </div>

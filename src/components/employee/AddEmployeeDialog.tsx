@@ -1,66 +1,155 @@
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 import { EmployeeFormFields } from "./form/EmployeeFormFields";
 import { useEmployeeStore } from "./store/employeeStore";
-import { UserPlus } from "lucide-react";
+import { validateFormData, processEmployeeData } from "./form/employeeFormSubmission";
+import { calculateEmployeeBenchmarks } from "./EmployeeBenchmarkCalculator";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useNavigate } from "react-router-dom";
 
 export const AddEmployeeDialog = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
-
-  // Initialize form data
+  const employees = useEmployeeStore((state) => state.employees);
+  const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+  
   const [formData, setFormData] = useState({
-    id: '',
-    name: '',
-    location: '',
-    office: '',
-    department: '',
-    manager: '',
-    role: '',
-    level: '',
-    startDate: '',
-    termDate: '',
-    sex: '',
-    category: '',
-    skills: ''
+    id: "",
+    name: "",
+    location: "",
+    office: "",
+    department: "",
+    manager: "",
+    role: "",
+    level: "",
+    startDate: "",
+    termDate: "",
+    sex: "",
+    category: "",
+    skills: ""
   });
 
-  const handleInputChange = (field: string, value: string) => {
-    console.log('Input changed:', field, value);
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    console.log('Form submission started - Form data:', formData);
+    
+    // Validate form data
+    const validation = validateFormData(formData, employees);
+    if (!validation.isValid) {
+      console.log('Validation failed:', validation.error);
+      toast({
+        title: "Validation Error",
+        description: validation.error,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // Process employee data
+      const newEmployee = processEmployeeData(formData);
+      console.log('Processed employee data:', newEmployee);
+      
+      // Add employee to store
+      addEmployee(newEmployee);
+      console.log('Employee added to store:', newEmployee);
+
+      // Calculate initial benchmark
+      const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+        [newEmployee],
+        [formData.role],
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
+
+      console.log('Initial benchmark calculation:', employeesWithBenchmarks);
+
+      toast({
+        title: "Success",
+        description: "Employee profile created successfully",
+      });
+      
+      setOpen(false);
+      // Navigate to the new employee's profile
+      navigate(`/employee/${newEmployee.id}`);
+      
+      // Reset form
+      setFormData({
+        id: "",
+        name: "",
+        location: "",
+        office: "",
+        department: "",
+        manager: "",
+        role: "",
+        level: "",
+        startDate: "",
+        termDate: "",
+        sex: "",
+        category: "",
+        skills: ""
+      });
+    } catch (error) {
+      console.error('Error creating employee:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create employee profile. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleSubmit = () => {
-    console.log('Submitting employee data:', formData);
-    addEmployee(formData);
-    setOpen(false);
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [field]: value
+      };
+
+      // Reset level when role changes
+      if (field === 'role') {
+        newData.level = '';
+        console.log('Role changed, reset level');
+      }
+
+      console.log(`Field ${field} updated to:`, value);
+      return newData;
+    });
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Add Employee
-        </Button>
+        <Button>Add Employee</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Add New Employee</DialogTitle>
+          <DialogTitle>Create Employee Profile</DialogTitle>
+          <DialogDescription>
+            Fill in the employee details below to create a new profile.
+          </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
           <EmployeeFormFields 
             formData={formData}
             handleInputChange={handleInputChange}
           />
-          <Button onClick={handleSubmit} className="w-full">
-            Add Employee
-          </Button>
-        </div>
+
+          <div className="flex justify-end">
+            <Button type="submit">Create Profile</Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
