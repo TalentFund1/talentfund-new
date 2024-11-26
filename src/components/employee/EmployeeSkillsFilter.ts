@@ -1,7 +1,7 @@
 import { Employee } from "../types/employeeTypes";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
-import { getSkillProfileId } from "../utils/roleUtils";
+import { getSkillProfileId, getBaseRole } from "../utils/roleUtils";
 
 export const filterEmployeesBySkills = (
   employees: Employee[],
@@ -39,6 +39,13 @@ export const getSkillMatchCount = (
   const employeeSkills = getEmployeeSkills(employeeId);
   const profileId = getSkillProfileId(roleId);
   const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
+
+  console.log('Getting skill match count:', {
+    employeeId,
+    roleId,
+    profileId,
+    hasRoleSkills: !!currentRoleSkills
+  });
 
   if (!currentRoleSkills) {
     console.warn('No role skills found for profile:', profileId);

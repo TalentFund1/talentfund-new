@@ -1,5 +1,5 @@
 import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId, getLevel } from "../utils/roleUtils";
+import { getSkillProfileId, getLevel, getBaseRole } from "../utils/roleUtils";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 
@@ -14,8 +14,14 @@ export const calculateBenchmarkPercentage = (
   console.log('Calculating benchmark:', { employeeId, roleId, level });
   
   const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  const profileId = getSkillProfileId(roleId);
+  const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
   
+  if (!currentRoleSkills) {
+    console.error('No role skills found for profile:', profileId);
+    return 0;
+  }
+
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -82,6 +88,7 @@ export const calculateBenchmarkPercentage = (
   console.log('Benchmark calculation results:', {
     employeeId,
     roleId,
+    profileId,
     level,
     totalSkills: totalToggledSkills,
     matchingSkills: matchingSkills.length,
@@ -120,8 +127,16 @@ export const calculateEmployeeBenchmarks = (
       );
     } else {
       // Calculate benchmark against employee's current role
-      const roleId = getSkillProfileId(employee.role);
+      const roleId = getSkillProfileId(getBaseRole(employee.role));
       const level = getLevel(employee.role);
+      
+      console.log('Calculating benchmark for employee against own role:', {
+        employee: employee.name,
+        roleId,
+        level,
+        baseRole: getBaseRole(employee.role)
+      });
+      
       benchmark = calculateBenchmarkPercentage(
         employee.id,
         roleId,
