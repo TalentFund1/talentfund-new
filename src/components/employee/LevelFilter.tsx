@@ -6,7 +6,7 @@ interface LevelFilterProps {
   selectedJobTitle: string[];
 }
 
-export const LevelFilter = ({ onLevelChange, selectedLevel, selectedJobTitle = [] }: LevelFilterProps) => {
+export const LevelFilter = ({ onLevelChange, selectedLevel, selectedJobTitle }: LevelFilterProps) => {
   const isManagerialTrack = selectedJobTitle.length > 0 && 
     selectedJobTitle[0].toLowerCase().includes('manager');
 
