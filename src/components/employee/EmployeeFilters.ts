@@ -38,7 +38,8 @@ export const filterEmployees = (
           employee: employee.name,
           employeeRole: employee.role,
           employeeRoleId,
-          selectedRoleId
+          selectedRoleId,
+          matches: employeeRoleId === selectedRoleId
         });
 
         // Match only by exact role ID
@@ -46,7 +47,7 @@ export const filterEmployees = (
       });
     
     const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(getLevel(employee.role));
+      selectedLevel.includes(getBaseRole(employee.role));
 
     const matchesOffice = selectedOffice.length === 0 || 
       selectedOffice.includes(employee.location.split(',')[0].trim());
