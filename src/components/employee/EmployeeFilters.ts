@@ -25,17 +25,18 @@ export const filterEmployees = (
   });
 
   return employees.filter(employee => {
-    // Get employee's role ID first
+    // Get employee's role ID first and check if it matches
     const employeeRoleId = getSkillProfileId(employee.role);
     
-    console.log(`Checking employee ${employee.name}:`, {
+    console.log(`Filtering employee ${employee.name}:`, {
       employeeRoleId,
       selectedRoleId,
       roleMatch: selectedRoleId.length === 0 || selectedRoleId.includes(employeeRoleId)
     });
 
-    // If role ID is selected, it takes precedence - return false immediately if no match
+    // If role ID is selected and doesn't match, exclude the employee
     if (selectedRoleId.length > 0 && !selectedRoleId.includes(employeeRoleId)) {
+      console.log(`Excluding ${employee.name} due to role ID mismatch`);
       return false;
     }
 
@@ -44,6 +45,9 @@ export const filterEmployees = (
 
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
+    
+    const matchesJobTitle = selectedJobTitle.length === 0 || 
+      selectedJobTitle.includes(getBaseRole(employee.role));
     
     const matchesLevel = selectedLevel.length === 0 || 
       selectedLevel.includes(getLevel(employee.role));
@@ -57,14 +61,22 @@ export const filterEmployees = (
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
 
-    const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(getBaseRole(employee.role));
-
     const matches = matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
            matchesLevel && matchesOffice && matchesEmploymentType && 
            matchesManager;
 
-    console.log(`Final match result for ${employee.name}:`, matches);
+    console.log(`Final match result for ${employee.name}:`, {
+      matches,
+      criteria: {
+        employeeSearch: matchesEmployeeSearch,
+        department: matchesDepartment,
+        jobTitle: matchesJobTitle,
+        level: matchesLevel,
+        office: matchesOffice,
+        employmentType: matchesEmploymentType,
+        manager: matchesManager
+      }
+    });
     
     return matches;
   });
