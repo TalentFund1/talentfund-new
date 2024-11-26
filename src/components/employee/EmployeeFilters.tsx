@@ -7,6 +7,31 @@ import { EmployeeSearch } from './EmployeeSearch';
 import { LevelFilter } from './LevelFilter';
 import { useEmployeeStore } from './store/employeeStore';
 import { jobTitles } from '../skills/competency/skillProfileData';
+import { Employee } from '../types/employeeTypes';
+
+// Export the filterEmployees function
+export const filterEmployees = (
+  employees: Employee[],
+  selectedEmployees: string[],
+  selectedDepartment: string[],
+  selectedJobTitle: string[],
+  selectedLevel: string[],
+  selectedOffice: string[],
+  selectedEmploymentType: string[],
+  selectedSkills: string[],
+  selectedManager: string[]
+): Employee[] => {
+  return employees.filter(employee => {
+    if (selectedEmployees.length > 0 && !selectedEmployees.includes(employee.name)) return false;
+    if (selectedDepartment.length > 0 && !selectedDepartment.includes(employee.department)) return false;
+    if (selectedJobTitle.length > 0 && !selectedJobTitle.includes(getBaseRole(employee.role))) return false;
+    if (selectedLevel.length > 0 && !selectedLevel.some(level => employee.role.includes(level))) return false;
+    if (selectedOffice.length > 0 && !selectedOffice.includes(employee.office)) return false;
+    if (selectedEmploymentType.length > 0 && !selectedEmploymentType.includes(employee.employmentType)) return false;
+    if (selectedManager.length > 0 && !selectedManager.includes(employee.manager)) return false;
+    return true;
+  });
+};
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -160,4 +185,5 @@ export const EmployeeFilters = ({
   );
 };
 
+// Add default export
 export default EmployeeFilters;
