@@ -5,15 +5,13 @@ interface EmployeeTableHeaderProps {
   isAllSelected: boolean;
   hasEmployees: boolean;
   hasSelectedSkills?: boolean;
-  showSkillMatch: boolean;
 }
 
 export const EmployeeTableHeader = ({ 
   onSelectAll, 
   isAllSelected, 
   hasEmployees,
-  hasSelectedSkills = false,
-  showSkillMatch
+  hasSelectedSkills = false 
 }: EmployeeTableHeaderProps) => {
   return (
     <tr className="border-b border-border">
@@ -33,11 +31,7 @@ export const EmployeeTableHeader = ({
       </th>
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Current Role</th>
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Department</th>
-      {showSkillMatch ? (
-        <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Match</th>
-      ) : (
-        <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Overall Skills</th>
-      )}
+      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Match</th>
       <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">
         Benchmark
       </th>

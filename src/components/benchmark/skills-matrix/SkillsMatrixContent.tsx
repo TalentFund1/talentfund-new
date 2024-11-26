@@ -5,13 +5,7 @@ import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
 import { useRef } from "react";
 
 interface SkillsMatrixContentProps {
-  filteredSkills: Array<{
-    title: string;
-    subcategory: string;
-    level: string;
-    growth: string;
-    confidence: string;
-  }>;
+  filteredSkills: any[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedLevel: string;
@@ -27,7 +21,7 @@ interface SkillsMatrixContentProps {
 }
 
 export const SkillsMatrixContent = ({
-  filteredSkills = [],
+  filteredSkills,
   searchTerm,
   setSearchTerm,
   selectedLevel,
@@ -41,19 +35,11 @@ export const SkillsMatrixContent = ({
   visibleItems,
   observerTarget
 }: SkillsMatrixContentProps) => {
-  console.log('Rendering SkillsMatrixContent with skills:', {
-    filteredSkillsCount: filteredSkills?.length || 0,
-    visibleItems
-  });
+  console.log('Rendering SkillsMatrixContent with skills:', filteredSkills);
 
   const removeSearchSkill = (skill: string) => {
     setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
   };
-
-  // Ensure we have an array before slicing
-  const visibleSkills = Array.isArray(filteredSkills) 
-    ? filteredSkills.slice(0, visibleItems)
-    : [];
 
   return (
     <>
@@ -78,27 +64,19 @@ export const SkillsMatrixContent = ({
             isRoleBenchmark={true}
           />
           <TableBody>
-            {!visibleSkills.length ? (
-              <tr>
-                <td colSpan={6} className="text-center py-4 text-muted-foreground">
-                  No skills found
-                </td>
-              </tr>
-            ) : (
-              visibleSkills.map((skill) => (
-                <SkillsMatrixRow 
-                  key={skill.title} 
-                  skill={skill}
-                  showCompanySkill={false}
-                  isRoleBenchmark={true}
-                />
-              ))
-            )}
+            {filteredSkills.slice(0, visibleItems).map((skill) => (
+              <SkillsMatrixRow 
+                key={skill.title} 
+                skill={skill}
+                showCompanySkill={false}
+                isRoleBenchmark={true}
+              />
+            ))}
           </TableBody>
         </Table>
       </div>
 
-      {visibleItems < (filteredSkills?.length || 0) && (
+      {visibleItems < filteredSkills.length && (
         <div 
           ref={observerTarget} 
           className="h-10 flex items-center justify-center"

@@ -13,6 +13,4 @@ export interface Employee {
   startDate?: string;
   office: string;
   termDate: string;
-  skills?: string[];
-  image?: string;
 }
