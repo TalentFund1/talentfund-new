@@ -7,25 +7,27 @@ import { cn } from "@/lib/utils";
 interface SearchFilterProps {
   label: string;
   placeholder: string;
-  items?: string[];
+  items?: Array<string | { id: string; title: string }>;
   selectedItems: string[];
   onItemsChange: (items: string[]) => void;
   singleSelect?: boolean;
   required?: boolean;
   className?: string;
   disabled?: boolean;
+  displayKey?: 'title';
 }
 
 export const SearchFilter = ({ 
   label, 
   placeholder, 
-  items = [], // Provide default empty array
-  selectedItems = [], // Provide default empty array
+  items = [],
+  selectedItems = [],
   onItemsChange,
   singleSelect = false,
   required = false,
   className,
-  disabled = false
+  disabled = false,
+  displayKey
 }: SearchFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,14 +45,21 @@ export const SearchFilter = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (item: string) => {
+  const getDisplayValue = (item: string | { id: string; title: string }): string => {
+    if (typeof item === 'string') return item;
+    return displayKey ? item[displayKey] : item.id;
+  };
+
+  const handleSelect = (item: string | { id: string; title: string }) => {
     if (disabled) return;
     
+    const value = typeof item === 'string' ? item : item.id;
+    
     if (singleSelect) {
-      onItemsChange([item]);
+      onItemsChange([value]);
     } else {
-      if (!selectedItems.includes(item)) {
-        onItemsChange([...selectedItems, item]);
+      if (!selectedItems.includes(value)) {
+        onItemsChange([...selectedItems, value]);
       }
     }
     setSearchQuery("");
@@ -59,19 +68,28 @@ export const SearchFilter = ({
     }
   };
 
-  const removeItem = (item: string) => {
+  const removeItem = (itemToRemove: string) => {
     if (disabled) return;
     
     if (singleSelect) {
       onItemsChange([]);
     } else {
-      onItemsChange(selectedItems.filter(i => i !== item));
+      onItemsChange(selectedItems.filter(i => i !== itemToRemove));
     }
   };
 
-  const filteredItems = (items || []).filter(item => 
-    item.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredItems = items.filter(item => {
+    const displayValue = getDisplayValue(item).toLowerCase();
+    return displayValue.includes(searchQuery.toLowerCase());
+  });
+
+  const getSelectedItemDisplay = (itemId: string): string => {
+    const item = items.find(i => {
+      if (typeof i === 'string') return i === itemId;
+      return i.id === itemId;
+    });
+    return item ? getDisplayValue(item) : itemId;
+  };
 
   return (
     <div className={cn("space-y-2", className)} ref={dropdownRef}>
@@ -81,12 +99,12 @@ export const SearchFilter = ({
       </label>
       <div className="relative">
         <div className="flex flex-wrap gap-2 mb-2">
-          {selectedItems.map((item) => (
-            <Badge key={item} variant="secondary" className="flex items-center gap-1">
-              {item}
+          {selectedItems.map((itemId) => (
+            <Badge key={itemId} variant="secondary" className="flex items-center gap-1">
+              {getSelectedItemDisplay(itemId)}
               <X 
                 className={cn("h-3 w-3", disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer")}
-                onClick={() => !disabled && removeItem(item)}
+                onClick={() => !disabled && removeItem(itemId)}
               />
             </Badge>
           ))}
@@ -130,18 +148,22 @@ export const SearchFilter = ({
                   No {label.toLowerCase()} found.
                 </div>
               ) : (
-                filteredItems.map((item) => (
-                  <div
-                    key={item}
-                    onClick={() => handleSelect(item)}
-                    className="flex items-center justify-between px-3 py-2 text-sm rounded hover:bg-gray-100 cursor-pointer"
-                  >
-                    <span>{item}</span>
-                    {selectedItems.includes(item) && (
-                      <Check className="h-4 w-4 text-primary-accent" />
-                    )}
-                  </div>
-                ))
+                filteredItems.map((item) => {
+                  const value = typeof item === 'string' ? item : item.id;
+                  const display = getDisplayValue(item);
+                  return (
+                    <div
+                      key={value}
+                      onClick={() => handleSelect(item)}
+                      className="flex items-center justify-between px-3 py-2 text-sm rounded hover:bg-gray-100 cursor-pointer"
+                    >
+                      <span>{display}</span>
+                      {selectedItems.includes(value) && (
+                        <Check className="h-4 w-4 text-primary-accent" />
+                      )}
+                    </div>
+                  );
+                })
               )}
             </div>
           </div>

@@ -95,7 +95,7 @@ export const EmployeeFilters = ({
           placeholder="Search skills..."
           items={allSkills}
           selectedItems={selectedSkills}
-          onItemsChange={(items) => onSkillsChange(items.map(item => String(item)))}
+          onItemsChange={(items) => onSkillsChange(items)}
           singleSelect={false}
         />
       </div>
@@ -106,7 +106,7 @@ export const EmployeeFilters = ({
           placeholder="Manager"
           items={managers}
           selectedItems={selectedManager}
-          onItemsChange={(items) => onManagerChange(items.map(item => String(item)))}
+          onItemsChange={(items) => onManagerChange(items)}
           singleSelect={true}
           className="w-[180px]"
         />
@@ -140,7 +140,7 @@ export const EmployeeFilters = ({
           placeholder="Office"
           items={["Toronto", "New York", "San Francisco"]}
           selectedItems={selectedOffice}
-          onItemsChange={(items) => onOfficeChange(items.map(item => String(item)))}
+          onItemsChange={(items) => onOfficeChange(items)}
           singleSelect={false}
           className="w-[180px]"
         />
@@ -150,7 +150,7 @@ export const EmployeeFilters = ({
           placeholder="Department"
           items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
           selectedItems={selectedDepartment}
-          onItemsChange={(items) => onDepartmentChange(items.map(item => String(item)))}
+          onItemsChange={(items) => onDepartmentChange(items)}
           singleSelect={false}
           className="w-[180px]"
         />
@@ -160,7 +160,7 @@ export const EmployeeFilters = ({
           placeholder="Category"
           items={["Full-time", "Part-time", "Contract", "Internship"]}
           selectedItems={selectedEmploymentType}
-          onItemsChange={(items) => onEmploymentTypeChange(items.map(item => String(item)))}
+          onItemsChange={(items) => onEmploymentTypeChange(items)}
           singleSelect={false}
           className="w-[180px]"
         />
