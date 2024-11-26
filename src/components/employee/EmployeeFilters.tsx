@@ -1,70 +1,163 @@
-import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId } from "../EmployeeTable";
+import { SearchFilter } from '@/components/market/SearchFilter';
+import { useState, useEffect } from "react";
+import { technicalSkills, softSkills } from '../skillsData';
+import { Button } from '@/components/ui/button';
+import { getBaseRole } from '../EmployeeTable';
+import { EmployeeSearch } from './EmployeeSearch';
+import { LevelFilter } from './LevelFilter';
+import { useEmployeeStore } from './store/employeeStore';
+import { jobTitles } from '../skills/competency/skillProfileData';
 
-export const filterEmployees = (
-  employees: Employee[],
-  searchedEmployees: string[],
-  selectedDepartment: string[],
-  selectedJobTitle: string[],  // This is actually roleIds now
-  selectedLevel: string[],
-  selectedOffice: string[],
-  selectedEmploymentType: string[],
-  selectedSkills: string[],
-  selectedManager: string[] = []
-): Employee[] => {
-  console.log('Starting employee filtering with roleIds:', {
-    searchedEmployees,
-    selectedDepartment,
-    selectedRoleIds: selectedJobTitle,
-    selectedLevel,
-    selectedOffice,
-    selectedEmploymentType,
-    selectedManager
-  });
+interface EmployeeFiltersProps {
+  onDepartmentChange: (department: string[]) => void;
+  selectedDepartment: string[];
+  onJobTitleChange: (jobTitle: string[]) => void;
+  selectedJobTitle: string[];
+  onLevelChange: (level: string[]) => void;
+  selectedLevel: string[];
+  onOfficeChange: (office: string[]) => void;
+  selectedOffice: string[];
+  onEmploymentTypeChange: (employmentType: string[]) => void;
+  selectedEmploymentType: string[];
+  onSkillsChange: (skills: string[]) => void;
+  selectedSkills: string[];
+  onEmployeeSearch: (employees: string[]) => void;
+  selectedEmployees: string[];
+  onManagerChange?: (manager: string[]) => void;
+  selectedManager?: string[];
+}
 
-  return employees.filter(employee => {
-    const employeeRoleId = getSkillProfileId(employee.role);
-    const matchesRoleId = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(employeeRoleId);
+export const EmployeeFilters = ({ 
+  onDepartmentChange, 
+  selectedDepartment,
+  onJobTitleChange,
+  selectedJobTitle,
+  onLevelChange,
+  selectedLevel,
+  onOfficeChange,
+  selectedOffice,
+  onEmploymentTypeChange,
+  selectedEmploymentType,
+  onSkillsChange,
+  selectedSkills,
+  onEmployeeSearch,
+  selectedEmployees,
+  onManagerChange = () => {},
+  selectedManager = []
+}: EmployeeFiltersProps) => {
+  const allSkills = [...technicalSkills, ...softSkills];
+  const employees = useEmployeeStore((state) => state.employees);
+  const managers = Array.from(new Set(
+    employees
+      .filter(emp => emp.role.toLowerCase().includes('manager'))
+      .map(emp => emp.name)
+  ));
 
-    console.log(`Role ID matching for ${employee.name}:`, {
-      employeeRoleId,
-      selectedRoleIds: selectedJobTitle,
-      matchesRoleId
-    });
+  useEffect(() => {
+    onLevelChange([]);
+  }, [selectedJobTitle, onLevelChange]);
 
-    const matchesEmployeeSearch = searchedEmployees.length === 0 || 
-      searchedEmployees.includes(employee.name);
+  const handleClearAll = () => {
+    onSkillsChange([]);
+    onJobTitleChange([]);
+    onLevelChange([]);
+    onOfficeChange([]);
+    onDepartmentChange([]);
+    onEmploymentTypeChange([]);
+    onEmployeeSearch([]);
+    onManagerChange([]);
+  };
 
-    const matchesDepartment = selectedDepartment.length === 0 || 
-      selectedDepartment.includes(employee.department);
+  // Get available role IDs from jobTitles
+  const roleIds = Object.keys(jobTitles);
+  console.log('Available role IDs:', roleIds);
 
-    const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(employeeRoleId);
+  return (
+    <div className="space-y-0.5">
+      <EmployeeSearch 
+        onEmployeeSearch={onEmployeeSearch}
+        selectedEmployees={selectedEmployees}
+      />
 
-    const matchesOffice = selectedOffice.length === 0 || 
-      selectedOffice.includes(employee.office);
+      <div className="w-full">
+        <SearchFilter
+          label=""
+          placeholder="Search skills..."
+          items={allSkills}
+          selectedItems={selectedSkills}
+          onItemsChange={(items) => onSkillsChange(items.map(item => String(item)))}
+          singleSelect={false}
+        />
+      </div>
 
-    const matchesEmploymentType = selectedEmploymentType.length === 0 ||
-      selectedEmploymentType.includes(employee.category);
+      <div className="flex flex-wrap items-start gap-3">
+        <SearchFilter
+          label=""
+          placeholder="Manager"
+          items={managers}
+          selectedItems={selectedManager}
+          onItemsChange={(items) => onManagerChange(items.map(item => String(item)))}
+          singleSelect={true}
+          className="w-[180px]"
+        />
 
-    const matchesManager = selectedManager.length === 0 ||
-      (employee.manager && selectedManager.includes(employee.manager));
+        <SearchFilter
+          label=""
+          placeholder="Job Title"
+          items={roleIds}
+          selectedItems={selectedJobTitle}
+          onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
+          singleSelect={true}
+          className="w-[180px]"
+          displayMap={jobTitles}
+        />
+        
+        <LevelFilter
+          onLevelChange={onLevelChange}
+          selectedLevel={selectedLevel}
+          selectedJobTitle={selectedJobTitle}
+        />
+        
+        <SearchFilter
+          label=""
+          placeholder="Office"
+          items={["Toronto", "New York", "San Francisco"]}
+          selectedItems={selectedOffice}
+          onItemsChange={(items) => onOfficeChange(items.map(item => String(item)))}
+          singleSelect={false}
+          className="w-[180px]"
+        />
 
-    const matches = matchesEmployeeSearch && matchesDepartment && matchesRoleId && 
-           matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
+        <SearchFilter
+          label=""
+          placeholder="Department"
+          items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
+          selectedItems={selectedDepartment}
+          onItemsChange={(items) => onDepartmentChange(items.map(item => String(item)))}
+          singleSelect={false}
+          className="w-[180px]"
+        />
 
-    console.log(`Filter results for ${employee.name}:`, {
-      matchesEmployeeSearch,
-      matchesDepartment,
-      matchesRoleId,
-      matchesLevel,
-      matchesOffice,
-      matchesEmploymentType,
-      matchesManager,
-      finalResult: matches
-    });
-    
-    return matches;
-  });
+        <SearchFilter
+          label=""
+          placeholder="Category"
+          items={["Full-time", "Part-time", "Contract", "Internship"]}
+          selectedItems={selectedEmploymentType}
+          onItemsChange={(items) => onEmploymentTypeChange(items.map(item => String(item)))}
+          singleSelect={false}
+          className="w-[180px]"
+        />
+
+        <Button 
+          variant="outline" 
+          onClick={handleClearAll}
+          className="h-[40px] mt-4"
+        >
+          Clear All
+        </Button>
+      </div>
+    </div>
+  );
 };
+
+export default EmployeeFilters;
