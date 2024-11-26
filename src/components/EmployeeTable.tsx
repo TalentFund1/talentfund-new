@@ -11,6 +11,7 @@ import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { calculateEmployeeBenchmarks } from "./employee/BenchmarkCalculator";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
+import { getSkillProfileId, getBaseRole } from "./utils/roleUtils";
 
 interface EmployeeTableProps {
   selectedDepartment: string[];
@@ -37,19 +38,37 @@ export const EmployeeTable = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
-  const employees = useEmployeeStore((state) => {
-    console.log('Current employees in store:', state.employees);
-    return state.employees;
-  });
+  const employees = useEmployeeStore((state) => state.employees);
 
-  // Calculate benchmark percentages for each employee
-  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
-    employees,
-    selectedJobTitle,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
-  );
+  console.log('Starting employee benchmark calculations...');
+
+  // Calculate benchmark percentages for each employee against their own role by default
+  const employeesWithBenchmarks = employees.map(employee => {
+    const employeeRoleId = getSkillProfileId(getBaseRole(employee.role));
+    console.log(`Calculating benchmark for ${employee.name}:`, {
+      role: employee.role,
+      roleId: employeeRoleId
+    });
+
+    // If a job title is selected, calculate against that, otherwise use employee's own role
+    const benchmarkRoleId = selectedJobTitle.length > 0 
+      ? getSkillProfileId(selectedJobTitle[0])
+      : employeeRoleId;
+
+    console.log(`Using role ID for benchmark: ${benchmarkRoleId} (${selectedJobTitle.length > 0 ? 'selected job' : 'own role'})`);
+
+    return {
+      ...employee,
+      benchmark: calculateBenchmarkPercentage(
+        employee.id,
+        benchmarkRoleId,
+        employee.role,
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      )
+    };
+  });
 
   console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
