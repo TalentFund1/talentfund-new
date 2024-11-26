@@ -8,126 +8,86 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { useMemo, useEffect, useState } from "react";
-import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
-import { useToast } from "@/components/ui/use-toast";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
+  const employeeSkills = getEmployeeSkills(id || "");
   const { selectedRole, selectedLevel } = useRoleStore();
+  const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { toast } = useToast();
-  const [matches, setMatches] = useState({ skillMatch: 0, competencyMatch: 0, skillGoalMatch: 0, total: 0 });
   
-  // Memoize employee skills
-  const employeeSkills = useMemo(() => getEmployeeSkills(id || ""), [id]);
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  if (!currentRoleSkills) {
+    console.error('No role skills found for role:', selectedRole);
+    return null;
+  }
+  
+  const toggledRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ].filter(skill => toggledSkills.has(skill.title));
 
-  // Memoize current role skills lookup with dependency on selectedRole
-  const currentRoleSkills = useMemo(() => {
-    const skills = roleSkills[selectedRole as keyof typeof roleSkills];
-    if (!skills) {
-      console.error('No role skills found for role:', selectedRole);
-      return null;
-    }
-    return skills;
-  }, [selectedRole]);
+  // Match skills based on role profile skills
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
+    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+    return employeeSkill !== undefined;
+  });
 
-  // Get toggled role skills with proper dependencies
-  const toggledRoleSkills = useMemo(() => {
-    if (!currentRoleSkills) return [];
-    
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
+  // Competency Match calculation
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+    if (!roleSkillState) return false;
 
-    console.log('Filtering toggled skills from:', allSkills.length, 'total skills');
-    const filtered = allSkills.filter(skill => toggledSkills.has(skill.title));
-    console.log('Found', filtered.length, 'toggled skills');
-    
-    return filtered;
-  }, [currentRoleSkills, toggledSkills]);
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const roleSkillLevel = roleSkillState.level;
 
-  // Calculate matches immediately when dependencies change
-  useEffect(() => {
-    if (!toggledRoleSkills.length) {
-      console.log('No toggled skills found');
-      setMatches({ skillMatch: 0, competencyMatch: 0, skillGoalMatch: 0, total: 0 });
-      return;
-    }
-
-    console.log('Calculating matches for', toggledRoleSkills.length, 'toggled skills');
-
-    // Match skills based on role profile skills
-    const matchingSkills = toggledRoleSkills.filter(roleSkill => {
-      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-      return employeeSkill !== undefined;
-    });
-
-    // Competency Match calculation
-    const competencyMatchingSkills = matchingSkills.filter(skill => {
-      const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      if (!roleSkillState) return false;
-
-      const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
-      const roleSkillLevel = roleSkillState.level;
-
-      const getLevelPriority = (level: string = 'unspecified') => {
-        const priorities: { [key: string]: number } = {
-          'advanced': 3,
-          'intermediate': 2,
-          'beginner': 1,
-          'unspecified': 0
-        };
-        return priorities[level.toLowerCase()] ?? 0;
+    const getLevelPriority = (level: string = 'unspecified') => {
+      const priorities: { [key: string]: number } = {
+        'advanced': 3,
+        'intermediate': 2,
+        'beginner': 1,
+        'unspecified': 0
       };
-
-      const employeePriority = getLevelPriority(employeeSkillLevel);
-      const rolePriority = getLevelPriority(roleSkillLevel);
-
-      return employeePriority === rolePriority || employeePriority > rolePriority;
-    });
-
-    // Skill Goal Match calculation
-    const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-      const skillState = currentStates[skill.title];
-      if (!skillState) return false;
-      return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
-    });
-
-    const newMatches = {
-      skillMatch: matchingSkills.length,
-      competencyMatch: competencyMatchingSkills.length,
-      skillGoalMatch: skillGoalMatchingSkills.length,
-      total: toggledRoleSkills.length
+      return priorities[level.toLowerCase()] ?? 0;
     };
 
-    console.log('Setting new matches:', newMatches);
-    setMatches(newMatches);
+    const employeePriority = getLevelPriority(employeeSkillLevel);
+    const rolePriority = getLevelPriority(roleSkillLevel);
 
-  }, [
-    toggledRoleSkills,
-    employeeSkills,
-    selectedLevel,
-    currentStates,
-    getSkillCompetencyState,
-    toggledSkills // Add toggledSkills to dependencies to ensure updates
-  ]);
+    return employeePriority === rolePriority || employeePriority > rolePriority;
+  });
 
-  // Debug effect to track match updates
-  useEffect(() => {
-    console.log('Benchmark Analysis Updates:', {
-      selectedRole,
-      selectedLevel,
-      toggledSkillsCount: toggledRoleSkills.length,
-      matches
-    });
-  }, [selectedRole, selectedLevel, toggledRoleSkills.length, matches]);
+  // Skill Goal Match calculation
+  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
+    const skillState = currentStates[skill.title];
+    if (!skillState) return false;
+    return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
+  });
 
-  if (!currentRoleSkills) return null;
+  const totalSkillsCount = toggledRoleSkills.length;
+  const matchingSkillsCount = matchingSkills.length;
+  const competencyMatchCount = competencyMatchingSkills.length;
+  const skillGoalMatchCount = skillGoalMatchingSkills.length;
+
+  // Calculate individual percentages
+  const skillMatchPercentage = (matchingSkillsCount / totalSkillsCount) * 100;
+  const competencyMatchPercentage = (competencyMatchCount / totalSkillsCount) * 100;
+  const skillGoalMatchPercentage = (skillGoalMatchCount / totalSkillsCount) * 100;
+
+  // Calculate average percentage
+  const averagePercentage = Math.round(
+    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
+  );
+
+  console.log('Benchmark Analysis Calculation:', {
+    skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
+    competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
+    skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
+    averagePercentage
+  });
 
   return (
     <div className="space-y-6">
@@ -143,20 +103,24 @@ export const BenchmarkAnalysis = () => {
           </div>
         </div>
 
-        <BenchmarkAnalysisCard 
-          skillMatch={{
-            current: matches.skillMatch,
-            total: matches.total
-          }}
-          competencyMatch={{
-            current: matches.competencyMatch,
-            total: matches.total
-          }}
-          skillGoals={{
-            current: matches.skillGoalMatch,
-            total: matches.total
-          }}
-        />
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Skill Match</span>
+                <span className="text-sm text-foreground">
+                  {matchingSkillsCount} out of {totalSkillsCount}
+                </span>
+              </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full" 
+                  style={{ width: `${skillMatchPercentage}%` }} 
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </Card>
     </div>
   );

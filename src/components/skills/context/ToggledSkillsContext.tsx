@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { roleSkills } from '../data/roleSkills';
 import { useCompetencyStore } from '../competency/CompetencyState';
 import { useRoleStore } from '../../benchmark/RoleBenchmark';
@@ -7,7 +7,6 @@ import { useRoleStore } from '../../benchmark/RoleBenchmark';
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
   setToggledSkills: (skills: Set<string>) => void;
-  toggleSkill: (skill: string) => void;
 }
 
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
@@ -109,77 +108,34 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const currentRole = id || selectedRole;
   const toggledSkills = currentRole ? (skillsByRole[currentRole] || new Set<string>()) : new Set<string>();
 
-  const setToggledSkills = useCallback((newSkills: Set<string>) => {
+  const setToggledSkills = (newSkills: Set<string>) => {
     console.log('Setting toggled skills for role:', currentRole, Array.from(newSkills));
     if (currentRole) {
-      setSkillsByRole(prev => {
-        const updated = {
-          ...prev,
-          [currentRole]: newSkills
-        };
-        // Save to localStorage immediately
-        try {
-          const serializable = Object.fromEntries(
-            Object.entries(updated).map(([roleId, skills]) => [
-              roleId,
-              Array.from(skills)
-            ])
-          );
-          localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
-          console.log('Saved toggled skills by role:', serializable);
-        } catch (error) {
-          console.error('Error saving skills:', error);
-        }
-        return updated;
-      });
-    }
-  }, [currentRole]);
-
-  const toggleSkill = useCallback((skill: string) => {
-    if (!currentRole) return;
-    
-    console.log('Toggling skill:', skill, 'for role:', currentRole);
-    setSkillsByRole(prev => {
-      const currentSkills = prev[currentRole] || new Set<string>();
-      const newSkills = new Set(currentSkills);
-      
-      if (newSkills.has(skill)) {
-        newSkills.delete(skill);
-      } else {
-        newSkills.add(skill);
-      }
-
-      const updated = {
+      setSkillsByRole(prev => ({
         ...prev,
         [currentRole]: newSkills
-      };
-
-      // Save to localStorage immediately
-      try {
-        const serializable = Object.fromEntries(
-          Object.entries(updated).map(([roleId, skills]) => [
-            roleId,
-            Array.from(skills)
-          ])
-        );
-        localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
-        console.log('Saved toggled skills by role:', serializable);
-      } catch (error) {
-        console.error('Error saving skills:', error);
-      }
-
-      return updated;
-    });
-  }, [currentRole]);
-
-  const contextValue = {
-    toggledSkills,
-    setToggledSkills,
-    toggleSkill
+      }));
+    }
   };
 
+  useEffect(() => {
+    try {
+      const serializable = Object.fromEntries(
+        Object.entries(skillsByRole).map(([roleId, skills]) => [
+          roleId,
+          Array.from(skills)
+        ])
+      );
+      
+      localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
+      console.log('Saved toggled skills by role:', serializable);
+    } catch (error) {
+      console.error('Error saving skills:', error);
+    }
+  }, [skillsByRole]);
+
   return (
-    <ToggledSkillsContext.Provider value={contextValue}>
+    <ToggledSkillsContext.Provider value={{ toggledSkills, setToggledSkills }}>
       {children}
     </ToggledSkillsContext.Provider>
   );
