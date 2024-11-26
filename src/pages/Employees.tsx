@@ -4,14 +4,13 @@ import { StatCard } from "@/components/StatCard";
 import { Users, UserPlus, Equal, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
+import { EmployeeFilters } from "@/components/EmployeeFilters";
 import { EmployeeTable } from "@/components/EmployeeTable";
-import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
-import { EmployeeFilters } from "@/components/employee/EmployeeFilters";
-import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { TablePagination } from "@/components/TablePagination";
 import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
+import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 
 const calculateAverageTenure = (employeeList: any[]) => {
@@ -95,9 +94,7 @@ const EmployeesContent = () => {
             <h1 className="text-3xl font-bold text-foreground">Employees</h1>
             <div className="space-x-2">
               <Button variant="outline">Export Data</Button>
-              <ToggledSkillsProvider>
-                <AddEmployeeDialog />
-              </ToggledSkillsProvider>
+              <AddEmployeeDialog />
             </div>
           </div>
 
@@ -146,18 +143,16 @@ const EmployeesContent = () => {
           </div>
 
           <Card className="p-6">
-            <ToggledSkillsProvider>
-              <EmployeeTable 
-                selectedDepartment={selectedDepartment}
-                selectedJobTitle={selectedJobTitle}
-                selectedLevel={selectedLevel}
-                selectedOffice={selectedOffice}
-                selectedEmploymentType={selectedEmploymentType}
-                selectedSkills={selectedSkills}
-                selectedEmployees={selectedEmployees}
-                selectedManager={selectedManager}
-              />
-            </ToggledSkillsProvider>
+            <EmployeeTable 
+              selectedDepartment={selectedDepartment}
+              selectedJobTitle={selectedJobTitle}
+              selectedLevel={selectedLevel}
+              selectedOffice={selectedOffice}
+              selectedEmploymentType={selectedEmploymentType}
+              selectedSkills={selectedSkills}
+              selectedEmployees={selectedEmployees}
+              selectedManager={selectedManager}
+            />
             <Separator className="my-4" />
             <TablePagination />
           </Card>

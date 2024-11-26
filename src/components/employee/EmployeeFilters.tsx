@@ -1,189 +1,36 @@
-import { SearchFilter } from '@/components/market/SearchFilter';
-import { useState, useEffect } from "react";
-import { technicalSkills, softSkills } from '../skillsData';
-import { Button } from '@/components/ui/button';
-import { getBaseRole } from '../EmployeeTable';
-import { EmployeeSearch } from './EmployeeSearch';
-import { LevelFilter } from './LevelFilter';
-import { useEmployeeStore } from './store/employeeStore';
-import { jobTitles } from '../skills/competency/skillProfileData';
-import { Employee } from '../types/employeeTypes';
+import { Employee } from "../types/employeeTypes";
+import { getBaseRole, getLevel } from "../EmployeeTable";
 
-// Export the filterEmployees function
 export const filterEmployees = (
   employees: Employee[],
-  selectedEmployees: string[],
+  searchedEmployees: string[],
   selectedDepartment: string[],
   selectedJobTitle: string[],
   selectedLevel: string[],
   selectedOffice: string[],
   selectedEmploymentType: string[],
-  selectedSkills: string[],
-  selectedManager: string[]
+  selectedSkills: string[]
 ): Employee[] => {
   return employees.filter(employee => {
-    if (selectedEmployees.length > 0 && !selectedEmployees.includes(employee.name)) return false;
-    if (selectedDepartment.length > 0 && !selectedDepartment.includes(employee.department)) return false;
-    if (selectedJobTitle.length > 0 && !selectedJobTitle.includes(getBaseRole(employee.role))) return false;
-    if (selectedLevel.length > 0 && !selectedLevel.some(level => employee.role.includes(level))) return false;
-    if (selectedOffice.length > 0 && !selectedOffice.includes(employee.office)) return false;
-    if (selectedEmploymentType.length > 0 && !selectedEmploymentType.includes(employee.employmentType)) return false;
-    if (selectedManager.length > 0 && !selectedManager.includes(employee.manager)) return false;
-    return true;
+    const matchesEmployeeSearch = searchedEmployees.length === 0 || 
+      searchedEmployees.includes(employee.name);
+
+    const matchesDepartment = selectedDepartment.length === 0 || 
+      selectedDepartment.includes(employee.department);
+    
+    const matchesJobTitle = selectedJobTitle.length === 0 || 
+      selectedJobTitle.includes(getBaseRole(employee.role));
+    
+    const matchesLevel = selectedLevel.length === 0 || 
+      selectedLevel.includes(getLevel(employee.role));
+
+    const matchesOffice = selectedOffice.length === 0 || 
+      selectedOffice.includes(employee.location.split(',')[0].trim());
+
+    const matchesEmploymentType = selectedEmploymentType.length === 0 ||
+      selectedEmploymentType.includes(employee.category);
+
+    return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
+           matchesLevel && matchesOffice && matchesEmploymentType;
   });
 };
-
-interface EmployeeFiltersProps {
-  onDepartmentChange: (department: string[]) => void;
-  selectedDepartment: string[];
-  onJobTitleChange: (jobTitle: string[]) => void;
-  selectedJobTitle: string[];
-  onLevelChange: (level: string[]) => void;
-  selectedLevel: string[];
-  onOfficeChange: (office: string[]) => void;
-  selectedOffice: string[];
-  onEmploymentTypeChange: (employmentType: string[]) => void;
-  selectedEmploymentType: string[];
-  onSkillsChange: (skills: string[]) => void;
-  selectedSkills: string[];
-  onEmployeeSearch: (employees: string[]) => void;
-  selectedEmployees: string[];
-  onManagerChange?: (manager: string[]) => void;
-  selectedManager?: string[];
-}
-
-export const EmployeeFilters = ({ 
-  onDepartmentChange, 
-  selectedDepartment,
-  onJobTitleChange,
-  selectedJobTitle,
-  onLevelChange,
-  selectedLevel,
-  onOfficeChange,
-  selectedOffice,
-  onEmploymentTypeChange,
-  selectedEmploymentType,
-  onSkillsChange,
-  selectedSkills,
-  onEmployeeSearch,
-  selectedEmployees,
-  onManagerChange = () => {},
-  selectedManager = []
-}: EmployeeFiltersProps) => {
-  const allSkills = [...technicalSkills, ...softSkills];
-  const employees = useEmployeeStore((state) => state.employees);
-  const managers = Array.from(new Set(
-    employees
-      .filter(emp => emp.role.toLowerCase().includes('manager'))
-      .map(emp => emp.name)
-  ));
-
-  useEffect(() => {
-    onLevelChange([]);
-  }, [selectedJobTitle, onLevelChange]);
-
-  const handleClearAll = () => {
-    onSkillsChange([]);
-    onJobTitleChange([]);
-    onLevelChange([]);
-    onOfficeChange([]);
-    onDepartmentChange([]);
-    onEmploymentTypeChange([]);
-    onEmployeeSearch([]);
-    onManagerChange([]);
-  };
-
-  // Get available role IDs from jobTitles
-  const roleIds = Object.keys(jobTitles);
-  console.log('Available role IDs:', roleIds);
-
-  return (
-    <div className="space-y-0.5">
-      <EmployeeSearch 
-        onEmployeeSearch={onEmployeeSearch}
-        selectedEmployees={selectedEmployees}
-      />
-
-      <div className="w-full">
-        <SearchFilter
-          label=""
-          placeholder="Search skills..."
-          items={allSkills}
-          selectedItems={selectedSkills}
-          onItemsChange={(items) => onSkillsChange(items.map(item => String(item)))}
-          singleSelect={false}
-        />
-      </div>
-
-      <div className="flex flex-wrap items-start gap-3">
-        <SearchFilter
-          label=""
-          placeholder="Manager"
-          items={managers}
-          selectedItems={selectedManager}
-          onItemsChange={(items) => onManagerChange(items.map(item => String(item)))}
-          singleSelect={true}
-          className="w-[180px]"
-        />
-
-        <SearchFilter
-          label=""
-          placeholder="Job Title"
-          items={roleIds}
-          selectedItems={selectedJobTitle}
-          onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
-          singleSelect={true}
-          className="w-[180px]"
-          displayMap={jobTitles}
-        />
-        
-        <LevelFilter
-          onLevelChange={onLevelChange}
-          selectedLevel={selectedLevel}
-          selectedJobTitle={selectedJobTitle}
-        />
-        
-        <SearchFilter
-          label=""
-          placeholder="Office"
-          items={["Toronto", "New York", "San Francisco"]}
-          selectedItems={selectedOffice}
-          onItemsChange={(items) => onOfficeChange(items.map(item => String(item)))}
-          singleSelect={false}
-          className="w-[180px]"
-        />
-
-        <SearchFilter
-          label=""
-          placeholder="Department"
-          items={["Engineering", "Product", "Design", "Marketing", "Sales"]}
-          selectedItems={selectedDepartment}
-          onItemsChange={(items) => onDepartmentChange(items.map(item => String(item)))}
-          singleSelect={false}
-          className="w-[180px]"
-        />
-
-        <SearchFilter
-          label=""
-          placeholder="Category"
-          items={["Full-time", "Part-time", "Contract", "Internship"]}
-          selectedItems={selectedEmploymentType}
-          onItemsChange={(items) => onEmploymentTypeChange(items.map(item => String(item)))}
-          singleSelect={false}
-          className="w-[180px]"
-        />
-
-        <Button 
-          variant="outline" 
-          onClick={handleClearAll}
-          className="h-[40px] mt-4"
-        >
-          Clear All
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-// Add default export
-export default EmployeeFilters;
