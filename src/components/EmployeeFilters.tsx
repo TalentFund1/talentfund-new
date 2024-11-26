@@ -53,9 +53,6 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Create an array of role IDs
-  const roleIds = Object.keys(jobTitles);
-
   useEffect(() => {
     onLevelChange([]);
   }, [selectedJobTitle, onLevelChange]);
@@ -103,7 +100,7 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={roleIds}
+          items={Object.keys(jobTitles)}
           selectedItems={selectedJobTitle}
           onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
           singleSelect={true}

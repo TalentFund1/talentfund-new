@@ -45,6 +45,10 @@ export const SearchFilter = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const getDisplayValue = (item: string) => {
+    return displayMap ? displayMap[item] || item : item;
+  };
+
   const handleSelect = (item: string) => {
     if (disabled) return;
     
@@ -71,11 +75,7 @@ export const SearchFilter = ({
     }
   };
 
-  const getDisplayValue = (item: string) => {
-    return displayMap ? displayMap[item] || item : item;
-  };
-
-  const filteredItems = (items || []).filter(item => 
+  const filteredItems = items.filter(item => 
     getDisplayValue(item).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
