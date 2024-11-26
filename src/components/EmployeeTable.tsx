@@ -9,46 +9,8 @@ import { filterEmployees } from "./employee/EmployeeFilters";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
-
-export const getSkillProfileId = (role: string) => {
-  // Validate role ID format first
-  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
-  if (validProfileIds.includes(role)) {
-    console.log('Using direct role ID:', role);
-    return role;
-  }
-
-  // Map role titles to IDs with consistent structure
-  const roleMap: { [key: string]: string } = {
-    "AI Engineer": "123",
-    "Backend Engineer": "124",
-    "Frontend Engineer": "125",
-    "Engineering Manager": "126",
-    "Data Engineer": "127",
-    "DevOps Engineer": "128",
-    "Product Manager": "129"
-  };
-  
-  const baseRole = role.split(":")[0].trim();
-  const mappedId = roleMap[baseRole];
-  
-  console.log('Role mapping:', { 
-    originalRole: role,
-    baseRole,
-    mappedId
-  });
-  
-  return mappedId || "123";
-};
-
-export const getBaseRole = (role: string) => {
-  return role.split(":")[0].trim();
-};
-
-export const getLevel = (role: string) => {
-  const parts = role.split(":");
-  return parts.length > 1 ? parts[1].trim() : "";
-};
+import { calculateEmployeeBenchmarks } from "./employee/BenchmarkCalculator";
+import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 
 interface EmployeeTableProps {
   selectedDepartment: string[];
@@ -80,9 +42,20 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
+  // Calculate benchmark percentages for each employee
+  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+    employees,
+    selectedJobTitle,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
+  );
+
+  console.log('Employees with benchmarks:', employeesWithBenchmarks);
+
   // Filter employees based on all criteria including skills and employee search
   const preFilteredEmployees = filterEmployees(
-    employees,
+    employeesWithBenchmarks,
     selectedEmployees,
     selectedDepartment,
     selectedJobTitle,
@@ -96,9 +69,20 @@ export const EmployeeTable = ({
   console.log('Pre-filtered employees:', preFilteredEmployees);
 
   // Apply skills filter
-  const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
-  console.log('Filtered employees:', filteredEmployees);
+  console.log('Skill filtered employees:', skillFilteredEmployees);
+
+  // Sort employees by role match and benchmark percentage
+  const filteredEmployees = sortEmployeesByRoleMatch(
+    skillFilteredEmployees,
+    selectedJobTitle,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
+  );
+
+  console.log('Final filtered and sorted employees:', filteredEmployees);
 
   return (
     <div className="bg-white rounded-lg">

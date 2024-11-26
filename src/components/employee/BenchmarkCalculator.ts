@@ -1,10 +1,11 @@
+import { Employee } from "../types/employeeTypes";
+import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
-import { getBaseRole } from "../EmployeeTable";
 
 export const calculateBenchmarkPercentage = (
-  employeeId: string, 
-  roleId: string, 
+  employeeId: string,
+  roleId: string,
   level: string,
   currentStates: any,
   toggledSkills: Set<string>,
@@ -39,19 +40,10 @@ export const calculateBenchmarkPercentage = (
   // 2. Competency Level Match (33.33% weight)
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, level.toLowerCase());
-    if (!roleSkillState) {
-      console.log('No competency state found for skill:', skill.title);
-      return getBaseRole(level).toLowerCase().includes('m');
-    }
+    if (!roleSkillState) return false;
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
-
-    console.log('Comparing skill levels:', {
-      skill: skill.title,
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel
-    });
 
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
@@ -72,10 +64,7 @@ export const calculateBenchmarkPercentage = (
   // 3. Skill Goal Match (33.33% weight)
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
-    if (!skillState) {
-      console.log('No skill state found for skill:', skill.title);
-      return getBaseRole(level).toLowerCase().includes('m');
-    }
+    if (!skillState) return false;
     return skillState.requirement === 'required' || 
            skillState.requirement === 'skill_goal';
   });
@@ -105,4 +94,44 @@ export const calculateBenchmarkPercentage = (
   });
 
   return averagePercentage;
+};
+
+export const calculateEmployeeBenchmarks = (
+  employees: Employee[],
+  selectedJobTitle: string[],
+  currentStates: any,
+  toggledSkills: Set<string>,
+  getSkillCompetencyState: any
+): Employee[] => {
+  return employees.map(employee => {
+    let benchmark = 0;
+    
+    if (selectedJobTitle.length > 0) {
+      // Calculate benchmark against selected job title
+      const roleId = getSkillProfileId(selectedJobTitle[0]);
+      const level = getLevel(employee.role);
+      benchmark = calculateBenchmarkPercentage(
+        employee.id,
+        roleId,
+        level,
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
+    } else {
+      // Calculate benchmark against employee's current role
+      const roleId = getSkillProfileId(employee.role);
+      const level = getLevel(employee.role);
+      benchmark = calculateBenchmarkPercentage(
+        employee.id,
+        roleId,
+        level,
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
+    }
+    
+    return { ...employee, benchmark };
+  });
 };
