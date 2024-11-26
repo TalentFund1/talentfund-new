@@ -10,6 +10,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { Avatar } from "@/components/ui/avatar";
+import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -83,6 +84,19 @@ export const EmployeeTableRow = ({
     };
   };
 
+  const getBenchmarkMatch = () => {
+    const targetRoleId = selectedRoleId.length > 0 ? selectedRoleId[0] : employeeRoleId;
+    const benchmarkPercentage = calculateBenchmarkPercentage(
+      employee.id,
+      targetRoleId,
+      "",
+      currentStates,
+      toggledSkills,
+      getSkillCompetencyState
+    );
+    return Math.round(benchmarkPercentage);
+  };
+
   const renderBenchmark = () => {
     if (selectedSkills.length > 0) {
       return (
@@ -125,6 +139,7 @@ export const EmployeeTableRow = ({
   };
 
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
+  const benchmarkMatch = getBenchmarkMatch();
 
   const shouldShowExactMatch = (isExactSkillMatch || isExactMatch) && 
     (selectedSkills.length > 0 || selectedRoleId.length > 0);
@@ -179,6 +194,19 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
+      {!showSkillMatch && (
+        <td className="px-4 py-4 w-[100px] text-center">
+          <span className={`px-2.5 py-1 rounded-full text-sm ${
+            benchmarkMatch >= 80 
+              ? 'bg-green-100 text-green-800' 
+              : benchmarkMatch >= 60
+              ? 'bg-orange-100 text-orange-800'
+              : 'bg-red-100 text-red-800'
+          }`}>
+            {benchmarkMatch}%
+          </span>
+        </td>
+      )}
       {showSkillMatch && (
         <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
       )}
