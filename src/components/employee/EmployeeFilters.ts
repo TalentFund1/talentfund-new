@@ -1,5 +1,5 @@
 import { Employee } from "../types/employeeTypes";
-import { getBaseRole, getLevel } from "../EmployeeTable";
+import { getSkillProfileId } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],
@@ -29,9 +29,12 @@ export const filterEmployees = (
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
     
-    // Remove exact role match requirement to allow partial matches
+    // Match based on role ID instead of title
+    const matchesJobTitle = selectedJobTitle.length === 0 || 
+      selectedJobTitle.includes(getSkillProfileId(employee.role));
+
     const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(getLevel(employee.role));
+      selectedLevel.includes(employee.role.split(":")[1]?.trim());
 
     const matchesOffice = selectedOffice.length === 0 || 
       selectedOffice.includes(employee.location.split(',')[0].trim());
@@ -41,9 +44,6 @@ export const filterEmployees = (
 
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
-
-    // If job title is selected, we'll handle matching in the sorter
-    const matchesJobTitle = selectedJobTitle.length === 0 || true;
 
     return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
            matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;

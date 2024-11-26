@@ -26,6 +26,16 @@ interface EmployeeFiltersProps {
   selectedManager?: string[];
 }
 
+const roleIdToTitle: { [key: string]: string } = {
+  "123": "AI Engineer",
+  "124": "Backend Engineer",
+  "125": "Frontend Engineer",
+  "126": "Engineering Manager",
+  "127": "Data Engineer",
+  "128": "DevOps Engineer",
+  "129": "Product Manager"
+};
+
 export const EmployeeFilters = ({ 
   onDepartmentChange, 
   selectedDepartment,
@@ -46,7 +56,13 @@ export const EmployeeFilters = ({
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
-  const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
+  
+  // Create items array with role IDs as values but display titles
+  const jobTitleItems = Object.entries(roleIdToTitle).map(([id, title]) => ({
+    value: id,
+    label: title
+  }));
+
   const managers = Array.from(new Set(
     employees
       .filter(emp => emp.role.toLowerCase().includes('manager'))
@@ -67,6 +83,9 @@ export const EmployeeFilters = ({
     onEmployeeSearch([]);
     onManagerChange([]);
   };
+
+  console.log('Job title items:', jobTitleItems);
+  console.log('Selected job title:', selectedJobTitle);
 
   return (
     <div className="space-y-0.5">
@@ -100,9 +119,15 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={jobTitles}
-          selectedItems={selectedJobTitle}
-          onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
+          items={jobTitleItems.map(item => item.label)}
+          selectedItems={selectedJobTitle.map(id => roleIdToTitle[id] || id)}
+          onItemsChange={(items) => {
+            const selectedIds = items.map(label => 
+              Object.entries(roleIdToTitle).find(([_, title]) => title === label)?.[0] || label
+            );
+            console.log('Selected job title IDs:', selectedIds);
+            onJobTitleChange(selectedIds);
+          }}
           singleSelect={true}
           className="w-[180px]"
         />
