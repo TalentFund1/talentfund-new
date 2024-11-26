@@ -1,5 +1,5 @@
 import { Employee } from "../types/employeeTypes";
-import { getLevel } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],
@@ -12,7 +12,7 @@ export const filterEmployees = (
   selectedSkills: string[],
   selectedManager: string[] = []
 ): Employee[] => {
-  console.log('Filtering employees with criteria:', {
+  console.log('Starting employee filtering with criteria:', {
     searchedEmployees,
     selectedDepartment,
     selectedJobTitle,
@@ -24,11 +24,12 @@ export const filterEmployees = (
 
   return employees.filter(employee => {
     // Direct role ID matching
+    const employeeRoleId = getSkillProfileId(employee.role);
     const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(employee.id);
+      selectedJobTitle.some(roleId => roleId === employeeRoleId);
 
-    console.log(`Employee ${employee.name} role matching:`, {
-      employeeId: employee.id,
+    console.log(`Role ID matching for ${employee.name}:`, {
+      employeeRoleId,
       selectedJobTitle,
       matchesJobTitle
     });
@@ -40,7 +41,7 @@ export const filterEmployees = (
       selectedDepartment.includes(employee.department);
 
     const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(getLevel(employee.role));
+      selectedLevel.includes(getBaseRole(employee.role));
 
     const matchesOffice = selectedOffice.length === 0 || 
       selectedOffice.includes(employee.office);
