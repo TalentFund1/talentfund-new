@@ -39,7 +39,6 @@ export const EmployeeTableRow = ({
   const isExactMatch = selectedRoleId.length > 0 && employeeRoleId === selectedRoleId[0];
 
   const getMatchingSkillsCount = () => {
-    // If specific skills are selected, match against those
     if (selectedSkills.length > 0) {
       const matchingSkills = selectedSkills.filter(skillName => {
         return employeeSkills.some(empSkill => empSkill.title === skillName);
@@ -51,29 +50,17 @@ export const EmployeeTableRow = ({
       };
     }
 
-    // If no specific skills selected, match against role skills
-    const roleSkillsForId = roleSkills[employeeRoleId];
-    if (!roleSkillsForId) {
-      console.log(`No role skills found for ID: ${employeeRoleId}`);
-      return { count: '0 / 0', isExactSkillMatch: false };
-    }
+    if (!currentRoleSkills) return { count: '0 / 0', isExactSkillMatch: false };
 
     const allRoleSkills = [
-      ...roleSkillsForId.specialized,
-      ...roleSkillsForId.common,
-      ...roleSkillsForId.certifications
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
     ].filter(skill => toggledSkills.has(skill.title));
 
     const matchingSkills = allRoleSkills.filter(roleSkill => {
       const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
       return employeeSkill !== undefined;
-    });
-
-    console.log(`Skill matching for ${employee.name}:`, {
-      roleId: employeeRoleId,
-      totalRoleSkills: allRoleSkills.length,
-      matchingSkills: matchingSkills.length,
-      employeeSkills: employeeSkills.map(s => s.title)
     });
 
     return {
@@ -165,7 +152,7 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[250px]">
         <Link 
-          to={`/skills/${employeeRoleId}`} 
+          to={`/skills/${roleId}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
         >
           {employee.role}
