@@ -11,7 +11,7 @@ import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
-import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
+import { roleSkills } from "./skills/data/roleSkills";
 
 export const getSkillProfileId = (role: string) => {
   // Map role titles to IDs with consistent structure
@@ -90,6 +90,17 @@ export const EmployeeTable = ({
     getSkillCompetencyState
   );
 
+  // Get all skills for the role
+  const getRoleSkills = (roleId: string) => {
+    const role = roleSkills[roleId as keyof typeof roleSkills];
+    if (!role) return [];
+    return [
+      ...role.specialized.map(s => s.title),
+      ...role.common.map(s => s.title),
+      ...role.certifications.map(s => s.title)
+    ];
+  };
+
   console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
   // Filter employees based on all criteria including skills and employee search
@@ -103,7 +114,17 @@ export const EmployeeTable = ({
     selectedEmploymentType,
     selectedSkills,
     selectedManager
-  );
+  ).map(employee => {
+    const roleId = getSkillProfileId(employee.role);
+    const allRoleSkills = getRoleSkills(roleId);
+    const matchingSkills = allRoleSkills.filter(skill => 
+      employee.skills?.includes(skill)
+    );
+    return {
+      ...employee,
+      skillMatch: `${matchingSkills.length} / ${allRoleSkills.length}`
+    };
+  });
 
   console.log('Pre-filtered employees:', preFilteredEmployees);
 
