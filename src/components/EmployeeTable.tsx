@@ -9,7 +9,7 @@ import { filterEmployees } from "./employee/EmployeeFilters";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
-import { calculateEmployeeBenchmarks } from "./employee/BenchmarkCalculator";
+import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { getSkillProfileId, getBaseRole } from "./utils/roleUtils";
 
