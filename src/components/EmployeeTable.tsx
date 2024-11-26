@@ -12,9 +12,7 @@ import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalcula
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { roleSkills } from "./skills/data/roleSkills";
-import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
 
-// Move helper functions to separate file to reduce file size
 export const getSkillProfileId = (role: string) => {
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
@@ -74,7 +72,10 @@ export const EmployeeTable = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
-  const employees = useEmployeeStore((state) => state.employees);
+  const employees = useEmployeeStore((state) => {
+    console.log('Current employees in store:', state.employees);
+    return state.employees;
+  });
 
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
     employees,
@@ -95,33 +96,12 @@ export const EmployeeTable = ({
       ...role.specialized.map(s => s.title),
       ...role.common.map(s => s.title),
       ...role.certifications.map(s => s.title)
-    ].filter(skill => toggledSkills.has(skill)); // Only include toggled skills
-    
+    ];
     console.log('Found skills for role:', skills);
     return skills;
   };
 
-  const calculateSkillMatch = (employee: Employee, compareRoleId: string) => {
-    const employeeSkills = getEmployeeSkills(employee.id);
-    const allRoleSkills = getRoleSkills(compareRoleId);
-    
-    console.log('Calculating skill match:', {
-      employee: employee.name,
-      employeeSkills: employeeSkills.map(s => s.title),
-      roleSkills: allRoleSkills,
-      compareRoleId
-    });
-
-    const matchingSkills = allRoleSkills.filter(roleSkill => 
-      employeeSkills.some(empSkill => empSkill.title === roleSkill)
-    );
-
-    return {
-      count: matchingSkills.length,
-      total: allRoleSkills.length,
-      match: `${matchingSkills.length} / ${allRoleSkills.length}`
-    };
-  };
+  console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
   const preFilteredEmployees = filterEmployees(
     employeesWithBenchmarks,
@@ -134,24 +114,41 @@ export const EmployeeTable = ({
     selectedSkills,
     selectedManager
   ).map(employee => {
+    // If a role is selected in the filter, use that role's ID for comparison
+    // Otherwise, use the employee's own role ID
     const compareRoleId = selectedJobTitle.length > 0 ? selectedJobTitle[0] : getSkillProfileId(employee.role);
-    const skillMatch = calculateSkillMatch(employee, compareRoleId);
-    
-    console.log('Skill match result:', {
+    console.log('Comparing skills for employee:', {
       employee: employee.name,
       compareRoleId,
-      match: skillMatch.match,
-      matchingCount: skillMatch.count,
-      totalSkills: skillMatch.total
+      selectedJobTitle,
+      employeeRoleId: getSkillProfileId(employee.role)
+    });
+    
+    const allRoleSkills = getRoleSkills(compareRoleId);
+    const employeeSkills = employee.skills || [];
+    const matchingSkills = allRoleSkills.filter(skill => 
+      employeeSkills.includes(skill)
+    );
+
+    console.log('Skill matching results:', {
+      employee: employee.name,
+      totalRoleSkills: allRoleSkills.length,
+      matchingSkills: matchingSkills.length,
+      employeeSkills,
+      roleSkills: allRoleSkills
     });
 
     return {
       ...employee,
-      skillMatch: skillMatch.match
+      skillMatch: `${matchingSkills.length} / ${allRoleSkills.length}`
     };
   });
 
+  console.log('Pre-filtered employees:', preFilteredEmployees);
+
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+
+  console.log('Skill filtered employees:', skillFilteredEmployees);
 
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
@@ -160,6 +157,8 @@ export const EmployeeTable = ({
     toggledSkills,
     getSkillCompetencyState
   );
+
+  console.log('Final filtered and sorted employees:', filteredEmployees);
 
   return (
     <div className="bg-white rounded-lg">
