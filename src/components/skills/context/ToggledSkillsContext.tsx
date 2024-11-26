@@ -3,6 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { roleSkills } from '../data/roleSkills';
 import { useCompetencyStore } from '../competency/CompetencyState';
 import { useRoleStore } from '../../benchmark/RoleBenchmark';
+import { getSkillProfileId } from '../../utils/roleUtils';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -79,13 +80,25 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return selectedRole ? { [selectedRole]: getInitialSkillsForRole(selectedRole) } : {};
   });
 
-  // Initialize competency states when role changes
+  // Initialize competency states for all roles on mount
   useEffect(() => {
-    if (selectedRole) {
-      console.log('Initializing competency states for selected role:', selectedRole);
-      initializeStates(selectedRole);
-    }
-  }, [selectedRole, initializeStates]);
+    console.log('Initializing competency states for all roles');
+    Object.keys(roleSkills).forEach(roleId => {
+      console.log('Initializing states for role:', roleId);
+      initializeStates(roleId);
+      
+      // Also ensure we have toggled skills for this role
+      setSkillsByRole(prev => {
+        if (!prev[roleId] || prev[roleId].size === 0) {
+          return {
+            ...prev,
+            [roleId]: getInitialSkillsForRole(roleId)
+          };
+        }
+        return prev;
+      });
+    });
+  }, []); // Run once on mount
 
   // Initialize skills for new roles or when they're empty
   useEffect(() => {
