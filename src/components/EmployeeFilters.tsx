@@ -26,11 +26,16 @@ interface EmployeeFiltersProps {
   selectedManager?: string[];
 }
 
+// Map role IDs to titles for display
 const roleIdMap = {
-  "AI Engineer": "123",
-  "Backend Engineer": "124",
-  "Frontend Engineer": "125",
-  "Engineering Manager": "126"
+  "123": "AI Engineer",
+  "124": "Backend Engineer",
+  "125": "Frontend Engineer",
+  "126": "Engineering Manager",
+  "127": "Data Engineer",
+  "128": "DevOps Engineer",
+  "129": "Product Manager",
+  "130": "Technical Lead"
 };
 
 export const EmployeeFilters = ({ 
@@ -53,7 +58,6 @@ export const EmployeeFilters = ({
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
-  const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
   const managers = Array.from(new Set(
     employees
       .filter(emp => emp.role.toLowerCase().includes('manager'))
@@ -75,11 +79,8 @@ export const EmployeeFilters = ({
     onManagerChange([]);
   };
 
-  const handleJobTitleChange = (items: string[]) => {
-    // Convert role titles to IDs when sending to parent
-    const roleIds = items.map(title => roleIdMap[title as keyof typeof roleIdMap]);
-    onJobTitleChange(roleIds);
-  };
+  // Convert role IDs to titles for display in the dropdown
+  const selectedTitles = selectedJobTitle.map(id => roleIdMap[id as keyof typeof roleIdMap] || id);
 
   return (
     <div className="space-y-0.5">
@@ -113,15 +114,19 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={Object.keys(roleIdMap)}
-          selectedItems={selectedJobTitle.map(id => {
-            // Convert IDs back to titles for display
-            const title = Object.entries(roleIdMap).find(([_, value]) => value === id)?.[0];
-            return title || id;
-          })}
-          onItemsChange={handleJobTitleChange}
+          items={Object.entries(roleIdMap).map(([id, title]) => ({ id, title }))}
+          selectedItems={selectedTitles}
+          onItemsChange={(items) => {
+            // Convert selected titles back to IDs
+            const selectedIds = items.map(item => {
+              const entry = Object.entries(roleIdMap).find(([_, title]) => title === item);
+              return entry ? entry[0] : item;
+            });
+            onJobTitleChange(selectedIds);
+          }}
           singleSelect={true}
           className="w-[180px]"
+          displayKey="title"
         />
         
         <LevelFilter
