@@ -20,8 +20,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     selectedRole,
     roleLevel,
     employeeId,
-    currentStates,
-    toggledSkills: Array.from(toggledSkills)
+    currentStates
   });
 
   // Get employee skills but only use them for comparison with selected role
