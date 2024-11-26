@@ -1,15 +1,11 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
+import { Employee } from "../types/employeeTypes";
 
 interface EmployeeHeaderProps {
   id: string;
-  employee: {
-    name: string;
-    role: string;
-    location: string;
-    image: string;
-  };
+  employee: Employee & { image: string };
 }
 
 export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
