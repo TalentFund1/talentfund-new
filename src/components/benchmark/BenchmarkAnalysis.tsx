@@ -24,7 +24,7 @@ export const BenchmarkAnalysis = () => {
   // Memoize employee skills
   const employeeSkills = useMemo(() => getEmployeeSkills(id || ""), [id]);
 
-  // Memoize current role skills lookup
+  // Memoize current role skills lookup with dependency on selectedRole
   const currentRoleSkills = useMemo(() => {
     const skills = roleSkills[selectedRole as keyof typeof roleSkills];
     if (!skills) {
@@ -34,7 +34,7 @@ export const BenchmarkAnalysis = () => {
     return skills;
   }, [selectedRole]);
 
-  // Get toggled role skills with memoization
+  // Get toggled role skills with proper dependencies
   const toggledRoleSkills = useMemo(() => {
     if (!currentRoleSkills) return [];
     
@@ -51,7 +51,7 @@ export const BenchmarkAnalysis = () => {
     return filtered;
   }, [currentRoleSkills, toggledSkills]);
 
-  // Calculate matches using useEffect to ensure state updates
+  // Calculate matches immediately when dependencies change
   useEffect(() => {
     if (!toggledRoleSkills.length) {
       console.log('No toggled skills found');
@@ -108,7 +108,14 @@ export const BenchmarkAnalysis = () => {
     console.log('Setting new matches:', newMatches);
     setMatches(newMatches);
 
-  }, [toggledRoleSkills, employeeSkills, selectedLevel, currentStates, getSkillCompetencyState, toggledSkills]);
+  }, [
+    toggledRoleSkills,
+    employeeSkills,
+    selectedLevel,
+    currentStates,
+    getSkillCompetencyState,
+    toggledSkills // Add toggledSkills to dependencies to ensure updates
+  ]);
 
   // Debug effect to track match updates
   useEffect(() => {
