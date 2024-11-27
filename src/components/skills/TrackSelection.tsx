@@ -91,7 +91,12 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
           </RadioGroup>
         </div>
         {hasUnsavedChanges && (
-          <Button onClick={handleSave} size="sm" variant="secondary" className="ml-auto">
+          <Button 
+            onClick={handleSave} 
+            size="sm" 
+            variant="outline"
+            className="ml-auto bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
+          >
             Save Track
           </Button>
         )}
