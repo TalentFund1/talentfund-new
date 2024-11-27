@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { BenchmarkAnalysisCard } from "./BenchmarkAnalysisCard";
@@ -17,17 +16,17 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { toggledSkills } = useToggledSkills();
   
-  useEffect(() => {
-    console.log('BenchmarkAnalysis - Toggled Skills Changed:', {
-      toggledSkills: Array.from(toggledSkills),
-      selectedRole,
-      roleLevel
-    });
-  }, [toggledSkills, selectedRole, roleLevel]);
+  console.log('BenchmarkAnalysis - Selected Role Analysis:', {
+    selectedRole,
+    roleLevel,
+    employeeId,
+    currentStates
+  });
 
   // Get employee skills but only use them for comparison with selected role
   const employeeSkills = getEmployeeSkills(employeeId);
-  
+  console.log('Employee skills loaded for comparison:', employeeSkills);
+
   // Get skills for the selected role from dropdown
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   if (!currentRoleSkills) {
@@ -44,6 +43,12 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
 
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
   const totalToggledSkills = toggledRoleSkills.length;
+
+  console.log('Selected role toggled skills:', {
+    roleId: selectedRole,
+    total: totalToggledSkills,
+    skills: toggledRoleSkills.map(s => s.title)
+  });
 
   // Skill Match calculation based on selected role requirements
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
@@ -83,11 +88,12 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
            skillState.requirement === 'skill_goal';
   });
 
-  console.log('Benchmark Analysis Results:', {
-    totalSkills: totalToggledSkills,
-    matching: matchingSkills.length,
-    competency: competencyMatchingSkills.length,
-    skillGoals: skillGoalMatchingSkills.length
+  console.log('Selected role match calculations:', {
+    roleId: selectedRole,
+    skillMatches: matchingSkills.length,
+    competencyMatches: competencyMatchingSkills.length,
+    skillGoalMatches: skillGoalMatchingSkills.length,
+    totalSkills: totalToggledSkills
   });
 
   return (

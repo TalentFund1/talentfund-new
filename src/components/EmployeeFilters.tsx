@@ -6,6 +6,7 @@ import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
+import { jobTitles } from './skills/competency/skillProfileData';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -24,6 +25,8 @@ interface EmployeeFiltersProps {
   selectedEmployees: string[];
   onManagerChange?: (manager: string[]) => void;
   selectedManager?: string[];
+  onRoleTitleChange?: (roleTitle: string[]) => void;
+  selectedRoleTitle?: string[];
 }
 
 export const EmployeeFilters = ({ 
@@ -42,16 +45,21 @@ export const EmployeeFilters = ({
   onEmployeeSearch,
   selectedEmployees,
   onManagerChange = () => {},
-  selectedManager = []
+  selectedManager = [],
+  onRoleTitleChange = () => {},
+  selectedRoleTitle = []
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
-  const jobTitles = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
+  const jobTitlesList = Array.from(new Set(employees.map(emp => getBaseRole(emp.role))));
   const managers = Array.from(new Set(
     employees
       .filter(emp => emp.role.toLowerCase().includes('manager'))
       .map(emp => emp.name)
   ));
+
+  // Create role titles list with IDs
+  const roleTitles = Object.entries(jobTitles).map(([id, title]) => `${title} (${id})`);
 
   useEffect(() => {
     onLevelChange([]);
@@ -66,6 +74,7 @@ export const EmployeeFilters = ({
     onEmploymentTypeChange([]);
     onEmployeeSearch([]);
     onManagerChange([]);
+    onRoleTitleChange([]);
   };
 
   return (
@@ -100,9 +109,19 @@ export const EmployeeFilters = ({
         <SearchFilter
           label=""
           placeholder="Job Title"
-          items={jobTitles}
+          items={jobTitlesList}
           selectedItems={selectedJobTitle}
           onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
+          singleSelect={true}
+          className="w-[180px]"
+        />
+
+        <SearchFilter
+          label=""
+          placeholder="Role Title"
+          items={roleTitles}
+          selectedItems={selectedRoleTitle}
+          onItemsChange={(items) => onRoleTitleChange(items.map(item => String(item)))}
           singleSelect={true}
           className="w-[180px]"
         />
