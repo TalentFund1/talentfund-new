@@ -13,6 +13,7 @@ import MarketData from "./pages/MarketData";
 import TalentMarketplace from "./pages/TalentMarketplace";
 
 const App = () => {
+  // Move QueryClient instantiation inside the component
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -27,8 +28,8 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <ToggledSkillsProvider>
-          <BrowserRouter>
+        <BrowserRouter>
+          <ToggledSkillsProvider>
             <Toaster />
             <Sonner />
             <Routes>
@@ -40,8 +41,8 @@ const App = () => {
               <Route path="/market" element={<MarketData />} />
               <Route path="/marketplace" element={<TalentMarketplace />} />
             </Routes>
-          </BrowserRouter>
-        </ToggledSkillsProvider>
+          </ToggledSkillsProvider>
+        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );
