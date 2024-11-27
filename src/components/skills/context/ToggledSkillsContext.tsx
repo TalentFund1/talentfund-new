@@ -37,13 +37,7 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
     ...certificationSkills
   ]);
 
-  console.log('Initial skills breakdown for role:', roleId, {
-    specialized: specializedSkills,
-    common: commonSkills,
-    certifications: certificationSkills,
-    total: skills.size
-  });
-  
+  console.log('Initial skills for role:', roleId, Array.from(skills));
   return skills;
 };
 
@@ -66,10 +60,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         Object.entries(parsed).forEach(([roleId, skills]) => {
           if (Array.isArray(skills)) {
             result[roleId] = new Set(skills);
-            console.log(`Restored ${skills.length} skills for role ${roleId}:`, skills);
+            console.log(`Restored ${skills.length} skills for role ${roleId}`);
           }
         });
         
+        console.log('Loaded saved skills by role:', result);
         return result;
       }
     } catch (error) {
@@ -87,9 +82,9 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       
       // Initialize skills for new role if not present
       setSkillsByRole(prev => {
-        if (!prev[currentRole]) {
+        if (!prev[currentRole] || prev[currentRole].size === 0) {
           const initialSkills = getInitialSkillsForRole(currentRole);
-          console.log('Initializing new skills for role:', currentRole, Array.from(initialSkills));
+          console.log('Initializing skills for role:', currentRole, Array.from(initialSkills));
           return {
             ...prev,
             [currentRole]: initialSkills
@@ -102,19 +97,17 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   // Save skills to localStorage whenever they change
   useEffect(() => {
-    if (Object.keys(skillsByRole).length > 0) {
-      try {
-        const serializable = Object.fromEntries(
-          Object.entries(skillsByRole).map(([roleId, skills]) => [
-            roleId,
-            Array.from(skills)
-          ])
-        );
-        localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
-        console.log('Saved skills to localStorage:', serializable);
-      } catch (error) {
-        console.error('Error saving skills:', error);
-      }
+    try {
+      const serializable = Object.fromEntries(
+        Object.entries(skillsByRole).map(([roleId, skills]) => [
+          roleId,
+          Array.from(skills)
+        ])
+      );
+      localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
+      console.log('Saved skills to localStorage:', serializable);
+    } catch (error) {
+      console.error('Error saving skills:', error);
     }
   }, [skillsByRole]);
 
