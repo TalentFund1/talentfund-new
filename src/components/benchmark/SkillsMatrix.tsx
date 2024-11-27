@@ -11,6 +11,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { Separator } from "@/components/ui/separator";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -168,38 +169,40 @@ export const SkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <SkillsMatrixHeader 
-          hasChanges={hasChanges}
-          onSave={handleSave}
-          onCancel={handleCancel}
-        />
-        
-        <Separator className="my-4" />
-        
-        <SkillsMatrixFilters 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
-        />
+      <ToggledSkillsProvider>
+        <Card className="p-6 space-y-6 animate-fade-in bg-white">
+          <SkillsMatrixHeader 
+            hasChanges={hasChanges}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
+          
+          <Separator className="my-4" />
+          
+          <SkillsMatrixFilters 
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            selectedLevel={selectedLevel}
+            setSelectedLevel={setSelectedLevel}
+            selectedInterest={selectedInterest}
+            setSelectedInterest={setSelectedInterest}
+          />
 
-        <SkillsMatrixTable 
-          filteredSkills={paginatedSkills}
-          setHasChanges={setHasChanges}
-        />
-        
-        {visibleItems < filteredSkills.length && (
-          <div 
-            ref={observerTarget} 
-            className="h-10 flex items-center justify-center"
-          >
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-          </div>
-        )}
-      </Card>
+          <SkillsMatrixTable 
+            filteredSkills={paginatedSkills}
+            setHasChanges={setHasChanges}
+          />
+          
+          {visibleItems < filteredSkills.length && (
+            <div 
+              ref={observerTarget} 
+              className="h-10 flex items-center justify-center"
+            >
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+            </div>
+          )}
+        </Card>
+      </ToggledSkillsProvider>
     </div>
   );
 };
