@@ -10,6 +10,7 @@ import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
+import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 
 export const getSkillProfileId = (role: string) => {
   // Validate role ID format first
@@ -52,17 +53,6 @@ export const getLevel = (role: string) => {
   return parts.length > 1 ? parts[1].trim() : "";
 };
 
-interface EmployeeTableProps {
-  selectedDepartment: string[];
-  selectedJobTitle: string[];
-  selectedLevel?: string[];
-  selectedOffice?: string[];
-  selectedEmploymentType?: string[];
-  selectedSkills?: string[];
-  selectedEmployees?: string[];
-  selectedManager?: string[];
-}
-
 export const EmployeeTable = ({ 
   selectedDepartment = [], 
   selectedJobTitle = [],
@@ -82,7 +72,6 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
-  // Filter employees based on all criteria including skills and employee search
   const preFilteredEmployees = filterEmployees(
     employees,
     selectedEmployees,
@@ -133,17 +122,19 @@ export const EmployeeTable = ({
                 </td>
               </tr>
             ) : (
-              filteredEmployees.map((employee, index) => (
-                <EmployeeTableRow
-                  key={employee.id}
-                  employee={employee}
-                  isSelected={selectedRows.includes(employee.name)}
-                  onSelect={handleSelectEmployee}
-                  imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
-                  selectedSkills={selectedSkills}
-                  selectedJobTitle={selectedJobTitle}
-                />
-              ))
+              <ToggledSkillsProvider>
+                {filteredEmployees.map((employee, index) => (
+                  <EmployeeTableRow
+                    key={employee.id}
+                    employee={employee}
+                    isSelected={selectedRows.includes(employee.name)}
+                    onSelect={handleSelectEmployee}
+                    imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
+                    selectedSkills={selectedSkills}
+                    selectedJobTitle={selectedJobTitle}
+                  />
+                ))}
+              </ToggledSkillsProvider>
             )}
           </tbody>
         </table>

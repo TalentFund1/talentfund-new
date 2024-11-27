@@ -41,7 +41,7 @@ export const EmployeeTableRow = ({
               key={skillName}
               skillName={skillName}
               level={competencyState.level}
-              isRequired={competencyState.requirement === 'required' || competencyState.requirement === 'skill_goal'}
+              isRequired={competencyState.required === 'required' || competencyState.required === 'skill_goal'}
             />
           ) : null;
         })}
