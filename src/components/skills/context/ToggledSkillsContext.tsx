@@ -37,7 +37,13 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
     ...certificationSkills
   ]);
 
-  console.log('Initial skills for role:', roleId, Array.from(skills));
+  console.log('Initial skills breakdown for role:', roleId, {
+    specialized: specializedSkills,
+    common: commonSkills,
+    certifications: certificationSkills,
+    total: skills.size
+  });
+  
   return skills;
 };
 
@@ -60,7 +66,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         Object.entries(parsed).forEach(([roleId, skills]) => {
           if (Array.isArray(skills)) {
             result[roleId] = new Set(skills);
-            console.log(`Restored ${skills.length} skills for role ${roleId}`);
+            console.log(`Restored ${skills.length} skills for role ${roleId}:`, skills);
           }
         });
         
@@ -84,7 +90,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       setSkillsByRole(prev => {
         if (!prev[currentRole] || prev[currentRole].size === 0) {
           const initialSkills = getInitialSkillsForRole(currentRole);
-          console.log('Initializing skills for role:', currentRole, Array.from(initialSkills));
+          console.log('Initializing new skills for role:', currentRole, Array.from(initialSkills));
           return {
             ...prev,
             [currentRole]: initialSkills
