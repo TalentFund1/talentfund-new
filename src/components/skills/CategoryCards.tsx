@@ -1,15 +1,13 @@
 import { Card } from "@/components/ui/card";
-import { roleSkills } from './data/roleSkills';
-import { useParams } from 'react-router-dom';
 
 interface CategoryCardsProps {
   selectedCategory: string;
   onCategorySelect: (category: string) => void;
   skillCount: {
+    all: number;
     critical: number;
     technical: number;
     necessary: number;
-    all: number;
   };
 }
 

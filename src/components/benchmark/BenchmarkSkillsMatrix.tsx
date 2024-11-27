@@ -5,7 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useParams } from "react-router-dom";
 import { roleSkills } from '../skills/data/roleSkills';
 import { CategoryCards } from '../skills/CategoryCards';
-import { getCategoryForSkill, calculateSkillCounts } from '../skills/utils/skillCountUtils';
+import { getCategoryForSkill } from '../skills/utils/skillCountUtils';
 import { SkillMappingHeader } from '../skills/header/SkillMappingHeader';
 import { SkillTypeFilters } from '../skills/filters/SkillTypeFilters';
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
@@ -47,8 +47,8 @@ export const BenchmarkSkillsMatrix = () => {
     }
   };
 
-  // Get only the skills for the current role
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleId = id || "123";
+  const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
 
   const filteredSkills = (() => {
     let skills = [];
@@ -67,20 +67,13 @@ export const BenchmarkSkillsMatrix = () => {
     }
 
     let sortedSkills = skills.filter(skill => {
-      const isInCurrentRole = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ].some(roleSkill => roleSkill.title === skill.title);
-
       if (selectedCategory !== 'all') {
-        const skillCategory = getCategoryForSkill(skill, id || "123");
+        const skillCategory = getCategoryForSkill(skill, currentRoleId);
         if (skillCategory !== selectedCategory) {
           return false;
         }
       }
-
-      return isInCurrentRole;
+      return true;
     });
 
     if (sortField && sortDirection) {
@@ -89,10 +82,6 @@ export const BenchmarkSkillsMatrix = () => {
           const aGrowth = parseFloat(a.growth);
           const bGrowth = parseFloat(b.growth);
           return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
-        } else if (sortField === 'salary') {
-          const aSalary = parseFloat(a.salary.replace(/[^0-9.-]+/g, ""));
-          const bSalary = parseFloat(b.salary.replace(/[^0-9.-]+/g, ""));
-          return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
         }
         return 0;
       });
@@ -101,61 +90,65 @@ export const BenchmarkSkillsMatrix = () => {
     return sortedSkills;
   })();
 
-  const skillCounts = calculateSkillCounts(id || "123");
-
   return (
-    <div className="space-y-6">
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <SkillMappingHeader skillCount={filteredSkills.length} />
-        
-        <Separator className="my-4" />
+    <ToggledSkillsProvider>
+      <div className="space-y-6">
+        <Card className="p-6 space-y-6 animate-fade-in bg-white">
+          <SkillMappingHeader skillCount={filteredSkills.length} />
+          
+          <Separator className="my-4" />
 
-        <CategoryCards
-          selectedCategory={selectedCategory}
-          onCategorySelect={setSelectedCategory}
-          roleId={id || "123"}
-          selectedLevel={selectedLevel}
-        />
-
-        <SkillTypeFilters
-          skillType={skillType}
-          setSkillType={setSkillType}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-        />
-
-        <BenchmarkMatrixFilters
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
-          selectedSkillLevel={selectedSkillLevel}
-          setSelectedSkillLevel={setSelectedSkillLevel}
-          selectedSearchSkills={selectedSearchSkills}
-          removeSearchSkill={(skill: string) => {
-            setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
-          }}
-          clearSearch={() => {
-            setSearchTerm("");
-            setSelectedSearchSkills([]);
-          }}
-        />
-
-        <div className="rounded-lg border border-border overflow-hidden">
-          <SkillsMatrixTable 
-            filteredSkills={filteredSkills}
-            setHasChanges={setIsDirty}
-            showCompanySkill={false}
-            isRoleBenchmark={true}
+          <CategoryCards
+            selectedCategory={selectedCategory}
+            onCategorySelect={setSelectedCategory}
+            skillCount={{
+              all: filteredSkills.length,
+              critical: filteredSkills.filter(s => s.type === 'critical').length,
+              technical: filteredSkills.filter(s => s.type === 'technical').length,
+              necessary: filteredSkills.filter(s => s.type === 'necessary').length
+            }}
           />
-        </div>
 
-        {hasMore && (
-          <div ref={observerTarget} className="h-10" />
-        )}
-      </Card>
-    </div>
+          <SkillTypeFilters
+            skillType={skillType}
+            setSkillType={setSkillType}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
+
+          <BenchmarkMatrixFilters
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedLevel={selectedLevel}
+            setSelectedLevel={setSelectedLevel}
+            selectedInterest={selectedInterest}
+            setSelectedInterest={setSelectedInterest}
+            selectedSkillLevel={selectedSkillLevel}
+            setSelectedSkillLevel={setSelectedSkillLevel}
+            selectedSearchSkills={selectedSearchSkills}
+            removeSearchSkill={(skill: string) => {
+              setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
+            }}
+            clearSearch={() => {
+              setSearchTerm("");
+              setSelectedSearchSkills([]);
+            }}
+          />
+
+          <div className="rounded-lg border border-border overflow-hidden">
+            <SkillsMatrixTable 
+              filteredSkills={filteredSkills}
+              setHasChanges={setIsDirty}
+              showCompanySkill={false}
+              isRoleBenchmark={true}
+            />
+          </div>
+
+          {hasMore && (
+            <div ref={observerTarget} className="h-10" />
+          )}
+        </Card>
+      </div>
+    </ToggledSkillsProvider>
   );
 };
