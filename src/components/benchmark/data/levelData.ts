@@ -1,15 +1,15 @@
-export const professionalLevels = {
-  "p1": "P1",
-  "p2": "P2",
-  "p3": "P3",
-  "p4": "P4",
-  "p5": "P5",
-  "p6": "P6"
-};
+export const professionalLevels = [
+  { value: "p1", label: "P1" },
+  { value: "p2", label: "P2" },
+  { value: "p3", label: "P3" },
+  { value: "p4", label: "P4" },
+  { value: "p5", label: "P5" },
+  { value: "p6", label: "P6" }
+];
 
-export const managerialLevels = {
-  "m3": "M3",
-  "m4": "M4",
-  "m5": "M5",
-  "m6": "M6"
-};
+export const managerialLevels = [
+  { value: "m3", label: "M3" },
+  { value: "m4", label: "M4" },
+  { value: "m5", label: "M5" },
+  { value: "m6", label: "M6" }
+];
