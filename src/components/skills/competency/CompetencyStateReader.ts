@@ -9,7 +9,7 @@ interface SkillCompetencyState {
 }
 
 export const useCompetencyStateReader = () => {
-  const { currentStates, initializeStates } = useCompetencyStore();
+  const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
 
   const normalizeLevel = (level: string = ""): string => {
@@ -56,11 +56,6 @@ export const useCompetencyStateReader = () => {
     levelKey: string = 'p4', 
     targetRoleId?: string
   ): SkillCompetencyState | null => {
-    if (!toggledSkills.has(skillName)) {
-      console.log('Skill not toggled:', skillName);
-      return null;
-    }
-
     console.log('Reading competency state:', { 
       skillName, 
       levelKey, 
@@ -76,13 +71,6 @@ export const useCompetencyStateReader = () => {
     }
 
     console.log('Using effective role ID:', effectiveRoleId);
-
-    // Initialize states if they don't exist for this role
-    if (!currentStates[effectiveRoleId]) {
-      console.log('Initializing states for role:', effectiveRoleId);
-      initializeStates(effectiveRoleId);
-      return getDefaultState(skillName, effectiveRoleId);
-    }
 
     const roleStates = currentStates[effectiveRoleId];
     if (!roleStates || !roleStates[skillName]) {
@@ -152,12 +140,6 @@ export const useCompetencyStateReader = () => {
     if (!effectiveRoleId) {
       console.error('No role ID available');
       return states;
-    }
-
-    // Initialize states if they don't exist for this role
-    if (!currentStates[effectiveRoleId]) {
-      console.log('Initializing states for role:', effectiveRoleId);
-      initializeStates(effectiveRoleId);
     }
 
     const roleData = roleSkills[effectiveRoleId as keyof typeof roleSkills];
