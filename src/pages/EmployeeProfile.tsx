@@ -9,7 +9,6 @@ import { SelectedSkillsProvider } from "@/components/skills/context/SelectedSkil
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import { BenchmarkSearchProvider } from "@/components/skills/context/BenchmarkSearchContext";
 import { SkillsMatrixSearchProvider } from "@/components/skills/context/SkillsMatrixSearchContext";
-import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { EmployeeHeader } from "@/components/employee/EmployeeHeader";
 import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
@@ -46,7 +45,7 @@ const EmployeeProfile = () => {
   }, [employee, navigate, toast]);
 
   if (!employee) {
-    return null;
+    return null; // Return null while redirecting
   }
 
   const employeeData = {
@@ -118,48 +117,46 @@ const EmployeeProfile = () => {
             <EmployeeDetails employee={employeeData} id={id || ""} />
           </Card>
 
-          <ToggledSkillsProvider>
-            <TrackProvider>
-              <Tabs defaultValue="experience" className="w-full space-y-6">
-                <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
-                  <TabsTrigger 
-                    value="experience" 
-                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-                  >
-                    Skills Summary
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="benchmark"
-                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-                  >
-                    Role Benchmark
-                  </TabsTrigger>
-                </TabsList>
+          <TrackProvider>
+            <Tabs defaultValue="experience" className="w-full space-y-6">
+              <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
+                <TabsTrigger 
+                  value="experience" 
+                  className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                >
+                  Skills Summary
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="benchmark"
+                  className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                >
+                  Role Benchmark
+                </TabsTrigger>
+              </TabsList>
 
-                <TabsContent value="experience" className="space-y-6">
+              <TabsContent value="experience" className="space-y-6">
+                <SelectedSkillsProvider>
+                  <SkillsMatrixSearchProvider>
+                    <Card className="p-8 bg-white">
+                      <SkillsSummary />
+                    </Card>
+                    <SkillsMatrix />
+                  </SkillsMatrixSearchProvider>
+                </SelectedSkillsProvider>
+              </TabsContent>
+
+              <TabsContent value="benchmark" className="space-y-6">
+                <BenchmarkSearchProvider>
                   <SelectedSkillsProvider>
-                    <SkillsMatrixSearchProvider>
-                      <Card className="p-8 bg-white">
-                        <SkillsSummary />
-                      </Card>
-                      <SkillsMatrix />
-                    </SkillsMatrixSearchProvider>
+                    <Card className="p-8 bg-white">
+                      <RoleBenchmark />
+                    </Card>
+                    <BenchmarkSkillsMatrix />
                   </SelectedSkillsProvider>
-                </TabsContent>
-
-                <TabsContent value="benchmark" className="space-y-6">
-                  <BenchmarkSearchProvider>
-                    <SelectedSkillsProvider>
-                      <Card className="p-8 bg-white">
-                        <RoleBenchmark />
-                      </Card>
-                      <BenchmarkSkillsMatrix />
-                    </SelectedSkillsProvider>
-                  </BenchmarkSearchProvider>
-                </TabsContent>
-              </Tabs>
-            </TrackProvider>
-          </ToggledSkillsProvider>
+                </BenchmarkSearchProvider>
+              </TabsContent>
+            </Tabs>
+          </TrackProvider>
         </div>
       </div>
     </div>
