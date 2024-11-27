@@ -5,7 +5,6 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { Separator } from "@/components/ui/separator";
-import { ToggledSkillsProvider } from "../../skills/context/ToggledSkillsContext";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -46,7 +45,7 @@ export const BenchmarkSkillsMatrixContent = ({
   };
 
   return (
-    <ToggledSkillsProvider>
+    <>
       <CategorizedSkills 
         roleId={roleId}
         employeeId={employeeId}
@@ -65,6 +64,6 @@ export const BenchmarkSkillsMatrixContent = ({
         filteredSkills={filteredSkills}
         {...props}
       />
-    </ToggledSkillsProvider>
+    </>
   );
 };
