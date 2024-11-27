@@ -94,7 +94,11 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
         ...currentRoleSkills.certifications
-      ].filter(skill => toggledSkills.has(skill.title)); // Only process toggled skills
+      ].filter(skill => toggledSkills.has(skill.title));
+
+      if (allSkills.length === 0) {
+        throw new Error('No skills selected for generation');
+      }
 
       console.log('Processing skills generation for:', allSkills.map(s => s.title));
 
@@ -139,7 +143,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       console.error("Error generating skills:", error);
       toast({
         title: "Generation Failed",
-        description: "There was an error generating the skill levels. Please try again.",
+        description: error instanceof Error ? error.message : "There was an error generating the skill levels. Please try again.",
         variant: "destructive",
       });
     } finally {
