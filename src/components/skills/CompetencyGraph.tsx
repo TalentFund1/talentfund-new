@@ -86,7 +86,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
         ...currentRoleSkills.certifications
-      ];
+      ].filter(skill => toggledSkills.has(skill.title)); // Only process toggled skills
 
       console.log('Processing skills generation for:', allSkills.map(s => s.title));
 
@@ -120,7 +120,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         });
       });
 
-      // Force a re-render by saving changes
+      // Save changes to persist the generated progressions
       saveChanges();
 
       toast({
