@@ -1,6 +1,3 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { Employee } from "./types/employeeTypes";
 import { EmployeeTableHeader } from "./employee/EmployeeTableHeader";
 import { EmployeeTableRow } from "./employee/EmployeeTableRow";
@@ -11,19 +8,9 @@ import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
+import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
-
-interface EmployeeTableProps {
-  selectedDepartment?: string[];
-  selectedJobTitle?: string[];
-  selectedLevel?: string[];
-  selectedOffice?: string[];
-  selectedEmploymentType?: string[];
-  selectedSkills?: string[];
-  selectedEmployees?: string[];
-  selectedManager?: string[];
-}
 
 export const getSkillProfileId = (role: string) => {
   // Validate role ID format first
@@ -41,8 +28,7 @@ export const getSkillProfileId = (role: string) => {
     "Engineering Manager": "126",
     "Data Engineer": "127",
     "DevOps Engineer": "128",
-    "Product Manager": "129",
-    "Frontend Developer": "125"  // Alias for Frontend Engineer
+    "Product Manager": "129"
   };
   
   const baseRole = role.split(":")[0].trim();
@@ -66,6 +52,17 @@ export const getLevel = (role: string) => {
   return parts.length > 1 ? parts[1].trim() : "";
 };
 
+interface EmployeeTableProps {
+  selectedDepartment: string[];
+  selectedJobTitle: string[];
+  selectedLevel?: string[];
+  selectedOffice?: string[];
+  selectedEmploymentType?: string[];
+  selectedSkills?: string[];
+  selectedEmployees?: string[];
+  selectedManager?: string[];
+}
+
 export const EmployeeTable = ({ 
   selectedDepartment = [], 
   selectedJobTitle = [],
@@ -85,10 +82,20 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
-  console.log('EmployeeTable rendering with toggledSkills:', Array.from(toggledSkills));
-
-  const preFilteredEmployees = filterEmployees(
+  // Calculate benchmark percentages for each employee
+  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
     employees,
+    selectedJobTitle,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
+  );
+
+  console.log('Employees with benchmarks:', employeesWithBenchmarks);
+
+  // Filter employees based on all criteria including skills and employee search
+  const preFilteredEmployees = filterEmployees(
+    employeesWithBenchmarks,
     selectedEmployees,
     selectedDepartment,
     selectedJobTitle,
@@ -101,10 +108,12 @@ export const EmployeeTable = ({
 
   console.log('Pre-filtered employees:', preFilteredEmployees);
 
+  // Apply skills filter
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
+  // Sort employees by role match and benchmark percentage
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     selectedJobTitle,
@@ -114,12 +123,6 @@ export const EmployeeTable = ({
   );
 
   console.log('Final filtered and sorted employees:', filteredEmployees);
-
-  // Ensure image URLs are properly formatted
-  const getImageUrl = (index: number) => {
-    const imageId = EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length];
-    return `https://images.unsplash.com/${imageId}?auto=format&fit=crop&w=24&h=24`;
-  };
 
   return (
     <div className="bg-white rounded-lg">
@@ -136,7 +139,7 @@ export const EmployeeTable = ({
           <tbody>
             {filteredEmployees.length === 0 ? (
               <tr>
-                <td colSpan={selectedSkills.length > 0 ? 6 : 5} className="text-center py-4 text-muted-foreground">
+                <td colSpan={7} className="text-center py-4 text-muted-foreground">
                   No employees found
                 </td>
               </tr>
@@ -147,7 +150,7 @@ export const EmployeeTable = ({
                   employee={employee}
                   isSelected={selectedRows.includes(employee.name)}
                   onSelect={handleSelectEmployee}
-                  imageUrl={getImageUrl(index)}
+                  imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
                   selectedSkills={selectedSkills}
                   selectedJobTitle={selectedJobTitle}
                 />
@@ -159,3 +162,5 @@ export const EmployeeTable = ({
     </div>
   );
 };
+
+

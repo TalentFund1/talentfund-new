@@ -37,7 +37,7 @@ export const SkillsMatrixRow = ({
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const getBorderColorClass = (level: string = '') => {
+  const getBorderColorClass = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent bg-primary-accent/10';
@@ -50,7 +50,7 @@ export const SkillsMatrixRow = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string = '', required: string = '') => {
+  const getLowerBorderColorClass = (level: string, required: string) => {
     if (required.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
@@ -100,7 +100,7 @@ export const SkillsMatrixRow = ({
                  roleSkillState.level === 'intermediate' ? <Shield className="w-3.5 h-3.5 text-primary-icon" /> :
                  roleSkillState.level === 'beginner' ? <Target className="w-3.5 h-3.5 text-[#008000]" /> :
                  <CircleDashed className="w-3.5 h-3.5 text-gray-400" />}
-                {(roleSkillState.level || 'unspecified').charAt(0).toUpperCase() + (roleSkillState.level || 'unspecified').slice(1)}
+                {roleSkillState.level.charAt(0).toUpperCase() + roleSkillState.level.slice(1)}
               </span>
             </div>
             <div className={`
@@ -139,7 +139,7 @@ export const SkillsMatrixRow = ({
             skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
             'bg-red-100 text-red-800'
           }`}>
-            {(skill.confidence || '').charAt(0).toUpperCase() + (skill.confidence || '').slice(1)}
+            {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
           </span>
         )}
       </TableCell>
