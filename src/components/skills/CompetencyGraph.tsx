@@ -15,6 +15,7 @@ import { roleSkills } from "./data/roleSkills";
 import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
 import { CompetencyGraphHeader } from "./competency/CompetencyGraphHeader";
 import { CompetencyGraphTable } from "./competency/CompetencyGraphTable";
+import { generateSkillProgression } from "./competency/autoFillUtils";
 import { Brain } from "lucide-react";
 
 interface CompetencyGraphProps {
@@ -44,7 +45,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   }, [savedTrack]);
 
   useEffect(() => {
-    console.log('Initializing competency states for role:', currentRoleId);
     initializeStates(currentRoleId);
   }, [currentRoleId, initializeStates]);
 
@@ -62,26 +62,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       title: "Changes cancelled",
       description: "Your changes have been discarded.",
     });
-  };
-
-  const generateSkillLevel = (level: string, track: string) => {
-    const levels = track === "Professional" ? professionalLevels : managerialLevels;
-    const levelIndex = levels.findIndex(l => l.value === level);
-    
-    if (levelIndex === -1) return { level: "unspecified", required: "preferred" };
-    
-    // Higher levels require advanced skills
-    if (levelIndex >= levels.length - 2) {
-      return { level: "advanced", required: "required" };
-    }
-    // Mid levels require intermediate skills
-    else if (levelIndex >= levels.length - 4) {
-      return { level: "intermediate", required: "required" };
-    }
-    // Lower levels start with beginner skills
-    else {
-      return { level: "beginner", required: "preferred" };
-    }
   };
 
   const handleGenerateWithAI = async () => {
@@ -106,31 +86,41 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
         ...currentRoleSkills.certifications
-      ];
+      ].filter(skill => toggledSkills.has(skill.title)); // Only process toggled skills
 
-      const levels = track === "Professional" ? professionalLevels : managerialLevels;
+      console.log('Processing skills generation for:', allSkills.map(s => s.title));
 
       // Generate progression for each skill
       allSkills.forEach(skill => {
-        const progression: Record<string, { level: string; required: string }> = {};
+        let category = "specialized";
+        if (currentRoleSkills.common.some(s => s.title === skill.title)) {
+          category = "common";
+        } else if (currentRoleSkills.certifications.some(s => s.title === skill.title)) {
+          category = "certification";
+        }
+
+        console.log('Generating progression for skill:', { 
+          title: skill.title, 
+          category,
+          track,
+          roleId: currentRoleId 
+        });
+
+        const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
+        console.log('Generated progression:', { skill: skill.title, progression });
         
-        // Generate for each level
-        levels.forEach(level => {
-          const generated = generateSkillLevel(level.value, track);
-          progression[level.value] = generated;
+        // Update each level's state for the skill
+        Object.entries(progression).forEach(([level, state]) => {
+          setSkillProgression(skill.title, {
+            [level]: {
+              level: state.level,
+              required: state.required
+            }
+          });
         });
-
-        console.log('Generated progression for skill:', {
-          skill: skill.title,
-          progression,
-          track
-        });
-
-        // Update skill progression
-        setSkillProgression(skill.title, progression);
       });
 
-      // Save changes to persist the generated levels
+      // Save changes to persist the generated progressions
       saveChanges();
 
       toast({
