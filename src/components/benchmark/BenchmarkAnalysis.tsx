@@ -8,7 +8,6 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { useEffect } from "react";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -35,8 +34,9 @@ export const BenchmarkAnalysis = () => {
 
   // Get all toggled skills for the role
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+  const totalToggledSkills = toggledRoleSkills.length;
 
-  console.log('Toggled skills for role:', {
+  console.log('Current toggled skills:', {
     roleId: selectedRole,
     level: selectedLevel,
     count: toggledRoleSkills.length,
@@ -80,7 +80,6 @@ export const BenchmarkAnalysis = () => {
     return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
   });
 
-  const totalToggledSkills = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const competencyMatchCount = competencyMatchingSkills.length;
   const skillGoalMatchCount = skillGoalMatchingSkills.length;
