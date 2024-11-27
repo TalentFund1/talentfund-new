@@ -1,4 +1,4 @@
-import { ToggledSkillsProvider } from "../../skills/context/ToggledSkillsContext";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { BenchmarkSkillsMatrix } from "../BenchmarkSkillsMatrix";
 
 interface BenchmarkSkillsMatrixProviderProps {
