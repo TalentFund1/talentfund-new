@@ -1,5 +1,5 @@
 import { Employee } from "../types/employeeTypes";
-import { getBaseRole, getLevel, getSkillProfileId } from "../EmployeeTable";
+import { getBaseRole, getLevel } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],
@@ -10,53 +10,31 @@ export const filterEmployees = (
   selectedOffice: string[],
   selectedEmploymentType: string[],
   selectedSkills: string[],
-  selectedManager: string[] = [],
-  selectedRoleId: string[] = []
+  selectedManager: string[] = []
 ): Employee[] => {
-  console.log('Starting employee filtering with criteria:', {
+  console.log('Filtering employees with criteria:', {
     searchedEmployees,
     selectedDepartment,
     selectedJobTitle,
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
-    selectedManager,
-    selectedRoleId
+    selectedManager
   });
 
   return employees.filter(employee => {
-    // Get employee's role ID
-    const employeeRoleId = getSkillProfileId(employee.role);
-    
-    console.log(`Filtering employee ${employee.name}:`, {
-      employeeRoleId,
-      selectedRoleId,
-      roleMatch: selectedRoleId.length === 0 || selectedRoleId.includes(employeeRoleId)
-    });
-
-    // Role ID filter - if selected and doesn't match, exclude immediately
-    if (selectedRoleId.length > 0) {
-      const roleMatches = selectedRoleId.includes(employeeRoleId);
-      if (!roleMatches) {
-        console.log(`Excluding ${employee.name} - Role ID ${employeeRoleId} doesn't match selected ${selectedRoleId}`);
-        return false;
-      }
-    }
-
     const matchesEmployeeSearch = searchedEmployees.length === 0 || 
       searchedEmployees.includes(employee.name);
 
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
     
-    const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(getBaseRole(employee.role));
-    
+    // Remove exact role match requirement to allow partial matches
     const matchesLevel = selectedLevel.length === 0 || 
       selectedLevel.includes(getLevel(employee.role));
 
     const matchesOffice = selectedOffice.length === 0 || 
-      selectedOffice.includes(employee.office);
+      selectedOffice.includes(employee.location.split(',')[0].trim());
 
     const matchesEmploymentType = selectedEmploymentType.length === 0 ||
       selectedEmploymentType.includes(employee.category);
@@ -64,23 +42,10 @@ export const filterEmployees = (
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
 
-    const matches = matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
-           matchesLevel && matchesOffice && matchesEmploymentType && 
-           matchesManager;
+    // If job title is selected, we'll handle matching in the sorter
+    const matchesJobTitle = selectedJobTitle.length === 0 || true;
 
-    console.log(`Final match result for ${employee.name}:`, {
-      matches,
-      criteria: {
-        employeeSearch: matchesEmployeeSearch,
-        department: matchesDepartment,
-        jobTitle: matchesJobTitle,
-        level: matchesLevel,
-        office: matchesOffice,
-        employmentType: matchesEmploymentType,
-        manager: matchesManager
-      }
-    });
-    
-    return matches;
+    return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
+           matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
   });
 };

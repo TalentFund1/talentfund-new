@@ -61,7 +61,6 @@ interface EmployeeTableProps {
   selectedSkills?: string[];
   selectedEmployees?: string[];
   selectedManager?: string[];
-  selectedRoleTitle?: string[];
 }
 
 export const EmployeeTable = ({ 
@@ -72,39 +71,20 @@ export const EmployeeTable = ({
   selectedEmploymentType = [],
   selectedSkills = [],
   selectedEmployees = [],
-  selectedManager = [],
-  selectedRoleTitle = []
+  selectedManager = []
 }: EmployeeTableProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
-  const employees = useEmployeeStore((state) => state.employees);
+  const employees = useEmployeeStore((state) => {
+    console.log('Current employees in store:', state.employees);
+    return state.employees;
+  });
 
-  console.log('Selected Role Title (ID):', selectedRoleTitle);
-
-  // Filter employees based on all criteria including role ID
-  const preFilteredEmployees = filterEmployees(
-    employees,
-    selectedEmployees,
-    selectedDepartment,
-    selectedJobTitle,
-    selectedLevel,
-    selectedOffice,
-    selectedEmploymentType,
-    selectedSkills,
-    selectedManager,
-    selectedRoleTitle // This is now correctly passed as selectedRoleId
-  );
-
-  // Apply skills filter
-  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
-
-  console.log('Skill filtered employees:', skillFilteredEmployees);
-
-  // Calculate benchmark percentages for filtered employees
+  // Calculate benchmark percentages for each employee
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
-    skillFilteredEmployees,
+    employees,
     selectedJobTitle,
     currentStates,
     toggledSkills,
@@ -113,9 +93,29 @@ export const EmployeeTable = ({
 
   console.log('Employees with benchmarks:', employeesWithBenchmarks);
 
+  // Filter employees based on all criteria including skills and employee search
+  const preFilteredEmployees = filterEmployees(
+    employeesWithBenchmarks,
+    selectedEmployees,
+    selectedDepartment,
+    selectedJobTitle,
+    selectedLevel,
+    selectedOffice,
+    selectedEmploymentType,
+    selectedSkills,
+    selectedManager
+  );
+
+  console.log('Pre-filtered employees:', preFilteredEmployees);
+
+  // Apply skills filter
+  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+
+  console.log('Skill filtered employees:', skillFilteredEmployees);
+
   // Sort employees by role match and benchmark percentage
   const filteredEmployees = sortEmployeesByRoleMatch(
-    employeesWithBenchmarks,
+    skillFilteredEmployees,
     selectedJobTitle,
     currentStates,
     toggledSkills,
@@ -162,3 +162,5 @@ export const EmployeeTable = ({
     </div>
   );
 };
+
+
