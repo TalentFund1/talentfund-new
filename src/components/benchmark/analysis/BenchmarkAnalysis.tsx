@@ -5,6 +5,7 @@ import { BenchmarkAnalysisCard } from "./BenchmarkAnalysisCard";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { getEmployeeSkills } from "../skills-matrix/initialSkills";
+import { ToggledSkillsProvider } from "../../skills/context/ToggledSkillsContext";
 
 interface BenchmarkAnalysisProps {
   selectedRole: string;
@@ -12,7 +13,7 @@ interface BenchmarkAnalysisProps {
   employeeId: string;
 }
 
-export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
+const BenchmarkAnalysisContent = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { toggledSkills } = useToggledSkills();
@@ -132,4 +133,12 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   }
 
   return <BenchmarkAnalysisCard {...metrics} />;
+};
+
+export const BenchmarkAnalysis = (props: BenchmarkAnalysisProps) => {
+  return (
+    <ToggledSkillsProvider>
+      <BenchmarkAnalysisContent {...props} />
+    </ToggledSkillsProvider>
+  );
 };
