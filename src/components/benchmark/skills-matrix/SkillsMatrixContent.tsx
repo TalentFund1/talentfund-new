@@ -2,7 +2,6 @@ import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
-import { useRef } from "react";
 
 interface SkillsMatrixContentProps {
   filteredSkills: any[];
