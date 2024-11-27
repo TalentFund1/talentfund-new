@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { SkillCell } from "./competency/SkillCell";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { CategorySection } from "./competency/CategorySection";
 import { useCompetencyStore } from "./competency/CompetencyState";
@@ -9,10 +11,12 @@ import { TrackSelection } from "./TrackSelection";
 import { useTrack } from "./context/TrackContext";
 import { jobTitles } from "./competency/skillProfileData";
 import { useParams } from "react-router-dom";
+import { roleSkills } from "./data/roleSkills";
+import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
 import { CompetencyGraphHeader } from "./competency/CompetencyGraphHeader";
 import { CompetencyGraphTable } from "./competency/CompetencyGraphTable";
+import { generateSkillProgression } from "./competency/autoFillUtils";
 import { Brain, RotateCcw } from "lucide-react";
-import { generateSkillsWithAI } from "./competency/AISkillGenerator";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -30,11 +34,11 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { saveChanges, cancelChanges, hasChanges, initializeStates, setSkillProgression, resetLevels } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
-  const [isGenerating, setIsGenerating] = useState(false);
 
   const currentRoleId = propRoleId || urlRoleId || "123";
   const savedTrack = getTrackForRole(currentRoleId);
   const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     setTrack(savedTrack);
@@ -69,14 +73,74 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleGenerateWithAI = async () => {
+    console.log("Starting AI generation for skills...", { currentRoleId, track });
     setIsGenerating(true);
+    
     try {
-      await generateSkillsWithAI({
-        currentRoleId,
-        track,
-        toggledSkills,
-        setSkillProgression,
-        saveChanges,
+      // Get current role skills
+      const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
+      if (!currentRoleSkills) {
+        console.error('No skills found for current role:', currentRoleId);
+        throw new Error('No skills found for current role');
+      }
+
+      console.log('Found role skills:', {
+        specialized: currentRoleSkills.specialized?.length || 0,
+        common: currentRoleSkills.common?.length || 0,
+        certifications: currentRoleSkills.certifications?.length || 0
+      });
+
+      const allSkills = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].filter(skill => toggledSkills.has(skill.title)); // Only process toggled skills
+
+      console.log('Processing skills generation for:', allSkills.map(s => s.title));
+
+      // Generate progression for each skill
+      allSkills.forEach(skill => {
+        let category = "specialized";
+        if (currentRoleSkills.common.some(s => s.title === skill.title)) {
+          category = "common";
+        } else if (currentRoleSkills.certifications.some(s => s.title === skill.title)) {
+          category = "certification";
+        }
+
+        console.log('Generating progression for skill:', { 
+          title: skill.title, 
+          category,
+          track,
+          roleId: currentRoleId 
+        });
+
+        const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
+        console.log('Generated progression:', { skill: skill.title, progression });
+        
+        // Update each level's state for the skill
+        Object.entries(progression).forEach(([level, state]) => {
+          setSkillProgression(skill.title, {
+            [level]: {
+              level: state.level,
+              required: state.required
+            }
+          });
+        });
+      });
+
+      // Save changes to persist the generated progressions
+      saveChanges();
+
+      toast({
+        title: "Skills Generated",
+        description: "Skill levels have been automatically generated based on industry standards.",
+      });
+    } catch (error) {
+      console.error("Error generating skills:", error);
+      toast({
+        title: "Generation Failed",
+        description: "There was an error generating the skill levels. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setIsGenerating(false);
