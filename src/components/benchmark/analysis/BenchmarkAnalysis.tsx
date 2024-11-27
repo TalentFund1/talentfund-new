@@ -4,7 +4,6 @@ import { BenchmarkAnalysisCard } from "./BenchmarkAnalysisCard";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { getEmployeeSkills } from "../skills-matrix/initialSkills";
-import { getSkillProfileId } from "../../EmployeeTable";
 
 interface BenchmarkAnalysisProps {
   selectedRole: string;
@@ -28,14 +27,10 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   const employeeSkills = getEmployeeSkills(employeeId);
   console.log('Employee skills loaded for comparison:', employeeSkills);
 
-  // Convert role name to ID if needed
-  const roleId = getSkillProfileId(selectedRole);
-  console.log('Converted role name to ID:', { selectedRole, roleId });
-
-  // Get skills for the selected role from dropdown (not employee's role)
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  // Get skills for the selected role from dropdown
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   if (!currentRoleSkills) {
-    console.error('No role skills found for selected role:', roleId);
+    console.error('No role skills found for selected role:', selectedRole);
     return null;
   }
 
@@ -50,7 +45,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   const totalToggledSkills = toggledRoleSkills.length;
 
   console.log('Selected role toggled skills:', {
-    roleId,
+    roleId: selectedRole,
     total: totalToggledSkills,
     skills: toggledRoleSkills.map(s => s.title)
   });
@@ -94,7 +89,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   });
 
   console.log('Selected role match calculations:', {
-    roleId,
+    roleId: selectedRole,
     skillMatches: matchingSkills.length,
     competencyMatches: competencyMatchingSkills.length,
     skillGoalMatches: skillGoalMatchingSkills.length,

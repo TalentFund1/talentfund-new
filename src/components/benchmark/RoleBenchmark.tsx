@@ -1,18 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { roleSkills } from "@/components/skills/data/roleSkills";
+import { roleSkills } from "../skills/data/roleSkills";
 import { useState, useEffect } from "react";
-import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
-import { useTrack } from "@/components/skills/context/TrackContext";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
-import { useBenchmarkSearch } from "@/components/skills/context/BenchmarkSearchContext";
+import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
-import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 
 interface RoleStore {
   selectedRole: string;
@@ -123,15 +122,11 @@ export const RoleBenchmark = () => {
           roles={roles}
         />
 
-        {id && (
-          <ToggledSkillsProvider>
-            <BenchmarkAnalysis 
-              selectedRole={selectedRole}
-              roleLevel={roleLevel}
-              employeeId={id}
-            />
-          </ToggledSkillsProvider>
-        )}
+        {id && <BenchmarkAnalysis 
+          selectedRole={selectedRole}
+          roleLevel={roleLevel}
+          employeeId={id}
+        />}
       </div>
     </div>
   );
