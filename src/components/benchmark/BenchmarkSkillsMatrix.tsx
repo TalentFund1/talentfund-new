@@ -1,68 +1,69 @@
-import { useState, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { useRef } from "react";
+import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
+import { CategorizedSkills } from "./CategorizedSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { useRoleStore } from "./RoleBenchmark";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
-import { BenchmarkMatrixContent } from "./skills-matrix/BenchmarkMatrixContent";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { Separator } from "@/components/ui/separator";
 
-const ITEMS_PER_PAGE = 10;
+interface BenchmarkSkillsMatrixContentProps {
+  roleId: string;
+  employeeId: string;
+  roleLevel: string;
+  filteredSkills: any[];
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  selectedLevel: string;
+  setSelectedLevel: (level: string) => void;
+  selectedInterest: string;
+  setSelectedInterest: (interest: string) => void;
+  selectedSkillLevel: string;
+  setSelectedSkillLevel: (level: string) => void;
+  selectedSearchSkills: string[];
+  setSelectedSearchSkills: (skills: string[]) => void;
+  visibleItems: number;
+  observerTarget: React.RefObject<HTMLDivElement>;
+}
 
-export const BenchmarkSkillsMatrix = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
-  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
-  const [selectedLevel, setSelectedLevel] = useState("all");
-  const [selectedInterest, setSelectedInterest] = useState("all");
-  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
-  const { id } = useParams<{ id: string }>();
-  const observerTarget = useRef<HTMLDivElement>(null);
-  const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
+export const BenchmarkSkillsMatrix = ({
+  roleId,
+  employeeId,
+  roleLevel,
+  filteredSkills,
+  ...props
+}: BenchmarkSkillsMatrixContentProps) => {
+  console.log('Rendering BenchmarkSkillsMatrix with skills:', filteredSkills);
 
-  const employeeSkills = getEmployeeSkills(id || "");
-
-  // Filter skills based on selected criteria
-  const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
-    .filter(skill => {
-      let matchesLevel = selectedLevel === 'all' || skill.level?.toLowerCase() === selectedLevel.toLowerCase();
-      let matchesInterest = selectedInterest === 'all' || skill.requirement?.toLowerCase() === selectedInterest.toLowerCase();
-      let matchesSearch = !searchTerm || skill.title.toLowerCase().includes(searchTerm.toLowerCase());
-      let matchesSkillLevel = selectedSkillLevel === 'all' || skill.level?.toLowerCase() === selectedSkillLevel.toLowerCase();
-
-      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
-    });
-
-  console.log('Filtered skills:', {
-    total: filteredSkills.length,
-    level: selectedLevel,
-    interest: selectedInterest,
-    skillLevel: selectedSkillLevel
-  });
+  const getRoleTitle = (id: string) => {
+    const roleTitles: { [key: string]: string } = {
+      "123": "AI Engineer",
+      "124": "Backend Engineer",
+      "125": "Frontend Engineer",
+      "126": "Engineering Manager"
+    };
+    return roleTitles[id] || "AI Engineer";
+  };
 
   return (
-    <div className="space-y-6">
-      <ToggledSkillsProvider>
-        <BenchmarkMatrixContent
-          roleId={selectedRole}
-          employeeId={id || ""}
-          roleLevel={roleLevel}
-          filteredSkills={filteredSkills.slice(0, visibleItems)}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
-          selectedSkillLevel={selectedSkillLevel}
-          setSelectedSkillLevel={setSelectedSkillLevel}
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-          visibleItems={visibleItems}
-          observerTarget={observerTarget}
-        />
-      </ToggledSkillsProvider>
-    </div>
+    <ToggledSkillsProvider>
+      <CategorizedSkills 
+        roleId={roleId}
+        employeeId={employeeId}
+        selectedLevel={roleLevel}
+      />
+
+      <Separator className="my-8" />
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-foreground">
+          {getRoleTitle(roleId)}: {roleLevel.toUpperCase()}
+        </h2>
+      </div>
+
+      <SkillsMatrixContent 
+        filteredSkills={filteredSkills}
+        {...props}
+      />
+    </ToggledSkillsProvider>
   );
 };
