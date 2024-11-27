@@ -40,13 +40,15 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
       }
 
       // Get only toggled skills for the current role
-      const toggledRoleSkills = [
+      const allRoleSkills = [
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
         ...currentRoleSkills.certifications
-      ].filter(skill => toggledSkills.has(skill.title));
+      ];
 
+      const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
       const totalToggledSkills = toggledRoleSkills.length;
+
       console.log('Toggled skills count:', totalToggledSkills);
 
       // Calculate matching skills
@@ -76,7 +78,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
         const employeePriority = getLevelPriority(employeeSkillLevel);
         const rolePriority = getLevelPriority(roleSkillLevel);
 
-        return employeePriority === rolePriority || employeePriority > rolePriority;
+        return employeePriority >= rolePriority;
       });
 
       // Calculate skill goal matches
