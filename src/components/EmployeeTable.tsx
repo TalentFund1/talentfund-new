@@ -86,6 +86,8 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
+  console.log('EmployeeTable rendering with toggledSkills:', Array.from(toggledSkills));
+
   const preFilteredEmployees = filterEmployees(
     employees,
     selectedEmployees,
@@ -134,19 +136,17 @@ export const EmployeeTable = ({
                 </td>
               </tr>
             ) : (
-              <ToggledSkillsProvider>
-                {filteredEmployees.map((employee, index) => (
-                  <EmployeeTableRow
-                    key={employee.id}
-                    employee={employee}
-                    isSelected={selectedRows.includes(employee.name)}
-                    onSelect={handleSelectEmployee}
-                    imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
-                    selectedSkills={selectedSkills}
-                    selectedJobTitle={selectedJobTitle}
-                  />
-                ))}
-              </ToggledSkillsProvider>
+              filteredEmployees.map((employee, index) => (
+                <EmployeeTableRow
+                  key={employee.id}
+                  employee={employee}
+                  isSelected={selectedRows.includes(employee.name)}
+                  onSelect={handleSelectEmployee}
+                  imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
+                  selectedSkills={selectedSkills}
+                  selectedJobTitle={selectedJobTitle}
+                />
+              ))
             )}
           </tbody>
         </table>
