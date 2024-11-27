@@ -15,12 +15,17 @@ export const useCompetencyStateReader = () => {
   const { id: roleId } = useParams<{ id: string }>();
 
   const normalizeLevel = (level: string): string => {
+    // Handle formats like "P4 - Senior" -> "p4"
+    const match = level.toLowerCase().match(/[pm][1-6]/);
+    if (match) {
+      return match[0];
+    }
     return level.toLowerCase().trim();
   };
 
   const getDefaultState = (skillName: string): SkillCompetencyState => {
     if (!roleId) {
-      console.log('No role ID provided, using default state');
+      console.log('No role ID provided for skill:', skillName);
       return { level: 'advanced', required: 'required' };
     }
 
@@ -37,7 +42,7 @@ export const useCompetencyStateReader = () => {
     ];
 
     const skillData = allSkills.find(skill => skill.title === skillName);
-    console.log('Found skill data:', { skillName, skillData });
+    console.log('Found skill data:', { skillName, skillData, roleId });
     
     return {
       level: skillData?.level || 'advanced',
@@ -65,26 +70,44 @@ export const useCompetencyStateReader = () => {
     }
 
     const normalizedLevelKey = normalizeLevel(levelKey);
-    const levelState = roleStates[skillName][normalizedLevelKey];
+    console.log('Normalized level key:', { original: levelKey, normalized: normalizedLevelKey });
+    
+    let levelState = roleStates[skillName][normalizedLevelKey];
 
     if (!levelState) {
-      console.log('No level state found for skill:', { skillName, levelKey: normalizedLevelKey });
+      console.log('No exact level state found, searching for matching level...');
       // Try to find a matching level if exact match not found
       const availableLevels = Object.keys(roleStates[skillName]);
-      const matchingLevel = availableLevels.find(level => 
-        normalizeLevel(level).includes(normalizedLevelKey) || 
-        normalizedLevelKey.includes(normalizeLevel(level))
+      
+      // First try exact match after normalization
+      const exactMatch = availableLevels.find(level => 
+        normalizeLevel(level) === normalizedLevelKey
       );
 
-      if (matchingLevel) {
-        console.log('Found matching level:', matchingLevel);
-        return roleStates[skillName][matchingLevel];
+      if (exactMatch) {
+        console.log('Found exact matching level:', exactMatch);
+        levelState = roleStates[skillName][exactMatch];
+      } else {
+        // Try partial matches
+        const partialMatch = availableLevels.find(level => 
+          normalizeLevel(level).includes(normalizedLevelKey) || 
+          normalizedLevelKey.includes(normalizeLevel(level))
+        );
+
+        if (partialMatch) {
+          console.log('Found partial matching level:', partialMatch);
+          levelState = roleStates[skillName][partialMatch];
+        }
       }
 
-      return getDefaultState(skillName);
+      if (!levelState) {
+        console.log('No matching level found, using default state');
+        return getDefaultState(skillName);
+      }
     }
 
-    console.log('Found competency state:', { skillName, levelKey: normalizedLevelKey, state: levelState });
+    console.log('Using level state:', { skillName, level: levelState.level, required: levelState.required });
+    
     return {
       level: levelState.level || getDefaultState(skillName).level,
       required: levelState.required || getDefaultState(skillName).required
