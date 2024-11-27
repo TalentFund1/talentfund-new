@@ -33,12 +33,14 @@ export const BenchmarkAnalysis = () => {
     return null;
   }
 
-  // Get all skills for the role
-  const allRoleSkills = [
+  // Get all skills for the role that are toggled on
+  const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ];
+  ].filter(skill => toggledSkills.has(skill.title));
+
+  console.log('Toggled role skills:', toggledRoleSkills.map(s => s.title));
 
   // Update metrics whenever any relevant state changes
   useEffect(() => {
@@ -48,11 +50,9 @@ export const BenchmarkAnalysis = () => {
       currentStates
     });
     
-    // Get all toggled skills for the role
-    const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
     const totalToggledSkills = toggledRoleSkills.length;
 
-    console.log('Filtered toggled skills:', toggledRoleSkills.map(s => s.title));
+    console.log('Total toggled skills:', totalToggledSkills);
 
     // Match skills based on role profile skills
     const matchingSkills = toggledRoleSkills.filter(roleSkill => {
@@ -104,7 +104,7 @@ export const BenchmarkAnalysis = () => {
       skillGoalCount: skillGoalMatchingSkills.length,
       totalSkills: totalToggledSkills
     });
-  }, [toggledSkills, selectedLevel, currentStates, employeeSkills, allRoleSkills, getSkillCompetencyState]);
+  }, [toggledSkills, selectedLevel, currentStates, employeeSkills, toggledRoleSkills, getSkillCompetencyState]);
 
   // Calculate percentages based on current metrics
   const skillMatchPercentage = metrics.totalSkills > 0 ? (metrics.matchingCount / metrics.totalSkills) * 100 : 0;
