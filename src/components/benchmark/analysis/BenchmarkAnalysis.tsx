@@ -38,23 +38,17 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
       return;
     }
 
-    // Get all skills for the role
-    const allRoleSkills = [
+    // Get all skills for the role that are toggled on
+    const toggledRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
-    ];
+    ].filter(skill => toggledSkills.has(skill.title));
 
-    // Filter by toggled skills
-    const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+    console.log('Toggled role skills:', toggledRoleSkills.map(s => s.title));
     const totalToggledSkills = toggledRoleSkills.length;
 
-    console.log('Calculating metrics for toggled skills:', {
-      roleId: selectedRole,
-      level: roleLevel,
-      count: toggledRoleSkills.length,
-      skills: toggledRoleSkills.map(s => s.title)
-    });
+    console.log('Total toggled skills:', totalToggledSkills);
 
     // Match skills based on employee skills
     const matchingSkills = toggledRoleSkills.filter(roleSkill => {
