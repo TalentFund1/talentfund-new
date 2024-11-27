@@ -1,9 +1,9 @@
-import { useSkillsMatrixStore } from "../../skills-matrix/SkillsMatrixState";
-import { useCompetencyStateReader } from "../../../skills/competency/CompetencyStateReader";
+import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
+import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { BenchmarkAnalysisCard } from "./BenchmarkAnalysisCard";
-import { roleSkills } from "../../../skills/data/roleSkills";
-import { useToggledSkills } from "../../../skills/context/ToggledSkillsContext";
-import { getEmployeeSkills } from "../../skills-matrix/initialSkills";
+import { roleSkills } from "../../skills/data/roleSkills";
+import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
+import { getEmployeeSkills } from "../skills-matrix/initialSkills";
 import { useEffect, useState } from "react";
 
 interface BenchmarkAnalysisProps {
