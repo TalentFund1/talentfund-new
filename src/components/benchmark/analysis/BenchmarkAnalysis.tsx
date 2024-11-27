@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { BenchmarkAnalysisCard } from "./BenchmarkAnalysisCard";
@@ -7,6 +8,9 @@ import { getEmployeeSkills } from "../skills-matrix/initialSkills";
 import { BenchmarkSkillsMatrixContent } from "../skills-matrix/BenchmarkSkillsMatrixContent";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useRef } from "react";
+
+const ITEMS_PER_PAGE = 10;
 
 interface BenchmarkAnalysisProps {
   selectedRole: string;
@@ -18,6 +22,13 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { toggledSkills } = useToggledSkills();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
+  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
+  const [selectedLevel, setSelectedLevel] = useState("all");
+  const [selectedInterest, setSelectedInterest] = useState("all");
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
+  const observerTarget = useRef<HTMLDivElement>(null);
   
   console.log('BenchmarkAnalysis - Selected Role Analysis:', {
     selectedRole,
@@ -91,6 +102,9 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
            skillState.requirement === 'skill_goal';
   });
 
+  // Filter skills for the matrix content
+  const filteredSkills = employeeSkills.filter(skill => toggledSkills.has(skill.title));
+
   console.log('Selected role match calculations:', {
     roleId: selectedRole,
     skillMatches: matchingSkills.length,
@@ -121,6 +135,19 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
           roleId={selectedRole}
           employeeId={employeeId}
           roleLevel={roleLevel}
+          filteredSkills={filteredSkills}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedSkillLevel={selectedSkillLevel}
+          setSelectedSkillLevel={setSelectedSkillLevel}
+          selectedSearchSkills={selectedSearchSkills}
+          setSelectedSearchSkills={setSelectedSearchSkills}
+          visibleItems={visibleItems}
+          observerTarget={observerTarget}
         />
       </Card>
     </div>
