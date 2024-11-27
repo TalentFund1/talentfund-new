@@ -1,6 +1,5 @@
 import { useCompetencyStore } from "./CompetencyState";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { useParams } from "react-router-dom";
 import { roleSkills } from "../data/roleSkills";
 
 interface SkillCompetencyState {
@@ -29,6 +28,8 @@ export const useCompetencyStateReader = () => {
   };
 
   const getDefaultState = (skillName: string, roleId: string): SkillCompetencyState => {
+    console.log('Getting default state for:', { skillName, roleId });
+    
     const roleData = roleSkills[roleId as keyof typeof roleSkills];
     if (!roleData) {
       console.log('No role data found for role:', roleId);
@@ -59,7 +60,8 @@ export const useCompetencyStateReader = () => {
       skillName, 
       levelKey, 
       targetRoleId,
-      currentStates 
+      currentStates,
+      hasToggledSkill: toggledSkills.has(skillName)
     });
     
     if (!toggledSkills.has(skillName)) {
@@ -67,11 +69,14 @@ export const useCompetencyStateReader = () => {
       return null;
     }
 
+    // Use target role ID if provided, otherwise use the first available role
     const effectiveRoleId = targetRoleId || Object.keys(currentStates)[0];
     if (!effectiveRoleId) {
       console.error('No role ID provided');
       return getDefaultState(skillName, targetRoleId || "123");
     }
+
+    console.log('Using effective role ID:', effectiveRoleId);
 
     const roleStates = currentStates[effectiveRoleId];
     if (!roleStates || !roleStates[skillName]) {
