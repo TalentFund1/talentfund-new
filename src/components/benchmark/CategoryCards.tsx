@@ -44,7 +44,14 @@ export const CategoryCards = ({
     const certification = getSkillsByCategory('certification').length;
     const all = specialized + common + certification;
 
-    console.log('Category counts:', { specialized, common, certification, all });
+    console.log('Category counts:', { 
+      specialized, 
+      common, 
+      certification, 
+      all,
+      toggledSkills: Array.from(toggledSkills),
+      currentRoleSkills
+    });
     
     return { specialized, common, certification, all };
   };
