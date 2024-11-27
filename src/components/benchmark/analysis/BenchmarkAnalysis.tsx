@@ -3,9 +3,7 @@ import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { BenchmarkAnalysisCard } from "./BenchmarkAnalysisCard";
 import { roleSkills } from "../../skills/data/roleSkills";
-import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { getEmployeeSkills } from "../skills-matrix/initialSkills";
-import { ToggledSkillsProvider } from "../../skills/context/ToggledSkillsContext";
 
 interface BenchmarkAnalysisProps {
   selectedRole: string;
@@ -13,10 +11,9 @@ interface BenchmarkAnalysisProps {
   employeeId: string;
 }
 
-const BenchmarkAnalysisContent = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
+export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { toggledSkills } = useToggledSkills();
   const [metrics, setMetrics] = useState({
     skillMatch: { current: 0, total: 0 },
     competencyMatch: { current: 0, total: 0 },
@@ -25,9 +22,7 @@ const BenchmarkAnalysisContent = ({ selectedRole, roleLevel, employeeId }: Bench
   
   console.log('BenchmarkAnalysis - Re-rendering with:', {
     selectedRole,
-    roleLevel,
-    toggledSkillsCount: toggledSkills.size,
-    toggledSkills: Array.from(toggledSkills)
+    roleLevel
   });
 
   const employeeSkills = getEmployeeSkills(employeeId);
@@ -39,26 +34,24 @@ const BenchmarkAnalysisContent = ({ selectedRole, roleLevel, employeeId }: Bench
       return;
     }
 
-    // Get all skills for the role
+    // Get all skills for the role without filtering by toggledSkills
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
 
-    // Filter by toggled skills
-    const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
-    const totalToggledSkills = toggledRoleSkills.length;
+    const totalSkills = allRoleSkills.length;
 
-    console.log('Calculating metrics for toggled skills:', {
+    console.log('Calculating metrics for all skills:', {
       roleId: selectedRole,
       level: roleLevel,
-      count: toggledRoleSkills.length,
-      skills: toggledRoleSkills.map(s => s.title)
+      count: allRoleSkills.length,
+      skills: allRoleSkills.map(s => s.title)
     });
 
     // Match skills based on employee skills
-    const matchingSkills = toggledRoleSkills.filter(roleSkill => {
+    const matchingSkills = allRoleSkills.filter(roleSkill => {
       const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
       return employeeSkill !== undefined;
     });
@@ -96,7 +89,7 @@ const BenchmarkAnalysisContent = ({ selectedRole, roleLevel, employeeId }: Bench
     });
 
     console.log('Metrics calculation results:', {
-      totalSkills: totalToggledSkills,
+      totalSkills,
       matchingSkills: matchingSkills.length,
       competencyMatches: competencyMatchingSkills.length,
       skillGoalMatches: skillGoalMatchingSkills.length
@@ -105,22 +98,21 @@ const BenchmarkAnalysisContent = ({ selectedRole, roleLevel, employeeId }: Bench
     setMetrics({
       skillMatch: {
         current: matchingSkills.length,
-        total: totalToggledSkills
+        total: totalSkills
       },
       competencyMatch: {
         current: competencyMatchingSkills.length,
-        total: totalToggledSkills
+        total: totalSkills
       },
       skillGoals: {
         current: skillGoalMatchingSkills.length,
-        total: totalToggledSkills
+        total: totalSkills
       }
     });
   }, [
     selectedRole,
     roleLevel,
     employeeId,
-    toggledSkills,
     currentStates,
     getSkillCompetencyState,
     employeeSkills,
@@ -133,12 +125,4 @@ const BenchmarkAnalysisContent = ({ selectedRole, roleLevel, employeeId }: Bench
   }
 
   return <BenchmarkAnalysisCard {...metrics} />;
-};
-
-export const BenchmarkAnalysis = (props: BenchmarkAnalysisProps) => {
-  return (
-    <ToggledSkillsProvider>
-      <BenchmarkAnalysisContent {...props} />
-    </ToggledSkillsProvider>
-  );
 };
