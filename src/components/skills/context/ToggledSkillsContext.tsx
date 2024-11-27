@@ -70,7 +70,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           }
         });
         
-        console.log('Loaded saved skills by role:', result);
         return result;
       }
     } catch (error) {
@@ -88,7 +87,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       
       // Initialize skills for new role if not present
       setSkillsByRole(prev => {
-        if (!prev[currentRole] || prev[currentRole].size === 0) {
+        if (!prev[currentRole]) {
           const initialSkills = getInitialSkillsForRole(currentRole);
           console.log('Initializing new skills for role:', currentRole, Array.from(initialSkills));
           return {
@@ -103,17 +102,19 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   // Save skills to localStorage whenever they change
   useEffect(() => {
-    try {
-      const serializable = Object.fromEntries(
-        Object.entries(skillsByRole).map(([roleId, skills]) => [
-          roleId,
-          Array.from(skills)
-        ])
-      );
-      localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
-      console.log('Saved skills to localStorage:', serializable);
-    } catch (error) {
-      console.error('Error saving skills:', error);
+    if (Object.keys(skillsByRole).length > 0) {
+      try {
+        const serializable = Object.fromEntries(
+          Object.entries(skillsByRole).map(([roleId, skills]) => [
+            roleId,
+            Array.from(skills)
+          ])
+        );
+        localStorage.setItem('toggledSkillsByRole', JSON.stringify(serializable));
+        console.log('Saved skills to localStorage:', serializable);
+      } catch (error) {
+        console.error('Error saving skills:', error);
+      }
     }
   }, [skillsByRole]);
 
