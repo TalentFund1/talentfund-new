@@ -42,7 +42,7 @@ const initializeSkillStates = (roleId: string) => {
     try {
       const parsedStates = JSON.parse(savedStates);
       if (parsedStates && typeof parsedStates === 'object') {
-        console.log('Successfully loaded saved states for role:', roleId, parsedStates);
+        console.log('Successfully loaded saved states for role:', roleId);
         return parsedStates;
       }
     } catch (error) {
@@ -85,38 +85,43 @@ export const useCompetencyStore = create<CompetencyState>()(
       hasChanges: false,
       initializeStates: (roleId: string) => {
         const initializedStates = initializeSkillStates(roleId);
-        console.log('Setting initial competency states for role:', roleId, initializedStates);
+        console.log('Setting initial competency states for role:', roleId);
         
-        // Force a re-render by creating new object references
-        set((state) => ({
-          currentStates: {
-            ...state.currentStates,
-            [roleId]: { ...initializedStates }
-          },
-          originalStates: {
-            ...state.originalStates,
-            [roleId]: { ...initializedStates }
-          },
-          hasChanges: false
-        }));
+        set((state) => {
+          const newState = {
+            currentStates: {
+              ...state.currentStates,
+              [roleId]: JSON.parse(JSON.stringify(initializedStates))
+            },
+            originalStates: {
+              ...state.originalStates,
+              [roleId]: JSON.parse(JSON.stringify(initializedStates))
+            },
+            hasChanges: false
+          };
+          
+          // Ensure localStorage is updated
+          localStorage.setItem(getStorageKey(roleId), JSON.stringify(initializedStates));
+          
+          return newState;
+        });
       },
       setSkillState: (skillName, level, levelKey, required, roleId) => {
         console.log('Setting competency state:', { skillName, level, levelKey, required, roleId });
         
         set((state) => {
-          // Create new object references to ensure React detects the changes
-          const newStates = {
-            ...state.currentStates,
-            [roleId]: {
-              ...(state.currentStates[roleId] || {}),
-              [skillName]: {
-                ...(state.currentStates[roleId]?.[skillName] || {}),
-                [levelKey]: {
-                  level,
-                  required,
-                },
-              },
-            },
+          const newStates = JSON.parse(JSON.stringify(state.currentStates));
+          
+          if (!newStates[roleId]) {
+            newStates[roleId] = {};
+          }
+          if (!newStates[roleId][skillName]) {
+            newStates[roleId][skillName] = {};
+          }
+          
+          newStates[roleId][skillName][levelKey] = {
+            level,
+            required,
           };
           
           const hasChanges = JSON.stringify(newStates[roleId]) !== JSON.stringify(state.originalStates[roleId]);
@@ -136,13 +141,13 @@ export const useCompetencyStore = create<CompetencyState>()(
           const roleId = Object.keys(state.currentStates)[0];
           if (!roleId) return state;
 
-          const newStates = {
-            ...state.currentStates,
-            [roleId]: {
-              ...state.currentStates[roleId],
-              [skillName]: { ...progression },
-            },
-          };
+          const newStates = JSON.parse(JSON.stringify(state.currentStates));
+          
+          if (!newStates[roleId]) {
+            newStates[roleId] = {};
+          }
+          
+          newStates[roleId][skillName] = progression;
 
           // Save to localStorage immediately
           localStorage.setItem(getStorageKey(roleId), JSON.stringify(newStates[roleId]));
@@ -159,12 +164,9 @@ export const useCompetencyStore = create<CompetencyState>()(
         
         // Save all role states to localStorage
         Object.entries(currentStates).forEach(([roleId, roleStates]) => {
-          const storageKey = getStorageKey(roleId);
-          localStorage.setItem(storageKey, JSON.stringify(roleStates));
-          console.log('Saved states to localStorage for role:', roleId);
+          localStorage.setItem(getStorageKey(roleId), JSON.stringify(roleStates));
         });
         
-        // Update originalStates with new references
         set((state) => ({
           originalStates: JSON.parse(JSON.stringify(state.currentStates)),
           hasChanges: false,
