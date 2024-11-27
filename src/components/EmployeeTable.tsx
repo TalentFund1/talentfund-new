@@ -94,7 +94,7 @@ export const EmployeeTable = ({
     selectedEmploymentType,
     selectedSkills,
     selectedManager,
-    selectedRoleTitle
+    selectedRoleTitle // This is now correctly passed as selectedRoleId
   );
 
   // Apply skills filter
@@ -102,10 +102,10 @@ export const EmployeeTable = ({
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
-  // Calculate benchmark percentages for filtered employees using selected role ID
+  // Calculate benchmark percentages for filtered employees
   const employeesWithBenchmarks = calculateEmployeeBenchmarks(
     skillFilteredEmployees,
-    selectedRoleTitle,
+    selectedJobTitle,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
@@ -116,7 +116,7 @@ export const EmployeeTable = ({
   // Sort employees by role match and benchmark percentage
   const filteredEmployees = sortEmployeesByRoleMatch(
     employeesWithBenchmarks,
-    selectedRoleTitle,
+    selectedJobTitle,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
