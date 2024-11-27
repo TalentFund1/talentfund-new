@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { getSkillProfileId } from "../EmployeeTable";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
-import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -26,72 +24,34 @@ export const EmployeeTableRow = ({
   selectedJobTitle = []
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { currentStates } = useSkillsMatrixStore();
-  const employeeSkills = getEmployeeSkills(employee.id);
-
-  const roleId = selectedJobTitle.length > 0 
-    ? getSkillProfileId(selectedJobTitle[0])
-    : getSkillProfileId(employee.role);
-    
+  const roleId = getSkillProfileId(employee.role);
+  
   const isExactMatch = selectedJobTitle.length > 0 && 
-    getBaseRole(employee.role) === selectedJobTitle[0];
-
-  const getMatchingSkillsCount = () => {
-    if (selectedSkills.length > 0) {
-      const matchingSkills = selectedSkills.filter(skillName => {
-        return employeeSkills.some(empSkill => empSkill.title === skillName);
-      });
-      
-      return {
-        count: `${matchingSkills.length} / ${selectedSkills.length}`,
-        isExactSkillMatch: matchingSkills.length === selectedSkills.length && selectedSkills.length > 0
-      };
-    }
-
-    return { count: '0 / 0', isExactSkillMatch: false };
-  };
+    selectedJobTitle.some(title => getSkillProfileId(title) === roleId);
 
   const renderSkills = () => {
-    if (selectedSkills.length > 0) {
-      return (
-        <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
-          {selectedSkills.map(skillName => {
-            const employeeSkill = employeeSkills.find(s => s.title === skillName);
-            if (!employeeSkill) return null;
-
-            const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4");
-            const skillState = currentStates[skillName];
-            const isSkillGoal = skillState?.requirement === 'required' || 
-                               skillState?.requirement === 'skill_goal';
-            
-            return (
-              <SkillBubble
-                key={skillName}
-                skillName={skillName}
-                level={competencyState?.level || employeeSkill.level}
-                isRequired={isSkillGoal}
-              />
-            );
-          })}
-        </div>
-      );
-    }
+    if (selectedSkills.length === 0) return null;
 
     return (
-      <div className="text-center">
-        {getMatchingSkillsCount().count}
+      <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
+        {selectedSkills.map(skillName => {
+          const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4");
+          return competencyState ? (
+            <SkillBubble
+              key={skillName}
+              skillName={skillName}
+              level={competencyState.level}
+              isRequired={competencyState.requirement === 'required' || competencyState.requirement === 'skill_goal'}
+            />
+          ) : null;
+        })}
       </div>
     );
   };
 
-  const { isExactSkillMatch } = getMatchingSkillsCount();
-
-  const shouldShowExactMatch = (isExactSkillMatch || isExactMatch) && 
-    (selectedSkills.length > 0 || selectedJobTitle.length > 0);
-
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
-      shouldShowExactMatch ? 'bg-blue-50/50' : ''
+      isExactMatch ? 'bg-blue-50/50' : ''
     }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
@@ -112,7 +72,7 @@ export const EmployeeTableRow = ({
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
-            {shouldShowExactMatch && (
+            {isExactMatch && (
               <Badge 
                 variant="secondary" 
                 className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
@@ -135,7 +95,7 @@ export const EmployeeTableRow = ({
       <td className="px-4 py-4 w-[100px] text-sm">{roleId}</td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       {selectedSkills.length > 0 && (
-        <td className="px-4 py-4 w-[100px]">
+        <td className="px-4 py-4">
           {renderSkills()}
         </td>
       )}

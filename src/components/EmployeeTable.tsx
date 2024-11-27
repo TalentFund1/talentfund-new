@@ -27,7 +27,8 @@ export const getSkillProfileId = (role: string) => {
     "Engineering Manager": "126",
     "Data Engineer": "127",
     "DevOps Engineer": "128",
-    "Product Manager": "129"
+    "Product Manager": "129",
+    "Frontend Developer": "125"  // Alias for Frontend Engineer
   };
   
   const baseRole = role.split(":")[0].trim();
