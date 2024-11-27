@@ -1,3 +1,5 @@
+import { ChevronDown } from "lucide-react";
+
 interface EmployeeTableHeaderProps {
   onSelectAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isAllSelected: boolean;
@@ -24,11 +26,10 @@ export const EmployeeTableHeader = ({
       </th>
       <th className="h-12 px-4 text-left">
         <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
-          Employee Name
+          Employee Name <ChevronDown className="h-4 w-4" />
         </div>
       </th>
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Current Role</th>
-      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Role ID</th>
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Department</th>
       {hasSelectedSkills && (
         <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Match</th>
