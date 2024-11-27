@@ -81,35 +81,33 @@ export const BenchmarkMatrixFilters = ({
         className="w-full pr-8 hidden"
       />
 
-      <div className="hidden">
-        {selectedSearchSkills.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {selectedSearchSkills.map((skill, index) => (
-              <Badge 
-                key={index} 
-                variant="secondary"
-                className="flex items-center gap-1 bg-background"
-              >
-                {skill}
-                <button
-                  onClick={() => removeSearchSkill(skill)}
-                  className="ml-1 hover:text-destructive"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            ))}
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={clearSearch}
-              className="text-sm"
+      {selectedSearchSkills && selectedSearchSkills.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {selectedSearchSkills.map((skill, index) => (
+            <Badge 
+              key={index} 
+              variant="secondary"
+              className="flex items-center gap-1 bg-background"
             >
-              Clear All
-            </Button>
-          </div>
-        )}
-      </div>
+              {skill}
+              <button
+                onClick={() => removeSearchSkill(skill)}
+                className="ml-1 hover:text-destructive"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          ))}
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={clearSearch}
+            className="text-sm"
+          >
+            Clear All
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
