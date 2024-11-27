@@ -10,7 +10,6 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useNavigate } from "react-router-dom";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 export const AddEmployeeDialog = () => {
   const { toast } = useToast();
@@ -18,6 +17,9 @@ export const AddEmployeeDialog = () => {
   const [open, setOpen] = useState(false);
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
   const employees = useEmployeeStore((state) => state.employees);
+  const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   
   const [formData, setFormData] = useState({
     id: "",
@@ -60,6 +62,17 @@ export const AddEmployeeDialog = () => {
       // Add employee to store
       addEmployee(newEmployee);
       console.log('Employee added to store:', newEmployee);
+
+      // Calculate initial benchmark
+      const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+        [newEmployee],
+        [formData.role],
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
+
+      console.log('Initial benchmark calculation:', employeesWithBenchmarks);
 
       toast({
         title: "Success",
@@ -119,27 +132,25 @@ export const AddEmployeeDialog = () => {
       <DialogTrigger asChild>
         <Button>Add Employee</Button>
       </DialogTrigger>
-      <ToggledSkillsProvider>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Create Employee Profile</DialogTitle>
-            <DialogDescription>
-              Fill in the employee details below to create a new profile.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <EmployeeFormFields 
-              formData={formData}
-              handleInputChange={handleInputChange}
-            />
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Create Employee Profile</DialogTitle>
+          <DialogDescription>
+            Fill in the employee details below to create a new profile.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <EmployeeFormFields 
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
 
-            <div className="flex justify-end">
-              <Button type="submit">Create Profile</Button>
-            </div>
-          </form>
-        </DialogContent>
-      </ToggledSkillsProvider>
+          <div className="flex justify-end">
+            <Button type="submit">Create Profile</Button>
+          </div>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 };

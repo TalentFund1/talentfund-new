@@ -27,8 +27,6 @@ export const SkillProfileMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
-  console.log('Current toggled skills:', Array.from(toggledSkills));
-
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
     if (newToggledSkills.has(skillTitle)) {
@@ -66,8 +64,6 @@ export const SkillProfileMatrix = () => {
 
   const filteredSkills = (() => {
     let skills = [];
-    
-    // Get skills based on skill type
     if (skillType === "all") {
       skills = [
         ...currentRoleSkills.specialized,
@@ -82,9 +78,6 @@ export const SkillProfileMatrix = () => {
       skills = currentRoleSkills.certifications;
     }
 
-    console.log('Initial filtered skills:', skills.map(s => s.title));
-
-    // Filter skills based on category and role
     let sortedSkills = skills.filter(skill => {
       const isInCurrentRole = [
         ...currentRoleSkills.specialized,
@@ -102,8 +95,6 @@ export const SkillProfileMatrix = () => {
 
       return isInCurrentRole;
     });
-
-    console.log('Category filtered skills:', sortedSkills.map(s => s.title));
 
     // Sort skills based on toggle state first
     sortedSkills.sort((a, b) => {
@@ -140,7 +131,6 @@ export const SkillProfileMatrix = () => {
       sortedSkills = toggleSortedSkills;
     }
 
-    console.log('Final sorted and filtered skills:', sortedSkills.map(s => s.title));
     return sortedSkills;
   })();
 
