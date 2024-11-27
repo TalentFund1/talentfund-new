@@ -19,10 +19,6 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   
   console.log('BenchmarkAnalysis - Re-rendering with toggledSkills:', Array.from(toggledSkills));
 
-  useEffect(() => {
-    console.log('BenchmarkAnalysis - toggledSkills changed:', Array.from(toggledSkills));
-  }, [toggledSkills]);
-
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   
