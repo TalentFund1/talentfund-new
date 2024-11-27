@@ -7,7 +7,6 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
-import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 
@@ -26,6 +25,8 @@ export const SkillProfileMatrix = () => {
   const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
+
+  console.log('Current toggled skills:', Array.from(toggledSkills));
 
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
@@ -64,6 +65,8 @@ export const SkillProfileMatrix = () => {
 
   const filteredSkills = (() => {
     let skills = [];
+    
+    // Get skills based on skill type
     if (skillType === "all") {
       skills = [
         ...currentRoleSkills.specialized,
@@ -78,6 +81,9 @@ export const SkillProfileMatrix = () => {
       skills = currentRoleSkills.certifications;
     }
 
+    console.log('Initial filtered skills:', skills.map(s => s.title));
+
+    // Filter skills based on category and role
     let sortedSkills = skills.filter(skill => {
       const isInCurrentRole = [
         ...currentRoleSkills.specialized,
@@ -85,16 +91,10 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
-      // Apply category filter
-      if (selectedCategory !== 'all') {
-        const skillCategory = getCategoryForSkill(skill, id || "123");
-        if (skillCategory !== selectedCategory) {
-          return false;
-        }
-      }
-
       return isInCurrentRole;
     });
+
+    console.log('Category filtered skills:', sortedSkills.map(s => s.title));
 
     // Sort skills based on toggle state first
     sortedSkills.sort((a, b) => {
@@ -131,18 +131,29 @@ export const SkillProfileMatrix = () => {
       sortedSkills = toggleSortedSkills;
     }
 
+    console.log('Final sorted and filtered skills:', sortedSkills.map(s => s.title));
     return sortedSkills;
   })();
 
-  const skillCounts = calculateSkillCounts(id || "123");
-  const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
-    filteredSkills.some(fs => fs.title === skill)
-  ).length;
+  const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
+    return skills.filter(skill => toggledSkills.has(skill.title)).length;
+  };
+
+  const skillCounts = {
+    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
+    common: getToggledSkillsCount(currentRoleSkills.common || []),
+    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
+    all: getToggledSkillsCount([
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ])
+  };
 
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <SkillMappingHeader skillCount={toggledSkillCount} />
+        <SkillMappingHeader skillCount={skillCounts.all} />
         
         <Separator className="my-4" />
 

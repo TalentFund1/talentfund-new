@@ -1,5 +1,5 @@
 import { Employee } from "../types/employeeTypes";
-import { getBaseRole, getLevel } from "../EmployeeTable";
+import { getBaseRole, getLevel, getSkillProfileId } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],
@@ -28,8 +28,16 @@ export const filterEmployees = (
 
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
+
+    // Match by role ID instead of exact role name
+    const matchesJobTitle = selectedJobTitle.length === 0 || 
+      selectedJobTitle.some(title => {
+        const titleRoleId = getSkillProfileId(title);
+        const employeeRoleId = getSkillProfileId(employee.role);
+        console.log(`Comparing role IDs - Title: ${titleRoleId}, Employee: ${employeeRoleId}`);
+        return titleRoleId === employeeRoleId;
+      });
     
-    // Remove exact role match requirement to allow partial matches
     const matchesLevel = selectedLevel.length === 0 || 
       selectedLevel.includes(getLevel(employee.role));
 
@@ -41,9 +49,6 @@ export const filterEmployees = (
 
     const matchesManager = selectedManager.length === 0 ||
       (employee.manager && selectedManager.includes(employee.manager));
-
-    // If job title is selected, we'll handle matching in the sorter
-    const matchesJobTitle = selectedJobTitle.length === 0 || true;
 
     return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
            matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
