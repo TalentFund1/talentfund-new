@@ -6,7 +6,7 @@ import { roleSkills } from "../data/roleSkills";
 interface SkillCompetencyState {
   level: string;
   required: string;
-  requirement?: string; // Added this property
+  requirement?: string;
 }
 
 export const useCompetencyStateReader = () => {
@@ -14,11 +14,21 @@ export const useCompetencyStateReader = () => {
   const { toggledSkills } = useToggledSkills();
   const { id: roleId } = useParams<{ id: string }>();
 
+  const normalizeLevel = (level: string): string => {
+    return level.toLowerCase().trim();
+  };
+
   const getDefaultState = (skillName: string): SkillCompetencyState => {
-    if (!roleId) return { level: 'advanced', required: 'required' };
+    if (!roleId) {
+      console.log('No role ID provided, using default state');
+      return { level: 'advanced', required: 'required' };
+    }
 
     const roleData = roleSkills[roleId as keyof typeof roleSkills];
-    if (!roleData) return { level: 'advanced', required: 'required' };
+    if (!roleData) {
+      console.log('No role data found for role:', roleId);
+      return { level: 'advanced', required: 'required' };
+    }
 
     const allSkills = [
       ...roleData.specialized,
@@ -27,6 +37,8 @@ export const useCompetencyStateReader = () => {
     ];
 
     const skillData = allSkills.find(skill => skill.title === skillName);
+    console.log('Found skill data:', { skillName, skillData });
+    
     return {
       level: skillData?.level || 'advanced',
       required: skillData?.requirement || 'required'
@@ -52,11 +64,23 @@ export const useCompetencyStateReader = () => {
       return getDefaultState(skillName);
     }
 
-    const normalizedLevelKey = levelKey.toLowerCase();
+    const normalizedLevelKey = normalizeLevel(levelKey);
     const levelState = roleStates[skillName][normalizedLevelKey];
 
     if (!levelState) {
       console.log('No level state found for skill:', { skillName, levelKey: normalizedLevelKey });
+      // Try to find a matching level if exact match not found
+      const availableLevels = Object.keys(roleStates[skillName]);
+      const matchingLevel = availableLevels.find(level => 
+        normalizeLevel(level).includes(normalizedLevelKey) || 
+        normalizedLevelKey.includes(normalizeLevel(level))
+      );
+
+      if (matchingLevel) {
+        console.log('Found matching level:', matchingLevel);
+        return roleStates[skillName][matchingLevel];
+      }
+
       return getDefaultState(skillName);
     }
 
