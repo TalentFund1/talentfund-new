@@ -1,4 +1,6 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
+import { useTrack } from '../skills/context/TrackContext';
+import { getSkillProfileId } from '../EmployeeTable';
 
 interface LevelFilterProps {
   onLevelChange: (level: string[]) => void;
@@ -7,8 +9,21 @@ interface LevelFilterProps {
 }
 
 export const LevelFilter = ({ onLevelChange, selectedLevel, selectedJobTitle }: LevelFilterProps) => {
-  const isManagerialTrack = selectedJobTitle.length > 0 && 
-    selectedJobTitle[0].toLowerCase().includes('manager');
+  const { getTrackForRole } = useTrack();
+  
+  const getTrackForJobTitle = () => {
+    if (selectedJobTitle.length === 0) return "Professional";
+    const roleId = getSkillProfileId(selectedJobTitle[0]);
+    return getTrackForRole(roleId);
+  };
+
+  const isManagerialTrack = getTrackForJobTitle() === "Managerial";
+
+  console.log('LevelFilter - Track info:', {
+    selectedJobTitle,
+    track: getTrackForJobTitle(),
+    isManagerialTrack
+  });
 
   const getLevelsForTrack = () => {
     if (isManagerialTrack) {
