@@ -56,9 +56,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         const parsed = JSON.parse(savedSkills);
         const result: Record<string, Set<string>> = {};
         
+        // Convert arrays back to Sets
         Object.entries(parsed).forEach(([roleId, skills]) => {
           if (Array.isArray(skills)) {
             result[roleId] = new Set(skills);
+            console.log(`Restored ${skills.length} skills for role ${roleId}`);
           }
         });
         
