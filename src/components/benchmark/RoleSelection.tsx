@@ -66,15 +66,15 @@ export const RoleSelection = ({
         >
           <SelectTrigger className="w-[200px] bg-white">
             <SelectValue placeholder="Select Level">
-              {levels[selectedLevel.toLowerCase() as keyof typeof levels]} - {getLevelDescription(selectedLevel)}
+              {levels.find(l => l.value === selectedLevel.toLowerCase())?.label} - {getLevelDescription(selectedLevel)}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(levels).map(([id, title]) => (
-              <SelectItem key={id} value={id}>
+            {levels.map((level) => (
+              <SelectItem key={level.value} value={level.value}>
                 <span className="flex items-center justify-between w-full">
-                  <span>{title}</span>
-                  <span className="text-muted-foreground ml-2">- {getLevelDescription(id)}</span>
+                  <span>{level.label}</span>
+                  <span className="text-muted-foreground ml-2">- {getLevelDescription(level.value)}</span>
                 </span>
               </SelectItem>
             ))}

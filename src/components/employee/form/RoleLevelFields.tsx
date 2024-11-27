@@ -76,9 +76,9 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
             <SelectValue placeholder="Select level" />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(levelOptions).map(([key, value]) => (
-              <SelectItem key={key} value={key}>
-                {value} - {getLevelDescription(key)}
+            {levelOptions.map((level) => (
+              <SelectItem key={level.value} value={level.value}>
+                {level.label} - {getLevelDescription(level.value)}
               </SelectItem>
             ))}
           </SelectContent>
