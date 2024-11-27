@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
-  const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "");
   const { selectedRole, selectedLevel } = useRoleStore();
@@ -43,19 +42,13 @@ export const BenchmarkAnalysis = () => {
   // Update metrics whenever any relevant state changes
   useEffect(() => {
     console.log('Recalculating metrics due to state change:', {
-      toggledSkills: Array.from(toggledSkills),
       selectedLevel,
-      currentStates
+      currentStates,
+      totalSkills: allRoleSkills.length
     });
-    
-    // Get all toggled skills for the role
-    const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
-    const totalToggledSkills = toggledRoleSkills.length;
-
-    console.log('Filtered toggled skills:', toggledRoleSkills.map(s => s.title));
 
     // Match skills based on role profile skills
-    const matchingSkills = toggledRoleSkills.filter(roleSkill => {
+    const matchingSkills = allRoleSkills.filter(roleSkill => {
       const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
       return employeeSkill !== undefined;
     });
@@ -92,7 +85,7 @@ export const BenchmarkAnalysis = () => {
     });
 
     console.log('Metrics calculation:', {
-      total: totalToggledSkills,
+      total: allRoleSkills.length,
       matching: matchingSkills.length,
       competency: competencyMatchingSkills.length,
       skillGoal: skillGoalMatchingSkills.length
@@ -102,9 +95,9 @@ export const BenchmarkAnalysis = () => {
       matchingCount: matchingSkills.length,
       competencyCount: competencyMatchingSkills.length,
       skillGoalCount: skillGoalMatchingSkills.length,
-      totalSkills: totalToggledSkills
+      totalSkills: allRoleSkills.length
     });
-  }, [toggledSkills, selectedLevel, currentStates, employeeSkills, allRoleSkills, getSkillCompetencyState]);
+  }, [selectedLevel, currentStates, employeeSkills, allRoleSkills, getSkillCompetencyState]);
 
   // Calculate percentages based on current metrics
   const skillMatchPercentage = metrics.totalSkills > 0 ? (metrics.matchingCount / metrics.totalSkills) * 100 : 0;
