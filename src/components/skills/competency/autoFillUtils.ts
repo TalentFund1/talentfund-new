@@ -1,79 +1,48 @@
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
 
-interface SkillState {
-  level: string;
-  required: string;
-}
-
 export const generateSkillProgression = (
   skillName: string,
   category: string,
   track: "Professional" | "Managerial",
   roleId: string
-): Record<string, SkillState> => {
-  console.log(`Generating progression for ${skillName} in ${category} for ${track} track`);
+): Record<string, { level: string; required: string }> => {
+  console.log('Generating skill progression:', { skillName, category, track, roleId });
   
-  const levels = track === "Professional" ? Object.keys(professionalLevels) : Object.keys(managerialLevels);
-  const progression: Record<string, SkillState> = {};
+  const levels = track === "Professional" ? professionalLevels : managerialLevels;
+  const progression: Record<string, { level: string; required: string }> = {};
 
-  const getProgressionPattern = (category: string, skillName: string): string[] => {
-    const specializedPatterns = {
-      "123": {
-        "Machine Learning": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-        "Deep Learning": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"],
-        "Natural Language Processing": ["unspecified", "unspecified", "unspecified", "unspecified", "intermediate", "unspecified"],
-        "Computer Vision": ["unspecified", "unspecified", "unspecified", "unspecified", "advanced", "advanced"]
-      },
-      "124": {
-        "Node.js": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-        "Database Design": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-        "API Development": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-        "System Architecture": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"],
-        "Kubernetes": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"]
+  try {
+    // Generate progression based on skill category and track
+    Object.keys(levels).forEach((levelKey) => {
+      const normalizedKey = levelKey.toLowerCase();
+      let skillLevel: string;
+      let requirement: string;
+
+      // Determine skill level based on category and position in levels
+      if (category === "specialized") {
+        skillLevel = normalizedKey.includes("p5") || normalizedKey.includes("p6") ? "advanced" :
+                    normalizedKey.includes("p3") || normalizedKey.includes("p4") ? "intermediate" : "beginner";
+        requirement = "required";
+      } else if (category === "common") {
+        skillLevel = normalizedKey.includes("p4") || normalizedKey.includes("p5") ? "intermediate" :
+                    normalizedKey.includes("p6") ? "advanced" : "beginner";
+        requirement = "required";
+      } else {
+        skillLevel = normalizedKey.includes("p5") || normalizedKey.includes("p6") ? "advanced" :
+                    normalizedKey.includes("p4") ? "intermediate" : "beginner";
+        requirement = "preferred";
       }
-    };
 
-    const commonPatterns = {
-      "Problem Solving": ["intermediate", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-      "Technical Writing": ["beginner", "intermediate", "intermediate", "advanced", "advanced", "advanced"],
-      "Code Review": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"]
-    };
+      progression[normalizedKey] = {
+        level: skillLevel,
+        required: requirement
+      };
+    });
 
-    const certificationPatterns = {
-      "AWS Certified Solutions Architect": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"],
-      "TensorFlow Developer Certificate": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"],
-      "Kubernetes Administrator": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"]
-    };
-
-    if (category === "specialized" && specializedPatterns[roleId as keyof typeof specializedPatterns]?.[skillName]) {
-      return specializedPatterns[roleId as keyof typeof specializedPatterns][skillName];
-    }
-
-    if (category === "common" && commonPatterns[skillName]) {
-      return commonPatterns[skillName];
-    }
-
-    if (category === "certification" && certificationPatterns[skillName]) {
-      return certificationPatterns[skillName];
-    }
-
-    return ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"];
-  };
-
-  const pattern = getProgressionPattern(category, skillName);
-  
-  levels.forEach((level, index) => {
-    const currentLevel = pattern[index] || "unspecified";
-    const isRequired = currentLevel === "advanced" || 
-                      (currentLevel === "intermediate" && index > 1) ||
-                      (category === "specialized" && index > 1);
-    
-    progression[level.toLowerCase()] = {
-      level: currentLevel,
-      required: isRequired ? "required" : "preferred"
-    };
-  });
-
-  console.log(`Generated progression for ${skillName}:`, progression);
-  return progression;
+    console.log('Generated progression:', { skillName, progression });
+    return progression;
+  } catch (error) {
+    console.error('Error generating progression:', error);
+    throw new Error(`Failed to generate progression for ${skillName}`);
+  }
 };

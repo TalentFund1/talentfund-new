@@ -17,21 +17,19 @@ export const generateSkillsWithAI = async ({
   setSkillProgression,
   saveChanges,
 }: GenerateSkillsParams) => {
-  console.log("Starting AI generation for skills...", { currentRoleId, track });
+  console.log("Starting AI generation for skills...", { currentRoleId, track, toggledSkillsCount: toggledSkills.size });
 
   try {
+    if (!currentRoleId) {
+      throw new Error('No role ID provided');
+    }
+
     // Get current role skills
     const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
     if (!currentRoleSkills) {
       console.error('No skills found for current role:', currentRoleId);
       throw new Error('No skills found for current role');
     }
-
-    console.log('Found role skills:', {
-      specialized: currentRoleSkills.specialized?.length || 0,
-      common: currentRoleSkills.common?.length || 0,
-      certifications: currentRoleSkills.certifications?.length || 0
-    });
 
     const allSkills = [
       ...currentRoleSkills.specialized,
@@ -40,13 +38,13 @@ export const generateSkillsWithAI = async ({
     ].filter(skill => toggledSkills.has(skill.title));
 
     if (allSkills.length === 0) {
-      throw new Error('Please select at least one skill to generate levels for');
+      throw new Error('Please select at least one skill category to generate levels');
     }
 
     console.log('Processing skills generation for:', allSkills.map(s => s.title));
 
     // Generate progression for each skill
-    allSkills.forEach(skill => {
+    for (const skill of allSkills) {
       let category = "specialized";
       if (currentRoleSkills.common.some(s => s.title === skill.title)) {
         category = "common";
@@ -64,15 +62,20 @@ export const generateSkillsWithAI = async ({
       const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
       console.log('Generated progression:', { skill: skill.title, progression });
       
+      if (!progression || Object.keys(progression).length === 0) {
+        console.error('Failed to generate progression for skill:', skill.title);
+        continue;
+      }
+
       setSkillProgression(skill.title, progression);
-    });
+    }
 
     // Save changes to persist the generated progressions
     saveChanges();
 
     toast({
-      title: "Skills Generated",
-      description: "Skill levels have been automatically generated based on industry standards.",
+      title: "Skills Generated Successfully",
+      description: `Generated skill levels for ${allSkills.length} skills based on industry standards.`,
     });
 
     return true;
@@ -80,7 +83,7 @@ export const generateSkillsWithAI = async ({
     console.error("Error generating skills:", error);
     toast({
       title: "Generation Failed",
-      description: error instanceof Error ? error.message : "There was an error generating the skill levels. Please try again.",
+      description: error instanceof Error ? error.message : "Failed to generate skill levels. Please try again.",
       variant: "destructive",
     });
     return false;
