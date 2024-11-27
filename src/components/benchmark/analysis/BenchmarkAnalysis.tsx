@@ -48,7 +48,15 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     console.log('Toggled role skills:', toggledRoleSkills.map(s => s.title));
     const totalToggledSkills = toggledRoleSkills.length;
 
-    console.log('Total toggled skills:', totalToggledSkills);
+    if (totalToggledSkills === 0) {
+      console.log('No toggled skills found, setting all metrics to 0');
+      setMetrics({
+        skillMatch: { current: 0, total: 0 },
+        competencyMatch: { current: 0, total: 0 },
+        skillGoals: { current: 0, total: 0 }
+      });
+      return;
+    }
 
     // Match skills based on employee skills
     const matchingSkills = toggledRoleSkills.filter(roleSkill => {
