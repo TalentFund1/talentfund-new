@@ -154,7 +154,6 @@ export const BenchmarkSkillsMatrix = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
-        // Only trigger if we haven't shown all items yet
         if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
           setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
         }
