@@ -7,6 +7,7 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
+import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 
@@ -91,6 +92,14 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
+      // Apply category filter
+      if (selectedCategory !== 'all') {
+        const skillCategory = getCategoryForSkill(skill, id || "123");
+        if (skillCategory !== selectedCategory) {
+          return false;
+        }
+      }
+
       return isInCurrentRole;
     });
 
@@ -135,25 +144,15 @@ export const SkillProfileMatrix = () => {
     return sortedSkills;
   })();
 
-  const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
-    return skills.filter(skill => toggledSkills.has(skill.title)).length;
-  };
-
-  const skillCounts = {
-    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
-    common: getToggledSkillsCount(currentRoleSkills.common || []),
-    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
-    all: getToggledSkillsCount([
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ])
-  };
+  const skillCounts = calculateSkillCounts(id || "123");
+  const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
+    filteredSkills.some(fs => fs.title === skill)
+  ).length;
 
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <SkillMappingHeader skillCount={skillCounts.all} />
+        <SkillMappingHeader skillCount={toggledSkillCount} />
         
         <Separator className="my-4" />
 
