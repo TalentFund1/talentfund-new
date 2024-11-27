@@ -12,9 +12,9 @@ export const BenchmarkAnalysisCard = ({
   skillGoals 
 }: BenchmarkAnalysisCardProps) => {
   // Calculate individual percentages
-  const skillMatchPercentage = Math.round((skillMatch.current / skillMatch.total) * 100);
-  const competencyMatchPercentage = Math.round((competencyMatch.current / competencyMatch.total) * 100);
-  const skillGoalMatchPercentage = Math.round((skillGoals.current / skillGoals.total) * 100);
+  const skillMatchPercentage = skillMatch.total > 0 ? Math.round((skillMatch.current / skillMatch.total) * 100) : 0;
+  const competencyMatchPercentage = competencyMatch.total > 0 ? Math.round((competencyMatch.current / competencyMatch.total) * 100) : 0;
+  const skillGoalMatchPercentage = skillGoals.total > 0 ? Math.round((skillGoals.current / skillGoals.total) * 100) : 0;
 
   // Calculate average percentage
   const averagePercentage = Math.round(
