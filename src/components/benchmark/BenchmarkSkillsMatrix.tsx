@@ -11,6 +11,8 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixContent } from "./skills-matrix/BenchmarkSkillsMatrixContent";
+import { CompetencyGraph } from "../skills/CompetencyGraph";
+import { Separator } from "@/components/ui/separator";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -195,6 +197,12 @@ export const BenchmarkSkillsMatrix = () => {
           visibleItems={visibleItems}
           observerTarget={observerTarget}
         />
+      </Card>
+
+      <Separator className="my-8" />
+
+      <Card className="p-6 bg-white">
+        <CompetencyGraph roleId={selectedRole} />
       </Card>
     </div>
   );
