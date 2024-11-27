@@ -13,7 +13,6 @@ import MarketData from "./pages/MarketData";
 import TalentMarketplace from "./pages/TalentMarketplace";
 
 const App = () => {
-  // Move QueryClient instantiation inside the component
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
