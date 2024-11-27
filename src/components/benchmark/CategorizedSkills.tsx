@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
 import { useState, useEffect, useMemo } from "react";
 
@@ -16,29 +17,35 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Memoize filtered role skills based on toggledSkills
-  const filteredRoleSkills = useMemo(() => {
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    return allSkills.filter(skill => toggledSkills.has(skill.title));
-  }, [currentRoleSkills, toggledSkills]);
-
-  // Log state changes for debugging
+  // Log initial state and changes for debugging
   useEffect(() => {
     console.log('CategorizedSkills - State Update:', {
       roleId,
-      toggledSkillsCount: toggledSkills.size,
+      employeeId,
+      selectedLevel,
       toggledSkills: Array.from(toggledSkills),
-      filteredSkillsCount: filteredRoleSkills.length,
-      filteredSkills: filteredRoleSkills.map(s => s.title)
+      currentRoleSkills
     });
-  }, [roleId, toggledSkills, filteredRoleSkills]);
+  }, [roleId, employeeId, selectedLevel, toggledSkills, currentRoleSkills]);
+
+  // Memoize filtered role skills to prevent unnecessary recalculations
+  const allRoleSkills = useMemo(() => {
+    const skills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ].filter(skill => toggledSkills.has(skill.title));
+
+    console.log('Filtered toggled skills:', {
+      total: skills.length,
+      skills: skills.map(s => s.title)
+    });
+
+    return skills;
+  }, [currentRoleSkills, toggledSkills]);
 
   const filterSkillsByCategory = (skills: any[]) => {
     if (selectedCategory === "all") return skills;
@@ -64,8 +71,9 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     return priorities[level.toLowerCase()] ?? 0;
   };
 
+  // Memoize filtered skills to prevent unnecessary recalculations
   const { requiredSkills, preferredSkills, missingSkills } = useMemo(() => {
-    const required = filterSkillsByCategory(filteredRoleSkills
+    const required = filterSkillsByCategory(allRoleSkills
       .filter(skill => {
         const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
         return competencyState?.required === 'required';
@@ -73,10 +81,10 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
       .sort((a, b) => {
         const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
         const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
-        return getLevelPriority(bState?.level) - getLevelPriority(aState?.level);
+        return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
       }));
 
-    const preferred = filterSkillsByCategory(filteredRoleSkills
+    const preferred = filterSkillsByCategory(allRoleSkills
       .filter(skill => {
         const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
         return competencyState?.required === 'preferred' && 
@@ -85,23 +93,22 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
       .sort((a, b) => {
         const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
         const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
-        return getLevelPriority(bState?.level) - getLevelPriority(aState?.level);
+        return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
       }));
 
-    const missing = filterSkillsByCategory(filteredRoleSkills
+    const missing = filterSkillsByCategory(allRoleSkills
       .filter(skill => {
-        const hasSkill = required.some(req => req.title === skill.title) || 
-                        preferred.some(pref => pref.title === skill.title);
+        const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
         return !hasSkill;
       })
       .sort((a, b) => {
         const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
         const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
-        return getLevelPriority(bState?.level) - getLevelPriority(aState?.level);
+        return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
       }));
 
     console.log('Skills Summary:', {
-      total: filteredRoleSkills.length,
+      total: allRoleSkills.length,
       required: required.length,
       preferred: preferred.length,
       missing: missing.length,
@@ -111,7 +118,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     });
 
     return { requiredSkills: required, preferredSkills: preferred, missingSkills: missing };
-  }, [filteredRoleSkills, selectedCategory, selectedLevel, getSkillCompetencyState]);
+  }, [allRoleSkills, selectedLevel, selectedCategory, employeeSkills, getSkillCompetencyState]);
 
   const getLevelColor = (skillTitle: string) => {
     const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase());
