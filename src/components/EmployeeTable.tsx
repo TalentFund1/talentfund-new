@@ -8,7 +8,6 @@ import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
-import { calculateEmployeeBenchmarks } from "./employee/EmployeeBenchmarkCalculator";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 
@@ -82,20 +81,9 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
-  // Calculate benchmark percentages for each employee
-  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
-    employees,
-    selectedJobTitle,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
-  );
-
-  console.log('Employees with benchmarks:', employeesWithBenchmarks);
-
   // Filter employees based on all criteria including skills and employee search
   const preFilteredEmployees = filterEmployees(
-    employeesWithBenchmarks,
+    employees,
     selectedEmployees,
     selectedDepartment,
     selectedJobTitle,
@@ -113,7 +101,7 @@ export const EmployeeTable = ({
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
-  // Sort employees by role match and benchmark percentage
+  // Sort employees by role match
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     selectedJobTitle,
@@ -139,7 +127,7 @@ export const EmployeeTable = ({
           <tbody>
             {filteredEmployees.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center py-4 text-muted-foreground">
+                <td colSpan={6} className="text-center py-4 text-muted-foreground">
                   No employees found
                 </td>
               </tr>
@@ -162,5 +150,3 @@ export const EmployeeTable = ({
     </div>
   );
 };
-
-
