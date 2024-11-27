@@ -40,6 +40,7 @@ const Employees = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [selectedManager, setSelectedManager] = useState<string[]>([]);
+  const [selectedRoleId, setSelectedRoleId] = useState<string[]>([]);
   
   const employees = useEmployeeStore((state) => state.employees);
 
@@ -53,7 +54,8 @@ const Employees = () => {
     selectedOffice,
     selectedEmploymentType,
     selectedSkills,
-    selectedManager
+    selectedManager,
+    selectedRoleId
   );
 
   // Apply skills filter
@@ -118,6 +120,8 @@ const Employees = () => {
                 selectedEmployees={selectedEmployees}
                 onManagerChange={setSelectedManager}
                 selectedManager={selectedManager}
+                onRoleTitleChange={setSelectedRoleId}
+                selectedRoleTitle={selectedRoleId}
               />
             </Card>
 
