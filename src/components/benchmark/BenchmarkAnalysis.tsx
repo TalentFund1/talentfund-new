@@ -19,14 +19,13 @@ export const BenchmarkAnalysis = () => {
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
-  // Add state to track metrics
   const [metrics, setMetrics] = useState({
     matchingCount: 0,
     competencyCount: 0,
     skillGoalCount: 0,
     totalSkills: 0
   });
-  
+
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   
   if (!currentRoleSkills) {
@@ -43,11 +42,13 @@ export const BenchmarkAnalysis = () => {
 
   // Update metrics whenever toggledSkills changes
   useEffect(() => {
-    console.log('Recalculating metrics due to toggledSkills change');
+    console.log('Recalculating metrics due to toggledSkills change:', Array.from(toggledSkills));
     
     // Get all toggled skills for the role
     const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
     const totalToggledSkills = toggledRoleSkills.length;
+
+    console.log('Filtered toggled skills:', toggledRoleSkills.map(s => s.title));
 
     // Match skills based on role profile skills
     const matchingSkills = toggledRoleSkills.filter(roleSkill => {
@@ -116,8 +117,11 @@ export const BenchmarkAnalysis = () => {
       <Card className="p-8 bg-white space-y-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold text-foreground">
+            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
               Benchmark Analysis
+              <span className="bg-[#ECFDF3] text-[#027A48] rounded-full px-3 py-1.5 text-sm font-medium">
+                {averagePercentage}%
+              </span>
             </h2>
             <p className="text-sm text-muted-foreground">
               Manage and track employee skills and competencies
@@ -136,8 +140,42 @@ export const BenchmarkAnalysis = () => {
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-[#1F2144] rounded-full" 
+                  className="h-full bg-[#1F2144] rounded-full transition-all duration-300" 
                   style={{ width: `${skillMatchPercentage}%` }} 
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Competency Match</span>
+                <span className="text-sm text-foreground">
+                  {metrics.competencyCount} out of {metrics.totalSkills}
+                </span>
+              </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full transition-all duration-300" 
+                  style={{ width: `${competencyMatchPercentage}%` }} 
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Skill Goal Match</span>
+                <span className="text-sm text-foreground">
+                  {metrics.skillGoalCount} out of {metrics.totalSkills}
+                </span>
+              </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full transition-all duration-300" 
+                  style={{ width: `${skillGoalMatchPercentage}%` }} 
                 />
               </div>
             </div>
