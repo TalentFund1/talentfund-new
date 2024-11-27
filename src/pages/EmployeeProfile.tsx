@@ -15,10 +15,8 @@ import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { getSkillProfileId } from "@/components/EmployeeTable";
-import { getEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
 
 const employeeImages = {
   "123": "photo-1488590528505-98d2b5aba04b",
@@ -33,13 +31,6 @@ const EmployeeProfile = () => {
   const { toast } = useToast();
   const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
   const employee = getEmployeeById(id || "");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("all");
-  const [selectedInterest, setSelectedInterest] = useState("all");
-  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
-  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
-  const [visibleItems, setVisibleItems] = useState(10);
-  const observerTarget = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!employee) {
@@ -54,7 +45,7 @@ const EmployeeProfile = () => {
   }, [employee, navigate, toast]);
 
   if (!employee) {
-    return null;
+    return null; // Return null while redirecting
   }
 
   const employeeData = {
@@ -88,8 +79,6 @@ const EmployeeProfile = () => {
 
   const currentIndex = useEmployeeStore.getState().employees.findIndex(emp => emp.id === id) + 1;
   const totalEmployees = useEmployeeStore.getState().employees.length;
-  const roleId = getSkillProfileId(employee.role);
-  const filteredSkills = getEmployeeSkills(id || "");
 
   console.log('Employee Profile Data:', {
     id,
@@ -162,24 +151,7 @@ const EmployeeProfile = () => {
                     <Card className="p-8 bg-white">
                       <RoleBenchmark />
                     </Card>
-                    <BenchmarkSkillsMatrix 
-                      roleId={roleId}
-                      employeeId={id || ""}
-                      roleLevel={employee.role.split(":")[1]?.trim().toLowerCase() || "p4"}
-                      filteredSkills={filteredSkills}
-                      searchTerm={searchTerm}
-                      setSearchTerm={setSearchTerm}
-                      selectedLevel={selectedLevel}
-                      setSelectedLevel={setSelectedLevel}
-                      selectedInterest={selectedInterest}
-                      setSelectedInterest={setSelectedInterest}
-                      selectedSkillLevel={selectedSkillLevel}
-                      setSelectedSkillLevel={setSelectedSkillLevel}
-                      selectedSearchSkills={selectedSearchSkills}
-                      setSelectedSearchSkills={setSelectedSearchSkills}
-                      visibleItems={visibleItems}
-                      observerTarget={observerTarget}
-                    />
+                    <BenchmarkSkillsMatrix />
                   </SelectedSkillsProvider>
                 </BenchmarkSearchProvider>
               </TabsContent>
