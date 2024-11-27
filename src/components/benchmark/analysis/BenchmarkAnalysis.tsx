@@ -48,9 +48,9 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     console.log('No toggled skills found, showing empty state');
     return (
       <BenchmarkAnalysisCard 
-        skillMatch={{ current: 0, total: 0 }}
-        competencyMatch={{ current: 0, total: 0 }}
-        skillGoals={{ current: 0, total: 0 }}
+        skillMatch={{ current: 0, total: totalToggledSkills }}
+        competencyMatch={{ current: 0, total: totalToggledSkills }}
+        skillGoals={{ current: 0, total: totalToggledSkills }}
       />
     );
   }
