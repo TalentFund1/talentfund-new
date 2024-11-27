@@ -6,6 +6,7 @@ import { roleSkills } from "../data/roleSkills";
 interface SkillCompetencyState {
   level: string;
   required: string;
+  requirement?: string; // Added this property
 }
 
 export const useCompetencyStateReader = () => {
@@ -51,7 +52,6 @@ export const useCompetencyStateReader = () => {
       return getDefaultState(skillName);
     }
 
-    // Normalize level key to lowercase for consistency
     const normalizedLevelKey = levelKey.toLowerCase();
     const levelState = roleStates[skillName][normalizedLevelKey];
 

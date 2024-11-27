@@ -8,10 +8,11 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useEffect } from "react";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "");
   const { selectedRole, selectedLevel } = useRoleStore();
@@ -19,16 +20,52 @@ export const BenchmarkAnalysis = () => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  
+  useEffect(() => {
+    if (!currentRoleSkills) {
+      console.error('No role skills found for role:', selectedRole);
+      return;
+    }
+
+    // Get all skills for the role
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    // Initialize toggledSkills with all role skills
+    const initialToggledSkills = new Set(allRoleSkills.map(skill => skill.title));
+    setToggledSkills(initialToggledSkills);
+
+    console.log('Initialized toggled skills:', {
+      roleId: selectedRole,
+      level: selectedLevel,
+      skills: Array.from(initialToggledSkills)
+    });
+  }, [selectedRole, selectedLevel, currentRoleSkills, setToggledSkills]);
+
   if (!currentRoleSkills) {
     console.error('No role skills found for role:', selectedRole);
     return null;
   }
-  
-  const toggledRoleSkills = [
+
+  // Get all skills for the role
+  const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
+  ];
+
+  // Get all toggled skills for the role
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+
+  console.log('Toggled skills for role:', {
+    roleId: selectedRole,
+    level: selectedLevel,
+    count: toggledRoleSkills.length,
+    skills: toggledRoleSkills.map(s => s.title)
+  });
 
   // Match skills based on role profile skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
@@ -57,7 +94,7 @@ export const BenchmarkAnalysis = () => {
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    return employeePriority === rolePriority || employeePriority > rolePriority;
+    return employeePriority >= rolePriority;
   });
 
   // Skill Goal Match calculation
@@ -67,15 +104,15 @@ export const BenchmarkAnalysis = () => {
     return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
   });
 
-  const totalSkillsCount = toggledRoleSkills.length;
+  const totalToggledSkills = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const competencyMatchCount = competencyMatchingSkills.length;
   const skillGoalMatchCount = skillGoalMatchingSkills.length;
 
-  // Calculate individual percentages
-  const skillMatchPercentage = (matchingSkillsCount / totalSkillsCount) * 100;
-  const competencyMatchPercentage = (competencyMatchCount / totalSkillsCount) * 100;
-  const skillGoalMatchPercentage = (skillGoalMatchCount / totalSkillsCount) * 100;
+  // Calculate individual percentages based on toggled skills
+  const skillMatchPercentage = totalToggledSkills > 0 ? (matchingSkillsCount / totalToggledSkills) * 100 : 0;
+  const competencyMatchPercentage = totalToggledSkills > 0 ? (competencyMatchCount / totalToggledSkills) * 100 : 0;
+  const skillGoalMatchPercentage = totalToggledSkills > 0 ? (skillGoalMatchCount / totalToggledSkills) * 100 : 0;
 
   // Calculate average percentage
   const averagePercentage = Math.round(
@@ -83,6 +120,7 @@ export const BenchmarkAnalysis = () => {
   );
 
   console.log('Benchmark Analysis Calculation:', {
+    totalToggled: totalToggledSkills,
     skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
     competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
     skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
@@ -109,7 +147,7 @@ export const BenchmarkAnalysis = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Match</span>
                 <span className="text-sm text-foreground">
-                  {matchingSkillsCount} out of {totalSkillsCount}
+                  {matchingSkillsCount} out of {totalToggledSkills}
                 </span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">

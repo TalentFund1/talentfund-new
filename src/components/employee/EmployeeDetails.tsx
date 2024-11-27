@@ -2,6 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Link } from "react-router-dom";
+import { getSkillProfileId } from "../EmployeeTable";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -12,6 +13,7 @@ interface EmployeeDetailsProps {
     startDate: string;
     termDate: string;
     tenure: string;
+    role: string;
   };
   id: string;
 }
@@ -33,6 +35,7 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const tenure = calculateTenure(employee.startDate, employee.termDate === "-" ? null : employee.termDate);
   const employeeSkills = getEmployeeSkills(id);
   const totalSkills = employeeSkills.length;
+  const roleId = getSkillProfileId(employee.role);
 
   console.log(`Employee ${id} has ${totalSkills} skills:`, employeeSkills);
 
@@ -78,6 +81,10 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Skill Count</span>
           <p className="font-medium text-gray-900">{totalSkills}</p>
+        </div>
+        <div className="space-y-1">
+          <span className="text-sm text-gray-500">Role ID</span>
+          <p className="font-medium text-gray-900">{roleId}</p>
         </div>
       </div>
     </>
