@@ -27,8 +27,8 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   const employeeSkills = getEmployeeSkills(employeeId);
   console.log('Employee skills loaded for comparison:', employeeSkills);
 
-  // Get skills for the selected role from dropdown
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  // Get skills for the selected role from dropdown (not employee's role)
+  const currentRoleSkills = roleSkills[selectedRole];
   if (!currentRoleSkills) {
     console.error('No role skills found for selected role:', selectedRole);
     return null;
