@@ -16,64 +16,79 @@ export const generateSkillProgression = (
   const levels = track === "Professional" ? Object.keys(professionalLevels) : Object.keys(managerialLevels);
   const progression: Record<string, SkillState> = {};
 
-  const getProgressionPattern = (category: string, skillName: string): string[] => {
-    const specializedPatterns = {
-      "123": {
-        "Machine Learning": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-        "Deep Learning": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"],
-        "Natural Language Processing": ["unspecified", "unspecified", "unspecified", "unspecified", "intermediate", "unspecified"],
-        "Computer Vision": ["unspecified", "unspecified", "unspecified", "unspecified", "advanced", "advanced"]
-      },
-      "124": {
-        "Node.js": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-        "Database Design": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-        "API Development": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-        "System Architecture": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"],
-        "Kubernetes": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"]
-      }
+  // Helper function to determine skill importance
+  const getSkillImportance = (skillName: string, category: string, roleId: string): number => {
+    // Core skills that are fundamental to any role
+    const coreSkills = ["Problem Solving", "Technical Writing", "Code Review"];
+    
+    // Role-specific critical skills
+    const criticalSkillsByRole: Record<string, string[]> = {
+      "123": ["Machine Learning", "Deep Learning", "Natural Language Processing"], // AI Engineer
+      "124": ["Node.js", "Database Design", "API Development"], // Backend Engineer
+      "125": ["React", "TypeScript", "Next.js"], // Frontend Engineer
+      "126": ["System Design", "Technical Architecture", "Team Leadership"] // Engineering Manager
     };
 
-    const commonPatterns = {
-      "Problem Solving": ["intermediate", "intermediate", "advanced", "advanced", "advanced", "advanced"],
-      "Technical Writing": ["beginner", "intermediate", "intermediate", "advanced", "advanced", "advanced"],
-      "Code Review": ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"]
-    };
-
-    const certificationPatterns = {
-      "AWS Certified Solutions Architect": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"],
-      "TensorFlow Developer Certificate": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"],
-      "Kubernetes Administrator": ["unspecified", "beginner", "intermediate", "advanced", "advanced", "advanced"]
-    };
-
-    if (category === "specialized" && specializedPatterns[roleId as keyof typeof specializedPatterns]?.[skillName]) {
-      return specializedPatterns[roleId as keyof typeof specializedPatterns][skillName];
-    }
-
-    if (category === "common" && commonPatterns[skillName]) {
-      return commonPatterns[skillName];
-    }
-
-    if (category === "certification" && certificationPatterns[skillName]) {
-      return certificationPatterns[skillName];
-    }
-
-    return ["beginner", "intermediate", "advanced", "advanced", "advanced", "advanced"];
+    if (coreSkills.includes(skillName)) return 3; // Core skills
+    if (criticalSkillsByRole[roleId]?.includes(skillName)) return 4; // Role-critical skills
+    if (category === "specialized") return 2; // Specialized but not critical
+    if (category === "certification") return 1; // Certifications
+    return 0; // Common skills
   };
 
-  const pattern = getProgressionPattern(category, skillName);
-  
+  const importance = getSkillImportance(skillName, category, roleId);
+  console.log(`Skill importance for ${skillName}: ${importance}`);
+
+  // Generate progression based on importance and level
   levels.forEach((level, index) => {
-    const currentLevel = pattern[index] || "unspecified";
-    const isRequired = currentLevel === "advanced" || 
-                      (currentLevel === "intermediate" && index > 1) ||
-                      (category === "specialized" && index > 1);
+    let skillLevel: string;
+    let requirement: string;
+
+    // Determine skill level based on importance and career stage
+    switch (importance) {
+      case 4: // Role-critical skills
+        if (index <= 1) skillLevel = "beginner";
+        else if (index <= 3) skillLevel = "intermediate";
+        else skillLevel = "advanced";
+        requirement = index >= 2 ? "required" : "preferred";
+        break;
+
+      case 3: // Core skills
+        if (index === 0) skillLevel = "beginner";
+        else if (index <= 2) skillLevel = "intermediate";
+        else skillLevel = "advanced";
+        requirement = index >= 3 ? "required" : "preferred";
+        break;
+
+      case 2: // Specialized skills
+        if (index <= 2) skillLevel = "unspecified";
+        else if (index <= 4) skillLevel = "intermediate";
+        else skillLevel = "advanced";
+        requirement = index >= 4 ? "required" : "preferred";
+        break;
+
+      case 1: // Certifications
+        if (index <= 3) skillLevel = "unspecified";
+        else if (index === 4) skillLevel = "intermediate";
+        else skillLevel = "advanced";
+        requirement = index >= 5 ? "required" : "preferred";
+        break;
+
+      default: // Common skills
+        if (index <= 1) skillLevel = "unspecified";
+        else if (index <= 3) skillLevel = "beginner";
+        else if (index <= 4) skillLevel = "intermediate";
+        else skillLevel = "advanced";
+        requirement = index >= 5 ? "required" : "preferred";
+    }
+
+    console.log(`Generated level for ${skillName} at ${level}: ${skillLevel} (${requirement})`);
     
     progression[level.toLowerCase()] = {
-      level: currentLevel,
-      required: isRequired ? "required" : "preferred"
+      level: skillLevel,
+      required: requirement
     };
   });
 
-  console.log(`Generated progression for ${skillName}:`, progression);
   return progression;
 };
