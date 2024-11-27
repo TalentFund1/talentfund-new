@@ -1,5 +1,3 @@
-import { BenchmarkProgressBar } from "./BenchmarkProgressBar";
-
 interface BenchmarkAnalysisCardProps {
   skillMatch: { current: number; total: number };
   competencyMatch: { current: number; total: number };
@@ -12,9 +10,9 @@ export const BenchmarkAnalysisCard = ({
   skillGoals 
 }: BenchmarkAnalysisCardProps) => {
   // Calculate individual percentages
-  const skillMatchPercentage = Math.round((skillMatch.current / skillMatch.total) * 100);
-  const competencyMatchPercentage = Math.round((competencyMatch.current / competencyMatch.total) * 100);
-  const skillGoalMatchPercentage = Math.round((skillGoals.current / skillGoals.total) * 100);
+  const skillMatchPercentage = Math.round((skillMatch.current / skillMatch.total) * 100) || 0;
+  const competencyMatchPercentage = Math.round((competencyMatch.current / competencyMatch.total) * 100) || 0;
+  const skillGoalMatchPercentage = Math.round((skillGoals.current / skillGoals.total) * 100) || 0;
 
   // Calculate average percentage
   const averagePercentage = Math.round(
@@ -35,21 +33,50 @@ export const BenchmarkAnalysisCard = ({
       </div>
 
       <div className="space-y-6 rounded-xl border border-border bg-white p-6">
-        <BenchmarkProgressBar 
-          label="Skill Match"
-          current={skillMatch.current}
-          total={skillMatch.total}
-        />
-        <BenchmarkProgressBar 
-          label="Competency Match"
-          current={competencyMatch.current}
-          total={competencyMatch.total}
-        />
-        <BenchmarkProgressBar 
-          label="Skill Goal Match"
-          current={skillGoals.current}
-          total={skillGoals.total}
-        />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-foreground">Skill Match</span>
+            <span className="text-sm text-foreground">
+              {skillMatch.current} out of {skillMatch.total}
+            </span>
+          </div>
+          <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[#1F2144] rounded-full transition-all duration-300" 
+              style={{ width: `${skillMatchPercentage}%` }} 
+            />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-foreground">Competency Match</span>
+            <span className="text-sm text-foreground">
+              {competencyMatch.current} out of {competencyMatch.total}
+            </span>
+          </div>
+          <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[#1F2144] rounded-full transition-all duration-300" 
+              style={{ width: `${competencyMatchPercentage}%` }} 
+            />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-foreground">Skill Goal Match</span>
+            <span className="text-sm text-foreground">
+              {skillGoals.current} out of {skillGoals.total}
+            </span>
+          </div>
+          <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[#1F2144] rounded-full transition-all duration-300" 
+              style={{ width: `${skillGoalMatchPercentage}%` }} 
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
