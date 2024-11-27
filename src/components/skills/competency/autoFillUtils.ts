@@ -22,9 +22,7 @@ export const generateSkillProgression = (
   console.log(`Skill importance for ${skillName}: ${importance}`);
 
   levels.forEach((level, index) => {
-    // Normalize index to a 0-1 scale for progression calculation
     const progressionPoint = index / (levels.length - 1);
-    
     const { level: skillLevel, required } = generateProgressionForTrack(progressionPoint, importance, track);
     
     console.log(`Generated level for ${skillName} at ${level}: ${skillLevel} (${required})`);
