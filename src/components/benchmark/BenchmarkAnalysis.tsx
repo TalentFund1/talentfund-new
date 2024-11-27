@@ -40,9 +40,13 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.certifications
   ];
 
-  // Update metrics whenever toggledSkills changes
+  // Update metrics whenever any relevant state changes
   useEffect(() => {
-    console.log('Recalculating metrics due to toggledSkills change:', Array.from(toggledSkills));
+    console.log('Recalculating metrics due to state change:', {
+      toggledSkills: Array.from(toggledSkills),
+      selectedLevel,
+      currentStates
+    });
     
     // Get all toggled skills for the role
     const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
@@ -87,18 +91,18 @@ export const BenchmarkAnalysis = () => {
       return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
     });
 
+    console.log('Metrics calculation:', {
+      total: totalToggledSkills,
+      matching: matchingSkills.length,
+      competency: competencyMatchingSkills.length,
+      skillGoal: skillGoalMatchingSkills.length
+    });
+
     setMetrics({
       matchingCount: matchingSkills.length,
       competencyCount: competencyMatchingSkills.length,
       skillGoalCount: skillGoalMatchingSkills.length,
       totalSkills: totalToggledSkills
-    });
-
-    console.log('Updated metrics:', {
-      totalToggled: totalToggledSkills,
-      matching: matchingSkills.length,
-      competency: competencyMatchingSkills.length,
-      skillGoal: skillGoalMatchingSkills.length
     });
   }, [toggledSkills, selectedLevel, currentStates, employeeSkills, allRoleSkills, getSkillCompetencyState]);
 
