@@ -17,11 +17,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { toggledSkills } = useToggledSkills();
   
-  console.log('BenchmarkAnalysis - Current toggled skills:', {
-    roleId: selectedRole,
-    toggledSkills: Array.from(toggledSkills),
-    count: toggledSkills.size
-  });
+  console.log('BenchmarkAnalysis - Re-rendering with toggledSkills:', Array.from(toggledSkills));
 
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
@@ -31,26 +27,26 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     return null;
   }
 
-  // Get all skills for the role that are currently toggled
-  const toggledRoleSkills = [
+  const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
+  ];
 
-  console.log('Filtered toggled skills for role:', {
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+
+  console.log('Toggled skills for role:', {
     roleId: selectedRole,
+    level: roleLevel,
     count: toggledRoleSkills.length,
     skills: toggledRoleSkills.map(s => s.title)
   });
 
-  // Match skills based on employee's skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
   });
 
-  // Competency Match calculation
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
     if (!roleSkillState) return false;
@@ -74,7 +70,6 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     return employeePriority >= rolePriority;
   });
 
-  // Skill Goal Match calculation
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
@@ -82,12 +77,12 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
            skillState.requirement === 'skill_goal';
   });
 
-  console.log('Benchmark Analysis Results:', {
+  console.log('Selected role match calculations:', {
     roleId: selectedRole,
-    totalToggled: toggledRoleSkills.length,
     skillMatches: matchingSkills.length,
     competencyMatches: competencyMatchingSkills.length,
-    skillGoalMatches: skillGoalMatchingSkills.length
+    skillGoalMatches: skillGoalMatchingSkills.length,
+    totalSkills: toggledRoleSkills.length
   });
 
   return (
