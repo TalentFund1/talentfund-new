@@ -48,6 +48,7 @@ export const RoleBenchmark = () => {
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   
+  // Set initial role and level based on employee's role
   useEffect(() => {
     if (employee) {
       const profileId = getSkillProfileId(employee.role);

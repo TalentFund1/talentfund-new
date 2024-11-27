@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { roleSkills } from '../data/roleSkills';
 import { useCompetencyStore } from '../competency/CompetencyState';
 import { useRoleStore } from '../../benchmark/RoleBenchmark';
@@ -25,24 +25,29 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
     return new Set();
   }
 
-  const allSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ].map(s => s.title);
+  // Get all skills for the role
+  const specializedSkills = currentRoleSkills.specialized?.map(s => s.title) || [];
+  const commonSkills = currentRoleSkills.common?.map(s => s.title) || [];
+  const certificationSkills = currentRoleSkills.certifications?.map(s => s.title) || [];
 
-  console.log('Initial skills for role:', roleId, allSkills);
-  return new Set(allSkills);
+  // Create a set of all skills
+  const skills = new Set([
+    ...specializedSkills,
+    ...commonSkills,
+    ...certificationSkills
+  ]);
+
+  console.log('Initial skills for role:', roleId, Array.from(skills));
+  return skills;
 };
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { selectedRole } = useRoleStore();
   const { initializeStates } = useCompetencyStore();
   const { id } = useParams<{ id: string }>();
-  const currentRole = id || selectedRole;
   
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
-    console.log('Initializing skills by role, current role:', currentRole);
+    console.log('Initializing skills by role, selected role:', selectedRole);
     
     try {
       const savedSkills = localStorage.getItem('toggledSkillsByRole');
@@ -58,9 +63,10 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           }
         });
 
-        if (currentRole && (!result[currentRole] || result[currentRole].size === 0)) {
-          console.log('Initializing missing skills for current role:', currentRole);
-          result[currentRole] = getInitialSkillsForRole(currentRole);
+        // Always ensure we have skills for the selected role
+        if (selectedRole && (!result[selectedRole] || result[selectedRole].size === 0)) {
+          console.log('Initializing missing skills for selected role:', selectedRole);
+          result[selectedRole] = getInitialSkillsForRole(selectedRole);
         }
         
         console.log('Loaded toggled skills by role:', result);
@@ -70,14 +76,21 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       console.error('Error loading saved skills:', error);
     }
     
-    return currentRole ? { [currentRole]: getInitialSkillsForRole(currentRole) } : {};
+    return selectedRole ? { [selectedRole]: getInitialSkillsForRole(selectedRole) } : {};
   });
 
+  // Initialize competency states when role changes
   useEffect(() => {
+    if (selectedRole) {
+      console.log('Initializing competency states for selected role:', selectedRole);
+      initializeStates(selectedRole);
+    }
+  }, [selectedRole, initializeStates]);
+
+  // Initialize skills for new roles or when they're empty
+  useEffect(() => {
+    const currentRole = id || selectedRole;
     if (currentRole) {
-      console.log('Initializing competency states for current role:', currentRole);
-      initializeStates(currentRole);
-      
       setSkillsByRole(prev => {
         if (!prev[currentRole] || prev[currentRole].size === 0) {
           console.log('Initializing skills for role:', currentRole);
@@ -90,8 +103,9 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         return prev;
       });
     }
-  }, [currentRole, initializeStates]);
+  }, [id, selectedRole]);
 
+  const currentRole = id || selectedRole;
   const toggledSkills = currentRole ? (skillsByRole[currentRole] || new Set<string>()) : new Set<string>();
 
   const setToggledSkills = (newSkills: Set<string>) => {
