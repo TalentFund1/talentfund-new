@@ -24,12 +24,14 @@ export const BenchmarkAnalysis = () => {
     return null;
   }
 
+  // Get all skills for the role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
 
+  // Get all toggled skills for the role
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
 
   console.log('Toggled skills for role:', {
@@ -39,13 +41,15 @@ export const BenchmarkAnalysis = () => {
     skills: toggledRoleSkills.map(s => s.title)
   });
 
+  // Match skills based on role profile skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
   });
 
+  // Competency Match calculation
   const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), selectedRole);
+    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
     if (!roleSkillState) return false;
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
@@ -67,6 +71,7 @@ export const BenchmarkAnalysis = () => {
     return employeePriority >= rolePriority;
   });
 
+  // Skill Goal Match calculation
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
@@ -78,10 +83,12 @@ export const BenchmarkAnalysis = () => {
   const competencyMatchCount = competencyMatchingSkills.length;
   const skillGoalMatchCount = skillGoalMatchingSkills.length;
 
+  // Calculate individual percentages based on toggled skills
   const skillMatchPercentage = totalToggledSkills > 0 ? (matchingSkillsCount / totalToggledSkills) * 100 : 0;
   const competencyMatchPercentage = totalToggledSkills > 0 ? (competencyMatchCount / totalToggledSkills) * 100 : 0;
   const skillGoalMatchPercentage = totalToggledSkills > 0 ? (skillGoalMatchCount / totalToggledSkills) * 100 : 0;
 
+  // Calculate average percentage
   const averagePercentage = Math.round(
     (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
   );
