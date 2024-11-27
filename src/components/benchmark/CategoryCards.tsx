@@ -38,36 +38,32 @@ export const CategoryCards = ({
     return allSkills.filter(skill => categoryMap[category]?.includes(skill.title));
   };
 
-  const getCounts = () => {
-    const specialized = getSkillsByCategory('specialized').length;
-    const common = getSkillsByCategory('common').length;
-    const certification = getSkillsByCategory('certification').length;
-    const all = specialized + common + certification;
+  const getCounts = (category: string) => {
+    const skills = getSkillsByCategory(category);
+    let required = 0, preferred = 0;
 
-    console.log('Category counts:', { 
-      specialized, 
-      common, 
-      certification, 
-      all,
-      toggledSkills: Array.from(toggledSkills),
-      currentRoleSkills
+    skills.forEach(skill => {
+      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      if (competencyState?.required === 'required') required++;
+      if (competencyState?.required === 'preferred') preferred++;
     });
-    
-    return { specialized, common, certification, all };
+
+    return { required, preferred };
   };
 
-  const counts = getCounts();
-
   const categories = [
-    { id: "all", title: "All Categories", count: counts.all },
-    { id: "specialized", title: "Specialized Skills", count: counts.specialized },
-    { id: "common", title: "Common Skills", count: counts.common },
-    { id: "certification", title: "Certification", count: counts.certification }
+    { id: "all", title: "All Categories" },
+    { id: "specialized", title: "Specialized Skills" },
+    { id: "common", title: "Common Skills" },
+    { id: "certification", title: "Certification" }
   ];
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
       {categories.map((category) => {
+        const counts = getCounts(category.id);
+        const total = counts.required + counts.preferred;
+        
         return (
           <button
             key={category.id}
@@ -91,7 +87,7 @@ export const CategoryCards = ({
                   {category.title}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {category.count} {category.count === 1 ? 'skill' : 'skills'}
+                  {total} {total === 1 ? 'skill' : 'skills'}
                 </span>
               </div>
             </Card>
