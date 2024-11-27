@@ -12,6 +12,16 @@ import { useRoleStore } from "./RoleBenchmark";
 
 const ITEMS_PER_PAGE = 10;
 
+const getRoleTitle = (roleId: string) => {
+  const titles: { [key: string]: string } = {
+    "123": "AI Engineer",
+    "124": "Backend Engineer",
+    "125": "Frontend Engineer",
+    "126": "Engineering Manager"
+  };
+  return titles[roleId] || "AI Engineer";
+};
+
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("all");
@@ -82,7 +92,7 @@ export const BenchmarkSkillsMatrix = () => {
 
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-foreground">
-            {currentRoleSkills.title}: {roleLevel.toUpperCase()}
+            {getRoleTitle(selectedRole)}: {roleLevel.toUpperCase()}
           </h2>
         </div>
 
