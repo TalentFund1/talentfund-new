@@ -38,7 +38,7 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-6">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">Track:</span>
@@ -91,7 +91,7 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
           </RadioGroup>
         </div>
         {hasUnsavedChanges && (
-          <Button onClick={handleSave} size="sm">
+          <Button onClick={handleSave} size="sm" variant="secondary" className="ml-auto">
             Save Track
           </Button>
         )}
