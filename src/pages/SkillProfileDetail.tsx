@@ -51,10 +51,10 @@ const SkillProfileDetail = () => {
   const totalProfiles = Object.keys(jobTitles).length;
 
   return (
-    <ToastProvider>
-      <TooltipProvider>
-        <TrackProvider>
-          <ToggledSkillsProvider>
+    <ToggledSkillsProvider>
+      <ToastProvider>
+        <TooltipProvider>
+          <TrackProvider>
             <div className="flex min-h-screen bg-background">
               <Sidebar />
               <div className="flex-1 p-6 ml-16 transition-all duration-300">
@@ -116,10 +116,10 @@ const SkillProfileDetail = () => {
                 </div>
               </div>
             </div>
-          </ToggledSkillsProvider>
-        </TrackProvider>
-      </TooltipProvider>
-    </ToastProvider>
+          </TrackProvider>
+        </TooltipProvider>
+      </ToastProvider>
+    </ToggledSkillsProvider>
   );
 };
 
