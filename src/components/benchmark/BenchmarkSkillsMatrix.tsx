@@ -51,8 +51,15 @@ export const BenchmarkSkillsMatrix = () => {
     ...currentRoleSkills.certifications
   ];
 
+  console.log('All role skills before filtering:', allRoleSkills.map(s => s.title));
+
   // First filter by toggled skills
-  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+  const toggledRoleSkills = allRoleSkills.filter(skill => {
+    const isToggled = toggledSkills.has(skill.title);
+    console.log(`Skill ${skill.title} is toggled: ${isToggled}`);
+    return isToggled;
+  });
+
   console.log('Filtered toggled skills:', toggledRoleSkills.map(s => s.title));
 
   // Then apply additional filters
@@ -82,7 +89,16 @@ export const BenchmarkSkillsMatrix = () => {
       matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
     }
 
-    return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
+    const matches = matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
+    console.log(`Filtering skill ${skill.title}:`, {
+      matchesLevel,
+      matchesInterest,
+      matchesSearch,
+      matchesSkillLevel,
+      finalResult: matches
+    });
+
+    return matches;
   });
 
   console.log('Final filtered skills:', filteredSkills.map(s => s.title));
