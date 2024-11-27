@@ -9,7 +9,8 @@ export const filterEmployees = (
   selectedLevel: string[],
   selectedOffice: string[],
   selectedEmploymentType: string[],
-  selectedSkills: string[]
+  selectedSkills: string[],
+  selectedManager: string[]
 ): Employee[] => {
   return employees.filter(employee => {
     const matchesEmployeeSearch = searchedEmployees.length === 0 || 
@@ -30,7 +31,10 @@ export const filterEmployees = (
     const matchesEmploymentType = selectedEmploymentType.length === 0 ||
       selectedEmploymentType.includes(employee.category);
 
+    const matchesManager = selectedManager.length === 0 ||
+      (employee.manager && selectedManager.includes(employee.manager));
+
     return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
-           matchesLevel && matchesOffice && matchesEmploymentType;
+           matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
   });
 };
