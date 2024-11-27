@@ -25,13 +25,13 @@ export const generateSkillProgression = (
     // Normalize index to a 0-1 scale for progression calculation
     const progressionPoint = index / (levels.length - 1);
     
-    const { skillLevel, requirement } = generateProgressionForTrack(progressionPoint, importance, track);
+    const { level: skillLevel, required } = generateProgressionForTrack(progressionPoint, importance, track);
     
-    console.log(`Generated level for ${skillName} at ${level}: ${skillLevel} (${requirement})`);
+    console.log(`Generated level for ${skillName} at ${level}: ${skillLevel} (${required})`);
     
     progression[level.toLowerCase()] = {
       level: skillLevel,
-      required: requirement
+      required
     };
   });
 
