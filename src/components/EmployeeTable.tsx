@@ -127,7 +127,7 @@ export const EmployeeTable = ({
           <tbody>
             {filteredEmployees.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center py-4 text-muted-foreground">
+                <td colSpan={selectedSkills.length > 0 ? 6 : 5} className="text-center py-4 text-muted-foreground">
                   No employees found
                 </td>
               </tr>

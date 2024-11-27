@@ -7,8 +7,6 @@ import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { roleSkills } from "../skills/data/roleSkills";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -29,15 +27,12 @@ export const EmployeeTableRow = ({
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
-  const { toggledSkills } = useToggledSkills();
   const employeeSkills = getEmployeeSkills(employee.id);
 
   const roleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
     
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-  
   const isExactMatch = selectedJobTitle.length > 0 && 
     getBaseRole(employee.role) === selectedJobTitle[0];
 
@@ -53,23 +48,7 @@ export const EmployeeTableRow = ({
       };
     }
 
-    if (!currentRoleSkills) return { count: '0 / 0', isExactSkillMatch: false };
-
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
-
-    const matchingSkills = allRoleSkills.filter(roleSkill => {
-      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-      return employeeSkill !== undefined;
-    });
-
-    return {
-      count: `${matchingSkills.length} / ${allRoleSkills.length}`,
-      isExactSkillMatch: matchingSkills.length === allRoleSkills.length && allRoleSkills.length > 0
-    };
+    return { count: '0 / 0', isExactSkillMatch: false };
   };
 
   const renderSkills = () => {
@@ -154,9 +133,11 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      <td className="px-4 py-4 w-[100px]">
-        {renderSkills()}
-      </td>
+      {selectedSkills.length > 0 && (
+        <td className="px-4 py-4 w-[100px]">
+          {renderSkills()}
+        </td>
+      )}
       <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
       </td>
