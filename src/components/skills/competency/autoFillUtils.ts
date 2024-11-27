@@ -3,45 +3,55 @@ import { professionalLevels, managerialLevels } from "../../benchmark/data/level
 const getSkillLevelForPosition = (
   position: number, 
   totalPositions: number,
-  category: string
+  category: string,
+  skillName: string
 ): { level: string; required: string } => {
-  console.log('Determining skill level for:', { position, totalPositions, category });
+  console.log('Determining skill level for:', { position, totalPositions, category, skillName });
   
   // Calculate relative position (0-1)
   const relativePosition = position / totalPositions;
   
   let level: string;
-  let required: string = "required";
+  let required: string;
 
+  // Specialized skills progress faster to advanced and are more likely to be required
   if (category === "specialized") {
-    if (relativePosition >= 0.8) {
-      level = "advanced";
-    } else if (relativePosition >= 0.4) {
+    if (relativePosition <= 0.3) {
       level = "intermediate";
+      required = "preferred";
     } else {
-      level = "beginner";
-    }
-  } else if (category === "common") {
-    if (relativePosition >= 0.7) {
-      level = "intermediate";
-    } else if (relativePosition >= 0.9) {
       level = "advanced";
-    } else {
-      level = "beginner";
+      required = "required";
     }
-    required = "preferred";
-  } else { // certification
-    if (relativePosition >= 0.8) {
-      level = "advanced";
-    } else if (relativePosition >= 0.5) {
+  } 
+  // Common skills progress more gradually
+  else if (category === "common") {
+    if (relativePosition <= 0.3) {
+      level = "beginner";
+      required = "preferred";
+    } else if (relativePosition <= 0.6) {
       level = "intermediate";
+      required = "preferred";
     } else {
-      level = "beginner";
+      level = "advanced";
+      required = "required";
     }
-    required = "preferred";
+  }
+  // Certifications follow a similar pattern to common skills
+  else {
+    if (relativePosition <= 0.3) {
+      level = "beginner";
+      required = "preferred";
+    } else if (relativePosition <= 0.6) {
+      level = "intermediate";
+      required = "preferred";
+    } else {
+      level = "advanced";
+      required = "required";
+    }
   }
 
-  console.log('Generated level and requirement:', { level, required });
+  console.log('Generated level and requirement:', { level, required, skillName, position });
   return { level, required };
 };
 
@@ -63,7 +73,8 @@ export const generateSkillProgression = (
       const { level, required } = getSkillLevelForPosition(
         index + 1, 
         levelKeys.length,
-        category
+        category,
+        skillName
       );
 
       progression[normalizedKey] = {
@@ -72,6 +83,7 @@ export const generateSkillProgression = (
       };
 
       console.log('Generated progression for level:', { 
+        skillName,
         levelKey: normalizedKey, 
         level, 
         required 
