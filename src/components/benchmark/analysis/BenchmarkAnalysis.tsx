@@ -24,7 +24,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
 
   useEffect(() => {
     const calculateAnalysis = () => {
-      console.log('Recalculating benchmark analysis due to changes in:', {
+      console.log('Recalculating benchmark analysis:', {
         selectedRole,
         roleLevel,
         toggledSkillsCount: toggledSkills.size,
@@ -39,6 +39,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
         return;
       }
 
+      // Get only toggled skills for the current role
       const toggledRoleSkills = [
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
@@ -48,11 +49,13 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
       const totalToggledSkills = toggledRoleSkills.length;
       console.log('Toggled skills count:', totalToggledSkills);
 
+      // Calculate matching skills
       const matchingSkills = toggledRoleSkills.filter(roleSkill => {
         const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
         return employeeSkill !== undefined;
       });
 
+      // Calculate competency matches
       const competencyMatchingSkills = matchingSkills.filter(skill => {
         const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
         if (!roleSkillState) return false;
@@ -76,6 +79,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
         return employeePriority === rolePriority || employeePriority > rolePriority;
       });
 
+      // Calculate skill goal matches
       const skillGoalMatchingSkills = matchingSkills.filter(skill => {
         const skillState = currentStates[skill.title];
         if (!skillState) return false;
@@ -83,9 +87,9 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
                skillState.requirement === 'skill_goal';
       });
 
-      console.log('Benchmark Analysis Calculation:', {
+      console.log('Analysis results:', {
         totalSkills: totalToggledSkills,
-        skillMatches: matchingSkills.length,
+        matchingSkills: matchingSkills.length,
         competencyMatches: competencyMatchingSkills.length,
         skillGoalMatches: skillGoalMatchingSkills.length
       });
