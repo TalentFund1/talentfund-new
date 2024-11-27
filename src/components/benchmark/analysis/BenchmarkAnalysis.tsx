@@ -21,7 +21,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     competencyMatch: { current: 0, total: 0 },
     skillGoals: { current: 0, total: 0 }
   });
-  
+
   console.log('BenchmarkAnalysis - Re-rendering with:', {
     selectedRole,
     roleLevel,
@@ -31,7 +31,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
 
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-  
+
   useEffect(() => {
     if (!currentRoleSkills) {
       console.error('No role skills found for selected role:', selectedRole);
@@ -127,11 +127,6 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     employeeSkills,
     currentRoleSkills
   ]);
-
-  if (!currentRoleSkills) {
-    console.error('No role skills found for selected role:', selectedRole);
-    return null;
-  }
 
   return <BenchmarkAnalysisCard {...metrics} />;
 };
