@@ -124,9 +124,9 @@ export const useCompetencyStore = create<CompetencyState>()(
           // Save to localStorage immediately
           localStorage.setItem(getStorageKey(roleId), JSON.stringify(newStates[roleId]));
           
-          return {
+          return { 
             currentStates: newStates,
-            hasChanges,
+            hasChanges
           };
         });
       },

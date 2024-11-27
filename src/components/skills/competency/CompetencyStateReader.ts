@@ -14,12 +14,21 @@ export const useCompetencyStateReader = () => {
   const { toggledSkills } = useToggledSkills();
   const { id: roleId } = useParams<{ id: string }>();
 
-  const normalizeLevel = (level: string): string => {
+  const normalizeLevel = (level: string = ""): string => {
+    // Handle empty or undefined level
+    if (!level) return "p4"; // Default to P4 if no level provided
+    
     // Handle formats like "P4 - Senior" -> "p4"
     const match = level.toLowerCase().match(/[pm][1-6]/);
     if (match) {
       return match[0];
     }
+
+    // Handle plain level numbers
+    if (level.match(/^[1-6]$/)) {
+      return `p${level}`;
+    }
+
     return level.toLowerCase().trim();
   };
 
