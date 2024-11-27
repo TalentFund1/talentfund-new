@@ -67,7 +67,11 @@ export const RoleSelection = ({
       <div className="flex gap-4 w-full max-w-[800px]">
         <Select 
           value={selectedRole}
-          onValueChange={onRoleChange}
+          onValueChange={(value) => {
+            console.log('Role changed to:', value);
+            onRoleChange(value);
+            // Level will be automatically adjusted by the useEffect
+          }}
         >
           <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Select Role">
