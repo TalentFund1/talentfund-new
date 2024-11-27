@@ -22,7 +22,10 @@ const getSkillImportance = (
       "Team Leadership",
       "Project Management",
       "Strategic Planning",
-      "Stakeholder Management"
+      "Stakeholder Management",
+      "Risk Management",
+      "System Design",
+      "Technical Architecture"
     ]
   };
 
@@ -31,7 +34,14 @@ const getSkillImportance = (
     "123": ["Machine Learning", "Deep Learning", "Natural Language Processing"],
     "124": ["Node.js", "Database Design", "API Development"],
     "125": ["React", "TypeScript", "Next.js"],
-    "126": ["System Design", "Technical Architecture", "Risk Management"]
+    "126": [
+      "System Design", 
+      "Technical Architecture", 
+      "Risk Management",
+      "Team Leadership",
+      "Project Management",
+      "Strategic Planning"
+    ]
   };
 
   // Check if it's a core skill for the current track
@@ -78,67 +88,105 @@ export const generateSkillProgression = (
     // Normalize index to a 0-1 scale for progression calculation
     const progressionPoint = index / (levels.length - 1);
 
-    switch (importance) {
-      case 4: // Core skills
-        if (progressionPoint <= 0.2) {
-          skillLevel = "intermediate";
-          requirement = "required";
-        } else {
-          skillLevel = "advanced";
-          requirement = "required";
-        }
-        break;
+    // For managerial track, start with higher baseline levels
+    if (track === "Managerial") {
+      switch (importance) {
+        case 4: // Core managerial skills
+          if (progressionPoint <= 0.3) {
+            skillLevel = "intermediate";
+            requirement = "required";
+          } else {
+            skillLevel = "advanced";
+            requirement = "required";
+          }
+          break;
 
-      case 3: // Role-critical skills
-        if (progressionPoint <= 0.3) {
-          skillLevel = "intermediate";
-          requirement = "required";
-        } else if (progressionPoint <= 0.6) {
-          skillLevel = "intermediate";
-          requirement = "required";
-        } else {
-          skillLevel = "advanced";
-          requirement = "required";
-        }
-        break;
+        case 3: // Role-critical skills
+          if (progressionPoint <= 0.3) {
+            skillLevel = "intermediate";
+            requirement = "required";
+          } else {
+            skillLevel = "advanced";
+            requirement = "required";
+          }
+          break;
 
-      case 2: // Specialized skills
-        if (progressionPoint <= 0.3) {
-          skillLevel = "beginner";
-          requirement = "preferred";
-        } else if (progressionPoint <= 0.6) {
-          skillLevel = "intermediate";
-          requirement = "required";
-        } else {
-          skillLevel = "advanced";
-          requirement = "required";
-        }
-        break;
+        case 2: // Specialized skills
+          if (progressionPoint <= 0.3) {
+            skillLevel = "intermediate";
+            requirement = "required";
+          } else if (progressionPoint <= 0.6) {
+            skillLevel = "intermediate";
+            requirement = "required";
+          } else {
+            skillLevel = "advanced";
+            requirement = "required";
+          }
+          break;
 
-      case 1: // Certifications
-        if (progressionPoint <= 0.4) {
-          skillLevel = "unspecified";
-          requirement = "preferred";
-        } else if (progressionPoint <= 0.7) {
-          skillLevel = "intermediate";
-          requirement = "required";
-        } else {
-          skillLevel = "advanced";
-          requirement = "required";
-        }
-        break;
+        default: // Common skills and others
+          if (progressionPoint <= 0.3) {
+            skillLevel = "beginner";
+            requirement = "preferred";
+          } else if (progressionPoint <= 0.6) {
+            skillLevel = "intermediate";
+            requirement = "required";
+          } else {
+            skillLevel = "advanced";
+            requirement = "required";
+          }
+      }
+    } else {
+      // Professional track progression (keeping existing logic)
+      switch (importance) {
+        case 4: // Core skills
+          if (progressionPoint <= 0.2) {
+            skillLevel = "intermediate";
+            requirement = "required";
+          } else {
+            skillLevel = "advanced";
+            requirement = "required";
+          }
+          break;
 
-      default: // Common skills
-        if (progressionPoint <= 0.3) {
-          skillLevel = "beginner";
-          requirement = "preferred";
-        } else if (progressionPoint <= 0.6) {
-          skillLevel = "intermediate";
-          requirement = "preferred";
-        } else {
-          skillLevel = "advanced";
-          requirement = "required";
-        }
+        case 3: // Role-critical skills
+          if (progressionPoint <= 0.3) {
+            skillLevel = "intermediate";
+            requirement = "required";
+          } else if (progressionPoint <= 0.6) {
+            skillLevel = "intermediate";
+            requirement = "required";
+          } else {
+            skillLevel = "advanced";
+            requirement = "required";
+          }
+          break;
+
+        case 2: // Specialized skills
+          if (progressionPoint <= 0.3) {
+            skillLevel = "beginner";
+            requirement = "preferred";
+          } else if (progressionPoint <= 0.6) {
+            skillLevel = "intermediate";
+            requirement = "required";
+          } else {
+            skillLevel = "advanced";
+            requirement = "required";
+          }
+          break;
+
+        default: // Common skills and others
+          if (progressionPoint <= 0.3) {
+            skillLevel = "beginner";
+            requirement = "preferred";
+          } else if (progressionPoint <= 0.6) {
+            skillLevel = "intermediate";
+            requirement = "preferred";
+          } else {
+            skillLevel = "advanced";
+            requirement = "required";
+          }
+      }
     }
 
     console.log(`Generated level for ${skillName} at ${level}: ${skillLevel} (${requirement})`);
