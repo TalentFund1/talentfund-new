@@ -17,7 +17,11 @@ export const generateSkillsWithAI = async ({
   setSkillProgression,
   saveChanges,
 }: GenerateSkillsParams) => {
-  console.log("Starting AI generation for skills...", { currentRoleId, track, toggledSkillsCount: toggledSkills.size });
+  console.log("Starting AI generation for skills...", { 
+    currentRoleId, 
+    track, 
+    toggledSkillsCount: toggledSkills.size 
+  });
 
   try {
     if (!currentRoleId) {
@@ -32,9 +36,9 @@ export const generateSkillsWithAI = async ({
     }
 
     const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
+      ...currentRoleSkills.specialized.map(skill => ({ ...skill, category: 'specialized' })),
+      ...currentRoleSkills.common.map(skill => ({ ...skill, category: 'common' })),
+      ...currentRoleSkills.certifications.map(skill => ({ ...skill, category: 'certification' }))
     ].filter(skill => toggledSkills.has(skill.title));
 
     if (allSkills.length === 0) {
@@ -45,22 +49,19 @@ export const generateSkillsWithAI = async ({
 
     // Generate progression for each skill
     for (const skill of allSkills) {
-      let category = "specialized";
-      if (currentRoleSkills.common.some(s => s.title === skill.title)) {
-        category = "common";
-      } else if (currentRoleSkills.certifications.some(s => s.title === skill.title)) {
-        category = "certification";
-      }
-
       console.log('Generating progression for skill:', { 
         title: skill.title, 
-        category,
+        category: skill.category,
         track,
         roleId: currentRoleId 
       });
 
-      const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
-      console.log('Generated progression:', { skill: skill.title, progression });
+      const progression = generateSkillProgression(
+        skill.title, 
+        skill.category, 
+        track, 
+        currentRoleId
+      );
       
       if (!progression || Object.keys(progression).length === 0) {
         console.error('Failed to generate progression for skill:', skill.title);
