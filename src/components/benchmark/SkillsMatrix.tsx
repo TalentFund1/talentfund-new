@@ -148,6 +148,22 @@ export const SkillsMatrix = () => {
     setHasChanges(storeHasChanges);
   }, [storeHasChanges]);
 
+  const handleSave = () => {
+    saveChanges();
+    toast({
+      title: "Changes saved",
+      description: "Your changes have been saved successfully.",
+    });
+  };
+
+  const handleCancel = () => {
+    cancelChanges();
+    toast({
+      title: "Changes cancelled",
+      description: "Your changes have been discarded.",
+    });
+  };
+
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
 
   return (
@@ -155,8 +171,8 @@ export const SkillsMatrix = () => {
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <SkillsMatrixHeader 
           hasChanges={hasChanges}
-          onSave={saveChanges}
-          onCancel={cancelChanges}
+          onSave={handleSave}
+          onCancel={handleCancel}
         />
         
         <Separator className="my-4" />
