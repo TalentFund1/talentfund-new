@@ -52,7 +52,6 @@ export const useCompetencyStateReader = () => {
       return getDefaultState(skillName);
     }
 
-    // Normalize level key to lowercase for consistency
     const normalizedLevelKey = levelKey.toLowerCase();
     const levelState = roleStates[skillName][normalizedLevelKey];
 

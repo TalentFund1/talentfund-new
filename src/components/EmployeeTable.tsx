@@ -1,3 +1,6 @@
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Employee } from "./types/employeeTypes";
 import { EmployeeTableHeader } from "./employee/EmployeeTableHeader";
 import { EmployeeTableRow } from "./employee/EmployeeTableRow";
@@ -11,6 +14,17 @@ import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
+
+interface EmployeeTableProps {
+  selectedDepartment?: string[];
+  selectedJobTitle?: string[];
+  selectedLevel?: string[];
+  selectedOffice?: string[];
+  selectedEmploymentType?: string[];
+  selectedSkills?: string[];
+  selectedEmployees?: string[];
+  selectedManager?: string[];
+}
 
 export const getSkillProfileId = (role: string) => {
   // Validate role ID format first
@@ -86,12 +100,10 @@ export const EmployeeTable = ({
 
   console.log('Pre-filtered employees:', preFilteredEmployees);
 
-  // Apply skills filter
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
-  // Sort employees by role match
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     selectedJobTitle,
