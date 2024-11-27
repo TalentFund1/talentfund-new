@@ -10,6 +10,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useNavigate } from "react-router-dom";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 export const AddEmployeeDialog = () => {
   const { toast } = useToast();
@@ -18,8 +19,6 @@ export const AddEmployeeDialog = () => {
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
   const employees = useEmployeeStore((state) => state.employees);
   const { currentStates } = useSkillsMatrixStore();
-  const { toggledSkills } = useToggledSkills();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
   
   const [formData, setFormData] = useState({
     id: "",
@@ -37,94 +36,112 @@ export const AddEmployeeDialog = () => {
     skills: ""
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    console.log('Form submission started - Form data:', formData);
-    
-    // Validate form data
-    const validation = validateFormData(formData, employees);
-    if (!validation.isValid) {
-      console.log('Validation failed:', validation.error);
-      toast({
-        title: "Validation Error",
-        description: validation.error,
-        variant: "destructive"
-      });
-      return;
-    }
+  const DialogContent = () => {
+    const { toggledSkills } = useToggledSkills();
+    const { getSkillCompetencyState } = useCompetencyStateReader();
 
-    try {
-      // Process employee data
-      const newEmployee = processEmployeeData(formData);
-      console.log('Processed employee data:', newEmployee);
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
       
-      // Add employee to store
-      addEmployee(newEmployee);
-      console.log('Employee added to store:', newEmployee);
-
-      // Calculate initial benchmark
-      const employeesWithBenchmarks = calculateEmployeeBenchmarks(
-        [newEmployee],
-        [formData.role],
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      );
-
-      console.log('Initial benchmark calculation:', employeesWithBenchmarks);
-
-      toast({
-        title: "Success",
-        description: "Employee profile created successfully",
-      });
+      console.log('Form submission started - Form data:', formData);
       
-      setOpen(false);
-      // Navigate to the new employee's profile
-      navigate(`/employee/${newEmployee.id}`);
-      
-      // Reset form
-      setFormData({
-        id: "",
-        name: "",
-        location: "",
-        office: "",
-        department: "",
-        manager: "",
-        role: "",
-        level: "",
-        startDate: "",
-        termDate: "",
-        sex: "",
-        category: "",
-        skills: ""
-      });
-    } catch (error) {
-      console.error('Error creating employee:', error);
-      toast({
-        title: "Error",
-        description: "Failed to create employee profile. Please try again.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => {
-      const newData = {
-        ...prev,
-        [field]: value
-      };
-
-      // Reset level when role changes
-      if (field === 'role') {
-        newData.level = '';
-        console.log('Role changed, reset level');
+      // Validate form data
+      const validation = validateFormData(formData, employees);
+      if (!validation.isValid) {
+        console.log('Validation failed:', validation.error);
+        toast({
+          title: "Validation Error",
+          description: validation.error,
+          variant: "destructive"
+        });
+        return;
       }
 
-      console.log(`Field ${field} updated to:`, value);
-      return newData;
-    });
+      try {
+        // Process employee data
+        const newEmployee = processEmployeeData(formData);
+        console.log('Processed employee data:', newEmployee);
+        
+        // Add employee to store
+        addEmployee(newEmployee);
+        console.log('Employee added to store:', newEmployee);
+
+        // Calculate initial benchmark
+        const employeesWithBenchmarks = calculateEmployeeBenchmarks(
+          [newEmployee],
+          [formData.role],
+          currentStates,
+          toggledSkills,
+          getSkillCompetencyState
+        );
+
+        console.log('Initial benchmark calculation:', employeesWithBenchmarks);
+
+        toast({
+          title: "Success",
+          description: "Employee profile created successfully",
+        });
+        
+        setOpen(false);
+        // Navigate to the new employee's profile
+        navigate(`/employee/${newEmployee.id}`);
+        
+        // Reset form
+        setFormData({
+          id: "",
+          name: "",
+          location: "",
+          office: "",
+          department: "",
+          manager: "",
+          role: "",
+          level: "",
+          startDate: "",
+          termDate: "",
+          sex: "",
+          category: "",
+          skills: ""
+        });
+      } catch (error) {
+        console.error('Error creating employee:', error);
+        toast({
+          title: "Error",
+          description: "Failed to create employee profile. Please try again.",
+          variant: "destructive"
+        });
+      }
+    };
+
+    const handleInputChange = (field: string, value: string) => {
+      setFormData(prev => {
+        const newData = {
+          ...prev,
+          [field]: value
+        };
+
+        // Reset level when role changes
+        if (field === 'role') {
+          newData.level = '';
+          console.log('Role changed, reset level');
+        }
+
+        console.log(`Field ${field} updated to:`, value);
+        return newData;
+      });
+    };
+
+    return (
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <EmployeeFormFields 
+          formData={formData}
+          handleInputChange={handleInputChange}
+        />
+
+        <div className="flex justify-end">
+          <Button type="submit">Create Profile</Button>
+        </div>
+      </form>
+    );
   };
 
   return (
@@ -140,16 +157,9 @@ export const AddEmployeeDialog = () => {
           </DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <EmployeeFormFields 
-            formData={formData}
-            handleInputChange={handleInputChange}
-          />
-
-          <div className="flex justify-end">
-            <Button type="submit">Create Profile</Button>
-          </div>
-        </form>
+        <ToggledSkillsProvider>
+          <DialogContent />
+        </ToggledSkillsProvider>
       </DialogContent>
     </Dialog>
   );
