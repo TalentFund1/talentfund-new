@@ -24,11 +24,14 @@ export const BenchmarkAnalysis = () => {
     return null;
   }
   
+  // Get all toggled skills for the current role
   const toggledRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ].filter(skill => toggledSkills.has(skill.title));
+
+  console.log('Toggled skills count:', toggledRoleSkills.length);
 
   // Match skills based on role profile skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
@@ -83,6 +86,7 @@ export const BenchmarkAnalysis = () => {
   );
 
   console.log('Benchmark Analysis Calculation:', {
+    totalSkills: totalSkillsCount,
     skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
     competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
     skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
