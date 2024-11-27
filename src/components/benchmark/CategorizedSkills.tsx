@@ -5,7 +5,7 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -19,6 +19,17 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+
+  // Log initial state for debugging
+  useEffect(() => {
+    console.log('CategorizedSkills - Initial State:', {
+      roleId,
+      employeeId,
+      selectedLevel,
+      toggledSkills: Array.from(toggledSkills),
+      currentRoleSkills
+    });
+  }, [roleId, employeeId, selectedLevel, toggledSkills, currentRoleSkills]);
 
   const filterSkillsByCategory = (skills: any[]) => {
     if (selectedCategory === "all") return skills;
@@ -34,12 +45,17 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     );
   };
 
-  // Get all skills for the role
+  // Get all skills for the role that are toggled on
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
-  ];
+  ].filter(skill => toggledSkills.has(skill.title));
+
+  console.log('Filtered toggled skills:', {
+    total: allRoleSkills.length,
+    skills: allRoleSkills.map(s => s.title)
+  });
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -55,13 +71,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const requiredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      console.log('Checking required skill:', {
-        skill: skill.title,
-        competencyState,
-        isToggled: toggledSkills.has(skill.title)
-      });
-      
-      return competencyState?.required === 'required' && toggledSkills.has(skill.title);
+      return competencyState?.required === 'required';
     })
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
@@ -72,14 +82,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const preferredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      console.log('Checking preferred skill:', {
-        skill: skill.title,
-        competencyState,
-        isToggled: toggledSkills.has(skill.title)
-      });
-      
       return competencyState?.required === 'preferred' && 
-             toggledSkills.has(skill.title) && 
              !requiredSkills.some(req => req.title === skill.title);
     })
     .sort((a, b) => {
@@ -91,7 +94,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const missingSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
-      return !hasSkill && toggledSkills.has(skill.title);
+      return !hasSkill;
     })
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
@@ -118,12 +121,13 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   };
 
   console.log('Skills Summary:', {
+    total: allRoleSkills.length,
     required: requiredSkills.length,
     preferred: preferredSkills.length,
     missing: missingSkills.length,
-    requiredSkills,
-    preferredSkills,
-    missingSkills
+    requiredSkills: requiredSkills.map(s => s.title),
+    preferredSkills: preferredSkills.map(s => s.title),
+    missingSkills: missingSkills.map(s => s.title)
   });
 
   const SkillSection = ({ title, skills, count }: { title: string, skills: any[], count: number }) => (
