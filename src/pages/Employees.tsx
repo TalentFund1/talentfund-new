@@ -1,12 +1,21 @@
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sidebar } from "@/components/Sidebar";
 import { EmployeeTable } from "@/components/EmployeeTable";
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
-import { EmployeeFilters } from "@/components/employee/EmployeeFilters";
+import { EmployeeFilters } from "@/components/EmployeeFilters";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
+import { useState } from "react";
 
 const Employees = () => {
+  const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
+  const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
+  const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
+  const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
+  const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [selectedManager, setSelectedManager] = useState<string[]>([]);
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -25,11 +34,37 @@ const Employees = () => {
           </div>
 
           <Card className="p-6 bg-white">
-            <EmployeeFilters />
+            <EmployeeFilters 
+              onDepartmentChange={setSelectedDepartment}
+              selectedDepartment={selectedDepartment}
+              onJobTitleChange={setSelectedJobTitle}
+              selectedJobTitle={selectedJobTitle}
+              onLevelChange={setSelectedLevel}
+              selectedLevel={selectedLevel}
+              onOfficeChange={setSelectedOffice}
+              selectedOffice={selectedOffice}
+              onEmploymentTypeChange={setSelectedEmploymentType}
+              selectedEmploymentType={selectedEmploymentType}
+              onSkillsChange={setSelectedSkills}
+              selectedSkills={selectedSkills}
+              onEmployeeSearch={setSelectedEmployees}
+              selectedEmployees={selectedEmployees}
+              onManagerChange={setSelectedManager}
+              selectedManager={selectedManager}
+            />
           </Card>
 
           <Card className="p-6 bg-white">
-            <EmployeeTable />
+            <EmployeeTable 
+              selectedDepartment={selectedDepartment}
+              selectedJobTitle={selectedJobTitle}
+              selectedLevel={selectedLevel}
+              selectedOffice={selectedOffice}
+              selectedEmploymentType={selectedEmploymentType}
+              selectedSkills={selectedSkills}
+              selectedEmployees={selectedEmployees}
+              selectedManager={selectedManager}
+            />
           </Card>
         </div>
       </div>
