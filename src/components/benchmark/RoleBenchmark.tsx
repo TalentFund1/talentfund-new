@@ -12,6 +12,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
+import { ToggledSkillsProvider } from "../../skills/context/ToggledSkillsContext";
 
 interface RoleStore {
   selectedRole: string;
@@ -122,11 +123,15 @@ export const RoleBenchmark = () => {
           roles={roles}
         />
 
-        {id && <BenchmarkAnalysis 
-          selectedRole={selectedRole}
-          roleLevel={roleLevel}
-          employeeId={id}
-        />}
+        {id && (
+          <ToggledSkillsProvider>
+            <BenchmarkAnalysis 
+              selectedRole={selectedRole}
+              roleLevel={roleLevel}
+              employeeId={id}
+            />
+          </ToggledSkillsProvider>
+        )}
       </div>
     </div>
   );

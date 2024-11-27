@@ -14,7 +14,12 @@ import { BenchmarkSkillsMatrixContent } from "./skills-matrix/BenchmarkSkillsMat
 
 const ITEMS_PER_PAGE = 10;
 
-export const BenchmarkSkillsMatrix = () => {
+interface BenchmarkSkillsMatrixProps {
+  roleId?: string;
+  employeeId?: string;
+}
+
+export const BenchmarkSkillsMatrix = ({ roleId, employeeId }: BenchmarkSkillsMatrixProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
@@ -24,26 +29,29 @@ export const BenchmarkSkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
 
-  const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  const effectiveEmployeeId = employeeId || id || "";
+  const effectiveRoleId = roleId || selectedRole;
+  const employeeSkills = getEmployeeSkills(effectiveEmployeeId);
+  const currentRoleSkills = roleSkills[effectiveRoleId as keyof typeof roleSkills] || roleSkills["123"];
 
+  // Update toggled skills when role changes
   useEffect(() => {
+    console.log('Role changed, updating toggled skills:', effectiveRoleId);
+    
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
 
-    const toggledRoleSkills = allRoleSkills
-      .filter(skill => toggledSkills.has(skill.title))
-      .map(skill => skill.title);
-    
+    const toggledRoleSkills = allRoleSkills.map(skill => skill.title);
     setSelectedSearchSkills(toggledRoleSkills);
-  }, [selectedRole, toggledSkills, currentRoleSkills]);
+    setToggledSkills(new Set(toggledRoleSkills));
+  }, [effectiveRoleId, currentRoleSkills, setToggledSkills]);
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -180,8 +188,8 @@ export const BenchmarkSkillsMatrix = () => {
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
         <BenchmarkSkillsMatrixContent 
-          roleId={selectedRole}
-          employeeId={id || ""}
+          roleId={effectiveRoleId}
+          employeeId={effectiveEmployeeId}
           roleLevel={roleLevel}
           filteredSkills={paginatedSkills}
           searchTerm={searchTerm}
