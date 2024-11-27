@@ -17,6 +17,7 @@ interface CompetencyState {
   initializeStates: (roleId: string) => void;
   setSkillState: (skillName: string, level: string, levelKey: string, required: string, roleId: string) => void;
   setSkillProgression: (skillName: string, progression: Record<string, SkillState>, roleId?: string) => void;
+  resetLevels: (roleId: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -159,6 +160,29 @@ export const useCompetencyStore = create<CompetencyState>()(
           return {
             currentStates: newStates,
             hasChanges: true,
+          };
+        });
+      },
+      resetLevels: (roleId: string) => {
+        console.log('Resetting all levels for role:', roleId);
+        
+        set((state) => {
+          const newStates = JSON.parse(JSON.stringify(state.currentStates));
+          
+          if (newStates[roleId]) {
+            Object.keys(newStates[roleId]).forEach(skillName => {
+              Object.keys(newStates[roleId][skillName]).forEach(levelKey => {
+                newStates[roleId][skillName][levelKey] = {
+                  level: 'unspecified',
+                  required: 'preferred'
+                };
+              });
+            });
+          }
+          
+          return { 
+            currentStates: newStates,
+            hasChanges: true
           };
         });
       },

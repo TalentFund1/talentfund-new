@@ -16,7 +16,7 @@ import { professionalLevels, managerialLevels } from "../benchmark/data/levelDat
 import { CompetencyGraphHeader } from "./competency/CompetencyGraphHeader";
 import { CompetencyGraphTable } from "./competency/CompetencyGraphTable";
 import { generateSkillProgression } from "./competency/autoFillUtils";
-import { Brain } from "lucide-react";
+import { Brain, RotateCcw } from "lucide-react";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -31,7 +31,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   });
   
   const { getTrackForRole } = useTrack();
-  const { saveChanges, cancelChanges, hasChanges, initializeStates, setSkillProgression } = useCompetencyStore();
+  const { saveChanges, cancelChanges, hasChanges, initializeStates, setSkillProgression, resetLevels } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
 
@@ -61,6 +61,14 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     toast({
       title: "Changes cancelled",
       description: "Your changes have been discarded.",
+    });
+  };
+
+  const handleResetLevels = () => {
+    resetLevels(currentRoleId);
+    toast({
+      title: "Levels reset",
+      description: "All skill levels have been reset to their default values.",
     });
   };
 
@@ -154,14 +162,24 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitles[currentRoleId]}</h3>
         <div className="flex justify-between items-center mb-6">
           <TrackSelection onTrackChange={setTrack} />
-          <Button 
-            onClick={handleGenerateWithAI}
-            className="bg-primary hover:bg-primary/90 flex items-center gap-2"
-            disabled={isGenerating}
-          >
-            <Brain className="h-4 w-4" />
-            {isGenerating ? "Generating..." : "Generate with AI"}
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={handleResetLevels}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Reset Levels
+            </Button>
+            <Button 
+              onClick={handleGenerateWithAI}
+              className="bg-primary hover:bg-primary/90 flex items-center gap-2"
+              disabled={isGenerating}
+            >
+              <Brain className="h-4 w-4" />
+              {isGenerating ? "Generating..." : "Generate with AI"}
+            </Button>
+          </div>
         </div>
       </div>
 
