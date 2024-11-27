@@ -27,13 +27,16 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     return null;
   }
 
+  // Get all skills for the role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
 
+  // Filter by toggled skills
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+  const totalToggledSkills = toggledRoleSkills.length;
 
   console.log('Toggled skills for role:', {
     roleId: selectedRole,
@@ -42,11 +45,13 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     skills: toggledRoleSkills.map(s => s.title)
   });
 
+  // Match skills based on employee skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
   });
 
+  // Competency Match calculation
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
     if (!roleSkillState) return false;
@@ -70,6 +75,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     return employeePriority >= rolePriority;
   });
 
+  // Skill Goal Match calculation
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
@@ -82,22 +88,22 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     skillMatches: matchingSkills.length,
     competencyMatches: competencyMatchingSkills.length,
     skillGoalMatches: skillGoalMatchingSkills.length,
-    totalSkills: toggledRoleSkills.length
+    totalSkills: totalToggledSkills
   });
 
   return (
     <BenchmarkAnalysisCard 
       skillMatch={{
         current: matchingSkills.length,
-        total: toggledRoleSkills.length
+        total: totalToggledSkills
       }}
       competencyMatch={{
         current: competencyMatchingSkills.length,
-        total: toggledRoleSkills.length
+        total: totalToggledSkills
       }}
       skillGoals={{
         current: skillGoalMatchingSkills.length,
-        total: toggledRoleSkills.length
+        total: totalToggledSkills
       }}
     />
   );
