@@ -115,12 +115,9 @@ export const EmployeeTableRow = ({
 
   const { count, isExactSkillMatch } = getMatchingSkillsCount();
 
-  const shouldShowExactMatch = (isExactSkillMatch || isExactMatch) && 
-    (selectedSkills.length > 0 || selectedJobTitle.length > 0);
-
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
-      shouldShowExactMatch ? 'bg-blue-50/50' : ''
+      (isExactSkillMatch || isExactMatch) ? 'bg-blue-50/50' : ''
     }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
@@ -141,7 +138,7 @@ export const EmployeeTableRow = ({
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
-            {shouldShowExactMatch && (
+            {(isExactSkillMatch || isExactMatch) && (
               <Badge 
                 variant="secondary" 
                 className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
@@ -161,10 +158,21 @@ export const EmployeeTableRow = ({
           {employee.role}
         </Link>
       </td>
+      <td className="px-4 py-4 w-[100px] text-sm text-muted-foreground">
+        {roleId}
+      </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 w-[100px] text-center text-sm">{count}</td>
       <td className="py-4 w-[200px] text-center">
-        {renderBenchmark()}
+        <span className={`px-2.5 py-1 rounded-full text-sm ${
+          employee.benchmark >= 80 
+            ? 'bg-green-100 text-green-800' 
+            : employee.benchmark >= 60
+            ? 'bg-orange-100 text-orange-800'
+            : 'bg-red-100 text-red-800'
+        }`}>
+          {employee.benchmark}%
+        </span>
       </td>
       <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
