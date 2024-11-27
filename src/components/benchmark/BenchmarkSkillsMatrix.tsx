@@ -11,7 +11,6 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useTrack } from "../skills/context/TrackContext";
 import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixContent } from "./skills-matrix/BenchmarkSkillsMatrixContent";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -84,7 +83,7 @@ export const BenchmarkSkillsMatrix = () => {
             matchesInterest = requirement === 'required' || requirement === 'skill_goal';
             break;
           case 'not_interested':
-            matchesInterest = requirement === 'not_interested';
+            matchesInterest = requirement === 'not-interested';
             break;
           case 'unknown':
             matchesInterest = !requirement || requirement === 'unknown';
@@ -137,7 +136,6 @@ export const BenchmarkSkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
-      <ToggledSkillsProvider>
         <Card className="p-6 space-y-6 animate-fade-in bg-white">
           <BenchmarkSkillsMatrixContent 
             roleId={selectedRole}
@@ -158,7 +156,6 @@ export const BenchmarkSkillsMatrix = () => {
             observerTarget={observerTarget}
           />
         </Card>
-      </ToggledSkillsProvider>
     </div>
   );
 };
