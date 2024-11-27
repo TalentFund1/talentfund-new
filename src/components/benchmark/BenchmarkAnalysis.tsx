@@ -12,7 +12,7 @@ import { useEffect } from "react";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
-  const { toggledSkills, setToggledSkills } = useToggledSkills();
+  const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "");
   const { selectedRole, selectedLevel } = useRoleStore();
@@ -21,30 +21,6 @@ export const BenchmarkAnalysis = () => {
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   
-  useEffect(() => {
-    if (!currentRoleSkills) {
-      console.error('No role skills found for role:', selectedRole);
-      return;
-    }
-
-    // Get all skills for the role
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    // Initialize toggledSkills with all role skills
-    const initialToggledSkills = new Set(allRoleSkills.map(skill => skill.title));
-    setToggledSkills(initialToggledSkills);
-
-    console.log('Initialized toggled skills:', {
-      roleId: selectedRole,
-      level: selectedLevel,
-      skills: Array.from(initialToggledSkills)
-    });
-  }, [selectedRole, selectedLevel, currentRoleSkills, setToggledSkills]);
-
   if (!currentRoleSkills) {
     console.error('No role skills found for role:', selectedRole);
     return null;
