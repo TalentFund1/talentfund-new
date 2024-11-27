@@ -31,23 +31,20 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.certifications
   ];
 
-  // Get required skills based on competency states
-  const requiredSkills = allRoleSkills.filter(skill => {
-    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-    return competencyState?.required === 'required';
-  });
+  // Get all toggled skills for the role
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
 
-  console.log('Required skills for role:', {
+  console.log('Toggled skills for role:', {
     roleId: selectedRole,
     level: selectedLevel,
-    count: requiredSkills.length,
-    skills: requiredSkills.map(s => s.title)
+    count: toggledRoleSkills.length,
+    skills: toggledRoleSkills.map(s => s.title)
   });
 
   // Match skills based on role profile skills
-  const matchingSkills = requiredSkills.filter(roleSkill => {
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    return employeeSkill !== undefined && toggledSkills.has(roleSkill.title);
+    return employeeSkill !== undefined;
   });
 
   // Competency Match calculation
@@ -81,15 +78,15 @@ export const BenchmarkAnalysis = () => {
     return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
   });
 
-  const totalRequiredSkills = requiredSkills.length;
+  const totalToggledSkills = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const competencyMatchCount = competencyMatchingSkills.length;
   const skillGoalMatchCount = skillGoalMatchingSkills.length;
 
-  // Calculate individual percentages based on required skills
-  const skillMatchPercentage = totalRequiredSkills > 0 ? (matchingSkillsCount / totalRequiredSkills) * 100 : 0;
-  const competencyMatchPercentage = totalRequiredSkills > 0 ? (competencyMatchCount / totalRequiredSkills) * 100 : 0;
-  const skillGoalMatchPercentage = totalRequiredSkills > 0 ? (skillGoalMatchCount / totalRequiredSkills) * 100 : 0;
+  // Calculate individual percentages based on toggled skills
+  const skillMatchPercentage = totalToggledSkills > 0 ? (matchingSkillsCount / totalToggledSkills) * 100 : 0;
+  const competencyMatchPercentage = totalToggledSkills > 0 ? (competencyMatchCount / totalToggledSkills) * 100 : 0;
+  const skillGoalMatchPercentage = totalToggledSkills > 0 ? (skillGoalMatchCount / totalToggledSkills) * 100 : 0;
 
   // Calculate average percentage
   const averagePercentage = Math.round(
@@ -97,7 +94,7 @@ export const BenchmarkAnalysis = () => {
   );
 
   console.log('Benchmark Analysis Calculation:', {
-    totalRequired: totalRequiredSkills,
+    totalToggled: totalToggledSkills,
     skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
     competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
     skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
@@ -124,7 +121,7 @@ export const BenchmarkAnalysis = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Match</span>
                 <span className="text-sm text-foreground">
-                  {matchingSkillsCount} out of {totalRequiredSkills}
+                  {matchingSkillsCount} out of {totalToggledSkills}
                 </span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
