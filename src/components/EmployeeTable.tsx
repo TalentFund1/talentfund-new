@@ -13,6 +13,7 @@ import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
+import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -85,8 +86,6 @@ export const EmployeeTable = ({
     return state.employees;
   });
 
-  console.log('EmployeeTable rendering with toggledSkills:', Array.from(toggledSkills));
-
   const preFilteredEmployees = filterEmployees(
     employees,
     selectedEmployees,
@@ -115,12 +114,6 @@ export const EmployeeTable = ({
 
   console.log('Final filtered and sorted employees:', filteredEmployees);
 
-  // Ensure image URLs are properly formatted
-  const getImageUrl = (index: number) => {
-    const imageId = EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length];
-    return `https://images.unsplash.com/${imageId}?auto=format&fit=crop&w=24&h=24`;
-  };
-
   return (
     <div className="bg-white rounded-lg">
       <div className="relative">
@@ -141,17 +134,19 @@ export const EmployeeTable = ({
                 </td>
               </tr>
             ) : (
-              filteredEmployees.map((employee, index) => (
-                <EmployeeTableRow
-                  key={employee.id}
-                  employee={employee}
-                  isSelected={selectedRows.includes(employee.name)}
-                  onSelect={handleSelectEmployee}
-                  imageUrl={getImageUrl(index)}
-                  selectedSkills={selectedSkills}
-                  selectedJobTitle={selectedJobTitle}
-                />
-              ))
+              <ToggledSkillsProvider>
+                {filteredEmployees.map((employee, index) => (
+                  <EmployeeTableRow
+                    key={employee.id}
+                    employee={employee}
+                    isSelected={selectedRows.includes(employee.name)}
+                    onSelect={handleSelectEmployee}
+                    imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
+                    selectedSkills={selectedSkills}
+                    selectedJobTitle={selectedJobTitle}
+                  />
+                ))}
+              </ToggledSkillsProvider>
             )}
           </tbody>
         </table>
