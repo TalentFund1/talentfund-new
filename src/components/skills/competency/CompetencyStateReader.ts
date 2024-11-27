@@ -6,7 +6,7 @@ import { roleSkills } from "../data/roleSkills";
 interface SkillCompetencyState {
   level: string;
   required: string;
-  requirement?: string; // Added this property
+  requirement?: string;
 }
 
 export const useCompetencyStateReader = () => {
@@ -52,11 +52,26 @@ export const useCompetencyStateReader = () => {
       return getDefaultState(skillName);
     }
 
+    // Normalize level key to lowercase and ensure it exists
     const normalizedLevelKey = levelKey.toLowerCase();
+    console.log('Looking for level state:', { skillName, normalizedLevelKey, availableLevels: Object.keys(roleStates[skillName]) });
+    
     const levelState = roleStates[skillName][normalizedLevelKey];
 
     if (!levelState) {
       console.log('No level state found for skill:', { skillName, levelKey: normalizedLevelKey });
+      // Try to find the closest matching level if exact match not found
+      const levels = Object.keys(roleStates[skillName]);
+      const matchingLevel = levels.find(level => level.startsWith(normalizedLevelKey[0]));
+      
+      if (matchingLevel) {
+        console.log('Found matching level:', { skillName, matchingLevel, state: roleStates[skillName][matchingLevel] });
+        return {
+          level: roleStates[skillName][matchingLevel].level || getDefaultState(skillName).level,
+          required: roleStates[skillName][matchingLevel].required || getDefaultState(skillName).required
+        };
+      }
+      
       return getDefaultState(skillName);
     }
 
