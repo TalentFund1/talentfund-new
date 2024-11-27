@@ -33,7 +33,7 @@ export const useCompetencyStateReader = () => {
     const roleData = roleSkills[roleId as keyof typeof roleSkills];
     if (!roleData) {
       console.log('No role data found for role:', roleId);
-      return { level: 'advanced', required: 'required' };
+      return { level: 'unspecified', required: 'required' };
     }
 
     const allSkills = [
@@ -46,7 +46,7 @@ export const useCompetencyStateReader = () => {
     console.log('Found skill data:', { skillName, skillData, roleId });
     
     return {
-      level: skillData?.level || 'advanced',
+      level: skillData?.level || 'unspecified',
       required: skillData?.requirement || 'required'
     };
   };
@@ -60,14 +60,8 @@ export const useCompetencyStateReader = () => {
       skillName, 
       levelKey, 
       targetRoleId,
-      currentStates,
       hasToggledSkill: toggledSkills.has(skillName)
     });
-    
-    if (!toggledSkills.has(skillName)) {
-      console.log('Skill not toggled:', skillName);
-      return null;
-    }
 
     // Use target role ID if provided, otherwise use the first available role
     const effectiveRoleId = targetRoleId || Object.keys(currentStates)[0];
