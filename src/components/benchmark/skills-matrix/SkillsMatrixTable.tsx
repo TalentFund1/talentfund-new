@@ -1,6 +1,7 @@
 import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
+import { ToggledSkillsProvider } from "../../skills/context/ToggledSkillsContext";
 
 interface SkillsMatrixTableProps {
   filteredSkills: Array<{
@@ -23,22 +24,24 @@ export const SkillsMatrixTable = ({
 }: SkillsMatrixTableProps) => {
   return (
     <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
-      <Table>
-        <SkillsMatrixTableHeader 
-          showCompanySkill={showCompanySkill}
-          isRoleBenchmark={isRoleBenchmark}
-        />
-        <TableBody>
-          {filteredSkills.map((skill) => (
-            <SkillsMatrixRow 
-              key={skill.title} 
-              skill={skill}
-              showCompanySkill={showCompanySkill}
-              isRoleBenchmark={isRoleBenchmark}
-            />
-          ))}
-        </TableBody>
-      </Table>
+      <ToggledSkillsProvider>
+        <Table>
+          <SkillsMatrixTableHeader 
+            showCompanySkill={showCompanySkill}
+            isRoleBenchmark={isRoleBenchmark}
+          />
+          <TableBody>
+            {filteredSkills.map((skill) => (
+              <SkillsMatrixRow 
+                key={skill.title} 
+                skill={skill}
+                showCompanySkill={showCompanySkill}
+                isRoleBenchmark={isRoleBenchmark}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </ToggledSkillsProvider>
     </div>
   );
 };
