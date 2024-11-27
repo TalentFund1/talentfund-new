@@ -4,6 +4,9 @@ import { BenchmarkAnalysisCard } from "./BenchmarkAnalysisCard";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { getEmployeeSkills } from "../skills-matrix/initialSkills";
+import { BenchmarkSkillsMatrixContent } from "../skills-matrix/BenchmarkSkillsMatrixContent";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 interface BenchmarkAnalysisProps {
   selectedRole: string;
@@ -97,19 +100,29 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   });
 
   return (
-    <BenchmarkAnalysisCard 
-      skillMatch={{
-        current: matchingSkills.length,
-        total: totalToggledSkills
-      }}
-      competencyMatch={{
-        current: competencyMatchingSkills.length,
-        total: totalToggledSkills
-      }}
-      skillGoals={{
-        current: skillGoalMatchingSkills.length,
-        total: totalToggledSkills
-      }}
-    />
+    <div className="space-y-6">
+      <BenchmarkAnalysisCard 
+        skillMatch={{
+          current: matchingSkills.length,
+          total: totalToggledSkills
+        }}
+        competencyMatch={{
+          current: competencyMatchingSkills.length,
+          total: totalToggledSkills
+        }}
+        skillGoals={{
+          current: skillGoalMatchingSkills.length,
+          total: totalToggledSkills
+        }}
+      />
+
+      <Card className="p-6 bg-white">
+        <BenchmarkSkillsMatrixContent 
+          roleId={selectedRole}
+          employeeId={employeeId}
+          roleLevel={roleLevel}
+        />
+      </Card>
+    </div>
   );
 };
