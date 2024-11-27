@@ -8,39 +8,39 @@ import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
 
 interface EmployeeFiltersProps {
-  onDepartmentChange?: (department: string[]) => void;
-  selectedDepartment?: string[];
-  onJobTitleChange?: (jobTitle: string[]) => void;
-  selectedJobTitle?: string[];
-  onLevelChange?: (level: string[]) => void;
-  selectedLevel?: string[];
-  onOfficeChange?: (office: string[]) => void;
-  selectedOffice?: string[];
-  onEmploymentTypeChange?: (employmentType: string[]) => void;
-  selectedEmploymentType?: string[];
-  onSkillsChange?: (skills: string[]) => void;
-  selectedSkills?: string[];
-  onEmployeeSearch?: (employees: string[]) => void;
-  selectedEmployees?: string[];
+  onDepartmentChange: (department: string[]) => void;
+  selectedDepartment: string[];
+  onJobTitleChange: (jobTitle: string[]) => void;
+  selectedJobTitle: string[];
+  onLevelChange: (level: string[]) => void;
+  selectedLevel: string[];
+  onOfficeChange: (office: string[]) => void;
+  selectedOffice: string[];
+  onEmploymentTypeChange: (employmentType: string[]) => void;
+  selectedEmploymentType: string[];
+  onSkillsChange: (skills: string[]) => void;
+  selectedSkills: string[];
+  onEmployeeSearch: (employees: string[]) => void;
+  selectedEmployees: string[];
   onManagerChange?: (manager: string[]) => void;
   selectedManager?: string[];
 }
 
 export const EmployeeFilters = ({ 
-  onDepartmentChange = () => {}, 
-  selectedDepartment = [],
-  onJobTitleChange = () => {},
-  selectedJobTitle = [],
-  onLevelChange = () => {},
-  selectedLevel = [],
-  onOfficeChange = () => {},
-  selectedOffice = [],
-  onEmploymentTypeChange = () => {},
-  selectedEmploymentType = [],
-  onSkillsChange = () => {},
-  selectedSkills = [],
-  onEmployeeSearch = () => {},
-  selectedEmployees = [],
+  onDepartmentChange, 
+  selectedDepartment,
+  onJobTitleChange,
+  selectedJobTitle,
+  onLevelChange,
+  selectedLevel,
+  onOfficeChange,
+  selectedOffice,
+  onEmploymentTypeChange,
+  selectedEmploymentType,
+  onSkillsChange,
+  selectedSkills,
+  onEmployeeSearch,
+  selectedEmployees,
   onManagerChange = () => {},
   selectedManager = []
 }: EmployeeFiltersProps) => {
