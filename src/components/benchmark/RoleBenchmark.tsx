@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { roleSkills } from "../skills/data/roleSkills";
+import { roleSkills } from "@/components/skills/data/roleSkills";
 import { useState, useEffect } from "react";
 import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
-import { useTrack } from "../skills/context/TrackContext";
+import { useTrack } from "@/components/skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
+import { useBenchmarkSearch } from "@/components/skills/context/BenchmarkSearchContext";
 import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
