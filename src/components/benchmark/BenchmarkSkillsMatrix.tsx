@@ -31,7 +31,6 @@ export const BenchmarkSkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Initialize view-only states for benchmark comparison
   useEffect(() => {
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
@@ -75,7 +74,6 @@ export const BenchmarkSkillsMatrix = () => {
     return priorities[requirement.toLowerCase()] ?? 3;
   };
 
-  // Filter and sort skills without modifying states
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) return false;
@@ -134,24 +132,29 @@ export const BenchmarkSkillsMatrix = () => {
       requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
     }))
     .sort((a, b) => {
+      // First, sort by role skill level
       const aRoleLevel = a.roleLevel;
       const bRoleLevel = b.roleLevel;
       
       const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
+      // Then, sort by employee skill level
       const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
       if (employeeLevelDiff !== 0) return employeeLevelDiff;
 
+      // Finally, sort by requirement status
       const requirementDiff = getSkillGoalPriority(a.requirement) - getSkillGoalPriority(b.requirement);
       if (requirementDiff !== 0) return requirementDiff;
 
+      // If all else is equal, sort alphabetically
       return a.title.localeCompare(b.title);
     });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
+        // Only trigger if we haven't shown all items yet
         if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
           setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
         }

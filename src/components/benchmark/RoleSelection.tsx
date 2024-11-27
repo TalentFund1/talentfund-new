@@ -1,7 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { professionalLevels, managerialLevels } from "./data/levelData";
 import { Separator } from "@/components/ui/separator";
-import { useEffect } from "react";
 
 interface RoleSelectionProps {
   selectedRole: string;
@@ -22,23 +21,6 @@ export const RoleSelection = ({
   onTrackChange,
   roles
 }: RoleSelectionProps) => {
-  // Determine if the selected role is managerial
-  const isManagerialRole = selectedRole === "126"; // Engineering Manager ID
-
-  // Set appropriate levels based on role type
-  const levels = isManagerialRole ? managerialLevels : professionalLevels;
-
-  // Effect to handle level changes when switching role types
-  useEffect(() => {
-    if (isManagerialRole && !selectedLevel.toLowerCase().startsWith('m')) {
-      // If switching to managerial role, set default managerial level
-      onLevelChange('m3');
-    } else if (!isManagerialRole && !selectedLevel.toLowerCase().startsWith('p')) {
-      // If switching to professional role, set default professional level
-      onLevelChange('p4');
-    }
-  }, [isManagerialRole, selectedLevel, onLevelChange]);
-
   const getLevelDescription = (level: string) => {
     switch (level.toLowerCase()) {
       case 'p1': return 'Entry';
@@ -55,23 +37,14 @@ export const RoleSelection = ({
     }
   };
 
-  console.log('RoleSelection render:', {
-    selectedRole,
-    selectedLevel,
-    isManagerialRole,
-    availableLevels: Object.keys(levels)
-  });
+  const levels = currentTrack === "Managerial" ? managerialLevels : professionalLevels;
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 w-full max-w-[800px]">
         <Select 
           value={selectedRole}
-          onValueChange={(value) => {
-            console.log('Role changed to:', value);
-            onRoleChange(value);
-            // Level will be automatically adjusted by the useEffect
-          }}
+          onValueChange={onRoleChange}
         >
           <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Select Role">

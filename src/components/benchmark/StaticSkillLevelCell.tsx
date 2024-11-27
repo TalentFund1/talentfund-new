@@ -14,22 +14,17 @@ export const StaticSkillLevelCell = ({
 }: StaticSkillLevelCellProps) => {
   const { currentStates, initializeState } = useSkillsMatrixStore();
 
-  // Initialize the skill state with initial level and requirement
+  // Initialize the skill state with unspecified level and unknown requirement
   useEffect(() => {
-    console.log('Initializing static skill cell:', {
-      skillTitle,
-      initialLevel,
-      currentState: currentStates[skillTitle]
-    });
-    
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, initialLevel || 'unspecified', 'required');
+      console.log('Initializing skill state:', { skillTitle, level: 'unspecified', requirement: 'unknown' });
+      initializeState(skillTitle, 'unspecified', 'unknown');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
-    level: initialLevel || 'unspecified',
-    requirement: 'required'
+    level: 'unspecified',
+    requirement: 'unknown'
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {
@@ -77,6 +72,14 @@ export const StaticSkillLevelCell = ({
     }
     return getBorderColorClass(level).split(' ')[0];
   };
+
+  console.log('StaticSkillLevelCell render:', {
+    skillTitle,
+    initialLevel,
+    currentState,
+    level: currentState?.level || 'unspecified',
+    requirement: currentState?.requirement || 'unknown'
+  });
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
