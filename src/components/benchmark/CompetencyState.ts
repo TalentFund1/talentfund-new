@@ -55,7 +55,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-matrix-storage',
-      version: 2, // Increment version to ensure clean state
+      version: 2,
       partialize: (state) => ({
         currentStates: state.currentStates,
       }),
