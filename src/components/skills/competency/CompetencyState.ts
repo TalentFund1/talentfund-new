@@ -1,21 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-interface SkillState {
-  level: string;
-  required: string;
-}
-
-interface CompetencyState {
-  currentStates: Record<string, Record<string, SkillState>>;
-  originalStates: Record<string, Record<string, SkillState>>;
-  hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
-  setSkillProgression: (skillName: string, progression: Record<string, SkillState>) => void;
-  resetLevels: () => void;
-  saveChanges: () => void;
-  cancelChanges: () => void;
-}
+import { CompetencyState, SkillState } from './state/types';
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -28,14 +13,18 @@ export const useCompetencyStore = create<CompetencyState>()(
           skillName, 
           level, 
           levelKey, 
-          required
+          required,
+          currentStates: get().currentStates
         });
         
         set((state) => {
+          // Preserve existing states while updating the specific skill
+          const existingSkillStates = state.currentStates[skillName] || {};
+          
           const newStates = {
             ...state.currentStates,
             [skillName]: {
-              ...state.currentStates[skillName],
+              ...existingSkillStates,
               [levelKey]: {
                 level,
                 required,
@@ -43,20 +32,33 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
           };
           
+          console.log('Updated states:', {
+            previous: state.currentStates,
+            new: newStates
+          });
+          
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
-          return {
+          return { 
             currentStates: newStates,
             hasChanges
           };
         });
       },
       setSkillProgression: (skillName, progression) => {
-        console.log('Setting skill progression:', { skillName, progression });
+        console.log('Setting skill progression:', { 
+          skillName, 
+          progression,
+          currentStates: get().currentStates 
+        });
+        
         set((state) => {
           const newStates = {
             ...state.currentStates,
-            [skillName]: progression,
+            [skillName]: {
+              ...state.currentStates[skillName],
+              ...progression,
+            },
           };
           
           return {

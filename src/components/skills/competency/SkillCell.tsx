@@ -31,9 +31,16 @@ export const SkillCell = ({
       skillName,
       levelKey,
       newLevel: value,
-      currentRequired: currentState.required
+      currentRequired: currentState.required,
+      currentStates: currentStates
     });
-    setSkillState(skillName, value, levelKey, currentState.required);
+    
+    setSkillState(
+      skillName,
+      value,
+      levelKey,
+      currentState.required
+    );
   };
 
   const handleRequirementChange = (value: string) => {
@@ -41,9 +48,16 @@ export const SkillCell = ({
       skillName,
       levelKey,
       currentLevel: currentState.level,
-      newRequired: value
+      newRequired: value,
+      currentStates: currentStates
     });
-    setSkillState(skillName, currentState.level, levelKey, value);
+    
+    setSkillState(
+      skillName,
+      currentState.level,
+      levelKey,
+      value
+    );
   };
 
   return (
