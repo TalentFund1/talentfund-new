@@ -44,27 +44,33 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { currentStates } = useCompetencyStore();
   const { id } = useParams<{ id: string }>();
   
+  // Initialize with competency store state or initial skills
   const [toggledSkills, setToggledSkillsState] = useState<Set<string>>(() => {
-    const currentRole = id || selectedRole;
-    if (!currentRole) return new Set();
-
-    // Get skills from competency store if they exist
+    const currentRole = id || selectedRole || "123"; // Default to "123" if no role
+    console.log('Initializing toggled skills for role:', currentRole);
+    
+    // First try to get from competency store
     if (currentStates[currentRole]) {
-      return new Set(Object.keys(currentStates[currentRole]));
+      const storeSkills = new Set(Object.keys(currentStates[currentRole]));
+      console.log('Using skills from competency store:', Array.from(storeSkills));
+      return storeSkills;
     }
-
-    // Otherwise use initial skills
-    return getInitialSkillsForRole(currentRole);
+    
+    // Fallback to initial skills
+    const initialSkills = getInitialSkillsForRole(currentRole);
+    console.log('Using initial skills:', Array.from(initialSkills));
+    return initialSkills;
   });
 
+  // Keep in sync with competency store
   useEffect(() => {
-    const currentRole = id || selectedRole;
-    if (currentRole && currentStates[currentRole]) {
-      console.log('Updating toggled skills from competency store for role:', currentRole);
-      setToggledSkillsState(new Set(Object.keys(currentStates[currentRole])));
-    } else if (currentRole) {
-      console.log('Setting initial skills for role:', currentRole);
-      setToggledSkillsState(getInitialSkillsForRole(currentRole));
+    const currentRole = id || selectedRole || "123";
+    console.log('Checking competency store sync for role:', currentRole);
+    
+    if (currentStates[currentRole]) {
+      const storeSkills = new Set(Object.keys(currentStates[currentRole]));
+      console.log('Syncing with competency store skills:', Array.from(storeSkills));
+      setToggledSkillsState(storeSkills);
     }
   }, [id, selectedRole, currentStates]);
 
