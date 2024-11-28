@@ -14,24 +14,27 @@ export const setSkillStateAction = (
   // Initialize role state if it doesn't exist
   const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
   
+  // Initialize skill state if it doesn't exist
+  const skillState = roleState[skillName] || {};
+  
   const newRoleStates = {
     ...state.roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
-        ...roleState[skillName],
+        ...skillState,
         [levelKey]: { level, required }
       }
     }
   };
 
   return {
+    ...state,
     roleStates: newRoleStates,
     currentStates: {
       ...state.currentStates,
       [roleId]: newRoleStates[roleId]
     },
-    originalStates: state.originalStates,
     hasChanges: true
   };
 };
@@ -47,24 +50,27 @@ export const setSkillProgressionAction = (
   // Initialize role state if it doesn't exist
   const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
   
+  // Initialize skill state if it doesn't exist
+  const skillState = roleState[skillName] || {};
+  
   const newRoleStates = {
     ...state.roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
-        ...roleState[skillName],
+        ...skillState,
         ...progression
       }
     }
   };
 
   return {
+    ...state,
     roleStates: newRoleStates,
     currentStates: {
       ...state.currentStates,
       [roleId]: newRoleStates[roleId]
     },
-    originalStates: state.originalStates,
     hasChanges: true
   };
 };
