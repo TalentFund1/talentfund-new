@@ -1,4 +1,4 @@
-import { RoleState } from './competencyTypes';
+import { RoleState } from './types';
 
 export const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
 

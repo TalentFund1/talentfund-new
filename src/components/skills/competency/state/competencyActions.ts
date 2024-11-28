@@ -1,4 +1,4 @@
-import { RoleState, SkillState } from './competencyTypes';
+import { RoleState, SkillState } from './types';
 import { saveRoleState } from './storageUtils';
 
 export const setSkillStateAction = (
