@@ -55,7 +55,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
               resetState[skillName][level] = {
                 level: 'unspecified',
-                requirement: 'preferred'
+                required: 'preferred'
               };
             });
           });
@@ -96,7 +96,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
                 newState[skillName][level] = {
                   level: 'unspecified',
-                  requirement: 'preferred'
+                  required: 'preferred'
                 };
               });
             });
@@ -117,7 +117,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 8, // Increment version to force reset of persisted state
+      version: 9, // Increment version to force reset of persisted state
       skipHydration: false,
       partialize: (state) => ({
         roleStates: state.roleStates

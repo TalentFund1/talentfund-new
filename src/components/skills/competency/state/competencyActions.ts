@@ -64,7 +64,7 @@ export const resetLevelsAction = (
     ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
       resetState[skillName][level] = {
         level: 'unspecified',
-        requirement: 'preferred'
+        required: 'preferred'
       };
     });
   });
