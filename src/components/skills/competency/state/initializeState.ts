@@ -1,5 +1,5 @@
 import { roleSkills } from '../../data/roleSkills';
-import { RoleState, SkillState } from './competencyTypes';
+import { RoleState } from './competencyTypes';
 import { saveRoleState } from './storageUtils';
 
 export const initializeRoleState = (roleId: string): RoleState => {
