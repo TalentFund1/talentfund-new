@@ -26,8 +26,8 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <ToggledSkillsProvider>
+      <ToggledSkillsProvider>
+        <TooltipProvider>
           <BrowserRouter>
             <Toaster />
             <Sonner />
@@ -41,8 +41,8 @@ const App = () => {
               <Route path="/marketplace" element={<TalentMarketplace />} />
             </Routes>
           </BrowserRouter>
-        </ToggledSkillsProvider>
-      </TooltipProvider>
+        </TooltipProvider>
+      </ToggledSkillsProvider>
     </QueryClientProvider>
   );
 };
