@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { roleSkills } from '../data/roleSkills';
 import { useCompetencyStore } from '../competency/CompetencyState';
 
 interface ToggledSkillsContextType {
@@ -12,9 +11,16 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { currentStates } = useCompetencyStore();
   
-  // Initialize with competency store state
+  // Initialize with competency store state and persist in localStorage
   const [toggledSkills, setToggledSkillsState] = useState<Set<string>>(() => {
-    // Always use the first available role's state from competency store
+    // Try to load from localStorage first
+    const savedSkills = localStorage.getItem('toggledSkills');
+    if (savedSkills) {
+      console.log('Loading toggled skills from localStorage:', JSON.parse(savedSkills));
+      return new Set(JSON.parse(savedSkills));
+    }
+
+    // Fall back to competency store state
     const availableRoles = Object.keys(currentStates);
     if (availableRoles.length > 0) {
       const primaryRole = availableRoles[0];
@@ -22,20 +28,35 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       return new Set(Object.keys(currentStates[primaryRole]));
     }
     
-    console.log('No states found in competency store, using empty set');
+    console.log('No states found, using empty set');
     return new Set();
   });
 
-  // Keep in sync with competency store's primary role
+  // Persist toggled skills to localStorage whenever they change
+  useEffect(() => {
+    console.log('Persisting toggled skills to localStorage:', Array.from(toggledSkills));
+    localStorage.setItem('toggledSkills', JSON.stringify(Array.from(toggledSkills)));
+  }, [toggledSkills]);
+
+  // Keep in sync with competency store's primary role while preserving existing toggles
   useEffect(() => {
     const availableRoles = Object.keys(currentStates);
     if (availableRoles.length > 0) {
       const primaryRole = availableRoles[0];
-      console.log('Syncing toggled skills with primary role:', {
+      const competencySkills = new Set(Object.keys(currentStates[primaryRole]));
+      
+      console.log('Syncing toggled skills with competency store:', {
         role: primaryRole,
-        skills: Object.keys(currentStates[primaryRole])
+        currentToggles: Array.from(toggledSkills),
+        competencySkills: Array.from(competencySkills)
       });
-      setToggledSkillsState(new Set(Object.keys(currentStates[primaryRole])));
+
+      // Merge existing toggles with competency skills
+      setToggledSkillsState(prev => {
+        const merged = new Set([...prev, ...competencySkills]);
+        console.log('Merged toggled skills:', Array.from(merged));
+        return merged;
+      });
     }
   }, [currentStates]);
 
