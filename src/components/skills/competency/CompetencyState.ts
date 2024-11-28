@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CompetencyStateStore } from './state/types';
 import { setSkillStateAction, setSkillProgressionAction } from './state/stateActions';
-import { loadPersistedState } from './persistenceUtils';
-import { initializeRoleState } from './initializeState';
+import { loadPersistedState } from './state/persistenceUtils';
+import { initializeRoleState } from './state/initializeState';
 
 export const useCompetencyStore = create<CompetencyStateStore>()(
   persist(
