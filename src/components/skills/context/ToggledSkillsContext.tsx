@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { roleSkills } from '../data/roleSkills';
 import { useCompetencyStore } from '../competency/CompetencyState';
 import { useRoleStore } from '../../benchmark/RoleBenchmark';
@@ -63,7 +63,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           }
         });
 
-        // Always ensure we have skills for the selected role
         if (selectedRole && (!result[selectedRole] || result[selectedRole].size === 0)) {
           console.log('Initializing missing skills for selected role:', selectedRole);
           result[selectedRole] = getInitialSkillsForRole(selectedRole);
@@ -79,7 +78,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return selectedRole ? { [selectedRole]: getInitialSkillsForRole(selectedRole) } : {};
   });
 
-  // Remove initializeStates effect
   useEffect(() => {
     const currentRole = id || selectedRole;
     if (currentRole) {
