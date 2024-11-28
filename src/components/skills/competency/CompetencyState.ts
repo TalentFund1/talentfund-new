@@ -9,7 +9,7 @@ import {
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       roleStates: {},
       currentStates: {},
       originalStates: {},
@@ -63,8 +63,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       getRoleState: (roleId) => {
-        const state = get();
-        return state.roleStates[roleId] || {};
+        return get().roleStates[roleId] || {};
       }
     }),
     {
