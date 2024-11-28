@@ -20,7 +20,6 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
         
         set((state) => {
-          // Deep copy the current states to avoid reference issues
           const newStates = JSON.parse(JSON.stringify({
             ...state.currentStates,
             [skillName]: {
@@ -102,25 +101,25 @@ export const useCompetencyStore = create<CompetencyState>()(
           ...(currentRoleSkills.certifications || [])
         ];
 
-        // Create initial states for all skills
+        // Create initial states for all skills with default values
         const initialStates: Record<string, Record<string, SkillState>> = {};
         
         allSkills.forEach(skill => {
           initialStates[skill.title] = {};
           
-          // Initialize P1-P6 levels
+          // Initialize P1-P6 levels with default values
           ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(level => {
             initialStates[skill.title][level] = {
-              level: skill.level || 'advanced',
-              required: skill.requirement || 'required'
+              level: 'unspecified',
+              required: 'preferred'
             };
           });
           
-          // Initialize M3-M6 levels
+          // Initialize M3-M6 levels with default values
           ['m3', 'm4', 'm5', 'm6'].forEach(level => {
             initialStates[skill.title][level] = {
-              level: skill.level || 'advanced',
-              required: skill.requirement || 'required'
+              level: 'unspecified',
+              required: 'preferred'
             };
           });
         });
@@ -136,7 +135,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 2, // Increment version to force rehydration
+      version: 3, // Increment version to force rehydration with new defaults
       skipHydration: false,
       partialize: (state) => ({
         currentStates: state.currentStates,
