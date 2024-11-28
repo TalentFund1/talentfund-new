@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
 import { BenchmarkCompetencyMatrix } from "./competency/BenchmarkCompetencyMatrix";
@@ -148,29 +148,27 @@ export const BenchmarkSkillsMatrix = () => {
     });
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
-  
+
   return (
-    <ToggledSkillsProvider>
-      <div className="space-y-6">
-        <BenchmarkCompetencyMatrix />
-        <BenchmarkSkillsMatrixView
-          roleId={selectedRole}
-          employeeId={id || ""}
-          roleLevel={roleLevel}
-          filteredSkills={paginatedSkills}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
-          selectedSkillLevel={selectedSkillLevel}
-          setSelectedSkillLevel={setSelectedSkillLevel}
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-          visibleItems={visibleItems}
-        />
-      </div>
-    </ToggledSkillsProvider>
+    <div className="space-y-6">
+      <BenchmarkCompetencyMatrix />
+      <BenchmarkSkillsMatrixView
+        roleId={selectedRole}
+        employeeId={id || ""}
+        roleLevel={roleLevel}
+        filteredSkills={paginatedSkills}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
+        selectedInterest={selectedInterest}
+        setSelectedInterest={setSelectedInterest}
+        selectedSkillLevel={selectedSkillLevel}
+        setSelectedSkillLevel={setSelectedSkillLevel}
+        selectedSearchSkills={selectedSearchSkills}
+        setSelectedSearchSkills={setSelectedSearchSkills}
+        visibleItems={visibleItems}
+      />
+    </div>
   );
 };
