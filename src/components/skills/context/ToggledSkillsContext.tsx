@@ -10,67 +10,69 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 
 const STORAGE_KEY = 'roleToggledSkills';
 
+// Separate validation function for better error handling
 const validateSkillsData = (data: any): boolean => {
-  if (!data || typeof data !== 'object') return false;
+  if (!data || typeof data !== 'object') {
+    console.log('Invalid data structure:', data);
+    return false;
+  }
   return true;
 };
 
+// Separate loading function
 const loadSavedSkills = (roleId: string): Set<string> => {
-  try {
-    console.log('Loading saved skills - Step 1: Starting load for role:', roleId);
-    
-    if (!roleId) {
-      console.warn('Invalid roleId provided to loadSavedSkills');
-      return new Set();
-    }
+  console.log('Loading saved skills for role:', roleId);
+  
+  if (!roleId) {
+    console.warn('No roleId provided for loading skills');
+    return new Set();
+  }
 
+  try {
     const savedData = localStorage.getItem(STORAGE_KEY);
-    console.log('Loading saved skills - Step 2: Raw data from storage:', savedData);
+    console.log('Raw saved data:', savedData);
     
     if (!savedData) {
-      console.log('No saved skills data found in storage');
+      console.log('No saved skills found');
       return new Set();
     }
 
     const parsed = JSON.parse(savedData);
-    console.log('Loading saved skills - Step 3: Parsed data:', parsed);
+    console.log('Parsed saved data:', parsed);
     
     if (!validateSkillsData(parsed)) {
-      console.warn('Invalid data structure in storage');
+      console.warn('Invalid saved data structure');
       return new Set();
     }
 
     const roleSkills = parsed[roleId];
-    console.log('Loading saved skills - Step 4: Role specific skills:', roleSkills);
-    
     if (!Array.isArray(roleSkills)) {
-      console.log('No valid skills array found for role:', roleId);
+      console.log('No valid skills array for role:', roleId);
       return new Set();
     }
 
-    console.log('Successfully loaded skills for role:', roleId, roleSkills);
+    console.log('Loaded skills:', roleSkills);
     return new Set(roleSkills);
   } catch (error) {
-    console.error('Error in loadSavedSkills:', error);
+    console.error('Error loading saved skills:', error);
     return new Set();
   }
 };
 
+// Separate save function
 const saveSkills = (roleId: string, skills: Set<string>): boolean => {
-  try {
-    console.log('Saving skills - Step 1: Starting save for role:', roleId);
-    
-    if (!roleId) {
-      console.error('Cannot save skills: Invalid roleId');
-      return false;
-    }
+  console.log('Saving skills for role:', roleId);
+  
+  if (!roleId) {
+    console.error('Cannot save: No roleId provided');
+    return false;
+  }
 
-    // Get existing data first
+  try {
+    // Get existing data
     const existingData = localStorage.getItem(STORAGE_KEY);
     const currentData = existingData ? JSON.parse(existingData) : {};
     
-    console.log('Saving skills - Step 2: Current storage data:', currentData);
-
     // Prepare new data
     const skillsArray = Array.from(skills);
     const updatedData = {
@@ -78,7 +80,7 @@ const saveSkills = (roleId: string, skills: Set<string>): boolean => {
       [roleId]: skillsArray
     };
 
-    console.log('Saving skills - Step 3: Preparing to save:', {
+    console.log('Saving data:', {
       roleId,
       skillsCount: skillsArray.length,
       updatedData
@@ -86,16 +88,16 @@ const saveSkills = (roleId: string, skills: Set<string>): boolean => {
 
     // Validate before saving
     if (!validateSkillsData(updatedData)) {
-      console.error('Invalid data structure detected before save');
+      console.error('Invalid data structure detected');
       return false;
     }
 
     // Save to storage
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
-    console.log('Saving skills - Step 4: Successfully saved skills for role:', roleId);
+    console.log('Successfully saved skills');
     return true;
   } catch (error) {
-    console.error('Error in saveSkills:', error);
+    console.error('Error saving skills:', error);
     return false;
   }
 };
@@ -112,6 +114,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return loadSavedSkills(currentRoleId);
   });
 
+  // Handle role changes
   useEffect(() => {
     const path = window.location.pathname;
     const matches = path.match(/\/skills\/(\d+)/);
@@ -126,58 +129,48 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   }, [window.location.pathname]);
 
   const setToggledSkills = (newSkills: Set<string>) => {
-    try {
-      console.log('Setting toggled skills:', {
-        roleId: currentRoleId,
-        previousCount: toggledSkills.size,
-        newCount: newSkills.size,
-        newSkills: Array.from(newSkills)
-      });
+    console.log('Setting toggled skills:', {
+      roleId: currentRoleId,
+      previousCount: toggledSkills.size,
+      newCount: newSkills.size
+    });
 
-      // Attempt to save first
-      const saveSuccessful = saveSkills(currentRoleId, newSkills);
-      
-      if (!saveSuccessful) {
-        console.error('Failed to save skills to storage');
-        toast({
-          title: "Save Error",
-          description: "Failed to save skill changes. Please try again.",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      // Only update state if save was successful
-      setToggledSkillsState(newSkills);
-
-      // Determine what changed for notification
-      const prevSkillsArray = Array.from(toggledSkills);
-      const newSkillsArray = Array.from(newSkills);
-      
-      if (newSkillsArray.length > prevSkillsArray.length) {
-        const addedSkill = newSkillsArray.find(skill => !prevSkillsArray.includes(skill));
-        if (addedSkill) {
-          toast({
-            title: "Skill Added",
-            description: `${addedSkill} has been added to your skills.`
-          });
-        }
-      } else if (newSkillsArray.length < prevSkillsArray.length) {
-        const removedSkill = prevSkillsArray.find(skill => !newSkillsArray.includes(skill));
-        if (removedSkill) {
-          toast({
-            title: "Skill Removed",
-            description: `${removedSkill} has been removed from your skills.`
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Error in setToggledSkills:', error);
+    // Save first
+    const saveSuccessful = saveSkills(currentRoleId, newSkills);
+    
+    if (!saveSuccessful) {
+      console.error('Failed to save skills');
       toast({
-        title: "Error",
-        description: "An error occurred while updating skills. Please try again.",
+        title: "Save Error",
+        description: "Failed to save skill changes. Please try again.",
         variant: "destructive"
       });
+      return;
+    }
+
+    // Only update state if save was successful
+    setToggledSkillsState(newSkills);
+
+    // Show success notification
+    const prevSkillsArray = Array.from(toggledSkills);
+    const newSkillsArray = Array.from(newSkills);
+    
+    if (newSkillsArray.length > prevSkillsArray.length) {
+      const addedSkill = newSkillsArray.find(skill => !prevSkillsArray.includes(skill));
+      if (addedSkill) {
+        toast({
+          title: "Skill Added",
+          description: `${addedSkill} has been added to your skills.`
+        });
+      }
+    } else if (newSkillsArray.length < prevSkillsArray.length) {
+      const removedSkill = prevSkillsArray.find(skill => !newSkillsArray.includes(skill));
+      if (removedSkill) {
+        toast({
+          title: "Skill Removed",
+          description: `${removedSkill} has been removed from your skills.`
+        });
+      }
     }
   };
 
