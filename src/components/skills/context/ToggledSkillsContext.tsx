@@ -11,16 +11,19 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { currentStates } = useCompetencyStore();
   
-  // Initialize with competency store state and persist in localStorage
   const [toggledSkills, setToggledSkillsState] = useState<Set<string>>(() => {
-    // Try to load from localStorage first
-    const savedSkills = localStorage.getItem('toggledSkills');
-    if (savedSkills) {
-      console.log('Loading toggled skills from localStorage:', JSON.parse(savedSkills));
-      return new Set(JSON.parse(savedSkills));
+    try {
+      // Try to load from localStorage first
+      const savedSkills = localStorage.getItem('toggledSkills');
+      if (savedSkills) {
+        console.log('Loading toggled skills from localStorage:', JSON.parse(savedSkills));
+        return new Set(JSON.parse(savedSkills));
+      }
+    } catch (error) {
+      console.error('Error loading toggled skills from localStorage:', error);
     }
 
-    // Fall back to competency store state
+    // Fall back to competency store state if localStorage is empty or invalid
     const availableRoles = Object.keys(currentStates);
     if (availableRoles.length > 0) {
       const primaryRole = availableRoles[0];
@@ -34,8 +37,13 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   // Persist toggled skills to localStorage whenever they change
   useEffect(() => {
-    console.log('Persisting toggled skills to localStorage:', Array.from(toggledSkills));
-    localStorage.setItem('toggledSkills', JSON.stringify(Array.from(toggledSkills)));
+    try {
+      const skillsArray = Array.from(toggledSkills);
+      console.log('Persisting toggled skills to localStorage:', skillsArray);
+      localStorage.setItem('toggledSkills', JSON.stringify(skillsArray));
+    } catch (error) {
+      console.error('Error saving toggled skills to localStorage:', error);
+    }
   }, [toggledSkills]);
 
   // Keep in sync with competency store's primary role while preserving existing toggles
@@ -51,7 +59,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         competencySkills: Array.from(competencySkills)
       });
 
-      // Merge existing toggles with competency skills
+      // Merge existing toggles with competency skills while preserving user selections
       setToggledSkillsState(prev => {
         const merged = new Set([...prev, ...competencySkills]);
         console.log('Merged toggled skills:', Array.from(merged));
