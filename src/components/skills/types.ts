@@ -35,7 +35,10 @@ export interface EmployeeSkill {
 export interface RoleSkill {
   title: string;
   subcategory: string;
-  level: string;
+  level?: string;
   growth: string;
-  requirement?: 'required' | 'preferred' | 'skill_goal';
+  confidence?: string;
+  requirement?: string;
+  salary?: string;
+  benchmarks?: { [key: string]: boolean };
 }
