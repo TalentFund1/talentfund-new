@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { CompetencyState } from './state/types';
-import { initializeSkillStates, getStorageKey } from './state/initialState';
+import { initializeSkillStates } from './state/initialState';
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -14,28 +14,41 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Setting initial competency states for role:', roleId);
         
         set((state) => {
-          // Only initialize if states don't exist for this role
+          // Check if we already have states for this role
           if (!state.currentStates[roleId]) {
             console.log('Initializing new states for role:', roleId);
-            const newState = {
-              currentStates: {
-                ...state.currentStates,
-                [roleId]: JSON.parse(JSON.stringify(initializedStates))
-              },
-              originalStates: {
-                ...state.originalStates,
-                [roleId]: JSON.parse(JSON.stringify(initializedStates))
-              },
+            
+            // Deep clone the states to avoid reference issues
+            const newCurrentStates = {
+              ...state.currentStates,
+              [roleId]: JSON.parse(JSON.stringify(initializedStates))
+            };
+            
+            const newOriginalStates = {
+              ...state.originalStates,
+              [roleId]: JSON.parse(JSON.stringify(initializedStates))
+            };
+
+            return {
+              currentStates: newCurrentStates,
+              originalStates: newOriginalStates,
               hasChanges: false
             };
-            return newState;
           }
+          
           console.log('States already exist for role:', roleId);
           return state;
         });
       },
       setSkillState: (skillName, level, levelKey, required, roleId) => {
-        console.log('Setting competency state:', { skillName, level, levelKey, required, roleId });
+        console.log('Setting competency state:', { 
+          skillName, 
+          level, 
+          levelKey, 
+          required, 
+          roleId,
+          currentStates: get().currentStates
+        });
         
         set((state) => {
           const newStates = JSON.parse(JSON.stringify(state.currentStates));
@@ -52,7 +65,8 @@ export const useCompetencyStore = create<CompetencyState>()(
             required,
           };
           
-          const hasChanges = JSON.stringify(newStates[roleId]) !== JSON.stringify(state.originalStates[roleId]);
+          const hasChanges = JSON.stringify(newStates[roleId]) !== 
+                            JSON.stringify(state.originalStates[roleId]);
           
           return { 
             currentStates: newStates,
@@ -61,7 +75,12 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
       setSkillProgression: (skillName, progression, roleId) => {
-        console.log('Setting skill progression:', { skillName, progression, roleId });
+        console.log('Setting skill progression:', { 
+          skillName, 
+          progression, 
+          roleId,
+          currentStates: get().currentStates
+        });
         
         set((state) => {
           const currentRoleId = roleId || Object.keys(state.currentStates)[0];
