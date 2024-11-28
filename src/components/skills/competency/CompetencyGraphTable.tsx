@@ -18,7 +18,7 @@ export const CompetencyGraphTable = ({
   selectedCategory,
   toggledSkills
 }: CompetencyGraphTableProps) => {
-  const { currentStates } = useCompetencyStore();
+  const { roleStates } = useCompetencyStore();
 
   const getLevelsForTrack = () => {
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
@@ -73,15 +73,19 @@ export const CompetencyGraphTable = ({
 
   const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
     let count = 0;
-    levels.forEach(level => {
-      const skillState = currentStates[skillName]?.[level.toLowerCase()];
-      if (skillState && typeof skillState.level === 'string') {
-        const currentLevel = skillState.level.toLowerCase();
-        if (currentLevel === targetLevel.toLowerCase()) {
-          count++;
+    const roleState = roleStates[currentRoleId];
+    
+    if (roleState && roleState[skillName]) {
+      levels.forEach(level => {
+        const skillState = roleState[skillName][level.toLowerCase()];
+        if (skillState && typeof skillState.level === 'string') {
+          const currentLevel = skillState.level.toLowerCase();
+          if (currentLevel === targetLevel.toLowerCase()) {
+            count++;
+          }
         }
-      }
-    });
+      });
+    }
     return count;
   };
 
