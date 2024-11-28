@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useCompetencyStore } from '../competency/CompetencyState';
+import { useParams } from 'react-router-dom';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -9,7 +10,7 @@ interface ToggledSkillsContextType {
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
-  const { getRoleState } = useCompetencyStore();
+  const { getRoleState, initializeState } = useCompetencyStore();
   const [roleToggledSkills, setRoleToggledSkills] = useState<Record<string, Set<string>>>(() => {
     try {
       const savedSkills = localStorage.getItem('roleToggledSkills');
@@ -28,23 +29,25 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return {};
   });
 
-  const [currentRoleId, setCurrentRoleId] = useState<string>(() => {
-    const path = window.location.pathname;
-    const matches = path.match(/\/skills\/(\d+)/);
-    return matches?.[1] || "123";
-  });
+  const { id: urlRoleId } = useParams<{ id: string }>();
+  const [currentRoleId, setCurrentRoleId] = useState<string>(urlRoleId || "123");
 
   useEffect(() => {
-    const path = window.location.pathname;
-    const matches = path.match(/\/skills\/(\d+)/);
-    if (matches?.[1]) {
-      setCurrentRoleId(matches[1]);
+    if (urlRoleId) {
+      setCurrentRoleId(urlRoleId);
+      console.log('Current role ID updated:', urlRoleId);
     }
-  }, [window.location.pathname]);
+  }, [urlRoleId]);
 
   useEffect(() => {
     if (currentRoleId) {
+      // Initialize competency state for current role
+      initializeState(currentRoleId);
+      
+      // Get existing role state
       const roleState = getRoleState(currentRoleId);
+      console.log('Loading role state for:', currentRoleId, roleState);
+      
       if (roleState && Object.keys(roleState).length > 0) {
         setRoleToggledSkills(prev => ({
           ...prev,
@@ -52,7 +55,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         }));
       }
     }
-  }, [currentRoleId, getRoleState]);
+  }, [currentRoleId, getRoleState, initializeState]);
 
   useEffect(() => {
     try {
@@ -72,7 +75,12 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const toggledSkills = roleToggledSkills[currentRoleId] || new Set();
 
   const setToggledSkills = (newSkills: Set<string>) => {
-    console.log('Setting toggled skills for role:', { roleId: currentRoleId, skills: Array.from(newSkills) });
+    console.log('Setting toggled skills for role:', { 
+      roleId: currentRoleId, 
+      skills: Array.from(newSkills),
+      previousSkills: Array.from(toggledSkills)
+    });
+    
     setRoleToggledSkills(prev => ({
       ...prev,
       [currentRoleId]: newSkills
