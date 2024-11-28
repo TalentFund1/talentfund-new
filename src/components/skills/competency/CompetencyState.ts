@@ -68,12 +68,31 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
       resetLevels: () => {
-        console.log('Resetting all levels');
-        set((state) => ({
-          currentStates: {},
-          originalStates: {},
+        console.log('Resetting all levels to default values');
+        const currentStates = get().currentStates;
+        
+        // Create new states with default values for each skill
+        const resetStates = Object.keys(currentStates).reduce((acc, skillName) => {
+          const levels = Object.keys(currentStates[skillName]);
+          
+          acc[skillName] = levels.reduce((levelAcc, level) => {
+            levelAcc[level] = {
+              level: 'unspecified',
+              required: 'preferred'
+            };
+            return levelAcc;
+          }, {} as Record<string, SkillState>);
+          
+          return acc;
+        }, {} as Record<string, Record<string, SkillState>>);
+
+        console.log('Reset states:', resetStates);
+        
+        set({
+          currentStates: resetStates,
+          originalStates: resetStates,
           hasChanges: false
-        }));
+        });
       },
       saveChanges: () => {
         console.log('Saving changes');
