@@ -28,6 +28,8 @@ export const setSkillStateAction = (
     }
   };
 
+  console.log('Updated role states:', newRoleStates);
+
   return {
     ...state,
     roleStates: newRoleStates,
@@ -63,6 +65,8 @@ export const setSkillProgressionAction = (
       }
     }
   };
+
+  console.log('Updated role states with progression:', newRoleStates);
 
   return {
     ...state,
