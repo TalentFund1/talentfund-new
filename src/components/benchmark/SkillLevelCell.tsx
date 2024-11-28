@@ -4,7 +4,6 @@ import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-reac
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillLevelCellProps {
-  initialLevel: string;
   skillTitle: string;
   onLevelChange?: (newLevel: string, requirement: string) => void;
   isRoleBenchmark?: boolean;

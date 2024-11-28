@@ -4,31 +4,22 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useEffect } from "react";
 
 interface StaticSkillLevelCellProps {
-  initialLevel: string;
   skillTitle: string;
 }
 
 export const StaticSkillLevelCell = ({ 
-  initialLevel, 
   skillTitle,
 }: StaticSkillLevelCellProps) => {
   const { currentStates, initializeState } = useSkillsMatrixStore();
 
-  // Initialize the skill state with initial level and requirement
   useEffect(() => {
-    console.log('Initializing static skill cell:', {
-      skillTitle,
-      initialLevel,
-      currentState: currentStates[skillTitle]
-    });
-    
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, initialLevel || 'unspecified', 'required');
+      initializeState(skillTitle, 'unspecified', 'required');
     }
-  }, [skillTitle, initialLevel, currentStates, initializeState]);
+  }, [skillTitle, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
-    level: initialLevel || 'unspecified',
+    level: 'unspecified',
     requirement: 'required'
   };
 
