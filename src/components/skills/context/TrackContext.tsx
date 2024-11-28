@@ -21,33 +21,31 @@ const DEFAULT_TRACKS: Record<string, Track> = {
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
   const [tracks, setTracks] = useState<Record<string, Track>>(() => {
     const savedTracks = localStorage.getItem('roleTracks');
-    return savedTracks ? JSON.parse(savedTracks) : DEFAULT_TRACKS;
+    if (savedTracks) {
+      console.log('Loading saved tracks from storage:', JSON.parse(savedTracks));
+      return JSON.parse(savedTracks);
+    }
+    console.log('Using default tracks:', DEFAULT_TRACKS);
+    localStorage.setItem('roleTracks', JSON.stringify(DEFAULT_TRACKS));
+    return DEFAULT_TRACKS;
   });
+  
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // Initialize tracks on mount if not already set
-  useEffect(() => {
-    const savedTracks = localStorage.getItem('roleTracks');
-    if (!savedTracks) {
-      localStorage.setItem('roleTracks', JSON.stringify(DEFAULT_TRACKS));
-      setTracks(DEFAULT_TRACKS);
-    }
-  }, []);
-
   const getTrackForRole = (roleId: string): Track => {
-    console.log('Getting track for role:', roleId, 'Current tracks:', tracks);
-    return tracks[roleId] || DEFAULT_TRACKS[roleId] || "Professional";
+    const track = tracks[roleId] || DEFAULT_TRACKS[roleId] || "Professional";
+    console.log('Getting track for role:', { roleId, track, allTracks: tracks });
+    return track;
   };
 
   const setTrackForRole = (roleId: string, track: Track) => {
-    console.log('Setting track for role:', roleId, 'to:', track);
+    console.log('Setting track for role:', { roleId, track, previousTracks: tracks });
     const newTracks = {
       ...tracks,
       [roleId]: track
     };
     setTracks(newTracks);
     setHasUnsavedChanges(true);
-    // Immediately save to localStorage
     localStorage.setItem('roleTracks', JSON.stringify(newTracks));
   };
 

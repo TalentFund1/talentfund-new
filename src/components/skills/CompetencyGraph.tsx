@@ -35,17 +35,25 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
 
   const currentRoleId = propRoleId || urlRoleId || "123";
   const savedTrack = getTrackForRole(currentRoleId);
-  const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
+  const [track, setTrack] = useState<"Professional" | "Managerial">(() => {
+    console.log('Initializing track state:', {
+      currentRoleId,
+      savedTrack,
+      initialTrack
+    });
+    return savedTrack;
+  });
 
-  // Ensure track is synced with saved track on mount and role changes
+  // Sync track with saved track on role changes
   useEffect(() => {
-    console.log('Syncing track with saved track:', { 
-      currentRoleId, 
-      savedTrack, 
-      currentTrack: track 
+    console.log('Track sync effect:', {
+      currentRoleId,
+      savedTrack,
+      currentTrack: track
     });
     
     if (savedTrack !== track) {
+      console.log('Updating track to match saved track:', savedTrack);
       setTrack(savedTrack);
     }
   }, [currentRoleId, savedTrack]);
