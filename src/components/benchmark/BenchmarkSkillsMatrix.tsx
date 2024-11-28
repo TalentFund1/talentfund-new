@@ -22,9 +22,19 @@ export const BenchmarkSkillsMatrix = () => {
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { currentStates } = useSkillsMatrixStore();
+  const { currentStates, initializeState } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
+
+  useEffect(() => {
+    console.log('Initializing skills matrix states for employee:', id);
+    employeeSkills.forEach(skill => {
+      if (toggledSkills.has(skill.title)) {
+        console.log('Initializing state for skill:', skill.title);
+        initializeState(skill.title, skill.level || 'unspecified', skill.requirement || 'required');
+      }
+    });
+  }, [id, employeeSkills, toggledSkills, initializeState]);
 
   useEffect(() => {
     const toggledRoleSkills = Array.from(toggledSkills);
