@@ -23,13 +23,13 @@ export const StaticSkillLevelCell = ({
     });
     
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, initialLevel || 'unspecified', 'required');
+      initializeState(skillTitle, 'unspecified', 'preferred');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
-    level: initialLevel || 'unspecified',
-    requirement: 'required'
+    level: 'unspecified',
+    requirement: 'preferred'
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {

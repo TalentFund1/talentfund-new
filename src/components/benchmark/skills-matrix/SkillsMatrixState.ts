@@ -30,15 +30,15 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             currentStates: {
               ...state.currentStates,
               [skillTitle]: {
-                level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'required'
+                level: 'unspecified',
+                requirement: 'preferred'
               }
             },
             originalStates: {
               ...state.originalStates,
               [skillTitle]: {
-                level: initialLevel || 'unspecified',
-                requirement: initialRequirement || 'required'
+                level: 'unspecified',
+                requirement: 'preferred'
               }
             }
           }));
