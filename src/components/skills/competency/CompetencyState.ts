@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CompetencyState } from './state/competencyTypes';
+import { initializeRoleState } from './state/initializeState';
 import { roleSkills } from '../data/roleSkills';
 
 export const useCompetencyStore = create<CompetencyState>()(
@@ -57,6 +58,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         set((state) => {
           const resetState = {};
           
+          // Reset each skill to unspecified/preferred for all levels
           allSkills.forEach(skill => {
             resetState[skill.title] = {};
             ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
@@ -79,6 +81,16 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
 
+      saveChanges: (roleId) => {
+        console.log('Saving changes for role:', roleId);
+        set({ hasChanges: false });
+      },
+
+      cancelChanges: (roleId) => {
+        console.log('Cancelling changes for role:', roleId);
+        set({ hasChanges: false });
+      },
+
       initializeState: (roleId) => {
         console.log('Initializing state for role:', roleId);
         const currentState = get().roleStates[roleId];
@@ -94,6 +106,7 @@ export const useCompetencyStore = create<CompetencyState>()(
           set((state) => {
             const newState = {};
             
+            // Initialize all skills with unspecified level and preferred requirement
             allSkills.forEach(skill => {
               newState[skill.title] = {};
               ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
@@ -103,8 +116,6 @@ export const useCompetencyStore = create<CompetencyState>()(
                 };
               });
             });
-            
-            console.log('Initialized state for role:', { roleId, skillCount: allSkills.length });
             
             return {
               roleStates: {
@@ -116,23 +127,13 @@ export const useCompetencyStore = create<CompetencyState>()(
         }
       },
 
-      saveChanges: (roleId) => {
-        console.log('Saving changes for role:', roleId);
-        set({ hasChanges: false });
-      },
-
-      cancelChanges: (roleId) => {
-        console.log('Cancelling changes for role:', roleId);
-        set({ hasChanges: false });
-      },
-
       getRoleState: (roleId) => {
         return get().roleStates[roleId] || {};
       }
     }),
     {
       name: 'competency-storage',
-      version: 13, // Increment version to force reset of persisted state
+      version: 12, // Increment version to force reset of persisted state
       skipHydration: false,
       partialize: (state) => ({
         roleStates: state.roleStates
