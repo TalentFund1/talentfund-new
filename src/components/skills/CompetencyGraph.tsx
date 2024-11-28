@@ -52,12 +52,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         throw new Error('No skills found for current role');
       }
 
-      console.log('Found role skills:', {
-        specialized: currentRoleSkills.specialized?.length || 0,
-        common: currentRoleSkills.common?.length || 0,
-        certifications: currentRoleSkills.certifications?.length || 0,
-        toggledSkills: Array.from(toggledSkills)
-      });
+      // Get currently toggled skills before generation
+      const currentToggledSkills = Array.from(toggledSkills);
+      console.log('Currently toggled skills before generation:', currentToggledSkills);
 
       // Only process skills that are currently toggled
       const allSkills = [
@@ -67,6 +64,16 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       ].filter(skill => toggledSkills.has(skill.title));
 
       console.log('Processing AI generation for toggled skills:', allSkills.map(s => s.title));
+
+      if (allSkills.length === 0) {
+        toast({
+          title: "No Skills Selected",
+          description: "Please select at least one skill before generating progressions.",
+          variant: "destructive",
+        });
+        setIsGenerating(false);
+        return;
+      }
 
       // Generate progression for each toggled skill
       allSkills.forEach(skill => {
