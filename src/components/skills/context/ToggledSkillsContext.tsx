@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useCompetencyStore } from '../competency/CompetencyState';
+import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -19,11 +20,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         Object.entries(parsed).forEach(([roleId, skills]) => {
           result[roleId] = new Set(skills as string[]);
         });
-        console.log('Loading role-specific toggled skills from localStorage:', result);
+        console.log('Loading saved toggled skills from localStorage:', result);
         return result;
       }
     } catch (error) {
-      console.error('Error loading role-specific toggled skills from localStorage:', error);
+      console.error('Error loading toggled skills from localStorage:', error);
     }
     return {};
   });
@@ -42,18 +43,27 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   }, [window.location.pathname]);
 
+  // Initialize toggle states for new roles
   useEffect(() => {
-    if (currentRoleId) {
-      const roleState = getRoleState(currentRoleId);
-      if (roleState && Object.keys(roleState).length > 0) {
+    if (currentRoleId && !roleToggledSkills[currentRoleId]) {
+      const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
+      if (currentRoleSkills) {
+        const allSkills = [
+          ...currentRoleSkills.specialized,
+          ...currentRoleSkills.common,
+          ...currentRoleSkills.certifications
+        ];
+        
+        console.log('Initializing toggle states for role:', currentRoleId);
         setRoleToggledSkills(prev => ({
           ...prev,
-          [currentRoleId]: new Set(Object.keys(roleState))
+          [currentRoleId]: new Set(allSkills.map(skill => skill.title))
         }));
       }
     }
-  }, [currentRoleId, getRoleState]);
+  }, [currentRoleId]);
 
+  // Persist toggle states to localStorage
   useEffect(() => {
     try {
       const serialized = Object.fromEntries(
