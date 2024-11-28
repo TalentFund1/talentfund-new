@@ -120,6 +120,11 @@ export const useCompetencyStore = create<CompetencyState>()(
             }));
           }
         }
+      },
+
+      getRoleState: (roleId) => {
+        console.log('Getting role state for:', roleId);
+        return get().roleStates[roleId] || {};
       }
     }),
     {
