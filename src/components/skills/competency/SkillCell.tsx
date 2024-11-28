@@ -2,6 +2,7 @@ import { TableCell } from "@/components/ui/table";
 import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
+import { useParams } from "react-router-dom";
 
 interface SkillCellProps {
   skillName: string;
@@ -20,6 +21,7 @@ export const SkillCell = ({
   levelKey 
 }: SkillCellProps) => {
   const { currentStates, setSkillState } = useCompetencyStore();
+  const { id: roleId } = useParams<{ id: string }>();
 
   const currentState = currentStates[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
@@ -32,14 +34,15 @@ export const SkillCell = ({
       levelKey,
       newLevel: value,
       currentRequired: currentState.required,
-      currentStates: currentStates
+      roleId
     });
     
     setSkillState(
       skillName,
       value,
       levelKey,
-      currentState.required
+      currentState.required,
+      roleId || "123"
     );
   };
 
@@ -49,14 +52,15 @@ export const SkillCell = ({
       levelKey,
       currentLevel: currentState.level,
       newRequired: value,
-      currentStates: currentStates
+      roleId
     });
     
     setSkillState(
       skillName,
       currentState.level,
       levelKey,
-      value
+      value,
+      roleId || "123"
     );
   };
 

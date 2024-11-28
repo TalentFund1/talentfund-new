@@ -86,12 +86,12 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         console.log('Generated progression:', { skill: skill.title, progression });
         
         if (progression) {
-          setSkillProgression(skill.title, progression);
+          setSkillProgression(skill.title, progression, currentRoleId);
         }
       });
 
       // Save changes to persist the generated progressions
-      saveChanges();
+      saveChanges(currentRoleId);
 
       toast({
         title: "Skills Generated",
@@ -110,7 +110,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleSave = () => {
-    saveChanges();
+    saveChanges(currentRoleId);
     toast({
       title: "Changes saved",
       description: "Your changes have been saved successfully.",
@@ -118,7 +118,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleCancel = () => {
-    cancelChanges();
+    cancelChanges(currentRoleId);
     toast({
       title: "Changes cancelled",
       description: "Your changes have been discarded.",
@@ -126,7 +126,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleResetLevels = () => {
-    resetLevels();
+    resetLevels(currentRoleId);
     toast({
       title: "Levels reset",
       description: "All skill levels have been reset to their default values.",
