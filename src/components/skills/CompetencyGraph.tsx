@@ -52,30 +52,21 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         throw new Error('No skills found for current role');
       }
 
-      // Get currently toggled skills before generation
-      const currentToggledSkills = Array.from(toggledSkills);
-      console.log('Currently toggled skills before generation:', currentToggledSkills);
+      console.log('Found role skills:', {
+        specialized: currentRoleSkills.specialized?.length || 0,
+        common: currentRoleSkills.common?.length || 0,
+        certifications: currentRoleSkills.certifications?.length || 0
+      });
 
-      // Only process skills that are currently toggled
       const allSkills = [
         ...(currentRoleSkills.specialized || []),
         ...(currentRoleSkills.common || []),
         ...(currentRoleSkills.certifications || [])
       ].filter(skill => toggledSkills.has(skill.title));
 
-      console.log('Processing AI generation for toggled skills:', allSkills.map(s => s.title));
+      console.log('Processing skills generation for:', allSkills.map(s => s.title));
 
-      if (allSkills.length === 0) {
-        toast({
-          title: "No Skills Selected",
-          description: "Please select at least one skill before generating progressions.",
-          variant: "destructive",
-        });
-        setIsGenerating(false);
-        return;
-      }
-
-      // Generate progression for each toggled skill
+      // Generate progression for each skill
       allSkills.forEach(skill => {
         let category = "specialized";
         if (currentRoleSkills.common.some(s => s.title === skill.title)) {
@@ -104,7 +95,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
 
       toast({
         title: "Skills Generated",
-        description: `Generated progression for ${allSkills.length} toggled skills.`,
+        description: "Skill levels have been automatically generated based on industry standards.",
       });
     } catch (error) {
       console.error("Error generating skills:", error);
