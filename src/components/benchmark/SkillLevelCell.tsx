@@ -11,7 +11,6 @@ interface SkillLevelCellProps {
 }
 
 export const SkillLevelCell = ({ 
-  initialLevel, 
   skillTitle, 
   onLevelChange,
   isRoleBenchmark = false
@@ -19,10 +18,10 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel, 'required');
+  initializeState(skillTitle, 'unspecified', 'required');
 
   const currentState = currentStates[skillTitle] || {
-    level: initialLevel?.toLowerCase() || 'unspecified',
+    level: 'unspecified',
     requirement: 'required'
   };
 
