@@ -8,10 +8,15 @@ interface LevelSelectorProps {
 }
 
 export const LevelSelector = ({ currentLevel, onLevelChange }: LevelSelectorProps) => {
+  const handleChange = (value: string) => {
+    console.log('Level selector change:', { currentLevel, newLevel: value });
+    onLevelChange(value);
+  };
+
   return (
     <Select 
       value={currentLevel}
-      onValueChange={onLevelChange}
+      onValueChange={handleChange}
     >
       <SelectTrigger 
         className={`${getLevelStyles(currentLevel)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}

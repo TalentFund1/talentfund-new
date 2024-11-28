@@ -29,20 +29,22 @@ export const SkillCell = ({
       console.log('Initializing skill state:', {
         roleId,
         skillName,
-        levelKey
+        levelKey,
+        details
       });
+      
       setSkillState(
         skillName,
-        "unspecified",
+        details?.level || "unspecified",
         levelKey,
-        "preferred"
+        details?.required || "preferred"
       );
     }
-  }, [roleId, skillName, levelKey]); // Remove currentStates and setSkillState from deps
+  }, [skillName, levelKey, details]); // Remove dependencies that cause re-renders
 
   const currentState = currentStates[roleId]?.[skillName]?.[levelKey] || {
-    level: "unspecified",
-    required: "preferred",
+    level: details?.level || "unspecified",
+    required: details?.required || "preferred",
   };
 
   const handleLevelChange = useCallback((value: string) => {
@@ -52,7 +54,13 @@ export const SkillCell = ({
       newLevel: value,
       currentRequired: currentState.required
     });
-    setSkillState(skillName, value, levelKey, currentState.required);
+    
+    setSkillState(
+      skillName,
+      value,
+      levelKey,
+      currentState.required
+    );
   }, [skillName, levelKey, currentState.required, setSkillState]);
 
   const handleRequirementChange = useCallback((value: string) => {
@@ -62,7 +70,13 @@ export const SkillCell = ({
       currentLevel: currentState.level,
       newRequired: value
     });
-    setSkillState(skillName, currentState.level, levelKey, value);
+    
+    setSkillState(
+      skillName,
+      currentState.level,
+      levelKey,
+      value
+    );
   }, [skillName, levelKey, currentState.level, setSkillState]);
 
   return (
