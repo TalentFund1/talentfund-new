@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CompetencyState } from './state/types';
-import { setSkillStateAction, setSkillProgressionAction, resetLevelsAction } from './state/competencyActions';
+import { setSkillStateAction, setSkillProgressionAction } from './state/competencyActions';
 import { loadRoleState, saveRoleState } from './state/storageUtils';
 import { initializeRoleState } from './state/initializeState';
 
@@ -73,18 +73,28 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Resetting levels for role:', roleId);
         
         set((state) => {
-          const newRoleStates = resetLevelsAction(state.roleStates, roleId);
+          // Initialize a fresh state for the role
+          const freshState = initializeRoleState(roleId);
           
           const newState = {
-            roleStates: newRoleStates,
+            roleStates: {
+              ...state.roleStates,
+              [roleId]: freshState
+            },
             currentStates: {
               ...state.currentStates,
-              [roleId]: newRoleStates[roleId]
+              [roleId]: freshState
             },
             hasChanges: true
           };
 
-          saveRoleState(roleId, newRoleStates[roleId]);
+          // Save the reset state to localStorage
+          saveRoleState(roleId, freshState);
+          
+          console.log('Reset state completed:', {
+            roleId,
+            newState: freshState
+          });
           
           return newState;
         });
@@ -178,7 +188,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 16, // Increment version to force rehydration with new structure
+      version: 16,
       skipHydration: false,
       partialize: (state) => ({
         roleStates: state.roleStates,
@@ -187,7 +197,6 @@ export const useCompetencyStore = create<CompetencyState>()(
       }),
       onRehydrateStorage: () => (state) => {
         console.log('Rehydrated competency state:', state);
-        // Initialize any missing states after rehydration
         if (state) {
           const roleIds = Object.keys(state.roleStates);
           roleIds.forEach(roleId => {
