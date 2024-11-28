@@ -75,8 +75,11 @@ export const CompetencyGraphTable = ({
     let count = 0;
     levels.forEach(level => {
       const skillState = currentStates[skillName]?.[level.toLowerCase()];
-      if (skillState && typeof skillState.level === 'string' && skillState.level.toLowerCase() === targetLevel.toLowerCase()) {
-        count++;
+      if (skillState && typeof skillState.level === 'string') {
+        const currentLevel = skillState.level.toLowerCase();
+        if (currentLevel === targetLevel.toLowerCase()) {
+          count++;
+        }
       }
     });
     return count;
@@ -85,7 +88,6 @@ export const CompetencyGraphTable = ({
   const skills = getSkillsByCategory();
   const levels = getLevelsForTrack();
 
-  // Enhanced sorting logic based on level counts
   const sortedSkills = skills
     .map(skill => ({
       title: skill.title,
@@ -95,23 +97,18 @@ export const CompetencyGraphTable = ({
       unspecifiedCount: countSkillLevels(skill.title, levels, 'unspecified')
     }))
     .sort((a, b) => {
-      // First, sort by number of advanced levels
       const advancedDiff = b.advancedCount - a.advancedCount;
       if (advancedDiff !== 0) return advancedDiff;
       
-      // Then by intermediate levels
       const intermediateDiff = b.intermediateCount - a.intermediateCount;
       if (intermediateDiff !== 0) return intermediateDiff;
       
-      // Then by beginner levels
       const beginnerDiff = b.beginnerCount - a.beginnerCount;
       if (beginnerDiff !== 0) return beginnerDiff;
       
-      // Finally by unspecified levels (reverse order since fewer unspecified is better)
       const unspecifiedDiff = a.unspecifiedCount - b.unspecifiedCount;
       if (unspecifiedDiff !== 0) return unspecifiedDiff;
       
-      // If all counts are equal, sort alphabetically
       return a.title.localeCompare(b.title);
     })
     .map(skill => skill.title);
