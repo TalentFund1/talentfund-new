@@ -11,10 +11,10 @@ export const setSkillStateAction = (
 ) => {
   console.log('Setting skill state action:', { skillName, level, levelKey, required, roleId });
   
-  // Initialize role state if it doesn't exist
-  const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
+  // Initialize or get existing role state
+  const roleState = state.roleStates[roleId] || {};
   
-  // Initialize skill state if it doesn't exist
+  // Initialize or get existing skill state
   const skillState = roleState[skillName] || {};
   
   const newRoleStates = {
@@ -49,10 +49,10 @@ export const setSkillProgressionAction = (
 ) => {
   console.log('Setting skill progression action:', { skillName, progression, roleId });
   
-  // Initialize role state if it doesn't exist
-  const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
+  // Initialize or get existing role state
+  const roleState = state.roleStates[roleId] || {};
   
-  // Initialize skill state if it doesn't exist
+  // Initialize or get existing skill state
   const skillState = roleState[skillName] || {};
   
   const newRoleStates = {
