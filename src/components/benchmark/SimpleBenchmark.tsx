@@ -2,6 +2,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
 import { useState, useEffect } from "react";
 import { professionalLevels } from "./data/levelData";
+import { useParams } from "react-router-dom";
+import { useEmployeeStore } from "../employee/store/employeeStore";
+import { getSkillProfileId, getLevel } from "../EmployeeTable";
 
 const roles = {
   "124": "Backend Engineer",
@@ -11,36 +14,65 @@ const roles = {
 };
 
 export const SimpleBenchmark = () => {
+  const { id } = useParams();
   const { currentStates } = useCompetencyStore();
-  const [selectedRole, setSelectedRole] = useState("123");
-  const [selectedLevel, setSelectedLevel] = useState("p4");
+  const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
+  const employee = getEmployeeById(id || "");
+  
+  // Initialize with employee's role
+  const [selectedRole, setSelectedRole] = useState(() => {
+    if (employee) {
+      const profileId = getSkillProfileId(employee.role);
+      console.log('Initializing with employee role:', {
+        employeeRole: employee.role,
+        mappedProfileId: profileId
+      });
+      return profileId;
+    }
+    return "";
+  });
+
+  const [selectedLevel, setSelectedLevel] = useState(() => {
+    if (employee) {
+      const level = getLevel(employee.role).toLowerCase();
+      console.log('Initializing with employee level:', {
+        employeeRole: employee.role,
+        extractedLevel: level
+      });
+      return level || "p4";
+    }
+    return "p4";
+  });
 
   // Get the primary role ID that contains the saved states
   const getPrimaryRoleId = (): string => {
     const availableRoles = Object.keys(currentStates);
     console.log('Available roles in competency store:', availableRoles);
     
-    if (availableRoles.length === 0) {
-      console.log('No roles found in competency store, using default role: 123 (AI Engineer)');
-      return "123";
+    if (!employee) {
+      console.log('No employee found, cannot determine role');
+      return "";
     }
-    
-    console.log('Using primary role from competency store:', {
-      roleId: availableRoles[0],
-      roleName: roles[availableRoles[0] as keyof typeof roles]
+
+    const profileId = getSkillProfileId(employee.role);
+    console.log('Using employee role:', {
+      employeeRole: employee.role,
+      mappedProfileId: profileId
     });
-    return availableRoles[0];
+    return profileId;
   };
 
   useEffect(() => {
     const primaryRoleId = getPrimaryRoleId();
-    console.log('Setting selected role from competency store:', {
-      previousRole: selectedRole,
-      newRole: primaryRoleId,
-      availableStates: Object.keys(currentStates)
-    });
-    setSelectedRole(primaryRoleId);
-  }, [currentStates]);
+    if (primaryRoleId) {
+      console.log('Setting selected role from employee:', {
+        previousRole: selectedRole,
+        newRole: primaryRoleId,
+        availableStates: Object.keys(currentStates)
+      });
+      setSelectedRole(primaryRoleId);
+    }
+  }, [currentStates, employee]);
 
   const getLevelDescription = (level: string) => {
     switch (level.toLowerCase()) {
