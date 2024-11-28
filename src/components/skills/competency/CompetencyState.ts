@@ -9,20 +9,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       currentStates: {},
       originalStates: {},
       hasChanges: false,
-      initializeStates: (roleId: string) => {
-        // Only initialize if no states exist
-        if (Object.keys(get().currentStates).length === 0) {
-          const initializedStates = initializeSkillStates(roleId);
-          console.log('Setting initial competency states');
-          
-          set({
-            currentStates: initializedStates,
-            originalStates: JSON.parse(JSON.stringify(initializedStates)),
-            hasChanges: false
-          });
-        }
-      },
-      setSkillState: (skillName, level, levelKey, required, roleId) => {
+      setSkillState: (skillName, level, levelKey, required) => {
         console.log('Setting competency state:', { 
           skillName, 
           level, 

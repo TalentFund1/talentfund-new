@@ -28,7 +28,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   });
   
   const { getTrackForRole } = useTrack();
-  const { saveChanges, cancelChanges, hasChanges, initializeStates, setSkillProgression, resetLevels } = useCompetencyStore();
+  const { saveChanges, cancelChanges, hasChanges, setSkillProgression, resetLevels } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -40,10 +40,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   useEffect(() => {
     setTrack(savedTrack);
   }, [savedTrack]);
-
-  useEffect(() => {
-    initializeStates(currentRoleId);
-  }, [currentRoleId, initializeStates]);
 
   const handleGenerateWithAI = async () => {
     console.log("Starting AI generation for skills...", { currentRoleId, track });
