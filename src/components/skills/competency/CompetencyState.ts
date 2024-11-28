@@ -16,6 +16,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       hasChanges: false,
 
       setSkillState: (skillName, level, levelKey, required, roleId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
         set((state) => ({
           roleStates: setSkillStateAction(
             state.roleStates,
@@ -30,6 +31,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       setSkillProgression: (skillName, progression, roleId) => {
+        console.log('Setting skill progression:', { skillName, progression, roleId });
         set((state) => ({
           roleStates: setSkillProgressionAction(
             state.roleStates,
@@ -53,7 +55,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
               resetState[skillName][level] = {
                 level: 'unspecified',
-                required: 'preferred'
+                requirement: 'preferred'
               };
             });
           });
@@ -94,7 +96,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
                 newState[skillName][level] = {
                   level: 'unspecified',
-                  required: 'preferred'
+                  requirement: 'preferred'
                 };
               });
             });
@@ -115,7 +117,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 7,
+      version: 8, // Increment version to force reset of persisted state
       skipHydration: false,
       partialize: (state) => ({
         roleStates: state.roleStates
