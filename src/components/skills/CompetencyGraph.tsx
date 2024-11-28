@@ -42,8 +42,8 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   }, [savedTrack]);
 
   useEffect(() => {
-    initializeStates();
-  }, [initializeStates]);
+    initializeStates(currentRoleId);
+  }, [currentRoleId, initializeStates]);
 
   const handleGenerateWithAI = async () => {
     console.log("Starting AI generation for skills...", { currentRoleId, track });
@@ -82,10 +82,11 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         console.log('Generating progression for skill:', { 
           title: skill.title, 
           category,
-          track
+          track,
+          roleId: currentRoleId
         });
 
-        const progression = generateSkillProgression(skill.title, category);
+        const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
         console.log('Generated progression:', { skill: skill.title, progression });
         
         setSkillProgression(skill.title, progression);
