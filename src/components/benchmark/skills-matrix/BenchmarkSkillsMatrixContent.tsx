@@ -1,6 +1,9 @@
 import { useRef } from "react";
 import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { CategorizedSkills } from "../CategorizedSkills";
+import { useSkillsMatrixStore } from "./SkillsMatrixState";
+import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { Separator } from "@/components/ui/separator";
 
 interface BenchmarkSkillsMatrixContentProps {

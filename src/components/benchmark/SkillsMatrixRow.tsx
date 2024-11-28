@@ -121,7 +121,7 @@ export const SkillsMatrixRow = ({
       )}
       {isRoleBenchmark ? (
         <StaticSkillLevelCell 
-          initialLevel={skill.level}
+          initialLevel={skill.level || 'unspecified'}
           skillTitle={skill.title}
         />
       ) : (

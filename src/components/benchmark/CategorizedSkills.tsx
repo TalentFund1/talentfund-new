@@ -6,7 +6,6 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
 import { useState } from "react";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -18,7 +17,6 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -36,6 +34,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     );
   };
 
+  // Get all skills for the role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -52,6 +51,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     return priorities[level.toLowerCase()] ?? 3;
   };
 
+  // Filter and sort skills based on requirement and employee possession
   const requiredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());

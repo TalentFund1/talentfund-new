@@ -6,6 +6,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
 import { BenchmarkCompetencyMatrix } from "./competency/BenchmarkCompetencyMatrix";
 
@@ -22,24 +23,25 @@ export const BenchmarkSkillsMatrix = () => {
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { currentStates, initializeState } = useSkillsMatrixStore();
+  const { currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
+  // Initialize view-only states for benchmark comparison
   useEffect(() => {
-    console.log('Initializing skills matrix states for employee:', id);
-    employeeSkills.forEach(skill => {
-      if (toggledSkills.has(skill.title)) {
-        console.log('Initializing state for skill:', skill.title);
-        initializeState(skill.title, skill.level || 'unspecified', skill.requirement || 'required');
-      }
-    });
-  }, [id, employeeSkills, toggledSkills, initializeState]);
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
 
-  useEffect(() => {
-    const toggledRoleSkills = Array.from(toggledSkills);
+    const toggledRoleSkills = allRoleSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .map(skill => skill.title);
+    
     setSelectedSearchSkills(toggledRoleSkills);
-  }, [selectedRole, toggledSkills]);
+  }, [selectedRole, toggledSkills, currentRoleSkills]);
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -70,6 +72,7 @@ export const BenchmarkSkillsMatrix = () => {
     return priorities[requirement.toLowerCase()] ?? 3;
   };
 
+  // Filter and sort skills without modifying states
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) return false;
@@ -87,13 +90,13 @@ export const BenchmarkSkillsMatrix = () => {
       }
 
       const currentSkillState = currentStates[skill.title];
-      const skillLevel = currentSkillState?.level || 'unspecified';
+      const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
       
       if (selectedSkillLevel !== 'all') {
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      const requirement = currentSkillState?.requirement || 'unknown';
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {
@@ -123,9 +126,9 @@ export const BenchmarkSkillsMatrix = () => {
     })
     .map(skill => ({
       ...skill,
-      employeeLevel: currentStates[skill.title]?.level || 'unspecified',
+      employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
       roleLevel: getSkillCompetencyState(skill.title, roleLevel.toLowerCase())?.level || 'unspecified',
-      requirement: currentStates[skill.title]?.requirement || 'unknown'
+      requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
     }))
     .sort((a, b) => {
       const aRoleLevel = a.roleLevel;

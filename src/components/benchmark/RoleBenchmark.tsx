@@ -12,7 +12,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
-import { useCompetencyStore } from "../skills/competency/CompetencyState";
 
 interface RoleStore {
   selectedRole: string;
@@ -44,28 +43,21 @@ export const RoleBenchmark = () => {
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">("Professional");
-  const { currentStates, initializeStates } = useCompetencyStore();
 
   // Find the employee and get their role
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   
-  // Set initial role and level based on employee's role and competency store
+  // Set initial role and level based on employee's role
   useEffect(() => {
     if (employee) {
       const profileId = getSkillProfileId(employee.role);
-      console.log('Initializing competency states for role:', profileId);
-      initializeStates(profileId);
-      
+      const level = getLevel(employee.role).toLowerCase();
+      console.log('Setting initial role and level:', { profileId, level });
       setSelectedRole(profileId);
-      
-      // Get the level from competency store if available, otherwise fallback to employee role
-      const competencyState = currentStates[profileId];
-      const level = competencyState ? Object.keys(competencyState)[0] : getLevel(employee.role).toLowerCase();
-      console.log('Setting level from competency store:', level);
       setRoleLevel(level);
     }
-  }, [employee, setSelectedRole, setRoleLevel, initializeStates, currentStates]);
+  }, [employee, setSelectedRole, setRoleLevel]);
 
   useEffect(() => {
     if (!currentRoleSkills) return;

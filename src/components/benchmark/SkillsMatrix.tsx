@@ -1,28 +1,18 @@
-import { useState, useRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
+import { useParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
+import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
+import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useToast } from "@/components/ui/use-toast";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
-import { MatrixHeader } from "./skills-matrix/MatrixHeader";
-import { MatrixFilters } from "./skills-matrix/MatrixFilters";
-import { MatrixContent } from "./skills-matrix/MatrixContent";
+import { Separator } from "@/components/ui/separator";
 
 const ITEMS_PER_PAGE = 10;
-
-const getInterestPriority = (interest: string = 'unknown') => {
-  const priorities: { [key: string]: number } = {
-    'required': 0,
-    'skill_goal': 1,
-    'preferred': 2,
-    'not_interested': 3,
-    'unknown': 4
-  };
-  return priorities[interest.toLowerCase()] ?? 4;
-};
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -41,6 +31,27 @@ export const SkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
 
   const getLevelPriority = (level: string) => {
+    const priorities: { [key: string]: number } = {
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
+    };
+    return priorities[level.toLowerCase()] ?? 3;
+  };
+
+  const getInterestPriority = (requirement: string) => {
+    const priorities: { [key: string]: number } = {
+      'required': 0,
+      'skill_goal': 0,
+      'preferred': 1,
+      'not_interested': 2,
+      'unknown': 3
+    };
+    return priorities[requirement.toLowerCase()] ?? 3;
+  };
+
+  const getRoleLevelPriority = (level: string) => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
       'intermediate': 1,
@@ -89,12 +100,14 @@ export const SkillsMatrix = () => {
       return matchesLevel && matchesInterest && matchesSearch;
     })
     .sort((a, b) => {
+      // Sort by Role Skills level first
       const aRoleLevel = (a.roleLevel || 'unspecified').toLowerCase();
       const bRoleLevel = (b.roleLevel || 'unspecified').toLowerCase();
       
-      const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
+      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
+      // If Role Skills levels are the same, sort by current skill level
       const aState = currentStates[a.title];
       const bState = currentStates[b.title];
       
@@ -104,11 +117,13 @@ export const SkillsMatrix = () => {
       const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
       if (levelDiff !== 0) return levelDiff;
 
+      // If levels are the same, sort by interest/requirement
       const aInterest = (aState?.requirement || a.requirement || 'unknown').toLowerCase();
       const bInterest = (bState?.requirement || b.requirement || 'unknown').toLowerCase();
       const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
       if (interestDiff !== 0) return interestDiff;
 
+      // Finally, sort alphabetically by title
       return a.title.localeCompare(b.title);
     });
 
@@ -154,13 +169,15 @@ export const SkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <MatrixHeader 
+        <SkillsMatrixHeader 
           hasChanges={hasChanges}
           onSave={handleSave}
           onCancel={handleCancel}
         />
         
-        <MatrixFilters 
+        <Separator className="my-4" />
+        
+        <SkillsMatrixFilters 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           selectedLevel={selectedLevel}
@@ -169,12 +186,19 @@ export const SkillsMatrix = () => {
           setSelectedInterest={setSelectedInterest}
         />
 
-        <MatrixContent 
+        <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
           setHasChanges={setHasChanges}
-          visibleItems={visibleItems}
-          observerTarget={observerTarget}
         />
+        
+        {visibleItems < filteredSkills.length && (
+          <div 
+            ref={observerTarget} 
+            className="h-10 flex items-center justify-center"
+          >
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+          </div>
+        )}
       </Card>
     </div>
   );
