@@ -26,22 +26,6 @@ export const useCompetencyStateReader = () => {
     return level.toLowerCase().trim();
   };
 
-  const findSavedState = (skillName: string, levelKey: string): SkillCompetencyState | null => {
-    // Look through all role states for the skill
-    for (const roleId of Object.keys(currentStates)) {
-      const roleStates = currentStates[roleId];
-      if (roleStates?.[skillName]) {
-        const normalizedLevelKey = normalizeLevel(levelKey);
-        const levelState = roleStates[skillName][normalizedLevelKey];
-        if (levelState) {
-          console.log('Found saved state:', { skillName, levelKey, roleId, state: levelState });
-          return levelState;
-        }
-      }
-    }
-    return null;
-  };
-
   const getSkillCompetencyState = (
     skillName: string, 
     levelKey: string = 'p4', 
@@ -54,10 +38,17 @@ export const useCompetencyStateReader = () => {
       hasToggledSkill: toggledSkills.has(skillName)
     });
 
-    // First try to find any saved state for this skill
-    const savedState = findSavedState(skillName, levelKey);
-    if (savedState) {
-      return savedState;
+    // Look through all role states for the skill
+    for (const roleId of Object.keys(currentStates)) {
+      const roleStates = currentStates[roleId];
+      if (roleStates?.[skillName]) {
+        const normalizedLevelKey = normalizeLevel(levelKey);
+        const levelState = roleStates[skillName][normalizedLevelKey];
+        if (levelState) {
+          console.log('Found saved state:', { skillName, levelKey, roleId, state: levelState });
+          return levelState;
+        }
+      }
     }
 
     // If no saved state is found, return unspecified state
