@@ -1,84 +1,74 @@
-interface RoleSkill {
-  title: string;
-}
-
-interface RoleSkills {
-  specialized: RoleSkill[];
-  common: RoleSkill[];
-  certifications: RoleSkill[];
-}
-
-export const roleSkills: { [key: string]: RoleSkills } = {
-  "123": {
+export const roleSkills = {
+  "123": { // AI Engineer
     specialized: [
-      { title: "Machine Learning" },
-      { title: "Deep Learning" },
-      { title: "Natural Language Processing" },
-      { title: "Computer Vision" },
-      { title: "TensorFlow" }
+      { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", salary: "$180,256", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Deep Learning", subcategory: "AI & ML", level: "advanced", growth: "28%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Natural Language Processing", subcategory: "AI Applications", level: "advanced", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Computer Vision", subcategory: "AI Applications", level: "advanced", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "TensorFlow", subcategory: "ML Frameworks", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     common: [
-      { title: "Python" },
-      { title: "Data Structures" },
-      { title: "Algorithms" }
+      { title: "Python", subcategory: "Programming Languages", level: "advanced", growth: "25%", salary: "$173,344", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Technical Writing", subcategory: "Communication", level: "intermediate", growth: "12%", salary: "$156,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     certifications: [
-      { title: "AWS Machine Learning Specialty" },
-      { title: "Google Cloud Professional ML Engineer" }
+      { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud Certification", level: "advanced", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "advanced", growth: "20%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ]
   },
-  "124": {
+  "124": { // Backend Engineer
     specialized: [
-      { title: "Node.js" },
-      { title: "Database Design" },
-      { title: "API Development" },
-      { title: "System Architecture" },
-      { title: "Kubernetes" }
+      { title: "Node.js", subcategory: "Backend Development", level: "advanced", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Database Design", subcategory: "Data Management", level: "advanced", growth: "15%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "API Development", subcategory: "Backend Development", level: "advanced", growth: "25%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "System Architecture", subcategory: "Software Architecture", level: "intermediate", growth: "30%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Kubernetes", subcategory: "Container Orchestration", level: "advanced", growth: "28%", salary: "$178,208", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     common: [
-      { title: "Git" },
-      { title: "CI/CD" },
-      { title: "Testing" }
+      { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Code Review", subcategory: "Development Practices", level: "advanced", growth: "12%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Agile Methodologies", subcategory: "Project Management", level: "advanced", growth: "15%", salary: "$162,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     certifications: [
-      { title: "AWS Solutions Architect" },
-      { title: "Kubernetes Administrator" }
+      { title: "AWS Certified Solutions Architect", subcategory: "Cloud Certification", level: "advanced", growth: "30%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Kubernetes Administrator (CKA)", subcategory: "Container Certification", level: "advanced", growth: "25%", salary: "$178,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ]
   },
-  "125": {
+  "125": { // Frontend Engineer
     specialized: [
-      { title: "React" },
-      { title: "TypeScript" },
-      { title: "Next.js" },
-      { title: "CSS/SASS" },
-      { title: "Performance Optimization" }
+      { title: "React", subcategory: "Frontend Frameworks", level: "advanced", growth: "20%", salary: "$170,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "TypeScript", subcategory: "Programming Languages", level: "advanced", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Next.js", subcategory: "Frontend Frameworks", level: "advanced", growth: "28%", salary: "$172,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "CSS/SASS", subcategory: "Styling", level: "advanced", growth: "15%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Performance Optimization", subcategory: "Frontend Development", level: "advanced", growth: "22%", salary: "$168,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     common: [
-      { title: "HTML5" },
-      { title: "JavaScript" },
-      { title: "Web Security" }
+      { title: "Problem Solving", subcategory: "Soft Skills", level: "advanced", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Code Review", subcategory: "Development Practices", level: "advanced", growth: "12%", salary: "$165,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Agile Methodologies", subcategory: "Project Management", level: "advanced", growth: "15%", salary: "$162,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     certifications: [
-      { title: "AWS Developer Associate" },
-      { title: "Frontend Performance" }
+      { title: "AWS Certified Developer - Associate", subcategory: "Cloud Certification", level: "advanced", growth: "25%", salary: "$170,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Google Mobile Web Specialist", subcategory: "Web Development Certification", level: "advanced", growth: "20%", salary: "$168,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ]
   },
-  "126": {
+  "126": { // Engineering Manager
     specialized: [
-      { title: "System Design" },
-      { title: "Technical Architecture" },
-      { title: "Risk Management" },
-      { title: "Team Leadership" },
-      { title: "Project Management" }
+      { title: "System Design", subcategory: "Architecture", level: "advanced", growth: "25%", salary: "$192,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Technical Architecture", subcategory: "Architecture", level: "advanced", growth: "30%", salary: "$195,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Risk Management", subcategory: "Management", level: "advanced", growth: "20%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Team Leadership", subcategory: "Leadership", level: "advanced", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Project Management", subcategory: "Management", level: "advanced", growth: "25%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     common: [
-      { title: "Communication" },
-      { title: "Strategic Planning" },
-      { title: "Mentoring" }
+      { title: "Strategic Planning", subcategory: "Management", level: "advanced", growth: "30%", salary: "$192,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Stakeholder Management", subcategory: "Leadership", level: "advanced", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Agile Methodologies", subcategory: "Project Management", level: "advanced", growth: "15%", salary: "$162,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ],
     certifications: [
-      { title: "PMP" },
-      { title: "AWS Solutions Architect Professional" }
+      { title: "Project Management Professional (PMP)", subcategory: "Management Certification", level: "advanced", growth: "25%", salary: "$190,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" },
+      { title: "Certified Scrum Master (CSM)", subcategory: "Agile Certification", level: "advanced", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true }, requirement: "required" }
     ]
   }
 };

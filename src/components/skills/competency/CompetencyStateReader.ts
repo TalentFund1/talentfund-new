@@ -1,4 +1,4 @@
-import { useCompetencyStore } from "../../benchmark/CompetencyState";
+import { useCompetencyStore } from "./CompetencyState";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from "../data/roleSkills";
 
@@ -47,6 +47,7 @@ export const useCompetencyStateReader = () => {
     return null;
   };
 
+  // Get the primary role ID that contains the saved states
   const getPrimaryRoleId = (): string => {
     const availableRoles = Object.keys(currentStates);
     if (availableRoles.length === 0) {
