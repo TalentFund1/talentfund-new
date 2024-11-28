@@ -30,18 +30,29 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   });
 
   const [currentRoleId, setCurrentRoleId] = useState<string>(() => {
+    // Get initial role ID from URL or default to "123"
     const path = window.location.pathname;
     const matches = path.match(/\/skills\/(\d+)/);
-    return matches?.[1] || "123";
+    const roleId = matches?.[1] || "123";
+    console.log('Initial role ID:', roleId);
+    return roleId;
   });
 
+  // Update currentRoleId when URL changes
   useEffect(() => {
-    const path = window.location.pathname;
-    const matches = path.match(/\/skills\/(\d+)/);
-    if (matches?.[1]) {
-      setCurrentRoleId(matches[1]);
-    }
-  }, [window.location.pathname]);
+    const handleLocationChange = () => {
+      const path = window.location.pathname;
+      const matches = path.match(/\/skills\/(\d+)/);
+      if (matches?.[1]) {
+        console.log('URL changed, updating role ID to:', matches[1]);
+        setCurrentRoleId(matches[1]);
+      }
+    };
+
+    // Listen for URL changes
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
 
   // Initialize toggle states for new roles
   useEffect(() => {
@@ -54,7 +65,12 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           ...currentRoleSkills.certifications
         ];
         
-        console.log('Initializing toggle states for role:', currentRoleId);
+        console.log('Initializing toggle states for role:', {
+          roleId: currentRoleId,
+          skillCount: allSkills.length,
+          skills: allSkills.map(skill => skill.title)
+        });
+
         setRoleToggledSkills(prev => ({
           ...prev,
           [currentRoleId]: new Set(allSkills.map(skill => skill.title))
@@ -72,7 +88,10 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           Array.from(skills)
         ])
       );
-      console.log('Persisting role-specific toggled skills to localStorage:', serialized);
+      console.log('Persisting role-specific toggled skills to localStorage:', {
+        roleToggledSkills: serialized,
+        currentRoleId
+      });
       localStorage.setItem('roleToggledSkills', JSON.stringify(serialized));
     } catch (error) {
       console.error('Error saving role-specific toggled skills to localStorage:', error);
@@ -82,7 +101,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const toggledSkills = roleToggledSkills[currentRoleId] || new Set();
 
   const setToggledSkills = (newSkills: Set<string>) => {
-    console.log('Setting toggled skills for role:', { roleId: currentRoleId, skills: Array.from(newSkills) });
+    console.log('Setting toggled skills for role:', {
+      roleId: currentRoleId,
+      skillCount: newSkills.size,
+      skills: Array.from(newSkills)
+    });
     setRoleToggledSkills(prev => ({
       ...prev,
       [currentRoleId]: newSkills
