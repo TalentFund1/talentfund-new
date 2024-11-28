@@ -4,10 +4,14 @@ import { useEffect } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface StaticSkillLevelCellProps {
+  initialLevel: string;
   skillTitle: string;
 }
 
-export const StaticSkillLevelCell = ({ skillTitle }: StaticSkillLevelCellProps) => {
+export const StaticSkillLevelCell = ({ 
+  initialLevel,
+  skillTitle 
+}: StaticSkillLevelCellProps) => {
   const { currentStates, initializeState } = useSkillsMatrixStore();
 
   useEffect(() => {
