@@ -150,7 +150,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 20, // Increment version to ensure clean state
+      version: 21, // Increment version to ensure clean state
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
@@ -160,15 +160,9 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Merging persisted state with current state');
         return {
           ...currentState,
-          roleStates: {
-            ...persistedState.roleStates
-          },
-          currentStates: {
-            ...persistedState.currentStates
-          },
-          originalStates: {
-            ...persistedState.originalStates
-          }
+          roleStates: persistedState.roleStates || {},
+          currentStates: persistedState.currentStates || {},
+          originalStates: persistedState.originalStates || {}
         };
       }
     }

@@ -28,6 +28,6 @@ export const initializeRoleState = (roleId: string): RoleState => {
     });
   });
 
-  console.log('Initialized states:', initialStates);
+  console.log('Initialized states with unspecified/preferred defaults:', initialStates);
   return initialStates;
 };
