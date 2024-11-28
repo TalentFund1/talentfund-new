@@ -1,50 +1,63 @@
-import { RoleState, SkillState } from './types';
-import { persistState } from './persistenceUtils';
+import { CompetencyState } from './types';
 
 export const setSkillStateAction = (
-  roleStates: Record<string, RoleState>,
+  state: CompetencyState,
   skillName: string,
   level: string,
   levelKey: string,
   required: string,
   roleId: string
-): Record<string, RoleState> => {
-  console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
+) => {
+  console.log('Setting skill state action:', { skillName, level, levelKey, required, roleId });
   
-  const updatedRoleState = {
-    ...roleStates,
+  const newRoleStates = {
+    ...state.roleStates,
     [roleId]: {
-      ...roleStates[roleId],
+      ...state.roleStates[roleId],
       [skillName]: {
-        ...roleStates[roleId]?.[skillName],
+        ...state.roleStates[roleId]?.[skillName],
         [levelKey]: { level, required }
       }
     }
   };
 
-  persistState(roleId, updatedRoleState[roleId]);
-  return updatedRoleState;
+  return {
+    roleStates: newRoleStates,
+    currentStates: {
+      ...state.currentStates,
+      [roleId]: newRoleStates[roleId]
+    },
+    originalStates: state.originalStates,
+    hasChanges: true
+  };
 };
 
 export const setSkillProgressionAction = (
-  roleStates: Record<string, RoleState>,
+  state: CompetencyState,
   skillName: string,
-  progression: Record<string, SkillState>,
+  progression: Record<string, { level: string; required: string }>,
   roleId: string
-): Record<string, RoleState> => {
-  console.log('Setting skill progression:', { skillName, progression, roleId });
+) => {
+  console.log('Setting skill progression action:', { skillName, progression, roleId });
   
-  const updatedRoleState = {
-    ...roleStates,
+  const newRoleStates = {
+    ...state.roleStates,
     [roleId]: {
-      ...roleStates[roleId],
+      ...state.roleStates[roleId],
       [skillName]: {
-        ...roleStates[roleId]?.[skillName],
+        ...state.roleStates[roleId]?.[skillName],
         ...progression
       }
     }
   };
 
-  persistState(roleId, updatedRoleState[roleId]);
-  return updatedRoleState;
+  return {
+    roleStates: newRoleStates,
+    currentStates: {
+      ...state.currentStates,
+      [roleId]: newRoleStates[roleId]
+    },
+    originalStates: state.originalStates,
+    hasChanges: true
+  };
 };

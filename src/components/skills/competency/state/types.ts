@@ -20,5 +20,4 @@ export interface CompetencyState {
   saveChanges: (roleId: string) => void;
   cancelChanges: (roleId: string) => void;
   initializeState: (roleId: string) => void;
-  getRoleState: (roleId: string) => RoleState;
 }
