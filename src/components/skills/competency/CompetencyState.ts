@@ -25,8 +25,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             roleId
           );
 
-          // Update both roleStates and currentStates
-          return {
+          const updatedState = {
             roleStates: newRoleStates,
             currentStates: {
               ...state.currentStates,
@@ -34,6 +33,12 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true
           };
+
+          // Immediately persist state changes
+          localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(newRoleStates[roleId]));
+          console.log('Persisted updated state for role:', roleId);
+
+          return updatedState;
         });
       },
 
@@ -47,8 +52,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             roleId
           );
 
-          // Update both roleStates and currentStates
-          return {
+          const updatedState = {
             roleStates: newRoleStates,
             currentStates: {
               ...state.currentStates,
@@ -56,6 +60,12 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true
           };
+
+          // Immediately persist state changes
+          localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(newRoleStates[roleId]));
+          console.log('Persisted progression state for role:', roleId);
+
+          return updatedState;
         });
       },
 
@@ -63,7 +73,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Resetting levels for role:', roleId);
         set((state) => {
           const freshState = initializeRoleState(roleId);
-          return {
+          const updatedState = {
             roleStates: {
               ...state.roleStates,
               [roleId]: freshState
@@ -74,6 +84,12 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true
           };
+
+          // Persist reset state
+          localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(freshState));
+          console.log('Persisted reset state for role:', roleId);
+
+          return updatedState;
         });
       },
 
@@ -81,13 +97,19 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Saving changes for role:', roleId);
         set((state) => {
           const currentRoleState = state.roleStates[roleId];
-          return {
+          const updatedState = {
             originalStates: {
               ...state.originalStates,
               [roleId]: { ...currentRoleState }
             },
             hasChanges: false
           };
+
+          // Persist saved state
+          localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(currentRoleState));
+          console.log('Persisted saved state for role:', roleId);
+
+          return updatedState;
         });
       },
 
@@ -158,7 +180,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 18, // Increment version to ensure clean state
+      version: 19, // Increment version to ensure clean state
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
@@ -166,9 +188,21 @@ export const useCompetencyStore = create<CompetencyState>()(
       }),
       merge: (persistedState: any, currentState: CompetencyState) => {
         console.log('Merging persisted state with current state');
+        // Deep merge the states to ensure no data is lost
         return {
           ...currentState,
-          ...persistedState,
+          roleStates: {
+            ...currentState.roleStates,
+            ...persistedState.roleStates
+          },
+          currentStates: {
+            ...currentState.currentStates,
+            ...persistedState.currentStates
+          },
+          originalStates: {
+            ...currentState.originalStates,
+            ...persistedState.originalStates
+          }
         };
       }
     }
