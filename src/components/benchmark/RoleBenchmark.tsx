@@ -12,6 +12,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
+import { useCompetencyStore } from "../skills/competency/CompetencyState";
 
 interface RoleStore {
   selectedRole: string;
@@ -43,6 +44,7 @@ export const RoleBenchmark = () => {
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">("Professional");
+  const { initializeStates } = useCompetencyStore();
 
   // Find the employee and get their role
   const employee = employees.find(emp => emp.id === id);
@@ -56,8 +58,11 @@ export const RoleBenchmark = () => {
       console.log('Setting initial role and level:', { profileId, level });
       setSelectedRole(profileId);
       setRoleLevel(level);
+      
+      // Initialize competency states for the role
+      initializeStates(profileId);
     }
-  }, [employee, setSelectedRole, setRoleLevel]);
+  }, [employee, setSelectedRole, setRoleLevel, initializeStates]);
 
   useEffect(() => {
     if (!currentRoleSkills) return;
@@ -93,6 +98,12 @@ export const RoleBenchmark = () => {
     setCurrentTrack(value as "Professional" | "Managerial");
   };
 
+  const handleRoleChange = (newRole: string) => {
+    setSelectedRole(newRole);
+    // Initialize competency states for the new role
+    initializeStates(newRole);
+  };
+
   if (!currentRoleSkills) {
     console.log('No role skills found for role:', selectedRole);
     return null;
@@ -116,7 +127,7 @@ export const RoleBenchmark = () => {
           selectedRole={selectedRole}
           selectedLevel={roleLevel}
           currentTrack={currentTrack}
-          onRoleChange={setSelectedRole}
+          onRoleChange={handleRoleChange}
           onLevelChange={setRoleLevel}
           onTrackChange={handleTrackChange}
           roles={roles}
