@@ -22,11 +22,10 @@ export const SkillCell = ({
 }: SkillCellProps) => {
   const { currentStates, setSkillState } = useCompetencyStore();
   const initRef = useRef(false);
-  const roleId = "123"; // Default role ID
 
   // Initialize state only once when component mounts
   useEffect(() => {
-    if (!initRef.current && !currentStates[skillName]?.[levelKey]) {
+    if (!initRef.current) {
       console.log('Initializing skill state:', {
         skillName,
         levelKey,
@@ -42,7 +41,7 @@ export const SkillCell = ({
       );
       initRef.current = true;
     }
-  }, []);
+  }, [skillName, levelKey, details.level, details.required, setSkillState]);
 
   const currentState = currentStates[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
