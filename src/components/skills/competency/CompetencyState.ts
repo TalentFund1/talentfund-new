@@ -34,7 +34,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             hasChanges: true
           };
 
-          // Immediately persist state changes
           localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(newRoleStates[roleId]));
           console.log('Persisted updated state for role:', roleId);
 
@@ -61,7 +60,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             hasChanges: true
           };
 
-          // Immediately persist state changes
           localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(newRoleStates[roleId]));
           console.log('Persisted progression state for role:', roleId);
 
@@ -85,7 +83,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             hasChanges: true
           };
 
-          // Persist reset state
           localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(freshState));
           console.log('Persisted reset state for role:', roleId);
 
@@ -105,7 +102,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             hasChanges: false
           };
 
-          // Persist saved state
           localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(currentRoleState));
           console.log('Persisted saved state for role:', roleId);
 
@@ -175,12 +171,13 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       getRoleState: (roleId) => {
+        console.log('Getting role state for:', roleId);
         return get().roleStates[roleId] || {};
       }
     }),
     {
       name: 'competency-storage',
-      version: 19, // Increment version to ensure clean state
+      version: 19,
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
@@ -188,7 +185,6 @@ export const useCompetencyStore = create<CompetencyState>()(
       }),
       merge: (persistedState: any, currentState: CompetencyState) => {
         console.log('Merging persisted state with current state');
-        // Deep merge the states to ensure no data is lost
         return {
           ...currentState,
           roleStates: {
