@@ -58,13 +58,15 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       const roleState = getRoleState(currentRoleId);
       console.log('Loading role state for:', currentRoleId, roleState);
       
-      if (!roleToggledSkills[currentRoleId] && roleState && Object.keys(roleState).length > 0) {
-        console.log('Initializing toggles from role state for:', currentRoleId);
+      // Only initialize if no saved toggle state exists for this role
+      if (!roleToggledSkills[currentRoleId]) {
+        console.log('No saved toggles found for role:', currentRoleId);
         setRoleToggledSkills(prev => {
           const newState = {
             ...prev,
-            [currentRoleId]: new Set(Object.keys(roleState))
+            [currentRoleId]: new Set()
           };
+          
           // Persist immediately after initialization
           try {
             const serialized = Object.fromEntries(
