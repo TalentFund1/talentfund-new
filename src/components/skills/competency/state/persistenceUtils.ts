@@ -6,8 +6,8 @@ export const getStorageKey = (roleId: string) => `${STORAGE_PREFIX}-${roleId}`;
 
 export const loadPersistedState = (roleId: string): RoleState | null => {
   try {
-    const key = getStorageKey(roleId);
-    const savedState = localStorage.getItem(key);
+    const storageKey = getStorageKey(roleId);
+    const savedState = localStorage.getItem(storageKey);
     console.log('Loading persisted state for role:', roleId);
     
     if (savedState) {
@@ -23,9 +23,9 @@ export const loadPersistedState = (roleId: string): RoleState | null => {
 
 export const persistState = (roleId: string, state: RoleState): void => {
   try {
-    const key = getStorageKey(roleId);
+    const storageKey = getStorageKey(roleId);
     console.log('Persisting state for role:', roleId, state);
-    localStorage.setItem(key, JSON.stringify(state));
+    localStorage.setItem(storageKey, JSON.stringify(state));
   } catch (error) {
     console.error('Error persisting state:', error);
   }

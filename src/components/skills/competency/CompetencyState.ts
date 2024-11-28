@@ -25,7 +25,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             roleId
           );
 
-          const updatedState = {
+          return {
             roleStates: newRoleStates,
             currentStates: {
               ...state.currentStates,
@@ -33,12 +33,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true
           };
-
-          // Immediately persist state changes
-          localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(newRoleStates[roleId]));
-          console.log('Persisted updated state for role:', roleId);
-
-          return updatedState;
         });
       },
 
@@ -52,7 +46,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             roleId
           );
 
-          const updatedState = {
+          return {
             roleStates: newRoleStates,
             currentStates: {
               ...state.currentStates,
@@ -60,12 +54,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true
           };
-
-          // Immediately persist state changes
-          localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(newRoleStates[roleId]));
-          console.log('Persisted progression state for role:', roleId);
-
-          return updatedState;
         });
       },
 
@@ -73,7 +61,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Resetting levels for role:', roleId);
         set((state) => {
           const freshState = initializeRoleState(roleId);
-          const updatedState = {
+          return {
             roleStates: {
               ...state.roleStates,
               [roleId]: freshState
@@ -84,51 +72,33 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true
           };
-
-          // Persist reset state
-          localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(freshState));
-          console.log('Persisted reset state for role:', roleId);
-
-          return updatedState;
         });
       },
 
       saveChanges: (roleId) => {
         console.log('Saving changes for role:', roleId);
-        set((state) => {
-          const currentRoleState = state.roleStates[roleId];
-          const updatedState = {
-            originalStates: {
-              ...state.originalStates,
-              [roleId]: { ...currentRoleState }
-            },
-            hasChanges: false
-          };
-
-          // Persist saved state
-          localStorage.setItem(`competency-state-${roleId}`, JSON.stringify(currentRoleState));
-          console.log('Persisted saved state for role:', roleId);
-
-          return updatedState;
-        });
+        set((state) => ({
+          originalStates: {
+            ...state.originalStates,
+            [roleId]: { ...state.roleStates[roleId] }
+          },
+          hasChanges: false
+        }));
       },
 
       cancelChanges: (roleId) => {
         console.log('Canceling changes for role:', roleId);
-        set((state) => {
-          const originalRoleState = state.originalStates[roleId];
-          return {
-            roleStates: {
-              ...state.roleStates,
-              [roleId]: { ...originalRoleState }
-            },
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: { ...originalRoleState }
-            },
-            hasChanges: false
-          };
-        });
+        set((state) => ({
+          roleStates: {
+            ...state.roleStates,
+            [roleId]: { ...state.originalStates[roleId] }
+          },
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: { ...state.originalStates[roleId] }
+          },
+          hasChanges: false
+        }));
       },
 
       initializeState: (roleId) => {
@@ -142,15 +112,15 @@ export const useCompetencyStore = create<CompetencyState>()(
             set((state) => ({
               roleStates: {
                 ...state.roleStates,
-                [roleId]: { ...savedState }
+                [roleId]: savedState
               },
               currentStates: {
                 ...state.currentStates,
-                [roleId]: { ...savedState }
+                [roleId]: savedState
               },
               originalStates: {
                 ...state.originalStates,
-                [roleId]: { ...savedState }
+                [roleId]: savedState
               }
             }));
           } else {
@@ -180,7 +150,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 19, // Increment version to ensure clean state
+      version: 20, // Increment version to ensure clean state
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
@@ -188,19 +158,15 @@ export const useCompetencyStore = create<CompetencyState>()(
       }),
       merge: (persistedState: any, currentState: CompetencyState) => {
         console.log('Merging persisted state with current state');
-        // Deep merge the states to ensure no data is lost
         return {
           ...currentState,
           roleStates: {
-            ...currentState.roleStates,
             ...persistedState.roleStates
           },
           currentStates: {
-            ...currentState.currentStates,
             ...persistedState.currentStates
           },
           originalStates: {
-            ...currentState.originalStates,
             ...persistedState.originalStates
           }
         };
