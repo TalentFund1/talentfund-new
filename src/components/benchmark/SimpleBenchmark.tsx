@@ -21,7 +21,7 @@ export const SimpleBenchmark = () => {
   const { getTrackForRole } = useTrack();
   const employee = getEmployeeById(id || "");
   
-  // Initialize with employee's role
+  // Initialize with employee's role and level
   const [selectedRole, setSelectedRole] = useState(() => {
     if (employee) {
       const profileId = getSkillProfileId(employee.role);
@@ -49,53 +49,36 @@ export const SimpleBenchmark = () => {
   const track = getTrackForRole(selectedRole);
   const levels = track === "Managerial" ? managerialLevels : professionalLevels;
 
-  // Get the primary role ID that contains the saved states
-  const getPrimaryRoleId = (): string => {
-    const availableRoles = Object.keys(currentStates);
-    console.log('Available roles in competency store:', availableRoles);
-    
-    if (!employee) {
-      console.log('No employee found, cannot determine role');
-      return "";
-    }
-
-    const profileId = getSkillProfileId(employee.role);
-    console.log('Using employee role:', {
-      employeeRole: employee.role,
-      mappedProfileId: profileId
-    });
-    return profileId;
-  };
-
+  // Combined effect to handle role and level synchronization
   useEffect(() => {
-    const primaryRoleId = getPrimaryRoleId();
-    if (primaryRoleId) {
-      console.log('Setting selected role from employee:', {
-        previousRole: selectedRole,
-        newRole: primaryRoleId,
-        availableStates: Object.keys(currentStates)
+    if (employee) {
+      const profileId = getSkillProfileId(employee.role);
+      const level = getLevel(employee.role).toLowerCase();
+      
+      console.log('Synchronizing role and level:', {
+        profileId,
+        level,
+        track: getTrackForRole(profileId)
       });
-      setSelectedRole(primaryRoleId);
-    }
-  }, [currentStates, employee]);
 
-  // Update level when track changes
-  useEffect(() => {
-    const isManagerial = track === "Managerial";
-    const currentLevel = selectedLevel.toLowerCase();
-    const isWrongTrack = (isManagerial && currentLevel.startsWith('p')) || 
-                        (!isManagerial && currentLevel.startsWith('m'));
-    
-    if (isWrongTrack) {
-      const newLevel = isManagerial ? 'm3' : 'p4';
-      console.log('Updating level to match track:', {
-        previousLevel: selectedLevel,
-        newLevel,
-        track
-      });
-      setSelectedLevel(newLevel);
+      // Update role if different
+      if (profileId !== selectedRole) {
+        setSelectedRole(profileId);
+      }
+
+      // Update level if track mismatch
+      const isManagerial = track === "Managerial";
+      const isWrongTrack = (isManagerial && level.startsWith('p')) || 
+                          (!isManagerial && level.startsWith('m'));
+      
+      if (isWrongTrack) {
+        const newLevel = isManagerial ? 'm3' : 'p4';
+        setSelectedLevel(newLevel);
+      } else if (level !== selectedLevel) {
+        setSelectedLevel(level);
+      }
     }
-  }, [track, selectedLevel]);
+  }, [employee, track]); // Only depend on employee and track changes
 
   const getLevelDescription = (level: string) => {
     switch (level.toLowerCase()) {
