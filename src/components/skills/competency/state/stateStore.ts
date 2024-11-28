@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyStateStore } from './types';
+import { CompetencyState } from './types';
 import { setSkillStateAction, setSkillProgressionAction } from './stateActions';
 import { loadPersistedState } from './persistenceUtils';
 import { initializeRoleState } from './initializeState';
 
-export const useCompetencyStore = create<CompetencyStateStore>()(
+export const useCompetencyStore = create<CompetencyState>()(
   persist(
     (set, get) => ({
       roleStates: {},
@@ -16,46 +16,16 @@ export const useCompetencyStore = create<CompetencyStateStore>()(
       setSkillState: (skillName, level, levelKey, required, roleId) => {
         console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
         set((state) => {
-          const result = setSkillStateAction(
-            { roleStates: state.roleStates },
-            skillName,
-            level,
-            levelKey,
-            required,
-            roleId
-          );
-          
-          return {
-            ...state,
-            roleStates: result.roleStates,
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: result.roleStates[roleId]
-            },
-            hasChanges: result.hasChanges
-          };
+          const newState = setSkillStateAction(state, skillName, level, levelKey, required, roleId);
+          return newState;
         });
       },
 
       setSkillProgression: (skillName, progression, roleId) => {
         console.log('Setting skill progression:', { skillName, progression, roleId });
         set((state) => {
-          const result = setSkillProgressionAction(
-            { roleStates: state.roleStates },
-            skillName,
-            progression,
-            roleId
-          );
-          
-          return {
-            ...state,
-            roleStates: result.roleStates,
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: result.roleStates[roleId]
-            },
-            hasChanges: result.hasChanges
-          };
+          const newState = setSkillProgressionAction(state, skillName, progression, roleId);
+          return newState;
         });
       },
 
@@ -165,7 +135,7 @@ export const useCompetencyStore = create<CompetencyStateStore>()(
         currentStates: state.currentStates,
         originalStates: state.originalStates
       }),
-      merge: (persistedState: any, currentState: CompetencyStateStore) => {
+      merge: (persistedState: any, currentState: CompetencyState) => {
         console.log('Merging states:', { persistedState, currentState });
         return {
           ...currentState,
