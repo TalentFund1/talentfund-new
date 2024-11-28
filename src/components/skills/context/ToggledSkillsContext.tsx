@@ -31,7 +31,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   const [currentRoleId, setCurrentRoleId] = useState<string>(() => {
     const path = window.location.pathname;
-    const matches = path.match(/\/skills\/(\d+)/);
+    const matches = path.match(/\/(?:skills|employee)\/(\d+)/);
     const roleId = matches?.[1] || "123";
     console.log('Initial role ID:', roleId);
     return roleId;
@@ -41,23 +41,25 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   useEffect(() => {
     const handleLocationChange = () => {
       const path = window.location.pathname;
-      const matches = path.match(/\/skills\/(\d+)/);
+      const matches = path.match(/\/(?:skills|employee)\/(\d+)/);
       if (matches?.[1]) {
         console.log('URL changed, updating role ID to:', matches[1]);
         setCurrentRoleId(matches[1]);
       }
     };
 
-    // Listen for both popstate and pushstate events
     window.addEventListener('popstate', handleLocationChange);
-    window.addEventListener('pushstate', handleLocationChange);
+    const pushState = history.pushState;
+    history.pushState = function() {
+      pushState.apply(history, arguments as any);
+      handleLocationChange();
+    };
     
-    // Initial check
     handleLocationChange();
 
     return () => {
       window.removeEventListener('popstate', handleLocationChange);
-      window.removeEventListener('pushstate', handleLocationChange);
+      history.pushState = pushState;
     };
   }, []);
 
