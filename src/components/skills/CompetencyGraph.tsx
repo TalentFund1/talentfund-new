@@ -37,9 +37,18 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const savedTrack = getTrackForRole(currentRoleId);
   const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
 
+  // Ensure track is synced with saved track on mount and role changes
   useEffect(() => {
-    setTrack(savedTrack);
-  }, [savedTrack]);
+    console.log('Syncing track with saved track:', { 
+      currentRoleId, 
+      savedTrack, 
+      currentTrack: track 
+    });
+    
+    if (savedTrack !== track) {
+      setTrack(savedTrack);
+    }
+  }, [currentRoleId, savedTrack]);
 
   const handleGenerateWithAI = async () => {
     console.log("Starting AI generation for skills...", { currentRoleId, track });
