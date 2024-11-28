@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { useCompetencyStore } from "./CompetencyState";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 
@@ -22,10 +22,11 @@ export const SkillCell = ({
 }: SkillCellProps) => {
   const { currentStates, setSkillState } = useCompetencyStore();
   const roleId = "123"; // Default role ID
+  const isInitialized = useRef(false);
 
   // Initialize state only once when component mounts
   useEffect(() => {
-    if (!currentStates[roleId]?.[skillName]?.[levelKey]) {
+    if (!isInitialized.current && !currentStates[roleId]?.[skillName]?.[levelKey]) {
       console.log('Initializing skill state:', {
         roleId,
         skillName,
@@ -39,8 +40,10 @@ export const SkillCell = ({
         levelKey,
         details?.required || "preferred"
       );
+      
+      isInitialized.current = true;
     }
-  }, [skillName, levelKey, details]); // Remove dependencies that cause re-renders
+  }, []); // Empty dependency array since we only want this to run once
 
   const currentState = currentStates[roleId]?.[skillName]?.[levelKey] || {
     level: details?.level || "unspecified",
