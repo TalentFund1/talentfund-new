@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { useCompetencyStore } from '../competency/CompetencyState';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -8,63 +8,75 @@ interface ToggledSkillsContextType {
 
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'roleToggledSkills';
-
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
-  const { toast } = useToast();
-  const [toggledSkills, setToggledSkillsState] = useState<Set<string>>(() => {
+  const { getRoleState } = useCompetencyStore();
+  const [roleToggledSkills, setRoleToggledSkills] = useState<Record<string, Set<string>>>(() => {
     try {
-      const path = window.location.pathname;
-      const matches = path.match(/\/skills\/(\d+)/);
-      const roleId = matches?.[1] || "123";
-      
-      const savedData = localStorage.getItem(STORAGE_KEY);
-      if (!savedData) return new Set();
-      
-      const parsed = JSON.parse(savedData);
-      if (!parsed || typeof parsed !== 'object') return new Set();
-      
-      const roleSkills = parsed[roleId];
-      if (!Array.isArray(roleSkills)) return new Set();
-      
-      return new Set(roleSkills);
+      const savedSkills = localStorage.getItem('roleToggledSkills');
+      if (savedSkills) {
+        const parsed = JSON.parse(savedSkills);
+        const result: Record<string, Set<string>> = {};
+        Object.entries(parsed).forEach(([roleId, skills]) => {
+          result[roleId] = new Set(skills as string[]);
+        });
+        console.log('Loading role-specific toggled skills from localStorage:', result);
+        return result;
+      }
     } catch (error) {
-      console.log('Error loading initial skills:', error);
-      return new Set();
+      console.error('Error loading role-specific toggled skills from localStorage:', error);
     }
+    return {};
   });
 
-  const setToggledSkills = (newSkills: Set<string>) => {
-    try {
-      const path = window.location.pathname;
-      const matches = path.match(/\/skills\/(\d+)/);
-      const roleId = matches?.[1] || "123";
+  const [currentRoleId, setCurrentRoleId] = useState<string>(() => {
+    const path = window.location.pathname;
+    const matches = path.match(/\/skills\/(\d+)/);
+    return matches?.[1] || "123";
+  });
 
-      // Get existing data first
-      const existingData = localStorage.getItem(STORAGE_KEY);
-      const currentData = existingData ? JSON.parse(existingData) : {};
-      
-      // Update only the specific role's skills
-      const skillsArray = Array.from(newSkills);
-      const updatedData = {
-        ...currentData,
-        [roleId]: skillsArray
-      };
-
-      // Save to storage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
-      
-      // Only update state after successful save
-      setToggledSkillsState(newSkills);
-      
-    } catch (error) {
-      console.log('Error saving skills:', error);
-      toast({
-        title: "Warning",
-        description: "Some changes might not have been saved",
-        variant: "destructive"
-      });
+  useEffect(() => {
+    const path = window.location.pathname;
+    const matches = path.match(/\/skills\/(\d+)/);
+    if (matches?.[1]) {
+      setCurrentRoleId(matches[1]);
     }
+  }, [window.location.pathname]);
+
+  useEffect(() => {
+    if (currentRoleId) {
+      const roleState = getRoleState(currentRoleId);
+      if (roleState && Object.keys(roleState).length > 0) {
+        setRoleToggledSkills(prev => ({
+          ...prev,
+          [currentRoleId]: new Set(Object.keys(roleState))
+        }));
+      }
+    }
+  }, [currentRoleId, getRoleState]);
+
+  useEffect(() => {
+    try {
+      const serialized = Object.fromEntries(
+        Object.entries(roleToggledSkills).map(([roleId, skills]) => [
+          roleId,
+          Array.from(skills)
+        ])
+      );
+      console.log('Persisting role-specific toggled skills to localStorage:', serialized);
+      localStorage.setItem('roleToggledSkills', JSON.stringify(serialized));
+    } catch (error) {
+      console.error('Error saving role-specific toggled skills to localStorage:', error);
+    }
+  }, [roleToggledSkills]);
+
+  const toggledSkills = roleToggledSkills[currentRoleId] || new Set();
+
+  const setToggledSkills = (newSkills: Set<string>) => {
+    console.log('Setting toggled skills for role:', { roleId: currentRoleId, skills: Array.from(newSkills) });
+    setRoleToggledSkills(prev => ({
+      ...prev,
+      [currentRoleId]: newSkills
+    }));
   };
 
   return (
