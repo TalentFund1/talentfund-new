@@ -16,16 +16,46 @@ export const useCompetencyStore = create<CompetencyState>()(
       setSkillState: (skillName, level, levelKey, required, roleId) => {
         console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
         set((state) => {
-          const newState = setSkillStateAction(state, skillName, level, levelKey, required, roleId);
-          return newState;
+          const result = setSkillStateAction(
+            { roleStates: state.roleStates },
+            skillName,
+            level,
+            levelKey,
+            required,
+            roleId
+          );
+          
+          return {
+            ...state,
+            roleStates: result.roleStates,
+            currentStates: {
+              ...state.currentStates,
+              [roleId]: result.roleStates[roleId]
+            },
+            hasChanges: result.hasChanges
+          };
         });
       },
 
       setSkillProgression: (skillName, progression, roleId) => {
         console.log('Setting skill progression:', { skillName, progression, roleId });
         set((state) => {
-          const newState = setSkillProgressionAction(state, skillName, progression, roleId);
-          return newState;
+          const result = setSkillProgressionAction(
+            { roleStates: state.roleStates },
+            skillName,
+            progression,
+            roleId
+          );
+          
+          return {
+            ...state,
+            roleStates: result.roleStates,
+            currentStates: {
+              ...state.currentStates,
+              [roleId]: result.roleStates[roleId]
+            },
+            hasChanges: result.hasChanges
+          };
         });
       },
 

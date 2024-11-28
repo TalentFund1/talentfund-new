@@ -39,23 +39,23 @@ const initializeRoleState = (roleId: string): RoleState => {
 };
 
 export const setSkillStateAction = (
-  roleStates: Record<string, RoleState>,
+  state: { roleStates: Record<string, RoleState> },
   skillName: string,
   level: string,
   levelKey: string,
   required: string,
   roleId: string
-): Record<string, RoleState> => {
+) => {
   console.log('Setting skill state action:', { skillName, level, levelKey, required, roleId });
   
   // Initialize role state if it doesn't exist
-  const roleState = roleStates[roleId] || initializeRoleState(roleId);
+  const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
   
   // Initialize skill state if it doesn't exist
   const skillState = roleState[skillName] || initializeSkillState(skillName, roleId);
   
   const newRoleStates = {
-    ...roleStates,
+    ...state.roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
@@ -66,25 +66,28 @@ export const setSkillStateAction = (
   };
 
   console.log('Updated role states:', newRoleStates);
-  return newRoleStates;
+  return {
+    roleStates: newRoleStates,
+    hasChanges: true
+  };
 };
 
 export const setSkillProgressionAction = (
-  roleStates: Record<string, RoleState>,
+  state: { roleStates: Record<string, RoleState> },
   skillName: string,
   progression: Record<string, SkillState>,
   roleId: string
-): Record<string, RoleState> => {
+) => {
   console.log('Setting skill progression action:', { skillName, progression, roleId });
   
   // Initialize role state if it doesn't exist
-  const roleState = roleStates[roleId] || initializeRoleState(roleId);
+  const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
   
   // Initialize skill state if it doesn't exist
   const skillState = roleState[skillName] || initializeSkillState(skillName, roleId);
   
   const newRoleStates = {
-    ...roleStates,
+    ...state.roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
@@ -95,5 +98,8 @@ export const setSkillProgressionAction = (
   };
 
   console.log('Updated role states with progression:', newRoleStates);
-  return newRoleStates;
+  return {
+    roleStates: newRoleStates,
+    hasChanges: true
+  };
 };
