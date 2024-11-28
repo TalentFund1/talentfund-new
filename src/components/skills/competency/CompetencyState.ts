@@ -1,9 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyState, SkillState } from './state/types';
-import { roleSkills } from '../data/roleSkills';
-import { loadRoleState, saveRoleState } from './state/roleStateManager';
-import { getCurrentRoleState, getSkillState } from './state/stateSelectors';
+import { CompetencyState, RoleState } from './state/competencyTypes';
+import { loadRoleState, saveRoleState } from './state/storageUtils';
+import { initializeRoleState } from './state/initializeState';
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -17,7 +16,10 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
         
         set((state) => {
-          const roleState = getCurrentRoleState(state.roleStates, roleId);
+          // Get the current role state or initialize it
+          const roleState = state.roleStates[roleId] || {};
+          
+          // Create new state for this specific role
           const updatedRoleState = {
             ...roleState,
             [skillName]: {
@@ -26,16 +28,18 @@ export const useCompetencyStore = create<CompetencyState>()(
             }
           };
 
-          const newRoleStates = {
-            ...state.roleStates,
-            [roleId]: updatedRoleState
-          };
-
+          // Save to localStorage for this specific role
           saveRoleState(roleId, updatedRoleState);
 
           return {
-            roleStates: newRoleStates,
-            currentStates: updatedRoleState,
+            roleStates: {
+              ...state.roleStates,
+              [roleId]: updatedRoleState
+            },
+            currentStates: {
+              ...state.currentStates,
+              [roleId]: updatedRoleState
+            },
             hasChanges: true
           };
         });
@@ -45,7 +49,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Setting skill progression:', { skillName, progression, roleId });
         
         set((state) => {
-          const roleState = getCurrentRoleState(state.roleStates, roleId);
+          const roleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
             ...roleState,
             [skillName]: {
@@ -61,7 +65,10 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...state.roleStates,
               [roleId]: updatedRoleState
             },
-            currentStates: updatedRoleState,
+            currentStates: {
+              ...state.currentStates,
+              [roleId]: updatedRoleState
+            },
             hasChanges: true
           };
         });
@@ -69,47 +76,28 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       resetLevels: (roleId) => {
         console.log('Resetting levels for role:', roleId);
-        
-        const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-        if (!currentRoleSkills) {
-          console.warn('No skills found for role:', roleId);
-          return;
-        }
-
-        const allSkills = [
-          ...currentRoleSkills.specialized,
-          ...currentRoleSkills.common,
-          ...currentRoleSkills.certifications
-        ];
-        
-        const defaultStates: Record<string, Record<string, SkillState>> = {};
-        
-        allSkills.forEach(skill => {
-          defaultStates[skill.title] = {};
-          ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
-            defaultStates[skill.title][level] = {
-              level: 'unspecified',
-              required: 'preferred'
-            };
-          });
-        });
-
-        saveRoleState(roleId, defaultStates);
+        const initialState = initializeRoleState(roleId);
         
         set(state => ({
           roleStates: {
             ...state.roleStates,
-            [roleId]: defaultStates
+            [roleId]: initialState
           },
-          currentStates: defaultStates,
-          originalStates: defaultStates,
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: initialState
+          },
+          originalStates: {
+            ...state.originalStates,
+            [roleId]: initialState
+          },
           hasChanges: false
         }));
       },
 
       saveChanges: (roleId) => {
         console.log('Saving changes for role:', roleId);
-        const roleState = getCurrentRoleState(get().roleStates, roleId);
+        const roleState = get().roleStates[roleId] || {};
         saveRoleState(roleId, roleState);
         
         set((state) => ({
@@ -117,8 +105,14 @@ export const useCompetencyStore = create<CompetencyState>()(
             ...state.roleStates,
             [roleId]: roleState
           },
-          currentStates: roleState,
-          originalStates: roleState,
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: roleState
+          },
+          originalStates: {
+            ...state.originalStates,
+            [roleId]: roleState
+          },
           hasChanges: false
         }));
       },
@@ -132,8 +126,14 @@ export const useCompetencyStore = create<CompetencyState>()(
             ...state.roleStates,
             [roleId]: savedState
           },
-          currentStates: savedState,
-          originalStates: savedState,
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: savedState
+          },
+          originalStates: {
+            ...state.originalStates,
+            [roleId]: savedState
+          },
           hasChanges: false
         }));
       },
@@ -148,56 +148,44 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...state.roleStates,
               [roleId]: savedState
             },
-            currentStates: savedState,
-            originalStates: savedState,
+            currentStates: {
+              ...state.currentStates,
+              [roleId]: savedState
+            },
+            originalStates: {
+              ...state.originalStates,
+              [roleId]: savedState
+            },
             hasChanges: false
           }));
           return;
         }
 
-        const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-        if (!currentRoleSkills) {
-          console.warn('No skills found for role:', roleId);
-          return;
-        }
-
-        const allSkills = [
-          ...currentRoleSkills.specialized,
-          ...currentRoleSkills.common,
-          ...currentRoleSkills.certifications
-        ];
-
-        const initialStates: Record<string, Record<string, SkillState>> = {};
-        allSkills.forEach(skill => {
-          initialStates[skill.title] = {};
-          ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
-            initialStates[skill.title][level] = {
-              level: 'unspecified',
-              required: 'preferred'
-            };
-          });
-        });
-
-        saveRoleState(roleId, initialStates);
-        
+        const initialState = initializeRoleState(roleId);
         set(state => ({
           roleStates: {
             ...state.roleStates,
-            [roleId]: initialStates
+            [roleId]: initialState
           },
-          currentStates: initialStates,
-          originalStates: initialStates,
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: initialState
+          },
+          originalStates: {
+            ...state.originalStates,
+            [roleId]: initialState
+          },
           hasChanges: false
         }));
       },
 
       getRoleState: (roleId) => {
-        return getCurrentRoleState(get().roleStates, roleId);
+        return get().roleStates[roleId] || {};
       }
     }),
     {
       name: 'competency-storage',
-      version: 6,
+      version: 7,
       skipHydration: false,
       partialize: (state) => ({
         roleStates: state.roleStates
