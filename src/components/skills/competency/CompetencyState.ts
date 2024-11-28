@@ -82,6 +82,31 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       initializeState: (roleId) => {
         console.log('Initializing state for role:', roleId);
+        const currentState = get().roleStates[roleId];
+        
+        // Only initialize if the state doesn't exist yet
+        if (!currentState) {
+          set((state) => {
+            const newState = {};
+            // Initialize all skills with unspecified level and preferred requirement
+            Object.keys(state.roleStates[roleId] || {}).forEach(skillName => {
+              newState[skillName] = {};
+              ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
+                newState[skillName][level] = {
+                  level: 'unspecified',
+                  required: 'preferred'
+                };
+              });
+            });
+            
+            return {
+              roleStates: {
+                ...state.roleStates,
+                [roleId]: newState
+              }
+            };
+          });
+        }
       },
 
       getRoleState: (roleId) => {
