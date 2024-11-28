@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { CompetencyState } from './state/types';
 import { setSkillStateAction, setSkillProgressionAction, resetLevelsAction } from './state/competencyActions';
 import { loadRoleState, saveRoleState } from './state/storageUtils';
+import { initializeRoleState } from './state/initializeState';
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -13,6 +14,8 @@ export const useCompetencyStore = create<CompetencyState>()(
       hasChanges: false,
 
       setSkillState: (skillName, level, levelKey, required, roleId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
+        
         set((state) => {
           const newRoleStates = setSkillStateAction(
             state.roleStates,
@@ -23,7 +26,8 @@ export const useCompetencyStore = create<CompetencyState>()(
             roleId
           );
 
-          return {
+          // Ensure we update both roleStates and currentStates
+          const newState = {
             roleStates: newRoleStates,
             currentStates: {
               ...state.currentStates,
@@ -31,10 +35,17 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true
           };
+
+          // Save to localStorage immediately
+          saveRoleState(roleId, newRoleStates[roleId]);
+          
+          return newState;
         });
       },
 
       setSkillProgression: (skillName, progression, roleId) => {
+        console.log('Setting skill progression:', { skillName, progression, roleId });
+        
         set((state) => {
           const newRoleStates = setSkillProgressionAction(
             state.roleStates,
@@ -43,7 +54,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             roleId
           );
 
-          return {
+          const newState = {
             roleStates: newRoleStates,
             currentStates: {
               ...state.currentStates,
@@ -51,14 +62,20 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true
           };
+
+          saveRoleState(roleId, newRoleStates[roleId]);
+          
+          return newState;
         });
       },
 
       resetLevels: (roleId) => {
+        console.log('Resetting levels for role:', roleId);
+        
         set((state) => {
           const newRoleStates = resetLevelsAction(state.roleStates, roleId);
           
-          return {
+          const newState = {
             roleStates: newRoleStates,
             currentStates: {
               ...state.currentStates,
@@ -66,10 +83,16 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
             hasChanges: true
           };
+
+          saveRoleState(roleId, newRoleStates[roleId]);
+          
+          return newState;
         });
       },
 
       saveChanges: (roleId) => {
+        console.log('Saving changes for role:', roleId);
+        
         set((state) => {
           const currentRoleState = state.roleStates[roleId];
           saveRoleState(roleId, currentRoleState);
@@ -85,6 +108,8 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       cancelChanges: (roleId) => {
+        console.log('Cancelling changes for role:', roleId);
+        
         set((state) => {
           const originalRoleState = state.originalStates[roleId];
           return {
@@ -102,10 +127,15 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       initializeState: (roleId) => {
+        console.log('Initializing state for role:', roleId);
+        
         const currentState = get().roleStates[roleId];
         if (!currentState) {
+          // Try to load from localStorage first
           const savedState = loadRoleState(roleId);
+          
           if (Object.keys(savedState).length > 0) {
+            console.log('Loaded saved state for role:', roleId);
             set((state) => ({
               roleStates: {
                 ...state.roleStates,
@@ -120,6 +150,24 @@ export const useCompetencyStore = create<CompetencyState>()(
                 [roleId]: savedState
               }
             }));
+          } else {
+            // Initialize with default state if no saved state exists
+            console.log('Initializing new state for role:', roleId);
+            const initialState = initializeRoleState(roleId);
+            set((state) => ({
+              roleStates: {
+                ...state.roleStates,
+                [roleId]: initialState
+              },
+              currentStates: {
+                ...state.currentStates,
+                [roleId]: initialState
+              },
+              originalStates: {
+                ...state.originalStates,
+                [roleId]: initialState
+              }
+            }));
           }
         }
       },
@@ -130,7 +178,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 15,
+      version: 16, // Increment version to force rehydration with new structure
       skipHydration: false,
       partialize: (state) => ({
         roleStates: state.roleStates,
@@ -139,6 +187,13 @@ export const useCompetencyStore = create<CompetencyState>()(
       }),
       onRehydrateStorage: () => (state) => {
         console.log('Rehydrated competency state:', state);
+        // Initialize any missing states after rehydration
+        if (state) {
+          const roleIds = Object.keys(state.roleStates);
+          roleIds.forEach(roleId => {
+            state.initializeState(roleId);
+          });
+        }
       }
     }
   )
