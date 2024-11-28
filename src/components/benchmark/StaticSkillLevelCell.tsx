@@ -84,7 +84,7 @@ export const StaticSkillLevelCell = ({
         <div className={`
           text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
           border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-          ${getLowerBorderColorClass(currentState?.level, currentState?.requirement)}
+          ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement || 'required')}
         `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
