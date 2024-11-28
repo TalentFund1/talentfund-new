@@ -21,7 +21,6 @@ export const CategoryCards = ({
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
   const getSkillsByCategory = (category: string) => {
-    // Get all skills that are toggled on
     const allSkills = [
       ...(currentRoleSkills.specialized || []),
       ...(currentRoleSkills.common || []),

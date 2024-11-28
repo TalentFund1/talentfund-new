@@ -12,7 +12,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
-import { BenchmarkCompetencyMatrix } from "./competency/BenchmarkCompetencyMatrix";
 
 interface RoleStore {
   selectedRole: string;
@@ -45,9 +44,10 @@ export const RoleBenchmark = () => {
   const employees = useEmployeeStore((state) => state.employees);
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">("Professional");
 
+  // Find the employee and get their role
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-
+  
   // Set initial role and level based on employee's role
   useEffect(() => {
     if (employee) {
@@ -126,11 +126,6 @@ export const RoleBenchmark = () => {
           selectedRole={selectedRole}
           roleLevel={roleLevel}
           employeeId={id}
-        />}
-
-        {id && <BenchmarkCompetencyMatrix
-          roleId={selectedRole}
-          roleLevel={roleLevel}
         />}
       </div>
     </div>

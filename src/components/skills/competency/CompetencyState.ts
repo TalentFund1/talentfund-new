@@ -10,50 +10,28 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
       initializeStates: (roleId: string) => {
-        console.log('Initializing competency states for role:', roleId);
+        const initializedStates = initializeSkillStates(roleId);
+        console.log('Setting initial competency states for role:', roleId);
         
         set((state) => {
-          // Check if we already have states for this role
-          if (state.currentStates[roleId]) {
-            console.log('Found existing states for role:', roleId);
-            return state;
+          // Only initialize if states don't exist for this role
+          if (!state.currentStates[roleId]) {
+            console.log('Initializing new states for role:', roleId);
+            const newState = {
+              currentStates: {
+                ...state.currentStates,
+                [roleId]: JSON.parse(JSON.stringify(initializedStates))
+              },
+              originalStates: {
+                ...state.originalStates,
+                [roleId]: JSON.parse(JSON.stringify(initializedStates))
+              },
+              hasChanges: false
+            };
+            return newState;
           }
-
-          // Get saved states from localStorage
-          const storageKey = getStorageKey(roleId);
-          const savedStates = localStorage.getItem(storageKey);
-          let initializedStates;
-
-          if (savedStates) {
-            try {
-              const parsedStates = JSON.parse(savedStates);
-              if (parsedStates && typeof parsedStates === 'object') {
-                console.log('Successfully loaded saved states for role:', roleId);
-                initializedStates = parsedStates;
-              } else {
-                console.log('Invalid saved states format, initializing defaults');
-                initializedStates = initializeSkillStates(roleId);
-              }
-            } catch (error) {
-              console.error('Error parsing saved states for role:', roleId, error);
-              initializedStates = initializeSkillStates(roleId);
-            }
-          } else {
-            console.log('No saved states found, initializing default states for role:', roleId);
-            initializedStates = initializeSkillStates(roleId);
-          }
-
-          return {
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: JSON.parse(JSON.stringify(initializedStates))
-            },
-            originalStates: {
-              ...state.originalStates,
-              [roleId]: JSON.parse(JSON.stringify(initializedStates))
-            },
-            hasChanges: false
-          };
+          console.log('States already exist for role:', roleId);
+          return state;
         });
       },
       setSkillState: (skillName, level, levelKey, required, roleId) => {
@@ -135,18 +113,10 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
       saveChanges: () => {
         console.log('Saving competency changes');
-        set((state) => {
-          // Save to localStorage for each role
-          Object.keys(state.currentStates).forEach(roleId => {
-            const storageKey = getStorageKey(roleId);
-            localStorage.setItem(storageKey, JSON.stringify(state.currentStates[roleId]));
-          });
-
-          return {
-            originalStates: JSON.parse(JSON.stringify(state.currentStates)),
-            hasChanges: false,
-          };
-        });
+        set((state) => ({
+          originalStates: JSON.parse(JSON.stringify(state.currentStates)),
+          hasChanges: false,
+        }));
       },
       cancelChanges: () => {
         console.log('Cancelling competency changes');
