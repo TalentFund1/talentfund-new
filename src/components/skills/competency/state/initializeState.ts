@@ -1,6 +1,5 @@
 import { roleSkills } from '../../data/roleSkills';
-import { RoleState } from './competencyTypes';
-import { saveRoleState } from './storageUtils';
+import { RoleState } from './types';
 
 export const initializeRoleState = (roleId: string): RoleState => {
   console.log('Initializing new state for role:', roleId);
@@ -30,6 +29,5 @@ export const initializeRoleState = (roleId: string): RoleState => {
   });
 
   console.log('Initialized states:', initialStates);
-  saveRoleState(roleId, initialStates);
   return initialStates;
 };
