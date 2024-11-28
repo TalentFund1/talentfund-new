@@ -3,6 +3,7 @@ import { useCompetencyStore } from "./CompetencyState";
 import { SkillCell } from "./SkillCell";
 import { roleSkills } from "../data/roleSkills";
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
+import { SkillState } from "./state/competencyTypes";
 
 interface CompetencyGraphTableProps {
   currentRoleId: string;
@@ -74,7 +75,7 @@ export const CompetencyGraphTable = ({
     let count = 0;
     levels.forEach(level => {
       const skillState = currentStates[skillName]?.[level.toLowerCase()];
-      if (skillState?.level?.toLowerCase() === targetLevel.toLowerCase()) {
+      if (skillState && typeof skillState.level === 'string' && skillState.level.toLowerCase() === targetLevel.toLowerCase()) {
         count++;
       }
     });
