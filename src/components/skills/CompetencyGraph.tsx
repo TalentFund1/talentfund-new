@@ -42,8 +42,8 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   }, [savedTrack]);
 
   useEffect(() => {
-    initializeStates(currentRoleId);
-  }, [currentRoleId, initializeStates]);
+    initializeStates();
+  }, [initializeStates]);
 
   const handleGenerateWithAI = async () => {
     console.log("Starting AI generation for skills...", { currentRoleId, track });
@@ -82,14 +82,13 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         console.log('Generating progression for skill:', { 
           title: skill.title, 
           category,
-          track,
-          roleId: currentRoleId 
+          track
         });
 
-        const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
+        const progression = generateSkillProgression(skill.title, category);
         console.log('Generated progression:', { skill: skill.title, progression });
         
-        setSkillProgression(skill.title, progression, currentRoleId);
+        setSkillProgression(skill.title, progression);
       });
 
       // Save changes to persist the generated progressions
@@ -128,7 +127,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleResetLevels = () => {
-    resetLevels(currentRoleId);
+    resetLevels();
     toast({
       title: "Levels reset",
       description: "All skill levels have been reset to their default values.",
