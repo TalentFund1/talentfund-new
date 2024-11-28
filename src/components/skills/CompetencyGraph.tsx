@@ -14,6 +14,7 @@ import { CompetencyGraphHeader } from "./competency/CompetencyGraphHeader";
 import { CompetencyGraphTable } from "./competency/CompetencyGraphTable";
 import { generateSkillProgression } from "./competency/autoFillUtils";
 import { Brain, RotateCcw } from "lucide-react";
+import { useTrackState } from "./competency/hooks/useTrackState";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -34,29 +35,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const [isGenerating, setIsGenerating] = useState(false);
 
   const currentRoleId = propRoleId || urlRoleId || "123";
-  const savedTrack = getTrackForRole(currentRoleId);
-  const [track, setTrack] = useState<"Professional" | "Managerial">(() => {
-    console.log('Initializing track state:', {
-      currentRoleId,
-      savedTrack,
-      initialTrack
-    });
-    return savedTrack;
-  });
-
-  // Sync track with saved track on role changes
-  useEffect(() => {
-    console.log('Track sync effect:', {
-      currentRoleId,
-      savedTrack,
-      currentTrack: track
-    });
-    
-    if (savedTrack !== track) {
-      console.log('Updating track to match saved track:', savedTrack);
-      setTrack(savedTrack);
-    }
-  }, [currentRoleId, savedTrack]);
+  const { track, setTrack } = useTrackState(currentRoleId, initialTrack);
 
   const handleGenerateWithAI = async () => {
     console.log("Starting AI generation for skills...", { currentRoleId, track });
@@ -83,7 +62,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
 
       console.log('Processing skills generation for:', allSkills.map(s => s.title));
 
-      // Generate progression for each skill
       allSkills.forEach(skill => {
         let category = "specialized";
         if (currentRoleSkills.common.some(s => s.title === skill.title)) {
@@ -107,7 +85,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         }
       });
 
-      // Save changes to persist the generated progressions
       saveChanges();
 
       toast({
