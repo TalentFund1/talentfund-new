@@ -42,10 +42,32 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       resetLevels: (roleId) => {
-        set((state) => ({
-          roleStates: resetLevelsAction(state.roleStates, roleId),
-          hasChanges: true
-        }));
+        console.log('Resetting levels for role:', roleId);
+        set((state) => {
+          const currentRoleState = state.roleStates[roleId] || {};
+          const resetState = {};
+          
+          // Reset each skill to unspecified/preferred for all levels
+          Object.keys(currentRoleState).forEach(skillName => {
+            resetState[skillName] = {};
+            ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
+              resetState[skillName][level] = {
+                level: 'unspecified',
+                required: 'preferred'
+              };
+            });
+          });
+
+          console.log('Reset state:', resetState);
+          
+          return {
+            roleStates: {
+              ...state.roleStates,
+              [roleId]: resetState
+            },
+            hasChanges: true
+          };
+        });
       },
 
       saveChanges: (roleId) => {
