@@ -44,35 +44,34 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { currentStates } = useCompetencyStore();
   const { id } = useParams<{ id: string }>();
   
-  // Initialize with competency store state or initial skills
+  // Initialize with competency store state
   const [toggledSkills, setToggledSkillsState] = useState<Set<string>>(() => {
-    const currentRole = id || selectedRole || "123"; // Default to "123" if no role
-    console.log('Initializing toggled skills for role:', currentRole);
-    
-    // First try to get from competency store
-    if (currentStates[currentRole]) {
-      const storeSkills = new Set(Object.keys(currentStates[currentRole]));
-      console.log('Using skills from competency store:', Array.from(storeSkills));
-      return storeSkills;
+    // Always use the first available role's state from competency store
+    const availableRoles = Object.keys(currentStates);
+    if (availableRoles.length > 0) {
+      const firstRole = availableRoles[0];
+      console.log('Initializing with first available role state:', firstRole);
+      return new Set(Object.keys(currentStates[firstRole]));
     }
     
-    // Fallback to initial skills
-    const initialSkills = getInitialSkillsForRole(currentRole);
-    console.log('Using initial skills:', Array.from(initialSkills));
-    return initialSkills;
+    // Fallback to initial skills only if no states exist
+    const defaultRole = "123";
+    console.log('No states found, using default role:', defaultRole);
+    return getInitialSkillsForRole(defaultRole);
   });
 
-  // Keep in sync with competency store
+  // Keep in sync with competency store's first role
   useEffect(() => {
-    const currentRole = id || selectedRole || "123";
-    console.log('Checking competency store sync for role:', currentRole);
-    
-    if (currentStates[currentRole]) {
-      const storeSkills = new Set(Object.keys(currentStates[currentRole]));
-      console.log('Syncing with competency store skills:', Array.from(storeSkills));
-      setToggledSkillsState(storeSkills);
+    const availableRoles = Object.keys(currentStates);
+    if (availableRoles.length > 0) {
+      const firstRole = availableRoles[0];
+      console.log('Syncing with first role state:', {
+        role: firstRole,
+        skills: Object.keys(currentStates[firstRole])
+      });
+      setToggledSkillsState(new Set(Object.keys(currentStates[firstRole])));
     }
-  }, [id, selectedRole, currentStates]);
+  }, [currentStates]);
 
   const setToggledSkills = (newSkills: Set<string>) => {
     console.log('Setting toggled skills:', Array.from(newSkills));
