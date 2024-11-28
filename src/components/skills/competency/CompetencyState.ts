@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CompetencyState, SkillState } from './state/types';
+import { initializeSkillStates } from './state/initialState';
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -18,7 +19,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
         
         set((state) => {
-          // Preserve existing states while updating the specific skill
+          // Initialize the skill state if it doesn't exist
           const existingSkillStates = state.currentStates[skillName] || {};
           
           const newStates = {
@@ -32,7 +33,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             },
           };
           
-          console.log('Updated states:', {
+          console.log('Updated competency states:', {
             previous: state.currentStates,
             new: newStates
           });
@@ -69,48 +70,41 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
       resetLevels: () => {
         console.log('Resetting all levels to default values');
-        const currentStates = get().currentStates;
-        
-        // Create new states with default values for each skill
-        const resetStates = Object.keys(currentStates).reduce((acc, skillName) => {
-          const levels = Object.keys(currentStates[skillName]);
-          
-          acc[skillName] = levels.reduce((levelAcc, level) => {
-            levelAcc[level] = {
-              level: 'unspecified',
-              required: 'preferred'
-            };
-            return levelAcc;
-          }, {} as Record<string, SkillState>);
-          
-          return acc;
-        }, {} as Record<string, Record<string, SkillState>>);
-
-        console.log('Reset states:', resetStates);
+        const defaultStates = initializeSkillStates("123"); // Initialize with default role
         
         set({
-          currentStates: resetStates,
-          originalStates: resetStates,
+          currentStates: defaultStates,
+          originalStates: defaultStates,
           hasChanges: false
         });
       },
       saveChanges: () => {
-        console.log('Saving changes');
+        console.log('Saving competency changes');
         set((state) => ({
-          originalStates: { ...state.currentStates },
+          originalStates: JSON.parse(JSON.stringify(state.currentStates)), // Deep copy
           hasChanges: false
         }));
       },
       cancelChanges: () => {
-        console.log('Cancelling changes');
+        console.log('Cancelling competency changes');
         set((state) => ({
-          currentStates: { ...state.originalStates },
+          currentStates: JSON.parse(JSON.stringify(state.originalStates)), // Deep copy
           hasChanges: false
         }));
+      },
+      initializeState: (roleId: string) => {
+        console.log('Initializing competency state for role:', roleId);
+        const initialStates = initializeSkillStates(roleId);
+        set({
+          currentStates: initialStates,
+          originalStates: initialStates,
+          hasChanges: false
+        });
       }
     }),
     {
       name: 'competency-storage',
+      version: 1,
       skipHydration: false,
       partialize: (state) => ({
         currentStates: state.currentStates,

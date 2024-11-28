@@ -1,19 +1,17 @@
-import { aiSkills } from '../../data/skills/aiSkills';
-import { backendSkills } from '../../data/skills/backendSkills';
-import { commonSkills } from '../../data/skills/commonSkills';
-import { certificationSkills } from '../../data/skills/certificationSkills';
+import { roleSkills } from '../../data/roleSkills';
+import { SkillState } from './types';
 
 export const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
 
 export const initializeSkillStates = (roleId: string) => {
   console.log('Initializing competency states for role:', roleId);
-  const states: Record<string, Record<string, any>> = {};
+  const states: Record<string, Record<string, SkillState>> = {};
   
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   const allSkills = [
-    ...aiSkills,
-    ...backendSkills,
-    ...commonSkills,
-    ...certificationSkills
+    ...(currentRoleSkills.specialized || []),
+    ...(currentRoleSkills.common || []),
+    ...(currentRoleSkills.certifications || [])
   ];
 
   const storageKey = getStorageKey(roleId);
@@ -32,26 +30,26 @@ export const initializeSkillStates = (roleId: string) => {
   }
 
   console.log('Initializing with default states for role:', roleId);
+  
+  // Initialize states for all skills with default values
   allSkills.forEach(skill => {
-    states[skill.title] = states[skill.title] || {};
+    states[skill.title] = {};
     
-    if (skill.professionalTrack) {
-      Object.entries(skill.professionalTrack).forEach(([level, state]) => {
-        states[skill.title][level.toLowerCase()] = {
-          level: state.level || 'unspecified',
-          required: state.requirement || 'preferred'
-        };
-      });
-    }
+    // Initialize P1-P6 levels for professional track
+    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(level => {
+      states[skill.title][level] = {
+        level: 'unspecified',
+        required: 'preferred'
+      };
+    });
     
-    if (skill.managerialTrack) {
-      Object.entries(skill.managerialTrack).forEach(([level, state]) => {
-        states[skill.title][level.toLowerCase()] = {
-          level: state.level || 'unspecified',
-          required: state.requirement || 'preferred'
-        };
-      });
-    }
+    // Initialize M3-M6 levels for managerial track
+    ['m3', 'm4', 'm5', 'm6'].forEach(level => {
+      states[skill.title][level] = {
+        level: 'unspecified',
+        required: 'preferred'
+      };
+    });
   });
 
   return states;
