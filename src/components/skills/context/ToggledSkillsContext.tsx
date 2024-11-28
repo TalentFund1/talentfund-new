@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -12,30 +12,37 @@ const STORAGE_KEY = 'roleToggledSkills';
 
 const loadSavedSkills = (roleId: string): Set<string> => {
   try {
+    console.log('Loading saved skills for role:', roleId);
     const savedData = localStorage.getItem(STORAGE_KEY);
     if (!savedData) {
-      console.log('No saved skills found for role:', roleId);
+      console.log('No saved skills found');
       return new Set();
     }
 
     const parsed = JSON.parse(savedData);
     if (!parsed || !parsed[roleId]) {
-      console.log('No saved skills found for specific role:', roleId);
+      console.log('No saved skills found for role:', roleId);
       return new Set();
     }
 
-    console.log('Successfully loaded saved skills for role:', roleId, parsed[roleId]);
-    return new Set(parsed[roleId]);
+    const skillsArray = parsed[roleId];
+    if (!Array.isArray(skillsArray)) {
+      console.warn('Invalid saved skills format, resetting');
+      return new Set();
+    }
+
+    console.log('Successfully loaded saved skills:', skillsArray);
+    return new Set(skillsArray);
   } catch (error) {
     console.error('Error loading saved skills:', error);
     return new Set();
   }
 };
 
-const saveSkills = (roleId: string, skills: Set<string>): void => {
+const saveSkills = (roleId: string, skills: Set<string>): boolean => {
   if (!roleId) {
     console.error('Cannot save skills: Invalid roleId');
-    return;
+    return false;
   }
 
   try {
@@ -52,27 +59,25 @@ const saveSkills = (roleId: string, skills: Set<string>): void => {
     // Save back to storage
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
     console.log('Successfully saved skills for role:', roleId, Array.from(skills));
+    return true;
   } catch (error) {
     console.error('Error saving skills:', error);
+    return false;
   }
 };
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
-  
-  // Initialize roleId state
   const [currentRoleId, setCurrentRoleId] = useState<string>(() => {
     const path = window.location.pathname;
     const matches = path.match(/\/skills\/(\d+)/);
     return matches?.[1] || "123";
   });
 
-  // Initialize toggledSkills with saved data
   const [toggledSkills, setToggledSkillsState] = useState<Set<string>>(() => {
     return loadSavedSkills(currentRoleId);
   });
 
-  // Handle URL/role changes
   useEffect(() => {
     const path = window.location.pathname;
     const matches = path.match(/\/skills\/(\d+)/);
@@ -81,8 +86,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     if (newRoleId !== currentRoleId) {
       console.log('Role ID changed:', { from: currentRoleId, to: newRoleId });
       setCurrentRoleId(newRoleId);
-      
-      // Load skills for new role
       const savedSkills = loadSavedSkills(newRoleId);
       setToggledSkillsState(savedSkills);
     }
@@ -96,10 +99,19 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         newCount: newSkills.size
       });
 
-      // First save to ensure persistence
-      saveSkills(currentRoleId, newSkills);
+      // First try to save
+      const saveSuccessful = saveSkills(currentRoleId, newSkills);
       
-      // Then update state
+      if (!saveSuccessful) {
+        toast({
+          title: "Error",
+          description: "Failed to save skill changes. Please try again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Only update state if save was successful
       setToggledSkillsState(newSkills);
 
       // Compare changes for toast notification
@@ -127,7 +139,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       console.error('Error in setToggledSkills:', error);
       toast({
         title: "Error",
-        description: "Failed to update skills. Please try again.",
+        description: "An error occurred while updating skills. Please try again.",
         variant: "destructive"
       });
     }
