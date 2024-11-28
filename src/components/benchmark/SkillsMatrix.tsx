@@ -1,6 +1,5 @@
-import { Card } from "@/components/ui/card";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
@@ -12,6 +11,17 @@ import { MatrixFilters } from "./skills-matrix/MatrixFilters";
 import { MatrixContent } from "./skills-matrix/MatrixContent";
 
 const ITEMS_PER_PAGE = 10;
+
+const getInterestPriority = (interest: string = 'unknown') => {
+  const priorities: { [key: string]: number } = {
+    'required': 0,
+    'skill_goal': 1,
+    'preferred': 2,
+    'not_interested': 3,
+    'unknown': 4
+  };
+  return priorities[interest.toLowerCase()] ?? 4;
+};
 
 export const SkillsMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
