@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyState } from './types';
+import { CompetencyStateStore } from './types';
 import { setSkillStateAction, setSkillProgressionAction } from './stateActions';
 import { loadPersistedState } from './persistenceUtils';
 import { initializeRoleState } from './initializeState';
 
-export const useCompetencyStore = create<CompetencyState>()(
+export const useCompetencyStore = create<CompetencyStateStore>()(
   persist(
     (set, get) => ({
       roleStates: {},
@@ -165,7 +165,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         currentStates: state.currentStates,
         originalStates: state.originalStates
       }),
-      merge: (persistedState: any, currentState: CompetencyState) => {
+      merge: (persistedState: any, currentState: CompetencyStateStore) => {
         console.log('Merging states:', { persistedState, currentState });
         return {
           ...currentState,

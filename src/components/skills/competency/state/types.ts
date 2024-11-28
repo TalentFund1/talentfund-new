@@ -9,7 +9,7 @@ export interface RoleState {
   };
 }
 
-export interface CompetencyState {
+export interface CompetencyStateStore {
   roleStates: Record<string, RoleState>;
   currentStates: Record<string, RoleState>;
   originalStates: Record<string, RoleState>;

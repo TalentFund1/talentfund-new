@@ -38,24 +38,26 @@ const initializeRoleState = (roleId: string): RoleState => {
   return initialState;
 };
 
+interface StateActionResult {
+  roleStates: Record<string, RoleState>;
+  hasChanges: boolean;
+}
+
 export const setSkillStateAction = (
-  state: { roleStates: Record<string, RoleState> },
+  currentState: { roleStates: Record<string, RoleState> },
   skillName: string,
   level: string,
   levelKey: string,
   required: string,
   roleId: string
-) => {
+): StateActionResult => {
   console.log('Setting skill state action:', { skillName, level, levelKey, required, roleId });
   
-  // Initialize role state if it doesn't exist
-  const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
-  
-  // Initialize skill state if it doesn't exist
+  const roleState = currentState.roleStates[roleId] || initializeRoleState(roleId);
   const skillState = roleState[skillName] || initializeSkillState(skillName, roleId);
   
   const newRoleStates = {
-    ...state.roleStates,
+    ...currentState.roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
@@ -73,21 +75,18 @@ export const setSkillStateAction = (
 };
 
 export const setSkillProgressionAction = (
-  state: { roleStates: Record<string, RoleState> },
+  currentState: { roleStates: Record<string, RoleState> },
   skillName: string,
   progression: Record<string, SkillState>,
   roleId: string
-) => {
+): StateActionResult => {
   console.log('Setting skill progression action:', { skillName, progression, roleId });
   
-  // Initialize role state if it doesn't exist
-  const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
-  
-  // Initialize skill state if it doesn't exist
+  const roleState = currentState.roleStates[roleId] || initializeRoleState(roleId);
   const skillState = roleState[skillName] || initializeSkillState(skillName, roleId);
   
   const newRoleStates = {
-    ...state.roleStates,
+    ...currentState.roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
