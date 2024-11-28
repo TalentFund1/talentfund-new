@@ -1,24 +1,61 @@
-import { CompetencyState } from './types';
-import { initializeRoleState } from './initializeState';
+import { RoleState, SkillState } from './types';
+import { roleSkills } from '../../data/roleSkills';
+
+const initializeSkillState = (skillName: string, roleId: string) => {
+  console.log('Initializing skill state:', { skillName, roleId });
+  const levels = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'];
+  const initialState: Record<string, SkillState> = {};
+  
+  levels.forEach(level => {
+    initialState[level] = {
+      level: 'unspecified',
+      required: 'preferred'
+    };
+  });
+  
+  return initialState;
+};
+
+const initializeRoleState = (roleId: string): RoleState => {
+  console.log('Initializing role state:', { roleId });
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  if (!currentRoleSkills) {
+    console.warn('No skills found for role:', roleId);
+    return {};
+  }
+
+  const allSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  const initialState: RoleState = {};
+  allSkills.forEach(skill => {
+    initialState[skill.title] = initializeSkillState(skill.title, roleId);
+  });
+
+  return initialState;
+};
 
 export const setSkillStateAction = (
-  state: CompetencyState,
+  roleStates: Record<string, RoleState>,
   skillName: string,
   level: string,
   levelKey: string,
   required: string,
   roleId: string
-) => {
+): Record<string, RoleState> => {
   console.log('Setting skill state action:', { skillName, level, levelKey, required, roleId });
   
-  // Initialize or get existing role state
-  const roleState = state.roleStates[roleId] || {};
+  // Initialize role state if it doesn't exist
+  const roleState = roleStates[roleId] || initializeRoleState(roleId);
   
-  // Initialize or get existing skill state
-  const skillState = roleState[skillName] || {};
+  // Initialize skill state if it doesn't exist
+  const skillState = roleState[skillName] || initializeSkillState(skillName, roleId);
   
   const newRoleStates = {
-    ...state.roleStates,
+    ...roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
@@ -29,34 +66,25 @@ export const setSkillStateAction = (
   };
 
   console.log('Updated role states:', newRoleStates);
-
-  return {
-    ...state,
-    roleStates: newRoleStates,
-    currentStates: {
-      ...state.currentStates,
-      [roleId]: newRoleStates[roleId]
-    },
-    hasChanges: true
-  };
+  return newRoleStates;
 };
 
 export const setSkillProgressionAction = (
-  state: CompetencyState,
+  roleStates: Record<string, RoleState>,
   skillName: string,
-  progression: Record<string, { level: string; required: string }>,
+  progression: Record<string, SkillState>,
   roleId: string
-) => {
+): Record<string, RoleState> => {
   console.log('Setting skill progression action:', { skillName, progression, roleId });
   
-  // Initialize or get existing role state
-  const roleState = state.roleStates[roleId] || {};
+  // Initialize role state if it doesn't exist
+  const roleState = roleStates[roleId] || initializeRoleState(roleId);
   
-  // Initialize or get existing skill state
-  const skillState = roleState[skillName] || {};
+  // Initialize skill state if it doesn't exist
+  const skillState = roleState[skillName] || initializeSkillState(skillName, roleId);
   
   const newRoleStates = {
-    ...state.roleStates,
+    ...roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
@@ -67,14 +95,5 @@ export const setSkillProgressionAction = (
   };
 
   console.log('Updated role states with progression:', newRoleStates);
-
-  return {
-    ...state,
-    roleStates: newRoleStates,
-    currentStates: {
-      ...state.currentStates,
-      [roleId]: newRoleStates[roleId]
-    },
-    hasChanges: true
-  };
+  return newRoleStates;
 };
