@@ -8,7 +8,6 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
-import { BenchmarkCompetencyMatrix } from "./competency/BenchmarkCompetencyMatrix";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -150,7 +149,6 @@ export const BenchmarkSkillsMatrix = () => {
   
   return (
     <div className="space-y-6">
-      <BenchmarkCompetencyMatrix />
       <BenchmarkSkillsMatrixView
         roleId={selectedRole}
         employeeId={id || ""}
