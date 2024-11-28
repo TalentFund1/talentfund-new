@@ -16,10 +16,8 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
         
         set((state) => {
-          // Get the current role state or initialize it
           const roleState = state.roleStates[roleId] || {};
           
-          // Create new state for this specific role
           const updatedRoleState = {
             ...roleState,
             [skillName]: {
@@ -28,7 +26,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             }
           };
 
-          // Save to localStorage for this specific role
           saveRoleState(roleId, updatedRoleState);
 
           return {
@@ -76,20 +73,35 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       resetLevels: (roleId) => {
         console.log('Resetting levels for role:', roleId);
-        const initialState = initializeRoleState(roleId);
+        const currentState = get().roleStates[roleId] || {};
+        const resetState: RoleState = {};
+
+        // Reset each skill to unspecified/preferred
+        Object.keys(currentState).forEach(skillName => {
+          resetState[skillName] = {};
+          Object.keys(currentState[skillName]).forEach(levelKey => {
+            resetState[skillName][levelKey] = {
+              level: 'unspecified',
+              required: 'preferred'
+            };
+          });
+        });
+        
+        console.log('Reset state:', resetState);
+        saveRoleState(roleId, resetState);
         
         set(state => ({
           roleStates: {
             ...state.roleStates,
-            [roleId]: initialState
+            [roleId]: resetState
           },
           currentStates: {
             ...state.currentStates,
-            [roleId]: initialState
+            [roleId]: resetState
           },
           originalStates: {
             ...state.originalStates,
-            [roleId]: initialState
+            [roleId]: resetState
           },
           hasChanges: false
         }));
