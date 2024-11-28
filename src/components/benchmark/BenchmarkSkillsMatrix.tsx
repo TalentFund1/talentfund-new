@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
@@ -9,7 +9,6 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
 import { BenchmarkCompetencyMatrix } from "./competency/BenchmarkCompetencyMatrix";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -148,7 +147,7 @@ export const BenchmarkSkillsMatrix = () => {
     });
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
-
+  
   return (
     <div className="space-y-6">
       <BenchmarkCompetencyMatrix />
