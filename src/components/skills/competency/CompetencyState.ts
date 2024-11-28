@@ -30,6 +30,9 @@ export const useCompetencyStore = create<CompetencyState>()(
               if (parsedStates && typeof parsedStates === 'object') {
                 console.log('Successfully loaded saved states for role:', roleId);
                 initializedStates = parsedStates;
+              } else {
+                console.log('Invalid saved states format, initializing defaults');
+                initializedStates = initializeSkillStates(roleId);
               }
             } catch (error) {
               console.error('Error parsing saved states for role:', roleId, error);
