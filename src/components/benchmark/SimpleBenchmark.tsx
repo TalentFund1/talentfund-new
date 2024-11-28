@@ -18,16 +18,27 @@ export const SimpleBenchmark = () => {
   // Get the primary role ID that contains the saved states
   const getPrimaryRoleId = (): string => {
     const availableRoles = Object.keys(currentStates);
+    console.log('Available roles in competency store:', availableRoles);
+    
     if (availableRoles.length === 0) {
-      console.log('No roles found in competency store, using default');
+      console.log('No roles found in competency store, using default role: 123 (AI Engineer)');
       return "123";
     }
-    console.log('Using primary role:', availableRoles[0]);
+    
+    console.log('Using primary role from competency store:', {
+      roleId: availableRoles[0],
+      roleName: roles[availableRoles[0] as keyof typeof roles]
+    });
     return availableRoles[0];
   };
 
   useEffect(() => {
     const primaryRoleId = getPrimaryRoleId();
+    console.log('Setting selected role from competency store:', {
+      previousRole: selectedRole,
+      newRole: primaryRoleId,
+      availableStates: Object.keys(currentStates)
+    });
     setSelectedRole(primaryRoleId);
   }, [currentStates]);
 
@@ -43,6 +54,13 @@ export const SimpleBenchmark = () => {
     }
   };
 
+  console.log('Current benchmark state:', {
+    selectedRole,
+    selectedLevel,
+    roleName: roles[selectedRole as keyof typeof roles],
+    levelDescription: getLevelDescription(selectedLevel)
+  });
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -53,7 +71,14 @@ export const SimpleBenchmark = () => {
         <div className="flex gap-4 w-full max-w-[800px]">
           <Select 
             value={selectedRole}
-            onValueChange={setSelectedRole}
+            onValueChange={(value) => {
+              console.log('Role selection changed:', {
+                previousRole: selectedRole,
+                newRole: value,
+                roleName: roles[value as keyof typeof roles]
+              });
+              setSelectedRole(value);
+            }}
           >
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Select Role">
@@ -71,7 +96,14 @@ export const SimpleBenchmark = () => {
 
           <Select
             value={selectedLevel}
-            onValueChange={setSelectedLevel}
+            onValueChange={(value) => {
+              console.log('Level selection changed:', {
+                previousLevel: selectedLevel,
+                newLevel: value,
+                description: getLevelDescription(value)
+              });
+              setSelectedLevel(value);
+            }}
           >
             <SelectTrigger className="w-[200px] bg-white">
               <SelectValue placeholder="Select Level">
