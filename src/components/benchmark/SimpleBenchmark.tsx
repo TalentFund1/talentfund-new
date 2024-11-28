@@ -6,6 +6,15 @@ import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { useTrack } from "../skills/context/TrackContext";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { CompetencyGraphTable } from "../skills/competency/CompetencyGraphTable";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { Button } from "@/components/ui/button";
+import { Brain, RotateCcw } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { generateSkillProgression } from "../skills/competency/autoFillUtils";
+import { roleSkills } from "../skills/data/roleSkills";
 
 const roles = {
   "124": "Backend Engineer",
@@ -16,10 +25,14 @@ const roles = {
 
 export const SimpleBenchmark = () => {
   const { id } = useParams();
-  const { currentStates } = useCompetencyStore();
+  const { currentStates, setSkillProgression, saveChanges, resetLevels } = useCompetencyStore();
   const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
   const { getTrackForRole } = useTrack();
   const employee = getEmployeeById(id || "");
+  const { toast } = useToast();
+  const { toggledSkills } = useToggledSkills();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   
   // Initialize with employee's role and level
   const [selectedRole, setSelectedRole] = useState(() => {
@@ -77,27 +90,68 @@ export const SimpleBenchmark = () => {
         }
       }
     }
-  }, [employee]); // Only depend on employee changes
+  }, [employee]);
 
-  const handleRoleChange = (newRole: string) => {
-    console.log('Role selection changed:', {
-      previousRole: selectedRole,
-      newRole,
-      roleName: roles[newRole as keyof typeof roles]
-    });
+  const handleGenerateWithAI = async () => {
+    console.log("Starting AI generation for skills...", { selectedRole, track });
+    setIsGenerating(true);
     
-    setSelectedRole(newRole);
-    
-    // Adjust level based on new role's track
-    const newTrack = getTrackForRole(newRole);
-    const isManagerial = newTrack === "Managerial";
-    const currentLevel = selectedLevel.toLowerCase();
-    const isWrongTrack = (isManagerial && currentLevel.startsWith('p')) || 
-                        (!isManagerial && currentLevel.startsWith('m'));
-    
-    if (isWrongTrack) {
-      setSelectedLevel(isManagerial ? 'm3' : 'p4');
+    try {
+      const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+      if (!currentRoleSkills) {
+        console.error('No skills found for current role:', selectedRole);
+        throw new Error('No skills found for current role');
+      }
+
+      const allSkills = [
+        ...(currentRoleSkills.specialized || []),
+        ...(currentRoleSkills.common || []),
+        ...(currentRoleSkills.certifications || [])
+      ].filter(skill => toggledSkills.has(skill.title));
+
+      console.log('Processing skills generation for:', allSkills.map(s => s.title));
+
+      // Generate progression for each skill
+      allSkills.forEach(skill => {
+        let category = "specialized";
+        if (currentRoleSkills.common.some(s => s.title === skill.title)) {
+          category = "common";
+        } else if (currentRoleSkills.certifications.some(s => s.title === skill.title)) {
+          category = "certification";
+        }
+
+        const progression = generateSkillProgression(skill.title, category, track, selectedRole);
+        console.log('Generated progression:', { skill: skill.title, progression });
+        
+        if (progression) {
+          setSkillProgression(skill.title, progression);
+        }
+      });
+
+      saveChanges();
+
+      toast({
+        title: "Skills Generated",
+        description: "Skill levels have been automatically generated based on industry standards.",
+      });
+    } catch (error) {
+      console.error("Error generating skills:", error);
+      toast({
+        title: "Generation Failed",
+        description: "There was an error generating the skill levels. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
     }
+  };
+
+  const handleResetLevels = () => {
+    resetLevels();
+    toast({
+      title: "Levels reset",
+      description: "All skill levels have been reset to their default values.",
+    });
   };
 
   const getLevelDescription = (level: string) => {
@@ -116,14 +170,6 @@ export const SimpleBenchmark = () => {
     }
   };
 
-  console.log('Current benchmark state:', {
-    selectedRole,
-    selectedLevel,
-    roleName: roles[selectedRole as keyof typeof roles],
-    levelDescription: getLevelDescription(selectedLevel),
-    track
-  });
-
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -134,7 +180,25 @@ export const SimpleBenchmark = () => {
         <div className="flex gap-4 w-full max-w-[800px]">
           <Select 
             value={selectedRole}
-            onValueChange={handleRoleChange}
+            onValueChange={(value) => {
+              console.log('Role selection changed:', {
+                previousRole: selectedRole,
+                newRole: value,
+                roleName: roles[value as keyof typeof roles]
+              });
+              setSelectedRole(value);
+              
+              // Adjust level based on new role's track
+              const newTrack = getTrackForRole(value);
+              const isManagerial = newTrack === "Managerial";
+              const currentLevel = selectedLevel.toLowerCase();
+              const isWrongTrack = (isManagerial && currentLevel.startsWith('p')) || 
+                                (!isManagerial && currentLevel.startsWith('m'));
+              
+              if (isWrongTrack) {
+                setSelectedLevel(isManagerial ? 'm3' : 'p4');
+              }
+            }}
           >
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Select Role">
@@ -179,6 +243,39 @@ export const SimpleBenchmark = () => {
           </Select>
         </div>
       </div>
+
+      <Separator className="my-6" />
+
+      <Card className="p-6 space-y-6 bg-white">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-2xl font-bold text-foreground">{roles[selectedRole as keyof typeof roles]}</h3>
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={handleResetLevels}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Reset Levels
+            </Button>
+            <Button 
+              onClick={handleGenerateWithAI}
+              className="bg-primary hover:bg-primary/90 flex items-center gap-2"
+              disabled={isGenerating}
+            >
+              <Brain className="h-4 w-4" />
+              {isGenerating ? "Generating..." : "Generate with AI"}
+            </Button>
+          </div>
+        </div>
+
+        <CompetencyGraphTable
+          currentRoleId={selectedRole}
+          track={track}
+          selectedCategory={selectedCategory}
+          toggledSkills={toggledSkills}
+        />
+      </Card>
     </div>
   );
 };
