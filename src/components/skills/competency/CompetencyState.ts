@@ -21,7 +21,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...state.roleStates[roleId],
               [skillName]: {
                 ...state.roleStates[roleId]?.[skillName],
-                [levelKey]: { level, required }
+                [levelKey]: { level: level || 'unspecified', required: required || 'preferred' }
               }
             }
           },
@@ -31,6 +31,14 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       setSkillProgression: (skillName, progression, roleId) => {
         console.log('Setting skill progression:', { skillName, progression, roleId });
+        const defaultedProgression = Object.entries(progression).reduce((acc, [key, value]) => ({
+          ...acc,
+          [key]: {
+            level: value.level || 'unspecified',
+            required: value.required || 'preferred'
+          }
+        }), {});
+
         set((state) => ({
           roleStates: {
             ...state.roleStates,
@@ -38,7 +46,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...state.roleStates[roleId],
               [skillName]: {
                 ...state.roleStates[roleId]?.[skillName],
-                ...progression
+                ...defaultedProgression
               }
             }
           },
@@ -131,7 +139,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 12,
+      version: 13, // Increment version to force rehydration with new defaults
       skipHydration: false,
       partialize: (state) => ({
         roleStates: state.roleStates
