@@ -44,7 +44,7 @@ interface StateActionResult {
 }
 
 export const setSkillStateAction = (
-  currentState: { roleStates: Record<string, RoleState> },
+  roleStates: Record<string, RoleState>,
   skillName: string,
   level: string,
   levelKey: string,
@@ -53,11 +53,11 @@ export const setSkillStateAction = (
 ): StateActionResult => {
   console.log('Setting skill state action:', { skillName, level, levelKey, required, roleId });
   
-  const roleState = currentState.roleStates[roleId] || initializeRoleState(roleId);
+  const roleState = roleStates[roleId] || initializeRoleState(roleId);
   const skillState = roleState[skillName] || initializeSkillState(skillName, roleId);
   
   const newRoleStates = {
-    ...currentState.roleStates,
+    ...roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
@@ -75,18 +75,18 @@ export const setSkillStateAction = (
 };
 
 export const setSkillProgressionAction = (
-  currentState: { roleStates: Record<string, RoleState> },
+  roleStates: Record<string, RoleState>,
   skillName: string,
   progression: Record<string, SkillState>,
   roleId: string
 ): StateActionResult => {
   console.log('Setting skill progression action:', { skillName, progression, roleId });
   
-  const roleState = currentState.roleStates[roleId] || initializeRoleState(roleId);
+  const roleState = roleStates[roleId] || initializeRoleState(roleId);
   const skillState = roleState[skillName] || initializeSkillState(skillName, roleId);
   
   const newRoleStates = {
-    ...currentState.roleStates,
+    ...roleStates,
     [roleId]: {
       ...roleState,
       [skillName]: {
