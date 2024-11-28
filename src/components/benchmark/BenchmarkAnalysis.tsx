@@ -45,7 +45,7 @@ export const BenchmarkAnalysis = () => {
   });
 
   const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), selectedRole);
+    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
     if (!roleSkillState) return false;
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
