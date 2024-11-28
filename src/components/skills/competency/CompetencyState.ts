@@ -18,11 +18,13 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
         
         set((state) => {
-          // Create new state object to ensure updates are tracked
+          // Preserve existing states while updating the specific skill
+          const existingSkillStates = state.currentStates[skillName] || {};
+          
           const newStates = {
             ...state.currentStates,
             [skillName]: {
-              ...state.currentStates[skillName],
+              ...existingSkillStates,
               [levelKey]: {
                 level,
                 required,
@@ -35,7 +37,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             new: newStates
           });
           
-          // Check if there are actual changes
           const hasChanges = JSON.stringify(newStates) !== JSON.stringify(state.originalStates);
           
           return { 
@@ -94,16 +95,11 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
       saveChanges: () => {
-        console.log('Saving changes to competency store');
-        set((state) => {
-          // Create deep copy of current states to ensure proper persistence
-          const savedStates = JSON.parse(JSON.stringify(state.currentStates));
-          return {
-            currentStates: savedStates,
-            originalStates: savedStates,
-            hasChanges: false
-          };
-        });
+        console.log('Saving changes');
+        set((state) => ({
+          originalStates: { ...state.currentStates },
+          hasChanges: false
+        }));
       },
       cancelChanges: () => {
         console.log('Cancelling changes');
@@ -119,8 +115,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       partialize: (state) => ({
         currentStates: state.currentStates,
         originalStates: state.originalStates
-      }),
-      version: 1 // Added version for better state management
+      })
     }
   )
 );
