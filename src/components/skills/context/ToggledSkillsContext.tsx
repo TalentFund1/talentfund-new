@@ -90,8 +90,14 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
             }));
           } catch (error) {
             console.error('Error parsing saved toggle state:', error);
+            // If there's an error, initialize with all skills
+            setRoleToggledSkills(prev => ({
+              ...prev,
+              [currentRoleId]: new Set(allSkills.map(skill => skill.title))
+            }));
           }
         } else {
+          // If no saved state, initialize with all skills
           setRoleToggledSkills(prev => ({
             ...prev,
             [currentRoleId]: new Set(allSkills.map(skill => skill.title))
