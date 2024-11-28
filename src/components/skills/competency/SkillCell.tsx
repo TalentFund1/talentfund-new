@@ -3,7 +3,6 @@ import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { SkillState } from "./state/competencyTypes";
 
 interface SkillCellProps {
   skillName: string;
@@ -21,10 +20,11 @@ export const SkillCell = ({
   isLastColumn, 
   levelKey 
 }: SkillCellProps) => {
-  const { currentStates, setSkillState } = useCompetencyStore();
+  const { roleStates, setSkillState } = useCompetencyStore();
   const { id: roleId } = useParams<{ id: string }>();
+  const currentRoleId = roleId || "123";
 
-  const currentState = currentStates[skillName]?.[levelKey] || {
+  const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
     required: details.required || "preferred",
   };
@@ -35,15 +35,15 @@ export const SkillCell = ({
       levelKey,
       newLevel: value,
       currentRequired: currentState.required,
-      roleId
+      roleId: currentRoleId
     });
     
     setSkillState(
       skillName,
       value,
       levelKey,
-      typeof currentState.required === 'string' ? currentState.required : 'preferred',
-      roleId || "123"
+      currentState.required || 'preferred',
+      currentRoleId
     );
   };
 
@@ -53,15 +53,15 @@ export const SkillCell = ({
       levelKey,
       currentLevel: currentState.level,
       newRequired: value,
-      roleId
+      roleId: currentRoleId
     });
     
     setSkillState(
       skillName,
-      typeof currentState.level === 'string' ? currentState.level : 'unspecified',
+      currentState.level || 'unspecified',
       levelKey,
       value,
-      roleId || "123"
+      currentRoleId
     );
   };
 
@@ -71,12 +71,12 @@ export const SkillCell = ({
     >
       <div className="flex flex-col items-center gap-0">
         <LevelSelector
-          currentLevel={typeof currentState.level === 'string' ? currentState.level : 'unspecified'}
+          currentLevel={currentState.level || 'unspecified'}
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={typeof currentState.required === 'string' ? currentState.required : 'preferred'}
-          currentLevel={typeof currentState.level === 'string' ? currentState.level : 'unspecified'}
+          currentRequired={currentState.required || 'preferred'}
+          currentLevel={currentState.level || 'unspecified'}
           onRequirementChange={handleRequirementChange}
         />
       </div>

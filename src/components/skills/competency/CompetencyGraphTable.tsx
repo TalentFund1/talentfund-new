@@ -3,7 +3,7 @@ import { useCompetencyStore } from "./CompetencyState";
 import { SkillCell } from "./SkillCell";
 import { roleSkills } from "../data/roleSkills";
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
-import { SkillState } from "./state/competencyTypes";
+import { useParams } from "react-router-dom";
 
 interface CompetencyGraphTableProps {
   currentRoleId: string;
@@ -19,6 +19,7 @@ export const CompetencyGraphTable = ({
   toggledSkills
 }: CompetencyGraphTableProps) => {
   const { roleStates } = useCompetencyStore();
+  const { id: roleId } = useParams<{ id: string }>();
 
   const getLevelsForTrack = () => {
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
@@ -73,7 +74,7 @@ export const CompetencyGraphTable = ({
 
   const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
     let count = 0;
-    const roleState = roleStates[currentRoleId];
+    const roleState = roleStates[roleId || "123"];
     
     if (roleState && roleState[skillName]) {
       levels.forEach(level => {
@@ -155,7 +156,7 @@ export const CompetencyGraphTable = ({
                   skillName={skillName}
                   details={getSkillDetails(skillName, level)}
                   isLastColumn={index === levels.length - 1}
-                  levelKey={level}
+                  levelKey={level.toLowerCase()}
                 />
               ))}
             </TableRow>
