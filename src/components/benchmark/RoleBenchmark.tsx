@@ -44,21 +44,35 @@ export const RoleBenchmark = () => {
   const employees = useEmployeeStore((state) => state.employees);
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">("Professional");
 
-  // Find the employee and get their role
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-  
-  // Set initial role and level based on employee's role
+
+  // Single effect to handle initial setup and synchronization
   useEffect(() => {
     if (employee) {
       const profileId = getSkillProfileId(employee.role);
       const level = getLevel(employee.role).toLowerCase();
-      console.log('Setting initial role and level:', { profileId, level });
+      const track = getTrackForRole(profileId);
+      
+      console.log('Initial setup:', { profileId, level, track });
+      
       setSelectedRole(profileId);
-      setRoleLevel(level);
+      setCurrentTrack(track);
+      
+      // Only adjust level if track mismatch
+      const isManagerial = track === "Managerial";
+      const isWrongTrack = (isManagerial && level.startsWith('p')) || 
+                          (!isManagerial && level.startsWith('m'));
+      
+      if (isWrongTrack) {
+        setRoleLevel(isManagerial ? 'm3' : 'p4');
+      } else {
+        setRoleLevel(level);
+      }
     }
-  }, [employee, setSelectedRole, setRoleLevel]);
+  }, [employee, setSelectedRole, setRoleLevel, getTrackForRole]);
 
+  // Handle skill updates when role changes
   useEffect(() => {
     if (!currentRoleSkills) return;
 
@@ -71,21 +85,28 @@ export const RoleBenchmark = () => {
     .filter(skillTitle => toggledSkills.has(skillTitle));
     
     setBenchmarkSearchSkills(allSkills);
-  }, [selectedRole, currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
-
-  useEffect(() => {
-    const track = getTrackForRole(selectedRole);
-    setCurrentTrack(track);
-    
-    if (track === "Professional" && roleLevel.toLowerCase().startsWith("m")) {
-      setRoleLevel("p4");
-    } else if (track === "Managerial" && roleLevel.toLowerCase().startsWith("p")) {
-      setRoleLevel("m3");
-    }
-  }, [selectedRole, roleLevel, setRoleLevel, getTrackForRole]);
+  }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
+  };
+
+  const handleRoleChange = (newRole: string) => {
+    const newTrack = getTrackForRole(newRole);
+    console.log('Role change:', { newRole, newTrack });
+    
+    setSelectedRole(newRole);
+    setCurrentTrack(newTrack);
+    
+    // Adjust level based on new track if needed
+    const isManagerial = newTrack === "Managerial";
+    const currentLevel = roleLevel.toLowerCase();
+    const needsLevelAdjustment = (isManagerial && currentLevel.startsWith('p')) || 
+                                (!isManagerial && currentLevel.startsWith('m'));
+    
+    if (needsLevelAdjustment) {
+      setRoleLevel(isManagerial ? 'm3' : 'p4');
+    }
   };
 
   const handleTrackChange = (value: string) => {
@@ -116,7 +137,7 @@ export const RoleBenchmark = () => {
           selectedRole={selectedRole}
           selectedLevel={roleLevel}
           currentTrack={currentTrack}
-          onRoleChange={setSelectedRole}
+          onRoleChange={handleRoleChange}
           onLevelChange={setRoleLevel}
           onTrackChange={handleTrackChange}
           roles={roles}
