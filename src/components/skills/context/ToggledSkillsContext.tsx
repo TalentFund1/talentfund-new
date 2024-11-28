@@ -43,7 +43,7 @@ const getInitialSkillsForRole = (roleId: string): Set<string> => {
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { selectedRole } = useRoleStore();
-  const { initializeStates } = useCompetencyStore();
+  const { currentStates } = useCompetencyStore();
   const { id } = useParams<{ id: string }>();
   
   const [skillsByRole, setSkillsByRole] = useState<Record<string, Set<string>>>(() => {
@@ -79,15 +79,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return selectedRole ? { [selectedRole]: getInitialSkillsForRole(selectedRole) } : {};
   });
 
-  // Initialize competency states when role changes
-  useEffect(() => {
-    if (selectedRole) {
-      console.log('Initializing competency states for selected role:', selectedRole);
-      initializeStates(selectedRole);
-    }
-  }, [selectedRole, initializeStates]);
-
-  // Initialize skills for new roles or when they're empty
+  // Remove initializeStates effect
   useEffect(() => {
     const currentRole = id || selectedRole;
     if (currentRole) {

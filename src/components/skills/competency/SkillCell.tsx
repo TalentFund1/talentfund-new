@@ -35,8 +35,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
         skillName,
         "unspecified",
         levelKey,
-        "preferred",
-        roleId
+        "preferred"
       );
     }
   }, [skillName, currentStates, setSkillState, levelKey, roleId]);
@@ -101,7 +100,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
       <div className="flex flex-col items-center gap-0">
         <Select 
           value={currentState.level}
-          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required, roleId)}
+          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required)}
         >
           <SelectTrigger 
             className={`${getLevelStyles(currentState.level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
@@ -143,7 +142,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
 
         <Select 
           value={currentState.required}
-          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value, roleId)}
+          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value)}
         >
           <SelectTrigger 
             className={`${getRequirementStyles(currentState.required, currentState.level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
