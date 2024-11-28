@@ -58,7 +58,6 @@ export const useCompetencyStore = create<CompetencyState>()(
         set((state) => {
           const resetState = {};
           
-          // Reset each skill to unspecified/preferred for all levels
           allSkills.forEach(skill => {
             resetState[skill.title] = {};
             ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
@@ -106,7 +105,6 @@ export const useCompetencyStore = create<CompetencyState>()(
           set((state) => {
             const newState = {};
             
-            // Initialize all skills with unspecified level and preferred requirement
             allSkills.forEach(skill => {
               newState[skill.title] = {};
               ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
@@ -133,7 +131,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 12, // Increment version to force reset of persisted state
+      version: 12,
       skipHydration: false,
       partialize: (state) => ({
         roleStates: state.roleStates
