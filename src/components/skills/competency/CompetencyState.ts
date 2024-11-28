@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CompetencyState, SkillState } from './state/types';
-import { initializeSkillStates } from './state/initialState';
 import { roleSkills } from '../data/roleSkills';
 
 export const useCompetencyStore = create<CompetencyState>()(
@@ -68,11 +67,43 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
       resetLevels: () => {
         console.log('Resetting all levels to default values');
-        const defaultStates = initializeSkillStates("123"); // Initialize with default role
+        
+        // Get all skills from all roles to ensure we reset everything
+        const allSkills = new Set<string>();
+        Object.values(roleSkills).forEach(role => {
+          [...role.specialized, ...role.common, ...role.certifications].forEach(skill => {
+            allSkills.add(skill.title);
+          });
+        });
+        
+        // Create default states for all skills
+        const defaultStates: Record<string, Record<string, SkillState>> = {};
+        
+        allSkills.forEach(skillTitle => {
+          defaultStates[skillTitle] = {};
+          
+          // Reset P1-P6 levels to default values
+          ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(level => {
+            defaultStates[skillTitle][level] = {
+              level: 'unspecified',
+              required: 'preferred'
+            };
+          });
+          
+          // Reset M3-M6 levels to default values
+          ['m3', 'm4', 'm5', 'm6'].forEach(level => {
+            defaultStates[skillTitle][level] = {
+              level: 'unspecified',
+              required: 'preferred'
+            };
+          });
+        });
+
+        console.log('Reset states created:', defaultStates);
         
         set({
           currentStates: defaultStates,
-          originalStates: defaultStates,
+          originalStates: JSON.parse(JSON.stringify(defaultStates)),
           hasChanges: false
         });
       },
@@ -135,7 +166,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 3, // Increment version to force rehydration with new defaults
+      version: 4, // Increment version to force rehydration with new defaults
       skipHydration: false,
       partialize: (state) => ({
         currentStates: state.currentStates,
