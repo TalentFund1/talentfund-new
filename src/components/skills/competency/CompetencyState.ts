@@ -14,11 +14,9 @@ export const useCompetencyStore = create<CompetencyState>()(
         console.log('Setting initial competency states for role:', roleId);
         
         set((state) => {
-          // Check if we already have states for this role
           if (!state.currentStates[roleId]) {
             console.log('Initializing new states for role:', roleId);
             
-            // Deep clone the states to avoid reference issues
             const newCurrentStates = {
               ...state.currentStates,
               [roleId]: JSON.parse(JSON.stringify(initializedStates))
@@ -36,7 +34,6 @@ export const useCompetencyStore = create<CompetencyState>()(
             };
           }
           
-          console.log('States already exist for role:', roleId);
           return state;
         });
       },

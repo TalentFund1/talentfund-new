@@ -24,7 +24,6 @@ export const initializeSkillStates = (roleId: string) => {
     }
   }
 
-  // Initialize with unspecified states
   const allSkills = [
     ...aiSkills,
     ...backendSkills,

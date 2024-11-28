@@ -16,12 +16,12 @@ export const StaticSkillLevelCell = ({
 
   useEffect(() => {
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, 'unspecified', 'required');
+      initializeState(skillTitle, initialLevel || 'unspecified', 'required');
     }
-  }, [skillTitle, currentStates, initializeState]);
+  }, [skillTitle, currentStates, initializeState, initialLevel]);
 
   const currentState = currentStates[skillTitle] || {
-    level: 'unspecified',
+    level: initialLevel || 'unspecified',
     requirement: 'required'
   };
 
