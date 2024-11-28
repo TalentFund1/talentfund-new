@@ -49,36 +49,56 @@ export const SimpleBenchmark = () => {
   const track = getTrackForRole(selectedRole);
   const levels = track === "Managerial" ? managerialLevels : professionalLevels;
 
-  // Combined effect to handle role and level synchronization
+  // Single effect to handle initial synchronization
   useEffect(() => {
     if (employee) {
       const profileId = getSkillProfileId(employee.role);
       const level = getLevel(employee.role).toLowerCase();
+      const newTrack = getTrackForRole(profileId);
       
-      console.log('Synchronizing role and level:', {
+      console.log('Initial synchronization:', {
         profileId,
         level,
-        track: getTrackForRole(profileId)
+        track: newTrack
       });
 
-      // Update role if different
       if (profileId !== selectedRole) {
         setSelectedRole(profileId);
-      }
-
-      // Update level if track mismatch
-      const isManagerial = track === "Managerial";
-      const isWrongTrack = (isManagerial && level.startsWith('p')) || 
-                          (!isManagerial && level.startsWith('m'));
-      
-      if (isWrongTrack) {
-        const newLevel = isManagerial ? 'm3' : 'p4';
-        setSelectedLevel(newLevel);
-      } else if (level !== selectedLevel) {
-        setSelectedLevel(level);
+        
+        // Adjust level based on new role's track if needed
+        const isManagerial = newTrack === "Managerial";
+        const isWrongTrack = (isManagerial && level.startsWith('p')) || 
+                            (!isManagerial && level.startsWith('m'));
+        
+        if (isWrongTrack) {
+          setSelectedLevel(isManagerial ? 'm3' : 'p4');
+        } else {
+          setSelectedLevel(level);
+        }
       }
     }
-  }, [employee, track]); // Only depend on employee and track changes
+  }, [employee]); // Only depend on employee changes
+
+  const handleRoleChange = (newRole: string) => {
+    console.log('Role selection changed:', {
+      previousRole: selectedRole,
+      newRole,
+      roleName: roles[newRole as keyof typeof roles]
+    });
+    
+    setSelectedRole(newRole);
+    
+    // Adjust level based on new role's track
+    const newTrack = getTrackForRole(newRole);
+    const isManagerial = newTrack === "Managerial";
+    const currentLevel = selectedLevel.toLowerCase();
+    const isWrongTrack = (isManagerial && currentLevel.startsWith('p')) || 
+                        (!isManagerial && currentLevel.startsWith('m'));
+    
+    if (isWrongTrack) {
+      setSelectedLevel(isManagerial ? 'm3' : 'p4');
+    }
+  };
 
   const getLevelDescription = (level: string) => {
     switch (level.toLowerCase()) {
@@ -114,14 +134,7 @@ export const SimpleBenchmark = () => {
         <div className="flex gap-4 w-full max-w-[800px]">
           <Select 
             value={selectedRole}
-            onValueChange={(value) => {
-              console.log('Role selection changed:', {
-                previousRole: selectedRole,
-                newRole: value,
-                roleName: roles[value as keyof typeof roles]
-              });
-              setSelectedRole(value);
-            }}
+            onValueChange={handleRoleChange}
           >
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Select Role">
