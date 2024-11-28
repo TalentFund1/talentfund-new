@@ -9,13 +9,6 @@ export const initializeSkillStates = (roleId: string) => {
   console.log('Initializing competency states for role:', roleId);
   const states: Record<string, Record<string, any>> = {};
   
-  const allSkills = [
-    ...aiSkills,
-    ...backendSkills,
-    ...commonSkills,
-    ...certificationSkills
-  ];
-
   const storageKey = getStorageKey(roleId);
   const savedStates = localStorage.getItem(storageKey);
   
@@ -31,24 +24,32 @@ export const initializeSkillStates = (roleId: string) => {
     }
   }
 
-  console.log('Initializing with default states for role:', roleId);
+  // Initialize with unspecified states
+  const allSkills = [
+    ...aiSkills,
+    ...backendSkills,
+    ...commonSkills,
+    ...certificationSkills
+  ];
+
+  console.log('Initializing with unspecified states for role:', roleId);
   allSkills.forEach(skill => {
     states[skill.title] = states[skill.title] || {};
     
     if (skill.professionalTrack) {
-      Object.entries(skill.professionalTrack).forEach(([level, state]) => {
+      Object.keys(skill.professionalTrack).forEach(level => {
         states[skill.title][level.toLowerCase()] = {
-          level: state.level || 'unspecified',
-          required: state.requirement || 'preferred'
+          level: 'unspecified',
+          required: 'preferred'
         };
       });
     }
     
     if (skill.managerialTrack) {
-      Object.entries(skill.managerialTrack).forEach(([level, state]) => {
+      Object.keys(skill.managerialTrack).forEach(level => {
         states[skill.title][level.toLowerCase()] = {
-          level: state.level || 'unspecified',
-          required: state.requirement || 'preferred'
+          level: 'unspecified',
+          required: 'preferred'
         };
       });
     }
