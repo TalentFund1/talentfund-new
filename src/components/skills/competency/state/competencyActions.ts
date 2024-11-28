@@ -1,5 +1,5 @@
 import { RoleState, SkillState } from './types';
-import { persistState } from './persistenceUtils';
+import { saveRoleState } from './storageUtils';
 
 export const setSkillStateAction = (
   roleStates: Record<string, RoleState>,
@@ -22,7 +22,7 @@ export const setSkillStateAction = (
     }
   };
 
-  persistState(roleId, updatedRoleState[roleId]);
+  saveRoleState(roleId, updatedRoleState[roleId]);
   return updatedRoleState;
 };
 
@@ -45,7 +45,7 @@ export const setSkillProgressionAction = (
     }
   };
 
-  persistState(roleId, updatedRoleState[roleId]);
+  saveRoleState(roleId, updatedRoleState[roleId]);
   return updatedRoleState;
 };
 
@@ -70,7 +70,7 @@ export const resetLevelsAction = (
   });
 
   console.log('Reset state:', resetState);
-  persistState(roleId, resetState);
+  saveRoleState(roleId, resetState);
 
   return {
     ...roleStates,
