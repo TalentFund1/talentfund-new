@@ -1,14 +1,20 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { CompetencyState } from './state/types';
-import { initializeSkillStates } from './state/initialState';
+import { persist } from 'zustand/middleware';
+
+interface SkillState {
+  level: string;
+  required: string;
+}
+
+interface CompetencyState {
+  currentStates: Record<string, Record<string, SkillState>>;
+  setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
+}
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       currentStates: {},
-      originalStates: {},
-      hasChanges: false,
       setSkillState: (skillName, level, levelKey, required) => {
         console.log('Setting competency state:', { 
           skillName, 
@@ -17,94 +23,23 @@ export const useCompetencyStore = create<CompetencyState>()(
           required
         });
         
-        set((state) => {
-          const newStates = JSON.parse(JSON.stringify(state.currentStates));
-          
-          if (!newStates[skillName]) {
-            newStates[skillName] = {};
-          }
-          
-          newStates[skillName][levelKey] = {
-            level,
-            required,
-          };
-          
-          const hasChanges = JSON.stringify(newStates) !== 
-                            JSON.stringify(state.originalStates);
-          
-          return { 
-            currentStates: newStates,
-            hasChanges
-          };
-        });
-      },
-      setSkillProgression: (skillName, progression) => {
-        console.log('Setting skill progression:', { 
-          skillName, 
-          progression
-        });
-        
-        set((state) => {
-          const newStates = JSON.parse(JSON.stringify(state.currentStates));
-          
-          if (!newStates[skillName]) {
-            newStates[skillName] = {};
-          }
-
-          newStates[skillName] = {
-            ...newStates[skillName],
-            ...progression
-          };
-
-          return {
-            currentStates: newStates,
-            hasChanges: true,
-          };
-        });
-      },
-      resetLevels: () => {
-        console.log('Resetting all levels');
-        
-        set((state) => {
-          const newStates = JSON.parse(JSON.stringify(state.currentStates));
-          
-          Object.keys(newStates).forEach(skillName => {
-            Object.keys(newStates[skillName]).forEach(levelKey => {
-              newStates[skillName][levelKey] = {
-                level: 'unspecified',
-                required: 'preferred'
-              };
-            });
-          });
-          
-          return { 
-            currentStates: newStates,
-            hasChanges: true
-          };
-        });
-      },
-      saveChanges: () => {
-        console.log('Saving competency changes');
         set((state) => ({
-          originalStates: JSON.parse(JSON.stringify(state.currentStates)),
-          hasChanges: false,
-        }));
-      },
-      cancelChanges: () => {
-        console.log('Cancelling competency changes');
-        set((state) => ({
-          currentStates: JSON.parse(JSON.stringify(state.originalStates)),
-          hasChanges: false,
+          currentStates: {
+            ...state.currentStates,
+            [skillName]: {
+              ...state.currentStates[skillName],
+              [levelKey]: {
+                level,
+                required,
+              },
+            },
+          },
         }));
       },
     }),
     {
       name: 'competency-storage',
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        currentStates: state.currentStates,
-        originalStates: state.originalStates,
-      }),
+      skipHydration: false,
     }
   )
 );

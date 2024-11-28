@@ -1,6 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Check, Heart } from "lucide-react";
-import { getRequirementStyles } from "./utils/skillCellStyles";
 
 interface RequirementSelectorProps {
   currentRequired: string;
@@ -13,6 +12,25 @@ export const RequirementSelector = ({
   currentLevel,
   onRequirementChange 
 }: RequirementSelectorProps) => {
+  const getRequirementStyles = (requirement: string, level: string) => {
+    const borderColor = level.toLowerCase() === 'advanced' 
+      ? 'border-primary-accent'
+      : level.toLowerCase() === 'intermediate'
+        ? 'border-primary-icon'
+        : level.toLowerCase() === 'beginner'
+          ? 'border-[#008000]'
+          : 'border-gray-400';
+
+    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
+    
+    switch (requirement.toLowerCase()) {
+      case 'required':
+        return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
+      default:
+        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
+    }
+  };
+
   return (
     <Select 
       value={currentRequired}

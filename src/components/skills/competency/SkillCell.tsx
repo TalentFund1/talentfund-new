@@ -1,6 +1,5 @@
 import { TableCell } from "@/components/ui/table";
 import { useCompetencyStore } from "./CompetencyState";
-import { useEffect, useCallback } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 
@@ -21,31 +20,13 @@ export const SkillCell = ({
   levelKey 
 }: SkillCellProps) => {
   const { currentStates, setSkillState } = useCompetencyStore();
-  const roleId = "123"; // Default role ID
 
-  // Initialize state only once when component mounts
-  useEffect(() => {
-    if (!currentStates[roleId]?.[skillName]?.[levelKey]) {
-      console.log('Initializing skill state:', {
-        roleId,
-        skillName,
-        levelKey
-      });
-      setSkillState(
-        skillName,
-        "unspecified",
-        levelKey,
-        "preferred"
-      );
-    }
-  }, [roleId, skillName, levelKey]); // Remove currentStates and setSkillState from deps
-
-  const currentState = currentStates[roleId]?.[skillName]?.[levelKey] || {
-    level: "unspecified",
-    required: "preferred",
+  const currentState = currentStates[skillName]?.[levelKey] || {
+    level: details.level || "unspecified",
+    required: details.required || "preferred",
   };
 
-  const handleLevelChange = useCallback((value: string) => {
+  const handleLevelChange = (value: string) => {
     console.log('Changing level:', {
       skillName,
       levelKey,
@@ -53,9 +34,9 @@ export const SkillCell = ({
       currentRequired: currentState.required
     });
     setSkillState(skillName, value, levelKey, currentState.required);
-  }, [skillName, levelKey, currentState.required, setSkillState]);
+  };
 
-  const handleRequirementChange = useCallback((value: string) => {
+  const handleRequirementChange = (value: string) => {
     console.log('Changing requirement:', {
       skillName,
       levelKey,
@@ -63,7 +44,7 @@ export const SkillCell = ({
       newRequired: value
     });
     setSkillState(skillName, currentState.level, levelKey, value);
-  }, [skillName, levelKey, currentState.level, setSkillState]);
+  };
 
   return (
     <TableCell 
