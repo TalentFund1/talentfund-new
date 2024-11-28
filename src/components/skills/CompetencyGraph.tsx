@@ -6,7 +6,6 @@ import { CategorySection } from "./competency/CategorySection";
 import { useCompetencyStore } from "./competency/CompetencyState";
 import { useToast } from "@/hooks/use-toast";
 import { TrackSelection } from "./TrackSelection";
-import { useTrack } from "./context/TrackContext";
 import { jobTitles } from "./competency/skillProfileData";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
@@ -27,7 +26,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
     return savedCategory || "all";
   });
   
-  const { getTrackForRole } = useTrack();
   const { saveChanges, cancelChanges, hasChanges, setSkillProgression, resetLevels } = useCompetencyStore();
   const { toast } = useToast();
   const { id: urlRoleId } = useParams<{ id: string }>();
@@ -126,6 +124,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleResetLevels = () => {
+    console.log('Resetting levels for role:', currentRoleId);
     resetLevels(currentRoleId);
     toast({
       title: "Levels reset",
