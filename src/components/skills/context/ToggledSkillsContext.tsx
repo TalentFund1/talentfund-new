@@ -13,7 +13,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { getRoleState, initializeState } = useCompetencyStore();
   const { toast } = useToast();
   
-  // Initialize roleToggledSkills from localStorage
   const [roleToggledSkills, setRoleToggledSkills] = useState<Record<string, Set<string>>>(() => {
     try {
       const savedSkills = localStorage.getItem('roleToggledSkills');
@@ -35,7 +34,9 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const [currentRoleId, setCurrentRoleId] = useState<string>(() => {
     const path = window.location.pathname;
     const matches = path.match(/\/skills\/(\d+)/);
-    return matches?.[1] || "123";
+    const roleId = matches?.[1] || "123";
+    console.log('Initial role ID:', roleId);
+    return roleId;
   });
 
   // Update currentRoleId when URL changes
@@ -46,7 +47,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       console.log('Role ID changed:', matches[1]);
       setCurrentRoleId(matches[1]);
     }
-  }, [window.location.pathname, currentRoleId]);
+  }, [window.location.pathname]);
 
   // Initialize role state and toggled skills
   useEffect(() => {
@@ -57,16 +58,30 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       const roleState = getRoleState(currentRoleId);
       console.log('Loading role state for:', currentRoleId, roleState);
       
-      // Initialize from roleState if no saved toggle state exists
       if (!roleToggledSkills[currentRoleId] && roleState && Object.keys(roleState).length > 0) {
         console.log('Initializing toggles from role state for:', currentRoleId);
-        setRoleToggledSkills(prev => ({
-          ...prev,
-          [currentRoleId]: new Set(Object.keys(roleState))
-        }));
+        setRoleToggledSkills(prev => {
+          const newState = {
+            ...prev,
+            [currentRoleId]: new Set(Object.keys(roleState))
+          };
+          // Persist immediately after initialization
+          try {
+            const serialized = Object.fromEntries(
+              Object.entries(newState).map(([roleId, skills]) => [
+                roleId,
+                Array.from(skills)
+              ])
+            );
+            localStorage.setItem('roleToggledSkills', JSON.stringify(serialized));
+          } catch (error) {
+            console.error('Error saving initialized toggles:', error);
+          }
+          return newState;
+        });
       }
     }
-  }, [currentRoleId, getRoleState, initializeState, roleToggledSkills]);
+  }, [currentRoleId]);
 
   // Persist to localStorage whenever roleToggledSkills changes
   useEffect(() => {
@@ -81,6 +96,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       localStorage.setItem('roleToggledSkills', JSON.stringify(serialized));
     } catch (error) {
       console.error('Error saving role-specific toggled skills to localStorage:', error);
+      toast({
+        title: "Error Saving Skills",
+        description: "There was an error saving your skill changes.",
+        variant: "destructive"
+      });
     }
   }, [roleToggledSkills]);
 
