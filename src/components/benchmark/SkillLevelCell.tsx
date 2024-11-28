@@ -2,44 +2,26 @@ import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, Heart, CircleDashed, Check } from "lucide-react";
 import { useEffect } from "react";
-import { useCompetencyStore } from "../skills/competency/CompetencyState";
-import { useParams } from "react-router-dom";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
-interface SkillCellProps {
-  skillName: string;
-  details: {
-    level: string;
-    required: string;
-  };
-  isLastColumn: boolean;
-  levelKey: string;
+interface SkillLevelCellProps {
+  initialLevel?: string;
+  skillTitle: string;
 }
 
-export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillCellProps) => {
-  const { id: roleId } = useParams<{ id: string }>();
-  const { currentStates, setSkillState } = useCompetencyStore();
-
-  if (!roleId) {
-    console.error('No role ID provided');
-    return null;
-  }
-
-  const currentState = currentStates[roleId]?.[skillName]?.[levelKey] || {
-    level: "unspecified",
-    required: "preferred",
-  };
+export const SkillLevelCell = ({ skillTitle }: SkillLevelCellProps) => {
+  const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   useEffect(() => {
-    if (!currentStates[roleId]?.[skillName]?.[levelKey]) {
-      setSkillState(
-        skillName,
-        "unspecified",
-        levelKey,
-        "preferred",
-        roleId
-      );
+    if (!currentStates[skillTitle]) {
+      initializeState(skillTitle, 'unspecified', 'required');
     }
-  }, [skillName, currentStates, setSkillState, levelKey, roleId]);
+  }, [skillTitle, currentStates, initializeState]);
+
+  const currentState = currentStates[skillTitle] || {
+    level: 'unspecified',
+    requirement: 'required'
+  };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -49,8 +31,6 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
         return <Shield className="w-4 h-4 text-primary-icon" />;
       case 'beginner':
         return <Target className="w-4 h-4 text-[#008000]" />;
-      case 'unspecified':
-        return <CircleDashed className="w-4 h-4 text-gray-400" />;
       default:
         return <CircleDashed className="w-4 h-4 text-gray-400" />;
     }
@@ -66,8 +46,6 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
         return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
       case 'beginner':
         return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
-      case 'unspecified':
-        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
       default:
         return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
     }
@@ -87,21 +65,17 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
     switch (requirement.toLowerCase()) {
       case 'required':
         return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
-      case 'preferred':
-        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
       default:
         return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
     }
   };
 
   return (
-    <TableCell 
-      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
-    >
-      <div className="flex flex-col items-center gap-0">
+    <TableCell className="border-r border-blue-200 p-0">
+      <div className="flex flex-col items-center">
         <Select 
           value={currentState.level}
-          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required, roleId)}
+          onValueChange={(value) => setSkillState(skillTitle, value, currentState.requirement)}
         >
           <SelectTrigger 
             className={`${getLevelStyles(currentState.level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
@@ -142,15 +116,15 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
         </Select>
 
         <Select 
-          value={currentState.required}
-          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value, roleId)}
+          value={currentState.requirement}
+          onValueChange={(value) => setSkillState(skillTitle, currentState.level, value)}
         >
           <SelectTrigger 
-            className={`${getRequirementStyles(currentState.required, currentState.level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+            className={`${getRequirementStyles(currentState.requirement, currentState.level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
           >
             <SelectValue>
               <span className="flex items-center gap-2 justify-center">
-                {currentState.required === 'required' ? (
+                {currentState.requirement === 'required' ? (
                   <>
                     <Check className="w-3.5 h-3.5" />
                     <span>Required</span>
