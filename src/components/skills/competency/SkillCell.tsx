@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { useCompetencyStore } from "./CompetencyState";
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 
@@ -22,32 +22,27 @@ export const SkillCell = ({
 }: SkillCellProps) => {
   const { currentStates, setSkillState } = useCompetencyStore();
   const roleId = "123"; // Default role ID
-  const isInitialized = useRef(false);
 
   // Initialize state only once when component mounts
   useEffect(() => {
-    if (!isInitialized.current && !currentStates[roleId]?.[skillName]?.[levelKey]) {
+    if (!currentStates[roleId]?.[skillName]?.[levelKey]) {
       console.log('Initializing skill state:', {
         roleId,
         skillName,
-        levelKey,
-        details
+        levelKey
       });
-      
       setSkillState(
         skillName,
-        details?.level || "unspecified",
+        "unspecified",
         levelKey,
-        details?.required || "preferred"
+        "preferred"
       );
-      
-      isInitialized.current = true;
     }
-  }, []); // Empty dependency array since we only want this to run once
+  }, [roleId, skillName, levelKey]); // Remove currentStates and setSkillState from deps
 
   const currentState = currentStates[roleId]?.[skillName]?.[levelKey] || {
-    level: details?.level || "unspecified",
-    required: details?.required || "preferred",
+    level: "unspecified",
+    required: "preferred",
   };
 
   const handleLevelChange = useCallback((value: string) => {
@@ -57,13 +52,7 @@ export const SkillCell = ({
       newLevel: value,
       currentRequired: currentState.required
     });
-    
-    setSkillState(
-      skillName,
-      value,
-      levelKey,
-      currentState.required
-    );
+    setSkillState(skillName, value, levelKey, currentState.required);
   }, [skillName, levelKey, currentState.required, setSkillState]);
 
   const handleRequirementChange = useCallback((value: string) => {
@@ -73,13 +62,7 @@ export const SkillCell = ({
       currentLevel: currentState.level,
       newRequired: value
     });
-    
-    setSkillState(
-      skillName,
-      currentState.level,
-      levelKey,
-      value
-    );
+    setSkillState(skillName, currentState.level, levelKey, value);
   }, [skillName, levelKey, currentState.level, setSkillState]);
 
   return (

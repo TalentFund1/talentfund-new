@@ -13,19 +13,10 @@ export const RequirementSelector = ({
   currentLevel,
   onRequirementChange 
 }: RequirementSelectorProps) => {
-  const handleChange = (value: string) => {
-    console.log('Requirement selector change:', { 
-      currentRequired, 
-      newRequired: value,
-      currentLevel 
-    });
-    onRequirementChange(value);
-  };
-
   return (
     <Select 
       value={currentRequired}
-      onValueChange={handleChange}
+      onValueChange={onRequirementChange}
     >
       <SelectTrigger 
         className={`${getRequirementStyles(currentRequired, currentLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
