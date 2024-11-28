@@ -24,13 +24,14 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
     return null;
   }
 
-  const currentState = currentStates[roleId]?.[skillName]?.[levelKey] || {
-    level: "unspecified",
-    required: "preferred",
-  };
-
+  // Initialize state only once when component mounts or when dependencies change
   useEffect(() => {
     if (!currentStates[roleId]?.[skillName]?.[levelKey]) {
+      console.log('Initializing skill state:', {
+        roleId,
+        skillName,
+        levelKey
+      });
       setSkillState(
         skillName,
         "unspecified",
@@ -38,7 +39,12 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
         "preferred"
       );
     }
-  }, [skillName, currentStates, setSkillState, levelKey, roleId]);
+  }, [roleId, skillName, levelKey, currentStates, setSkillState]);
+
+  const currentState = currentStates[roleId]?.[skillName]?.[levelKey] || {
+    level: "unspecified",
+    required: "preferred",
+  };
 
   const getLevelIcon = (level: string) => {
     switch (level.toLowerCase()) {
@@ -93,6 +99,26 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
     }
   };
 
+  const handleLevelChange = (value: string) => {
+    console.log('Changing level:', {
+      skillName,
+      levelKey,
+      newLevel: value,
+      currentRequired: currentState.required
+    });
+    setSkillState(skillName, value, levelKey, currentState.required);
+  };
+
+  const handleRequirementChange = (value: string) => {
+    console.log('Changing requirement:', {
+      skillName,
+      levelKey,
+      currentLevel: currentState.level,
+      newRequired: value
+    });
+    setSkillState(skillName, currentState.level, levelKey, value);
+  };
+
   return (
     <TableCell 
       className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
@@ -100,7 +126,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
       <div className="flex flex-col items-center gap-0">
         <Select 
           value={currentState.level}
-          onValueChange={(value) => setSkillState(skillName, value, levelKey, currentState.required)}
+          onValueChange={handleLevelChange}
         >
           <SelectTrigger 
             className={`${getLevelStyles(currentState.level)} border-2 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
@@ -142,7 +168,7 @@ export const SkillCell = ({ skillName, details, isLastColumn, levelKey }: SkillC
 
         <Select 
           value={currentState.required}
-          onValueChange={(value) => setSkillState(skillName, currentState.level, levelKey, value)}
+          onValueChange={handleRequirementChange}
         >
           <SelectTrigger 
             className={`${getRequirementStyles(currentState.required, currentState.level)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
