@@ -10,6 +10,13 @@ interface CompetencyState {
   setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
 }
 
+const defaultSkillState: SkillState = {
+  level: 'unspecified',
+  required: 'preferred'
+};
+
+const defaultLevels = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'];
+
 export const useCompetencyStore = create<CompetencyState>((set) => ({
   currentStates: {},
   setSkillState: (skillName, level, levelKey, required) => {
@@ -17,18 +24,16 @@ export const useCompetencyStore = create<CompetencyState>((set) => ({
     set((state) => {
       // Initialize the skill state if it doesn't exist
       if (!state.currentStates[skillName]) {
-        state.currentStates[skillName] = {};
+        console.log('Initializing new skill:', skillName);
+        const initialSkillState: Record<string, SkillState> = {};
+        
+        // Initialize all levels with default state
+        defaultLevels.forEach(level => {
+          initialSkillState[level] = { ...defaultSkillState };
+        });
+        
+        state.currentStates[skillName] = initialSkillState;
       }
-      
-      // Initialize all levels for this skill if they don't exist
-      ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
-        if (!state.currentStates[skillName][level]) {
-          state.currentStates[skillName][level] = {
-            level: 'unspecified',
-            required: 'preferred'
-          };
-        }
-      });
 
       return {
         currentStates: {
