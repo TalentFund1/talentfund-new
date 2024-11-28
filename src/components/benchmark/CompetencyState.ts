@@ -27,7 +27,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         set((state) => {
           // Initialize the skill state if it doesn't exist
           if (!state.currentStates[skillName]) {
-            console.log('Initializing new skill:', skillName);
+            console.log('Initializing new skill with default states:', skillName);
             const initialSkillState: Record<string, SkillState> = {};
             
             // Initialize all levels with default state
@@ -55,7 +55,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-matrix-storage',
-      version: 1,
+      version: 2, // Increment version to ensure clean state
       partialize: (state) => ({
         currentStates: state.currentStates,
       }),

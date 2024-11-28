@@ -8,6 +8,11 @@ interface SkillCompetencyState {
   requirement?: string;
 }
 
+const defaultState: SkillCompetencyState = {
+  level: 'unspecified',
+  required: 'preferred'
+};
+
 export const useCompetencyStateReader = () => {
   const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
@@ -27,46 +32,6 @@ export const useCompetencyStateReader = () => {
     return level.toLowerCase().trim();
   };
 
-  const getDefaultStateFromRoleSkills = (skillName: string, roleId: string): SkillCompetencyState => {
-    console.log('Getting default state from role skills:', { skillName, roleId });
-    
-    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-    if (!currentRoleSkills) {
-      console.log('No role skills found, using fallback state');
-      return { level: 'unspecified', required: 'required' };
-    }
-
-    // Search for the skill in all categories
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    const skillData = allSkills.find(skill => skill.title === skillName);
-    if (skillData) {
-      console.log('Found skill in role skills:', skillData);
-      return {
-        level: skillData.level || 'unspecified',
-        required: skillData.requirement || 'required'
-      };
-    }
-
-    console.log('Skill not found in role skills, using fallback state');
-    return { level: 'unspecified', required: 'required' };
-  };
-
-  // Get the primary role ID that contains the saved states
-  const getPrimaryRoleId = (): string => {
-    const availableRoles = Object.keys(currentStates);
-    if (availableRoles.length === 0) {
-      console.log('No roles found in competency store, using default');
-      return "123";
-    }
-    console.log('Using primary role:', availableRoles[0]);
-    return availableRoles[0];
-  };
-
   const findSavedState = (skillName: string, levelKey: string): SkillCompetencyState | null => {
     const primaryRoleId = getPrimaryRoleId();
     const roleStates = currentStates[primaryRoleId];
@@ -82,17 +47,26 @@ export const useCompetencyStateReader = () => {
     return null;
   };
 
+  // Get the primary role ID that contains the saved states
+  const getPrimaryRoleId = (): string => {
+    const availableRoles = Object.keys(currentStates);
+    if (availableRoles.length === 0) {
+      console.log('No roles found in competency store, using default');
+      return "123";
+    }
+    console.log('Using primary role:', availableRoles[0]);
+    return availableRoles[0];
+  };
+
   const getSkillCompetencyState = (
     skillName: string, 
     levelKey: string = 'p4'
-  ): SkillCompetencyState | null => {
+  ): SkillCompetencyState => {
     console.log('Reading competency state:', { 
       skillName, 
       levelKey,
       hasToggledSkill: toggledSkills.has(skillName)
     });
-
-    const primaryRoleId = getPrimaryRoleId();
 
     // First try to get saved state from CompetencyStore
     const savedState = findSavedState(skillName, levelKey);
@@ -101,10 +75,9 @@ export const useCompetencyStateReader = () => {
       return savedState;
     }
 
-    // If no saved state, get default state from role skills
-    const defaultState = getDefaultStateFromRoleSkills(skillName, primaryRoleId);
-    console.log('Using default state from role skills:', defaultState);
-    return defaultState;
+    // If no saved state, return default state
+    console.log('No saved state found, using default state:', defaultState);
+    return { ...defaultState };
   };
 
   const getAllSkillStatesForLevel = (
@@ -126,9 +99,7 @@ export const useCompetencyStateReader = () => {
       allSkills.forEach(skill => {
         if (toggledSkills.has(skill.title)) {
           const competencyState = getSkillCompetencyState(skill.title, levelKey);
-          if (competencyState) {
-            states[skill.title] = competencyState;
-          }
+          states[skill.title] = competencyState;
         }
       });
     }
