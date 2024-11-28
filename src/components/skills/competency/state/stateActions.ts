@@ -1,4 +1,5 @@
 import { CompetencyState } from './types';
+import { initializeRoleState } from './initializeState';
 
 export const setSkillStateAction = (
   state: CompetencyState,
@@ -10,12 +11,15 @@ export const setSkillStateAction = (
 ) => {
   console.log('Setting skill state action:', { skillName, level, levelKey, required, roleId });
   
+  // Initialize role state if it doesn't exist
+  const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
+  
   const newRoleStates = {
     ...state.roleStates,
     [roleId]: {
-      ...state.roleStates[roleId],
+      ...roleState,
       [skillName]: {
-        ...state.roleStates[roleId]?.[skillName],
+        ...roleState[skillName],
         [levelKey]: { level, required }
       }
     }
@@ -40,12 +44,15 @@ export const setSkillProgressionAction = (
 ) => {
   console.log('Setting skill progression action:', { skillName, progression, roleId });
   
+  // Initialize role state if it doesn't exist
+  const roleState = state.roleStates[roleId] || initializeRoleState(roleId);
+  
   const newRoleStates = {
     ...state.roleStates,
     [roleId]: {
-      ...state.roleStates[roleId],
+      ...roleState,
       [skillName]: {
-        ...state.roleStates[roleId]?.[skillName],
+        ...roleState[skillName],
         ...progression
       }
     }
