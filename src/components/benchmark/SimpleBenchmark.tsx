@@ -1,10 +1,11 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
 import { useState, useEffect } from "react";
-import { professionalLevels } from "./data/levelData";
+import { professionalLevels, managerialLevels } from "./data/levelData";
 import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
+import { useTrack } from "../skills/context/TrackContext";
 
 const roles = {
   "124": "Backend Engineer",
@@ -17,6 +18,7 @@ export const SimpleBenchmark = () => {
   const { id } = useParams();
   const { currentStates } = useCompetencyStore();
   const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
+  const { getTrackForRole } = useTrack();
   const employee = getEmployeeById(id || "");
   
   // Initialize with employee's role
@@ -39,10 +41,13 @@ export const SimpleBenchmark = () => {
         employeeRole: employee.role,
         extractedLevel: level
       });
-      return level || "p4";
+      return level;
     }
     return "p4";
   });
+
+  const track = getTrackForRole(selectedRole);
+  const levels = track === "Managerial" ? managerialLevels : professionalLevels;
 
   // Get the primary role ID that contains the saved states
   const getPrimaryRoleId = (): string => {
@@ -74,6 +79,24 @@ export const SimpleBenchmark = () => {
     }
   }, [currentStates, employee]);
 
+  // Update level when track changes
+  useEffect(() => {
+    const isManagerial = track === "Managerial";
+    const currentLevel = selectedLevel.toLowerCase();
+    const isWrongTrack = (isManagerial && currentLevel.startsWith('p')) || 
+                        (!isManagerial && currentLevel.startsWith('m'));
+    
+    if (isWrongTrack) {
+      const newLevel = isManagerial ? 'm3' : 'p4';
+      console.log('Updating level to match track:', {
+        previousLevel: selectedLevel,
+        newLevel,
+        track
+      });
+      setSelectedLevel(newLevel);
+    }
+  }, [track, selectedLevel]);
+
   const getLevelDescription = (level: string) => {
     switch (level.toLowerCase()) {
       case 'p1': return 'Entry';
@@ -82,6 +105,10 @@ export const SimpleBenchmark = () => {
       case 'p4': return 'Senior';
       case 'p5': return 'Expert';
       case 'p6': return 'Principal';
+      case 'm3': return 'Manager';
+      case 'm4': return 'Senior Manager';
+      case 'm5': return 'Director';
+      case 'm6': return 'Senior Director';
       default: return '';
     }
   };
@@ -90,7 +117,8 @@ export const SimpleBenchmark = () => {
     selectedRole,
     selectedLevel,
     roleName: roles[selectedRole as keyof typeof roles],
-    levelDescription: getLevelDescription(selectedLevel)
+    levelDescription: getLevelDescription(selectedLevel),
+    track
   });
 
   return (
@@ -139,11 +167,11 @@ export const SimpleBenchmark = () => {
           >
             <SelectTrigger className="w-[200px] bg-white">
               <SelectValue placeholder="Select Level">
-                {professionalLevels[selectedLevel.toLowerCase() as keyof typeof professionalLevels]} - {getLevelDescription(selectedLevel)}
+                {levels[selectedLevel.toLowerCase() as keyof typeof levels]} - {getLevelDescription(selectedLevel)}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(professionalLevels).map(([id, title]) => (
+              {Object.entries(levels).map(([id, title]) => (
                 <SelectItem key={id} value={id}>
                   <span className="flex items-center justify-between w-full">
                     <span>{title}</span>
