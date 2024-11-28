@@ -9,68 +9,74 @@ interface ToggledSkillsContextType {
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
-  const { currentStates } = useCompetencyStore();
-  
-  const [toggledSkills, setToggledSkillsState] = useState<Set<string>>(() => {
+  const { getRoleState } = useCompetencyStore();
+  const [roleToggledSkills, setRoleToggledSkills] = useState<Record<string, Set<string>>>(() => {
     try {
-      // Try to load from localStorage first
-      const savedSkills = localStorage.getItem('toggledSkills');
+      const savedSkills = localStorage.getItem('roleToggledSkills');
       if (savedSkills) {
-        console.log('Loading toggled skills from localStorage:', JSON.parse(savedSkills));
-        return new Set(JSON.parse(savedSkills));
+        const parsed = JSON.parse(savedSkills);
+        const result: Record<string, Set<string>> = {};
+        Object.entries(parsed).forEach(([roleId, skills]) => {
+          result[roleId] = new Set(skills as string[]);
+        });
+        console.log('Loading role-specific toggled skills from localStorage:', result);
+        return result;
       }
     } catch (error) {
-      console.error('Error loading toggled skills from localStorage:', error);
+      console.error('Error loading role-specific toggled skills from localStorage:', error);
     }
-
-    // Fall back to competency store state if localStorage is empty or invalid
-    const availableRoles = Object.keys(currentStates);
-    if (availableRoles.length > 0) {
-      const primaryRole = availableRoles[0];
-      console.log('Initializing toggled skills with primary role state:', primaryRole);
-      return new Set(Object.keys(currentStates[primaryRole]));
-    }
-    
-    console.log('No states found, using empty set');
-    return new Set();
+    return {};
   });
 
-  // Persist toggled skills to localStorage whenever they change
+  const [currentRoleId, setCurrentRoleId] = useState<string>(() => {
+    const path = window.location.pathname;
+    const matches = path.match(/\/skills\/(\d+)/);
+    return matches?.[1] || "123";
+  });
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    const matches = path.match(/\/skills\/(\d+)/);
+    if (matches?.[1]) {
+      setCurrentRoleId(matches[1]);
+    }
+  }, [window.location.pathname]);
+
+  useEffect(() => {
+    if (currentRoleId) {
+      const roleState = getRoleState(currentRoleId);
+      if (roleState && Object.keys(roleState).length > 0) {
+        setRoleToggledSkills(prev => ({
+          ...prev,
+          [currentRoleId]: new Set(Object.keys(roleState))
+        }));
+      }
+    }
+  }, [currentRoleId, getRoleState]);
+
   useEffect(() => {
     try {
-      const skillsArray = Array.from(toggledSkills);
-      console.log('Persisting toggled skills to localStorage:', skillsArray);
-      localStorage.setItem('toggledSkills', JSON.stringify(skillsArray));
+      const serialized = Object.fromEntries(
+        Object.entries(roleToggledSkills).map(([roleId, skills]) => [
+          roleId,
+          Array.from(skills)
+        ])
+      );
+      console.log('Persisting role-specific toggled skills to localStorage:', serialized);
+      localStorage.setItem('roleToggledSkills', JSON.stringify(serialized));
     } catch (error) {
-      console.error('Error saving toggled skills to localStorage:', error);
+      console.error('Error saving role-specific toggled skills to localStorage:', error);
     }
-  }, [toggledSkills]);
+  }, [roleToggledSkills]);
 
-  // Keep in sync with competency store's primary role while preserving existing toggles
-  useEffect(() => {
-    const availableRoles = Object.keys(currentStates);
-    if (availableRoles.length > 0) {
-      const primaryRole = availableRoles[0];
-      const competencySkills = new Set(Object.keys(currentStates[primaryRole]));
-      
-      console.log('Syncing toggled skills with competency store:', {
-        role: primaryRole,
-        currentToggles: Array.from(toggledSkills),
-        competencySkills: Array.from(competencySkills)
-      });
-
-      // Merge existing toggles with competency skills while preserving user selections
-      setToggledSkillsState(prev => {
-        const merged = new Set([...prev, ...competencySkills]);
-        console.log('Merged toggled skills:', Array.from(merged));
-        return merged;
-      });
-    }
-  }, [currentStates]);
+  const toggledSkills = roleToggledSkills[currentRoleId] || new Set();
 
   const setToggledSkills = (newSkills: Set<string>) => {
-    console.log('Setting toggled skills:', Array.from(newSkills));
-    setToggledSkillsState(newSkills);
+    console.log('Setting toggled skills for role:', { roleId: currentRoleId, skills: Array.from(newSkills) });
+    setRoleToggledSkills(prev => ({
+      ...prev,
+      [currentRoleId]: newSkills
+    }));
   };
 
   return (
