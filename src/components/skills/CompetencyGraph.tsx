@@ -59,9 +59,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       });
 
       const allSkills = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
+        ...(currentRoleSkills.specialized || []),
+        ...(currentRoleSkills.common || []),
+        ...(currentRoleSkills.certifications || [])
       ].filter(skill => toggledSkills.has(skill.title));
 
       console.log('Processing skills generation for:', allSkills.map(s => s.title));
@@ -85,7 +85,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
         console.log('Generated progression:', { skill: skill.title, progression });
         
-        setSkillProgression(skill.title, progression);
+        if (progression) {
+          setSkillProgression(skill.title, progression);
+        }
       });
 
       // Save changes to persist the generated progressions
