@@ -13,14 +13,19 @@ export const generateProgressionForTrack = (
   let level: string;
   let required: string;
 
-  // For managerial track, start with higher baseline levels
+  // For managerial track, start with intermediate baseline
   if (track === "Managerial") {
-    if (importance >= 3) { // Core or critical skills
-      level = progressionPoint <= 0.3 ? "intermediate" : "advanced";
-      required = "required";
-    } else { // Other skills
+    if (importance >= 3) { // Critical skills
       if (progressionPoint <= 0.3) {
         level = "intermediate";
+        required = "required";
+      } else {
+        level = "advanced";
+        required = "required";
+      }
+    } else { // Other skills
+      if (progressionPoint <= 0.3) {
+        level = "beginner";
         required = "preferred";
       } else if (progressionPoint <= 0.6) {
         level = "intermediate";
@@ -31,9 +36,12 @@ export const generateProgressionForTrack = (
       }
     }
   } else {
-    // Professional track progression
+    // Professional track progression with more granular levels
     if (importance >= 3) { // Core or critical skills
       if (progressionPoint <= 0.2) {
+        level = "beginner";
+        required = "required";
+      } else if (progressionPoint <= 0.4) {
         level = "intermediate";
         required = "required";
       } else {
@@ -41,7 +49,10 @@ export const generateProgressionForTrack = (
         required = "required";
       }
     } else if (importance === 2) { // Specialized skills
-      if (progressionPoint <= 0.3) {
+      if (progressionPoint <= 0.2) {
+        level = "unspecified";
+        required = "preferred";
+      } else if (progressionPoint <= 0.4) {
         level = "beginner";
         required = "preferred";
       } else if (progressionPoint <= 0.6) {
@@ -52,10 +63,13 @@ export const generateProgressionForTrack = (
         required = "required";
       }
     } else { // Common skills and others
-      if (progressionPoint <= 0.3) {
+      if (progressionPoint <= 0.2) {
+        level = "unspecified";
+        required = "preferred";
+      } else if (progressionPoint <= 0.4) {
         level = "beginner";
         required = "preferred";
-      } else if (progressionPoint <= 0.6) {
+      } else if (progressionPoint <= 0.7) {
         level = "intermediate";
         required = "preferred";
       } else {
