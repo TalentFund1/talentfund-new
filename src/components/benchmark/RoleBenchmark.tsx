@@ -8,7 +8,7 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
-import { useRoleBenchmarkStore } from "./role/RoleBenchmarkState";
+import { useRoleStore } from "./role/RoleBenchmarkState";
 import { saveRoleSkills } from "./role/RoleSkillsManager";
 
 const roles = {
@@ -34,7 +34,7 @@ export const RoleBenchmark = () => {
     setSelectedRole,
     setSelectedLevel,
     initializeSkills
-  } = useRoleBenchmarkStore();
+  } = useRoleStore();
 
   const employee = employees.find(emp => emp.id === id);
 
