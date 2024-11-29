@@ -59,6 +59,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
             <SelectItem value="Backend Engineer">Backend Engineer</SelectItem>
             <SelectItem value="Frontend Engineer">Frontend Engineer</SelectItem>
             <SelectItem value="Engineering Manager">Engineering Manager</SelectItem>
+            <SelectItem value="DevOps Engineer">DevOps Engineer</SelectItem>
           </SelectContent>
         </Select>
       </div>

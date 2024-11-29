@@ -31,7 +31,8 @@ const roles = {
   "124": "Backend Engineer",
   "123": "AI Engineer",
   "125": "Frontend Engineer",
-  "126": "Engineering Manager"
+  "126": "Engineering Manager",
+  "127": "DevOps Engineer"
 };
 
 export const RoleBenchmark = () => {

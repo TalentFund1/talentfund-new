@@ -24,7 +24,8 @@ const SkillProfileDetail = () => {
     "123": "AI Engineer",
     "124": "Backend Engineer",
     "125": "Frontend Engineer",
-    "126": "Engineering Manager"
+    "126": "Engineering Manager",
+    "127": "DevOps Engineer"
   };
 
   const jobTitle = jobTitles[id || ""] || "AI Engineer";
