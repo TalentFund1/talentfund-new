@@ -68,33 +68,42 @@ export const RoleBenchmark = () => {
       const employeeRoleId = getSkillProfileId(getBaseRole(employee.role));
       const employeeLevel = getLevel(employee.role);
       
-      console.log('Overriding role from employee profile:', {
+      console.log('Loading employee profile:', {
         employeeId: id,
         roleId: employeeRoleId,
-        level: employeeLevel
+        level: employeeLevel,
+        existingToggledSkills: toggledSkills.size
       });
       
       setSelectedRole(employeeRoleId);
       setRoleLevel(employeeLevel.toLowerCase());
       
-      // Update toggled skills for the new role
-      const newRoleSkills = roleSkills[employeeRoleId as keyof typeof roleSkills];
-      if (newRoleSkills) {
-        const allSkills = [
-          ...newRoleSkills.specialized,
-          ...newRoleSkills.common,
-          ...newRoleSkills.certifications
-        ].map(skill => skill.title);
-        
-        console.log('Setting toggled skills for employee role:', {
+      // Only initialize toggled skills if none exist for this role
+      const savedSkills = localStorage.getItem(`roleToggledSkills-${employeeRoleId}`);
+      if (!savedSkills || toggledSkills.size === 0) {
+        const newRoleSkills = roleSkills[employeeRoleId as keyof typeof roleSkills];
+        if (newRoleSkills) {
+          const allSkills = [
+            ...newRoleSkills.specialized,
+            ...newRoleSkills.common,
+            ...newRoleSkills.certifications
+          ].map(skill => skill.title);
+          
+          console.log('Initializing toggled skills for employee role:', {
+            roleId: employeeRoleId,
+            skillCount: allSkills.length
+          });
+          
+          setToggledSkills(new Set(allSkills));
+        }
+      } else {
+        console.log('Using existing toggled skills:', {
           roleId: employeeRoleId,
-          skillCount: allSkills.length
+          skillCount: toggledSkills.size
         });
-        
-        setToggledSkills(new Set(allSkills));
       }
     }
-  }, [id, employee, setSelectedRole, setRoleLevel, setToggledSkills]);
+  }, [id, employee, setSelectedRole, setRoleLevel, setToggledSkills, toggledSkills]);
 
   // Effect to handle track changes
   useEffect(() => {
