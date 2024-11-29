@@ -21,7 +21,7 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "",
+  selectedRole: "123", // Default to AI Engineer
   setSelectedRole: (role) => set({ selectedRole: role }),
   selectedLevel: "p4",
   setSelectedLevel: (level) => set({ selectedLevel: level }),
@@ -48,30 +48,24 @@ export const RoleBenchmark = () => {
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
-  // Single effect to handle initial setup and synchronization
+  // Effect to handle track changes only
   useEffect(() => {
-    if (employee) {
-      const profileId = getSkillProfileId(employee.role);
-      const level = getLevel(employee.role).toLowerCase();
-      const track = getTrackForRole(profileId);
-      
-      console.log('Initial setup:', { profileId, level, track });
-      
-      setSelectedRole(profileId);
+    if (selectedRole) {
+      const track = getTrackForRole(selectedRole);
+      console.log('Track update:', { selectedRole, track });
       setCurrentTrack(track);
       
       // Only adjust level if track mismatch
       const isManagerial = track === "Managerial";
-      const isWrongTrack = (isManagerial && level.startsWith('p')) || 
-                          (!isManagerial && level.startsWith('m'));
+      const currentLevel = roleLevel.toLowerCase();
+      const needsLevelAdjustment = (isManagerial && currentLevel.startsWith('p')) || 
+                                  (!isManagerial && currentLevel.startsWith('m'));
       
-      if (isWrongTrack) {
+      if (needsLevelAdjustment) {
         setRoleLevel(isManagerial ? 'm3' : 'p4');
-      } else {
-        setRoleLevel(level);
       }
     }
-  }, [employee, setSelectedRole, setRoleLevel, getTrackForRole]);
+  }, [selectedRole, getTrackForRole]);
 
   // Handle skill updates when role changes
   useEffect(() => {
