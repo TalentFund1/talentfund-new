@@ -18,12 +18,12 @@ export const initializeRoleSkills = (
     console.log('Initializing skill:', {
       title: skill.title,
       level: skill.level || 'unspecified',
-      required: skill.requirement || 'required'
+      required: 'preferred' // Default to 'preferred' if requirement is not specified
     });
     initializeState(
       skill.title, 
       skill.level || 'unspecified',
-      skill.requirement || 'required'
+      'preferred' // Default to 'preferred' if requirement is not specified
     );
   });
 
