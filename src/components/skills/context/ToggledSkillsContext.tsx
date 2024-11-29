@@ -130,13 +130,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         const currentRoleSkills = Array.from(roleToggledSkills[currentRoleId]);
         localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(currentRoleSkills));
         
-        // Also update the global roleToggledSkills storage with data from role-specific storage
-        const allRoleSkills: Record<string, string[]> = {};
-        Object.keys(roleToggledSkills).forEach(roleId => {
-          allRoleSkills[roleId] = Array.from(roleToggledSkills[roleId]);
-        });
-        localStorage.setItem('roleToggledSkills', JSON.stringify(allRoleSkills));
-        
         console.log('Persisted toggled skills for role:', {
           roleId: currentRoleId,
           skillCount: currentRoleSkills.length,
