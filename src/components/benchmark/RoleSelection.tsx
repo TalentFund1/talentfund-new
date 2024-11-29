@@ -52,10 +52,13 @@ export const RoleSelection = ({
       <div className="flex gap-4 w-full max-w-[800px]">
         <Select 
           value={selectedRole}
-          onValueChange={onRoleChange}
+          onValueChange={(value) => {
+            console.log('Role selected:', value);
+            onRoleChange(value);
+          }}
         >
           <SelectTrigger className="w-full bg-white">
-            <SelectValue>
+            <SelectValue placeholder="Select Role">
               {roles[selectedRole] || "Select Role"}
             </SelectValue>
           </SelectTrigger>
@@ -73,7 +76,7 @@ export const RoleSelection = ({
           onValueChange={onLevelChange}
         >
           <SelectTrigger className="w-[200px] bg-white">
-            <SelectValue>
+            <SelectValue placeholder="Select Level">
               {selectedLevel ? `${levels[selectedLevel.toLowerCase() as keyof typeof levels]} - ${getLevelDescription(selectedLevel)}` : "Select Level"}
             </SelectValue>
           </SelectTrigger>
