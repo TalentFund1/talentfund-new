@@ -112,10 +112,12 @@ const EmployeeProfile = () => {
             </div>
           </div>
 
-          <Card className="p-8 bg-white">
-            <EmployeeHeader id={id || ""} employee={employeeData} />
-            <EmployeeDetails employee={employeeData} id={id || ""} />
-          </Card>
+          <TrackProvider>
+            <Card className="p-8 bg-white">
+              <EmployeeHeader id={id || ""} employee={employeeData} />
+              <EmployeeDetails employee={employeeData} id={id || ""} />
+            </Card>
+          </TrackProvider>
 
           <TrackProvider>
             <Tabs defaultValue="experience" className="w-full space-y-6">
