@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useCompetencyStore } from '../competency/CompetencyState';
 import { roleSkills } from '../data/roleSkills';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -11,6 +12,7 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { getRoleState } = useCompetencyStore();
+  const { toast } = useToast();
   const [roleToggledSkills, setRoleToggledSkills] = useState<Record<string, Set<string>>>(() => {
     try {
       // Initialize from role-specific storage first
@@ -149,11 +151,24 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           skillCount: currentRoleSkills.length,
           skills: currentRoleSkills
         });
+
+        // Show toast when skills are updated
+        if (currentRoleSkills.length > 0) {
+          toast({
+            title: "Skills Updated",
+            description: `${currentRoleSkills.length} skills are now active for this role.`,
+          });
+        }
       } catch (error) {
         console.error('Error saving toggled skills to localStorage:', error);
+        toast({
+          title: "Error Saving Skills",
+          description: "There was an error saving your skill selections.",
+          variant: "destructive",
+        });
       }
     }
-  }, [roleToggledSkills, currentRoleId]);
+  }, [roleToggledSkills, currentRoleId, toast]);
 
   const toggledSkills = roleToggledSkills[currentRoleId] || new Set();
 
