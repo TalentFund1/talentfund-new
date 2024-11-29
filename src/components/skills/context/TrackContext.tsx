@@ -43,44 +43,61 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [currentProfileId, setCurrentProfileId] = useState<string | undefined>(id);
 
-  // Effect to handle profile switches
+  // Effect to handle profile switches with debouncing
   useEffect(() => {
     if (id !== currentProfileId) {
       console.log('Profile changed:', { previous: currentProfileId, current: id });
+      
+      // Update current profile ID immediately
       setCurrentProfileId(id);
       
-      // Ensure the new profile has a track set
+      // Ensure the new profile has a track set with proper initialization
+      const defaultTrack = DEFAULT_TRACKS[id as keyof typeof DEFAULT_TRACKS] || "Professional";
+      
       setTracks(current => {
-        if (!current[id || ''] || current[id || ''] !== tracks[id || '']) {
-          console.log('Initializing track for new profile:', id);
-          const newTracks = { 
-            ...current, 
-            [id || '']: DEFAULT_TRACKS[id as keyof typeof DEFAULT_TRACKS] || "Professional" 
+        // Only update if the track doesn't exist or is different
+        if (!current[id || ''] || current[id || ''] !== defaultTrack) {
+          console.log('Initializing track for new profile:', {
+            id,
+            defaultTrack,
+            currentTrack: current[id || '']
+          });
+          
+          return {
+            ...current,
+            [id || '']: defaultTrack
           };
-          return newTracks;
         }
         return current;
       });
-    }
-  }, [id, currentProfileId, tracks]);
 
-  // Effect to persist tracks to localStorage
+      // Reset unsaved changes flag
+      setHasUnsavedChanges(false);
+    }
+  }, [id]);
+
+  // Separate effect for persisting tracks to localStorage
   useEffect(() => {
-    try {
-      console.log('Persisting tracks to localStorage:', tracks);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tracks));
-    } catch (error) {
-      console.error('Error saving tracks:', error);
+    if (Object.keys(tracks).length > 0) {
+      try {
+        console.log('Persisting tracks to localStorage:', tracks);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tracks));
+      } catch (error) {
+        console.error('Error saving tracks:', error);
+      }
     }
   }, [tracks]);
 
   const getTrackForRole = (roleId: string): Track => {
     console.log('Getting track for role:', roleId, 'Current tracks:', tracks);
-    return tracks[roleId] || DEFAULT_TRACKS[roleId as keyof typeof DEFAULT_TRACKS] || "Professional";
+    const track = tracks[roleId] || DEFAULT_TRACKS[roleId as keyof typeof DEFAULT_TRACKS] || "Professional";
+    console.log('Resolved track:', track);
+    return track;
   };
 
   const setTrackForRole = (roleId: string, track: Track) => {
     console.log('Setting track for role:', roleId, 'to:', track);
+    
     setTracks(current => {
       const newTracks = {
         ...current,
@@ -95,16 +112,19 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
       
       return newTracks;
     });
+    
     setHasUnsavedChanges(true);
   };
 
+  const value = {
+    tracks,
+    getTrackForRole,
+    setTrackForRole,
+    hasUnsavedChanges
+  };
+
   return (
-    <TrackContext.Provider value={{ 
-      tracks, 
-      getTrackForRole, 
-      setTrackForRole, 
-      hasUnsavedChanges 
-    }}>
+    <TrackContext.Provider value={value}>
       {children}
     </TrackContext.Provider>
   );
