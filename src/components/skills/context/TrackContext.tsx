@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 type Track = "Professional" | "Managerial";
 
@@ -30,24 +30,16 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
   });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  useEffect(() => {
-    const savedTracks = localStorage.getItem('roleTracks');
-    if (!savedTracks) {
-      localStorage.setItem('roleTracks', JSON.stringify(DEFAULT_TRACKS));
-      setTracks(DEFAULT_TRACKS);
-    }
-  }, []);
-
   const getTrackForRole = (roleId: string): Track => {
     console.log('Getting standardized track for role:', roleId, 'Current tracks:', tracks);
-    return "Professional"; // Always return Professional for consistent logic
+    return "Professional" as Track; // Always return Professional for consistent logic
   };
 
   const setTrackForRole = (roleId: string, track: Track) => {
     console.log('Setting track for role:', roleId, 'to:', track);
-    const newTracks = {
+    const newTracks: Record<string, Track> = {
       ...tracks,
-      [roleId]: "Professional" // Force Professional track for all roles
+      [roleId]: "Professional" as Track // Force Professional track for all roles
     };
     setTracks(newTracks);
     setHasUnsavedChanges(true);
