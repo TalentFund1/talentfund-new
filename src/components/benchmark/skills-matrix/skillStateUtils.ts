@@ -2,8 +2,14 @@ import { roleSkills } from '../../skills/data/roleSkills';
 
 export const getSkillsByRole = (roleId: string) => {
   console.log('Getting skills for role:', roleId);
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  // Remove the fallback to "123" (AI Engineer) to ensure correct role skills are loaded
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
+  if (!currentRoleSkills) {
+    console.error('No skills found for role:', roleId);
+    return [];
+  }
+
   const allSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
