@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { roleSkills } from '../skills/data/roleSkills';
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useEffect, useState } from "react";
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -17,52 +16,40 @@ export const CategoryCards = ({
   selectedLevel 
 }: CategoryCardsProps) => {
   const { toggledSkills } = useToggledSkills();
-  const [skillCounts, setSkillCounts] = useState({
-    all: 0,
-    specialized: 0,
-    common: 0,
-    certification: 0
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+
+  console.log('CategoryCards render:', {
+    roleId,
+    selectedLevel,
+    toggledSkillsCount: toggledSkills.size
   });
 
-  useEffect(() => {
-    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-    
-    const specializedCount = currentRoleSkills.specialized?.filter(skill => 
-      toggledSkills.has(skill.title)
-    ).length || 0;
-    
-    const commonCount = currentRoleSkills.common?.filter(skill => 
-      toggledSkills.has(skill.title)
-    ).length || 0;
-    
-    const certificationCount = currentRoleSkills.certifications?.filter(skill => 
-      toggledSkills.has(skill.title)
-    ).length || 0;
+  const specializedCount = currentRoleSkills.specialized?.filter(skill => 
+    toggledSkills.has(skill.title)
+  ).length || 0;
+  
+  const commonCount = currentRoleSkills.common?.filter(skill => 
+    toggledSkills.has(skill.title)
+  ).length || 0;
+  
+  const certificationCount = currentRoleSkills.certifications?.filter(skill => 
+    toggledSkills.has(skill.title)
+  ).length || 0;
 
-    const totalCount = specializedCount + commonCount + certificationCount;
+  const totalCount = specializedCount + commonCount + certificationCount;
 
-    console.log('Updating category counts:', {
-      roleId,
-      total: totalCount,
-      specialized: specializedCount,
-      common: commonCount,
-      certification: certificationCount,
-      toggledSkillsCount: toggledSkills.size
-    });
-
-    setSkillCounts({
-      all: totalCount,
-      specialized: specializedCount,
-      common: commonCount,
-      certification: certificationCount
-    });
-  }, [roleId, toggledSkills]);
+  console.log('Category counts calculated:', {
+    total: totalCount,
+    specialized: specializedCount,
+    common: commonCount,
+    certification: certificationCount
+  });
 
   const categories = [
-    { id: "all", name: "All Categories", count: skillCounts.all },
-    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
-    { id: "common", name: "Common Skills", count: skillCounts.common },
-    { id: "certification", name: "Certification", count: skillCounts.certification }
+    { id: "all", name: "All Categories", count: totalCount },
+    { id: "specialized", name: "Specialized Skills", count: specializedCount },
+    { id: "common", name: "Common Skills", count: commonCount },
+    { id: "certification", name: "Certification", count: certificationCount }
   ];
 
   return (

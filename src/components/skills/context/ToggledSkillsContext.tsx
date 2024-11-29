@@ -16,7 +16,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     const savedSkills = loadToggledSkills(currentRoleId);
-    console.log('Loading saved toggled skills for role:', currentRoleId, savedSkills);
+    console.log('Initial load of toggled skills for role:', currentRoleId, savedSkills);
     return new Set(savedSkills);
   });
 
