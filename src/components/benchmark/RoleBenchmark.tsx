@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useState, useEffect } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
@@ -7,8 +7,6 @@ import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { create } from "zustand";
-import { useParams } from "react-router-dom";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
@@ -21,7 +19,7 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "123", // Default to AI Engineer
+  selectedRole: "123",
   setSelectedRole: (role) => set({ selectedRole: role }),
   selectedLevel: "p4",
   setSelectedLevel: (level) => set({ selectedLevel: level }),
@@ -37,7 +35,7 @@ const roles = {
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { getTrackForRole, setTrackForRole } = useTrack();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
   const { selectedRole, setSelectedRole, selectedLevel: roleLevel, setSelectedLevel: setRoleLevel } = useRoleStore();
@@ -48,14 +46,47 @@ export const RoleBenchmark = () => {
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
-  // Effect to handle track changes only
+  // Override role when employee profile is loaded
+  useEffect(() => {
+    if (id && employee) {
+      const employeeRoleId = getSkillProfileId(getBaseRole(employee.role));
+      const employeeLevel = getLevel(employee.role);
+      
+      console.log('Overriding role from employee profile:', {
+        employeeId: id,
+        roleId: employeeRoleId,
+        level: employeeLevel
+      });
+      
+      setSelectedRole(employeeRoleId);
+      setRoleLevel(employeeLevel.toLowerCase());
+      
+      // Update toggled skills for the new role
+      const newRoleSkills = roleSkills[employeeRoleId as keyof typeof roleSkills];
+      if (newRoleSkills) {
+        const allSkills = [
+          ...newRoleSkills.specialized,
+          ...newRoleSkills.common,
+          ...newRoleSkills.certifications
+        ].map(skill => skill.title);
+        
+        console.log('Setting toggled skills for employee role:', {
+          roleId: employeeRoleId,
+          skillCount: allSkills.length
+        });
+        
+        setToggledSkills(new Set(allSkills));
+      }
+    }
+  }, [id, employee, setSelectedRole, setRoleLevel, setToggledSkills]);
+
+  // Effect to handle track changes
   useEffect(() => {
     if (selectedRole) {
       const track = getTrackForRole(selectedRole);
       console.log('Track update:', { selectedRole, track });
       setCurrentTrack(track);
       
-      // Only adjust level if track mismatch
       const isManagerial = track === "Managerial";
       const currentLevel = roleLevel.toLowerCase();
       const needsLevelAdjustment = (isManagerial && currentLevel.startsWith('p')) || 
@@ -65,7 +96,7 @@ export const RoleBenchmark = () => {
         setRoleLevel(isManagerial ? 'm3' : 'p4');
       }
     }
-  }, [selectedRole, getTrackForRole]);
+  }, [selectedRole, getTrackForRole, roleLevel, setRoleLevel]);
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -79,8 +110,13 @@ export const RoleBenchmark = () => {
     .map(skill => skill.title)
     .filter(skillTitle => toggledSkills.has(skillTitle));
     
+    console.log('Updating benchmark search skills:', {
+      roleId: selectedRole,
+      skillCount: allSkills.length
+    });
+    
     setBenchmarkSearchSkills(allSkills);
-  }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
+  }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills, selectedRole]);
 
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
@@ -93,7 +129,6 @@ export const RoleBenchmark = () => {
     setSelectedRole(newRole);
     setCurrentTrack(newTrack);
     
-    // Adjust level based on new track if needed
     const isManagerial = newTrack === "Managerial";
     const currentLevel = roleLevel.toLowerCase();
     const needsLevelAdjustment = (isManagerial && currentLevel.startsWith('p')) || 
