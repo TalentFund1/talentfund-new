@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -43,19 +43,38 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [currentProfileId, setCurrentProfileId] = useState<string | undefined>(id);
 
-  // Effect to handle profile switches with debouncing
+  // Memoize track operations to prevent unnecessary re-renders
+  const getTrackForRole = useMemo(() => (roleId: string): Track => {
+    const track = tracks[roleId] || DEFAULT_TRACKS[roleId as keyof typeof DEFAULT_TRACKS] || "Professional";
+    console.log('Getting track for role:', roleId, 'Resolved track:', track);
+    return track;
+  }, [tracks]);
+
+  const setTrackForRole = useMemo(() => (roleId: string, track: Track) => {
+    console.log('Setting track for role:', roleId, 'to:', track);
+    
+    setTracks(current => ({
+      ...current,
+      [roleId]: track
+    }));
+    
+    setHasUnsavedChanges(true);
+    
+    toast({
+      title: "Track Updated",
+      description: `Track for ${roleId} has been set to ${track}`,
+    });
+  }, [toast]);
+
+  // Handle profile changes
   useEffect(() => {
     if (id !== currentProfileId) {
       console.log('Profile changed:', { previous: currentProfileId, current: id });
-      
-      // Update current profile ID immediately
       setCurrentProfileId(id);
       
-      // Ensure the new profile has a track set with proper initialization
       const defaultTrack = DEFAULT_TRACKS[id as keyof typeof DEFAULT_TRACKS] || "Professional";
       
       setTracks(current => {
-        // Only update if the track doesn't exist or is different
         if (!current[id || ''] || current[id || ''] !== defaultTrack) {
           console.log('Initializing track for new profile:', {
             id,
@@ -71,57 +90,29 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
         return current;
       });
 
-      // Reset unsaved changes flag
       setHasUnsavedChanges(false);
     }
   }, [id]);
 
-  // Separate effect for persisting tracks to localStorage
+  // Persist tracks to localStorage
   useEffect(() => {
     if (Object.keys(tracks).length > 0) {
       try {
-        console.log('Persisting tracks to localStorage:', tracks);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tracks));
+        console.log('Persisted tracks to localStorage:', tracks);
       } catch (error) {
         console.error('Error saving tracks:', error);
       }
     }
   }, [tracks]);
 
-  const getTrackForRole = (roleId: string): Track => {
-    console.log('Getting track for role:', roleId, 'Current tracks:', tracks);
-    const track = tracks[roleId] || DEFAULT_TRACKS[roleId as keyof typeof DEFAULT_TRACKS] || "Professional";
-    console.log('Resolved track:', track);
-    return track;
-  };
-
-  const setTrackForRole = (roleId: string, track: Track) => {
-    console.log('Setting track for role:', roleId, 'to:', track);
-    
-    setTracks(current => {
-      const newTracks = {
-        ...current,
-        [roleId]: track
-      };
-      
-      // Show toast notification
-      toast({
-        title: "Track Updated",
-        description: `Track for ${roleId} has been set to ${track}`,
-      });
-      
-      return newTracks;
-    });
-    
-    setHasUnsavedChanges(true);
-  };
-
-  const value = {
+  // Memoize context value to prevent unnecessary re-renders
+  const value = useMemo(() => ({
     tracks,
     getTrackForRole,
     setTrackForRole,
     hasUnsavedChanges
-  };
+  }), [tracks, getTrackForRole, setTrackForRole, hasUnsavedChanges]);
 
   return (
     <TrackContext.Provider value={value}>
