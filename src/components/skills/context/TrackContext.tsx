@@ -16,6 +16,7 @@ const DEFAULT_TRACKS: Record<string, Track> = {
   "124": "Professional", // Backend Engineer
   "125": "Professional", // Frontend Engineer
   "126": "Managerial",  // Engineering Manager
+  "127": "Professional", // DevOps Engineer
 };
 
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
@@ -46,6 +47,8 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
     };
     setTracks(newTracks);
     setHasUnsavedChanges(true);
+    
+    // Save immediately to ensure track selection persists
     localStorage.setItem('roleTracks', JSON.stringify(newTracks));
   };
 
