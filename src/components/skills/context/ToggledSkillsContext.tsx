@@ -20,7 +20,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         Object.entries(parsed).forEach(([roleId, skills]) => {
           result[roleId] = new Set(skills as string[]);
         });
-        console.log('Loading saved toggled skills from localStorage:', result);
+        console.log('Loaded saved toggled skills from localStorage:', result);
         return result;
       }
     } catch (error) {
@@ -48,7 +48,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       }
     };
 
-    // Listen for route changes
     window.addEventListener('popstate', handleLocationChange);
     
     // Handle programmatic navigation
@@ -91,6 +90,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           skills: allSkills.map(skill => skill.title)
         });
 
+        // Try to load role-specific saved state first
         const savedState = localStorage.getItem(`roleToggledSkills-${currentRoleId}`);
         if (savedState) {
           try {
@@ -99,6 +99,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
               ...prev,
               [currentRoleId]: new Set(parsedState)
             }));
+            console.log('Loaded saved toggle state for role:', currentRoleId);
           } catch (error) {
             console.error('Error parsing saved toggle state:', error);
             setRoleToggledSkills(prev => ({
@@ -107,6 +108,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
             }));
           }
         } else {
+          // Initialize with all skills toggled on
           setRoleToggledSkills(prev => ({
             ...prev,
             [currentRoleId]: new Set(allSkills.map(skill => skill.title))
@@ -116,7 +118,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   }, [currentRoleId]);
 
-  // Persist toggle states to localStorage immediately when they change
+  // Persist toggle states to localStorage
   useEffect(() => {
     if (currentRoleId && roleToggledSkills[currentRoleId]) {
       try {
@@ -129,7 +131,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         );
         localStorage.setItem('roleToggledSkills', JSON.stringify(serialized));
 
-        // Save current role state separately for quicker access
+        // Save current role state separately
         const currentRoleSkills = Array.from(roleToggledSkills[currentRoleId]);
         localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(currentRoleSkills));
         
