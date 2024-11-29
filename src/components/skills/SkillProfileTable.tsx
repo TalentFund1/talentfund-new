@@ -10,6 +10,7 @@ import { getBaseRole } from "../EmployeeTable";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
+import { TrackProvider } from "./context/TrackContext";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
@@ -17,7 +18,7 @@ interface SkillProfileTableProps {
   selectedJobTitle?: string;
 }
 
-export const SkillProfileTable = ({ 
+const SkillProfileTableContent = ({ 
   selectedFunction,
   selectedSkills,
   selectedJobTitle 
@@ -167,5 +168,13 @@ export const SkillProfileTable = ({
         </TableBody>
       </Table>
     </div>
+  );
+};
+
+export const SkillProfileTable = (props: SkillProfileTableProps) => {
+  return (
+    <TrackProvider>
+      <SkillProfileTableContent {...props} />
+    </TrackProvider>
   );
 };
