@@ -1,88 +1,63 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 type Track = "Professional" | "Managerial";
 
 interface TrackContextType {
-  tracks: Record<string, Track>;
   getTrackForRole: (roleId: string) => Track;
   setTrackForRole: (roleId: string, track: Track) => void;
   hasUnsavedChanges: boolean;
+  saveTrackSelection: () => void;
 }
 
+const TrackContext = createContext<TrackContextType | undefined>(undefined);
+
+// Now all roles default to Professional track for consistent logic
 const DEFAULT_TRACKS: Record<string, Track> = {
   "123": "Professional",
   "124": "Professional",
   "125": "Professional",
-  "126": "Professional",
-  "127": "Professional"
+  "126": "Professional", // Changed from Managerial to Professional
+  "127": "Professional",
+  "128": "Professional",
+  "129": "Professional",
+  "130": "Professional"
 };
 
-const TrackContext = createContext<TrackContextType | undefined>(undefined);
-
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
-  const { id } = useParams();
   const [tracks, setTracks] = useState<Record<string, Track>>(() => {
-    try {
-      const savedTracks = localStorage.getItem('role-tracks');
-      if (savedTracks) {
-        const parsed = JSON.parse(savedTracks);
-        console.log('Loading saved tracks:', parsed);
-        return { ...DEFAULT_TRACKS, ...parsed };
-      }
-    } catch (error) {
-      console.error('Error loading tracks:', error);
-    }
-    return DEFAULT_TRACKS;
+    const savedTracks = localStorage.getItem('roleTracks');
+    return savedTracks ? JSON.parse(savedTracks) : DEFAULT_TRACKS;
   });
-  
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // Effect to handle profile switches
-  useEffect(() => {
-    if (id) {
-      console.log('Profile changed, initializing track for role:', id);
-      // Ensure the new profile has a track set
-      setTracks(current => {
-        if (!current[id]) {
-          console.log('Setting default track for new profile:', id);
-          return { ...current, [id]: "Professional" };
-        }
-        return current;
-      });
-    }
-  }, [id]);
-
-  // Effect to persist tracks to localStorage
-  useEffect(() => {
-    try {
-      console.log('Persisting tracks to localStorage:', tracks);
-      localStorage.setItem('role-tracks', JSON.stringify(tracks));
-    } catch (error) {
-      console.error('Error saving tracks:', error);
-    }
-  }, [tracks]);
-
   const getTrackForRole = (roleId: string): Track => {
-    console.log('Getting track for role:', roleId, 'Current tracks:', tracks);
-    return tracks[roleId] || "Professional";
+    console.log('Getting standardized track for role:', roleId, 'Current tracks:', tracks);
+    return "Professional" as Track; // Always return Professional for consistent logic
   };
 
   const setTrackForRole = (roleId: string, track: Track) => {
     console.log('Setting track for role:', roleId, 'to:', track);
-    setTracks(current => ({
-      ...current,
-      [roleId]: track
-    }));
+    const newTracks: Record<string, Track> = {
+      ...tracks,
+      [roleId]: "Professional" as Track // Force Professional track for all roles
+    };
+    setTracks(newTracks);
     setHasUnsavedChanges(true);
+    localStorage.setItem('roleTracks', JSON.stringify(newTracks));
+  };
+
+  const saveTrackSelection = () => {
+    console.log('Saving standardized track selections:', tracks);
+    localStorage.setItem('roleTracks', JSON.stringify(tracks));
+    setHasUnsavedChanges(false);
   };
 
   return (
     <TrackContext.Provider value={{ 
-      tracks, 
       getTrackForRole, 
       setTrackForRole, 
-      hasUnsavedChanges 
+      hasUnsavedChanges, 
+      saveTrackSelection 
     }}>
       {children}
     </TrackContext.Provider>
@@ -91,7 +66,7 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
 
 export const useTrack = () => {
   const context = useContext(TrackContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useTrack must be used within a TrackProvider');
   }
   return context;
