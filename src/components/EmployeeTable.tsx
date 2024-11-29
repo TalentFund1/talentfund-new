@@ -27,23 +27,25 @@ interface EmployeeTableProps {
 }
 
 export const getSkillProfileId = (role: string) => {
-  // Validate role ID format first
+  // Standardize role ID format
   const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
+  
+  // If a valid ID is passed directly, use it
   if (validProfileIds.includes(role)) {
     console.log('Using direct role ID:', role);
     return role;
   }
 
-  // Map role titles to IDs with consistent structure
+  // Map all roles to use the same base structure
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
-    "Backend Engineer": "124",
-    "Frontend Engineer": "125",
-    "Engineering Manager": "126",
-    "Data Engineer": "127",
-    "DevOps Engineer": "128",
-    "Product Manager": "129",
-    "Frontend Developer": "125"  // Alias for Frontend Engineer
+    "Backend Engineer": "123", // Now using same base as AI Engineer
+    "Frontend Engineer": "123", // Now using same base as AI Engineer
+    "Engineering Manager": "123", // Now using same base as AI Engineer
+    "Data Engineer": "123", // Now using same base as AI Engineer
+    "DevOps Engineer": "123", // Now using same base as AI Engineer
+    "Product Manager": "123", // Now using same base as AI Engineer
+    "Frontend Developer": "123" // Now using same base as AI Engineer
   };
   
   const baseRole = role.split(":")[0].trim();
@@ -52,10 +54,11 @@ export const getSkillProfileId = (role: string) => {
   console.log('Role mapping:', { 
     originalRole: role,
     baseRole,
-    mappedId
+    mappedId,
+    usingStandardizedLogic: true
   });
   
-  return mappedId || "123";
+  return mappedId || "123"; // Default to AI Engineer base logic
 };
 
 export const getBaseRole = (role: string) => {

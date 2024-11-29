@@ -11,11 +11,16 @@ interface TrackContextType {
 
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
 
+// Now all roles default to Professional track for consistent logic
 const DEFAULT_TRACKS: Record<string, Track> = {
-  "123": "Professional", // AI Engineer
-  "124": "Professional", // Backend Engineer
-  "125": "Professional", // Frontend Engineer
-  "126": "Managerial",  // Engineering Manager
+  "123": "Professional",
+  "124": "Professional",
+  "125": "Professional",
+  "126": "Professional", // Changed from Managerial to Professional
+  "127": "Professional",
+  "128": "Professional",
+  "129": "Professional",
+  "130": "Professional"
 };
 
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
@@ -25,7 +30,6 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
   });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // Initialize tracks on mount if not already set
   useEffect(() => {
     const savedTracks = localStorage.getItem('roleTracks');
     if (!savedTracks) {
@@ -35,24 +39,23 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const getTrackForRole = (roleId: string): Track => {
-    console.log('Getting track for role:', roleId, 'Current tracks:', tracks);
-    return tracks[roleId] || DEFAULT_TRACKS[roleId] || "Professional";
+    console.log('Getting standardized track for role:', roleId, 'Current tracks:', tracks);
+    return "Professional"; // Always return Professional for consistent logic
   };
 
   const setTrackForRole = (roleId: string, track: Track) => {
     console.log('Setting track for role:', roleId, 'to:', track);
     const newTracks = {
       ...tracks,
-      [roleId]: track
+      [roleId]: "Professional" // Force Professional track for all roles
     };
     setTracks(newTracks);
     setHasUnsavedChanges(true);
-    // Immediately save to localStorage
     localStorage.setItem('roleTracks', JSON.stringify(newTracks));
   };
 
   const saveTrackSelection = () => {
-    console.log('Saving track selections:', tracks);
+    console.log('Saving standardized track selections:', tracks);
     localStorage.setItem('roleTracks', JSON.stringify(tracks));
     setHasUnsavedChanges(false);
   };
