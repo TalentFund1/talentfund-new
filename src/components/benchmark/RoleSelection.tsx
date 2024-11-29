@@ -39,6 +39,13 @@ export const RoleSelection = ({
 
   const levels = currentTrack === "Managerial" ? managerialLevels : professionalLevels;
 
+  console.log('RoleSelection - Current state:', {
+    selectedRole,
+    roleName: roles[selectedRole],
+    selectedLevel,
+    currentTrack
+  });
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 w-full max-w-[800px]">
@@ -48,13 +55,13 @@ export const RoleSelection = ({
         >
           <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Select Role">
-              {roles[selectedRole]}
+              {roles[selectedRole]} {selectedRole ? `(${selectedRole})` : ''}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {Object.entries(roles).map(([id, title]) => (
               <SelectItem key={id} value={id}>
-                {title}
+                {title} ({id})
               </SelectItem>
             ))}
           </SelectContent>

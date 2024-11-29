@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useState, useEffect } from "react";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useToggledSkills } from "../skills/context/ToggledSkills";
 import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
@@ -28,8 +28,8 @@ export const useRoleStore = create<RoleStore>((set) => ({
 }));
 
 const roles = {
-  "124": "Backend Engineer",
   "123": "AI Engineer",
+  "124": "Backend Engineer",
   "125": "Frontend Engineer",
   "126": "Engineering Manager",
   "127": "DevOps Engineer"
@@ -94,7 +94,7 @@ export const RoleBenchmark = () => {
 
   const handleRoleChange = (newRole: string) => {
     const newTrack = getTrackForRole(newRole);
-    console.log('Role change:', { newRole, newTrack });
+    console.log('Role change:', { newRole, newTrack, roleName: roles[newRole as keyof typeof roles] });
     
     setSelectedRole(newRole);
     setCurrentTrack(newTrack);
