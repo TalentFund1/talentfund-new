@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
-import { roleSkills } from "../skills/data/roleSkills";
+import { roleSkills } from '../skills/data/roleSkills';
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useEffect, useState } from "react";
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -17,48 +17,53 @@ export const CategoryCards = ({
   selectedLevel 
 }: CategoryCardsProps) => {
   const { toggledSkills } = useToggledSkills();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-
-  console.log('CategoryCards - Current role skills:', {
-    roleId,
-    currentRoleSkills,
-    toggledSkillsSize: toggledSkills.size,
-    toggledSkills: Array.from(toggledSkills)
+  const [skillCounts, setSkillCounts] = useState({
+    all: 0,
+    specialized: 0,
+    common: 0,
+    certification: 0
   });
 
-  const getSkillsByCategory = (category: string) => {
-    const allSkills = [
-      ...(currentRoleSkills.specialized || []),
-      ...(currentRoleSkills.common || []),
-      ...(currentRoleSkills.certifications || [])
-    ];
+  useEffect(() => {
+    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+    
+    const specializedCount = currentRoleSkills.specialized?.filter(skill => 
+      toggledSkills.has(skill.title)
+    ).length || 0;
+    
+    const commonCount = currentRoleSkills.common?.filter(skill => 
+      toggledSkills.has(skill.title)
+    ).length || 0;
+    
+    const certificationCount = currentRoleSkills.certifications?.filter(skill => 
+      toggledSkills.has(skill.title)
+    ).length || 0;
 
-    if (category === 'all') {
-      return allSkills.filter(skill => toggledSkills.has(skill.title));
-    }
+    const totalCount = specializedCount + commonCount + certificationCount;
 
-    const categoryMap: { [key: string]: any[] } = {
-      specialized: currentRoleSkills.specialized || [],
-      common: currentRoleSkills.common || [],
-      certification: currentRoleSkills.certifications || []
-    };
+    console.log('Updating category counts:', {
+      roleId,
+      total: totalCount,
+      specialized: specializedCount,
+      common: commonCount,
+      certification: certificationCount,
+      toggledSkillsCount: toggledSkills.size
+    });
 
-    return (categoryMap[category] || []).filter(skill => toggledSkills.has(skill.title));
-  };
+    setSkillCounts({
+      all: totalCount,
+      specialized: specializedCount,
+      common: commonCount,
+      certification: certificationCount
+    });
+  }, [roleId, toggledSkills]);
 
   const categories = [
-    { id: "all", name: "All Categories", count: getSkillsByCategory('all').length },
-    { id: "specialized", name: "Specialized Skills", count: getSkillsByCategory('specialized').length },
-    { id: "common", name: "Common Skills", count: getSkillsByCategory('common').length },
-    { id: "certification", name: "Certification", count: getSkillsByCategory('certification').length }
+    { id: "all", name: "All Categories", count: skillCounts.all },
+    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
+    { id: "common", name: "Common Skills", count: skillCounts.common },
+    { id: "certification", name: "Certification", count: skillCounts.certification }
   ];
-
-  console.log('CategoryCards - Category counts:', categories.map(cat => ({
-    category: cat.id,
-    count: cat.count,
-    skills: getSkillsByCategory(cat.id).map(s => s.title)
-  })));
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
