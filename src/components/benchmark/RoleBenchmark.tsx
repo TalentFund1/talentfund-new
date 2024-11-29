@@ -7,6 +7,7 @@ import { useTrack } from "../skills/context/TrackContext";
 import { RoleSelection } from "./RoleSelection";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
@@ -18,12 +19,27 @@ interface RoleStore {
   setSelectedLevel: (level: string) => void;
 }
 
-export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "123",
-  setSelectedRole: (role) => set({ selectedRole: role }),
-  selectedLevel: "p4",
-  setSelectedLevel: (level) => set({ selectedLevel: level }),
-}));
+// Modified to use persist middleware
+export const useRoleStore = create<RoleStore>()(
+  persist(
+    (set) => ({
+      selectedRole: "123",
+      setSelectedRole: (role) => {
+        console.log('Setting selected role:', role);
+        set({ selectedRole: role });
+      },
+      selectedLevel: "p4",
+      setSelectedLevel: (level) => {
+        console.log('Setting selected level:', level);
+        set({ selectedLevel: level });
+      },
+    }),
+    {
+      name: 'role-store',
+      version: 1,
+    }
+  )
+);
 
 const roles = {
   "123": "AI Engineer",
