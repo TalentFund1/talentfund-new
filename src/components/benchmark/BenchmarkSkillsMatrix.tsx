@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
@@ -20,31 +20,12 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
-  const { toggledSkills, setToggledSkills } = useToggledSkills();
+  const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-
-  // Reset toggled skills when role changes
-  useEffect(() => {
-    console.log('Role changed, updating toggled skills for:', selectedRole);
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    const newToggledSkills = new Set(allRoleSkills.map(skill => skill.title));
-    setToggledSkills(newToggledSkills);
-    
-    const toggledRoleSkills = allRoleSkills
-      .filter(skill => newToggledSkills.has(skill.title))
-      .map(skill => skill.title);
-    
-    setSelectedSearchSkills(toggledRoleSkills);
-  }, [selectedRole, currentRoleSkills, setToggledSkills]);
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
