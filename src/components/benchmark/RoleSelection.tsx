@@ -43,7 +43,8 @@ export const RoleSelection = ({
     selectedRole,
     roleName: roles[selectedRole],
     selectedLevel,
-    currentTrack
+    currentTrack,
+    availableRoles: Object.entries(roles)
   });
 
   return (
@@ -54,8 +55,8 @@ export const RoleSelection = ({
           onValueChange={onRoleChange}
         >
           <SelectTrigger className="w-full bg-white">
-            <SelectValue placeholder="Select Role">
-              {roles[selectedRole]}
+            <SelectValue>
+              {roles[selectedRole] || "Select Role"}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -72,8 +73,8 @@ export const RoleSelection = ({
           onValueChange={onLevelChange}
         >
           <SelectTrigger className="w-[200px] bg-white">
-            <SelectValue placeholder="Select Level">
-              {levels[selectedLevel.toLowerCase() as keyof typeof levels]} - {getLevelDescription(selectedLevel)}
+            <SelectValue>
+              {selectedLevel ? `${levels[selectedLevel.toLowerCase() as keyof typeof levels]} - ${getLevelDescription(selectedLevel)}` : "Select Level"}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
