@@ -1,26 +1,6 @@
 // ... keep existing code (previous imports and other employee skills)
 
 export const initialSkills = {
-  "130": [
-    // Specialized Skills
-    { title: "Machine Learning", subcategory: "AI & ML", level: "unspecified", growth: "30%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "Deep Learning", subcategory: "AI & ML", level: "unspecified", growth: "28%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "Natural Language Processing", subcategory: "AI Applications", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "Computer Vision", subcategory: "AI Applications", level: "unspecified", growth: "22%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "AI Model Deployment", subcategory: "AI Operations", level: "unspecified", growth: "20%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "Big Data Handling", subcategory: "Data Management", level: "unspecified", growth: "24%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "AI Optimization", subcategory: "AI Performance", level: "unspecified", growth: "26%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    
-    // Common Skills
-    { title: "Programming Proficiency", subcategory: "Development", level: "unspecified", growth: "15%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "Data Structures & Algorithms", subcategory: "Computer Science", level: "unspecified", growth: "18%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "Statistical Analysis", subcategory: "Data Science", level: "unspecified", growth: "20%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "Problem Solving", subcategory: "Soft Skills", level: "unspecified", growth: "15%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    
-    // Certifications
-    { title: "AWS Certified Machine Learning - Specialty", subcategory: "AI Certification", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true },
-    { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "unspecified", growth: "20%", confidence: "high", requirement: "preferred", isCompanySkill: true }
-  ],
   "124": [
     // Specialized Skills
     { title: "Node.js", subcategory: "Backend Development", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true },
