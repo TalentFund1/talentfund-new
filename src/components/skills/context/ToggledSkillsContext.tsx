@@ -17,7 +17,7 @@ const getRoleIdFromPath = (path: string): string => {
 
 const loadSavedSkills = (roleId: string): Set<string> => {
   try {
-    const savedState = localStorage.getItem(`roleToggledSkills-${roleId}`);
+    const savedState = localStorage.getItem(`roleToggledSkills-${roleId}-v2`);
     if (savedState) {
       const parsedSkills = JSON.parse(savedState);
       if (Array.isArray(parsedSkills)) {
@@ -55,7 +55,7 @@ const initializeDefaultSkills = (roleId: string): Set<string> => {
   });
 
   // Save the initialized skills immediately
-  localStorage.setItem(`roleToggledSkills-${roleId}`, JSON.stringify(allSkills));
+  localStorage.setItem(`roleToggledSkills-${roleId}-v2`, JSON.stringify(allSkills));
   return new Set(allSkills);
 };
 
@@ -97,7 +97,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   useEffect(() => {
     if (currentRoleId) {
       const skillsArray = Array.from(toggledSkills);
-      localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(skillsArray));
+      localStorage.setItem(`roleToggledSkills-${currentRoleId}-v2`, JSON.stringify(skillsArray));
       console.log('Persisted skills for role:', {
         roleId: currentRoleId,
         skillCount: skillsArray.length,
@@ -115,7 +115,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     setToggledSkills(newSkills);
     
     // Immediately persist the changes
-    localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(Array.from(newSkills)));
+    localStorage.setItem(`roleToggledSkills-${currentRoleId}-v2`, JSON.stringify(Array.from(newSkills)));
   };
 
   return (
