@@ -7,9 +7,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { useTrack } from "../skills/context/TrackContext";
-import { CompetencyGraph } from "../skills/CompetencyGraph";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 
 const roles = {
   "124": "Backend Engineer",
@@ -195,14 +192,6 @@ export const SimpleBenchmark = () => {
           </Select>
         </div>
       </div>
-
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <div className="mb-8">
-          <h3 className="text-2xl font-bold text-foreground mb-6">Skills Graph</h3>
-        </div>
-        <Separator className="my-6" />
-        <CompetencyGraph roleId={selectedRole} track={track === "Managerial" ? "Managerial" : "Professional"} />
-      </Card>
     </div>
   );
 };

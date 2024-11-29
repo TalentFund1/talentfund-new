@@ -1,117 +1,69 @@
-import { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 type Track = "Professional" | "Managerial";
 
 interface TrackContextType {
-  tracks: Record<string, Track>;
   getTrackForRole: (roleId: string) => Track;
   setTrackForRole: (roleId: string, track: Track) => void;
   hasUnsavedChanges: boolean;
+  saveTrackSelection: () => void;
 }
-
-const DEFAULT_TRACKS: Record<string, Track> = {
-  "123": "Professional",
-  "124": "Professional",
-  "125": "Professional",
-  "126": "Professional",
-  "127": "Professional"
-};
-
-const STORAGE_KEY = 'role-tracks-v2';
 
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
 
+const DEFAULT_TRACKS: Record<string, Track> = {
+  "123": "Professional", // AI Engineer
+  "124": "Professional", // Backend Engineer
+  "125": "Professional", // Frontend Engineer
+  "126": "Managerial",  // Engineering Manager
+};
+
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
-  const { id } = useParams();
-  const { toast } = useToast();
   const [tracks, setTracks] = useState<Record<string, Track>>(() => {
-    try {
-      const savedTracks = localStorage.getItem(STORAGE_KEY);
-      if (savedTracks) {
-        const parsed = JSON.parse(savedTracks);
-        console.log('Loading saved tracks:', parsed);
-        return { ...DEFAULT_TRACKS, ...parsed };
-      }
-    } catch (error) {
-      console.error('Error loading tracks:', error);
-    }
-    return DEFAULT_TRACKS;
+    const savedTracks = localStorage.getItem('roleTracks');
+    return savedTracks ? JSON.parse(savedTracks) : DEFAULT_TRACKS;
   });
-  
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // Memoize track operations to prevent unnecessary re-renders
-  const getTrackForRole = useCallback((roleId: string): Track => {
-    const track = tracks[roleId] || DEFAULT_TRACKS[roleId as keyof typeof DEFAULT_TRACKS] || "Professional";
-    console.log('Getting track for role:', roleId, 'Resolved track:', track);
-    return track;
-  }, [tracks]);
-
-  const setTrackForRole = useCallback((roleId: string, track: Track) => {
-    console.log('Setting track for role:', roleId, 'to:', track);
-    
-    setTracks(current => ({
-      ...current,
-      [roleId]: track
-    }));
-    
-    setHasUnsavedChanges(true);
-    
-    toast({
-      title: "Track Updated",
-      description: `Track for ${roleId} has been set to ${track}`,
-    });
-  }, [toast]);
-
-  // Handle profile changes
+  // Initialize tracks on mount if not already set
   useEffect(() => {
-    if (!id) return;
-
-    const defaultTrack = DEFAULT_TRACKS[id as keyof typeof DEFAULT_TRACKS] || "Professional";
-    
-    setTracks(current => {
-      if (!current[id] || current[id] !== defaultTrack) {
-        console.log('Initializing track for new profile:', {
-          id,
-          defaultTrack,
-          currentTrack: current[id]
-        });
-        
-        return {
-          ...current,
-          [id]: defaultTrack
-        };
-      }
-      return current;
-    });
-
-    setHasUnsavedChanges(false);
-  }, [id]);
-
-  // Persist tracks to localStorage
-  useEffect(() => {
-    if (Object.keys(tracks).length > 0) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tracks));
-        console.log('Persisted tracks to localStorage:', tracks);
-      } catch (error) {
-        console.error('Error saving tracks:', error);
-      }
+    const savedTracks = localStorage.getItem('roleTracks');
+    if (!savedTracks) {
+      localStorage.setItem('roleTracks', JSON.stringify(DEFAULT_TRACKS));
+      setTracks(DEFAULT_TRACKS);
     }
-  }, [tracks]);
+  }, []);
 
-  // Memoize context value to prevent unnecessary re-renders
-  const value = useMemo(() => ({
-    tracks,
-    getTrackForRole,
-    setTrackForRole,
-    hasUnsavedChanges
-  }), [tracks, getTrackForRole, setTrackForRole, hasUnsavedChanges]);
+  const getTrackForRole = (roleId: string): Track => {
+    console.log('Getting track for role:', roleId, 'Current tracks:', tracks);
+    return tracks[roleId] || DEFAULT_TRACKS[roleId] || "Professional";
+  };
+
+  const setTrackForRole = (roleId: string, track: Track) => {
+    console.log('Setting track for role:', roleId, 'to:', track);
+    const newTracks = {
+      ...tracks,
+      [roleId]: track
+    };
+    setTracks(newTracks);
+    setHasUnsavedChanges(true);
+    // Immediately save to localStorage
+    localStorage.setItem('roleTracks', JSON.stringify(newTracks));
+  };
+
+  const saveTrackSelection = () => {
+    console.log('Saving track selections:', tracks);
+    localStorage.setItem('roleTracks', JSON.stringify(tracks));
+    setHasUnsavedChanges(false);
+  };
 
   return (
-    <TrackContext.Provider value={value}>
+    <TrackContext.Provider value={{ 
+      getTrackForRole, 
+      setTrackForRole, 
+      hasUnsavedChanges, 
+      saveTrackSelection 
+    }}>
       {children}
     </TrackContext.Provider>
   );
@@ -119,7 +71,7 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
 
 export const useTrack = () => {
   const context = useContext(TrackContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useTrack must be used within a TrackProvider');
   }
   return context;

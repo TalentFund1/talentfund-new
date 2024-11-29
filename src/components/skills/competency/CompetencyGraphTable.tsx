@@ -4,8 +4,6 @@ import { SkillCell } from "./SkillCell";
 import { roleSkills } from "../data/roleSkills";
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
 import { useParams } from "react-router-dom";
-import { CompetencyLoadingState } from "../../benchmark/loading/CompetencyLoadingState";
-import { useEffect, useState } from "react";
 
 interface CompetencyGraphTableProps {
   currentRoleId: string;
@@ -20,22 +18,8 @@ export const CompetencyGraphTable = ({
   selectedCategory,
   toggledSkills
 }: CompetencyGraphTableProps) => {
-  const { roleStates, initializeState } = useCompetencyStore();
+  const { roleStates } = useCompetencyStore();
   const { id: roleId } = useParams<{ id: string }>();
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Initialize state and handle loading
-  useEffect(() => {
-    setIsLoading(true);
-    initializeState(currentRoleId);
-    
-    // Brief timeout to ensure state is loaded
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [currentRoleId, initializeState]);
 
   const getLevelsForTrack = () => {
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
@@ -134,6 +118,14 @@ export const CompetencyGraphTable = ({
     })
     .map(skill => skill.title);
 
+  console.log('Sorted skills with counts:', skills.map(skill => ({
+    title: skill.title,
+    advanced: countSkillLevels(skill.title, levels, 'advanced'),
+    intermediate: countSkillLevels(skill.title, levels, 'intermediate'),
+    beginner: countSkillLevels(skill.title, levels, 'beginner'),
+    unspecified: countSkillLevels(skill.title, levels, 'unspecified')
+  })));
+
   return (
     <div className="rounded-lg border border-border bg-white overflow-hidden">
       <Table>
@@ -153,26 +145,22 @@ export const CompetencyGraphTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {isLoading ? (
-            <CompetencyLoadingState />
-          ) : (
-            sortedSkills.map((skillName) => (
-              <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
-                <TableCell className="font-medium border-r border-border">
-                  {skillName}
-                </TableCell>
-                {levels.map((level, index) => (
-                  <SkillCell 
-                    key={level}
-                    skillName={skillName}
-                    details={getSkillDetails(skillName, level)}
-                    isLastColumn={index === levels.length - 1}
-                    levelKey={level.toLowerCase()}
-                  />
-                ))}
-              </TableRow>
-            ))
-          )}
+          {sortedSkills.map((skillName) => (
+            <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
+              <TableCell className="font-medium border-r border-border">
+                {skillName}
+              </TableCell>
+              {levels.map((level, index) => (
+                <SkillCell 
+                  key={level}
+                  skillName={skillName}
+                  details={getSkillDetails(skillName, level)}
+                  isLastColumn={index === levels.length - 1}
+                  levelKey={level.toLowerCase()}
+                />
+              ))}
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>
