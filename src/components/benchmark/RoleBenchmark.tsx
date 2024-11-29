@@ -21,12 +21,26 @@ interface RoleStore {
   setSelectedLevel: (level: string) => void;
 }
 
-export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "123", // Default to AI Engineer
-  setSelectedRole: (role) => set({ selectedRole: role }),
-  selectedLevel: "p4",
-  setSelectedLevel: (level) => set({ selectedLevel: level }),
-}));
+export const useRoleStore = create<RoleStore>((set) => {
+  // Get the current employee's role ID from the URL
+  const employeeId = window.location.pathname.split('/').pop();
+  const employees = useEmployeeStore.getState().employees;
+  const employee = employees.find(emp => emp.id === employeeId);
+  const defaultRoleId = employee?.roleId || "123"; // Fallback to "123" only if no role found
+
+  console.log('Initializing RoleStore with:', {
+    employeeId,
+    defaultRoleId,
+    employeeFound: !!employee
+  });
+
+  return {
+    selectedRole: defaultRoleId,
+    setSelectedRole: (role) => set({ selectedRole: role }),
+    selectedLevel: "p4",
+    setSelectedLevel: (level) => set({ selectedLevel: level }),
+  };
+});
 
 const roles = {
   "123": "AI Engineer",
@@ -49,7 +63,18 @@ export const RoleBenchmark = () => {
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
-  // Effect to handle track changes only
+  // Initialize role based on employee data
+  useEffect(() => {
+    if (employee?.roleId && selectedRole !== employee.roleId) {
+      console.log('Updating selected role to match employee:', {
+        employeeId: id,
+        newRoleId: employee.roleId,
+        previousRole: selectedRole
+      });
+      setSelectedRole(employee.roleId);
+    }
+  }, [employee, selectedRole, setSelectedRole]);
+
   useEffect(() => {
     if (selectedRole) {
       const track = getTrackForRole(selectedRole);
