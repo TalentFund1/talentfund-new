@@ -11,23 +11,7 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { getRoleState } = useCompetencyStore();
-  const [roleToggledSkills, setRoleToggledSkills] = useState<Record<string, Set<string>>>(() => {
-    try {
-      const savedSkills = localStorage.getItem('roleToggledSkills');
-      if (savedSkills) {
-        const parsed = JSON.parse(savedSkills);
-        const result: Record<string, Set<string>> = {};
-        Object.entries(parsed).forEach(([roleId, skills]) => {
-          result[roleId] = new Set(skills as string[]);
-        });
-        console.log('Loaded saved toggled skills from localStorage:', result);
-        return result;
-      }
-    } catch (error) {
-      console.error('Error loading toggled skills from localStorage:', error);
-    }
-    return {};
-  });
+  const [roleToggledSkills, setRoleToggledSkills] = useState<Record<string, Set<string>>>({});
 
   const [currentRoleId, setCurrentRoleId] = useState<string>(() => {
     const path = window.location.pathname;
@@ -90,7 +74,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           skills: allSkills.map(skill => skill.title)
         });
 
-        // Try to load role-specific saved state first
+        // Try to load role-specific saved state
         const savedState = localStorage.getItem(`roleToggledSkills-${currentRoleId}`);
         if (savedState) {
           try {
@@ -122,16 +106,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   useEffect(() => {
     if (currentRoleId && roleToggledSkills[currentRoleId]) {
       try {
-        // Save all role states
-        const serialized = Object.fromEntries(
-          Object.entries(roleToggledSkills).map(([roleId, skills]) => [
-            roleId,
-            Array.from(skills)
-          ])
-        );
-        localStorage.setItem('roleToggledSkills', JSON.stringify(serialized));
-
-        // Save current role state separately
+        // Save current role state
         const currentRoleSkills = Array.from(roleToggledSkills[currentRoleId]);
         localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(currentRoleSkills));
         
