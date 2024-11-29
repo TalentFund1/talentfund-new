@@ -19,21 +19,11 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => {
-  const employeeId = window.location.pathname.split('/').pop();
-  const employees = useEmployeeStore.getState().employees;
-  const employee = employees.find(emp => emp.id === employeeId);
-  const defaultRoleId = "126"; // Default to Engineering Manager role (managerial track)
-
-  console.log('Initializing RoleStore with:', {
-    employeeId,
-    defaultRoleId,
-    employeeFound: !!employee,
-    employeeRole: employee?.role
-  });
-
+  console.log('Initializing RoleStore with default role: 123');
+  
   return {
-    selectedRole: defaultRoleId,
-    selectedLevel: "m3", // Default to M3 for managerial track
+    selectedRole: "123", // Always default to AI Engineer
+    selectedLevel: "p4", // Default to P4 for professional track
     setSelectedRole: (role) => set({ selectedRole: role })
   };
 });
@@ -95,7 +85,7 @@ export const RoleBenchmark = () => {
 
           {id && <BenchmarkAnalysis 
             selectedRole={selectedRole}
-            roleLevel="m3"
+            roleLevel="p4"
             employeeId={id}
           />}
         </div>

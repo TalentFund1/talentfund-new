@@ -62,8 +62,8 @@ export const useCompetencyStateReader = () => {
   const getPrimaryRoleId = (): string => {
     const availableRoles = Object.keys(currentStates);
     if (availableRoles.length === 0) {
-      console.log('No roles found in competency store, using default');
-      return "126"; // Default to Engineering Manager
+      console.log('No roles found in competency store, using default AI Engineer role');
+      return "123"; // Default to AI Engineer
     }
     console.log('Using primary role:', availableRoles[0]);
     return availableRoles[0];

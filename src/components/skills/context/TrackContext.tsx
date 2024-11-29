@@ -25,7 +25,6 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
   });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // Initialize tracks on mount if not already set
   useEffect(() => {
     const savedTracks = localStorage.getItem('roleTracks');
     if (!savedTracks) {
@@ -47,7 +46,6 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
     };
     setTracks(newTracks);
     setHasUnsavedChanges(true);
-    // Immediately save to localStorage
     localStorage.setItem('roleTracks', JSON.stringify(newTracks));
   };
 
