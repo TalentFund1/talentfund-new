@@ -2,7 +2,6 @@ import { roleSkills } from '../../skills/data/roleSkills';
 
 export const getSkillsByRole = (roleId: string) => {
   console.log('Getting skills for role:', roleId);
-  // Remove the fallback to "123" (AI Engineer) to ensure correct role skills are loaded
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
   if (!currentRoleSkills) {
