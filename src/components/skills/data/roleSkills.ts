@@ -70,5 +70,25 @@ export const roleSkills = {
       { title: "Project Management Professional (PMP)", subcategory: "Management Certification", level: "unspecified", growth: "25%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Certified Scrum Master (CSM)", subcategory: "Agile Certification", level: "unspecified", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } }
     ]
+  },
+  "127": { // DevOps Engineer
+    specialized: [
+      { title: "Docker", subcategory: "Container Technology", level: "unspecified", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Kubernetes", subcategory: "Container Orchestration", level: "unspecified", growth: "28%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Jenkins", subcategory: "CI/CD", level: "unspecified", growth: "22%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Terraform", subcategory: "Infrastructure as Code", level: "unspecified", growth: "30%", salary: "$180,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "AWS", subcategory: "Cloud Platforms", level: "unspecified", growth: "26%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } }
+    ],
+    common: [
+      { title: "Linux Administration", subcategory: "System Administration", level: "unspecified", growth: "20%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Shell Scripting", subcategory: "Scripting", level: "unspecified", growth: "18%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Git", subcategory: "Version Control", level: "unspecified", growth: "15%", salary: "$160,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Problem Solving", subcategory: "Soft Skills", level: "unspecified", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } }
+    ],
+    certifications: [
+      { title: "AWS Certified DevOps Engineer", subcategory: "Cloud Certification", level: "unspecified", growth: "25%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Certified Kubernetes Administrator", subcategory: "Container Certification", level: "unspecified", growth: "28%", salary: "$180,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "HashiCorp Certified Terraform Associate", subcategory: "Infrastructure Certification", level: "unspecified", growth: "24%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } }
+    ]
   }
 };

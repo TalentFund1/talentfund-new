@@ -1,5 +1,4 @@
-// ... keep existing code (previous imports and other employee skills)
-
+<lov-code>
 export const initialSkills = {
   "124": [
     // Specialized Skills
@@ -73,9 +72,7 @@ export const initialSkills = {
     { title: "Project Management Professional (PMP)", subcategory: "Management Certification", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true },
     { title: "Certified Scrum Master (CSM)", subcategory: "Agile Certification", level: "unspecified", growth: "20%", confidence: "high", requirement: "preferred", isCompanySkill: true },
     { title: "ITIL Foundation", subcategory: "IT Service Management", level: "unspecified", growth: "15%", confidence: "medium", requirement: "preferred", isCompanySkill: true }
-  ]
-};
-
-export const getEmployeeSkills = (employeeId: string) => {
-  return initialSkills[employeeId as keyof typeof initialSkills] || [];
-};
+  ],
+  "127": [
+    // Specialized Skills
+    { title: "Docker", subcategory: "Container Technology", level: "unspecified", growth: "
