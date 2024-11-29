@@ -18,7 +18,7 @@ interface TrackSelectionProps {
 
 export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
   const { id } = useParams<{ id: string }>();
-  const { getTrackForRole, setTrackForRole, hasUnsavedChanges, saveTrackSelection } = useTrack();
+  const { getTrackForRole, setTrackForRole, hasUnsavedChanges } = useTrack();
   const { toast } = useToast();
 
   const track = getTrackForRole(id || "");
@@ -26,13 +26,11 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
   const handleTrackChange = (value: "Professional" | "Managerial") => {
     setTrackForRole(id || "", value);
     onTrackChange?.(value);
-  };
-
-  const handleSave = () => {
-    saveTrackSelection();
+    
+    // Show toast notification when track is changed
     toast({
       title: "Track Selection Saved",
-      description: `Selected track: ${track}`,
+      description: `Selected track: ${value}`,
     });
   };
 
@@ -90,16 +88,6 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
             </div>
           </RadioGroup>
         </div>
-        {hasUnsavedChanges && (
-          <Button 
-            onClick={handleSave} 
-            size="sm" 
-            variant="outline"
-            className="ml-auto bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-          >
-            Save Track
-          </Button>
-        )}
       </div>
     </div>
   );
