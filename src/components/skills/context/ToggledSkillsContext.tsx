@@ -11,7 +11,27 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { getRoleState } = useCompetencyStore();
-  const [roleToggledSkills, setRoleToggledSkills] = useState<Record<string, Set<string>>>({});
+  const [roleToggledSkills, setRoleToggledSkills] = useState<Record<string, Set<string>>>(() => {
+    try {
+      // Initialize from role-specific storage first
+      const result: Record<string, Set<string>> = {};
+      // Get all keys from localStorage that match our pattern
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('roleToggledSkills-')) {
+          const roleId = key.replace('roleToggledSkills-', '');
+          const savedState = localStorage.getItem(key);
+          if (savedState) {
+            result[roleId] = new Set(JSON.parse(savedState));
+          }
+        }
+      });
+      console.log('Loaded saved toggled skills from role-specific storage:', result);
+      return result;
+    } catch (error) {
+      console.error('Error loading toggled skills from localStorage:', error);
+      return {};
+    }
+  });
 
   const [currentRoleId, setCurrentRoleId] = useState<string>(() => {
     const path = window.location.pathname;
@@ -109,6 +129,13 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         // Save current role state
         const currentRoleSkills = Array.from(roleToggledSkills[currentRoleId]);
         localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(currentRoleSkills));
+        
+        // Also update the global roleToggledSkills storage with data from role-specific storage
+        const allRoleSkills: Record<string, string[]> = {};
+        Object.keys(roleToggledSkills).forEach(roleId => {
+          allRoleSkills[roleId] = Array.from(roleToggledSkills[roleId]);
+        });
+        localStorage.setItem('roleToggledSkills', JSON.stringify(allRoleSkills));
         
         console.log('Persisted toggled skills for role:', {
           roleId: currentRoleId,
