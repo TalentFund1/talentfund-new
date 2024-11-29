@@ -30,10 +30,10 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
           <div key={skill.name}>
             <div className="flex justify-between mb-1">
               <span className="text-sm font-medium">{skill.name}</span>
-              <span className="text-sm text-secondary-foreground">{skill.level}%</span>
+              <span className="text-sm text-secondary-foreground">85%</span>
             </div>
             <div className="skill-progress">
-              <div className="skill-progress-bar" style={{ width: `${skill.level}%` }} />
+              <div className="skill-progress-bar" style={{ width: '85%' }} />
             </div>
           </div>
         ))}
