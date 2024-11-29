@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { useRoleStore } from "./role/RoleBenchmarkState";
+import { useRoleStore } from "./RoleBenchmark";
 
 interface SkillGoalSectionProps {
   skills: any[];

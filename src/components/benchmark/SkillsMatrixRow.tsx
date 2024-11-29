@@ -3,7 +3,7 @@ import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { useRoleStore } from "./role/RoleBenchmarkState";
+import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
