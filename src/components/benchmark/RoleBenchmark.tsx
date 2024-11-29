@@ -10,10 +10,11 @@ import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { Separator } from "@/components/ui/separator";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface RoleStore {
   selectedRole: string;
-  selectedLevel: string;  // Added this property
+  selectedLevel: string;
   setSelectedRole: (role: string) => void;
 }
 
@@ -21,7 +22,7 @@ export const useRoleStore = create<RoleStore>((set) => {
   const employeeId = window.location.pathname.split('/').pop();
   const employees = useEmployeeStore.getState().employees;
   const employee = employees.find(emp => emp.id === employeeId);
-  const defaultRoleId = "123"; // Default to AI Engineer role
+  const defaultRoleId = "126"; // Default to Engineering Manager role (managerial track)
 
   console.log('Initializing RoleStore with:', {
     employeeId,
@@ -32,7 +33,7 @@ export const useRoleStore = create<RoleStore>((set) => {
 
   return {
     selectedRole: defaultRoleId,
-    selectedLevel: "p4", // Added default level
+    selectedLevel: "m3", // Default to M3 for managerial track
     setSelectedRole: (role) => set({ selectedRole: role })
   };
 });
@@ -44,9 +45,11 @@ export const RoleBenchmark = () => {
   const { selectedRole } = useRoleStore();
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
+  const { getTrackForRole } = useTrack();
 
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  const track = getTrackForRole(selectedRole);
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -68,6 +71,12 @@ export const RoleBenchmark = () => {
     return null;
   }
 
+  console.log('RoleBenchmark rendering with:', {
+    selectedRole,
+    track,
+    hasSkills: !!currentRoleSkills
+  });
+
   return (
     <ToggledSkillsProvider>
       <div className="space-y-6">
@@ -86,7 +95,7 @@ export const RoleBenchmark = () => {
 
           {id && <BenchmarkAnalysis 
             selectedRole={selectedRole}
-            roleLevel="p4"
+            roleLevel="m3"
             employeeId={id}
           />}
         </div>
