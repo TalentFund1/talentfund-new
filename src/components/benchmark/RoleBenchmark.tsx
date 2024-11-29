@@ -12,6 +12,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 interface RoleStore {
   selectedRole: string;
@@ -115,35 +116,37 @@ export const RoleBenchmark = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
-          <Button 
-            variant="outline" 
-            className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-            onClick={handleSeeSkillProfile}
-          >
-            See Skill Profile
-          </Button>
-        </div>
-        
-        <RoleSelection 
-          selectedRole={selectedRole}
-          selectedLevel={roleLevel}
-          currentTrack={currentTrack}
-          onRoleChange={handleRoleChange}
-          onLevelChange={setRoleLevel}
-          onTrackChange={handleTrackChange}
-          roles={roles}
-        />
+    <ToggledSkillsProvider>
+      <div className="space-y-6">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
+            <Button 
+              variant="outline" 
+              className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
+              onClick={handleSeeSkillProfile}
+            >
+              See Skill Profile
+            </Button>
+          </div>
+          
+          <RoleSelection 
+            selectedRole={selectedRole}
+            selectedLevel={roleLevel}
+            currentTrack={currentTrack}
+            onRoleChange={handleRoleChange}
+            onLevelChange={setRoleLevel}
+            onTrackChange={handleTrackChange}
+            roles={roles}
+          />
 
-        {id && <BenchmarkAnalysis 
-          selectedRole={selectedRole}
-          roleLevel={roleLevel}
-          employeeId={id}
-        />}
+          {id && <BenchmarkAnalysis 
+            selectedRole={selectedRole}
+            roleLevel={roleLevel}
+            employeeId={id}
+          />}
+        </div>
       </div>
-    </div>
+    </ToggledSkillsProvider>
   );
 };
