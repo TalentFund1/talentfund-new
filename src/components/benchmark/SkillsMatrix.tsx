@@ -164,7 +164,13 @@ export const SkillsMatrix = () => {
     });
   };
 
-  const paginatedSkills = filteredSkills.slice(0, visibleItems);
+  const paginatedSkills = filteredSkills.slice(0, visibleItems).map(skill => ({
+    ...skill,
+    subcategory: skill.subcategory || '',
+    level: skill.level || 'unspecified',
+    growth: skill.growth || '0%',
+    confidence: skill.confidence || 'medium'
+  }));
 
   return (
     <div className="space-y-6">
@@ -188,7 +194,8 @@ export const SkillsMatrix = () => {
 
         <SkillsMatrixTable 
           filteredSkills={paginatedSkills}
-          setHasChanges={setHasChanges}
+          showCompanySkill={true}
+          isRoleBenchmark={false}
         />
         
         {visibleItems < filteredSkills.length && (
