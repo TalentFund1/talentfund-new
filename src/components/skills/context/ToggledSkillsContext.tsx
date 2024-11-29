@@ -15,17 +15,26 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     try {
       // Initialize from role-specific storage first
       const result: Record<string, Set<string>> = {};
+      
       // Get all keys from localStorage that match our pattern
       Object.keys(localStorage).forEach(key => {
         if (key.startsWith('roleToggledSkills-')) {
           const roleId = key.replace('roleToggledSkills-', '');
           const savedState = localStorage.getItem(key);
           if (savedState) {
-            result[roleId] = new Set(JSON.parse(savedState));
+            const parsedSkills = JSON.parse(savedState);
+            if (Array.isArray(parsedSkills)) {
+              result[roleId] = new Set(parsedSkills);
+              console.log('Loaded saved toggle state for role:', {
+                roleId,
+                skillCount: parsedSkills.length,
+                skills: parsedSkills
+              });
+            }
           }
         }
       });
-      console.log('Loaded saved toggled skills from role-specific storage:', result);
+      
       return result;
     } catch (error) {
       console.error('Error loading toggled skills from localStorage:', error);
@@ -99,11 +108,17 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         if (savedState) {
           try {
             const parsedState = JSON.parse(savedState);
-            setRoleToggledSkills(prev => ({
-              ...prev,
-              [currentRoleId]: new Set(parsedState)
-            }));
-            console.log('Loaded saved toggle state for role:', currentRoleId);
+            if (Array.isArray(parsedState)) {
+              setRoleToggledSkills(prev => ({
+                ...prev,
+                [currentRoleId]: new Set(parsedState)
+              }));
+              console.log('Loaded saved toggle state for role:', {
+                roleId: currentRoleId,
+                skillCount: parsedState.length,
+                skills: parsedState
+              });
+            }
           } catch (error) {
             console.error('Error parsing saved toggle state:', error);
             setRoleToggledSkills(prev => ({
@@ -126,7 +141,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   useEffect(() => {
     if (currentRoleId && roleToggledSkills[currentRoleId]) {
       try {
-        // Save current role state
         const currentRoleSkills = Array.from(roleToggledSkills[currentRoleId]);
         localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(currentRoleSkills));
         
