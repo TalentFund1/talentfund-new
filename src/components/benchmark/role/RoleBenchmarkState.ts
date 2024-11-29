@@ -10,7 +10,7 @@ interface RoleBenchmarkState {
   initializeSkills: (roleId: string, currentSkills: Set<string>) => Set<string>;
 }
 
-export const useRoleBenchmarkStore = create<RoleBenchmarkState>()(
+export const useRoleStore = create<RoleBenchmarkState>()(
   persist(
     (set) => ({
       selectedRole: "123",

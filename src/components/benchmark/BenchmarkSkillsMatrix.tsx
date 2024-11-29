@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { useRoleStore } from "./RoleBenchmark";
+import { useRoleStore } from "./role/RoleBenchmarkState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from "../skills/data/roleSkills";

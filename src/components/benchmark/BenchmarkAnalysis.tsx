@@ -6,7 +6,7 @@ import { useTrack } from "../skills/context/TrackContext";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { useRoleStore } from "./RoleBenchmark";
+import { useRoleStore } from "./role/RoleBenchmarkState";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 export const BenchmarkAnalysis = () => {
