@@ -18,15 +18,16 @@ export const useCompetencyStateReader = () => {
   const { toggledSkills } = useToggledSkills();
 
   const normalizeLevel = (level: string = ""): string => {
-    if (!level) return "p4";
+    if (!level) return "m4"; // Default to M4 for managerial track
     
     const match = level.toLowerCase().match(/[pm][1-6]/);
     if (match) {
       return match[0];
     }
 
-    if (level.match(/^[1-6]$/)) {
-      return `p${level}`;
+    // Handle numeric levels for managerial track
+    if (level.match(/^[3-6]$/)) {
+      return `m${level}`;
     }
 
     return level.toLowerCase().trim();
@@ -40,14 +41,17 @@ export const useCompetencyStateReader = () => {
       const normalizedLevelKey = normalizeLevel(levelKey);
       const levelState = roleStates[skillName][normalizedLevelKey];
       if (levelState) {
-        console.log('Found saved state:', { skillName, levelKey, state: levelState });
+        console.log('Found saved state for managerial track:', { 
+          skillName, 
+          levelKey: normalizedLevelKey, 
+          state: levelState 
+        });
         return levelState;
       }
     }
     return null;
   };
 
-  // Get the primary role ID that contains the saved states
   const getPrimaryRoleId = (): string => {
     const availableRoles = Object.keys(currentStates);
     if (availableRoles.length === 0) {
@@ -60,9 +64,9 @@ export const useCompetencyStateReader = () => {
 
   const getSkillCompetencyState = (
     skillName: string, 
-    levelKey: string = 'p4'
+    levelKey: string = 'm4'
   ): SkillCompetencyState => {
-    console.log('Reading competency state:', { 
+    console.log('Reading competency state for managerial track:', { 
       skillName, 
       levelKey,
       hasToggledSkill: toggledSkills.has(skillName)
@@ -71,19 +75,19 @@ export const useCompetencyStateReader = () => {
     // First try to get saved state from CompetencyStore
     const savedState = findSavedState(skillName, levelKey);
     if (savedState) {
-      console.log('Using saved state from CompetencyStore:', savedState);
+      console.log('Using saved state from CompetencyStore for managerial level:', savedState);
       return savedState;
     }
 
     // If no saved state, return default state
-    console.log('No saved state found, using default state:', defaultState);
+    console.log('No saved state found, using default state for managerial track:', defaultState);
     return { ...defaultState };
   };
 
   const getAllSkillStatesForLevel = (
-    levelKey: string = 'p4'
+    levelKey: string = 'm4'
   ): Record<string, SkillCompetencyState> => {
-    console.log('Getting all skill states for level:', { levelKey });
+    console.log('Getting all skill states for managerial level:', { levelKey });
     const states: Record<string, SkillCompetencyState> = {};
     
     const primaryRoleId = getPrimaryRoleId();
@@ -104,7 +108,7 @@ export const useCompetencyStateReader = () => {
       });
     }
 
-    console.log('Retrieved all skill states:', { 
+    console.log('Retrieved all skill states for managerial level:', { 
       roleId: primaryRoleId,
       level: levelKey,
       states 
