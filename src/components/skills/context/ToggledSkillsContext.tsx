@@ -54,6 +54,8 @@ const initializeDefaultSkills = (roleId: string): Set<string> => {
     skills: allSkills
   });
 
+  // Save the initialized skills immediately
+  localStorage.setItem(`roleToggledSkills-${roleId}`, JSON.stringify(allSkills));
   return new Set(allSkills);
 };
 
@@ -64,7 +66,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     const roleId = getRoleIdFromPath(location.pathname);
     const savedSkills = loadSavedSkills(roleId);
-    return savedSkills.size > 0 ? savedSkills : initializeDefaultSkills(roleId);
+    if (savedSkills.size > 0) {
+      console.log('Using saved skills for role:', { roleId, skillCount: savedSkills.size });
+      return savedSkills;
+    }
+    return initializeDefaultSkills(roleId);
   });
 
   // Update role ID and skills when URL changes
@@ -76,6 +82,13 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       
       const savedSkills = loadSavedSkills(newRoleId);
       const skillsToUse = savedSkills.size > 0 ? savedSkills : initializeDefaultSkills(newRoleId);
+      
+      console.log('Updating toggled skills for new role:', {
+        roleId: newRoleId,
+        skillCount: skillsToUse.size,
+        usingDefaultSkills: savedSkills.size === 0
+      });
+      
       setToggledSkills(skillsToUse);
     }
   }, [location.pathname, currentRoleId]);
@@ -100,6 +113,9 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       skills: Array.from(newSkills)
     });
     setToggledSkills(newSkills);
+    
+    // Immediately persist the changes
+    localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(Array.from(newSkills)));
   };
 
   return (
