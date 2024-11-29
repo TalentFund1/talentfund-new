@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
@@ -6,29 +6,45 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
-import { useSkillState } from "./skills-matrix/useSkillState";
-import { getSkillsByRole } from "./skills-matrix/skillStateUtils";
 
 const ITEMS_PER_PAGE = 10;
 
 export const BenchmarkSkillsMatrix = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
-  
   const { id } = useParams<{ id: string }>();
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
-  
-  const { selectedSearchSkills, setSelectedSearchSkills } = useSkillState(selectedRole);
 
   const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = getSkillsByRole(selectedRole);
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+
+  // Reset toggled skills when role changes
+  useEffect(() => {
+    console.log('Role changed, updating toggled skills for:', selectedRole);
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const newToggledSkills = new Set(allRoleSkills.map(skill => skill.title));
+    setToggledSkills(newToggledSkills);
+    
+    const toggledRoleSkills = allRoleSkills
+      .filter(skill => newToggledSkills.has(skill.title))
+      .map(skill => skill.title);
+    
+    setSelectedSearchSkills(toggledRoleSkills);
+  }, [selectedRole, currentRoleSkills, setToggledSkills]);
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -134,14 +150,13 @@ export const BenchmarkSkillsMatrix = () => {
     });
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
-
+  
   console.log('BenchmarkSkillsMatrix - Current state:', {
     selectedRole,
     roleLevel,
     filteredSkillsCount: filteredSkills.length,
     toggledSkillsCount: toggledSkills.size,
-    currentStates: Object.keys(currentStates).length,
-    allSkills: currentRoleSkills
+    currentStates: Object.keys(currentStates).length
   });
 
   return (
