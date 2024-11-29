@@ -3,17 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useState, useEffect } from "react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useTrack } from "../skills/context/TrackContext";
 import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { create } from "zustand";
 import { useParams } from "react-router-dom";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 interface RoleStore {
   selectedRole: string;
+  selectedLevel: string;  // Added this property
   setSelectedRole: (role: string) => void;
 }
 
@@ -32,6 +31,7 @@ export const useRoleStore = create<RoleStore>((set) => {
 
   return {
     selectedRole: defaultRoleId,
+    selectedLevel: "p4", // Added default level
     setSelectedRole: (role) => set({ selectedRole: role })
   };
 });
@@ -40,7 +40,7 @@ export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const { toggledSkills } = useToggledSkills();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
-  const { selectedRole, setSelectedRole } = useRoleStore();
+  const { selectedRole } = useRoleStore();
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
 
