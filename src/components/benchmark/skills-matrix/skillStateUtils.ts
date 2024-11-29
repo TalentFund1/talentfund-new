@@ -9,13 +9,7 @@ export const getSkillsByRole = (roleId: string) => {
   ];
 };
 
-export const initializeRoleSkills = (
-  roleId: string,
-  initializeState: (skillTitle: string, level: string, required: string) => void
-) => {
-  const allRoleSkills = getSkillsByRole(roleId);
-  
-  // Load persisted skills from localStorage
+export const loadPersistedSkills = (roleId: string, allRoleSkills: any[]) => {
   const persistedSkills = localStorage.getItem(`roleToggledSkills-${roleId}`);
   let toggledSkills: string[] = [];
   
@@ -35,18 +29,28 @@ export const initializeRoleSkills = (
     toggledSkills = allRoleSkills.map(skill => skill.title);
   }
 
+  return toggledSkills;
+};
+
+export const initializeRoleSkills = (
+  roleId: string,
+  initializeState: (skillTitle: string, level: string, required: string) => void
+) => {
+  const allRoleSkills = getSkillsByRole(roleId);
+  const toggledSkills = loadPersistedSkills(roleId, allRoleSkills);
+
   // Initialize states for all skills
   allRoleSkills.forEach(skill => {
     console.log('Initializing skill:', {
       title: skill.title,
       level: skill.level || 'unspecified',
-      required: 'preferred' // Default to 'preferred' if requirement is not specified
+      required: 'preferred'
     });
     
     initializeState(
       skill.title, 
       skill.level || 'unspecified',
-      'preferred' // Default to 'preferred' if requirement is not specified
+      'preferred'
     );
   });
 

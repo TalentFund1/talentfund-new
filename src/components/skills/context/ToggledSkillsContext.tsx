@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useCompetencyStore } from '../competency/CompetencyState';
 import { roleSkills } from '../data/roleSkills';
+import { persistToggledSkills } from '../../benchmark/skills-matrix/skillStateUtils';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -37,7 +38,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return roleId;
   });
 
-  // Update currentRoleId when URL changes
   useEffect(() => {
     const handleLocationChange = () => {
       const path = window.location.pathname;
@@ -48,17 +48,14 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       }
     };
 
-    // Listen for route changes
     window.addEventListener('popstate', handleLocationChange);
     
-    // Handle programmatic navigation
     const pushState = history.pushState;
     history.pushState = function() {
       pushState.apply(history, arguments as any);
       handleLocationChange();
     };
 
-    // Handle replaceState
     const replaceState = history.replaceState;
     history.replaceState = function() {
       replaceState.apply(history, arguments as any);
@@ -74,7 +71,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     };
   }, []);
 
-  // Initialize toggle states for new roles
   useEffect(() => {
     if (currentRoleId && !roleToggledSkills[currentRoleId]) {
       const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
@@ -116,31 +112,9 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   }, [currentRoleId]);
 
-  // Persist toggle states to localStorage immediately when they change
   useEffect(() => {
     if (currentRoleId && roleToggledSkills[currentRoleId]) {
-      try {
-        // Save all role states
-        const serialized = Object.fromEntries(
-          Object.entries(roleToggledSkills).map(([roleId, skills]) => [
-            roleId,
-            Array.from(skills)
-          ])
-        );
-        localStorage.setItem('roleToggledSkills', JSON.stringify(serialized));
-
-        // Save current role state separately for quicker access
-        const currentRoleSkills = Array.from(roleToggledSkills[currentRoleId]);
-        localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(currentRoleSkills));
-        
-        console.log('Persisted toggled skills for role:', {
-          roleId: currentRoleId,
-          skillCount: currentRoleSkills.length,
-          skills: currentRoleSkills
-        });
-      } catch (error) {
-        console.error('Error saving toggled skills to localStorage:', error);
-      }
+      persistToggledSkills(currentRoleId, roleToggledSkills[currentRoleId]);
     }
   }, [roleToggledSkills, currentRoleId]);
 
