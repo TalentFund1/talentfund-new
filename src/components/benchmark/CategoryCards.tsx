@@ -20,22 +20,19 @@ export const CategoryCards = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  console.log('CategoryCards - Current role skills:', {
+  console.log('CategoryCards - Current toggled skills:', {
     roleId,
-    currentRoleSkills,
-    toggledSkillsSize: toggledSkills.size,
+    toggledSkillsCount: toggledSkills.size,
     toggledSkills: Array.from(toggledSkills)
   });
 
   const getSkillsByCategory = (category: string) => {
-    const allSkills = [
-      ...(currentRoleSkills.specialized || []),
-      ...(currentRoleSkills.common || []),
-      ...(currentRoleSkills.certifications || [])
-    ];
-
     if (category === 'all') {
-      return allSkills.filter(skill => toggledSkills.has(skill.title));
+      return [
+        ...(currentRoleSkills.specialized || []),
+        ...(currentRoleSkills.common || []),
+        ...(currentRoleSkills.certifications || [])
+      ].filter(skill => toggledSkills.has(skill.title));
     }
 
     const categoryMap: { [key: string]: any[] } = {
@@ -56,8 +53,7 @@ export const CategoryCards = ({
 
   console.log('CategoryCards - Category counts:', categories.map(cat => ({
     category: cat.id,
-    count: cat.count,
-    skills: getSkillsByCategory(cat.id).map(s => s.title)
+    count: cat.count
   })));
 
   return (
