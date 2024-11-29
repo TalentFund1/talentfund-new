@@ -55,13 +55,13 @@ export const RoleSelection = ({
         >
           <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Select Role">
-              {roles[selectedRole]} {selectedRole ? `(${selectedRole})` : ''}
+              {roles[selectedRole]}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {Object.entries(roles).map(([id, title]) => (
               <SelectItem key={id} value={id}>
-                {title} ({id})
+                {title}
               </SelectItem>
             ))}
           </SelectContent>
