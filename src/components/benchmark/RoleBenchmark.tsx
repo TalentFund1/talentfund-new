@@ -11,7 +11,7 @@ import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
-import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
+import { BenchmarkAnalysis } from "./BenchmarkAnalysis";
 
 interface RoleStore {
   selectedRole: string;
@@ -22,9 +22,15 @@ interface RoleStore {
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "",
-  setSelectedRole: (role) => set({ selectedRole: role }),
+  setSelectedRole: (role) => {
+    console.log('Setting selected role:', role);
+    set({ selectedRole: role });
+  },
   selectedLevel: "p4",
-  setSelectedLevel: (level) => set({ selectedLevel: level }),
+  setSelectedLevel: (level) => {
+    console.log('Setting selected level:', level);
+    set({ selectedLevel: level });
+  },
 }));
 
 const roles = {
@@ -46,16 +52,20 @@ export const RoleBenchmark = () => {
   const [currentTrack, setCurrentTrack] = useState<"Professional" | "Managerial">("Professional");
 
   const employee = employees.find(emp => emp.id === id);
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
-  // Single effect to handle initial setup and synchronization
+  // Initialize role and level based on employee data
   useEffect(() => {
     if (employee) {
       const profileId = getSkillProfileId(employee.role);
       const level = getLevel(employee.role).toLowerCase();
       const track = getTrackForRole(profileId);
       
-      console.log('Initial setup:', { profileId, level, track });
+      console.log('Initializing role and level:', { 
+        employeeRole: employee.role,
+        profileId,
+        level,
+        track 
+      });
       
       setSelectedRole(profileId);
       setCurrentTrack(track);
@@ -73,10 +83,11 @@ export const RoleBenchmark = () => {
     }
   }, [employee, setSelectedRole, setRoleLevel, getTrackForRole]);
 
-  // Handle skill updates when role changes
+  // Update skills when role changes
   useEffect(() => {
-    if (!currentRoleSkills) return;
+    if (!roleSkills[selectedRole as keyof typeof roleSkills]) return;
 
+    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
     const allSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
@@ -85,8 +96,13 @@ export const RoleBenchmark = () => {
     .map(skill => skill.title)
     .filter(skillTitle => toggledSkills.has(skillTitle));
     
+    console.log('Updating benchmark search skills for role:', {
+      role: selectedRole,
+      skillsCount: allSkills.length
+    });
+    
     setBenchmarkSearchSkills(allSkills);
-  }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
+  }, [selectedRole, setBenchmarkSearchSkills, toggledSkills]);
 
   const handleSeeSkillProfile = () => {
     navigate(`/skills/${selectedRole}`);
@@ -94,7 +110,11 @@ export const RoleBenchmark = () => {
 
   const handleRoleChange = (newRole: string) => {
     const newTrack = getTrackForRole(newRole);
-    console.log('Role change:', { newRole, newTrack, roleName: roles[newRole as keyof typeof roles] });
+    console.log('Role change:', { 
+      newRole, 
+      newTrack, 
+      roleName: roles[newRole as keyof typeof roles] 
+    });
     
     setSelectedRole(newRole);
     setCurrentTrack(newTrack);
@@ -114,11 +134,6 @@ export const RoleBenchmark = () => {
     setTrackForRole(selectedRole, value as "Professional" | "Managerial");
     setCurrentTrack(value as "Professional" | "Managerial");
   };
-
-  if (!currentRoleSkills) {
-    console.log('No role skills found for role:', selectedRole);
-    return null;
-  }
 
   return (
     <div className="space-y-6">
@@ -144,11 +159,7 @@ export const RoleBenchmark = () => {
           roles={roles}
         />
 
-        {id && <BenchmarkAnalysis 
-          selectedRole={selectedRole}
-          roleLevel={roleLevel}
-          employeeId={id}
-        />}
+        {id && <BenchmarkAnalysis />}
       </div>
     </div>
   );
