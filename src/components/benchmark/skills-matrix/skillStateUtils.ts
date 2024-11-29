@@ -1,15 +1,28 @@
 import { roleSkills } from '../../skills/data/roleSkills';
 
 export const getSkillsByRole = (roleId: string) => {
+  console.log('Getting skills for role:', roleId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-  return [
+  
+  const allSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
+
+  console.log('Retrieved skills:', {
+    roleId,
+    specialized: currentRoleSkills.specialized.length,
+    common: currentRoleSkills.common.length,
+    certifications: currentRoleSkills.certifications.length,
+    total: allSkills.length
+  });
+
+  return allSkills;
 };
 
 export const loadPersistedSkills = (roleId: string, allRoleSkills: any[]) => {
+  console.log('Loading persisted skills for role:', roleId);
   const persistedSkills = localStorage.getItem(`roleToggledSkills-${roleId}`);
   let toggledSkills: string[] = [];
   
@@ -26,10 +39,16 @@ export const loadPersistedSkills = (roleId: string, allRoleSkills: any[]) => {
       toggledSkills = allRoleSkills.map(skill => skill.title);
     }
   } else {
+    // If no persisted skills, default to all skills for the role
     toggledSkills = allRoleSkills.map(skill => skill.title);
   }
 
-  return toggledSkills;
+  // Ensure we only return skills that actually exist for this role
+  const validSkills = toggledSkills.filter(skillTitle => 
+    allRoleSkills.some(roleSkill => roleSkill.title === skillTitle)
+  );
+
+  return validSkills;
 };
 
 export const initializeRoleSkills = (
@@ -37,7 +56,6 @@ export const initializeRoleSkills = (
   initializeState: (skillTitle: string, level: string, required: string) => void
 ) => {
   const allRoleSkills = getSkillsByRole(roleId);
-  const toggledSkills = loadPersistedSkills(roleId, allRoleSkills);
 
   // Initialize states for all skills
   allRoleSkills.forEach(skill => {
