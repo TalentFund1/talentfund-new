@@ -26,12 +26,13 @@ export const useRoleStore = create<RoleStore>((set) => {
   const employeeId = window.location.pathname.split('/').pop();
   const employees = useEmployeeStore.getState().employees;
   const employee = employees.find(emp => emp.id === employeeId);
-  const defaultRoleId = employee?.roleId || "123"; // Fallback to "123" only if no role found
+  const defaultRoleId = getSkillProfileId(employee?.role || "") || "123"; // Fallback to "123" only if no role found
 
   console.log('Initializing RoleStore with:', {
     employeeId,
     defaultRoleId,
-    employeeFound: !!employee
+    employeeFound: !!employee,
+    employeeRole: employee?.role
   });
 
   return {
@@ -65,15 +66,19 @@ export const RoleBenchmark = () => {
 
   // Initialize role based on employee data
   useEffect(() => {
-    if (employee?.roleId && selectedRole !== employee.roleId) {
-      console.log('Updating selected role to match employee:', {
-        employeeId: id,
-        newRoleId: employee.roleId,
-        previousRole: selectedRole
-      });
-      setSelectedRole(employee.roleId);
+    if (employee?.role) {
+      const employeeRoleId = getSkillProfileId(employee.role);
+      if (employeeRoleId && selectedRole !== employeeRoleId) {
+        console.log('Updating selected role to match employee:', {
+          employeeId: id,
+          newRoleId: employeeRoleId,
+          previousRole: selectedRole,
+          employeeRole: employee.role
+        });
+        setSelectedRole(employeeRoleId);
+      }
     }
-  }, [employee, selectedRole, setSelectedRole]);
+  }, [employee, selectedRole, setSelectedRole, id]);
 
   useEffect(() => {
     if (selectedRole) {
