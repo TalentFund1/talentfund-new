@@ -1,8 +1,9 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
 import { useState, useEffect } from "react";
 import { professionalLevels, managerialLevels } from "./data/levelData";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { useTrack } from "../skills/context/TrackContext";
@@ -16,6 +17,7 @@ const roles = {
 
 export const SimpleBenchmark = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { currentStates } = useCompetencyStore();
   const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
   const { getTrackForRole } = useTrack();
@@ -100,6 +102,10 @@ export const SimpleBenchmark = () => {
     }
   };
 
+  const handleSeeSkillProfile = () => {
+    navigate(`/skills/${selectedRole}`);
+  };
+
   const getLevelDescription = (level: string) => {
     switch (level.toLowerCase()) {
       case 'p1': return 'Entry';
@@ -129,6 +135,13 @@ export const SimpleBenchmark = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
+          <Button 
+            variant="outline" 
+            className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
+            onClick={handleSeeSkillProfile}
+          >
+            See Skill Profile
+          </Button>
         </div>
         
         <div className="flex gap-4 w-full max-w-[800px]">
