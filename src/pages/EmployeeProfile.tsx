@@ -17,7 +17,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { SimpleBenchmark } from "@/components/benchmark/SimpleBenchmark";
 
 const employeeImages = {
   "123": "photo-1488590528505-98d2b5aba04b",
@@ -46,7 +45,7 @@ const EmployeeProfile = () => {
   }, [employee, navigate, toast]);
 
   if (!employee) {
-    return null; // Return null while redirecting
+    return null;
   }
 
   const employeeData = {
@@ -133,12 +132,6 @@ const EmployeeProfile = () => {
                 >
                   Role Benchmark
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="benchmark2"
-                  className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-                >
-                  Benchmark 2
-                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="experience" className="space-y-6">
@@ -161,12 +154,6 @@ const EmployeeProfile = () => {
                     <BenchmarkSkillsMatrix />
                   </SelectedSkillsProvider>
                 </BenchmarkSearchProvider>
-              </TabsContent>
-
-              <TabsContent value="benchmark2" className="space-y-6">
-                <Card className="p-8 bg-white">
-                  <SimpleBenchmark />
-                </Card>
               </TabsContent>
             </Tabs>
           </TrackProvider>
