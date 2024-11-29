@@ -20,27 +20,31 @@ export const BenchmarkSkillsMatrix = () => {
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Initialize view-only states for benchmark comparison
+  // Reset toggled skills when role changes
   useEffect(() => {
+    console.log('Role changed, updating toggled skills for:', selectedRole);
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
 
+    const newToggledSkills = new Set(allRoleSkills.map(skill => skill.title));
+    setToggledSkills(newToggledSkills);
+    
     const toggledRoleSkills = allRoleSkills
-      .filter(skill => toggledSkills.has(skill.title))
+      .filter(skill => newToggledSkills.has(skill.title))
       .map(skill => skill.title);
     
     setSelectedSearchSkills(toggledRoleSkills);
-  }, [selectedRole, toggledSkills, currentRoleSkills]);
+  }, [selectedRole, currentRoleSkills, setToggledSkills]);
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -147,6 +151,14 @@ export const BenchmarkSkillsMatrix = () => {
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
   
+  console.log('BenchmarkSkillsMatrix - Current state:', {
+    selectedRole,
+    roleLevel,
+    filteredSkillsCount: filteredSkills.length,
+    toggledSkillsCount: toggledSkills.size,
+    currentStates: Object.keys(currentStates).length
+  });
+
   return (
     <div className="space-y-6">
       <BenchmarkSkillsMatrixView
