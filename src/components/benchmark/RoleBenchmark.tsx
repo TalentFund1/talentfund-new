@@ -9,7 +9,7 @@ import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
+import { getSkillProfileId } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
@@ -22,18 +22,30 @@ interface RoleStore {
   setSelectedLevel: (level: string) => void;
 }
 
+// Create a mapping between role titles and IDs that matches roleSkills.ts
+const roleMapping: { [key: string]: string } = {
+  "AI Engineer": "123",
+  "Backend Engineer": "124",
+  "Frontend Engineer": "125",
+  "Engineering Manager": "126",
+  "DevOps Engineer": "127"
+};
+
 export const useRoleStore = create<RoleStore>((set) => {
   const employeeId = window.location.pathname.split('/').pop();
   const employees = useEmployeeStore.getState().employees;
   const employee = employees.find(emp => emp.id === employeeId);
-  const defaultRoleId = getSkillProfileId(employee?.role || "") || Object.keys(jobTitles)[0];
+  
+  // Get role ID from employee's role title
+  const employeeRoleTitle = employee?.role || "";
+  const defaultRoleId = roleMapping[employeeRoleTitle] || "123";
 
   console.log('Initializing RoleStore with:', {
     employeeId,
     defaultRoleId,
     employeeFound: !!employee,
     employeeRole: employee?.role,
-    availableRoles: jobTitles
+    availableRoles: roleMapping
   });
 
   return {
@@ -44,7 +56,11 @@ export const useRoleStore = create<RoleStore>((set) => {
   };
 });
 
-const roles = jobTitles;
+// Use roleMapping to create roles object that matches roleSkills.ts
+const roles = Object.entries(roleMapping).reduce((acc, [title, id]) => {
+  acc[id] = title;
+  return acc;
+}, {} as { [key: string]: string });
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
@@ -62,16 +78,16 @@ export const RoleBenchmark = () => {
   // Initialize role based on employee data
   useEffect(() => {
     if (employee?.role) {
-      const employeeRoleId = getSkillProfileId(employee.role);
-      if (employeeRoleId && selectedRole !== employeeRoleId) {
+      const roleId = roleMapping[employee.role];
+      if (roleId && selectedRole !== roleId) {
         console.log('Updating selected role to match employee:', {
           employeeId: id,
-          newRoleId: employeeRoleId,
+          newRoleId: roleId,
           previousRole: selectedRole,
           employeeRole: employee.role,
           availableRoles: roles
         });
-        setSelectedRole(employeeRoleId);
+        setSelectedRole(roleId);
       }
     }
   }, [employee, selectedRole, setSelectedRole, id]);
@@ -82,7 +98,6 @@ export const RoleBenchmark = () => {
       console.log('Track update:', { selectedRole, track });
       setCurrentTrack(track);
       
-      // Only adjust level if track mismatch
       const isManagerial = track === "Managerial";
       const currentLevel = roleLevel.toLowerCase();
       const needsLevelAdjustment = (isManagerial && currentLevel.startsWith('p')) || 
@@ -109,35 +124,13 @@ export const RoleBenchmark = () => {
     setBenchmarkSearchSkills(allSkills);
   }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
-  const handleSeeSkillProfile = () => {
-    navigate(`/skills/${selectedRole}`);
-  };
-
-  const handleRoleChange = (newRole: string) => {
-    const newTrack = getTrackForRole(newRole);
-    console.log('Role change:', { newRole, newTrack, roleName: roles[newRole as keyof typeof roles] });
-    
-    setSelectedRole(newRole);
-    setCurrentTrack(newTrack);
-    
-    // Adjust level based on new track if needed
-    const isManagerial = newTrack === "Managerial";
-    const currentLevel = roleLevel.toLowerCase();
-    const needsLevelAdjustment = (isManagerial && currentLevel.startsWith('p')) || 
-                                (!isManagerial && currentLevel.startsWith('m'));
-    
-    if (needsLevelAdjustment) {
-      setRoleLevel(isManagerial ? 'm3' : 'p4');
-    }
-  };
-
   const handleTrackChange = (value: string) => {
     setTrackForRole(selectedRole, value as "Professional" | "Managerial");
     setCurrentTrack(value as "Professional" | "Managerial");
   };
 
   if (!currentRoleSkills) {
-    console.log('No role skills found for role:', selectedRole);
+    console.error('No role skills found for role:', selectedRole);
     return null;
   }
 
@@ -160,7 +153,7 @@ export const RoleBenchmark = () => {
             selectedRole={selectedRole}
             selectedLevel={roleLevel}
             currentTrack={currentTrack}
-            onRoleChange={handleRoleChange}
+            onRoleChange={setSelectedRole}
             onLevelChange={setRoleLevel}
             onTrackChange={handleTrackChange}
             roles={roles}
