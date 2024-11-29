@@ -1,4 +1,3 @@
-<lov-code>
 export const initialSkills = {
   "124": [
     // Specialized Skills
@@ -75,4 +74,24 @@ export const initialSkills = {
   ],
   "127": [
     // Specialized Skills
-    { title: "Docker", subcategory: "Container Technology", level: "unspecified", growth: "
+    { title: "Docker", subcategory: "Container Technology", level: "unspecified", growth: "30%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Kubernetes", subcategory: "Container Orchestration", level: "unspecified", growth: "28%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Jenkins", subcategory: "CI/CD", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Terraform", subcategory: "Infrastructure as Code", level: "unspecified", growth: "27%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "AWS Services", subcategory: "Cloud Services", level: "unspecified", growth: "30%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Linux Administration", subcategory: "System Administration", level: "unspecified", growth: "20%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Monitoring Tools", subcategory: "Operations", level: "unspecified", growth: "22%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    // Common Skills
+    { title: "Shell Scripting", subcategory: "Scripting", level: "unspecified", growth: "18%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Git", subcategory: "Version Control", level: "unspecified", growth: "15%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Problem Solving", subcategory: "Soft Skills", level: "unspecified", growth: "20%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    // Certifications
+    { title: "AWS Certified DevOps Engineer", subcategory: "Cloud Certification", level: "unspecified", growth: "28%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Certified Kubernetes Administrator", subcategory: "Container Certification", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "HashiCorp Certified Terraform Associate", subcategory: "Infrastructure Certification", level: "unspecified", growth: "22%", confidence: "high", requirement: "preferred", isCompanySkill: true }
+  ]
+};
+
+export const getEmployeeSkills = (id: string) => {
+  return initialSkills[id as keyof typeof initialSkills] || [];
+};
