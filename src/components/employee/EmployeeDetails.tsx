@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Link } from "react-router-dom";
 import { getSkillProfileId } from "../EmployeeTable";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -36,8 +37,14 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const employeeSkills = getEmployeeSkills(id);
   const totalSkills = employeeSkills.length;
   const roleId = getSkillProfileId(employee.role);
+  const { getTrackForRole } = useTrack();
+  const roleTrack = getTrackForRole(roleId);
 
-  console.log(`Employee ${id} has ${totalSkills} skills:`, employeeSkills);
+  console.log(`Employee ${id} track info:`, {
+    roleId,
+    roleTrack,
+    role: employee.role
+  });
 
   return (
     <>
@@ -85,6 +92,10 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Role ID</span>
           <p className="font-medium text-gray-900">{roleId}</p>
+        </div>
+        <div className="space-y-1">
+          <span className="text-sm text-gray-500">Role Track</span>
+          <p className="font-medium text-gray-900">{roleTrack}</p>
         </div>
       </div>
     </>
