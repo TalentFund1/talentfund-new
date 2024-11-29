@@ -13,6 +13,7 @@ import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { jobTitles } from "../skills/competency/skillProfileData";
 
 interface RoleStore {
   selectedRole: string;
@@ -22,17 +23,17 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => {
-  // Get the current employee's role ID from the URL
   const employeeId = window.location.pathname.split('/').pop();
   const employees = useEmployeeStore.getState().employees;
   const employee = employees.find(emp => emp.id === employeeId);
-  const defaultRoleId = getSkillProfileId(employee?.role || "") || "123"; // Fallback to "123" only if no role found
+  const defaultRoleId = getSkillProfileId(employee?.role || "") || Object.keys(jobTitles)[0];
 
   console.log('Initializing RoleStore with:', {
     employeeId,
     defaultRoleId,
     employeeFound: !!employee,
-    employeeRole: employee?.role
+    employeeRole: employee?.role,
+    availableRoles: jobTitles
   });
 
   return {
@@ -43,13 +44,7 @@ export const useRoleStore = create<RoleStore>((set) => {
   };
 });
 
-const roles = {
-  "123": "AI Engineer",
-  "124": "Backend Engineer",
-  "125": "Frontend Engineer",
-  "126": "Engineering Manager",
-  "127": "DevOps Engineer"
-};
+const roles = jobTitles;
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
@@ -73,7 +68,8 @@ export const RoleBenchmark = () => {
           employeeId: id,
           newRoleId: employeeRoleId,
           previousRole: selectedRole,
-          employeeRole: employee.role
+          employeeRole: employee.role,
+          availableRoles: roles
         });
         setSelectedRole(employeeRoleId);
       }
@@ -154,7 +150,7 @@ export const RoleBenchmark = () => {
             <Button 
               variant="outline" 
               className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-              onClick={handleSeeSkillProfile}
+              onClick={() => navigate(`/skills/${selectedRole}`)}
             >
               See Skill Profile
             </Button>
