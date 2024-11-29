@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { Separator } from "@/components/ui/separator";
 
 interface RoleStore {
   selectedRole: string;
@@ -81,6 +82,7 @@ export const RoleBenchmark = () => {
               See Skill Profile
             </Button>
           </div>
+          <Separator className="my-2" />
 
           {id && <BenchmarkAnalysis 
             selectedRole={selectedRole}
