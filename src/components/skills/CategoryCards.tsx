@@ -42,7 +42,7 @@ export const CategoryCards = ({ selectedCategory, onCategorySelect, skillCount }
               {category.name}
             </span>
             <span className="text-xs text-muted-foreground">
-              {category.count} {category.count === 1 ? 'skill' : 'skills'}
+              {category.count} skills
             </span>
           </div>
         </button>
