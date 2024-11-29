@@ -139,10 +139,18 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   }, [currentRoleId]);
 
-  // Persist toggle states to localStorage
+  // Persist toggle states to localStorage with debounced toast
   useEffect(() => {
+    let previousSkills: string[] = [];
+    
     if (currentRoleId && roleToggledSkills[currentRoleId]) {
       try {
+        // Get previous skills from localStorage
+        const savedState = localStorage.getItem(`roleToggledSkills-${currentRoleId}`);
+        if (savedState) {
+          previousSkills = JSON.parse(savedState);
+        }
+        
         const currentRoleSkills = Array.from(roleToggledSkills[currentRoleId]);
         localStorage.setItem(`roleToggledSkills-${currentRoleId}`, JSON.stringify(currentRoleSkills));
         
@@ -152,8 +160,8 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
           skills: currentRoleSkills
         });
 
-        // Show toast when skills are updated
-        if (currentRoleSkills.length > 0) {
+        // Only show toast if skills have actually changed
+        if (JSON.stringify(previousSkills) !== JSON.stringify(currentRoleSkills)) {
           toast({
             title: "Skills Updated",
             description: `${currentRoleSkills.length} skills are now active for this role.`,
