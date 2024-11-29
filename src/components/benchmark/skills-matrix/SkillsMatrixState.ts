@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useCompetencyStore } from '../../skills/competency/CompetencyState';
 
 interface SkillState {
   level: string;
@@ -23,7 +24,9 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       currentStates: {},
       hasChanges: false,
       initializeState: (skillTitle, initialLevel, initialRequirement) => {
-        const currentState = get().currentStates[skillTitle];
+        const competencyStore = useCompetencyStore.getState();
+        const currentState = competencyStore.currentStates[skillTitle];
+        
         if (!currentState) {
           console.log('Initializing matrix skill state:', { 
             skillTitle, 
@@ -51,6 +54,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       },
       setSkillState: (skillTitle, level, requirement) => {
         console.log('Setting matrix skill state:', { skillTitle, level, requirement });
+        const competencyStore = useCompetencyStore.getState();
+        
+        // Update both stores
+        competencyStore.setSkillState(skillTitle, level, 'p4', requirement, '123');
+        
         set((state) => {
           const newStates = {
             ...state.currentStates,
@@ -68,6 +76,9 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       saveChanges: () =>
         set((state) => {
           console.log('Saving matrix changes');
+          const competencyStore = useCompetencyStore.getState();
+          competencyStore.saveChanges('123');
+          
           return {
             originalStates: { ...state.currentStates },
             hasChanges: false,
@@ -76,6 +87,9 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       cancelChanges: () =>
         set((state) => {
           console.log('Cancelling matrix changes');
+          const competencyStore = useCompetencyStore.getState();
+          competencyStore.cancelChanges('123');
+          
           return {
             currentStates: { ...state.originalStates },
             hasChanges: false,
