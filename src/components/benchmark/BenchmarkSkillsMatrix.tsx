@@ -22,21 +22,27 @@ export const BenchmarkSkillsMatrix = () => {
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { currentStates } = useSkillsMatrixStore();
+  const { currentStates, initializeState } = useSkillsMatrixStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Reset toggled skills when role changes
+  // Initialize skill states when role changes
   useEffect(() => {
-    console.log('Role changed, updating toggled skills for:', selectedRole);
+    console.log('Initializing skill states for role:', selectedRole);
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
 
+    // Initialize state for each skill
+    allRoleSkills.forEach(skill => {
+      initializeState(skill.title, skill.level || 'unspecified', 'required');
+    });
+
     const newToggledSkills = new Set(allRoleSkills.map(skill => skill.title));
+    console.log('Setting toggled skills:', Array.from(newToggledSkills));
     setToggledSkills(newToggledSkills);
     
     const toggledRoleSkills = allRoleSkills
@@ -44,7 +50,7 @@ export const BenchmarkSkillsMatrix = () => {
       .map(skill => skill.title);
     
     setSelectedSearchSkills(toggledRoleSkills);
-  }, [selectedRole, currentRoleSkills, setToggledSkills]);
+  }, [selectedRole, currentRoleSkills, setToggledSkills, initializeState]);
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -156,7 +162,8 @@ export const BenchmarkSkillsMatrix = () => {
     roleLevel,
     filteredSkillsCount: filteredSkills.length,
     toggledSkillsCount: toggledSkills.size,
-    currentStates: Object.keys(currentStates).length
+    currentStates: Object.keys(currentStates).length,
+    allSkills: currentRoleSkills
   });
 
   return (
