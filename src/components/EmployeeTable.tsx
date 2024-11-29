@@ -14,6 +14,7 @@ import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
+import { TrackProvider } from "./skills/context/TrackContext";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -67,7 +68,7 @@ export const getLevel = (role: string) => {
   return parts.length > 1 ? parts[1].trim() : "";
 };
 
-export const EmployeeTable = ({ 
+const EmployeeTableContent = ({ 
   selectedDepartment = [], 
   selectedJobTitle = [],
   selectedLevel = [],
@@ -152,5 +153,13 @@ export const EmployeeTable = ({
         </table>
       </div>
     </div>
+  );
+};
+
+export const EmployeeTable = (props: EmployeeTableProps) => {
+  return (
+    <TrackProvider>
+      <EmployeeTableContent {...props} />
+    </TrackProvider>
   );
 };
