@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
-import { useCurrentRole } from './hooks/useCurrentRole';
+import { useParams } from 'react-router-dom';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -10,36 +9,59 @@ interface ToggledSkillsContextType {
 
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
+const STORAGE_KEY = 'toggled-skills';
+
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
-  const currentRoleId = useCurrentRole();
+  const { id } = useParams();
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
-    const savedSkills = loadToggledSkills(currentRoleId);
-    console.log('Initial load of toggled skills for role:', currentRoleId, savedSkills);
-    return new Set(savedSkills);
+    try {
+      const savedSkills = localStorage.getItem(STORAGE_KEY);
+      console.log('Initial load of toggled skills:', savedSkills);
+      return savedSkills ? new Set(JSON.parse(savedSkills)) : new Set();
+    } catch (error) {
+      console.error('Error loading toggled skills:', error);
+      return new Set();
+    }
   });
 
-  // Effect to handle role changes and reload toggled skills
+  // Effect to persist toggled skills whenever they change
   useEffect(() => {
-    const savedSkills = loadToggledSkills(currentRoleId);
-    console.log('Reloading toggled skills for role change:', currentRoleId, savedSkills);
-    setToggledSkills(new Set(savedSkills));
-  }, [currentRoleId]);
+    try {
+      const skillsArray = Array.from(toggledSkills);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(skillsArray));
+      console.log('Persisted toggled skills:', skillsArray);
+    } catch (error) {
+      console.error('Error saving toggled skills:', error);
+    }
+  }, [toggledSkills]);
+
+  // Effect to reload toggled skills when role ID changes
+  useEffect(() => {
+    try {
+      const savedSkills = localStorage.getItem(STORAGE_KEY);
+      if (savedSkills) {
+        const parsedSkills = JSON.parse(savedSkills);
+        console.log('Reloading toggled skills for role change:', parsedSkills);
+        setToggledSkills(new Set(parsedSkills));
+      }
+    } catch (error) {
+      console.error('Error reloading toggled skills:', error);
+    }
+  }, [id]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
-    console.log('Setting toggled skills for role:', {
-      roleId: currentRoleId,
+    console.log('Setting toggled skills:', {
       skillCount: newSkills.size,
       skills: Array.from(newSkills)
     });
     
     setToggledSkills(newSkills);
-    saveToggledSkills(currentRoleId, Array.from(newSkills));
     
     toast({
       title: "Skills Updated",
-      description: `${newSkills.size} skills are now active for this role.`,
+      description: `${newSkills.size} skills are now active.`,
     });
   };
 
