@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
@@ -27,15 +27,6 @@ export const SkillProfileMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
-  // Load saved toggled skills on component mount
-  useEffect(() => {
-    const savedToggledSkills = localStorage.getItem(`toggledSkills-${id}`);
-    if (savedToggledSkills) {
-      console.log('Loading saved toggled skills:', JSON.parse(savedToggledSkills));
-      setToggledSkills(new Set(JSON.parse(savedToggledSkills)));
-    }
-  }, [id, setToggledSkills]);
-
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
     if (newToggledSkills.has(skillTitle)) {
@@ -45,11 +36,6 @@ export const SkillProfileMatrix = () => {
       console.log('Adding skill:', skillTitle);
       newToggledSkills.add(skillTitle);
     }
-    
-    // Save to localStorage
-    localStorage.setItem(`toggledSkills-${id}`, JSON.stringify(Array.from(newToggledSkills)));
-    console.log('Saving toggled skills:', Array.from(newToggledSkills));
-    
     setToggledSkills(newToggledSkills);
     setIsDirty(true);
     
@@ -99,6 +85,7 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
+      // Apply category filter
       if (selectedCategory !== 'all') {
         const skillCategory = getCategoryForSkill(skill, id || "123");
         if (skillCategory !== selectedCategory) {

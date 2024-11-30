@@ -14,7 +14,7 @@ export const BenchmarkAnalysis = () => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "");
-  const { selectedRole } = useRoleStore();
+  const { selectedRole, selectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
@@ -25,7 +25,10 @@ export const BenchmarkAnalysis = () => {
   }
 
   const track = getTrackForRole(selectedRole);
-  const comparisonLevel = track === "Managerial" ? "m3" : "p4";
+  console.log('Current track and selected level:', { track, selectedLevel });
+
+  // Use the selected level directly without any default override
+  const comparisonLevel = selectedLevel.toLowerCase();
   console.log('Using comparison level:', comparisonLevel);
 
   const allRoleSkills = [
@@ -34,7 +37,6 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.certifications
   ];
 
-  // Filter only toggled skills from role skills
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
 
   console.log('Toggled skills for role:', {
@@ -44,23 +46,16 @@ export const BenchmarkAnalysis = () => {
     skills: toggledRoleSkills.map(s => s.title)
   });
 
-  // Find skills that exist in employee skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    const employeeSkillLevel = currentStates[roleSkill.title]?.level || 'unspecified';
-    console.log(`Checking skill match for ${roleSkill.title}:`, {
-      hasSkill: !!employeeSkill,
-      employeeLevel: employeeSkillLevel
-    });
     return employeeSkill !== undefined;
   });
 
-  // Check competency match (level requirements)
-  const competencyMatchingSkills = toggledRoleSkills.filter(skill => {
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel);
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = currentStates[skill.title]?.level || 'unspecified';
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     const getLevelPriority = (level: string = 'unspecified') => {
@@ -76,26 +71,13 @@ export const BenchmarkAnalysis = () => {
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    console.log(`Checking competency match for ${skill.title}:`, {
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      employeePriority,
-      rolePriority,
-      matches: employeePriority >= rolePriority
-    });
-
     return employeePriority >= rolePriority;
   });
 
-  // Check skill goals
-  const skillGoalMatchingSkills = toggledRoleSkills.filter(skill => {
+  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
-    const matches = skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
-    console.log(`Checking skill goal match for ${skill.title}:`, {
-      requirement: skillState?.requirement,
-      matches
-    });
-    return matches;
+    if (!skillState) return false;
+    return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
@@ -113,9 +95,9 @@ export const BenchmarkAnalysis = () => {
 
   console.log('Benchmark Analysis Calculation:', {
     totalToggled: totalToggledSkills,
-    skillMatch: { count: matchingSkillsCount, total: totalToggledSkills },
-    competencyMatch: { count: competencyMatchCount, total: totalToggledSkills },
-    skillGoalMatch: { count: skillGoalMatchCount, total: totalToggledSkills },
+    skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
+    competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
+    skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
     averagePercentage,
     track,
     comparisonLevel
@@ -148,40 +130,6 @@ export const BenchmarkAnalysis = () => {
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
                   style={{ width: `${skillMatchPercentage}%` }} 
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">Competency Match</span>
-                <span className="text-sm text-foreground">
-                  {competencyMatchCount} out of {totalToggledSkills}
-                </span>
-              </div>
-              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${competencyMatchPercentage}%` }} 
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">Skill Goal Match</span>
-                <span className="text-sm text-foreground">
-                  {skillGoalMatchCount} out of {totalToggledSkills}
-                </span>
-              </div>
-              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${skillGoalMatchPercentage}%` }} 
                 />
               </div>
             </div>

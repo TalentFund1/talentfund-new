@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
-import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
+import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -13,6 +13,7 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
+  const { id } = useParams();
   const { selectedRole } = useRoleStore();
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
@@ -56,18 +57,14 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
         detail: { role: selectedRole, skills: skillsArray }
       }));
-
-      // Only show toast if skills actually changed
-      const currentSkills = loadToggledSkills(selectedRole);
-      if (JSON.stringify(currentSkills) !== JSON.stringify(skillsArray)) {
-        toast({
-          title: "Skills Updated",
-          description: `${newSkills.size} skills are now active for this role.`,
-        });
-      }
     } catch (error) {
       console.error('Error saving toggled skills:', error);
     }
+    
+    toast({
+      title: "Skills Updated",
+      description: `${newSkills.size} skills are now active for ${selectedRole}.`,
+    });
   };
 
   // Listen for changes from other components
