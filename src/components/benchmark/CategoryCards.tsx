@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { roleSkills } from '../skills/data/roleSkills';
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useEffect, useState } from "react";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -16,7 +16,7 @@ export const CategoryCards = ({
   roleId,
   selectedLevel 
 }: CategoryCardsProps) => {
-  const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   const [counts, setCounts] = useState({
     specialized: 0,
@@ -26,35 +26,43 @@ export const CategoryCards = ({
   });
 
   useEffect(() => {
-    const specializedCount = currentRoleSkills.specialized?.filter(skill => 
-      toggledSkills.has(skill.title)
-    ).length || 0;
-    
-    const commonCount = currentRoleSkills.common?.filter(skill => 
-      toggledSkills.has(skill.title)
-    ).length || 0;
-    
-    const certificationCount = currentRoleSkills.certifications?.filter(skill => 
-      toggledSkills.has(skill.title)
-    ).length || 0;
+    const calculateSkillCounts = () => {
+      const specializedCount = currentRoleSkills.specialized?.filter(skill => {
+        const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+        return competencyState?.required === 'required' || competencyState?.required === 'skill_goal';
+      }).length || 0;
+      
+      const commonCount = currentRoleSkills.common?.filter(skill => {
+        const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+        return competencyState?.required === 'required' || competencyState?.required === 'skill_goal';
+      }).length || 0;
+      
+      const certificationCount = currentRoleSkills.certifications?.filter(skill => {
+        const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+        return competencyState?.required === 'required' || competencyState?.required === 'skill_goal';
+      }).length || 0;
 
-    const totalCount = specializedCount + commonCount + certificationCount;
+      const totalCount = specializedCount + commonCount + certificationCount;
 
-    setCounts({
-      specialized: specializedCount,
-      common: commonCount,
-      certification: certificationCount,
-      total: totalCount
-    });
+      setCounts({
+        specialized: specializedCount,
+        common: commonCount,
+        certification: certificationCount,
+        total: totalCount
+      });
 
-    console.log('CategoryCards - Updated counts:', {
-      specialized: specializedCount,
-      common: commonCount,
-      certification: certificationCount,
-      total: totalCount,
-      toggledSkillsSize: toggledSkills.size
-    });
-  }, [toggledSkills, currentRoleSkills]);
+      console.log('CategoryCards - Updated counts:', {
+        specialized: specializedCount,
+        common: commonCount,
+        certification: certificationCount,
+        total: totalCount,
+        roleId,
+        selectedLevel
+      });
+    };
+
+    calculateSkillCounts();
+  }, [currentRoleSkills, getSkillCompetencyState, roleId, selectedLevel]);
 
   const categories = [
     { id: "all", name: "All Categories", count: counts.total },
