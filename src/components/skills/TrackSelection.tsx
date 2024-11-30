@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -23,13 +24,26 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
 
   const track = getTrackForRole(id || "");
 
+  // Load the saved track when component mounts
+  useEffect(() => {
+    const savedTrack = localStorage.getItem(`track-selection-${id}`);
+    console.log('Loading saved track selection:', { roleId: id, savedTrack });
+    
+    if (savedTrack && (savedTrack === "Professional" || savedTrack === "Managerial")) {
+      setTrackForRole(id || "", savedTrack);
+    }
+  }, [id, setTrackForRole]);
+
   const handleTrackChange = (value: "Professional" | "Managerial") => {
+    console.log('Changing track:', { roleId: id, newTrack: value });
     setTrackForRole(id || "", value);
+    localStorage.setItem(`track-selection-${id}`, value);
     onTrackChange?.(value);
   };
 
   const handleSave = () => {
     saveTrackSelection();
+    localStorage.setItem(`track-selection-${id}`, track);
     toast({
       title: "Track Selection Saved",
       description: `Selected track: ${track}`,
