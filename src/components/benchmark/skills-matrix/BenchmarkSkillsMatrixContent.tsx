@@ -34,7 +34,6 @@ export const BenchmarkSkillsMatrixContent = ({
 }: BenchmarkSkillsMatrixContentProps) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
-  const { selectedLevel } = useRoleStore();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
   // Get all toggled skills as an array and filter by category
@@ -81,7 +80,7 @@ export const BenchmarkSkillsMatrixContent = ({
 
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-foreground">
-          {getRoleTitle(roleId)}: {selectedLevel.toUpperCase()}
+          {getRoleTitle(roleId)}
         </h2>
       </div>
 
