@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
-import { useCurrentRole } from './hooks/useCurrentRole';
+import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -13,14 +13,12 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
-  const { id } = useParams();
-  const currentRole = useCurrentRole(); // This tracks the current role/profile ID
+  const { selectedRole } = useRoleStore();
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     try {
-      // Load skills for the current profile/role ID
-      const savedSkills = loadToggledSkills(id || currentRole);
-      console.log('Initial load of toggled skills for role:', id || currentRole, savedSkills);
+      const savedSkills = loadToggledSkills(selectedRole);
+      console.log('Initial load of toggled skills for role:', selectedRole, savedSkills);
       return new Set(savedSkills);
     } catch (error) {
       console.error('Error loading initial toggled skills:', error);
@@ -28,23 +26,21 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   });
 
-  // Effect to reload toggled skills when profile/role changes
+  // Effect to reload toggled skills when role changes
   useEffect(() => {
-    const roleId = id || currentRole;
     try {
-      const savedSkills = loadToggledSkills(roleId);
-      console.log('Reloading toggled skills for role change:', roleId, savedSkills);
+      const savedSkills = loadToggledSkills(selectedRole);
+      console.log('Reloading toggled skills for role change:', selectedRole, savedSkills);
       setToggledSkills(new Set(savedSkills));
     } catch (error) {
       console.error('Error reloading toggled skills:', error);
       setToggledSkills(new Set());
     }
-  }, [id, currentRole]);
+  }, [selectedRole]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
-    const roleId = id || currentRole;
     console.log('Setting toggled skills for role:', {
-      roleId,
+      roleId: selectedRole,
       skillCount: newSkills.size,
       skills: Array.from(newSkills)
     });
@@ -54,19 +50,19 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     // Save to localStorage and broadcast change
     try {
       const skillsArray = Array.from(newSkills);
-      saveToggledSkills(roleId, skillsArray);
+      saveToggledSkills(selectedRole, skillsArray);
       
       // Broadcast the change to other components
       window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
-        detail: { role: roleId, skills: skillsArray }
+        detail: { role: selectedRole, skills: skillsArray }
       }));
 
       // Only show toast if skills actually changed
-      const currentSkills = loadToggledSkills(roleId);
+      const currentSkills = loadToggledSkills(selectedRole);
       if (JSON.stringify(currentSkills) !== JSON.stringify(skillsArray)) {
         toast({
           title: "Skills Updated",
-          description: `${newSkills.size} skills are now active for ${roleId}.`,
+          description: `${newSkills.size} skills are now active for this role.`,
         });
       }
     } catch (error) {
@@ -78,8 +74,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   useEffect(() => {
     const handleSkillsChanged = (event: Event) => {
       const customEvent = event as CustomEvent;
-      const roleId = id || currentRole;
-      if (customEvent.detail.role === roleId) {
+      if (customEvent.detail.role === selectedRole) {
         console.log('Received toggled skills update:', customEvent.detail);
         setToggledSkills(new Set(customEvent.detail.skills));
       }
@@ -87,7 +82,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
     window.addEventListener('toggledSkillsChanged', handleSkillsChanged);
     return () => window.removeEventListener('toggledSkillsChanged', handleSkillsChanged);
-  }, [id, currentRole]);
+  }, [selectedRole]);
 
   return (
     <ToggledSkillsContext.Provider value={{ toggledSkills, setToggledSkills: handleSetToggledSkills }}>
