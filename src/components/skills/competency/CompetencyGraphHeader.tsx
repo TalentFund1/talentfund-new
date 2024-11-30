@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { getRoleTitle } from "@/components/benchmark/skills-matrix/BenchmarkSkillsMatrixContent";
 
 interface CompetencyGraphHeaderProps {
   currentRoleId: string;
@@ -15,7 +16,9 @@ export const CompetencyGraphHeader = ({
 }: CompetencyGraphHeaderProps) => {
   return (
     <div className="flex items-center justify-between mb-4">
-      <h2 className="text-xl font-semibold text-foreground">Skills Graph</h2>
+      <h2 className="text-xl font-semibold text-foreground">
+        {getRoleTitle(currentRoleId)}
+      </h2>
       <div className="flex items-center gap-2">
         <Button 
           variant="outline" 
