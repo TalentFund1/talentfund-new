@@ -56,11 +56,10 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
 
   const setTrackForRole = (roleId: string, track: Track) => {
     console.log('Setting track for role:', roleId, 'to:', track);
-    const newTracks = {
-      ...tracks,
+    setTracks(prev => ({
+      ...prev,
       [roleId]: track
-    };
-    setTracks(newTracks);
+    }));
     setHasUnsavedChanges(true);
   };
 

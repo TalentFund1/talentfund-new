@@ -18,7 +18,7 @@ interface TrackSelectionProps {
 }
 
 export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const { getTrackForRole, setTrackForRole, hasUnsavedChanges, saveTrackSelection } = useTrack();
   const { toast } = useToast();
 
