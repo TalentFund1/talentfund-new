@@ -122,7 +122,7 @@ export const useCompetencyStateReader = () => {
     });
     
     const states: Record<string, SkillCompetencyState> = {};
-    const roleData = roleSkills[roleId];
+    const roleData = roleSkills[roleId as keyof typeof roleSkills];
     
     if (roleData) {
       const allSkills = [
