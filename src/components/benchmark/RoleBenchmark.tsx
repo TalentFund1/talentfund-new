@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTrack } from "../skills/context/TrackContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { professionalLevels, managerialLevels } from "./data/levelData";
+import { getSkillProfileId } from "../EmployeeTable";
 
 interface RoleStore {
   selectedRole: string;
@@ -21,7 +22,7 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "123",
+  selectedRole: "",
   selectedLevel: "p4", // Default to P4 for professional track
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
@@ -37,6 +38,20 @@ export const RoleBenchmark = () => {
   const { getTrackForRole } = useTrack();
 
   const employee = employees.find(emp => emp.id === id);
+  const employeeRoleId = employee ? getSkillProfileId(employee.role) : "";
+  
+  // Set initial role based on employee's assigned role
+  useEffect(() => {
+    if (employeeRoleId) {
+      console.log('Setting initial role based on employee role:', {
+        employeeId: id,
+        employeeRole: employee?.role,
+        roleId: employeeRoleId
+      });
+      setSelectedRole(employeeRoleId);
+    }
+  }, [employeeRoleId, setSelectedRole]);
+
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
 
@@ -81,7 +96,9 @@ export const RoleBenchmark = () => {
     selectedRole,
     selectedLevel,
     track,
-    hasSkills: !!currentRoleSkills
+    hasSkills: !!currentRoleSkills,
+    employeeRole: employee?.role,
+    employeeRoleId
   });
 
   return (
