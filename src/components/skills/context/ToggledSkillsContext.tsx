@@ -18,9 +18,15 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     try {
-      const savedSkills = loadToggledSkills(selectedRole || id || "123");
+      const currentRoleId = selectedRole || id;
+      if (!currentRoleId) {
+        console.error('No role ID available');
+        return new Set();
+      }
+      
+      const savedSkills = loadToggledSkills(currentRoleId);
       console.log('Initial load of toggled skills:', {
-        roleId: selectedRole || id || "123",
+        roleId: currentRoleId,
         savedSkills
       });
       return new Set(savedSkills);
@@ -32,7 +38,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   // Effect to reload toggled skills when role changes
   useEffect(() => {
-    const currentRoleId = selectedRole || id || "123";
+    const currentRoleId = selectedRole || id;
     try {
       const savedSkills = loadToggledSkills(currentRoleId);
       console.log('Reloading toggled skills for role change:', {
@@ -47,7 +53,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   }, [selectedRole, id]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
-    const currentRoleId = selectedRole || id || "123";
+    const currentRoleId = selectedRole || id;
     console.log('Setting toggled skills:', {
       roleId: currentRoleId,
       skillCount: newSkills.size,
@@ -82,7 +88,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   // Listen for changes from other components
   useEffect(() => {
-    const currentRoleId = selectedRole || id || "123";
+    const currentRoleId = selectedRole || id;
     const handleSkillsChanged = (event: Event) => {
       const customEvent = event as CustomEvent;
       if (customEvent.detail.role === currentRoleId) {
