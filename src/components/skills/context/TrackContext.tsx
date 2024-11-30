@@ -50,11 +50,6 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
     
     // Save immediately to ensure track selection persists
     localStorage.setItem('roleTracks', JSON.stringify(newTracks));
-
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('trackChanged', {
-      detail: { roleId, track }
-    }));
   };
 
   const saveTrackSelection = () => {

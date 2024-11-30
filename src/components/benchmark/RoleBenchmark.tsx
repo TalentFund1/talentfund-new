@@ -22,7 +22,7 @@ interface RoleStore {
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
-  selectedLevel: "p1",
+  selectedLevel: "m3",
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
@@ -40,12 +40,9 @@ export const RoleBenchmark = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
 
-  // Set level based on track when role changes
-  useEffect(() => {
-    const defaultLevel = track === "Professional" ? "p1" : "m3";
-    console.log('Setting level based on track:', { track, defaultLevel });
-    setSelectedLevel(defaultLevel);
-  }, [track, setSelectedLevel]);
+  const getLevelOptions = () => {
+    return track === "Managerial" ? managerialLevels : professionalLevels;
+  };
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -61,10 +58,6 @@ export const RoleBenchmark = () => {
     
     setBenchmarkSearchSkills(allSkills);
   }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
-
-  const getLevelOptions = () => {
-    return track === "Professional" ? professionalLevels : managerialLevels;
-  };
 
   console.log('RoleBenchmark rendering with:', {
     selectedRole,
@@ -97,13 +90,7 @@ export const RoleBenchmark = () => {
             </SelectContent>
           </Select>
 
-          <Select 
-            value={selectedLevel} 
-            onValueChange={(value) => {
-              console.log('Level selected:', value);
-              setSelectedLevel(value);
-            }}
-          >
+          <Select value={selectedLevel} onValueChange={setSelectedLevel}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
@@ -117,7 +104,11 @@ export const RoleBenchmark = () => {
 
         <Separator className="my-6" />
 
-        {id && <BenchmarkAnalysis />}
+        {id && <BenchmarkAnalysis 
+          selectedRole={selectedRole}
+          roleLevel={selectedLevel}
+          employeeId={id}
+        />}
       </div>
     </div>
   );
