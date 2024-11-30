@@ -8,7 +8,6 @@ import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
-import { CategorizedSkills } from "./CategorizedSkills";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { Separator } from "@/components/ui/separator";
 import { useTrack } from "../skills/context/TrackContext";
@@ -33,7 +32,7 @@ export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const { toggledSkills } = useToggledSkills();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
-  const { selectedRole, selectedLevel } = useRoleStore();
+  const { selectedRole } = useRoleStore();
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
   const { getTrackForRole } = useTrack();
@@ -84,14 +83,10 @@ export const RoleBenchmark = () => {
           </div>
           <Separator className="my-2" />
 
-          {id && <BenchmarkAnalysis />}
-          
-          <Separator className="my-6" />
-          
-          {id && <CategorizedSkills 
-            roleId={selectedRole}
+          {id && <BenchmarkAnalysis 
+            selectedRole={selectedRole}
+            roleLevel="p4"
             employeeId={id}
-            selectedLevel={selectedLevel}
           />}
         </div>
       </div>
