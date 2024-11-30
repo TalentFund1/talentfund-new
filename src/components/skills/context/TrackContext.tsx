@@ -11,7 +11,13 @@ interface TrackContextType {
 
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
 
-const DEFAULT_TRACKS: Record<string, Track> = {};
+const DEFAULT_TRACKS: Record<string, Track> = {
+  "123": "Professional", // AI Engineer
+  "124": "Professional", // Backend Engineer
+  "125": "Professional", // Frontend Engineer
+  "126": "Managerial",  // Engineering Manager
+  "127": "Professional", // DevOps Engineer
+};
 
 const STORAGE_KEY = 'roleTracks';
 
@@ -27,22 +33,25 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('Error loading persisted tracks:', error);
     }
-    console.log('Using empty default tracks');
-    return {};
+    console.log('Using default tracks:', DEFAULT_TRACKS);
+    return DEFAULT_TRACKS;
   });
   
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+  // Initialize tracks in localStorage if not present
+  useEffect(() => {
+    const savedTracks = localStorage.getItem(STORAGE_KEY);
+    if (!savedTracks) {
+      console.log('Initializing tracks in localStorage:', DEFAULT_TRACKS);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_TRACKS));
+      setTracks(DEFAULT_TRACKS);
+    }
+  }, []);
+
   const getTrackForRole = (roleId: string): Track => {
     console.log('Getting track for role:', roleId, 'Current tracks:', tracks);
-    
-    // If we have a saved track for this role, use it
-    if (tracks[roleId]) {
-      return tracks[roleId];
-    }
-
-    // Otherwise return Professional as default for any role
-    return "Professional";
+    return tracks[roleId] || DEFAULT_TRACKS[roleId] || "Professional";
   };
 
   const setTrackForRole = (roleId: string, track: Track) => {
