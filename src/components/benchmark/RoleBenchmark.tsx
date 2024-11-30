@@ -11,7 +11,6 @@ import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 import { Separator } from "@/components/ui/separator";
 import { useTrack } from "../skills/context/TrackContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { professionalLevels, managerialLevels } from "./data/levelData";
 
 interface RoleStore {
   selectedRole: string;
@@ -22,7 +21,7 @@ interface RoleStore {
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
-  selectedLevel: "m3",
+  selectedLevel: "p4", // Default to P4 for professional track
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
@@ -40,9 +39,11 @@ export const RoleBenchmark = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
 
-  const getLevelOptions = () => {
-    return track === "Managerial" ? managerialLevels : professionalLevels;
-  };
+  // Set the appropriate level based on track when role changes
+  useEffect(() => {
+    const newLevel = track === "Managerial" ? "m3" : "p4";
+    setSelectedLevel(newLevel);
+  }, [track, setSelectedLevel]);
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -87,17 +88,6 @@ export const RoleBenchmark = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="123">AI Engineer</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Select level" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(getLevelOptions()).map(([key, value]) => (
-                <SelectItem key={key} value={key}>{value}</SelectItem>
-              ))}
             </SelectContent>
           </Select>
         </div>
