@@ -1,12 +1,10 @@
-import { Card } from "@/components/ui/card";
+import { useRef } from "react";
 import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { CategorizedSkills } from "../CategorizedSkills";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
-import { CategoryCards } from "../CategoryCards";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -34,16 +32,7 @@ export const BenchmarkSkillsMatrixContent = ({
   filteredSkills,
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const { toggledSkills } = useToggledSkills();
-
-  console.log('Rendering BenchmarkSkillsMatrixContent with:', {
-    roleId,
-    employeeId,
-    roleLevel,
-    selectedCategory,
-    toggledSkillsCount: toggledSkills.size
-  });
+  console.log('Rendering BenchmarkSkillsMatrixContent with skills:', filteredSkills);
 
   const getRoleTitle = (id: string) => {
     const roleTitles: { [key: string]: string } = {
@@ -55,23 +44,8 @@ export const BenchmarkSkillsMatrixContent = ({
     return roleTitles[id] || "AI Engineer";
   };
 
-  const handleCategorySelect = (category: string) => {
-    console.log('Category selected:', category);
-    setSelectedCategory(category);
-  };
-
   return (
     <>
-      <CategoryCards
-        selectedCategory={selectedCategory}
-        onCategorySelect={handleCategorySelect}
-        roleId={roleId}
-        selectedLevel={roleLevel}
-        employeeId={employeeId}
-      />
-
-      <Separator className="my-8" />
-
       <CategorizedSkills 
         roleId={roleId}
         employeeId={employeeId}
