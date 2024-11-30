@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { roleSkills } from '../skills/data/roleSkills';
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -16,25 +17,33 @@ export const CategoryCards = ({
   selectedLevel 
 }: CategoryCardsProps) => {
   const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  console.log('CategoryCards render:', {
-    roleId,
-    selectedLevel,
-    toggledSkillsCount: toggledSkills.size
-  });
+  // Get all skills for the role
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
 
-  const specializedCount = currentRoleSkills.specialized?.filter(skill => 
+  // Filter to only toggled skills
+  const toggledRoleSkills = allRoleSkills.filter(skill => 
     toggledSkills.has(skill.title)
-  ).length || 0;
-  
-  const commonCount = currentRoleSkills.common?.filter(skill => 
-    toggledSkills.has(skill.title)
-  ).length || 0;
-  
-  const certificationCount = currentRoleSkills.certifications?.filter(skill => 
-    toggledSkills.has(skill.title)
-  ).length || 0;
+  );
+
+  // Count skills by category
+  const specializedCount = toggledRoleSkills.filter(skill => 
+    currentRoleSkills.specialized.some(s => s.title === skill.title)
+  ).length;
+
+  const commonCount = toggledRoleSkills.filter(skill => 
+    currentRoleSkills.common.some(s => s.title === skill.title)
+  ).length;
+
+  const certificationCount = toggledRoleSkills.filter(skill => 
+    currentRoleSkills.certifications.some(s => s.title === skill.title)
+  ).length;
 
   const totalCount = specializedCount + commonCount + certificationCount;
 
@@ -42,7 +51,9 @@ export const CategoryCards = ({
     total: totalCount,
     specialized: specializedCount,
     common: commonCount,
-    certification: certificationCount
+    certification: certificationCount,
+    selectedLevel,
+    roleId
   });
 
   const categories = [
