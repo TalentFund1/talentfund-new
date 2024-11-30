@@ -40,7 +40,8 @@ export const CategoryCards = ({
     .filter(skill => toggledSkills.has(skill.title))
     .length;
 
-  const totalCount = toggledSkills.size;
+  // Get total count of toggled skills
+  const totalCount = specializedCount + commonCount + certificationCount;
 
   console.log('Category counts calculated:', {
     total: totalCount,
@@ -49,7 +50,8 @@ export const CategoryCards = ({
     certification: certificationCount,
     selectedLevel,
     roleId,
-    toggledSkillsSize: toggledSkills.size
+    toggledSkillsSize: toggledSkills.size,
+    actualToggledSkills: Array.from(toggledSkills)
   });
 
   const categories = [
