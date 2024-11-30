@@ -48,7 +48,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     
     setToggledSkills(newSkills);
     
-    // Save to localStorage and broadcast change
+    // Save to localStorage immediately after state update
     try {
       const skillsArray = Array.from(newSkills);
       saveToggledSkills(selectedRole, skillsArray);
@@ -57,14 +57,19 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
         detail: { role: selectedRole, skills: skillsArray }
       }));
+
+      console.log('Successfully saved toggled skills:', {
+        roleId: selectedRole,
+        skills: skillsArray
+      });
     } catch (error) {
       console.error('Error saving toggled skills:', error);
+      toast({
+        title: "Error Saving Skills",
+        description: "There was an error saving your skill selection.",
+        variant: "destructive",
+      });
     }
-    
-    toast({
-      title: "Skills Updated",
-      description: `${newSkills.size} skills are now active for ${selectedRole}.`,
-    });
   };
 
   // Listen for changes from other components

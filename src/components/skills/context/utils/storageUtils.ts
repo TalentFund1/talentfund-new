@@ -22,14 +22,22 @@ export const loadToggledSkills = (roleId: string): string[] => {
 
 export const saveToggledSkills = (roleId: string, skills: string[]) => {
   try {
+    if (!roleId) {
+      console.error('Cannot save toggled skills: No role ID provided');
+      return;
+    }
+    
     const storageKey = getStorageKey(roleId);
     localStorage.setItem(storageKey, JSON.stringify(skills));
+    
     console.log('Saved toggled skills for role:', {
       roleId,
       skillCount: skills.length,
-      skills
+      skills,
+      storageKey
     });
   } catch (error) {
     console.error('Error saving toggled skills:', error);
+    throw error; // Re-throw to handle in the context
   }
 };
