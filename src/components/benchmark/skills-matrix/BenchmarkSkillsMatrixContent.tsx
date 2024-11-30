@@ -3,6 +3,7 @@ import { CategorizedSkills } from "../CategorizedSkills";
 import { Separator } from "@/components/ui/separator";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { roleSkills } from "../../skills/data/roleSkills";
+import { SkillsMatrixContent } from "./SkillsMatrixContent";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
