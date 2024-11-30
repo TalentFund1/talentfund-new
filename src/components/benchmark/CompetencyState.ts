@@ -32,18 +32,8 @@ export const useCompetencyStore = create<CompetencyState>()(
             console.log('Initializing new skill with default states:', skillName);
             const initialSkillState: Record<string, SkillState> = {};
             
-            // Determine track based on level key
-            const isManagerial = levelKey.toLowerCase().startsWith('m');
-            const levels = isManagerial ? managerialLevels : professionalLevels;
-            
-            console.log('Using track levels:', {
-              isManagerial,
-              levels,
-              levelKey
-            });
-            
-            // Initialize all levels with default state
-            levels.forEach(level => {
+            // Initialize all professional levels with default state
+            professionalLevels.forEach(level => {
               initialSkillState[level] = { ...defaultSkillState };
             });
             
@@ -67,7 +57,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-matrix-storage',
-      version: 23, // Increment version to ensure clean state
+      version: 24, // Increment version to ensure clean state
       partialize: (state) => ({
         currentStates: state.currentStates,
       }),
