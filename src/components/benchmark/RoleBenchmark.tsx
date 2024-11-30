@@ -22,7 +22,7 @@ interface RoleStore {
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
-  selectedLevel: "m3",
+  selectedLevel: "p4", // Default to P4 for Professional track
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
@@ -34,15 +34,20 @@ export const RoleBenchmark = () => {
   const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
-  const { getTrackForRole } = useTrack();
+  const { getTrackForRole, setTrackForRole } = useTrack();
 
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
 
-  const getLevelOptions = () => {
-    return track === "Managerial" ? managerialLevels : professionalLevels;
-  };
+  // Set default level based on track
+  useEffect(() => {
+    const defaultLevel = track === "Managerial" ? "m3" : "p4";
+    if (selectedLevel !== defaultLevel) {
+      console.log('Setting default level for track:', track, defaultLevel);
+      setSelectedLevel(defaultLevel);
+    }
+  }, [track]);
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -58,6 +63,10 @@ export const RoleBenchmark = () => {
     
     setBenchmarkSearchSkills(allSkills);
   }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
+
+  const getLevelOptions = () => {
+    return track === "Managerial" ? managerialLevels : professionalLevels;
+  };
 
   console.log('RoleBenchmark rendering with:', {
     selectedRole,
@@ -90,7 +99,13 @@ export const RoleBenchmark = () => {
             </SelectContent>
           </Select>
 
-          <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+          <Select 
+            value={selectedLevel} 
+            onValueChange={(value) => {
+              console.log('Level selected:', value);
+              setSelectedLevel(value);
+            }}
+          >
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
