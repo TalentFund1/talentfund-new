@@ -14,7 +14,7 @@ export const BenchmarkAnalysis = () => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "");
-  const { selectedRole, selectedLevel } = useRoleStore();
+  const { selectedRole } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
@@ -25,10 +25,7 @@ export const BenchmarkAnalysis = () => {
   }
 
   const track = getTrackForRole(selectedRole);
-  console.log('Current track and selected level:', { track, selectedLevel });
-
-  // Use the selected level directly without any default override
-  const comparisonLevel = selectedLevel.toLowerCase();
+  const comparisonLevel = track === "Managerial" ? "m3" : "p4";
   console.log('Using comparison level:', comparisonLevel);
 
   const allRoleSkills = [
@@ -95,9 +92,9 @@ export const BenchmarkAnalysis = () => {
 
   console.log('Benchmark Analysis Calculation:', {
     totalToggled: totalToggledSkills,
-    skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
-    competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
-    skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
+    skillMatch: { count: matchingSkillsCount, total: totalToggledSkills },
+    competencyMatch: { count: competencyMatchCount, total: totalToggledSkills },
+    skillGoalMatch: { count: skillGoalMatchCount, total: totalToggledSkills },
     averagePercentage,
     track,
     comparisonLevel
@@ -130,6 +127,40 @@ export const BenchmarkAnalysis = () => {
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
                   style={{ width: `${skillMatchPercentage}%` }} 
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Competency Match</span>
+                <span className="text-sm text-foreground">
+                  {competencyMatchCount} out of {totalToggledSkills}
+                </span>
+              </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full" 
+                  style={{ width: `${competencyMatchPercentage}%` }} 
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Skill Goal Match</span>
+                <span className="text-sm text-foreground">
+                  {skillGoalMatchCount} out of {totalToggledSkills}
+                </span>
+              </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full" 
+                  style={{ width: `${skillGoalMatchPercentage}%` }} 
                 />
               </div>
             </div>
