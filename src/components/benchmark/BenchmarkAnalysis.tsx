@@ -34,6 +34,7 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.certifications
   ];
 
+  // Filter only toggled skills from role skills
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
 
   console.log('Toggled skills for role:', {
@@ -43,16 +44,23 @@ export const BenchmarkAnalysis = () => {
     skills: toggledRoleSkills.map(s => s.title)
   });
 
+  // Find skills that exist in employee skills
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+    const employeeSkillLevel = currentStates[roleSkill.title]?.level || 'unspecified';
+    console.log(`Checking skill match for ${roleSkill.title}:`, {
+      hasSkill: !!employeeSkill,
+      employeeLevel: employeeSkillLevel
+    });
     return employeeSkill !== undefined;
   });
 
-  const competencyMatchingSkills = matchingSkills.filter(skill => {
+  // Check competency match (level requirements)
+  const competencyMatchingSkills = toggledRoleSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel);
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const employeeSkillLevel = currentStates[skill.title]?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     const getLevelPriority = (level: string = 'unspecified') => {
@@ -68,13 +76,26 @@ export const BenchmarkAnalysis = () => {
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
+    console.log(`Checking competency match for ${skill.title}:`, {
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel,
+      employeePriority,
+      rolePriority,
+      matches: employeePriority >= rolePriority
+    });
+
     return employeePriority >= rolePriority;
   });
 
-  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
+  // Check skill goals
+  const skillGoalMatchingSkills = toggledRoleSkills.filter(skill => {
     const skillState = currentStates[skill.title];
-    if (!skillState) return false;
-    return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
+    const matches = skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
+    console.log(`Checking skill goal match for ${skill.title}:`, {
+      requirement: skillState?.requirement,
+      matches
+    });
+    return matches;
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
