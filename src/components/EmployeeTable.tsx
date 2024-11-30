@@ -56,7 +56,7 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId || "123";
+  return mappedId;  // Removed the "123" fallback
 };
 
 export const getBaseRole = (role: string) => {
@@ -131,7 +131,9 @@ const EmployeeTableContent = ({
             {filteredEmployees.length === 0 ? (
               <tr>
                 <td colSpan={selectedSkills.length > 0 ? 6 : 5} className="text-center py-4 text-muted-foreground">
-                  No employees found
+                  {selectedJobTitle.length > 0 && !getSkillProfileId(selectedJobTitle[0]) 
+                    ? "No matching role profile found" 
+                    : "No employees found"}
                 </td>
               </tr>
             ) : (
