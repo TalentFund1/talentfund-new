@@ -5,7 +5,6 @@ import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
-import { getRoleTitle } from "@/utils/roleUtils";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -92,4 +91,14 @@ export const BenchmarkSkillsMatrixContent = ({
       />
     </>
   );
+};
+
+const getRoleTitle = (id: string) => {
+  const roleTitles: { [key: string]: string } = {
+    "123": "AI Engineer",
+    "124": "Backend Engineer",
+    "125": "Frontend Engineer",
+    "126": "Engineering Manager"
+  };
+  return roleTitles[id] || "AI Engineer";
 };
