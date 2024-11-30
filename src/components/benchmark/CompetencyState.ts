@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface SkillState {
+export interface SkillState {
   level: string;
   required: string;
 }
