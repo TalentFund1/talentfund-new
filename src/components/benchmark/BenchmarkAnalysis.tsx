@@ -8,6 +8,8 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { CategorySection } from "./CategorySection";
+import { useState } from "react";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +19,7 @@ export const BenchmarkAnalysis = () => {
   const { selectedRole, selectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const [selectedCategory, setSelectedCategory] = useState("all");
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   if (!currentRoleSkills) {
@@ -126,6 +129,12 @@ export const BenchmarkAnalysis = () => {
             </div>
           </div>
         </div>
+
+        <CategorySection 
+          selectedCategory={selectedCategory}
+          onCategorySelect={setSelectedCategory}
+          toggledSkills={toggledSkills}
+        />
       </Card>
     </div>
   );
