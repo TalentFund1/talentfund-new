@@ -21,7 +21,7 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "",  // Changed from "123" to empty string
+  selectedRole: "123",
   selectedLevel: "p4", // Default to P4 for professional track
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
@@ -38,17 +38,13 @@ export const RoleBenchmark = () => {
 
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-  
-  if (!currentRoleSkills) {
-    console.error('No role skills found for role:', selectedRole);
-    return null;
-  }
+  const track = getTrackForRole(selectedRole);
 
   // Set the appropriate level based on track when role changes
   useEffect(() => {
-    const newLevel = getTrackForRole(selectedRole) === "Managerial" ? "m3" : "p4";
+    const newLevel = track === "Managerial" ? "m3" : "p4";
     setSelectedLevel(newLevel);
-  }, [selectedRole, setSelectedLevel]);
+  }, [track, setSelectedLevel]);
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -84,7 +80,7 @@ export const RoleBenchmark = () => {
   console.log('RoleBenchmark rendering with:', {
     selectedRole,
     selectedLevel,
-    track: getTrackForRole(selectedRole),
+    track,
     hasSkills: !!currentRoleSkills
   });
 
@@ -121,7 +117,7 @@ export const RoleBenchmark = () => {
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
             <SelectContent>
-              {getTrackForRole(selectedRole) === "Managerial" ? (
+              {track === "Managerial" ? (
                 Object.entries(managerialLevels).map(([key, value]) => (
                   <SelectItem key={key} value={key.toLowerCase()}>
                     {value} - {getLevelDescription(key)}
