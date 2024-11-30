@@ -14,6 +14,7 @@ import { CompetencyGraphTable } from "./competency/CompetencyGraphTable";
 import { generateSkillProgression } from "./competency/autoFillUtils";
 import { Brain, RotateCcw } from "lucide-react";
 import { useTrack } from "./context/TrackContext";
+import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -32,6 +33,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { id: urlRoleId } = useParams<{ id: string }>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { getTrackForRole } = useTrack();
+  const { selectedLevel } = useRoleStore();
 
   const currentRoleId = propRoleId || urlRoleId || "123";
   const savedTrack = getTrackForRole(currentRoleId);
@@ -146,7 +148,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       <Separator className="my-6" />
       
       <div className="mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-6">{jobTitles[currentRoleId]}</h3>
+        <h3 className="text-2xl font-bold text-foreground mb-6">
+          {jobTitles[currentRoleId]}: {selectedLevel.toUpperCase()}
+        </h3>
         <div className="flex justify-between items-center mb-6">
           <TrackSelection onTrackChange={setTrack} />
           <div className="flex items-center gap-4">
