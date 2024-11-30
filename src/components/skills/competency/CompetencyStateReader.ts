@@ -26,40 +26,51 @@ export const useCompetencyStateReader = () => {
       return track === "Managerial" ? "m5" : "p4";
     }
     
-    // Handle managerial levels
+    // Handle professional track levels (P1-P6)
+    if (track === "Professional") {
+      // First try to match P1-P6 format
+      const professionalMatch = level.toLowerCase().match(/p[1-6]/);
+      if (professionalMatch) {
+        return professionalMatch[0];
+      }
+      
+      // Then try to match just the number
+      const numberMatch = level.match(/[1-6]/);
+      if (numberMatch) {
+        return `p${numberMatch[0]}`;
+      }
+      
+      return level.toLowerCase().startsWith('p') ? level.toLowerCase() : 'p4';
+    }
+    
+    // Handle managerial track levels (M3-M6)
     if (track === "Managerial") {
-      // First try to match M3-M6 format
       const managerialMatch = level.toLowerCase().match(/m[3-6]/);
       if (managerialMatch) {
         return managerialMatch[0];
       }
       
-      // Then try to match just the number
       const numberMatch = level.match(/[3-6]/);
       if (numberMatch) {
         return `m${numberMatch[0]}`;
       }
       
-      // If no valid level found, return the actual selected level or m5 as default
-      const selectedLevel = level.toLowerCase().startsWith('m') ? level.toLowerCase() : 'm5';
-      console.log('Using selected managerial level:', selectedLevel);
-      return selectedLevel;
-    }
-
-    // Handle professional track levels
-    const match = level.toLowerCase().match(/p[1-6]/);
-    if (match) {
-      return match[0];
+      return level.toLowerCase().startsWith('m') ? level.toLowerCase() : 'm3';
     }
     
     return level.toLowerCase().trim();
   };
 
   const getDefaultLevelForTrack = (track: string, roleLevel: string): string => {
-    if (track === "Managerial") {
-      // Extract the level number or default to 5
+    if (track === "Professional") {
       const levelMatch = roleLevel.match(/\d/);
-      const level = levelMatch ? levelMatch[0] : '5';
+      const level = levelMatch ? levelMatch[0] : '4';
+      console.log('Default professional level:', `p${level}`);
+      return `p${level}`;
+    }
+    if (track === "Managerial") {
+      const levelMatch = roleLevel.match(/\d/);
+      const level = levelMatch ? levelMatch[0] : '3';
       console.log('Default managerial level:', `m${level}`);
       return `m${level}`;
     }
@@ -69,18 +80,21 @@ export const useCompetencyStateReader = () => {
   const findSavedState = (skillName: string, levelKey: string, roleId: string): SkillCompetencyState | null => {
     const primaryRoleId = getPrimaryRoleId();
     const roleStates = currentStates[primaryRoleId];
+    const track = getTrackForRole(roleId);
     
     if (roleStates?.[skillName]) {
       const normalizedLevelKey = normalizeLevel(levelKey, roleId);
       const levelState = roleStates[skillName][normalizedLevelKey];
+      
+      console.log('Finding saved state:', { 
+        skillName, 
+        levelKey: normalizedLevelKey, 
+        state: levelState,
+        roleId,
+        track
+      });
+      
       if (levelState) {
-        console.log('Found saved state for track:', { 
-          skillName, 
-          levelKey: normalizedLevelKey, 
-          state: levelState,
-          roleId,
-          track: getTrackForRole(roleId)
-        });
         return levelState;
       }
     }
@@ -99,8 +113,8 @@ export const useCompetencyStateReader = () => {
 
   const getSkillCompetencyState = (
     skillName: string, 
-    levelKey: string = 'm5',
-    roleId: string = "126"
+    levelKey: string = 'p4',
+    roleId: string = "123"
   ): SkillCompetencyState => {
     const track = getTrackForRole(roleId);
     const normalizedLevel = normalizeLevel(levelKey, roleId);
@@ -132,17 +146,21 @@ export const useCompetencyStateReader = () => {
   };
 
   const determineRequirement = (levelKey: string, track: string): string => {
+    if (track === "Professional") {
+      const level = parseInt(levelKey.replace(/[^\d]/g, ''));
+      // Higher professional levels (P4-P6) typically require more skills
+      return level >= 4 ? "required" : "preferred";
+    }
     if (track === "Managerial") {
       const level = parseInt(levelKey.replace(/[^\d]/g, ''));
-      // Higher managerial levels (M5-M6) typically require more skills
       return level >= 5 ? "required" : "preferred";
     }
     return "preferred";
   };
 
   const getAllSkillStatesForLevel = (
-    levelKey: string = 'm5',
-    roleId: string = "126"
+    levelKey: string = 'p4',
+    roleId: string = "123"
   ): Record<string, SkillCompetencyState> => {
     const track = getTrackForRole(roleId);
     const normalizedLevel = normalizeLevel(levelKey, roleId);
