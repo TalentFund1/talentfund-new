@@ -18,12 +18,7 @@ export const CategoryCards = ({
   const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  console.log('CategoryCards render:', {
-    roleId,
-    selectedLevel,
-    toggledSkillsCount: toggledSkills.size
-  });
-
+  // Get counts for each category based on toggled skills
   const specializedCount = currentRoleSkills.specialized?.filter(skill => 
     toggledSkills.has(skill.title)
   ).length || 0;
