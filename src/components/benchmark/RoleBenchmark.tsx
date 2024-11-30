@@ -22,7 +22,7 @@ interface RoleStore {
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
-  selectedLevel: "p1", // Default to P1 for Professional track
+  selectedLevel: "p1",
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
@@ -40,10 +40,10 @@ export const RoleBenchmark = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
 
-  // Set default level based on track
+  // Set level based on track when role changes
   useEffect(() => {
-    const defaultLevel = track === "Managerial" ? "m3" : "p1";
-    console.log('Setting default level for track:', track, defaultLevel);
+    const defaultLevel = track === "Professional" ? "p1" : "m3";
+    console.log('Setting level based on track:', { track, defaultLevel });
     setSelectedLevel(defaultLevel);
   }, [track, setSelectedLevel]);
 
@@ -63,7 +63,7 @@ export const RoleBenchmark = () => {
   }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
   const getLevelOptions = () => {
-    return track === "Managerial" ? managerialLevels : professionalLevels;
+    return track === "Professional" ? professionalLevels : managerialLevels;
   };
 
   console.log('RoleBenchmark rendering with:', {
@@ -117,11 +117,7 @@ export const RoleBenchmark = () => {
 
         <Separator className="my-6" />
 
-        {id && <BenchmarkAnalysis 
-          selectedRole={selectedRole}
-          roleLevel={selectedLevel}
-          employeeId={id}
-        />}
+        {id && <BenchmarkAnalysis />}
       </div>
     </div>
   );
