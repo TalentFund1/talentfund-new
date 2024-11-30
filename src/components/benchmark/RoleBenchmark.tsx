@@ -11,6 +11,7 @@ import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 import { Separator } from "@/components/ui/separator";
 import { useTrack } from "../skills/context/TrackContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { professionalLevels, managerialLevels } from "./data/levelData";
 
 interface RoleStore {
   selectedRole: string;
@@ -60,6 +61,22 @@ export const RoleBenchmark = () => {
     setBenchmarkSearchSkills(allSkills);
   }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
+  const getLevelDescription = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'p1': return 'Entry';
+      case 'p2': return 'Developing';
+      case 'p3': return 'Career';
+      case 'p4': return 'Senior';
+      case 'p5': return 'Expert';
+      case 'p6': return 'Principal';
+      case 'm3': return 'Manager';
+      case 'm4': return 'Senior Manager';
+      case 'm5': return 'Director';
+      case 'm6': return 'Senior Director';
+      default: return '';
+    }
+  };
+
   console.log('RoleBenchmark rendering with:', {
     selectedRole,
     selectedLevel,
@@ -88,6 +105,31 @@ export const RoleBenchmark = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="123">AI Engineer</SelectItem>
+              <SelectItem value="124">Backend Engineer</SelectItem>
+              <SelectItem value="125">Frontend Engineer</SelectItem>
+              <SelectItem value="126">Engineering Manager</SelectItem>
+              <SelectItem value="127">DevOps Engineer</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select level" />
+            </SelectTrigger>
+            <SelectContent>
+              {track === "Managerial" ? (
+                Object.entries(managerialLevels).map(([key, value]) => (
+                  <SelectItem key={key} value={key.toLowerCase()}>
+                    {value} - {getLevelDescription(key)}
+                  </SelectItem>
+                ))
+              ) : (
+                Object.entries(professionalLevels).map(([key, value]) => (
+                  <SelectItem key={key} value={key.toLowerCase()}>
+                    {value} - {getLevelDescription(key)}
+                  </SelectItem>
+                ))
+              )}
             </SelectContent>
           </Select>
         </div>
