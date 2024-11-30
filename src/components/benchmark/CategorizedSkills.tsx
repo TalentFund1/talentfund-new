@@ -20,7 +20,7 @@ interface CategorySectionProps {
 export const CategorizedSkills = ({ 
   selectedCategory, 
   onCategorySelect,
-  toggledSkills,
+  toggledSkills = new Set(),
   skillCounts,
   roleId,
   employeeId,

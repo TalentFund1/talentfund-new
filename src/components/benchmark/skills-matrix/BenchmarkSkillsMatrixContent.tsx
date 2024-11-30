@@ -34,6 +34,7 @@ export const BenchmarkSkillsMatrixContent = ({
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
   const { toggledSkills } = useToggledSkills();
+  const [selectedCategory, setSelectedCategory] = useState("all");
   
   console.log('Rendering BenchmarkSkillsMatrixContent with:', {
     roleId,
@@ -58,10 +59,13 @@ export const BenchmarkSkillsMatrixContent = ({
   return (
     <>
       <CategorizedSkills 
+        selectedCategory={selectedCategory}
+        onCategorySelect={setSelectedCategory}
+        toggledSkills={toggledSkills}
+        skillCounts={skillCounts}
         roleId={roleId}
         employeeId={employeeId}
         selectedLevel={roleLevel}
-        skillCounts={skillCounts}
       />
 
       <Separator className="my-8" />
