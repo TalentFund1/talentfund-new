@@ -26,29 +26,11 @@ export const CategorySection = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all skills for the role
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
-  // Filter to only toggled skills
-  const toggledRoleSkills = allRoleSkills.filter(skill => 
-    toggledSkills.has(skill.title)
-  );
-
-  // Count skills by category
+  // Count all skills in each category without filtering by toggledSkills
   const skillCounts: SkillCounts = {
-    specialized: toggledRoleSkills.filter(skill => 
-      currentRoleSkills.specialized.some(s => s.title === skill.title)
-    ).length,
-    common: toggledRoleSkills.filter(skill => 
-      currentRoleSkills.common.some(s => s.title === skill.title)
-    ).length,
-    certification: toggledRoleSkills.filter(skill => 
-      currentRoleSkills.certifications.some(s => s.title === skill.title)
-    ).length,
+    specialized: currentRoleSkills.specialized.length,
+    common: currentRoleSkills.common.length,
+    certification: currentRoleSkills.certifications.length,
     all: 0 // Initialize with 0
   };
 
