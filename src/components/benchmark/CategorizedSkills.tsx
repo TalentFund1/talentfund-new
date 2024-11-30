@@ -32,7 +32,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     const missingSkills = allRoleSkills.filter(skill => {
       const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      return !hasSkill && competencyState?.required === 'required';
+      return !hasSkill && (competencyState?.required === 'required' || competencyState?.required === 'preferred');
     });
 
     // Ensure missing skills are toggled on
@@ -105,7 +105,9 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     .filter(skill => {
       const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      return !hasSkill && toggledSkills.has(skill.title) && competencyState?.required === 'required';
+      return !hasSkill && 
+             toggledSkills.has(skill.title) && 
+             (competencyState?.required === 'required' || competencyState?.required === 'preferred');
     }));
 
   console.log('Skills Summary:', {
