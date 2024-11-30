@@ -20,12 +20,16 @@ interface RoleStore {
   setSelectedLevel: (level: string) => void;
 }
 
-export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "123",
-  selectedLevel: "m5", // Default to M5 for managerial track
-  setSelectedRole: (role) => set({ selectedRole: role }),
-  setSelectedLevel: (level) => set({ selectedLevel: level })
-}));
+export const useRoleStore = create<RoleStore>((set) => {
+  console.log('Initializing RoleStore with default role: 123');
+  
+  return {
+    selectedRole: "123", // Always default to AI Engineer
+    selectedLevel: "p4", // Default to P4 for professional track
+    setSelectedRole: (role) => set({ selectedRole: role }),
+    setSelectedLevel: (level) => set({ selectedLevel: level })
+  };
+});
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
@@ -90,13 +94,7 @@ export const RoleBenchmark = () => {
             </SelectContent>
           </Select>
 
-          <Select 
-            value={selectedLevel} 
-            onValueChange={(value) => {
-              console.log('Setting selected level to:', value);
-              setSelectedLevel(value);
-            }}
-          >
+          <Select value={selectedLevel} onValueChange={setSelectedLevel}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
