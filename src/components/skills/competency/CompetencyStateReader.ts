@@ -93,13 +93,13 @@ export const useCompetencyStateReader = () => {
     }
 
     // If no saved state, determine the appropriate state based on track and level
-    const defaultState: SkillCompetencyState = {
+    const newDefaultState: SkillCompetencyState = {
       level: normalizedLevel,
       required: determineRequirement(normalizedLevel, track)
     };
     
-    console.log('No saved state found, using default state:', defaultState);
-    return defaultState;
+    console.log('No saved state found, using default state:', newDefaultState);
+    return newDefaultState;
   };
 
   const getAllSkillStatesForLevel = (
