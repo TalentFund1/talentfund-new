@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { useRef } from "react";
 import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { CategorizedSkills } from "../CategorizedSkills";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
