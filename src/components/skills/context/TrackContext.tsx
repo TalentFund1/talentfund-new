@@ -19,17 +19,32 @@ const DEFAULT_TRACKS: Record<string, Track> = {
   "127": "Professional", // DevOps Engineer
 };
 
+const STORAGE_KEY = 'roleTracks';
+
 export const TrackProvider = ({ children }: { children: ReactNode }) => {
   const [tracks, setTracks] = useState<Record<string, Track>>(() => {
-    const savedTracks = localStorage.getItem('roleTracks');
-    return savedTracks ? JSON.parse(savedTracks) : DEFAULT_TRACKS;
+    try {
+      const savedTracks = localStorage.getItem(STORAGE_KEY);
+      if (savedTracks) {
+        const parsed = JSON.parse(savedTracks);
+        console.log('Loaded persisted tracks:', parsed);
+        return parsed;
+      }
+    } catch (error) {
+      console.error('Error loading persisted tracks:', error);
+    }
+    console.log('Using default tracks:', DEFAULT_TRACKS);
+    return DEFAULT_TRACKS;
   });
+  
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+  // Initialize tracks in localStorage if not present
   useEffect(() => {
-    const savedTracks = localStorage.getItem('roleTracks');
+    const savedTracks = localStorage.getItem(STORAGE_KEY);
     if (!savedTracks) {
-      localStorage.setItem('roleTracks', JSON.stringify(DEFAULT_TRACKS));
+      console.log('Initializing tracks in localStorage:', DEFAULT_TRACKS);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_TRACKS));
       setTracks(DEFAULT_TRACKS);
     }
   }, []);
@@ -49,12 +64,12 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
     setHasUnsavedChanges(true);
     
     // Save immediately to ensure track selection persists
-    localStorage.setItem('roleTracks', JSON.stringify(newTracks));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newTracks));
   };
 
   const saveTrackSelection = () => {
     console.log('Saving track selections:', tracks);
-    localStorage.setItem('roleTracks', JSON.stringify(tracks));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tracks));
     setHasUnsavedChanges(false);
   };
 
