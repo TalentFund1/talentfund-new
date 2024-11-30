@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { BenchmarkSkillsMatrixContent } from "./BenchmarkSkillsMatrixContent";
+import { BenchmarkSkillsMatrixContent } from "../benchmark/BenchmarkSkillsMatrixContent";
 import { useRef } from "react";
 
 interface BenchmarkSkillsMatrixViewProps {
