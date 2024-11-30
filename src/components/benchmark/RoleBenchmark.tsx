@@ -32,7 +32,7 @@ export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const { toggledSkills } = useToggledSkills();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
-  const { selectedRole } = useRoleStore();
+  const { selectedRole, selectedLevel } = useRoleStore();
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
   const { getTrackForRole } = useTrack();
@@ -85,7 +85,7 @@ export const RoleBenchmark = () => {
 
           {id && <BenchmarkAnalysis 
             selectedRole={selectedRole}
-            roleLevel="p4"
+            roleLevel={selectedLevel}
             employeeId={id}
           />}
         </div>
