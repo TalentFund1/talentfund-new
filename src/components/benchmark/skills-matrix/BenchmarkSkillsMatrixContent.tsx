@@ -5,7 +5,6 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { Separator } from "@/components/ui/separator";
-import { roleSkills } from "../../skills/data/roleSkills";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -33,25 +32,7 @@ export const BenchmarkSkillsMatrixContent = ({
   filteredSkills,
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
-  const { toggledSkills } = useToggledSkills();
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-
-  // Get all skills for the role
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
-  // Filter skills based on toggled status
-  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
-
-  console.log('BenchmarkSkillsMatrixContent - Skill counts:', {
-    totalToggled: toggledSkills.size,
-    filteredCount: filteredSkills.length,
-    toggledRoleSkills: toggledRoleSkills.length,
-    allRoleSkills: allRoleSkills.length
-  });
+  console.log('Rendering BenchmarkSkillsMatrixContent with skills:', filteredSkills);
 
   const getRoleTitle = (id: string) => {
     const roleTitles: { [key: string]: string } = {

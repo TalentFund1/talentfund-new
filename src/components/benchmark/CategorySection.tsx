@@ -1,8 +1,6 @@
 import { RequirementSection } from "./RequirementSection";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface CategorySectionProps {
   selectedCategory: string;
@@ -23,14 +21,16 @@ export const CategorySection = ({
   toggledSkills
 }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Count all skills in each category without filtering by toggledSkills
+  const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
+    return skills.filter(skill => toggledSkills.has(skill.title)).length;
+  };
+
   const skillCounts: SkillCounts = {
-    specialized: currentRoleSkills.specialized.length,
-    common: currentRoleSkills.common.length,
-    certification: currentRoleSkills.certifications.length,
+    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
+    common: getToggledSkillsCount(currentRoleSkills.common || []),
+    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
     all: 0 // Initialize with 0
   };
 
@@ -43,14 +43,6 @@ export const CategorySection = ({
     { id: "common", title: "Common Skills", count: skillCounts.common },
     { id: "certification", title: "Certification", count: skillCounts.certification }
   ];
-
-  console.log('Category counts:', {
-    total: skillCounts.all,
-    specialized: skillCounts.specialized,
-    common: skillCounts.common,
-    certification: skillCounts.certification,
-    selectedCategory
-  });
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
