@@ -30,25 +30,16 @@ export const useSkillsFiltering = (
   };
 
   const filterSkills = () => {
-    // Get all role skills first
     const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
 
-    // Get employee skills that match role skills
     const matchingSkills = employeeSkills.filter(empSkill => {
       const isInRoleSkills = allRoleSkills.some(roleSkill => roleSkill.title === empSkill.title);
       const isToggled = toggledSkills.has(empSkill.title);
       return isInRoleSkills && isToggled;
-    });
-
-    console.log('Matching skills found:', {
-      employeeId,
-      roleId: selectedRole,
-      matchingSkillsCount: matchingSkills.length,
-      toggledSkillsCount: toggledSkills.size
     });
 
     return filterSkillsByCategory(matchingSkills, "all")
@@ -58,7 +49,7 @@ export const useSkillsFiltering = (
         let matchesSearch = true;
         let matchesSkillLevel = true;
 
-        const competencyState = getSkillCompetencyState(skill.title, comparisonLevel);
+        const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
         const roleSkillLevel = competencyState?.level || 'unspecified';
 
         if (selectedLevel !== 'all') {
@@ -99,7 +90,7 @@ export const useSkillsFiltering = (
       .map(skill => ({
         ...skill,
         employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
-        roleLevel: getSkillCompetencyState(skill.title, comparisonLevel)?.level || 'unspecified',
+        roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
         requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
       }))
       .sort((a, b) => {
@@ -115,13 +106,6 @@ export const useSkillsFiltering = (
         return a.title.localeCompare(b.title);
       });
   };
-
-  console.log('Skills filtering results:', {
-    employeeId,
-    selectedRole,
-    comparisonLevel,
-    filteredCount: filterSkills().length
-  });
 
   return { filteredSkills: filterSkills() };
 };

@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useRoleStore } from "./RoleBenchmark";
 
 interface CompetencyMatchSectionProps {
   skills: any[];
@@ -21,9 +22,10 @@ const getLevelPriority = (level: string = 'unspecified') => {
 export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSectionProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
+  const { selectedRole } = useRoleStore();
 
   const matchingSkills = skills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
+    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
     if (!roleSkillState) return false;
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';

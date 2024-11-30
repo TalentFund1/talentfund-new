@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useRoleStore } from "./RoleBenchmark";
 
@@ -11,12 +10,11 @@ interface SkillGoalSectionProps {
 }
 
 export const SkillGoalSection = ({ skills, count, title }: SkillGoalSectionProps) => {
-  const { currentStates } = useSkillsMatrixStore();
-  const { selectedLevel } = useRoleStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { selectedLevel, selectedRole } = useRoleStore();
 
   const getLevelColor = (skillTitle: string) => {
-    const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase());
+    const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase(), selectedRole);
     if (!competencyState?.level) return "bg-gray-300";
 
     const level = String(competencyState.level).toLowerCase();

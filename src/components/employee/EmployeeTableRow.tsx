@@ -35,7 +35,7 @@ export const EmployeeTableRow = ({
     return (
       <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
         {selectedSkills.map(skillName => {
-          const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4");
+          const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4", roleId);
           return competencyState ? (
             <SkillBubble
               key={skillName}

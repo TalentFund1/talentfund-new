@@ -27,7 +27,7 @@ export const SkillsMatrixRow = ({
   isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const { selectedLevel } = useRoleStore();
+  const { selectedLevel, selectedRole } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
@@ -58,7 +58,7 @@ export const SkillsMatrixRow = ({
   };
 
   const getRoleSkillState = () => {
-    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), selectedRole);
     if (!competencyState) return null;
 
     return {
