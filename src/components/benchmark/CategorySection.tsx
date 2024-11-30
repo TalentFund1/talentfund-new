@@ -1,6 +1,8 @@
 import { RequirementSection } from "./RequirementSection";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface CategorySectionProps {
   selectedCategory: string;
@@ -21,16 +23,32 @@ export const CategorySection = ({
   toggledSkills
 }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
-    return skills.filter(skill => toggledSkills.has(skill.title)).length;
-  };
+  // Get all skills for the role
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
 
+  // Filter to only toggled skills
+  const toggledRoleSkills = allRoleSkills.filter(skill => 
+    toggledSkills.has(skill.title)
+  );
+
+  // Count skills by category
   const skillCounts: SkillCounts = {
-    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
-    common: getToggledSkillsCount(currentRoleSkills.common || []),
-    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
+    specialized: toggledRoleSkills.filter(skill => 
+      currentRoleSkills.specialized.some(s => s.title === skill.title)
+    ).length,
+    common: toggledRoleSkills.filter(skill => 
+      currentRoleSkills.common.some(s => s.title === skill.title)
+    ).length,
+    certification: toggledRoleSkills.filter(skill => 
+      currentRoleSkills.certifications.some(s => s.title === skill.title)
+    ).length,
     all: 0 // Initialize with 0
   };
 
@@ -43,6 +61,14 @@ export const CategorySection = ({
     { id: "common", title: "Common Skills", count: skillCounts.common },
     { id: "certification", title: "Certification", count: skillCounts.certification }
   ];
+
+  console.log('Category counts:', {
+    total: skillCounts.all,
+    specialized: skillCounts.specialized,
+    common: skillCounts.common,
+    certification: skillCounts.certification,
+    selectedCategory
+  });
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
