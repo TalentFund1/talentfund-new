@@ -39,6 +39,7 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
   
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+  // Initialize tracks in localStorage if not present
   useEffect(() => {
     const savedTracks = localStorage.getItem(STORAGE_KEY);
     if (!savedTracks) {
@@ -55,15 +56,15 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
 
   const setTrackForRole = (roleId: string, track: Track) => {
     console.log('Setting track for role:', roleId, 'to:', track);
-    setTracks(currentTracks => {
-      const newTracks = {
-        ...currentTracks,
-        [roleId]: track
-      };
-      console.log('New tracks state:', newTracks);
-      return newTracks;
-    });
+    const newTracks = {
+      ...tracks,
+      [roleId]: track
+    };
+    setTracks(newTracks);
     setHasUnsavedChanges(true);
+    
+    // Save immediately to ensure track selection persists
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newTracks));
   };
 
   const saveTrackSelection = () => {

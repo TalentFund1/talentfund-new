@@ -24,6 +24,7 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
 
   const track = getTrackForRole(id || "");
 
+  // Load the saved track when component mounts
   useEffect(() => {
     const savedTrack = localStorage.getItem(`track-selection-${id}`);
     console.log('Loading saved track selection:', { roleId: id, savedTrack });
@@ -36,11 +37,11 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
   const handleTrackChange = (value: "Professional" | "Managerial") => {
     console.log('Changing track:', { roleId: id, newTrack: value });
     setTrackForRole(id || "", value);
+    localStorage.setItem(`track-selection-${id}`, value);
     onTrackChange?.(value);
   };
 
   const handleSave = () => {
-    console.log('Saving track selection:', { roleId: id, track });
     saveTrackSelection();
     localStorage.setItem(`track-selection-${id}`, track);
     toast({
