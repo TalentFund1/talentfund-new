@@ -84,7 +84,8 @@ export const useSkillsFiltering = (
           matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
         }
 
-        const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+        // Get requirement from currentStates or default to 'preferred'
+        const requirement = currentSkillState?.requirement || 'preferred';
 
         if (selectedInterest !== 'all') {
           switch (selectedInterest.toLowerCase()) {
@@ -112,7 +113,7 @@ export const useSkillsFiltering = (
         ...skill,
         employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
         roleLevel: getSkillCompetencyState(skill.title, comparisonLevel)?.level || 'unspecified',
-        requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
+        requirement: currentStates[skill.title]?.requirement || 'preferred'
       }))
       .sort((a, b) => {
         const aRoleLevel = a.roleLevel;
