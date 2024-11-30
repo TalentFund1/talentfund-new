@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -63,11 +62,7 @@ export const RoleBenchmark = () => {
 
       <Separator />
 
-      <BenchmarkAnalysis 
-        selectedRole={selectedRole}
-        roleLevel={selectedLevel}
-        employeeId={employeeId || ""}
-      />
+      <BenchmarkAnalysis />
 
       {showComparison && (
         <>
