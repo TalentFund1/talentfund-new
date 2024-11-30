@@ -12,20 +12,29 @@ interface CategorySectionProps {
     certification: number;
     all: number;
   };
+  roleId?: string;
+  employeeId?: string;
+  selectedLevel?: string;
 }
 
 export const CategorizedSkills = ({ 
   selectedCategory, 
   onCategorySelect,
   toggledSkills,
-  skillCounts
+  skillCounts,
+  roleId,
+  employeeId,
+  selectedLevel
 }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
   
   console.log('Rendering CategorizedSkills with:', {
     selectedCategory,
     toggledSkillsCount: toggledSkills.size,
-    skillCounts
+    skillCounts,
+    roleId,
+    employeeId,
+    selectedLevel
   });
 
   const counts = skillCounts || {
