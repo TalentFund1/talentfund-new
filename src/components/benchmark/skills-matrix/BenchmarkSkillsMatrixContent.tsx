@@ -5,7 +5,6 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { Separator } from "@/components/ui/separator";
-import { getCategorySkillCounts } from "./utils/skillFilterUtils";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -33,18 +32,7 @@ export const BenchmarkSkillsMatrixContent = ({
   filteredSkills,
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
-  const { toggledSkills } = useToggledSkills();
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  
-  console.log('Rendering BenchmarkSkillsMatrixContent with:', {
-    roleId,
-    employeeId,
-    roleLevel,
-    toggledSkillsCount: toggledSkills.size,
-    filteredSkillsCount: filteredSkills.length
-  });
-
-  const skillCounts = getCategorySkillCounts(roleId, toggledSkills);
+  console.log('Rendering BenchmarkSkillsMatrixContent with skills:', filteredSkills);
 
   const getRoleTitle = (id: string) => {
     const roleTitles: { [key: string]: string } = {
@@ -59,10 +47,6 @@ export const BenchmarkSkillsMatrixContent = ({
   return (
     <>
       <CategorizedSkills 
-        selectedCategory={selectedCategory}
-        onCategorySelect={setSelectedCategory}
-        toggledSkills={toggledSkills}
-        skillCounts={skillCounts}
         roleId={roleId}
         employeeId={employeeId}
         selectedLevel={roleLevel}
