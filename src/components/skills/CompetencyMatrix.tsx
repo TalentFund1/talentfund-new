@@ -19,6 +19,9 @@ export const CompetencyMatrix = () => {
   const [track, setTrack] = useState<"Technical" | "Managerial">("Technical");
   const { toggledSkills } = useToggledSkills();
 
+  // Get all toggled skills as an array
+  const skillsArray = Array.from(toggledSkills);
+
   const handleLevelSelect = (level: string) => {
     setSelectedLevels(prev => 
       prev.includes(level) 
@@ -34,8 +37,6 @@ export const CompetencyMatrix = () => {
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
   };
-
-  const skillsArray = Array.from(toggledSkills);
 
   return (
     <div className="space-y-6 bg-white rounded-lg border border-border p-6">
