@@ -3,6 +3,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
+import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -16,11 +17,25 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { id } = useParams();
   const { selectedRole } = useRoleStore();
   
+  const validateRoleId = (roleId: string | undefined): string => {
+    if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
+      console.error('Invalid or missing role ID:', roleId);
+      toast({
+        title: "Error",
+        description: "Invalid role selected. Please select a valid role.",
+        variant: "destructive",
+      });
+      throw new Error('Invalid role ID');
+    }
+    return roleId;
+  };
+
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     try {
-      const savedSkills = loadToggledSkills(selectedRole || id || "123");
+      const currentRoleId = validateRoleId(selectedRole || id);
+      const savedSkills = loadToggledSkills(currentRoleId);
       console.log('Initial load of toggled skills:', {
-        roleId: selectedRole || id || "123",
+        roleId: currentRoleId,
         savedSkills
       });
       return new Set(savedSkills);
@@ -30,10 +45,9 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   });
 
-  // Effect to reload toggled skills when role changes
   useEffect(() => {
-    const currentRoleId = selectedRole || id || "123";
     try {
+      const currentRoleId = validateRoleId(selectedRole || id);
       const savedSkills = loadToggledSkills(currentRoleId);
       console.log('Reloading toggled skills for role change:', {
         roleId: currentRoleId,
@@ -47,21 +61,19 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   }, [selectedRole, id]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
-    const currentRoleId = selectedRole || id || "123";
-    console.log('Setting toggled skills:', {
-      roleId: currentRoleId,
-      skillCount: newSkills.size,
-      skills: Array.from(newSkills)
-    });
-    
-    setToggledSkills(newSkills);
-    
-    // Save to localStorage immediately after state update
     try {
+      const currentRoleId = validateRoleId(selectedRole || id);
+      console.log('Setting toggled skills:', {
+        roleId: currentRoleId,
+        skillCount: newSkills.size,
+        skills: Array.from(newSkills)
+      });
+      
+      setToggledSkills(newSkills);
+      
       const skillsArray = Array.from(newSkills);
       saveToggledSkills(currentRoleId, skillsArray);
       
-      // Broadcast the change to other components
       window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
         detail: { role: currentRoleId, skills: skillsArray }
       }));
@@ -80,19 +92,22 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   };
 
-  // Listen for changes from other components
   useEffect(() => {
-    const currentRoleId = selectedRole || id || "123";
-    const handleSkillsChanged = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      if (customEvent.detail.role === currentRoleId) {
-        console.log('Received toggled skills update:', customEvent.detail);
-        setToggledSkills(new Set(customEvent.detail.skills));
-      }
-    };
+    try {
+      const currentRoleId = validateRoleId(selectedRole || id);
+      const handleSkillsChanged = (event: Event) => {
+        const customEvent = event as CustomEvent;
+        if (customEvent.detail.role === currentRoleId) {
+          console.log('Received toggled skills update:', customEvent.detail);
+          setToggledSkills(new Set(customEvent.detail.skills));
+        }
+      };
 
-    window.addEventListener('toggledSkillsChanged', handleSkillsChanged);
-    return () => window.removeEventListener('toggledSkillsChanged', handleSkillsChanged);
+      window.addEventListener('toggledSkillsChanged', handleSkillsChanged);
+      return () => window.removeEventListener('toggledSkillsChanged', handleSkillsChanged);
+    } catch (error) {
+      console.error('Error in skills changed listener:', error);
+    }
   }, [selectedRole, id]);
 
   return (

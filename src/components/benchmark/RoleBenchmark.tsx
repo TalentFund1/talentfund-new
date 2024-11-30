@@ -21,8 +21,8 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "123",
-  selectedLevel: "p4", // Default to P4 for professional track
+  selectedRole: "",  // Changed from "123" to empty string
+  selectedLevel: "p4",
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
