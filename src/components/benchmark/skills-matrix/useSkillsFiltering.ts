@@ -17,7 +17,7 @@ export const useSkillsFiltering = (
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
-  
+
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
@@ -31,40 +31,10 @@ export const useSkillsFiltering = (
   const filterSkills = () => {
     const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
     
-    // First get all toggled role skills
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
-
-    // Then filter to only show skills that exist in employee skills
-    const matchingSkills = allRoleSkills.filter(roleSkill => {
-      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-      const employeeSkillLevel = currentStates[roleSkill.title]?.level || 'unspecified';
-      const roleSkillState = getSkillCompetencyState(roleSkill.title, comparisonLevel);
-      
-      // Only include skills that exist in employee skills and match level requirements
-      if (!employeeSkill || !roleSkillState) return false;
-
-      const roleSkillLevel = roleSkillState.level;
-      const employeePriority = getLevelPriority(employeeSkillLevel);
-      const rolePriority = getLevelPriority(roleSkillLevel);
-
-      console.log(`Filtering skill ${roleSkill.title}:`, {
-        hasSkill: !!employeeSkill,
-        employeeLevel: employeeSkillLevel,
-        roleLevel: roleSkillLevel,
-        employeePriority,
-        rolePriority,
-        matches: employeePriority >= rolePriority
-      });
-
-      return employeePriority >= rolePriority;
-    });
-
-    return matchingSkills
+    return filterSkillsByCategory(employeeSkills, "all")
       .filter(skill => {
+        if (!toggledSkills.has(skill.title)) return false;
+
         let matchesLevel = true;
         let matchesInterest = true;
         let matchesSearch = true;
@@ -84,8 +54,7 @@ export const useSkillsFiltering = (
           matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
         }
 
-        // Get requirement from currentStates or default to 'preferred'
-        const requirement = currentSkillState?.requirement || 'preferred';
+        const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
         if (selectedInterest !== 'all') {
           switch (selectedInterest.toLowerCase()) {
@@ -113,7 +82,7 @@ export const useSkillsFiltering = (
         ...skill,
         employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
         roleLevel: getSkillCompetencyState(skill.title, comparisonLevel)?.level || 'unspecified',
-        requirement: currentStates[skill.title]?.requirement || 'preferred'
+        requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
       }))
       .sort((a, b) => {
         const aRoleLevel = a.roleLevel;

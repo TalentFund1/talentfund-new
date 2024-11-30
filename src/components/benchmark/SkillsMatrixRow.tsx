@@ -1,8 +1,11 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check, X, Star, Shield, Target, CircleDashed } from "lucide-react";
+import { Check, X } from "lucide-react";
+import { SkillLevelCell } from "./SkillLevelCell";
+import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
+import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 interface SkillsMatrixRowProps {
@@ -21,21 +24,20 @@ interface SkillsMatrixRowProps {
 export const SkillsMatrixRow = ({ 
   skill, 
   showCompanySkill = true,
-  isRoleBenchmark = false 
+  isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { selectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
   };
 
-  const getBorderColorClass = (level?: string) => {
-    if (!level) return 'border-gray-400 bg-gray-100/50';
-    
+  const getBorderColorClass = (level: string) => {
     switch (level.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent bg-primary-accent/10';
@@ -48,8 +50,8 @@ export const SkillsMatrixRow = ({
     }
   };
 
-  const getLowerBorderColorClass = (level?: string, required?: string) => {
-    if (!required || required.toLowerCase() !== 'required') {
+  const getLowerBorderColorClass = (level: string, required: string) => {
+    if (required.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
@@ -60,32 +62,12 @@ export const SkillsMatrixRow = ({
     if (!competencyState) return null;
 
     return {
-      level: competencyState.level || 'unspecified',
-      required: competencyState.required || 'preferred'
+      level: competencyState.level,
+      required: competencyState.required
     };
   };
 
   const roleSkillState = getRoleSkillState();
-  const currentSkillState = currentStates[skill.title];
-
-  const getRequirementText = (requirement?: string) => {
-    if (!requirement) return 'Unknown';
-    
-    const requirementMap: { [key: string]: string } = {
-      'required': 'Required',
-      'preferred': 'Preferred',
-      'not_interested': 'Not Interested',
-      'unknown': 'Unknown',
-      'skill_goal': 'Skill Goal'
-    };
-
-    return requirementMap[requirement.toLowerCase()] || 'Unknown';
-  };
-
-  if (!roleSkillState) {
-    console.warn(`No role skill state found for ${skill.title}`);
-    return null;
-  }
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -106,7 +88,7 @@ export const SkillsMatrixRow = ({
           </div>
         </TableCell>
       )}
-      {isRoleBenchmark && (
+      {isRoleBenchmark && roleSkillState && (
         <TableCell className="text-center border-r border-blue-200 py-2 p-0">
           <div className="flex flex-col items-center">
             <div className={`
@@ -130,11 +112,23 @@ export const SkillsMatrixRow = ({
                 {roleSkillState.required === 'required' ? <Check className="w-3.5 h-3.5" /> :
                  roleSkillState.required === 'preferred' ? <CircleDashed className="w-3.5 h-3.5" /> :
                  <CircleDashed className="w-3.5 h-3.5" />}
-                {getRequirementText(roleSkillState.required)}
+                {roleSkillState.required === 'required' ? 'Required' : 
+                 roleSkillState.required === 'preferred' ? 'Preferred' : 'Preferred'}
               </span>
             </div>
           </div>
         </TableCell>
+      )}
+      {isRoleBenchmark ? (
+        <StaticSkillLevelCell 
+          initialLevel={skill.level || 'unspecified'}
+          skillTitle={skill.title}
+        />
+      ) : (
+        <SkillLevelCell 
+          initialLevel={skill.level || 'unspecified'}
+          skillTitle={skill.title}
+        />
       )}
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
