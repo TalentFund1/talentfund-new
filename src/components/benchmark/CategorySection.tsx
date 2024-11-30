@@ -19,9 +19,6 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all toggled skills as an array
-  const skillsArray = Array.from(toggledSkills);
-
   // Get all skills for the role
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
@@ -30,14 +27,15 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   ];
 
   // Filter toggled skills that exist in the role skills
-  const filteredSkillsArray = skillsArray.filter(skillTitle => 
+  const filteredSkillsArray = Array.from(toggledSkills).filter(skillTitle => 
     allRoleSkills.some(roleSkill => roleSkill.title === skillTitle)
   );
 
   console.log('CategorySection render:', {
     roleId: id,
     totalSkills: filteredSkillsArray.length,
-    toggledSkills: filteredSkillsArray
+    toggledSkills: filteredSkillsArray,
+    allRoleSkills: allRoleSkills.map(s => s.title)
   });
 
   const skillCounts: SkillCounts = {
@@ -52,6 +50,14 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
     ).length,
     all: filteredSkillsArray.length
   };
+
+  console.log('Skill counts calculated:', {
+    roleId: id,
+    counts: skillCounts,
+    specialized: currentRoleSkills.specialized.map(s => s.title),
+    common: currentRoleSkills.common.map(s => s.title),
+    certifications: currentRoleSkills.certifications.map(s => s.title)
+  });
 
   const categories = [
     { id: "all", name: "All Categories", count: skillCounts.all },
