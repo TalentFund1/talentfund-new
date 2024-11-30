@@ -149,7 +149,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       
       <div className="mb-8">
         <h3 className="text-2xl font-bold text-foreground mb-6">
-          {jobTitles[currentRoleId]}: {selectedLevel.toUpperCase()}
+          {jobTitles[currentRoleId]}
         </h3>
         <div className="flex justify-between items-center mb-6">
           <TrackSelection onTrackChange={setTrack} />
