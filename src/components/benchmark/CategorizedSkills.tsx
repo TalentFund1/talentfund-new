@@ -156,8 +156,9 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
         onCategorySelect={setSelectedCategory}
         roleId={roleId}
         selectedLevel={selectedLevel}
+        employeeId={employeeId}
       />
-
+      
       <SkillSection 
         title="Required Skills" 
         skills={requiredSkills} 
