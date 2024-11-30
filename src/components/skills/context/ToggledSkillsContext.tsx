@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
 import { useCurrentRole } from './hooks/useCurrentRole';
@@ -19,6 +19,13 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     console.log('Initial load of toggled skills for role:', currentRoleId, savedSkills);
     return new Set(savedSkills);
   });
+
+  // Add effect to handle role changes
+  useEffect(() => {
+    const savedSkills = loadToggledSkills(currentRoleId);
+    console.log('Loading toggled skills for role change:', currentRoleId, savedSkills);
+    setToggledSkills(new Set(savedSkills));
+  }, [currentRoleId]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
     console.log('Setting toggled skills for role:', {
