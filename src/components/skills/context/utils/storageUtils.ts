@@ -2,11 +2,16 @@ export const getStorageKey = (roleId: string) => `roleToggledSkills-${roleId}`;
 
 export const loadToggledSkills = (roleId: string): string[] => {
   try {
+    if (!roleId) {
+      console.error('Cannot load toggled skills: No role ID provided');
+      return [];
+    }
+
     const savedState = localStorage.getItem(getStorageKey(roleId));
     if (savedState) {
       const parsedSkills = JSON.parse(savedState);
       if (Array.isArray(parsedSkills)) {
-        console.log('Loaded saved toggle state for role:', {
+        console.log('Loaded saved toggle state:', {
           roleId,
           skillCount: parsedSkills.length,
           skills: parsedSkills
@@ -30,7 +35,7 @@ export const saveToggledSkills = (roleId: string, skills: string[]) => {
     const storageKey = getStorageKey(roleId);
     localStorage.setItem(storageKey, JSON.stringify(skills));
     
-    console.log('Saved toggled skills for role:', {
+    console.log('Saved toggled skills:', {
       roleId,
       skillCount: skills.length,
       skills,
@@ -38,6 +43,6 @@ export const saveToggledSkills = (roleId: string, skills: string[]) => {
     });
   } catch (error) {
     console.error('Error saving toggled skills:', error);
-    throw error; // Re-throw to handle in the context
+    throw error;
   }
 };
