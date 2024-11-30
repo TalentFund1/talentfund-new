@@ -131,9 +131,7 @@ const EmployeeTableContent = ({
             {filteredEmployees.length === 0 ? (
               <tr>
                 <td colSpan={selectedSkills.length > 0 ? 6 : 5} className="text-center py-4 text-muted-foreground">
-                  {selectedJobTitle.length > 0 && !getSkillProfileId(selectedJobTitle[0]) 
-                    ? "No matching role profile found" 
-                    : "No employees found"}
+                  No employees found
                 </td>
               </tr>
             ) : (
