@@ -75,7 +75,6 @@ export const BenchmarkSkillsMatrixContent = ({
       <CategorizedSkills 
         roleId={roleId}
         employeeId={employeeId}
-        selectedLevel={roleLevel}
       />
 
       <Separator className="my-8" />
