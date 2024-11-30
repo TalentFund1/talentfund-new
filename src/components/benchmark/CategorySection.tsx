@@ -1,6 +1,6 @@
-import { roleSkills } from '../../skills/data/roleSkills';
+import { roleSkills } from '../skills/data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { useToggledSkills } from '../../skills/context/ToggledSkillsContext';
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 interface CategorySectionProps {
   selectedCategory: string;
