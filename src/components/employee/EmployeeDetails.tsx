@@ -4,6 +4,7 @@ import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Link } from "react-router-dom";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useTrack } from "../skills/context/TrackContext";
+import { TrackProvider } from "../skills/context/TrackContext";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -19,20 +20,7 @@ interface EmployeeDetailsProps {
   id: string;
 }
 
-const calculateTenure = (startDate: string, termDate: string | null): string => {
-  if (!startDate) return "0.0";
-  
-  const start = new Date(startDate);
-  const end = termDate && termDate !== "-" ? new Date(termDate) : new Date();
-  
-  if (isNaN(start.getTime())) return "0.0";
-  
-  const diffTime = Math.abs(end.getTime() - start.getTime());
-  const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
-  return diffYears.toFixed(1);
-};
-
-export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
+const EmployeeDetailsContent = ({ employee, id }: EmployeeDetailsProps) => {
   const tenure = calculateTenure(employee.startDate, employee.termDate === "-" ? null : employee.termDate);
   const employeeSkills = getEmployeeSkills(id);
   const totalSkills = employeeSkills.length;
@@ -99,5 +87,26 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         </div>
       </div>
     </>
+  );
+};
+
+const calculateTenure = (startDate: string, termDate: string | null): string => {
+  if (!startDate) return "0.0";
+  
+  const start = new Date(startDate);
+  const end = termDate && termDate !== "-" ? new Date(termDate) : new Date();
+  
+  if (isNaN(start.getTime())) return "0.0";
+  
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+  const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+  return diffYears.toFixed(1);
+};
+
+export const EmployeeDetails = (props: EmployeeDetailsProps) => {
+  return (
+    <TrackProvider>
+      <EmployeeDetailsContent {...props} />
+    </TrackProvider>
   );
 };
