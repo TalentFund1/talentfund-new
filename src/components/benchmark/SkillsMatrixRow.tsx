@@ -38,7 +38,7 @@ export const SkillsMatrixRow = ({
   };
 
   const getBorderColorClass = (level: string) => {
-    switch (level.toLowerCase()) {
+    switch (level?.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent bg-primary-accent/10';
       case 'intermediate':
@@ -51,7 +51,7 @@ export const SkillsMatrixRow = ({
   };
 
   const getLowerBorderColorClass = (level: string, required: string) => {
-    if (required.toLowerCase() !== 'required') {
+    if (required?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
@@ -68,6 +68,21 @@ export const SkillsMatrixRow = ({
   };
 
   const roleSkillState = getRoleSkillState();
+  const currentSkillState = currentStates[skill.title];
+
+  // Safely get the requirement text with a default value
+  const getRequirementText = (requirement?: string) => {
+    if (!requirement) return 'Unknown';
+    
+    const requirementMap: { [key: string]: string } = {
+      'required': 'Skill Goal',
+      'not-interested': 'Not Interested',
+      'unknown': 'Unknown',
+      'skill_goal': 'Skill Goal'
+    };
+
+    return requirementMap[requirement.toLowerCase()] || 'Unknown';
+  };
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -112,8 +127,7 @@ export const SkillsMatrixRow = ({
                 {roleSkillState.required === 'required' ? <Check className="w-3.5 h-3.5" /> :
                  roleSkillState.required === 'preferred' ? <CircleDashed className="w-3.5 h-3.5" /> :
                  <CircleDashed className="w-3.5 h-3.5" />}
-                {roleSkillState.required === 'required' ? 'Required' : 
-                 roleSkillState.required === 'preferred' ? 'Preferred' : 'Preferred'}
+                {getRequirementText(roleSkillState.required)}
               </span>
             </div>
           </div>
