@@ -55,14 +55,22 @@ export const useCompetencyStateReader = () => {
     return availableRoles[0];
   };
 
+  const validateRoleId = (roleId: string): boolean => {
+    if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
+      console.error('Invalid role ID or role skills not found:', roleId);
+      return false;
+    }
+    return true;
+  };
+
   const getSkillCompetencyState = (
     skillName: string, 
     levelKey: string = 'p4',
     roleId: string
   ): SkillCompetencyState => {
-    if (!roleId || !roleSkills[roleId]) {
-      console.error('Invalid role ID or role skills not found:', roleId);
-      throw new Error('Invalid role ID or role skills not found');
+    if (!validateRoleId(roleId)) {
+      console.log('Using default state due to invalid role:', roleId);
+      return defaultState;
     }
 
     const track = getTrackForRole(roleId);
@@ -98,9 +106,9 @@ export const useCompetencyStateReader = () => {
     levelKey: string = 'p4',
     roleId: string
   ): Record<string, SkillCompetencyState> => {
-    if (!roleId || !roleSkills[roleId]) {
-      console.error('Invalid role ID or role skills not found:', roleId);
-      throw new Error('Invalid role ID or role skills not found');
+    if (!validateRoleId(roleId)) {
+      console.log('Returning empty states due to invalid role:', roleId);
+      return {};
     }
 
     const track = getTrackForRole(roleId);
