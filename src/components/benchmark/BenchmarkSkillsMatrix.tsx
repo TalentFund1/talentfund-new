@@ -8,6 +8,7 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
+import { useTrack } from "../skills/context/TrackContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,9 +24,14 @@ export const BenchmarkSkillsMatrix = () => {
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
+  const { getTrackForRole } = useTrack();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  const track = getTrackForRole(selectedRole);
+
+  // If track is managerial, always use M3 level for comparison
+  const comparisonLevel = track === "Managerial" ? "m3" : roleLevel.toLowerCase();
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -66,7 +72,7 @@ export const BenchmarkSkillsMatrix = () => {
       let matchesSearch = true;
       let matchesSkillLevel = true;
 
-      const competencyState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase());
+      const competencyState = getSkillCompetencyState(skill.title, comparisonLevel);
       const roleSkillLevel = competencyState?.level || 'unspecified';
 
       if (selectedLevel !== 'all') {
@@ -111,7 +117,7 @@ export const BenchmarkSkillsMatrix = () => {
     .map(skill => ({
       ...skill,
       employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
-      roleLevel: getSkillCompetencyState(skill.title, roleLevel.toLowerCase())?.level || 'unspecified',
+      roleLevel: getSkillCompetencyState(skill.title, comparisonLevel)?.level || 'unspecified',
       requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
     }))
     .sort((a, b) => {
@@ -134,7 +140,8 @@ export const BenchmarkSkillsMatrix = () => {
   
   console.log('BenchmarkSkillsMatrix - Current state:', {
     selectedRole,
-    roleLevel,
+    roleLevel: comparisonLevel,
+    track,
     filteredSkillsCount: filteredSkills.length,
     toggledSkillsCount: toggledSkills.size,
     currentStates: Object.keys(currentStates).length
@@ -145,7 +152,7 @@ export const BenchmarkSkillsMatrix = () => {
       <BenchmarkSkillsMatrixView
         roleId={selectedRole}
         employeeId={id || ""}
-        roleLevel={roleLevel}
+        roleLevel={comparisonLevel}
         filteredSkills={paginatedSkills}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
