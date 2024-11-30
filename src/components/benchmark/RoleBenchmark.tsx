@@ -86,7 +86,7 @@ export const RoleBenchmark = () => {
 
         <div className="flex items-center gap-4 mt-4">
           <Select value={selectedRole} onValueChange={setSelectedRole}>
-            <SelectTrigger className="w-[300px]">
+            <SelectTrigger className="w-[400px]">
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
@@ -95,7 +95,7 @@ export const RoleBenchmark = () => {
           </Select>
 
           <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-            <SelectTrigger className="w-[300px]">
+            <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
             <SelectContent>
