@@ -23,20 +23,27 @@ export const useCompetencyStateReader = () => {
     const track = getTrackForRole(roleId);
     
     if (!level) {
-      return track === "Managerial" ? "m3" : "p4";
+      return track === "Managerial" ? "m5" : "p4";
     }
     
-    // Handle both formats: "M3" and "m3" or "3" for managerial
+    // Handle managerial levels
     if (track === "Managerial") {
-      if (level.match(/^[3-6]$/)) {
-        return `m${level.toLowerCase()}`;
+      // First try to match M3-M6 format
+      const managerialMatch = level.toLowerCase().match(/m[3-6]/);
+      if (managerialMatch) {
+        return managerialMatch[0];
       }
-      const match = level.toLowerCase().match(/m[3-6]/);
-      if (match) {
-        return match[0];
+      
+      // Then try to match just the number
+      const numberMatch = level.match(/[3-6]/);
+      if (numberMatch) {
+        return `m${numberMatch[0]}`;
       }
-      // Default to m3 if no valid managerial level found
-      return "m3";
+      
+      // If no valid level found, return the actual selected level or m5 as default
+      const selectedLevel = level.toLowerCase().startsWith('m') ? level.toLowerCase() : 'm5';
+      console.log('Using selected managerial level:', selectedLevel);
+      return selectedLevel;
     }
 
     // Handle professional track levels
@@ -50,7 +57,10 @@ export const useCompetencyStateReader = () => {
 
   const getDefaultLevelForTrack = (track: string, roleLevel: string): string => {
     if (track === "Managerial") {
-      const level = roleLevel.match(/\d/)?.[0] || "3";
+      // Extract the level number or default to 5
+      const levelMatch = roleLevel.match(/\d/);
+      const level = levelMatch ? levelMatch[0] : '5';
+      console.log('Default managerial level:', `m${level}`);
       return `m${level}`;
     }
     return "p4";
@@ -89,18 +99,18 @@ export const useCompetencyStateReader = () => {
 
   const getSkillCompetencyState = (
     skillName: string, 
-    levelKey: string = 'm3',
+    levelKey: string = 'm5',
     roleId: string = "126"
   ): SkillCompetencyState => {
     const track = getTrackForRole(roleId);
-    const defaultLevel = getDefaultLevelForTrack(track, levelKey);
+    const normalizedLevel = normalizeLevel(levelKey, roleId);
     
     console.log('Reading competency state:', { 
       skillName, 
       levelKey,
+      normalizedLevel,
       roleId,
       track,
-      defaultLevel,
       hasToggledSkill: toggledSkills.has(skillName)
     });
 
@@ -113,32 +123,35 @@ export const useCompetencyStateReader = () => {
 
     // If no saved state, determine the appropriate state based on track and level
     const defaultState: SkillCompetencyState = {
-      level: defaultLevel,
-      required: track === "Managerial" ? determineManagerialRequirement(levelKey) : "preferred"
+      level: normalizedLevel,
+      required: determineRequirement(normalizedLevel, track)
     };
     
     console.log('No saved state found, using default state:', defaultState);
     return defaultState;
   };
 
-  const determineManagerialRequirement = (levelKey: string): string => {
-    const level = parseInt(levelKey.replace(/[^\d]/g, ''));
-    // Higher managerial levels (M5-M6) typically require more skills
-    return level >= 5 ? "required" : "preferred";
+  const determineRequirement = (levelKey: string, track: string): string => {
+    if (track === "Managerial") {
+      const level = parseInt(levelKey.replace(/[^\d]/g, ''));
+      // Higher managerial levels (M5-M6) typically require more skills
+      return level >= 5 ? "required" : "preferred";
+    }
+    return "preferred";
   };
 
   const getAllSkillStatesForLevel = (
-    levelKey: string = 'm3',
+    levelKey: string = 'm5',
     roleId: string = "126"
   ): Record<string, SkillCompetencyState> => {
     const track = getTrackForRole(roleId);
-    const defaultLevel = getDefaultLevelForTrack(track, levelKey);
+    const normalizedLevel = normalizeLevel(levelKey, roleId);
     
     console.log('Getting all skill states for level:', { 
       levelKey, 
+      normalizedLevel,
       roleId,
-      track,
-      defaultLevel
+      track
     });
     
     const states: Record<string, SkillCompetencyState> = {};
