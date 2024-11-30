@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -14,6 +14,7 @@ import { ToastProvider } from "@/components/ui/toast";
 import { Sidebar } from "@/components/Sidebar";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
+import { Separator } from "@/components/ui/separator";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
@@ -55,32 +56,32 @@ const SkillProfileDetail = () => {
     <ToastProvider>
       <TooltipProvider>
         <TrackProvider>
-          <ToggledSkillsProvider>
-            <div className="flex min-h-screen bg-background">
-              <Sidebar />
-              <div className="flex-1 p-6 ml-16 transition-all duration-300">
-                <div className="max-w-7xl mx-auto space-y-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <Button 
-                      variant="outline" 
-                      className="flex items-center gap-2 bg-white border-border hover:bg-background"
-                      onClick={() => navigate('/skills')}
-                    >
-                      <ChevronLeft className="h-4 w-4" /> Back
-                    </Button>
-                    <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
-                      <ChevronLeft 
-                        className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
-                        onClick={() => handleNavigation('prev')}
-                      />
-                      <span className="text-sm text-foreground">{currentIndex}/{totalProfiles}</span>
-                      <ChevronRight 
-                        className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
-                        onClick={() => handleNavigation('next')}
-                      />
-                    </div>
+          <div className="flex min-h-screen bg-background">
+            <Sidebar />
+            <div className="flex-1 p-6 ml-16 transition-all duration-300">
+              <div className="max-w-7xl mx-auto space-y-6">
+                <div className="flex justify-between items-center mb-4">
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center gap-2 bg-white border-border hover:bg-background"
+                    onClick={() => navigate('/skills')}
+                  >
+                    <ChevronLeft className="h-4 w-4" /> Back
+                  </Button>
+                  <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
+                    <ChevronLeft 
+                      className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+                      onClick={() => handleNavigation('prev')}
+                    />
+                    <span className="text-sm text-foreground">{currentIndex}/{totalProfiles}</span>
+                    <ChevronRight 
+                      className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+                      onClick={() => handleNavigation('next')}
+                    />
                   </div>
+                </div>
 
+                <ToggledSkillsProvider>
                   <Card className="p-8 bg-white">
                     <SkillProfileHeader jobTitle={jobTitle} />
                   </Card>
@@ -114,10 +115,10 @@ const SkillProfileDetail = () => {
                       </Card>
                     </TabsContent>
                   </Tabs>
-                </div>
+                </ToggledSkillsProvider>
               </div>
             </div>
-          </ToggledSkillsProvider>
+          </div>
         </TrackProvider>
       </TooltipProvider>
     </ToastProvider>
