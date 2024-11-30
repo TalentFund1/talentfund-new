@@ -27,7 +27,6 @@ export const BenchmarkAnalysis = () => {
   const track = getTrackForRole(selectedRole);
   console.log('Current track and selected level:', { track, selectedLevel });
 
-  // Use the selected level directly without any default override
   const comparisonLevel = selectedLevel.toLowerCase();
   console.log('Using comparison level:', comparisonLevel);
 
@@ -58,6 +57,19 @@ export const BenchmarkAnalysis = () => {
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
+    console.log('Comparing competency levels:', {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel,
+      track
+    });
+
+    // For Professional track, require exact level matches
+    if (track === "Professional") {
+      return employeeSkillLevel.toLowerCase() === roleSkillLevel.toLowerCase();
+    }
+
+    // For Managerial track, allow higher levels to match
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
         'advanced': 3,
