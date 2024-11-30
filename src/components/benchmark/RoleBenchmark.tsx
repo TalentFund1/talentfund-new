@@ -21,8 +21,8 @@ interface RoleStore {
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
-  selectedRole: "",  // Changed from "123" to empty string
-  selectedLevel: "p4",
+  selectedRole: "123",
+  selectedLevel: "p4", // Default to P4 for professional track
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
@@ -38,11 +38,6 @@ export const RoleBenchmark = () => {
 
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-  if (!currentRoleSkills) {
-    console.error('No skills found for role:', selectedRole);
-    return null;
-  }
-  
   const track = getTrackForRole(selectedRole);
 
   // Set the appropriate level based on track when role changes

@@ -17,12 +17,7 @@ interface SkillCounts {
 export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
-
-  if (!currentRoleSkills) {
-    console.error('Invalid role ID:', id);
-    return null;
-  }
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
     return skills.filter(skill => toggledSkills.has(skill.title)).length;
