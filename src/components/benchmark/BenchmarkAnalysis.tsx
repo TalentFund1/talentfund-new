@@ -27,7 +27,6 @@ export const BenchmarkAnalysis = () => {
   const track = getTrackForRole(selectedRole);
   console.log('Current track and selected level:', { track, selectedLevel });
 
-  // Use the selected level directly without any default override
   const comparisonLevel = selectedLevel.toLowerCase();
   console.log('Using comparison level:', comparisonLevel);
 
@@ -46,16 +45,18 @@ export const BenchmarkAnalysis = () => {
     skills: toggledRoleSkills.map(s => s.title)
   });
 
+  // Basic skill match - employee has the skill
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
   });
 
+  // Competency match - employee skill level meets or exceeds role requirement
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel);
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const employeeSkillLevel = currentStates[skill.title]?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     const getLevelPriority = (level: string = 'unspecified') => {
@@ -71,13 +72,31 @@ export const BenchmarkAnalysis = () => {
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
+    console.log('Competency comparison:', {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel,
+      employeePriority,
+      rolePriority,
+      isMatch: employeePriority >= rolePriority
+    });
+
     return employeePriority >= rolePriority;
   });
 
+  // Skill goal match - employee has marked the skill as required or skill_goal
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
-    if (!skillState) return false;
-    return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel);
+    
+    console.log('Skill goal check:', {
+      skill: skill.title,
+      employeeState: skillState?.requirement,
+      roleRequired: roleSkillState?.required
+    });
+
+    return skillState?.requirement === 'skill_goal' || 
+           (roleSkillState?.required === 'required' && skillState?.requirement === 'required');
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
@@ -130,6 +149,40 @@ export const BenchmarkAnalysis = () => {
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
                   style={{ width: `${skillMatchPercentage}%` }} 
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Competency Match</span>
+                <span className="text-sm text-foreground">
+                  {competencyMatchCount} out of {totalToggledSkills}
+                </span>
+              </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full" 
+                  style={{ width: `${competencyMatchPercentage}%` }} 
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-white p-6 w-full">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-foreground">Skill Goal Match</span>
+                <span className="text-sm text-foreground">
+                  {skillGoalMatchCount} out of {totalToggledSkills}
+                </span>
+              </div>
+              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#1F2144] rounded-full" 
+                  style={{ width: `${skillGoalMatchPercentage}%` }} 
                 />
               </div>
             </div>
