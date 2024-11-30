@@ -8,6 +8,8 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { isCompetencyMatch } from "./analysis/competencyMatching";
+import { isSkillGoalMatch } from "./analysis/skillGoalMatching";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,20 +40,13 @@ export const BenchmarkAnalysis = () => {
 
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
 
-  console.log('Toggled skills for role:', {
-    roleId: selectedRole,
-    level: comparisonLevel,
-    count: toggledRoleSkills.length,
-    skills: toggledRoleSkills.map(s => s.title)
-  });
-
   // Basic skill match - employee has the skill
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
   });
 
-  // Competency match - employee skill level meets or exceeds role requirement
+  // Competency match - employee skill level matches role requirement for Professional track
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel);
     if (!roleSkillState) {
@@ -62,52 +57,19 @@ export const BenchmarkAnalysis = () => {
     const employeeSkillLevel = currentStates[skill.title]?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
-    const getLevelPriority = (level: string = 'unspecified') => {
-      const priorities: { [key: string]: number } = {
-        'advanced': 3,
-        'intermediate': 2,
-        'beginner': 1,
-        'unspecified': 0
-      };
-      return priorities[level.toLowerCase()] ?? 0;
-    };
-
-    const employeePriority = getLevelPriority(employeeSkillLevel);
-    const rolePriority = getLevelPriority(roleSkillLevel);
-
-    console.log('Competency comparison:', {
-      skill: skill.title,
-      track,
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      employeePriority,
-      rolePriority,
-      isMatch: employeePriority >= rolePriority
-    });
-
-    return employeePriority >= rolePriority;
+    return isCompetencyMatch(employeeSkillLevel, roleSkillLevel, track);
   });
 
-  // Skill goal match - employee has marked the skill as required or skill_goal
+  // Skill goal match - only count explicit skill_goal markings for Professional track
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel);
     
-    // For professional track, we need both the employee's requirement and role's requirement
-    const isSkillGoalMatch = track === "Professional" 
-      ? (skillState?.requirement === 'skill_goal' || 
-         (roleSkillState?.required === 'required' && skillState?.requirement === 'required'))
-      : (skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal');
-    
-    console.log('Skill goal check:', {
-      skill: skill.title,
-      track,
-      employeeState: skillState?.requirement,
-      roleRequired: roleSkillState?.required,
-      isMatch: isSkillGoalMatch
-    });
-
-    return isSkillGoalMatch;
+    return isSkillGoalMatch(
+      skillState?.requirement,
+      roleSkillState?.required,
+      track
+    );
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
@@ -119,16 +81,11 @@ export const BenchmarkAnalysis = () => {
   const competencyMatchPercentage = totalToggledSkills > 0 ? (competencyMatchCount / totalToggledSkills) * 100 : 0;
   const skillGoalMatchPercentage = totalToggledSkills > 0 ? (skillGoalMatchCount / totalToggledSkills) * 100 : 0;
 
-  const averagePercentage = Math.round(
-    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
-  );
-
-  console.log('Benchmark Analysis Calculation:', {
+  console.log('Benchmark Analysis Results:', {
     totalToggled: totalToggledSkills,
     skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
     competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
     skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
-    averagePercentage,
     track,
     comparisonLevel
   });
