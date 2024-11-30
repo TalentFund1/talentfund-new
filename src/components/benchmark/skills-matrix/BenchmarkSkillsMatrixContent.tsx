@@ -1,10 +1,8 @@
-import { useRef } from "react";
-import { SkillsMatrixContent } from "./SkillsMatrixContent";
+import React, { useState } from 'react';
 import { CategorizedSkills } from "../CategorizedSkills";
-import { useSkillsMatrixStore } from "./SkillsMatrixState";
-import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { Separator } from "@/components/ui/separator";
+import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
+import { roleSkills } from "../../skills/data/roleSkills";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -32,17 +30,42 @@ export const BenchmarkSkillsMatrixContent = ({
   filteredSkills,
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
-  console.log('Rendering BenchmarkSkillsMatrixContent with skills:', filteredSkills);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const { toggledSkills } = useToggledSkills();
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  const getRoleTitle = (id: string) => {
-    const roleTitles: { [key: string]: string } = {
-      "123": "AI Engineer",
-      "124": "Backend Engineer",
-      "125": "Frontend Engineer",
-      "126": "Engineering Manager"
-    };
-    return roleTitles[id] || "AI Engineer";
+  // Get all toggled skills as an array and filter by category
+  const getToggledSkillsCount = (category: string) => {
+    const allSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    return allSkills.filter(skill => {
+      if (!toggledSkills.has(skill.title)) return false;
+
+      switch (category) {
+        case 'specialized':
+          return currentRoleSkills.specialized.some(s => s.title === skill.title);
+        case 'common':
+          return currentRoleSkills.common.some(s => s.title === skill.title);
+        case 'certification':
+          return currentRoleSkills.certifications.some(s => s.title === skill.title);
+        default:
+          return true;
+      }
+    }).length;
   };
+
+  const skillCounts = {
+    all: getToggledSkillsCount('all'),
+    specialized: getToggledSkillsCount('specialized'),
+    common: getToggledSkillsCount('common'),
+    certification: getToggledSkillsCount('certification')
+  };
+
+  console.log('BenchmarkSkillsMatrixContent - Skill counts:', skillCounts);
 
   return (
     <>
@@ -66,4 +89,14 @@ export const BenchmarkSkillsMatrixContent = ({
       />
     </>
   );
+};
+
+const getRoleTitle = (id: string) => {
+  const roleTitles: { [key: string]: string } = {
+    "123": "AI Engineer",
+    "124": "Backend Engineer",
+    "125": "Frontend Engineer",
+    "126": "Engineering Manager"
+  };
+  return roleTitles[id] || "AI Engineer";
 };
