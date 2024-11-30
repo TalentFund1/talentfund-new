@@ -24,6 +24,13 @@ export const BenchmarkAnalysis = () => {
     return null;
   }
 
+  const track = getTrackForRole(selectedRole);
+  console.log('Current track and level:', { track, selectedLevel });
+
+  // If track is managerial, always use M3 level for comparison
+  const comparisonLevel = track === "Managerial" ? "m3" : selectedLevel.toLowerCase();
+  console.log('Using comparison level:', comparisonLevel);
+
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
@@ -34,7 +41,7 @@ export const BenchmarkAnalysis = () => {
 
   console.log('Toggled skills for role:', {
     roleId: selectedRole,
-    level: selectedLevel,
+    level: comparisonLevel,
     count: toggledRoleSkills.length,
     skills: toggledRoleSkills.map(s => s.title)
   });
@@ -45,7 +52,7 @@ export const BenchmarkAnalysis = () => {
   });
 
   const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel);
     if (!roleSkillState) return false;
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
@@ -91,7 +98,9 @@ export const BenchmarkAnalysis = () => {
     skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
     competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
     skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
-    averagePercentage
+    averagePercentage,
+    track,
+    comparisonLevel
   });
 
   return (
