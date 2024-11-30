@@ -8,8 +8,9 @@ import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { TrackProvider } from "./context/TrackContext";
 
-export const EmployeeOverview = () => {
+const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();
   const navigate = useNavigate();
   const { currentStates } = useSkillsMatrixStore();
@@ -138,5 +139,13 @@ export const EmployeeOverview = () => {
         </Card>
       </div>
     </Card>
+  );
+};
+
+export const EmployeeOverview = () => {
+  return (
+    <TrackProvider>
+      <EmployeeOverviewContent />
+    </TrackProvider>
   );
 };
