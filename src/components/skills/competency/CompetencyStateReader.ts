@@ -23,6 +23,7 @@ export const useCompetencyStateReader = () => {
     const track = getTrackForRole(roleId);
     
     if (!level) {
+      // Default to M3 for managerial track, P4 for professional track
       return track === "Managerial" ? "m3" : "p4";
     }
     
@@ -51,7 +52,8 @@ export const useCompetencyStateReader = () => {
           skillName, 
           levelKey: normalizedLevelKey, 
           state: levelState,
-          roleId
+          roleId,
+          track: getTrackForRole(roleId)
         });
         return levelState;
       }
@@ -63,7 +65,7 @@ export const useCompetencyStateReader = () => {
     const availableRoles = Object.keys(currentStates);
     if (availableRoles.length === 0) {
       console.log('No roles found in competency store, using default AI Engineer role');
-      return "123"; // Default to AI Engineer
+      return "123";
     }
     console.log('Using primary role:', availableRoles[0]);
     return availableRoles[0];
@@ -75,11 +77,14 @@ export const useCompetencyStateReader = () => {
     roleId: string = "126"
   ): SkillCompetencyState => {
     const track = getTrackForRole(roleId);
+    const defaultLevel = track === "Managerial" ? "m3" : "p4";
+    
     console.log('Reading competency state:', { 
       skillName, 
       levelKey,
       roleId,
       track,
+      defaultLevel,
       hasToggledSkill: toggledSkills.has(skillName)
     });
 
@@ -90,10 +95,10 @@ export const useCompetencyStateReader = () => {
       return savedState;
     }
 
-    // If no saved state, return default state
+    // If no saved state, return default state with track-appropriate level
     const defaultStateForTrack = {
       ...defaultState,
-      level: track === "Managerial" ? "m3" : "p4"
+      level: defaultLevel
     };
     
     console.log('No saved state found, using default state:', defaultStateForTrack);
@@ -104,7 +109,16 @@ export const useCompetencyStateReader = () => {
     levelKey: string = 'm3',
     roleId: string = "126"
   ): Record<string, SkillCompetencyState> => {
-    console.log('Getting all skill states for level:', { levelKey, roleId });
+    const track = getTrackForRole(roleId);
+    const defaultLevel = track === "Managerial" ? "m3" : "p4";
+    
+    console.log('Getting all skill states for level:', { 
+      levelKey, 
+      roleId,
+      track,
+      defaultLevel
+    });
+    
     const states: Record<string, SkillCompetencyState> = {};
     
     const primaryRoleId = getPrimaryRoleId();
