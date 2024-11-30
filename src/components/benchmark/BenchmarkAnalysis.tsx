@@ -8,7 +8,6 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { CategorySection } from "./CategorySection";
 import { useState } from "react";
 
 export const BenchmarkAnalysis = () => {
@@ -129,12 +128,6 @@ export const BenchmarkAnalysis = () => {
             </div>
           </div>
         </div>
-
-        <CategorySection 
-          selectedCategory={selectedCategory}
-          onCategorySelect={setSelectedCategory}
-          toggledSkills={toggledSkills}
-        />
       </Card>
     </div>
   );
