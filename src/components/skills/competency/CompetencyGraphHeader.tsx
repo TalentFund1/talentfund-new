@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { getRoleTitle } from "@/components/benchmark/skills-matrix/BenchmarkSkillsMatrixContent";
+import { getRoleTitle } from "@/utils/roleUtils";
 
 interface CompetencyGraphHeaderProps {
   currentRoleId: string;
