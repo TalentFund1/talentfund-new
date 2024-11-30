@@ -20,16 +20,12 @@ interface RoleStore {
   setSelectedLevel: (level: string) => void;
 }
 
-export const useRoleStore = create<RoleStore>((set) => {
-  console.log('Initializing RoleStore with default role: 123');
-  
-  return {
-    selectedRole: "123", // Always default to AI Engineer
-    selectedLevel: "p4", // Default to P4 for professional track
-    setSelectedRole: (role) => set({ selectedRole: role }),
-    setSelectedLevel: (level) => set({ selectedLevel: level })
-  };
-});
+export const useRoleStore = create<RoleStore>((set) => ({
+  selectedRole: "123",
+  selectedLevel: "m3",
+  setSelectedRole: (role) => set({ selectedRole: role }),
+  setSelectedLevel: (level) => set({ selectedLevel: level })
+}));
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
