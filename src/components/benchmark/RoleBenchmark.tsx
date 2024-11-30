@@ -22,7 +22,7 @@ interface RoleStore {
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
-  selectedLevel: "p4", // Default to P4 for Professional track
+  selectedLevel: "p1", // Default to P1 for Professional track
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
@@ -34,7 +34,7 @@ export const RoleBenchmark = () => {
   const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
-  const { getTrackForRole, setTrackForRole } = useTrack();
+  const { getTrackForRole } = useTrack();
 
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
@@ -42,12 +42,10 @@ export const RoleBenchmark = () => {
 
   // Set default level based on track
   useEffect(() => {
-    const defaultLevel = track === "Managerial" ? "m3" : "p4";
-    if (selectedLevel !== defaultLevel) {
-      console.log('Setting default level for track:', track, defaultLevel);
-      setSelectedLevel(defaultLevel);
-    }
-  }, [track]);
+    const defaultLevel = track === "Managerial" ? "m3" : "p1";
+    console.log('Setting default level for track:', track, defaultLevel);
+    setSelectedLevel(defaultLevel);
+  }, [track, setSelectedLevel]);
 
   // Handle skill updates when role changes
   useEffect(() => {
