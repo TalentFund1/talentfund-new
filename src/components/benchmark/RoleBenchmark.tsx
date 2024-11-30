@@ -8,7 +8,6 @@ import { create } from "zustand";
 import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { Separator } from "@/components/ui/separator";
 import { useTrack } from "../skills/context/TrackContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -85,9 +84,9 @@ export const RoleBenchmark = () => {
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 mt-4">
+        <div className="flex items-center gap-4 mt-4">
           <Select value={selectedRole} onValueChange={setSelectedRole}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[300px]">
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
@@ -96,7 +95,7 @@ export const RoleBenchmark = () => {
           </Select>
 
           <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[300px]">
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
             <SelectContent>
