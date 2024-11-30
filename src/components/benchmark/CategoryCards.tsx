@@ -27,23 +27,18 @@ export const CategoryCards = ({
     ...currentRoleSkills.certifications
   ];
 
-  // Filter to only toggled skills
-  const toggledRoleSkills = allRoleSkills.filter(skill => 
-    toggledSkills.has(skill.title)
-  );
+  // Filter to only toggled skills and count by category
+  const specializedCount = currentRoleSkills.specialized
+    .filter(skill => toggledSkills.has(skill.title))
+    .length;
 
-  // Count skills by category
-  const specializedCount = toggledRoleSkills.filter(skill => 
-    currentRoleSkills.specialized.some(s => s.title === skill.title)
-  ).length;
+  const commonCount = currentRoleSkills.common
+    .filter(skill => toggledSkills.has(skill.title))
+    .length;
 
-  const commonCount = toggledRoleSkills.filter(skill => 
-    currentRoleSkills.common.some(s => s.title === skill.title)
-  ).length;
-
-  const certificationCount = toggledRoleSkills.filter(skill => 
-    currentRoleSkills.certifications.some(s => s.title === skill.title)
-  ).length;
+  const certificationCount = currentRoleSkills.certifications
+    .filter(skill => toggledSkills.has(skill.title))
+    .length;
 
   const totalCount = specializedCount + commonCount + certificationCount;
 
@@ -53,7 +48,8 @@ export const CategoryCards = ({
     common: commonCount,
     certification: certificationCount,
     selectedLevel,
-    roleId
+    roleId,
+    toggledSkillsSize: toggledSkills.size
   });
 
   const categories = [
