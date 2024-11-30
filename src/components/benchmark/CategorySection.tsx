@@ -19,55 +19,52 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all skills for the role
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
+  // Get all toggled skills that exist in the specialized category
+  const specializedCount = currentRoleSkills.specialized
+    .filter(skill => toggledSkills.has(skill.title))
+    .length;
 
-  // Get toggled skills that exist in the role
-  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+  // Get all toggled skills that exist in the common category
+  const commonCount = currentRoleSkills.common
+    .filter(skill => toggledSkills.has(skill.title))
+    .length;
 
-  console.log('CategorySection - Initial counts:', {
+  // Get all toggled skills that exist in the certifications category
+  const certificationCount = currentRoleSkills.certifications
+    .filter(skill => toggledSkills.has(skill.title))
+    .length;
+
+  // Total count is the sum of all categories
+  const totalCount = specializedCount + commonCount + certificationCount;
+
+  console.log('CategorySection - Counts:', {
     roleId: id,
-    allRoleSkills: allRoleSkills.map(s => s.title),
-    toggledSkills: Array.from(toggledSkills),
-    toggledRoleSkills: toggledRoleSkills.map(s => s.title)
-  });
-
-  const specializedSkills = toggledRoleSkills.filter(skill => 
-    currentRoleSkills.specialized.some(s => s.title === skill.title)
-  );
-  
-  const commonSkills = toggledRoleSkills.filter(skill => 
-    currentRoleSkills.common.some(s => s.title === skill.title)
-  );
-  
-  const certificationSkills = toggledRoleSkills.filter(skill => 
-    currentRoleSkills.certifications.some(s => s.title === skill.title)
-  );
-
-  const skillCounts: SkillCounts = {
-    all: toggledRoleSkills.length,
-    specialized: specializedSkills.length,
-    common: commonSkills.length,
-    certification: certificationSkills.length
-  };
-
-  console.log('CategorySection - Final counts:', {
-    roleId: id,
-    counts: skillCounts,
-    specialized: specializedSkills.map(s => s.title),
-    common: commonSkills.map(s => s.title),
-    certification: certificationSkills.map(s => s.title)
+    specialized: {
+      count: specializedCount,
+      skills: currentRoleSkills.specialized
+        .filter(skill => toggledSkills.has(skill.title))
+        .map(s => s.title)
+    },
+    common: {
+      count: commonCount,
+      skills: currentRoleSkills.common
+        .filter(skill => toggledSkills.has(skill.title))
+        .map(s => s.title)
+    },
+    certification: {
+      count: certificationCount,
+      skills: currentRoleSkills.certifications
+        .filter(skill => toggledSkills.has(skill.title))
+        .map(s => s.title)
+    },
+    total: totalCount
   });
 
   const categories = [
-    { id: "all", name: "All Categories", count: skillCounts.all },
-    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
-    { id: "common", name: "Common Skills", count: skillCounts.common },
-    { id: "certification", name: "Certification", count: skillCounts.certification }
+    { id: "all", name: "All Categories", count: totalCount },
+    { id: "specialized", name: "Specialized Skills", count: specializedCount },
+    { id: "common", name: "Common Skills", count: commonCount },
+    { id: "certification", name: "Certification", count: certificationCount }
   ];
 
   return (
