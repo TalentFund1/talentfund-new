@@ -33,7 +33,11 @@ export const useSkillsFiltering = (
     
     return filterSkillsByCategory(employeeSkills, "all")
       .filter(skill => {
-        if (!toggledSkills.has(skill.title)) return false;
+        // Only show skills that are in both employee skills and toggled skills
+        const isToggled = toggledSkills.has(skill.title);
+        const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+        
+        if (!isToggled || !hasSkill) return false;
 
         let matchesLevel = true;
         let matchesInterest = true;
@@ -97,6 +101,13 @@ export const useSkillsFiltering = (
         return a.title.localeCompare(b.title);
       });
   };
+
+  console.log('Filtered skills:', {
+    employeeId,
+    selectedRole,
+    comparisonLevel,
+    filteredCount: filterSkills().length
+  });
 
   return { filteredSkills: filterSkills() };
 };
