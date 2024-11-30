@@ -56,11 +56,15 @@ export const BenchmarkSkillsMatrix = () => {
     return priorities[requirement.toLowerCase()] ?? 3;
   };
 
-  // Filter and sort skills without modifying states
-  const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
-    .filter(skill => {
-      if (!toggledSkills.has(skill.title)) return false;
+  // First filter by category and get only toggled skills
+  const toggledCategorySkills = filterSkillsByCategory(employeeSkills, "all")
+    .filter(skill => toggledSkills.has(skill.title));
 
+  console.log('Toggled skills after category filter:', toggledCategorySkills.length);
+
+  // Then apply additional filters
+  const filteredSkills = toggledCategorySkills
+    .filter(skill => {
       let matchesLevel = true;
       let matchesInterest = true;
       let matchesSearch = true;
@@ -135,8 +139,8 @@ export const BenchmarkSkillsMatrix = () => {
   console.log('BenchmarkSkillsMatrix - Current state:', {
     selectedRole,
     roleLevel,
+    toggledSkillsCount: toggledCategorySkills.length,
     filteredSkillsCount: filteredSkills.length,
-    toggledSkillsCount: toggledSkills.size,
     currentStates: Object.keys(currentStates).length
   });
 
