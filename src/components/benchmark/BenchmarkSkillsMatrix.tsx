@@ -58,6 +58,7 @@ export const BenchmarkSkillsMatrix = () => {
 
   // Filter and sort skills without modifying states
   const filteredSkills = filterSkillsByCategory(employeeSkills, "all")
+    // First filter by toggled state
     .filter(skill => {
       if (!toggledSkills.has(skill.title)) return false;
 
