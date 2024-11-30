@@ -64,11 +64,6 @@ export const RoleBenchmark = () => {
     setBenchmarkSearchSkills(allSkills);
   }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
-  if (!currentRoleSkills) {
-    console.error('No role skills found for role:', selectedRole);
-    return null;
-  }
-
   console.log('RoleBenchmark rendering with:', {
     selectedRole,
     selectedLevel,
@@ -77,51 +72,49 @@ export const RoleBenchmark = () => {
   });
 
   return (
-    <ToggledSkillsProvider>
-      <div className="space-y-6">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
-              <div className="flex items-center gap-2">
-                <Select value={selectedRole} onValueChange={setSelectedRole}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="123">AI Engineer</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(getLevelOptions()).map(([key, value]) => (
-                      <SelectItem key={key} value={key}>{value}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-              onClick={() => navigate(`/skills/${selectedRole}`)}
-            >
-              See Skill Profile
-            </Button>
-          </div>
-          <Separator className="my-2" />
-
-          {id && <BenchmarkAnalysis 
-            selectedRole={selectedRole}
-            roleLevel={selectedLevel}
-            employeeId={id}
-          />}
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xl font-semibold text-foreground">Role Benchmark</h3>
+          <Button 
+            variant="outline" 
+            className="bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
+            onClick={() => navigate(`/skills/${selectedRole}`)}
+          >
+            See Skill Profile
+          </Button>
         </div>
+
+        <div className="flex items-center gap-2 mt-4">
+          <Select value={selectedRole} onValueChange={setSelectedRole}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="123">AI Engineer</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select level" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(getLevelOptions()).map(([key, value]) => (
+                <SelectItem key={key} value={key}>{value}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Separator className="my-6" />
+
+        {id && <BenchmarkAnalysis 
+          selectedRole={selectedRole}
+          roleLevel={selectedLevel}
+          employeeId={id}
+        />}
       </div>
-    </ToggledSkillsProvider>
+    </div>
   );
 };
