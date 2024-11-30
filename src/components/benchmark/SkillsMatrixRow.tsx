@@ -30,7 +30,6 @@ export const SkillsMatrixRow = ({
   const { selectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];

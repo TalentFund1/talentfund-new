@@ -22,7 +22,7 @@ interface RoleStore {
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
-  selectedLevel: "p4",
+  selectedLevel: "p4", // Default to P4 for Professional track
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
@@ -40,16 +40,14 @@ export const RoleBenchmark = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
 
-  // Get level options based on track
-  const getLevelOptions = () => {
-    return track === "Managerial" ? managerialLevels : professionalLevels;
-  };
-
-  // Set default level based on track when role changes
+  // Set default level based on track
   useEffect(() => {
     const defaultLevel = track === "Managerial" ? "m3" : "p4";
-    setSelectedLevel(defaultLevel);
-  }, [track, setSelectedLevel]);
+    if (selectedLevel !== defaultLevel) {
+      console.log('Setting default level for track:', track, defaultLevel);
+      setSelectedLevel(defaultLevel);
+    }
+  }, [track]);
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -65,6 +63,10 @@ export const RoleBenchmark = () => {
     
     setBenchmarkSearchSkills(allSkills);
   }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
+
+  const getLevelOptions = () => {
+    return track === "Managerial" ? managerialLevels : professionalLevels;
+  };
 
   console.log('RoleBenchmark rendering with:', {
     selectedRole,
@@ -109,7 +111,7 @@ export const RoleBenchmark = () => {
             </SelectTrigger>
             <SelectContent>
               {Object.entries(getLevelOptions()).map(([key, value]) => (
-                <SelectItem key={key} value={key.toLowerCase()}>{value}</SelectItem>
+                <SelectItem key={key} value={key}>{value}</SelectItem>
               ))}
             </SelectContent>
           </Select>
