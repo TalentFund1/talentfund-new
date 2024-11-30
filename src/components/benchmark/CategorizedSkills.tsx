@@ -6,21 +6,22 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
 import { useState } from "react";
+import { useRoleStore } from "./RoleBenchmark";
 
 interface CategorizedSkillsProps {
   roleId: string;
   employeeId: string;
-  selectedLevel: string;
 }
 
-export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: CategorizedSkillsProps) => {
+export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  const { selectedLevel } = useRoleStore();
 
-  console.log('CategorizedSkills - Selected Level:', selectedLevel);
+  console.log('CategorizedSkills - Using selected level:', selectedLevel);
 
   const filterSkillsByCategory = (skills: any[]) => {
     if (selectedCategory === "all") return skills;
