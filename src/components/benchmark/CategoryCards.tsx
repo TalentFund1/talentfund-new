@@ -58,10 +58,10 @@ export const CategoryCards = ({
   });
 
   const categories = [
-    { id: "all", name: "All Categories", count: toggledSkills.size },
-    { id: "specialized", name: "Specialized Skills", count: currentRoleSkills.specialized.filter(skill => toggledSkills.has(skill.title)).length },
-    { id: "common", name: "Common Skills", count: currentRoleSkills.common.filter(skill => toggledSkills.has(skill.title)).length },
-    { id: "certification", name: "Certification", count: currentRoleSkills.certifications.filter(skill => toggledSkills.has(skill.title)).length }
+    { id: "all", name: "All Categories", count: totalCount },
+    { id: "specialized", name: "Specialized Skills", count: specializedCount },
+    { id: "common", name: "Common Skills", count: commonCount },
+    { id: "certification", name: "Certification", count: certificationCount }
   ];
 
   return (
