@@ -5,7 +5,7 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoleStore } from "./RoleBenchmark";
 
 interface CategorizedSkillsProps {
@@ -15,11 +15,36 @@ interface CategorizedSkillsProps {
 
 export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   const { selectedLevel } = useRoleStore();
+
+  // Effect to sync missing skills with toggled state
+  useEffect(() => {
+    const missingSkills = allRoleSkills.filter(skill => {
+      const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
+      return !hasSkill && competencyState?.required === 'required';
+    });
+
+    // Ensure missing skills are toggled on
+    const newToggledSkills = new Set(toggledSkills);
+    missingSkills.forEach(skill => {
+      if (!newToggledSkills.has(skill.title)) {
+        newToggledSkills.add(skill.title);
+      }
+    });
+
+    if (newToggledSkills.size !== toggledSkills.size) {
+      console.log('Updating toggled skills to include missing skills:', {
+        added: missingSkills.map(s => s.title),
+        total: newToggledSkills.size
+      });
+      setToggledSkills(newToggledSkills);
+    }
+  }, [employeeSkills, selectedLevel]);
 
   console.log('CategorizedSkills - Using selected level:', selectedLevel);
 
