@@ -4,8 +4,6 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { CategoryCards } from "./CategoryCards";
-import { useState } from "react";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -14,24 +12,13 @@ interface CategorizedSkillsProps {
 }
 
 export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: CategorizedSkillsProps) => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
   const filterSkillsByCategory = (skills: any[]) => {
-    if (selectedCategory === "all") return skills;
-
-    const categoryMap: { [key: string]: any[] } = {
-      specialized: currentRoleSkills.specialized || [],
-      common: currentRoleSkills.common || [],
-      certification: currentRoleSkills.certifications || []
-    };
-
-    return skills.filter(skill => 
-      categoryMap[selectedCategory]?.some(catSkill => catSkill.title === skill.title)
-    );
+    return skills;
   };
 
   // Get all skills for the role
@@ -150,15 +137,7 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   );
 
   return (
-    <div className="space-y-4">
-      <CategoryCards
-        selectedCategory={selectedCategory}
-        onCategorySelect={setSelectedCategory}
-        roleId={roleId}
-        selectedLevel={selectedLevel}
-        employeeId={employeeId}
-      />
-      
+    <div className="space-y-4">      
       <SkillSection 
         title="Required Skills" 
         skills={requiredSkills} 
