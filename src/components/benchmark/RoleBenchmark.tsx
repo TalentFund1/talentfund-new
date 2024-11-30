@@ -16,35 +16,32 @@ import { professionalLevels, managerialLevels } from "./data/levelData";
 interface RoleStore {
   selectedRole: string;
   selectedLevel: string;
+  selectedTrack: "Professional" | "Managerial";
   setSelectedRole: (role: string) => void;
   setSelectedLevel: (level: string) => void;
+  setSelectedTrack: (track: "Professional" | "Managerial") => void;
 }
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "123",
-  selectedLevel: "p4", // Default to P4 for professional track
+  selectedLevel: "p4",
+  selectedTrack: "Professional",
   setSelectedRole: (role) => set({ selectedRole: role }),
-  setSelectedLevel: (level) => set({ selectedLevel: level })
+  setSelectedLevel: (level) => set({ selectedLevel: level }),
+  setSelectedTrack: (track) => set({ selectedTrack: track })
 }));
 
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const { toggledSkills } = useToggledSkills();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
-  const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
+  const { selectedRole, selectedLevel, selectedTrack, setSelectedRole, setSelectedLevel, setSelectedTrack } = useRoleStore();
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
   const { getTrackForRole } = useTrack();
 
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-  const track = getTrackForRole(selectedRole);
-
-  // Set the appropriate level based on track when role changes
-  useEffect(() => {
-    const newLevel = track === "Managerial" ? "m3" : "p4";
-    setSelectedLevel(newLevel);
-  }, [track, setSelectedLevel]);
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -80,7 +77,7 @@ export const RoleBenchmark = () => {
   console.log('RoleBenchmark rendering with:', {
     selectedRole,
     selectedLevel,
-    track,
+    selectedTrack,
     hasSkills: !!currentRoleSkills
   });
 
@@ -112,12 +109,22 @@ export const RoleBenchmark = () => {
             </SelectContent>
           </Select>
 
+          <Select value={selectedTrack} onValueChange={setSelectedTrack}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select track" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Professional">Professional</SelectItem>
+              <SelectItem value="Managerial">Managerial</SelectItem>
+            </SelectContent>
+          </Select>
+
           <Select value={selectedLevel} onValueChange={setSelectedLevel}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
             <SelectContent>
-              {track === "Managerial" ? (
+              {selectedTrack === "Managerial" ? (
                 Object.entries(managerialLevels).map(([key, value]) => (
                   <SelectItem key={key} value={key.toLowerCase()}>
                     {value} - {getLevelDescription(key)}
