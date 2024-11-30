@@ -17,6 +17,7 @@ export const useSkillsFiltering = (
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -29,16 +30,29 @@ export const useSkillsFiltering = (
   };
 
   const filterSkills = () => {
-    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-    
-    return filterSkillsByCategory(employeeSkills, "all")
-      .filter(skill => {
-        // Only show skills that are in both employee skills and toggled skills
-        const isToggled = toggledSkills.has(skill.title);
-        const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
-        
-        if (!isToggled || !hasSkill) return false;
+    // Get all role skills first
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
 
+    // Get employee skills that match role skills
+    const matchingSkills = employeeSkills.filter(empSkill => {
+      const isInRoleSkills = allRoleSkills.some(roleSkill => roleSkill.title === empSkill.title);
+      const isToggled = toggledSkills.has(empSkill.title);
+      return isInRoleSkills && isToggled;
+    });
+
+    console.log('Matching skills found:', {
+      employeeId,
+      roleId: selectedRole,
+      matchingSkillsCount: matchingSkills.length,
+      toggledSkillsCount: toggledSkills.size
+    });
+
+    return filterSkillsByCategory(matchingSkills, "all")
+      .filter(skill => {
         let matchesLevel = true;
         let matchesInterest = true;
         let matchesSearch = true;
@@ -102,7 +116,7 @@ export const useSkillsFiltering = (
       });
   };
 
-  console.log('Filtered skills:', {
+  console.log('Skills filtering results:', {
     employeeId,
     selectedRole,
     comparisonLevel,
