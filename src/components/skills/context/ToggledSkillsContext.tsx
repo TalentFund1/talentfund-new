@@ -10,7 +10,7 @@ interface ToggledSkillsContextType {
 
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
-const getStorageKey = (roleId: string) => `toggled-skills-${roleId}`;
+const getStorageKey = (roleId: string) => `roleToggledSkills-${roleId}`;
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
@@ -51,7 +51,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         console.log('Reloading toggled skills for role change:', selectedRole, parsedSkills);
         setToggledSkills(new Set(parsedSkills));
       } else {
-        // If no skills found for new role, start with empty set
+        console.log('No saved skills found for role:', selectedRole);
         setToggledSkills(new Set());
       }
     } catch (error) {
@@ -68,6 +68,14 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     });
     
     setToggledSkills(newSkills);
+    
+    // Save to localStorage immediately
+    try {
+      const storageKey = getStorageKey(selectedRole);
+      localStorage.setItem(storageKey, JSON.stringify(Array.from(newSkills)));
+    } catch (error) {
+      console.error('Error immediately saving toggled skills:', error);
+    }
     
     toast({
       title: "Skills Updated",

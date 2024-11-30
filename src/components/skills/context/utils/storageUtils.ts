@@ -22,7 +22,8 @@ export const loadToggledSkills = (roleId: string): string[] => {
 
 export const saveToggledSkills = (roleId: string, skills: string[]) => {
   try {
-    localStorage.setItem(getStorageKey(roleId), JSON.stringify(skills));
+    const storageKey = getStorageKey(roleId);
+    localStorage.setItem(storageKey, JSON.stringify(skills));
     console.log('Saved toggled skills for role:', {
       roleId,
       skillCount: skills.length,
