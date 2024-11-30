@@ -62,9 +62,6 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
     };
     setTracks(newTracks);
     setHasUnsavedChanges(true);
-    
-    // Save immediately to ensure track selection persists
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newTracks));
   };
 
   const saveTrackSelection = () => {
