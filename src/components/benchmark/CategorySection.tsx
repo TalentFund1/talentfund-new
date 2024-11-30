@@ -1,6 +1,6 @@
-import { roleSkills } from '../data/roleSkills';
+import { roleSkills } from '../../skills/data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useToggledSkills } from '../../skills/context/ToggledSkillsContext';
 
 interface CategorySectionProps {
   selectedCategory: string;
@@ -17,14 +17,7 @@ interface SkillCounts {
 export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
-  
-  // Use the current role ID without fallback
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
-  
-  if (!currentRoleSkills) {
-    console.error('No skills found for role:', id);
-    return null;
-  }
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
     return skills.filter(skill => toggledSkills.has(skill.title)).length;
@@ -34,7 +27,7 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
     specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
     common: getToggledSkillsCount(currentRoleSkills.common || []),
     certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
-    all: 0
+    all: 0 // Will be updated below
   };
 
   skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
