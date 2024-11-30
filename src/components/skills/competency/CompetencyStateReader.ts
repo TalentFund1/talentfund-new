@@ -22,6 +22,11 @@ export const useCompetencyStateReader = () => {
   const { getTrackForRole } = useTrack();
 
   const findSavedState = (skillName: string, levelKey: string, roleId: string): SkillCompetencyState | null => {
+    if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
+      console.error('Invalid role ID:', roleId);
+      return null;
+    }
+
     const primaryRoleId = getPrimaryRoleId();
     const roleStates = currentStates[primaryRoleId];
     const track = getTrackForRole(roleId);

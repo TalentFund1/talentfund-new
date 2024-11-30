@@ -35,7 +35,12 @@ export const BenchmarkSkillsMatrixContent = ({
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
   const { selectedLevel } = useRoleStore();
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+
+  if (!currentRoleSkills) {
+    console.error('Invalid role ID:', roleId);
+    return null;
+  }
 
   // Get all toggled skills as an array and filter by category
   const getToggledSkillsCount = (category: string) => {

@@ -38,6 +38,11 @@ export const RoleBenchmark = () => {
 
   const employee = employees.find(emp => emp.id === id);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  if (!currentRoleSkills) {
+    console.error('No skills found for role:', selectedRole);
+    return null;
+  }
+  
   const track = getTrackForRole(selectedRole);
 
   // Set the appropriate level based on track when role changes

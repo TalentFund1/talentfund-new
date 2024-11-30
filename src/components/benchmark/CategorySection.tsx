@@ -1,6 +1,6 @@
 import { roleSkills } from '../skills/data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { useToggledSkills } from '../skills/context/ToggledSkillsContext';
+import { useToggledSkills } from '../context/ToggledSkillsContext';
 
 interface CategorySectionProps {
   selectedCategory: string;
@@ -17,54 +17,31 @@ interface SkillCounts {
 export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills];
 
-  // Get all toggled skills that exist in the specialized category
-  const specializedCount = currentRoleSkills.specialized
-    .filter(skill => toggledSkills.has(skill.title))
-    .length;
+  if (!currentRoleSkills) {
+    console.error('Invalid role ID:', id);
+    return null;
+  }
 
-  // Get all toggled skills that exist in the common category
-  const commonCount = currentRoleSkills.common
-    .filter(skill => toggledSkills.has(skill.title))
-    .length;
+  const getToggledSkillsCount = (skills: Array<{ title: string }>) => {
+    return skills.filter(skill => toggledSkills.has(skill.title)).length;
+  };
 
-  // Get all toggled skills that exist in the certifications category
-  const certificationCount = currentRoleSkills.certifications
-    .filter(skill => toggledSkills.has(skill.title))
-    .length;
+  const skillCounts: SkillCounts = {
+    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
+    common: getToggledSkillsCount(currentRoleSkills.common || []),
+    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
+    all: 0 // Will be updated below
+  };
 
-  // Total count is the sum of all categories
-  const totalCount = specializedCount + commonCount + certificationCount;
-
-  console.log('CategorySection - Counts:', {
-    roleId: id,
-    specialized: {
-      count: specializedCount,
-      skills: currentRoleSkills.specialized
-        .filter(skill => toggledSkills.has(skill.title))
-        .map(s => s.title)
-    },
-    common: {
-      count: commonCount,
-      skills: currentRoleSkills.common
-        .filter(skill => toggledSkills.has(skill.title))
-        .map(s => s.title)
-    },
-    certification: {
-      count: certificationCount,
-      skills: currentRoleSkills.certifications
-        .filter(skill => toggledSkills.has(skill.title))
-        .map(s => s.title)
-    },
-    total: totalCount
-  });
+  skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
 
   const categories = [
-    { id: "all", name: "All Categories", count: totalCount },
-    { id: "specialized", name: "Specialized Skills", count: specializedCount },
-    { id: "common", name: "Common Skills", count: commonCount },
-    { id: "certification", name: "Certification", count: certificationCount }
+    { id: "all", name: "All Categories", count: skillCounts.all },
+    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
+    { id: "common", name: "Common Skills", count: skillCounts.common },
+    { id: "certification", name: "Certification", count: skillCounts.certification }
   ];
 
   return (
@@ -88,7 +65,7 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
               {category.name}
             </span>
             <span className="text-xs text-muted-foreground">
-              {category.count} {category.count === 1 ? 'skill' : 'skills'}
+              {category.count} skills
             </span>
           </div>
         </button>

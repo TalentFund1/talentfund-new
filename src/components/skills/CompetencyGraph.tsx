@@ -35,7 +35,13 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { getTrackForRole } = useTrack();
   const { selectedLevel } = useRoleStore();
 
-  const currentRoleId = propRoleId || urlRoleId || "123";
+  const currentRoleId = propRoleId || urlRoleId;
+
+  if (!currentRoleId || !roleSkills[currentRoleId as keyof typeof roleSkills]) {
+    console.error('Invalid role ID:', currentRoleId);
+    return null;
+  }
+
   const savedTrack = getTrackForRole(currentRoleId);
   const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
 
