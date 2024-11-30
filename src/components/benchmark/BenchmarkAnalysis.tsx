@@ -25,10 +25,10 @@ export const BenchmarkAnalysis = () => {
   }
 
   const track = getTrackForRole(selectedRole);
-  console.log('Current track and level:', { track, selectedLevel });
+  console.log('Current track and selected level:', { track, selectedLevel });
 
-  // If track is managerial, always use M3 level for comparison
-  const comparisonLevel = track === "Managerial" ? "m3" : selectedLevel.toLowerCase();
+  // Use the selected level directly without any default override
+  const comparisonLevel = selectedLevel.toLowerCase();
   console.log('Using comparison level:', comparisonLevel);
 
   const allRoleSkills = [
