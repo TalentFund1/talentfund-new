@@ -18,13 +18,12 @@ interface TrackSelectionProps {
 }
 
 export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { getTrackForRole, setTrackForRole, hasUnsavedChanges, saveTrackSelection } = useTrack();
   const { toast } = useToast();
 
   const track = getTrackForRole(id || "");
 
-  // Load the saved track when component mounts
   useEffect(() => {
     const savedTrack = localStorage.getItem(`track-selection-${id}`);
     console.log('Loading saved track selection:', { roleId: id, savedTrack });
