@@ -14,7 +14,7 @@ interface CategorySectionProps {
   };
 }
 
-export const CategorySection = ({ 
+export const CategorizedSkills = ({ 
   selectedCategory, 
   onCategorySelect,
   toggledSkills,
@@ -22,7 +22,7 @@ export const CategorySection = ({
 }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
   
-  console.log('Rendering CategorySection with:', {
+  console.log('Rendering CategorizedSkills with:', {
     selectedCategory,
     toggledSkillsCount: toggledSkills.size,
     skillCounts
