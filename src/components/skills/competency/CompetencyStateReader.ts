@@ -23,21 +23,37 @@ export const useCompetencyStateReader = () => {
     const track = getTrackForRole(roleId);
     
     if (!level) {
-      // Default to M3 for managerial track, P4 for professional track
       return track === "Managerial" ? "m3" : "p4";
     }
     
-    const match = level.toLowerCase().match(/[pm][1-6]/);
+    // Handle both formats: "M3" and "m3" or "3" for managerial
+    if (track === "Managerial") {
+      if (level.match(/^[3-6]$/)) {
+        return `m${level.toLowerCase()}`;
+      }
+      const match = level.toLowerCase().match(/m[3-6]/);
+      if (match) {
+        return match[0];
+      }
+      // Default to m3 if no valid managerial level found
+      return "m3";
+    }
+
+    // Handle professional track levels
+    const match = level.toLowerCase().match(/p[1-6]/);
     if (match) {
       return match[0];
     }
+    
+    return level.toLowerCase().trim();
+  };
 
-    // Handle numeric levels for managerial track
-    if (level.match(/^[3-6]$/)) {
+  const getDefaultLevelForTrack = (track: string, roleLevel: string): string => {
+    if (track === "Managerial") {
+      const level = roleLevel.match(/\d/)?.[0] || "3";
       return `m${level}`;
     }
-
-    return level.toLowerCase().trim();
+    return "p4";
   };
 
   const findSavedState = (skillName: string, levelKey: string, roleId: string): SkillCompetencyState | null => {
@@ -77,7 +93,7 @@ export const useCompetencyStateReader = () => {
     roleId: string = "126"
   ): SkillCompetencyState => {
     const track = getTrackForRole(roleId);
-    const defaultLevel = track === "Managerial" ? "m3" : "p4";
+    const defaultLevel = getDefaultLevelForTrack(track, levelKey);
     
     console.log('Reading competency state:', { 
       skillName, 
@@ -95,14 +111,20 @@ export const useCompetencyStateReader = () => {
       return savedState;
     }
 
-    // If no saved state, return default state with track-appropriate level
-    const defaultStateForTrack = {
-      ...defaultState,
-      level: defaultLevel
+    // If no saved state, determine the appropriate state based on track and level
+    const defaultState: SkillCompetencyState = {
+      level: defaultLevel,
+      required: track === "Managerial" ? determineManagerialRequirement(levelKey) : "preferred"
     };
     
-    console.log('No saved state found, using default state:', defaultStateForTrack);
-    return defaultStateForTrack;
+    console.log('No saved state found, using default state:', defaultState);
+    return defaultState;
+  };
+
+  const determineManagerialRequirement = (levelKey: string): string => {
+    const level = parseInt(levelKey.replace(/[^\d]/g, ''));
+    // Higher managerial levels (M5-M6) typically require more skills
+    return level >= 5 ? "required" : "preferred";
   };
 
   const getAllSkillStatesForLevel = (
@@ -110,7 +132,7 @@ export const useCompetencyStateReader = () => {
     roleId: string = "126"
   ): Record<string, SkillCompetencyState> => {
     const track = getTrackForRole(roleId);
-    const defaultLevel = track === "Managerial" ? "m3" : "p4";
+    const defaultLevel = getDefaultLevelForTrack(track, levelKey);
     
     console.log('Getting all skill states for level:', { 
       levelKey, 
