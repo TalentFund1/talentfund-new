@@ -22,24 +22,35 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   // Get all toggled skills as an array
   const skillsArray = Array.from(toggledSkills);
 
+  // Get all skills for the role
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  // Filter toggled skills that exist in the role skills
+  const filteredSkillsArray = skillsArray.filter(skillTitle => 
+    allRoleSkills.some(roleSkill => roleSkill.title === skillTitle)
+  );
+
   console.log('CategorySection render:', {
     roleId: id,
-    totalSkills: skillsArray.length,
-    toggledSkills: skillsArray
+    totalSkills: filteredSkillsArray.length,
+    toggledSkills: filteredSkillsArray
   });
 
-  const getSkillCategory = (skill: string): string => {
-    if (currentRoleSkills.specialized.some(s => s.title === skill)) return 'specialized';
-    if (currentRoleSkills.common.some(s => s.title === skill)) return 'common';
-    if (currentRoleSkills.certifications.some(s => s.title === skill)) return 'certification';
-    return 'all';
-  };
-
   const skillCounts: SkillCounts = {
-    specialized: skillsArray.filter(skill => getSkillCategory(skill) === 'specialized').length,
-    common: skillsArray.filter(skill => getSkillCategory(skill) === 'common').length,
-    certification: skillsArray.filter(skill => getSkillCategory(skill) === 'certification').length,
-    all: skillsArray.length
+    specialized: filteredSkillsArray.filter(skillTitle => 
+      currentRoleSkills.specialized.some(s => s.title === skillTitle)
+    ).length,
+    common: filteredSkillsArray.filter(skillTitle => 
+      currentRoleSkills.common.some(s => s.title === skillTitle)
+    ).length,
+    certification: filteredSkillsArray.filter(skillTitle => 
+      currentRoleSkills.certifications.some(s => s.title === skillTitle)
+    ).length,
+    all: filteredSkillsArray.length
   };
 
   const categories = [
