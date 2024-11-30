@@ -54,7 +54,10 @@ export const BenchmarkAnalysis = () => {
   // Competency match - employee skill level meets or exceeds role requirement
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel);
-    if (!roleSkillState) return false;
+    if (!roleSkillState) {
+      console.log('No competency state found for skill:', skill.title);
+      return false;
+    }
 
     const employeeSkillLevel = currentStates[skill.title]?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
@@ -74,6 +77,7 @@ export const BenchmarkAnalysis = () => {
 
     console.log('Competency comparison:', {
       skill: skill.title,
+      track,
       employeeLevel: employeeSkillLevel,
       roleLevel: roleSkillLevel,
       employeePriority,
@@ -89,14 +93,21 @@ export const BenchmarkAnalysis = () => {
     const skillState = currentStates[skill.title];
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel);
     
+    // For professional track, we need both the employee's requirement and role's requirement
+    const isSkillGoalMatch = track === "Professional" 
+      ? (skillState?.requirement === 'skill_goal' || 
+         (roleSkillState?.required === 'required' && skillState?.requirement === 'required'))
+      : (skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal');
+    
     console.log('Skill goal check:', {
       skill: skill.title,
+      track,
       employeeState: skillState?.requirement,
-      roleRequired: roleSkillState?.required
+      roleRequired: roleSkillState?.required,
+      isMatch: isSkillGoalMatch
     });
 
-    return skillState?.requirement === 'skill_goal' || 
-           (roleSkillState?.required === 'required' && skillState?.requirement === 'required');
+    return isSkillGoalMatch;
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
