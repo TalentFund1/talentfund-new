@@ -27,24 +27,15 @@ export const CategorySection = ({
     return skills.filter(skill => toggledSkills.has(skill.title)).length;
   };
 
-  // Calculate counts for each category
   const skillCounts: SkillCounts = {
     specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
     common: getToggledSkillsCount(currentRoleSkills.common || []),
     certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
-    all: 0
+    all: 0 // Initialize with 0
   };
 
-  // Calculate total after individual counts
+  // Calculate total after individual counts are set
   skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
-
-  console.log('CategorySection - Skill counts:', {
-    total: skillCounts.all,
-    specialized: skillCounts.specialized,
-    common: skillCounts.common,
-    certification: skillCounts.certification,
-    toggledSkillsSize: toggledSkills.size
-  });
 
   const categories = [
     { id: "all", title: "All Categories", count: skillCounts.all },

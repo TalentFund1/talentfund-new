@@ -18,6 +18,12 @@ export const CategoryCards = ({
   const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
+  console.log('CategoryCards render:', {
+    roleId,
+    selectedLevel,
+    toggledSkillsCount: toggledSkills.size
+  });
+
   const specializedCount = currentRoleSkills.specialized?.filter(skill => 
     toggledSkills.has(skill.title)
   ).length || 0;
@@ -36,8 +42,7 @@ export const CategoryCards = ({
     total: totalCount,
     specialized: specializedCount,
     common: commonCount,
-    certification: certificationCount,
-    toggledSkillsSize: toggledSkills.size
+    certification: certificationCount
   });
 
   const categories = [
