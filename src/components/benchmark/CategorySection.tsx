@@ -29,33 +29,38 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   // Get toggled skills that exist in the role
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
 
-  console.log('CategorySection - Initial skill counts:', {
+  console.log('CategorySection - Initial counts:', {
     roleId: id,
-    allRoleSkills: allRoleSkills.length,
-    toggledSkills: toggledSkills.size,
-    toggledRoleSkills: toggledRoleSkills.length
+    allRoleSkills: allRoleSkills.map(s => s.title),
+    toggledSkills: Array.from(toggledSkills),
+    toggledRoleSkills: toggledRoleSkills.map(s => s.title)
   });
+
+  const specializedSkills = toggledRoleSkills.filter(skill => 
+    currentRoleSkills.specialized.some(s => s.title === skill.title)
+  );
+  
+  const commonSkills = toggledRoleSkills.filter(skill => 
+    currentRoleSkills.common.some(s => s.title === skill.title)
+  );
+  
+  const certificationSkills = toggledRoleSkills.filter(skill => 
+    currentRoleSkills.certifications.some(s => s.title === skill.title)
+  );
 
   const skillCounts: SkillCounts = {
     all: toggledRoleSkills.length,
-    specialized: toggledRoleSkills.filter(skill => 
-      currentRoleSkills.specialized.some(s => s.title === skill.title)
-    ).length,
-    common: toggledRoleSkills.filter(skill => 
-      currentRoleSkills.common.some(s => s.title === skill.title)
-    ).length,
-    certification: toggledRoleSkills.filter(skill => 
-      currentRoleSkills.certifications.some(s => s.title === skill.title)
-    ).length
+    specialized: specializedSkills.length,
+    common: commonSkills.length,
+    certification: certificationSkills.length
   };
 
   console.log('CategorySection - Final counts:', {
     roleId: id,
     counts: skillCounts,
-    toggledSkills: Array.from(toggledSkills),
-    specialized: currentRoleSkills.specialized.map(s => s.title),
-    common: currentRoleSkills.common.map(s => s.title),
-    certifications: currentRoleSkills.certifications.map(s => s.title)
+    specialized: specializedSkills.map(s => s.title),
+    common: commonSkills.map(s => s.title),
+    certification: certificationSkills.map(s => s.title)
   });
 
   const categories = [
@@ -86,7 +91,7 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
               {category.name}
             </span>
             <span className="text-xs text-muted-foreground">
-              {category.count} skills
+              {category.count} {category.count === 1 ? 'skill' : 'skills'}
             </span>
           </div>
         </button>
