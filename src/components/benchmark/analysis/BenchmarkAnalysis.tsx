@@ -62,7 +62,6 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     ...currentRoleSkills.certifications
   ];
 
-  // First filter by toggled state and map to include required properties
   const processedSkills = allRoleSkills
     .filter(skill => toggledSkills.has(skill.title))
     .map(skill => {
@@ -80,15 +79,12 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
       const aRoleLevel = a.roleLevel;
       const bRoleLevel = b.roleLevel;
       
-      // Sort by role level first
       const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
       if (roleLevelDiff !== 0) return roleLevelDiff;
 
-      // Then by employee level
       const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
       if (employeeLevelDiff !== 0) return employeeLevelDiff;
 
-      // Then by requirement
       const requirementDiff = getSkillGoalPriority(a.requirement) - getSkillGoalPriority(b.requirement);
       if (requirementDiff !== 0) return requirementDiff;
 
@@ -109,10 +105,17 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
+    console.log('Comparing skill levels:', {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel
+    });
+
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    return employeePriority >= rolePriority;
+    // Now using flexible matching for both tracks
+    return employeePriority <= rolePriority;
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
