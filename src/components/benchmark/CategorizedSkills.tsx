@@ -20,18 +20,6 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all skills for the role
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
-  // First filter to get only toggled skills
-  const toggledRoleSkills = allRoleSkills.filter(skill => 
-    toggledSkills.has(skill.title)
-  );
-
   const filterSkillsByCategory = (skills: any[]) => {
     if (selectedCategory === "all") return skills;
 
@@ -46,6 +34,22 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     );
   };
 
+  // Get all skills for the role
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  // Filter to only toggled skills
+  const toggledRoleSkills = filterSkillsByCategory(allRoleSkills
+    .filter(skill => toggledSkills.has(skill.title))
+    .sort((a, b) => {
+      const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
+      const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
+      return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
+    }));
+
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
@@ -55,41 +59,6 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
     };
     return priorities[level.toLowerCase()] ?? 3;
   };
-
-  // Then categorize toggled skills into required and preferred
-  const requiredSkills = filterSkillsByCategory(toggledRoleSkills
-    .filter(skill => {
-      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      return competencyState?.required === 'required';
-    })
-    .sort((a, b) => {
-      const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
-      const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
-      return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
-    }));
-
-  const preferredSkills = filterSkillsByCategory(toggledRoleSkills
-    .filter(skill => {
-      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase());
-      return competencyState?.required === 'preferred' &&
-             !requiredSkills.some(req => req.title === skill.title);
-    })
-    .sort((a, b) => {
-      const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
-      const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
-      return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
-    }));
-
-  const missingSkills = filterSkillsByCategory(toggledRoleSkills
-    .filter(skill => {
-      const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
-      return !hasSkill;
-    })
-    .sort((a, b) => {
-      const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
-      const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
-      return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
-    }));
 
   const getLevelColor = (skillTitle: string) => {
     const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase());
@@ -110,36 +79,9 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
   };
 
   console.log('Skills Summary:', {
-    required: requiredSkills.length,
-    preferred: preferredSkills.length,
-    missing: missingSkills.length,
-    requiredSkills,
-    preferredSkills,
-    missingSkills
+    toggledSkills: toggledRoleSkills.length,
+    toggledSkillsList: toggledRoleSkills.map(s => s.title)
   });
-
-  const SkillSection = ({ title, skills, count }: { title: string, skills: any[], count: number }) => (
-    <Card className="p-6 space-y-4">
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">{title}</span>
-        <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-          {count}
-        </span>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
-          <Badge 
-            key={skill.title}
-            variant="outline" 
-            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-          >
-            {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
-          </Badge>
-        ))}
-      </div>
-    </Card>
-  );
 
   return (
     <div className="space-y-4">
@@ -150,23 +92,26 @@ export const CategorizedSkills = ({ roleId, employeeId, selectedLevel }: Categor
         selectedLevel={selectedLevel}
       />
 
-      <SkillSection 
-        title="Required Skills" 
-        skills={requiredSkills} 
-        count={requiredSkills.length} 
-      />
-      
-      <SkillSection 
-        title="Preferred Skills" 
-        skills={preferredSkills} 
-        count={preferredSkills.length} 
-      />
-      
-      <SkillSection 
-        title="Missing Skills" 
-        skills={missingSkills} 
-        count={missingSkills.length} 
-      />
+      <Card className="p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">Toggled Skills</span>
+          <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+            {toggledRoleSkills.length}
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {toggledRoleSkills.map((skill) => (
+            <Badge 
+              key={skill.title}
+              variant="outline" 
+              className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+            >
+              {skill.title}
+              <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
+            </Badge>
+          ))}
+        </div>
+      </Card>
     </div>
   );
 };
