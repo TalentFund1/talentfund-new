@@ -5,6 +5,7 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { Separator } from "@/components/ui/separator";
+import { getCategorySkillCounts } from "./utils/skillFilterUtils";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -32,7 +33,17 @@ export const BenchmarkSkillsMatrixContent = ({
   filteredSkills,
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
-  console.log('Rendering BenchmarkSkillsMatrixContent with skills:', filteredSkills);
+  const { toggledSkills } = useToggledSkills();
+  
+  console.log('Rendering BenchmarkSkillsMatrixContent with:', {
+    roleId,
+    employeeId,
+    roleLevel,
+    toggledSkillsCount: toggledSkills.size,
+    filteredSkillsCount: filteredSkills.length
+  });
+
+  const skillCounts = getCategorySkillCounts(roleId, toggledSkills);
 
   const getRoleTitle = (id: string) => {
     const roleTitles: { [key: string]: string } = {
@@ -50,6 +61,7 @@ export const BenchmarkSkillsMatrixContent = ({
         roleId={roleId}
         employeeId={employeeId}
         selectedLevel={roleLevel}
+        skillCounts={skillCounts}
       />
 
       <Separator className="my-8" />
