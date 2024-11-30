@@ -89,11 +89,13 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     .sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase());
       const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase());
+      
       // First sort by requirement (required before preferred)
       const aRequired = aState?.required === 'required' ? 0 : 1;
       const bRequired = bState?.required === 'required' ? 0 : 1;
       if (aRequired !== bRequired) return aRequired - bRequired;
-      // Then sort by level
+      
+      // Then sort by level (advanced to unspecified)
       return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
     }));
 
