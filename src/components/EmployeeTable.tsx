@@ -108,6 +108,7 @@ const EmployeeTableContent = ({
 
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
+    [],  // Empty array for selectedJobTitle
     currentStates,
     toggledSkills,
     getSkillCompetencyState
