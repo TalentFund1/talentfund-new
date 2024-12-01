@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
@@ -31,13 +31,31 @@ export const EmployeeTableRow = ({
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const roleId = getSkillProfileId(employee.role);
+  const employeeLevel = getLevel(employee.role);
   
   const isExactMatch = selectedJobTitle.length > 0 && 
     selectedJobTitle.some(title => getBaseRole(title) === getBaseRole(employee.role));
 
   const getSkillMatchCount = () => {
     if (selectedJobTitle.length === 0) return null;
-    return "10 / 10";
+    
+    const targetRoleId = getSkillProfileId(selectedJobTitle[0]);
+    const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
+    
+    if (!currentRoleSkills) return null;
+
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ].filter(skill => toggledSkills.has(skill.title));
+
+    const matchingSkills = allRoleSkills.filter(roleSkill => {
+      const employeeSkill = getEmployeeSkills(employee.id).find(empSkill => empSkill.title === roleSkill.title);
+      return employeeSkill !== undefined;
+    });
+
+    return `${matchingSkills.length} / ${allRoleSkills.length}`;
   };
 
   const getBenchmarkPercentage = () => {
@@ -46,7 +64,7 @@ export const EmployeeTableRow = ({
     return calculateBenchmarkPercentage(
       employee.id,
       targetRoleId,
-      employee.role.split(":")[1]?.trim() || "P4",
+      employeeLevel,
       currentStates,
       toggledSkills,
       getSkillCompetencyState
@@ -68,7 +86,7 @@ export const EmployeeTableRow = ({
     return (
       <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
         {selectedSkills.map(skillName => {
-          const competencyState = getSkillCompetencyState(skillName, employee.role.split(":")[1]?.trim() || "P4", roleId);
+          const competencyState = getSkillCompetencyState(skillName, employeeLevel, roleId);
           return competencyState ? (
             <SkillBubble
               key={skillName}
