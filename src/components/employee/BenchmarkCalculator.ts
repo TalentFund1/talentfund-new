@@ -14,7 +14,8 @@ export const calculateBenchmarkPercentage = (
     employeeId, 
     roleId, 
     level,
-    toggledSkillsCount: toggledSkills.size
+    toggledSkillsCount: toggledSkills.size,
+    toggledSkills: Array.from(toggledSkills)
   });
   
   const employeeSkills = getEmployeeSkills(employeeId);
@@ -61,8 +62,6 @@ export const calculateBenchmarkPercentage = (
       employeeAssignedLevel: level
     });
 
-    // For Professional track, require exact level matches
-    // For Managerial track, allow higher levels to match
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
         'advanced': 3,
