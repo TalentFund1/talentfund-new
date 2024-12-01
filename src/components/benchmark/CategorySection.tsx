@@ -1,6 +1,7 @@
 import { roleSkills } from '../skills/data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from '../skills/context/ToggledSkillsContext';
+import { useRoleStore } from './RoleBenchmark';
 
 interface CategorySectionProps {
   selectedCategory: string;
@@ -17,7 +18,8 @@ interface SkillCounts {
 export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  const { selectedRole } = useRoleStore();
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
   // Get all toggled skills that exist in the specialized category
   const specializedCount = currentRoleSkills.specialized
@@ -38,7 +40,7 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   const totalCount = specializedCount + commonCount + certificationCount;
 
   console.log('CategorySection - Counts:', {
-    roleId: id,
+    roleId: selectedRole,
     specialized: {
       count: specializedCount,
       skills: currentRoleSkills.specialized

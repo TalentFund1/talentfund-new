@@ -22,8 +22,7 @@ export const useCompetencyStateReader = () => {
   const { getTrackForRole } = useTrack();
 
   const findSavedState = (skillName: string, levelKey: string, roleId: string): SkillCompetencyState | null => {
-    const primaryRoleId = getPrimaryRoleId();
-    const roleStates = currentStates[primaryRoleId];
+    const roleStates = currentStates[roleId];
     const track = getTrackForRole(roleId);
     
     if (roleStates?.[skillName]) {
@@ -43,16 +42,6 @@ export const useCompetencyStateReader = () => {
       }
     }
     return null;
-  };
-
-  const getPrimaryRoleId = (): string => {
-    const availableRoles = Object.keys(currentStates);
-    if (availableRoles.length === 0) {
-      console.warn('No roles found in competency store');
-      throw new Error('No roles available in competency store');
-    }
-    console.log('Using primary role:', availableRoles[0]);
-    return availableRoles[0];
   };
 
   const validateRoleId = (roleId: string): boolean => {
