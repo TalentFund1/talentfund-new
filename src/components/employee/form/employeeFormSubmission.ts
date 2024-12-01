@@ -92,6 +92,7 @@ export const processEmployeeData = (formData: FormData): Employee => {
 
   // Get role-specific skills
   const roleId = getSkillProfileId(formData.role);
+  console.log('Role ID for skills lookup:', roleId);
   const roleSkills = getEmployeeSkills(roleId);
   
   // Categorize skills

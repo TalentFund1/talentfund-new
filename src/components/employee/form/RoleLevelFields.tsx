@@ -15,7 +15,9 @@ const roleMapping = {
   "Backend Engineer": "124",
   "Frontend Engineer": "125",
   "Engineering Manager": "126",
-  "DevOps Engineer": "127"
+  "DevOps Engineer": "127",
+  "Data Engineer": "128",
+  "Product Manager": "129"
 };
 
 export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFieldsProps) => {
