@@ -49,6 +49,14 @@ export const getSkillProfileId = (role?: string) => {
     "Frontend Developer": "125"  // Alias for Frontend Engineer
   };
   
+  // Handle roles with ID in parentheses
+  const roleWithIdMatch = role.match(/^(.*?)\s*\((\d+)\)/);
+  if (roleWithIdMatch) {
+    const [, baseRole, id] = roleWithIdMatch;
+    console.log('Extracted role ID from string:', { baseRole, id });
+    return id;
+  }
+  
   const baseRole = role.split(":")[0].trim();
   const mappedId = roleMap[baseRole];
   
