@@ -68,7 +68,8 @@ export const sortEmployeesByRoleMatch = (
       targetRoleId: roleId,
       isExactMatch,
       benchmark,
-      employeeLevel
+      employeeLevel,
+      willBePartialMatch: !isExactMatch && benchmark > 0
     });
 
     const employeeWithBenchmark = {
@@ -83,7 +84,9 @@ export const sortEmployeesByRoleMatch = (
       partialMatches.push(employeeWithBenchmark);
       console.log('Added to partial matches:', {
         employee: employee.name,
-        benchmark
+        role: employee.role,
+        benchmark,
+        skills: allRoleSkills.length
       });
     }
   });
