@@ -100,8 +100,8 @@ export const EmployeeFilters = ({
               <SelectValue placeholder="Role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="123">AI Engineer</SelectItem>
               <SelectItem value="124">Backend Engineer</SelectItem>
+              <SelectItem value="123">AI Engineer</SelectItem>
               <SelectItem value="125">Frontend Engineer</SelectItem>
               <SelectItem value="126">Engineering Manager</SelectItem>
               <SelectItem value="127">DevOps Engineer</SelectItem>
