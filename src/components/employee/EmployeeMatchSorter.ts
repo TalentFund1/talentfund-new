@@ -49,10 +49,14 @@ export const sortEmployeesByRoleMatch = (
 
   // Filter to keep only employees with benchmark > 0 or exact role matches
   const matchingEmployees = employeesWithBenchmarks.filter(
-    employee => employee.isExactMatch || employee.benchmark > 0
+    employee => employee.isExactMatch || employee.benchmark >= 50
   );
 
-  console.log('All matching employees:', matchingEmployees);
+  console.log('Matching employees:', matchingEmployees.map(emp => ({
+    name: emp.name,
+    isExactMatch: emp.isExactMatch,
+    benchmark: emp.benchmark
+  })));
 
   // Sort by exact match first, then by benchmark score
   const sortedEmployees = matchingEmployees.sort((a, b) => {
@@ -61,7 +65,11 @@ export const sortEmployeesByRoleMatch = (
     return b.benchmark - a.benchmark;
   });
 
-  console.log('Final sorted employees:', sortedEmployees);
+  console.log('Final sorted employees:', sortedEmployees.map(emp => ({
+    name: emp.name,
+    isExactMatch: emp.isExactMatch,
+    benchmark: emp.benchmark
+  })));
 
   return sortedEmployees;
 };
