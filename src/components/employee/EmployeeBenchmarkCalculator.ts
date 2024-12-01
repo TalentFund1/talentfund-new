@@ -1,6 +1,6 @@
 import { Employee } from "../types/employeeTypes";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
-import { getSkillProfileId, getLevel } from "../EmployeeTable";
+import { getSkillProfileId, getLevel } from '@/utils/roleUtils';
 
 export const calculateEmployeeBenchmarks = (
   employees: Employee[],
