@@ -62,14 +62,6 @@ export const EmployeeTableRow = ({
       return competencyState !== null;
     }).length;
 
-    console.log('Skill match calculation:', {
-      employee: employee.name,
-      targetRole: selectedJobTitle[0],
-      totalSkills,
-      matchingSkills,
-      toggledSkills: toggledSkillsList
-    });
-
     return `${matchingSkills} / ${totalSkills}`;
   };
 
