@@ -129,7 +129,7 @@ export const EmployeeTableRow = ({
                 className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
               >
                 <CheckCircle2 className="w-3 h-3" />
-                Exact Match
+                Role Match
               </Badge>
             )}
           </div>
