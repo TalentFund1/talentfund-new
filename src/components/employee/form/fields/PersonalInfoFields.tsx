@@ -40,6 +40,7 @@ export const PersonalInfoFields = ({ formData, handleInputChange }: PersonalInfo
             <SelectItem value="Part-time">Part-time</SelectItem>
             <SelectItem value="Contract">Contract</SelectItem>
             <SelectItem value="Internship">Internship</SelectItem>
+            <SelectItem value="Temporary">Temporary</SelectItem>
           </SelectContent>
         </Select>
       </div>

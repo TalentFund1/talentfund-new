@@ -28,6 +28,7 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
             <SelectItem value="Toronto">Toronto</SelectItem>
             <SelectItem value="New York">New York</SelectItem>
             <SelectItem value="San Francisco">San Francisco</SelectItem>
+            <SelectItem value="Remote">Remote</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -44,6 +45,8 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
             <SelectItem value="Design">Design</SelectItem>
             <SelectItem value="Marketing">Marketing</SelectItem>
             <SelectItem value="Sales">Sales</SelectItem>
+            <SelectItem value="HR">HR</SelectItem>
+            <SelectItem value="Finance">Finance</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -56,6 +59,7 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Sus Manu">Sus Manu</SelectItem>
+            <SelectItem value="Sarah Chen">Sarah Chen</SelectItem>
           </SelectContent>
         </Select>
       </div>
