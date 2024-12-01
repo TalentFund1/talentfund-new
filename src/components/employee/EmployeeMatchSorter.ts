@@ -52,7 +52,7 @@ export const sortEmployeesByRoleMatch = (
     employee => employee.isExactMatch || employee.benchmark > 0
   );
 
-  console.log('Matching employees (including partial matches):', matchingEmployees);
+  console.log('All matching employees:', matchingEmployees);
 
   // Sort by exact match first, then by benchmark score
   const sortedEmployees = matchingEmployees.sort((a, b) => {
