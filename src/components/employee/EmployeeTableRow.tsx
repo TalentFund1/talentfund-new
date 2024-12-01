@@ -31,16 +31,17 @@ export const EmployeeTableRow = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
-  const roleId = getSkillProfileId(employee.role);
+  const employeeRoleId = getSkillProfileId(employee.role);
   const employeeLevel = getLevel(employee.role);
   
   const isExactMatch = selectedJobTitle.length > 0 && 
     selectedJobTitle.some(title => getBaseRole(title) === getBaseRole(employee.role));
 
   const getSkillMatchCount = () => {
-    if (selectedJobTitle.length === 0) return null;
-    
-    const targetRoleId = getSkillProfileId(selectedJobTitle[0]);
+    const targetRoleId = selectedJobTitle.length > 0 
+      ? getSkillProfileId(selectedJobTitle[0])
+      : employeeRoleId;
+      
     const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
     
     if (!currentRoleSkills) return null;
@@ -60,8 +61,10 @@ export const EmployeeTableRow = ({
   };
 
   const getBenchmarkPercentage = () => {
-    if (selectedJobTitle.length === 0) return null;
-    const targetRoleId = getSkillProfileId(selectedJobTitle[0]);
+    const targetRoleId = selectedJobTitle.length > 0 
+      ? getSkillProfileId(selectedJobTitle[0])
+      : employeeRoleId;
+      
     return calculateBenchmarkPercentage(
       employee.id,
       targetRoleId,
@@ -87,7 +90,7 @@ export const EmployeeTableRow = ({
     return (
       <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
         {selectedSkills.map(skillName => {
-          const competencyState = getSkillCompetencyState(skillName, employeeLevel, roleId);
+          const competencyState = getSkillCompetencyState(skillName, employeeLevel, employeeRoleId);
           return competencyState ? (
             <SkillBubble
               key={skillName}
@@ -103,7 +106,7 @@ export const EmployeeTableRow = ({
 
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
-      isExactMatch ? 'bg-blue-50/50' : ''
+      isExactMatch && selectedJobTitle.length > 0 ? 'bg-blue-50/50' : ''
     }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
@@ -124,7 +127,7 @@ export const EmployeeTableRow = ({
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
-            {isExactMatch && (
+            {isExactMatch && selectedJobTitle.length > 0 && (
               <Badge 
                 variant="secondary" 
                 className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
@@ -138,7 +141,7 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[250px]">
         <Link 
-          to={`/skills/${roleId}`} 
+          to={`/skills/${employeeRoleId}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
         >
           {employee.role}
