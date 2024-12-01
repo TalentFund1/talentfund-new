@@ -12,7 +12,7 @@ import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
-import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsProvider";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { getSkillProfileId, getBaseRole } from "@/components/EmployeeTable";
 
 const calculateAverageTenure = (employeeList: any[]) => {
