@@ -56,7 +56,7 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId;  // Removed the "123" fallback
+  return mappedId;
 };
 
 export const getBaseRole = (role: string) => {
