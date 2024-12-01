@@ -13,6 +13,7 @@ import { useTrack } from "../skills/context/TrackContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { professionalLevels, managerialLevels } from "./data/levelData";
 import { getSkillProfileId } from "../EmployeeTable";
+import { getEmployeeTrack } from "../employee/utils/employeeTrackUtils";
 
 interface RoleStore {
   selectedRole: string;
@@ -39,6 +40,7 @@ export const RoleBenchmark = () => {
 
   const employee = employees.find(emp => emp.id === id);
   const employeeRoleId = employee ? getSkillProfileId(employee.role) : "";
+  const employeeTrack = employee ? getEmployeeTrack(employee.role) : "Professional";
   
   // Set initial role based on employee's assigned role
   useEffect(() => {
@@ -46,7 +48,8 @@ export const RoleBenchmark = () => {
       console.log('Setting initial role based on employee role:', {
         employeeId: id,
         employeeRole: employee?.role,
-        roleId: employeeRoleId
+        roleId: employeeRoleId,
+        employeeTrack
       });
       setSelectedRole(employeeRoleId);
     }
@@ -55,11 +58,16 @@ export const RoleBenchmark = () => {
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
 
-  // Set the appropriate level based on track when role changes
+  // Set the appropriate level based on employee's track when role changes
   useEffect(() => {
-    const newLevel = track === "Managerial" ? "m3" : "p4";
-    setSelectedLevel(newLevel);
-  }, [track, setSelectedLevel]);
+    const defaultLevel = employeeTrack === "Managerial" ? "m3" : "p4";
+    console.log('Setting default level based on employee track:', {
+      employeeTrack,
+      defaultLevel,
+      currentTrack: track
+    });
+    setSelectedLevel(defaultLevel);
+  }, [track, setSelectedLevel, employeeTrack]);
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -96,10 +104,14 @@ export const RoleBenchmark = () => {
     selectedRole,
     selectedLevel,
     track,
+    employeeTrack,
     hasSkills: !!currentRoleSkills,
     employeeRole: employee?.role,
     employeeRoleId
   });
+
+  // Determine which levels to show based on employee's track
+  const availableLevels = employeeTrack === "Managerial" ? managerialLevels : professionalLevels;
 
   return (
     <div className="space-y-6">
@@ -134,19 +146,11 @@ export const RoleBenchmark = () => {
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
             <SelectContent>
-              {track === "Managerial" ? (
-                Object.entries(managerialLevels).map(([key, value]) => (
-                  <SelectItem key={key} value={key.toLowerCase()}>
-                    {value} - {getLevelDescription(key)}
-                  </SelectItem>
-                ))
-              ) : (
-                Object.entries(professionalLevels).map(([key, value]) => (
-                  <SelectItem key={key} value={key.toLowerCase()}>
-                    {value} - {getLevelDescription(key)}
-                  </SelectItem>
-                ))
-              )}
+              {Object.entries(availableLevels).map(([key, value]) => (
+                <SelectItem key={key} value={key.toLowerCase()}>
+                  {value} - {getLevelDescription(key)}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
