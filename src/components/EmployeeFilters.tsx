@@ -7,6 +7,7 @@ import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
 import { TrackProvider } from './skills/context/TrackContext';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -23,6 +24,8 @@ interface EmployeeFiltersProps {
   selectedEmployees: string[];
   onManagerChange?: (manager: string[]) => void;
   selectedManager?: string[];
+  onRoleChange?: (role: string) => void;
+  selectedRole?: string;
 }
 
 export const EmployeeFilters = ({ 
@@ -39,7 +42,9 @@ export const EmployeeFilters = ({
   onEmployeeSearch,
   selectedEmployees,
   onManagerChange = () => {},
-  selectedManager = []
+  selectedManager = [],
+  onRoleChange = () => {},
+  selectedRole = ""
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
@@ -57,6 +62,7 @@ export const EmployeeFilters = ({
     onEmploymentTypeChange([]);
     onEmployeeSearch([]);
     onManagerChange([]);
+    onRoleChange("");
   };
 
   return (
@@ -88,6 +94,19 @@ export const EmployeeFilters = ({
             singleSelect={true}
             className="w-[180px]"
           />
+
+          <Select value={selectedRole} onValueChange={onRoleChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="123">AI Engineer</SelectItem>
+              <SelectItem value="124">Backend Engineer</SelectItem>
+              <SelectItem value="125">Frontend Engineer</SelectItem>
+              <SelectItem value="126">Engineering Manager</SelectItem>
+              <SelectItem value="127">DevOps Engineer</SelectItem>
+            </SelectContent>
+          </Select>
           
           <LevelFilter
             onLevelChange={onLevelChange}
