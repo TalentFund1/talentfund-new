@@ -9,7 +9,8 @@ export const filterEmployees = (
   selectedLevel: string[],
   selectedOffice: string[],
   selectedEmploymentType: string[],
-  selectedSkills: string[]
+  selectedSkills: string[],
+  selectedManager: string[] = []
 ): Employee[] => {
   console.log('Filtering employees with criteria:', {
     searchedEmployees,
@@ -17,7 +18,8 @@ export const filterEmployees = (
     selectedJobTitle,
     selectedLevel,
     selectedOffice,
-    selectedEmploymentType
+    selectedEmploymentType,
+    selectedManager
   });
 
   return employees.filter(employee => {
@@ -56,8 +58,11 @@ export const filterEmployees = (
     const matchesEmploymentType = selectedEmploymentType.length === 0 ||
       selectedEmploymentType.includes(employee.category);
 
+    const matchesManager = selectedManager.length === 0 ||
+      (employee.manager && selectedManager.includes(employee.manager));
+
     const matches = matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
-           matchesLevel && matchesOffice && matchesEmploymentType;
+           matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
 
     console.log(`Employee ${employee.name} matches filters:`, matches);
 
