@@ -76,8 +76,9 @@ export const sortEmployeesByRoleMatch = (
 
     if (isExactMatch) {
       exactMatches.push(employeeWithBenchmark);
-    } else {
-      // Include all employees in partial matches, regardless of benchmark score
+    } else if (benchmark > 0) {
+      // Add to partial matches if they have any matching skills (benchmark > 0)
+      // and they're not an exact match
       partialMatches.push(employeeWithBenchmark);
       console.log('Added to partial matches:', {
         employee: employee.name,
