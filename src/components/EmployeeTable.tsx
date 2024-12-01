@@ -26,7 +26,9 @@ interface EmployeeTableProps {
   selectedManager?: string[];
 }
 
-export const getSkillProfileId = (role: string) => {
+export const getSkillProfileId = (role?: string) => {
+  if (!role) return "123"; // Default profile ID if role is undefined
+
   // Validate role ID format first
   const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
   if (validProfileIds.includes(role)) {
@@ -55,14 +57,16 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId;
+  return mappedId || "123"; // Return default if no mapping found
 };
 
-export const getBaseRole = (role: string) => {
+export const getBaseRole = (role?: string) => {
+  if (!role) return "";
   return role.split(":")[0].trim();
 };
 
-export const getLevel = (role: string) => {
+export const getLevel = (role?: string) => {
+  if (!role) return "";
   const parts = role.split(":");
   return parts.length > 1 ? parts[1].trim() : "";
 };

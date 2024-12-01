@@ -47,7 +47,6 @@ const Employees = () => {
     employees,
     selectedEmployees,
     selectedDepartment,
-    [],  // empty array for job title
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
