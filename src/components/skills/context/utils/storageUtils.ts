@@ -1,4 +1,4 @@
-export const getStorageKey = (roleId: string) => `roleToggledSkills-${roleId}`;
+export const getStorageKey = (roleId: string) => `toggled-skills-${roleId}`;
 
 export const loadToggledSkills = (roleId: string): string[] => {
   try {
