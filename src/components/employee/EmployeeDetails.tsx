@@ -102,9 +102,7 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Employee Track</span>
-          <Badge variant="secondary" className="mt-1">
-            {employeeTrack}
-          </Badge>
+          <p className="font-medium text-gray-900">{employeeTrack}</p>
         </div>
       </div>
     </>
