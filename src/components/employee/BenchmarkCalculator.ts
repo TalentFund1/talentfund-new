@@ -10,7 +10,12 @@ export const calculateBenchmarkPercentage = (
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ) => {
-  console.log('Calculating benchmark:', { employeeId, roleId, level });
+  console.log('Calculating benchmark:', { 
+    employeeId, 
+    roleId, 
+    level,
+    toggledSkillsCount: toggledSkills.size
+  });
   
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
@@ -49,15 +54,29 @@ export const calculateBenchmarkPercentage = (
     const employeeSkillLevel = currentStates[skill.title]?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
-    console.log('Comparing skill levels:', {
+    console.log('Comparing competency levels:', {
       skill: skill.title,
       employeeLevel: employeeSkillLevel,
       roleLevel: roleSkillLevel,
       employeeAssignedLevel: level
     });
 
-    // For partial matches, consider any defined skill level as a potential match
-    return employeeSkillLevel !== 'unspecified';
+    // For Professional track, require exact level matches
+    // For Managerial track, allow higher levels to match
+    const getLevelPriority = (level: string = 'unspecified') => {
+      const priorities: { [key: string]: number } = {
+        'advanced': 3,
+        'intermediate': 2,
+        'beginner': 1,
+        'unspecified': 0
+      };
+      return priorities[level.toLowerCase()] ?? 0;
+    };
+
+    const employeePriority = getLevelPriority(employeeSkillLevel);
+    const rolePriority = getLevelPriority(roleSkillLevel);
+
+    return employeePriority >= rolePriority;
   });
 
   // 3. Skill Goal Match (33.33% weight)
