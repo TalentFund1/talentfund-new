@@ -2,9 +2,12 @@ import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { getSkillProfileId } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
+import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -24,10 +27,33 @@ export const EmployeeTableRow = ({
   selectedJobTitle = []
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
   const roleId = getSkillProfileId(employee.role);
   
   const isExactMatch = selectedJobTitle.length > 0 && 
-    selectedJobTitle.some(title => getSkillProfileId(title) === roleId);
+    selectedJobTitle.some(title => getBaseRole(title) === getBaseRole(employee.role));
+
+  const getBenchmarkPercentage = () => {
+    if (selectedJobTitle.length === 0) return null;
+    const targetRoleId = getSkillProfileId(selectedJobTitle[0]);
+    return calculateBenchmarkPercentage(
+      employee.id,
+      targetRoleId,
+      employee.role.split(":")[1]?.trim() || "P4",
+      currentStates,
+      toggledSkills,
+      getSkillCompetencyState
+    );
+  };
+
+  const benchmark = getBenchmarkPercentage();
+
+  const getBenchmarkColor = (percentage: number) => {
+    if (percentage >= 90) return 'bg-green-100 text-green-800';
+    if (percentage >= 70) return 'bg-orange-100 text-orange-800';
+    return 'bg-red-100 text-red-800';
+  };
 
   const renderSkills = () => {
     if (selectedSkills.length === 0) return null;
@@ -72,15 +98,6 @@ export const EmployeeTableRow = ({
             <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
-            {isExactMatch && (
-              <Badge 
-                variant="secondary" 
-                className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
-              >
-                <CheckCircle2 className="w-3 h-3" />
-                Exact Match
-              </Badge>
-            )}
           </div>
         </div>
       </td>
@@ -94,6 +111,33 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[100px] text-sm">{roleId}</td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
+      <td className="px-4 py-4 text-center">
+        {isExactMatch ? (
+          <Badge 
+            variant="secondary" 
+            className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in mx-auto"
+          >
+            <CheckCircle2 className="w-3 h-3" />
+            Exact Match
+          </Badge>
+        ) : selectedJobTitle.length > 0 && benchmark ? (
+          <Badge 
+            variant="secondary" 
+            className="text-xs bg-orange-100 text-orange-800 border border-orange-200 hover:bg-orange-100/80 px-2 py-0.5 font-medium animate-fade-in mx-auto"
+          >
+            Partial Match
+          </Badge>
+        ) : null}
+      </td>
+      <td className="px-4 py-4 text-center">
+        {benchmark !== null && (
+          <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
+            getBenchmarkColor(benchmark)
+          }`}>
+            {Math.round(benchmark)}%
+          </span>
+        )}
+      </td>
       {selectedSkills.length > 0 && (
         <td className="px-4 py-4">
           {renderSkills()}
