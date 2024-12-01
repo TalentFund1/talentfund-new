@@ -26,38 +26,6 @@ interface EmployeeTableProps {
   selectedManager?: string[];
 }
 
-export const getSkillProfileId = (role: string) => {
-  // Validate role ID format first
-  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
-  if (validProfileIds.includes(role)) {
-    console.log('Using direct role ID:', role);
-    return role;
-  }
-
-  // Map role titles to IDs with consistent structure
-  const roleMap: { [key: string]: string } = {
-    "AI Engineer": "123",
-    "Backend Engineer": "124",
-    "Frontend Engineer": "125",
-    "Engineering Manager": "126",
-    "Data Engineer": "127",
-    "DevOps Engineer": "128",
-    "Product Manager": "129",
-    "Frontend Developer": "125"  // Alias for Frontend Engineer
-  };
-  
-  const baseRole = role.split(":")[0].trim();
-  const mappedId = roleMap[baseRole];
-  
-  console.log('Role mapping:', { 
-    originalRole: role,
-    baseRole,
-    mappedId
-  });
-  
-  return mappedId;
-};
-
 export const getBaseRole = (role: string) => {
   return role.split(":")[0].trim();
 };
@@ -89,7 +57,6 @@ const EmployeeTableContent = ({
     employees,
     selectedEmployees,
     selectedDepartment,
-    [],  // empty array for job title
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
@@ -105,7 +72,6 @@ const EmployeeTableContent = ({
 
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
-    [],  // empty array for job title
     currentStates,
     toggledSkills,
     getSkillCompetencyState
