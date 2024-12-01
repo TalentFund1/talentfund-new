@@ -115,17 +115,17 @@ const SkillProfileTableContent = ({
                 checked={selectedRows.length === filteredRows.length && filteredRows.length > 0}
               />
             </TableHead>
-            <TableHead className="w-[22%] h-12">
+            <TableHead className="w-[20%] h-12">
               <div className="flex items-center gap-1">
                 Role Name <ChevronDown className="h-4 w-4" />
               </div>
             </TableHead>
-            <TableHead className="w-[18%] h-12">Function</TableHead>
-            <TableHead className="w-[15%] text-center h-12">Skill Count</TableHead>
-            <TableHead className="w-[15%] text-center h-12">Employees</TableHead>
-            <TableHead className="w-[15%] text-center h-12">Benchmark</TableHead>
-            <TableHead className="w-[10%] text-right whitespace-nowrap h-12">Last Updated</TableHead>
-            <TableHead className="w-[10%] text-center h-12">SOC</TableHead>
+            <TableHead className="w-[15%] h-12">Function</TableHead>
+            <TableHead className="w-[10%] h-12">SOC</TableHead>
+            <TableHead className="w-[12%] text-center h-12">Skill Count</TableHead>
+            <TableHead className="w-[12%] text-center h-12">Employees</TableHead>
+            <TableHead className="w-[12%] text-center h-12">Benchmark</TableHead>
+            <TableHead className="w-[14%] text-right whitespace-nowrap h-12">Last Updated</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -155,6 +155,7 @@ const SkillProfileTableContent = ({
                   </Link>
                 </TableCell>
                 <TableCell className="align-middle">{row.function}</TableCell>
+                <TableCell className="align-middle">{row.soc}</TableCell>
                 <TableCell className="text-center align-middle">{row.skillCount}</TableCell>
                 <TableCell className="text-center align-middle">{row.employees}</TableCell>
                 <TableCell className="text-center align-middle">
@@ -165,7 +166,6 @@ const SkillProfileTableContent = ({
                   </span>
                 </TableCell>
                 <TableCell className="text-right align-middle text-muted-foreground">{row.lastUpdated}</TableCell>
-                <TableCell className="text-center align-middle">{row.soc}</TableCell>
               </TableRow>
             ))
           )}

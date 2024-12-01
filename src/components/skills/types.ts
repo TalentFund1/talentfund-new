@@ -22,7 +22,7 @@ export interface SkillProfileRow {
   matches: string;
   lastUpdated: string;
   occupation?: string;
-  soc?: string;  // Added SOC field
+  soc: string;
 }
 
 export interface EmployeeSkill {
