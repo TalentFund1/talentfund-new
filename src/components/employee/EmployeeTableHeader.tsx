@@ -26,7 +26,7 @@ export const EmployeeTableHeader = ({
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Current Role</th>
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Role ID</th>
       <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Department</th>
-      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Role Match</th>
+      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Match</th>
       <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Benchmark</th>
       {hasSelectedSkills && (
         <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Match</th>
