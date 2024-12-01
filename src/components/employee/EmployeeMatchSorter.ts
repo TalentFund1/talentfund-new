@@ -1,6 +1,7 @@
 import { Employee } from "../types/employeeTypes";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
+import { roleSkills } from "../skills/data/roleSkills";
 
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
@@ -23,6 +24,27 @@ export const sortEmployeesByRoleMatch = (
   // First separate exact matches and calculate benchmarks for remaining employees
   const exactMatches: Employee[] = [];
   const partialMatches: Employee[] = [];
+
+  // Get role skills for benchmark comparison
+  const roleData = roleSkills[roleId as keyof typeof roleSkills];
+  if (!roleData) {
+    console.error('No role skills found for role:', roleId);
+    return employees;
+  }
+
+  const allRoleSkills = [
+    ...roleData.specialized,
+    ...roleData.common,
+    ...roleData.certifications
+  ].filter(skill => toggledSkills.has(skill.title));
+
+  const totalRequiredSkills = allRoleSkills.length;
+
+  console.log('Role skills for matching:', {
+    roleId,
+    totalSkills: totalRequiredSkills,
+    skills: allRoleSkills.map(s => s.title)
+  });
 
   employees.forEach(employee => {
     const employeeRoleId = getSkillProfileId(employee.role);
@@ -55,17 +77,16 @@ export const sortEmployeesByRoleMatch = (
       willBePartialMatch: !isExactMatch && benchmark > 0
     });
 
+    const employeeWithBenchmark = {
+      ...employee,
+      benchmark
+    };
+
     if (isExactMatch) {
-      exactMatches.push({
-        ...employee,
-        benchmark
-      });
+      exactMatches.push(employeeWithBenchmark);
     } else if (benchmark > 0) {
-      // Only add to partial matches if benchmark > 0 and not an exact match
-      partialMatches.push({
-        ...employee,
-        benchmark
-      });
+      // Only add to partial matches if they have matching skills
+      partialMatches.push(employeeWithBenchmark);
     }
   });
 
