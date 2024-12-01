@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
 
 interface SkillProfileFiltersProps {
   selectedSkills: string[];
@@ -51,22 +49,6 @@ export const SkillProfileFilters = ({
           onItemsChange={setSelectedSkills}
           singleSelect={false}
         />
-
-        <div className="flex flex-wrap gap-2">
-          {selectedSkills.map((skill) => (
-            <Badge
-              key={skill}
-              variant="secondary"
-              className="flex items-center gap-1"
-            >
-              {skill}
-              <X
-                className="h-3 w-3 cursor-pointer"
-                onClick={() => setSelectedSkills(selectedSkills.filter(s => s !== skill))}
-              />
-            </Badge>
-          ))}
-        </div>
 
         <div className="flex flex-wrap items-center gap-3">
           <SearchFilter
