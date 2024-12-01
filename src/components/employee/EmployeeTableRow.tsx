@@ -119,7 +119,7 @@ export const EmployeeTableRow = ({
   };
 
   return (
-    <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
+    <tr className={`group border-t border-border hover:bg-muted/50 transition-colors w-full ${
       isExactMatch && selectedJobTitle.length > 0 ? 'bg-blue-50/50' : ''
     } ${isPerfectSkillMatch && selectedSkills.length > 0 ? 'bg-blue-50/50' : ''}`}>
       <td className="px-4 py-4 w-[48px]">
@@ -155,7 +155,7 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[220px]">
         <Link 
-          to={`/skills/${targetRoleId}`} 
+          to={`/skills/${getSkillProfileId(employee.role)}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
         >
           {employee.role}
