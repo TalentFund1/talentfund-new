@@ -44,11 +44,6 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
       getCategoryForSkill(skill, currentRoleId) === 'critical'
     );
     
-    console.log('Calculating average price for critical skills:', {
-      toggledSkillsData,
-      totalSkills: toggledSkillsData.length
-    });
-    
     if (toggledSkillsData.length === 0) return 0;
 
     const totalPrice = toggledSkillsData.reduce((sum, skill) => {
@@ -68,6 +63,8 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
 
   const fullDescription = roleDescriptions[jobTitle as keyof typeof roleDescriptions] || roleDescriptions["AI Engineer"];
   const averagePrice = calculateAveragePrice();
+  const currentRole = roleSkills[currentRoleId as keyof typeof roleSkills];
+  const occupation = currentRole?.occupation || "Not specified";
 
   return (
     <div className="space-y-6">
@@ -101,7 +98,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Occupation</span>
-            <p className="font-medium">Software Developer</p>
+            <p className="font-medium">{occupation}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
