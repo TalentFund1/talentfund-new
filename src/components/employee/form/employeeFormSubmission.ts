@@ -86,12 +86,15 @@ export const processEmployeeData = (formData: FormData): Employee => {
 
   console.log('Processed skills list:', skillsList);
 
-  // Format role with level
-  const formattedRole = `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`;
-  console.log('Formatted role:', formattedRole);
+  // Get role ID from the selected role
+  const roleId = getSkillProfileId(formData.role);
+  console.log('Mapped role ID:', roleId);
+
+  // Format role with level and ID
+  const formattedRole = `${formData.role} (${roleId})${formData.level ? ': ' + formData.level.toUpperCase() : ''}`;
+  console.log('Formatted role with ID:', formattedRole);
 
   // Get role-specific skills
-  const roleId = getSkillProfileId(formData.role);
   const roleSkills = getEmployeeSkills(roleId);
   
   // Categorize skills
@@ -101,7 +104,7 @@ export const processEmployeeData = (formData: FormData): Employee => {
   const lastUpdated = new Date().toLocaleDateString();
   console.log('Setting last updated date:', lastUpdated);
 
-  // Create new employee
+  // Create new employee with role ID included
   const newEmployee: Employee = {
     id: formData.id,
     name: formData.name,
@@ -119,6 +122,6 @@ export const processEmployeeData = (formData: FormData): Employee => {
     termDate: formData.termDate || "-"
   };
 
-  console.log('Created new employee:', newEmployee);
+  console.log('Created new employee with role ID:', newEmployee);
   return newEmployee;
 };
