@@ -68,7 +68,7 @@ export const SkillProfileFilters = ({
           ))}
         </div>
 
-        <div className="flex flex-wrap items-start gap-3 mt-1">
+        <div className="flex flex-wrap items-center gap-3">
           <SearchFilter
             label=""
             placeholder="Job Title"
