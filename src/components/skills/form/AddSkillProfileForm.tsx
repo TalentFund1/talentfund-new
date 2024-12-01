@@ -3,8 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { getEmployeeSkills } from "../../benchmark/skills-matrix/initialSkills";
+import { useTrack } from "../context/TrackContext";
 
 interface FormData {
   roleId: string;
@@ -14,11 +18,13 @@ interface FormData {
   marketPricer: string;
   jobDescription: string;
   skills: string;
+  roleTrack: "Professional" | "Managerial";
 }
 
 export const AddSkillProfileForm = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const { setTrackForRole } = useTrack();
   const [formData, setFormData] = useState<FormData>({
     roleId: "",
     function: "Engineering",
@@ -26,7 +32,8 @@ export const AddSkillProfileForm = () => {
     occupation: "",
     marketPricer: "",
     jobDescription: "",
-    skills: ""
+    skills: "",
+    roleTrack: "Professional"
   });
 
   const handleInputChange = (field: keyof FormData, value: string) => {
@@ -51,7 +58,14 @@ export const AddSkillProfileForm = () => {
       return;
     }
 
-    // TODO: Add profile creation logic here
+    // Map skills from initial skills store
+    const mappedSkills = getEmployeeSkills(formData.roleId);
+    console.log('Mapped skills:', mappedSkills);
+
+    // Set role track
+    setTrackForRole(formData.roleId, formData.roleTrack);
+    console.log('Role track set:', formData.roleTrack);
+
     toast({
       title: "Success",
       description: "Skill profile created successfully",
@@ -124,6 +138,24 @@ export const AddSkillProfileForm = () => {
                 value={formData.marketPricer}
                 onChange={(e) => handleInputChange('marketPricer', e.target.value)}
               />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Role Track</label>
+              <RadioGroup
+                value={formData.roleTrack}
+                onValueChange={(value) => handleInputChange('roleTrack', value as "Professional" | "Managerial")}
+                className="flex space-x-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Professional" id="professional" />
+                  <Label htmlFor="professional">Professional</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Managerial" id="managerial" />
+                  <Label htmlFor="managerial">Managerial</Label>
+                </div>
+              </RadioGroup>
             </div>
 
             <div className="col-span-2 space-y-2">
