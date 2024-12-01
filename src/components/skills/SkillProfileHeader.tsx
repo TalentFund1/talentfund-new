@@ -88,45 +88,52 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="space-y-1">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-semibold text-foreground">{formatTitle(jobTitle)}</h1>
-            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: {currentRoleId}</span>
+            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded-md border border-border">ID: {currentRoleId}</span>
           </div>
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" className="bg-white">Export</Button>
-          <Button className="bg-[#1F2144]">Edit</Button>
+          <Button variant="outline" className="bg-white hover:bg-background">
+            <Download className="w-4 h-4 mr-2" />
+            Export
+          </Button>
+          <Button className="bg-primary hover:bg-primary/90">
+            Edit
+          </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-5 gap-6">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-border/40 hover:border-border/60 transition-colors">
+          <Building2 className="w-4 h-4 text-primary-accent/70" />
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Function</span>
             <p className="font-medium">Engineering</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-border/40 hover:border-border/60 transition-colors">
+          <Users className="w-4 h-4 text-primary-accent/70" />
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">SOC</span>
             <p className="font-medium">({soc})</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-border/40 hover:border-border/60 transition-colors">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
             <p className="font-medium">{mappedTitle}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-border/40 hover:border-border/60 transition-colors">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Occupation</span>
             <p className="font-medium">{occupation}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex flex-col bg-[#F7F9FF] p-2 rounded-lg border border-border">
-            <span className="text-sm text-muted-foreground">Market Pricer</span>
-            <p className="font-medium text-primary">${averagePrice.toLocaleString()}</p>
+          <div className="flex flex-col bg-[#F7F9FF] p-3 rounded-lg border-2 border-primary-accent/30 hover:border-primary-accent/50 transition-all duration-300 shadow-sm hover:shadow-md w-full">
+            <span className="text-sm text-muted-foreground font-medium">Market Pricer</span>
+            <p className="font-semibold text-lg text-primary-accent">${averagePrice.toLocaleString()}</p>
           </div>
         </div>
       </div>
