@@ -35,7 +35,7 @@ export const EmployeeTableRow = ({
   const employeeLevel = getLevel(employee.role);
   
   const isExactMatch = selectedJobTitle.length > 0 && 
-    selectedJobTitle.some(title => getBaseRole(title) === getBaseRole(employee.role));
+    selectedJobTitle.some(title => getSkillProfileId(title) === employeeRoleId);
 
   const getSkillMatchCount = () => {
     const targetRoleId = selectedJobTitle.length > 0 
@@ -156,7 +156,7 @@ export const EmployeeTableRow = ({
         )}
       </td>
       <td className="px-4 py-4 text-center">
-        {benchmark !== null && (
+        {benchmark !== null && benchmark > 0 && (
           <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
             getBenchmarkColor(benchmark)
           }`}>
