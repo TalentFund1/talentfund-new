@@ -2,13 +2,6 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { RoleLevelFields } from "./RoleLevelFields";
-import { BasicFields } from "./fields/BasicFields";
-import { OrganizationFields } from "./fields/OrganizationFields";
-import { DateFields } from "./fields/DateFields";
-import { PersonalInfoFields } from "./fields/PersonalInfoFields";
-import { Avatar } from "@/components/ui/avatar";
-import { Image } from "lucide-react";
-import { useState } from "react";
 
 interface EmployeeFormFieldsProps {
   formData: {
@@ -29,60 +22,179 @@ interface EmployeeFormFieldsProps {
   handleInputChange: (field: string, value: string) => void;
 }
 
+// Basic input fields component
+const BasicFields = ({ formData, handleInputChange }: EmployeeFormFieldsProps) => {
+  console.log('Basic Fields Values:', {
+    id: formData.id,
+    name: formData.name,
+    location: formData.location
+  });
+
+  return (
+    <>
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Employee ID</label>
+        <Input 
+          placeholder="e.g., 127"
+          value={formData.id}
+          onChange={(e) => handleInputChange('id', e.target.value)}
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Name</label>
+        <Input 
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={(e) => handleInputChange('name', e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Location</label>
+        <Input 
+          placeholder="Toronto, ON"
+          value={formData.location}
+          onChange={(e) => handleInputChange('location', e.target.value)}
+        />
+      </div>
+    </>
+  );
+};
+
+// Organization fields component
+const OrganizationFields = ({ formData, handleInputChange }: EmployeeFormFieldsProps) => {
+  console.log('Organization Fields Values:', {
+    office: formData.office,
+    department: formData.department,
+    manager: formData.manager
+  });
+
+  return (
+    <>
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Office</label>
+        <Select value={formData.office} onValueChange={(value) => handleInputChange('office', value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select office" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Toronto">Toronto</SelectItem>
+            <SelectItem value="New York">New York</SelectItem>
+            <SelectItem value="San Francisco">San Francisco</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Department</label>
+        <Select value={formData.department} onValueChange={(value) => handleInputChange('department', value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select department" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Engineering">Engineering</SelectItem>
+            <SelectItem value="Product">Product</SelectItem>
+            <SelectItem value="Design">Design</SelectItem>
+            <SelectItem value="Marketing">Marketing</SelectItem>
+            <SelectItem value="Sales">Sales</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Manager</label>
+        <Select value={formData.manager} onValueChange={(value) => handleInputChange('manager', value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select manager" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Sus Manu">Sus Manu</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  );
+};
+
+// Date fields component
+const DateFields = ({ formData, handleInputChange }: EmployeeFormFieldsProps) => {
+  console.log('Date Fields Values:', {
+    startDate: formData.startDate,
+    termDate: formData.termDate
+  });
+
+  return (
+    <>
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Start Date</label>
+        <Input 
+          type="date"
+          value={formData.startDate}
+          onChange={(e) => handleInputChange('startDate', e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Term Date</label>
+        <Input 
+          type="date"
+          value={formData.termDate}
+          onChange={(e) => handleInputChange('termDate', e.target.value)}
+        />
+      </div>
+    </>
+  );
+};
+
+// Personal info fields component
+const PersonalInfoFields = ({ formData, handleInputChange }: EmployeeFormFieldsProps) => {
+  console.log('Personal Info Fields Values:', {
+    sex: formData.sex,
+    category: formData.category
+  });
+
+  return (
+    <>
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Sex</label>
+        <Select value={formData.sex} onValueChange={(value) => handleInputChange('sex', value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select sex" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="male">Male</SelectItem>
+            <SelectItem value="female">Female</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Category</label>
+        <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Full-time">Full-time</SelectItem>
+            <SelectItem value="Part-time">Part-time</SelectItem>
+            <SelectItem value="Contract">Contract</SelectItem>
+            <SelectItem value="Internship">Internship</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  );
+};
+
 export const EmployeeFormFields = ({
   formData,
   handleInputChange,
 }: EmployeeFormFieldsProps) => {
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
-  const [previewUrl, setPreviewUrl] = useState<string>("");
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setPreviewUrl(result);
-        handleInputChange('avatar', result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   console.log('Employee Form Fields - Complete Form Data:', formData);
 
   return (
     <div className="grid grid-cols-2 gap-4">
-      <div className="col-span-2 flex flex-col items-center gap-4 mb-4">
-        <Avatar className="h-24 w-24">
-          {previewUrl ? (
-            <img src={previewUrl} alt="Profile" className="h-full w-full object-cover" />
-          ) : (
-            <img 
-              src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=96&h=96" 
-              alt="Default Profile" 
-              className="h-full w-full object-cover"
-            />
-          )}
-        </Avatar>
-        <div className="flex items-center gap-2">
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-            id="avatar-upload"
-          />
-          <label
-            htmlFor="avatar-upload"
-            className="flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md cursor-pointer"
-          >
-            <Image className="h-4 w-4" />
-            Upload Photo
-          </label>
-        </div>
-      </div>
-
       <BasicFields formData={formData} handleInputChange={handleInputChange} />
       <OrganizationFields formData={formData} handleInputChange={handleInputChange} />
       <RoleLevelFields formData={formData} handleInputChange={handleInputChange} />

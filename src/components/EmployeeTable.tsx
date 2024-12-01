@@ -30,6 +30,13 @@ interface EmployeeTableProps {
 export const getSkillProfileId = (role?: string) => {
   if (!role) return "123"; // Default profile ID if role is undefined
 
+  // Validate role ID format first
+  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
+  if (validProfileIds.includes(role)) {
+    console.log('Using direct role ID:', role);
+    return role;
+  }
+
   // Map role titles to IDs with consistent structure
   const roleMap: { [key: string]: string } = {
     "Backend Engineer": "124",
@@ -48,8 +55,7 @@ export const getSkillProfileId = (role?: string) => {
   console.log('Role mapping:', { 
     originalRole: role,
     baseRole,
-    mappedId,
-    roleMap
+    mappedId
   });
   
   return mappedId || "123"; // Return default if no mapping found

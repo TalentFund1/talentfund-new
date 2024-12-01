@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { professionalLevels, managerialLevels } from "@/components/benchmark/data/levelData";
 
 interface RoleLevelFieldsProps {
   formData: {
@@ -8,7 +9,7 @@ interface RoleLevelFieldsProps {
   handleInputChange: (field: string, value: string) => void;
 }
 
-export const roleMapping = {
+const roleMapping = {
   "AI Engineer": "123",
   "Backend Engineer": "124",
   "Frontend Engineer": "125",
@@ -20,11 +21,14 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
   const isManagerialRole = formData.role.toLowerCase().includes('manager') || 
                           formData.role.toLowerCase().includes('director');
   
+  const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
+
   console.log('Role and Level Fields State:', {
     currentRole: formData.role,
     roleId: roleMapping[formData.role as keyof typeof roleMapping],
     currentLevel: formData.level,
-    isManagerialRole
+    isManagerialRole,
+    availableLevels: levelOptions
   });
 
   const getLevelDescription = (level: string) => {
@@ -42,24 +46,6 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
       default: return '';
     }
   };
-
-  const professionalLevels = {
-    'P1': 'P1',
-    'P2': 'P2',
-    'P3': 'P3',
-    'P4': 'P4',
-    'P5': 'P5',
-    'P6': 'P6'
-  };
-
-  const managerialLevels = {
-    'M3': 'M3',
-    'M4': 'M4',
-    'M5': 'M5',
-    'M6': 'M6'
-  };
-
-  const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
 
   return (
     <>

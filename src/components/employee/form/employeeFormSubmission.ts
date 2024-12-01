@@ -2,8 +2,6 @@ import { Employee } from "../../types/employeeTypes";
 import { getSkillProfileId } from "../../EmployeeTable";
 import { getEmployeeSkills } from "../../benchmark/skills-matrix/initialSkills";
 import { categorizeSkills } from "../../skills/competency/skillCategories";
-import { roleMapping } from "./RoleLevelFields";
-import { useSkillsMatrixStore } from "../../benchmark/skills-matrix/SkillsMatrixState";
 
 interface FormData {
   id: string;
@@ -73,17 +71,6 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
     }
   }
 
-  // Validate role and level combination
-  const isManagerialRole = formData.role.toLowerCase().includes('manager');
-  const isManagerialLevel = formData.level.toLowerCase().startsWith('m');
-  if (isManagerialRole !== isManagerialLevel) {
-    console.log('Validation failed: Role and level mismatch');
-    return {
-      isValid: false,
-      error: "Selected level does not match the role type (managerial/professional)"
-    };
-  }
-
   console.log('Form validation passed');
   return { isValid: true, error: null };
 };
@@ -91,41 +78,25 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
 export const processEmployeeData = (formData: FormData): Employee => {
   console.log('Processing employee data:', formData);
   
-  // Format role with level
-  const formattedRole = `${formData.role}: ${formData.level.toUpperCase()}`;
-  console.log('Formatted role:', formattedRole);
-
-  // Get role-specific skills
-  const roleId = roleMapping[formData.role as keyof typeof roleMapping];
-  const roleSkills = getEmployeeSkills(roleId);
-  
-  // Process skills list and categorize them
+  // Process skills
   const skillsList = formData.skills
     .split(',')
     .map(skill => skill.trim())
     .filter(skill => skill.length > 0);
 
-  // Initialize each skill with default values in the SkillsMatrix store
-  const skillsMatrixStore = useSkillsMatrixStore.getState();
-  
-  skillsList.forEach(skillTitle => {
-    skillsMatrixStore.setSkillState(skillTitle, 'unspecified', 'unknown');
-    console.log('Initialized skill with defaults:', {
-      skill: skillTitle,
-      level: 'unspecified',
-      requirement: 'unknown'
-    });
-  });
+  console.log('Processed skills list:', skillsList);
 
-  // Categorize skills based on role profile
-  const categorizedSkills = categorizeSkills(skillsList, roleId);
+  // Format role with level
+  const formattedRole = `${formData.role}${formData.level ? ': ' + formData.level.toUpperCase() : ''}`;
+  console.log('Formatted role:', formattedRole);
+
+  // Get role-specific skills
+  const roleId = getSkillProfileId(formData.role);
+  const roleSkills = getEmployeeSkills(roleId);
   
-  console.log('Processed skills:', {
-    roleId,
-    roleSkillsCount: roleSkills.length,
-    userSkillsCount: skillsList.length,
-    categorizedSkills
-  });
+  // Categorize skills
+  const categorizedSkills = categorizeSkills(skillsList, roleId);
+  console.log('Categorized skills:', categorizedSkills);
 
   const lastUpdated = new Date().toLocaleDateString();
   console.log('Setting last updated date:', lastUpdated);

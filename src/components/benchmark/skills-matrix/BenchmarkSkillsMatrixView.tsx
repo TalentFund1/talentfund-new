@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { BenchmarkSkillsMatrixContent } from "./BenchmarkSkillsMatrixContent";
 import { useRef } from "react";
-import { ToggledSkillsProvider } from "../../skills/context/ToggledSkillsContext";
 
 interface BenchmarkSkillsMatrixViewProps {
   roleId: string;
@@ -31,17 +30,15 @@ export const BenchmarkSkillsMatrixView = ({
   const observerTarget = useRef<HTMLDivElement>(null);
 
   return (
-    <ToggledSkillsProvider>
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <BenchmarkSkillsMatrixContent 
-          roleId={roleId}
-          employeeId={employeeId}
-          roleLevel={roleLevel}
-          filteredSkills={filteredSkills}
-          {...props}
-          observerTarget={observerTarget}
-        />
-      </Card>
-    </ToggledSkillsProvider>
+    <Card className="p-6 space-y-6 animate-fade-in bg-white">
+      <BenchmarkSkillsMatrixContent 
+        roleId={roleId}
+        employeeId={employeeId}
+        roleLevel={roleLevel}
+        filteredSkills={filteredSkills}
+        {...props}
+        observerTarget={observerTarget}
+      />
+    </Card>
   );
 };
