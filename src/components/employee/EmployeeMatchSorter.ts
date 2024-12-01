@@ -1,7 +1,7 @@
 import { Employee } from "../types/employeeTypes";
-import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { roleSkills } from "../skills/data/roleSkills";
+import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
@@ -12,18 +12,13 @@ export const sortEmployeesByRoleMatch = (
 ): Employee[] => {
   if (selectedJobTitle.length === 0) return employees;
 
-  const selectedRole = selectedJobTitle[0];
-  const roleId = getSkillProfileId(selectedRole);
-
+  const roleId = getSkillProfileId(selectedJobTitle[0]);
+  
   console.log('Sorting employees by role match:', { 
-    selectedRole, 
+    selectedJobTitle,
     roleId,
     totalEmployees: employees.length 
   });
-
-  // First separate exact matches and calculate benchmarks for remaining employees
-  const exactMatches: Employee[] = [];
-  const partialMatches: Employee[] = [];
 
   // Get role skills for benchmark comparison
   const roleData = roleSkills[roleId as keyof typeof roleSkills];
@@ -44,12 +39,9 @@ export const sortEmployeesByRoleMatch = (
     skills: allRoleSkills.map(s => s.title)
   });
 
-  employees.forEach(employee => {
-    const employeeRoleId = getSkillProfileId(employee.role);
+  // Calculate benchmarks for all employees
+  const employeesWithBenchmarks = employees.map(employee => {
     const employeeLevel = getLevel(employee.role);
-    const isExactMatch = employeeRoleId === roleId;
-
-    // Calculate benchmark for all employees
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
       roleId,
@@ -59,56 +51,22 @@ export const sortEmployeesByRoleMatch = (
       getSkillCompetencyState
     );
 
-    console.log('Processing employee for matching:', {
+    console.log('Employee benchmark calculation:', {
       employee: employee.name,
-      employeeRole: employee.role,
-      employeeRoleId,
-      targetRoleId: roleId,
-      isExactMatch,
+      role: employee.role,
       benchmark,
-      employeeLevel
+      roleId
     });
 
-    const employeeWithBenchmark = {
+    return {
       ...employee,
       benchmark
     };
-
-    if (isExactMatch) {
-      exactMatches.push(employeeWithBenchmark);
-    } else if (benchmark > 0) {
-      // Add to partial matches if they have any matching skills (benchmark > 0)
-      // and they're not an exact match
-      partialMatches.push(employeeWithBenchmark);
-      console.log('Added to partial matches:', {
-        employee: employee.name,
-        role: employee.role,
-        benchmark,
-        skills: allRoleSkills.length
-      });
-    }
   });
 
-  // Sort partial matches by benchmark percentage in descending order
-  const sortedPartialMatches = partialMatches.sort((a, b) => {
-    return (b.benchmark || 0) - (a.benchmark || 0);
-  });
+  // Filter to only show employees with benchmarks > 0%
+  const matchingEmployees = employeesWithBenchmarks.filter(emp => emp.benchmark > 0);
 
-  console.log('Final matching results:', {
-    exactMatches: exactMatches.map(e => ({ 
-      name: e.name, 
-      role: e.role,
-      benchmark: e.benchmark 
-    })),
-    partialMatches: sortedPartialMatches.map(e => ({ 
-      name: e.name, 
-      role: e.role,
-      benchmark: e.benchmark 
-    })),
-    totalExactMatches: exactMatches.length,
-    totalPartialMatches: sortedPartialMatches.length
-  });
-
-  // Combine exact matches first, followed by sorted partial matches
-  return [...exactMatches, ...sortedPartialMatches];
+  // Sort by benchmark percentage in descending order
+  return matchingEmployees.sort((a, b) => (b.benchmark || 0) - (a.benchmark || 0));
 };
