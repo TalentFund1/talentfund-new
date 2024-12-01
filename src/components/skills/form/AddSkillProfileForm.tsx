@@ -11,6 +11,8 @@ interface FormData {
   function: string;
   mappedTitle: string;
   occupation: string;
+  marketPricer: string;
+  jobDescription: string;
   skills: string;
 }
 
@@ -22,6 +24,8 @@ export const AddSkillProfileForm = () => {
     function: "Engineering",
     mappedTitle: "",
     occupation: "",
+    marketPricer: "",
+    jobDescription: "",
     skills: ""
   });
 
@@ -110,6 +114,25 @@ export const AddSkillProfileForm = () => {
                 placeholder="e.g., Software Developer"
                 value={formData.occupation}
                 onChange={(e) => handleInputChange('occupation', e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Market Pricer</label>
+              <Input 
+                placeholder="e.g., $184,085"
+                value={formData.marketPricer}
+                onChange={(e) => handleInputChange('marketPricer', e.target.value)}
+              />
+            </div>
+
+            <div className="col-span-2 space-y-2">
+              <label className="text-sm font-medium">Job Description</label>
+              <Textarea 
+                placeholder="Enter job description"
+                value={formData.jobDescription}
+                onChange={(e) => handleInputChange('jobDescription', e.target.value)}
+                className="min-h-[100px]"
               />
             </div>
 
