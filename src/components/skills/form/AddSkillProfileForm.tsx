@@ -8,12 +8,12 @@ import { BasicProfileFields } from "./fields/BasicProfileFields";
 import { DescriptionFields } from "./fields/DescriptionFields";
 import { RoleTrackSelector } from "./fields/RoleTrackSelector";
 
-export const jobTitles: { [key: string]: string } = {
-  "123": "AI Engineer",
-  "124": "Backend Engineer",
-  "125": "Frontend Engineer",
-  "126": "Engineering Manager",
-  "127": "DevOps Engineer"
+export const jobTitles: { [key: string]: { title: string; mappedTitle: string } } = {
+  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer" },
+  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer" },
+  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer" },
+  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead" },
+  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer" }
 };
 
 interface FormData {
@@ -45,12 +45,13 @@ export const AddSkillProfileForm = () => {
   const handleInputChange = (field: keyof FormData, value: string) => {
     if (field === 'roleId') {
       // When roleId changes, update the mapped title automatically if it exists
-      const roleTitle = jobTitles[value] || formData.roleTitle;
-      console.log('Updating role title mapping:', { roleId: value, mappedTitle: roleTitle });
+      const roleData = jobTitles[value];
+      const mappedTitle = roleData?.mappedTitle || formData.mappedTitle;
+      console.log('Updating role title mapping:', { roleId: value, mappedTitle });
       setFormData(prev => ({
         ...prev,
         [field]: value,
-        mappedTitle: roleTitle
+        mappedTitle
       }));
     } else if (field === 'roleTitle') {
       // When role title changes, update the mapped title for new roles
@@ -85,7 +86,10 @@ export const AddSkillProfileForm = () => {
     // Add new role to jobTitles if it doesn't exist
     if (!jobTitles[formData.roleId] && formData.roleTitle) {
       console.log('Adding new role:', { roleId: formData.roleId, roleTitle: formData.roleTitle });
-      jobTitles[formData.roleId] = formData.roleTitle;
+      jobTitles[formData.roleId] = {
+        title: formData.roleTitle,
+        mappedTitle: formData.mappedTitle
+      };
     }
 
     const mappedSkills = getEmployeeSkills(formData.roleId);

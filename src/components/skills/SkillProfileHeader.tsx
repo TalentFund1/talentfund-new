@@ -12,12 +12,20 @@ interface SkillProfileHeaderProps {
   jobTitle: string;
 }
 
+const jobTitles: { [key: string]: { title: string; mappedTitle: string } } = {
+  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer" },
+  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer" },
+  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer" },
+  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead" },
+  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer" }
+};
+
 const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { toggledSkills } = useToggledSkills();
   const { id } = useParams<{ id: string }>();
   const currentRoleId = id || '';
-  
+
   const formatTitle = (title: string) => {
     return title.split(' ').map(word => {
       if (word.toLowerCase() === 'ai') return 'AI';
@@ -43,7 +51,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
       toggledSkillsList.includes(skill.title) && 
       getCategoryForSkill(skill, currentRoleId) === 'critical'
     );
-    
+
     if (toggledSkillsData.length === 0) return 0;
 
     const totalPrice = toggledSkillsData.reduce((sum, skill) => {
@@ -65,6 +73,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   const averagePrice = calculateAveragePrice();
   const currentRole = roleSkills[currentRoleId as keyof typeof roleSkills];
   const occupation = currentRole?.occupation || "Not specified";
+  const mappedTitle = jobTitles[currentRoleId]?.mappedTitle || jobTitle;
 
   return (
     <div className="space-y-6">
@@ -92,7 +101,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <p className="font-medium">Artificial Engineer</p>
+            <p className="font-medium">{mappedTitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
