@@ -15,6 +15,7 @@ import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
+import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -82,10 +83,7 @@ const EmployeeTableContent = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
-  const employees = useEmployeeStore((state) => {
-    console.log('Current employees in store:', state.employees);
-    return state.employees;
-  });
+  const employees = useEmployeeStore((state) => state.employees);
 
   const preFilteredEmployees = filterEmployees(
     employees,
@@ -99,19 +97,40 @@ const EmployeeTableContent = ({
     selectedManager
   );
 
-  console.log('Pre-filtered employees:', preFilteredEmployees);
-
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
-  console.log('Skill filtered employees:', skillFilteredEmployees);
+  const getEmployeesWithBenchmark = () => {
+    if (selectedJobTitle.length === 0) return skillFilteredEmployees;
 
-  const filteredEmployees = sortEmployeesByRoleMatch(
-    skillFilteredEmployees,
-    selectedJobTitle,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
-  );
+    const targetRoleId = getSkillProfileId(selectedJobTitle[0]);
+    
+    return skillFilteredEmployees.map(employee => {
+      const benchmark = calculateBenchmarkPercentage(
+        employee.id,
+        targetRoleId,
+        getLevel(employee.role),
+        currentStates,
+        toggledSkills,
+        getSkillCompetencyState
+      );
+
+      const isExactMatch = getSkillProfileId(employee.role) === targetRoleId;
+
+      return {
+        ...employee,
+        benchmark,
+        isExactMatch
+      };
+    }).filter(employee => employee.benchmark > 0)
+    .sort((a, b) => {
+      // Sort by exact match first, then by benchmark percentage
+      if (a.isExactMatch && !b.isExactMatch) return -1;
+      if (!a.isExactMatch && b.isExactMatch) return 1;
+      return b.benchmark - a.benchmark;
+    });
+  };
+
+  const filteredEmployees = getEmployeesWithBenchmark();
 
   console.log('Final filtered and sorted employees:', filteredEmployees);
 
@@ -144,6 +163,8 @@ const EmployeeTableContent = ({
                   imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
                   selectedSkills={selectedSkills}
                   selectedJobTitle={selectedJobTitle}
+                  isExactMatch={employee.isExactMatch}
+                  benchmark={employee.benchmark}
                 />
               ))
             )}
