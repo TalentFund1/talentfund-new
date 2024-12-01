@@ -12,6 +12,7 @@ import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilt
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { AddSkillProfileForm } from "@/components/skills/form/AddSkillProfileForm";
+import { TrackProvider } from "@/components/skills/context/TrackContext";
 import {
   Select,
   SelectContent,
@@ -52,7 +53,9 @@ const SkillsProfileContent = () => {
             <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
             <div className="space-x-2">
               <Button variant="outline">Export Data</Button>
-              <AddSkillProfileForm />
+              <TrackProvider>
+                <AddSkillProfileForm />
+              </TrackProvider>
             </div>
           </div>
 
