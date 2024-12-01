@@ -9,21 +9,33 @@ interface BasicProfileFieldsProps {
     occupation: string;
   };
   handleInputChange: (field: string, value: string) => void;
+  jobTitles: { [key: string]: string };
 }
 
 export const BasicProfileFields = ({
   formData,
   handleInputChange,
+  jobTitles
 }: BasicProfileFieldsProps) => {
   return (
     <>
       <div className="space-y-2">
         <label className="text-sm font-medium">Role ID</label>
-        <Input 
-          placeholder="e.g., 123"
-          value={formData.roleId}
-          onChange={(e) => handleInputChange('roleId', e.target.value)}
-        />
+        <Select 
+          value={formData.roleId} 
+          onValueChange={(value) => handleInputChange('roleId', value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select role ID" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(jobTitles).map(([id, title]) => (
+              <SelectItem key={id} value={id}>
+                {id} - {title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">
@@ -51,6 +63,8 @@ export const BasicProfileFields = ({
           placeholder="e.g., Software Engineer"
           value={formData.mappedTitle}
           onChange={(e) => handleInputChange('mappedTitle', e.target.value)}
+          readOnly
+          className="bg-gray-50"
         />
       </div>
 

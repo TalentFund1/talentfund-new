@@ -8,6 +8,14 @@ import { BasicProfileFields } from "./fields/BasicProfileFields";
 import { DescriptionFields } from "./fields/DescriptionFields";
 import { RoleTrackSelector } from "./fields/RoleTrackSelector";
 
+const jobTitles: { [key: string]: string } = {
+  "123": "AI Engineer",
+  "124": "Backend Engineer",
+  "125": "Frontend Engineer",
+  "126": "Engineering Manager",
+  "127": "DevOps Engineer"
+};
+
 interface FormData {
   roleId: string;
   function: string;
@@ -35,10 +43,21 @@ export const AddSkillProfileForm = () => {
   });
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    if (field === 'roleId') {
+      // When roleId changes, update the mapped title automatically
+      const roleTitle = jobTitles[value] || '';
+      console.log('Updating role title mapping:', { roleId: value, mappedTitle: roleTitle });
+      setFormData(prev => ({
+        ...prev,
+        [field]: value,
+        mappedTitle: roleTitle
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
     console.log(`Field ${field} updated to:`, value);
   };
 
@@ -83,6 +102,7 @@ export const AddSkillProfileForm = () => {
             <BasicProfileFields 
               formData={formData}
               handleInputChange={handleInputChange}
+              jobTitles={jobTitles}
             />
             
             <RoleTrackSelector
