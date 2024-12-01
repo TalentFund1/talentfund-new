@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Check, Heart } from "lucide-react";
+import { Heart, X, CircleDashed } from "lucide-react";
 
 interface RequirementSelectorProps {
   currentRequired: string;
@@ -43,13 +43,18 @@ export const RequirementSelector = ({
           <span className="flex items-center gap-2 justify-center">
             {currentRequired === 'required' ? (
               <>
-                <Check className="w-3.5 h-3.5" />
-                <span>Required</span>
+                <Heart className="w-3.5 h-3.5" />
+                <span>Skill Goal</span>
+              </>
+            ) : currentRequired === 'not-interested' ? (
+              <>
+                <X className="w-3.5 h-3.5" />
+                <span>Not Interested</span>
               </>
             ) : (
               <>
-                <Heart className="w-3.5 h-3.5" />
-                <span>Preferred</span>
+                <CircleDashed className="w-3.5 h-3.5" />
+                <span>Unknown</span>
               </>
             )}
           </span>
@@ -58,12 +63,17 @@ export const RequirementSelector = ({
       <SelectContent>
         <SelectItem value="required">
           <span className="flex items-center gap-2">
-            <Check className="w-3.5 h-3.5" /> Required
+            <Heart className="w-3.5 h-3.5" /> Skill Goal
           </span>
         </SelectItem>
-        <SelectItem value="preferred">
+        <SelectItem value="not-interested">
           <span className="flex items-center gap-2">
-            <Heart className="w-3.5 h-3.5" /> Preferred
+            <X className="w-3.5 h-3.5" /> Not Interested
+          </span>
+        </SelectItem>
+        <SelectItem value="unknown">
+          <span className="flex items-center gap-2">
+            <CircleDashed className="w-3.5 h-3.5" /> Unknown
           </span>
         </SelectItem>
       </SelectContent>
