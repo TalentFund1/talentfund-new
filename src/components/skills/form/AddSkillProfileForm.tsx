@@ -2,8 +2,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { getEmployeeSkills } from "../../benchmark/skills-matrix/initialSkills";
-import { useTrack } from "../context/TrackContext";
 import { BasicProfileFields } from "./fields/BasicProfileFields";
 import { DescriptionFields } from "./fields/DescriptionFields";
 import { RoleTrackSelector } from "./fields/RoleTrackSelector";
@@ -37,7 +35,6 @@ interface FormData {
 export const AddSkillProfileForm = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const { setTrackForRole } = useTrack();
   const [formData, setFormData] = useState<FormData>({
     roleId: "",
     roleTitle: "",
@@ -100,11 +97,8 @@ export const AddSkillProfileForm = () => {
       };
     }
 
-    const mappedSkills = getEmployeeSkills(formData.roleId);
+    const mappedSkills = formData.skills.split(',').map(skill => skill.trim());
     console.log('Mapped skills:', mappedSkills);
-
-    setTrackForRole(formData.roleId, formData.roleTrack);
-    console.log('Role track set:', formData.roleTrack);
 
     toast({
       title: "Success",
@@ -125,16 +119,13 @@ export const AddSkillProfileForm = () => {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <BasicProfileFields 
-              formData={formData}
-              handleInputChange={handleInputChange}
-              jobTitles={jobTitles}
-            />
-            
-            <RoleTrackSelector
-              value={formData.roleTrack}
-              onChange={(value) => handleInputChange('roleTrack', value)}
-            />
+            <div className="col-span-2 grid grid-cols-2 gap-4">
+              <BasicProfileFields 
+                formData={formData}
+                handleInputChange={handleInputChange}
+                jobTitles={jobTitles}
+              />
+            </div>
 
             <DescriptionFields 
               formData={formData}

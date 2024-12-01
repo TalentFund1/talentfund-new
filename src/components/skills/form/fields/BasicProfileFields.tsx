@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { JobTitle } from "../AddSkillProfileForm";
+import { RoleTrackSelector } from "./RoleTrackSelector";
 
 const companyFunctions = [
   "Engineering",
@@ -23,6 +24,7 @@ interface BasicProfileFieldsProps {
     mappedTitle: string;
     occupation: string;
     soc: string;
+    roleTrack: "Professional" | "Managerial";
   };
   handleInputChange: (field: string, value: string) => void;
   jobTitles: { [key: string]: JobTitle };
@@ -56,6 +58,13 @@ export const BasicProfileFields = ({
           />
         </div>
       )}
+
+      <div className="col-span-2">
+        <RoleTrackSelector
+          value={formData.roleTrack}
+          onChange={(value) => handleInputChange('roleTrack', value)}
+        />
+      </div>
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Function</label>
