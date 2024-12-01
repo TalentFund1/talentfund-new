@@ -6,6 +6,7 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { roleSkills } from './data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { getCategoryForSkill } from './utils/skillCountUtils';
+import { ToggledSkillsProvider } from "./context/ToggledSkillsContext";
 
 interface SkillProfileHeaderProps {
   jobTitle: string;
@@ -131,12 +132,10 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   );
 };
 
-const SkillProfileHeader = (props: SkillProfileHeaderProps) => {
+export const SkillProfileHeader = (props: SkillProfileHeaderProps) => {
   return (
-    <div className="bg-white rounded-lg p-6">
+    <ToggledSkillsProvider>
       <SkillProfileHeaderContent {...props} />
-    </div>
+    </ToggledSkillsProvider>
   );
 };
-
-export default SkillProfileHeader;

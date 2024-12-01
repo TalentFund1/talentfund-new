@@ -15,7 +15,6 @@ import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
-import { Card } from "@/components/ui/card";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -29,12 +28,14 @@ interface EmployeeTableProps {
 }
 
 export const getSkillProfileId = (role: string) => {
+  // Validate role ID format first
   const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
   if (validProfileIds.includes(role)) {
     console.log('Using direct role ID:', role);
     return role;
   }
 
+  // Map role titles to IDs with consistent structure
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
     "Backend Engineer": "124",
@@ -55,7 +56,7 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId;
+  return mappedId;  // Removed the "123" fallback
 };
 
 export const getBaseRole = (role: string) => {
@@ -112,49 +113,29 @@ const EmployeeTableContent = ({
     getSkillCompetencyState
   );
 
-  // Separate exact matches and partial matches
-  const exactMatches = filteredEmployees.filter(employee => 
-    selectedJobTitle.length > 0 && 
-    selectedJobTitle.some(title => getBaseRole(title) === getBaseRole(employee.role))
-  );
+  console.log('Final filtered and sorted employees:', filteredEmployees);
 
-  const partialMatches = filteredEmployees.filter(employee => {
-    const isExactMatch = selectedJobTitle.some(title => 
-      getBaseRole(title) === getBaseRole(employee.role)
-    );
-    return !isExactMatch && employee.benchmark > 0;
-  });
-
-  console.log('Exact matches:', exactMatches);
-  console.log('Partial matches:', partialMatches);
-
-  const renderEmployeeTable = (employees: Employee[], title: string) => (
-    <Card className="mb-6">
-      <div className="p-4 border-b border-border">
-        <h3 className="text-lg font-medium">{title}</h3>
-        <p className="text-sm text-muted-foreground">
-          {employees.length} {employees.length === 1 ? 'employee' : 'employees'}
-        </p>
-      </div>
+  return (
+    <div className="bg-white rounded-lg">
       <div className="relative">
         <table className="w-full">
           <thead>
             <EmployeeTableHeader 
-              onSelectAll={(e) => handleSelectAll(employees, e)}
-              isAllSelected={employees.length > 0 && selectedRows.length === employees.length}
-              hasEmployees={employees.length > 0}
+              onSelectAll={(e) => handleSelectAll(filteredEmployees, e)}
+              isAllSelected={filteredEmployees.length > 0 && selectedRows.length === filteredEmployees.length}
+              hasEmployees={filteredEmployees.length > 0}
               hasSelectedSkills={selectedSkills.length > 0}
             />
           </thead>
           <tbody>
-            {employees.length === 0 ? (
+            {filteredEmployees.length === 0 ? (
               <tr>
                 <td colSpan={selectedSkills.length > 0 ? 6 : 5} className="text-center py-4 text-muted-foreground">
                   No employees found
                 </td>
               </tr>
             ) : (
-              employees.map((employee, index) => (
+              filteredEmployees.map((employee, index) => (
                 <EmployeeTableRow
                   key={employee.id}
                   employee={employee}
@@ -169,19 +150,6 @@ const EmployeeTableContent = ({
           </tbody>
         </table>
       </div>
-    </Card>
-  );
-
-  return (
-    <div className="space-y-4">
-      {selectedJobTitle.length > 0 ? (
-        <>
-          {renderEmployeeTable(exactMatches, "People with this job")}
-          {renderEmployeeTable(partialMatches, "People with skills that match this job")}
-        </>
-      ) : (
-        renderEmployeeTable(filteredEmployees, "All Employees")
-      )}
     </div>
   );
 };
