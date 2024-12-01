@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { JobTitle } from "../AddSkillProfileForm";
 
 const companyFunctions = [
   "Engineering",
@@ -21,9 +22,10 @@ interface BasicProfileFieldsProps {
     function: string;
     mappedTitle: string;
     occupation: string;
+    soc: string;
   };
   handleInputChange: (field: string, value: string) => void;
-  jobTitles: { [key: string]: string };
+  jobTitles: { [key: string]: JobTitle };
 }
 
 export const BasicProfileFields = ({
@@ -80,8 +82,15 @@ export const BasicProfileFields = ({
           placeholder="e.g., Software Engineer"
           value={formData.mappedTitle}
           onChange={(e) => handleInputChange('mappedTitle', e.target.value)}
-          readOnly
-          className="bg-gray-50"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">SOC</label>
+        <Input 
+          placeholder="e.g., 15-1251"
+          value={formData.soc}
+          onChange={(e) => handleInputChange('soc', e.target.value)}
         />
       </div>
 

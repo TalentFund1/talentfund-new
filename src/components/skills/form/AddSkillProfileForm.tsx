@@ -8,17 +8,18 @@ import { BasicProfileFields } from "./fields/BasicProfileFields";
 import { DescriptionFields } from "./fields/DescriptionFields";
 import { RoleTrackSelector } from "./fields/RoleTrackSelector";
 
-interface JobTitle {
+export interface JobTitle {
   title: string;
   mappedTitle: string;
+  soc?: string;
 }
 
 export const jobTitles: { [key: string]: JobTitle } = {
-  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer" },
-  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer" },
-  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer" },
-  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead" },
-  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer" }
+  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer", soc: "11-9041" },
+  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer", soc: "15-1251" },
+  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer", soc: "15-1252" },
+  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead", soc: "11-9041" },
+  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1244" }
 };
 
 interface FormData {
@@ -30,6 +31,7 @@ interface FormData {
   jobDescription: string;
   skills: string;
   roleTrack: "Professional" | "Managerial";
+  soc: string;
 }
 
 export const AddSkillProfileForm = () => {
@@ -44,22 +46,23 @@ export const AddSkillProfileForm = () => {
     occupation: "",
     jobDescription: "",
     skills: "",
-    roleTrack: "Professional"
+    roleTrack: "Professional",
+    soc: ""
   });
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     if (field === 'roleId') {
-      // When roleId changes, update the mapped title automatically if it exists
       const roleData = jobTitles[value];
       const mappedTitle = roleData?.mappedTitle || formData.mappedTitle;
-      console.log('Updating role title mapping:', { roleId: value, mappedTitle });
+      const soc = roleData?.soc || formData.soc;
+      console.log('Updating role title mapping:', { roleId: value, mappedTitle, soc });
       setFormData(prev => ({
         ...prev,
         [field]: value,
-        mappedTitle
+        mappedTitle,
+        soc
       }));
     } else if (field === 'roleTitle') {
-      // When role title changes, update the mapped title for new roles
       console.log('Updating role title:', { roleTitle: value });
       setFormData(prev => ({
         ...prev,
@@ -79,7 +82,7 @@ export const AddSkillProfileForm = () => {
     e.preventDefault();
     console.log('Form submission started - Form data:', formData);
 
-    if (!formData.roleId || !formData.function || !formData.mappedTitle || !formData.occupation) {
+    if (!formData.roleId || !formData.function || !formData.mappedTitle || !formData.occupation || !formData.soc) {
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields",
@@ -88,12 +91,12 @@ export const AddSkillProfileForm = () => {
       return;
     }
 
-    // Add new role to jobTitles if it doesn't exist
     if (!jobTitles[formData.roleId] && formData.roleTitle) {
       console.log('Adding new role:', { roleId: formData.roleId, roleTitle: formData.roleTitle });
       jobTitles[formData.roleId] = {
         title: formData.roleTitle,
-        mappedTitle: formData.mappedTitle
+        mappedTitle: formData.mappedTitle,
+        soc: formData.soc
       };
     }
 
