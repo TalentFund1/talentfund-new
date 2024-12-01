@@ -27,7 +27,7 @@ export const sortEmployeesByRoleMatch = (
 
     return {
       ...employee,
-      isExactMatch: getBaseRole(employee.role) === selectedRole,
+      isExactMatch: getSkillProfileId(employee.role) === roleId,
       benchmark
     };
   });
