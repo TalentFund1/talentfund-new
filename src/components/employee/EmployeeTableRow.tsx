@@ -37,7 +37,40 @@ export const EmployeeTableRow = ({
 
   const getSkillMatchCount = () => {
     if (selectedJobTitle.length === 0) return null;
-    return "10 / 10";
+    
+    const targetRoleId = getSkillProfileId(selectedJobTitle[0]);
+    const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
+    
+    if (!currentRoleSkills) {
+      console.warn('No skills found for role:', targetRoleId);
+      return "0 / 0";
+    }
+
+    const allSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const toggledSkillsList = Array.from(toggledSkills);
+    const totalSkills = toggledSkillsList.length;
+    
+    if (totalSkills === 0) return "0 / 0";
+
+    const matchingSkills = toggledSkillsList.filter(skillTitle => {
+      const competencyState = getSkillCompetencyState(skillTitle, employee.role.split(":")[1]?.trim() || "P4", targetRoleId);
+      return competencyState !== null;
+    }).length;
+
+    console.log('Skill match calculation:', {
+      employee: employee.name,
+      targetRole: selectedJobTitle[0],
+      totalSkills,
+      matchingSkills,
+      toggledSkills: toggledSkillsList
+    });
+
+    return `${matchingSkills} / ${totalSkills}`;
   };
 
   const getBenchmarkPercentage = () => {
