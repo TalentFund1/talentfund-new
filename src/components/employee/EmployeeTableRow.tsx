@@ -42,22 +42,30 @@ export const EmployeeTableRow = ({
     getSkillProfileId(employee.role) === targetRoleId;
 
   const getSkillMatchCount = () => {
-    const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
-    
-    if (!currentRoleSkills) return null;
+    if (selectedSkills.length === 0) {
+      const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
+      if (!currentRoleSkills) return null;
 
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
+      const allRoleSkills = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].filter(skill => toggledSkills.has(skill.title));
 
-    const matchingSkills = allRoleSkills.filter(roleSkill => {
-      const employeeSkill = getEmployeeSkills(employee.id).find(empSkill => empSkill.title === roleSkill.title);
-      return employeeSkill !== undefined;
-    });
+      const matchingSkills = allRoleSkills.filter(roleSkill => {
+        const employeeSkill = getEmployeeSkills(employee.id).find(empSkill => empSkill.title === roleSkill.title);
+        return employeeSkill !== undefined;
+      });
 
-    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+      return `${matchingSkills.length} / ${allRoleSkills.length}`;
+    } else {
+      // Calculate matches based on selected skills
+      const employeeSkills = getEmployeeSkills(employee.id);
+      const matchingSkills = selectedSkills.filter(skillName => 
+        employeeSkills.some(empSkill => empSkill.title === skillName)
+      );
+      return `${matchingSkills.length} / ${selectedSkills.length}`;
+    }
   };
 
   const getBenchmarkPercentage = () => {
@@ -159,15 +167,17 @@ export const EmployeeTableRow = ({
           </span>
         )}
       </td>
-      <td className="px-4 py-4 text-center w-[120px]">
-        {benchmark !== null && benchmark > 0 && (
-          <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
-            getBenchmarkColor(benchmark)
-          }`}>
-            {Math.round(benchmark)}%
-          </span>
-        )}
-      </td>
+      {selectedSkills.length === 0 && (
+        <td className="px-4 py-4 text-center w-[120px]">
+          {benchmark !== null && benchmark > 0 && (
+            <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
+              getBenchmarkColor(benchmark)
+            }`}>
+              {Math.round(benchmark)}%
+            </span>
+          )}
+        </td>
+      )}
       {selectedSkills.length > 0 && (
         <td className="px-4 py-4 min-w-[300px]">
           {renderSkills()}
