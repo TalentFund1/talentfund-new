@@ -68,7 +68,7 @@ export const employees: Employee[] = [
     location: "Toronto, ON",
     sex: "male",
     category: "Contract",
-    manager: "Sarah Chen",
+    manager: "",
     startDate: "2022-11-01",
     office: "Toronto",
     termDate: "-"
