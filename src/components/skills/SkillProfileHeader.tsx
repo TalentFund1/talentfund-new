@@ -15,14 +15,15 @@ interface SkillProfileHeaderProps {
 interface JobTitle {
   title: string;
   mappedTitle: string;
+  soc: string;
 }
 
 const jobTitles: { [key: string]: JobTitle } = {
-  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer" },
-  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer" },
-  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer" },
-  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead" },
-  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer" }
+  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer", soc: "15-2051" },
+  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer", soc: "15-1252" },
+  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer", soc: "15-1254" },
+  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead", soc: "11-9041" },
+  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1251" }
 };
 
 const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
@@ -79,6 +80,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   const currentRole = roleSkills[currentRoleId as keyof typeof roleSkills];
   const occupation = currentRole?.occupation || "Not specified";
   const mappedTitle = jobTitles[currentRoleId]?.mappedTitle || jobTitle;
+  const socCode = jobTitles[currentRoleId]?.soc || "";
 
   return (
     <div className="space-y-6">
@@ -106,7 +108,10 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <p className="font-medium">{mappedTitle}</p>
+            <div className="flex items-center gap-2">
+              <p className="font-medium">{mappedTitle}</p>
+              <span className="text-sm text-muted-foreground">({socCode})</span>
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2">

@@ -21,7 +21,8 @@ export interface SkillProfileRow {
   employees: string;
   matches: string;
   lastUpdated: string;
-  occupation?: string;  // Added occupation as optional property
+  occupation?: string;
+  soc?: string;  // Added SOC field
 }
 
 export interface EmployeeSkill {
