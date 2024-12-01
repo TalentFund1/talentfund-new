@@ -5,6 +5,11 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
+import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { roleSkills } from "../skills/data/roleSkills";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -13,8 +18,6 @@ interface EmployeeTableRowProps {
   imageUrl: string;
   selectedSkills?: string[];
   selectedJobTitle?: string[];
-  isExactMatch?: boolean;
-  benchmark?: number;
 }
 
 export const EmployeeTableRow = ({ 
@@ -23,13 +26,57 @@ export const EmployeeTableRow = ({
   onSelect, 
   imageUrl,
   selectedSkills = [],
-  selectedJobTitle = [],
-  isExactMatch = false,
-  benchmark = 0
+  selectedJobTitle = []
 }: EmployeeTableRowProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
   const employeeRoleId = getSkillProfileId(employee.role);
   const employeeLevel = getLevel(employee.role);
+  
+  const isExactMatch = selectedJobTitle.length > 0 && 
+    selectedJobTitle.some(title => getBaseRole(title) === getBaseRole(employee.role));
+
+  const getSkillMatchCount = () => {
+    const targetRoleId = selectedJobTitle.length > 0 
+      ? getSkillProfileId(selectedJobTitle[0])
+      : employeeRoleId;
+      
+    const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
+    
+    if (!currentRoleSkills) return null;
+
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ].filter(skill => toggledSkills.has(skill.title));
+
+    const matchingSkills = allRoleSkills.filter(roleSkill => {
+      const employeeSkill = getEmployeeSkills(employee.id).find(empSkill => empSkill.title === roleSkill.title);
+      return employeeSkill !== undefined;
+    });
+
+    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+  };
+
+  const getBenchmarkPercentage = () => {
+    const targetRoleId = selectedJobTitle.length > 0 
+      ? getSkillProfileId(selectedJobTitle[0])
+      : employeeRoleId;
+      
+    return calculateBenchmarkPercentage(
+      employee.id,
+      targetRoleId,
+      employeeLevel,
+      currentStates,
+      toggledSkills,
+      getSkillCompetencyState
+    );
+  };
+
+  const benchmark = getBenchmarkPercentage();
+  const skillMatch = getSkillMatchCount();
 
   const getBenchmarkColor = (percentage: number) => {
     if (percentage >= 90) return 'bg-green-100 text-green-800';
@@ -59,7 +106,7 @@ export const EmployeeTableRow = ({
 
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
-      isExactMatch ? 'bg-blue-50/50' : ''
+      isExactMatch && selectedJobTitle.length > 0 ? 'bg-blue-50/50' : ''
     }`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
@@ -102,14 +149,14 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 text-center">
-        {selectedJobTitle.length > 0 && (
+        {skillMatch && (
           <span className="text-sm text-muted-foreground font-medium">
-            {employee.skillCount} / {employee.skillCount}
+            {skillMatch}
           </span>
         )}
       </td>
       <td className="px-4 py-4 text-center">
-        {benchmark > 0 && (
+        {benchmark !== null && (
           <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
             getBenchmarkColor(benchmark)
           }`}>
