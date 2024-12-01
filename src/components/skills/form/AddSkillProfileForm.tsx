@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { BasicProfileFields } from "./fields/BasicProfileFields";
 import { DescriptionFields } from "./fields/DescriptionFields";
-import { RoleTrackSelector } from "./fields/RoleTrackSelector";
+import { roleSkills } from '../data/roleSkills';
 
 export interface JobTitle {
   title: string;
@@ -48,6 +48,8 @@ export const AddSkillProfileForm = () => {
   });
 
   const handleInputChange = (field: keyof FormData, value: string) => {
+    console.log(`Updating ${field} with value:`, value);
+    
     if (field === 'roleId') {
       const roleData = jobTitles[value];
       const mappedTitle = roleData?.mappedTitle || formData.mappedTitle;
@@ -59,37 +61,69 @@ export const AddSkillProfileForm = () => {
         mappedTitle,
         soc
       }));
-    } else if (field === 'roleTitle') {
-      console.log('Updating role title:', { roleTitle: value });
-      setFormData(prev => ({
-        ...prev,
-        [field]: value,
-        mappedTitle: value
-      }));
     } else {
       setFormData(prev => ({
         ...prev,
         [field]: value
       }));
     }
-    console.log(`Field ${field} updated to:`, value);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submission started - Form data:', formData);
 
-    if (!formData.roleId || !formData.function || !formData.mappedTitle || !formData.occupation || !formData.soc) {
+    // Validate required fields
+    const requiredFields: (keyof FormData)[] = ['roleId', 'function', 'mappedTitle', 'occupation', 'soc'];
+    const missingFields = requiredFields.filter(field => !formData[field]);
+    
+    if (missingFields.length > 0) {
+      console.log('Validation failed - Missing fields:', missingFields);
       toast({
         title: "Validation Error",
-        description: "Please fill in all required fields",
+        description: `Please fill in all required fields: ${missingFields.join(', ')}`,
         variant: "destructive"
       });
       return;
     }
 
-    if (!jobTitles[formData.roleId] && formData.roleTitle) {
-      console.log('Adding new role:', { roleId: formData.roleId, roleTitle: formData.roleTitle });
+    // If it's a new role, validate role title
+    if (!jobTitles[formData.roleId] && !formData.roleTitle) {
+      console.log('Validation failed - Missing role title for new role');
+      toast({
+        title: "Validation Error",
+        description: "Role Title is required for new roles",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Create new role profile
+    const newProfile = {
+      id: formData.roleId,
+      name: formData.roleTitle || jobTitles[formData.roleId]?.title,
+      function: formData.function,
+      mappedTitle: formData.mappedTitle,
+      occupation: formData.occupation,
+      soc: formData.soc,
+      roleTrack: formData.roleTrack,
+      description: formData.jobDescription,
+      skills: formData.skills.split(',').map(skill => skill.trim()),
+      lastUpdated: new Date().toLocaleDateString()
+    };
+
+    console.log('Creating new skill profile:', newProfile);
+
+    // Add to roleSkills (you might want to implement this in a state management solution)
+    roleSkills[formData.roleId] = {
+      specialized: [],
+      common: [],
+      certifications: [],
+      occupation: formData.occupation
+    };
+
+    // Add to jobTitles if it's a new role
+    if (!jobTitles[formData.roleId]) {
       jobTitles[formData.roleId] = {
         title: formData.roleTitle,
         mappedTitle: formData.mappedTitle,
@@ -97,9 +131,7 @@ export const AddSkillProfileForm = () => {
       };
     }
 
-    const mappedSkills = formData.skills.split(',').map(skill => skill.trim());
-    console.log('Mapped skills:', mappedSkills);
-
+    console.log('Profile created successfully');
     toast({
       title: "Success",
       description: "Skill profile created successfully",
