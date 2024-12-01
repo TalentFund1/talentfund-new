@@ -78,11 +78,11 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
             <SelectValue placeholder="Select role" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="AI Engineer">AI Engineer (123)</SelectItem>
-            <SelectItem value="Backend Engineer">Backend Engineer (124)</SelectItem>
-            <SelectItem value="Frontend Engineer">Frontend Engineer (125)</SelectItem>
-            <SelectItem value="Engineering Manager">Engineering Manager (126)</SelectItem>
-            <SelectItem value="DevOps Engineer">DevOps Engineer (127)</SelectItem>
+            <SelectItem value="AI Engineer">AI Engineer</SelectItem>
+            <SelectItem value="Backend Engineer">Backend Engineer</SelectItem>
+            <SelectItem value="Frontend Engineer">Frontend Engineer</SelectItem>
+            <SelectItem value="Engineering Manager">Engineering Manager</SelectItem>
+            <SelectItem value="DevOps Engineer">DevOps Engineer</SelectItem>
           </SelectContent>
         </Select>
       </div>
