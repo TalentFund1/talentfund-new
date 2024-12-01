@@ -114,7 +114,7 @@ export const EmployeeTableRow = ({
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
       isExactMatch && selectedJobTitle.length > 0 ? 'bg-blue-50/50' : ''
     }`}>
-      <td className="px-4 py-4 w-[48px]">
+      <td className="px-4 py-3 w-[48px]">
         <input 
           type="checkbox" 
           className="rounded border-gray-300"
@@ -122,21 +122,21 @@ export const EmployeeTableRow = ({
           onChange={() => onSelect(employee.name)}
         />
       </td>
-      <td className="px-4 py-4 w-[200px]">
+      <td className="px-4 py-3 w-[200px]">
         <div className="flex items-center gap-2">
           <img 
             src={imageUrl}
             alt={employee.name}
-            className="w-6 h-6 rounded-full object-cover"
+            className="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm"
           />
-          <div className="flex items-center gap-2">
-            <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
+          <div className="flex flex-col">
+            <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm font-medium">
               {employee.name}
             </Link>
             {isExactMatch && selectedJobTitle.length > 0 && (
               <Badge 
                 variant="secondary" 
-                className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
+                className="text-[11px] bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1 px-1.5 py-0 font-medium mt-0.5 w-fit"
               >
                 <CheckCircle2 className="w-3 h-3" />
                 Role Match
@@ -145,23 +145,23 @@ export const EmployeeTableRow = ({
           </div>
         </div>
       </td>
-      <td className="px-4 py-4 w-[250px]">
+      <td className="px-4 py-3 w-[250px]">
         <Link 
           to={`/skills/${targetRoleId}`} 
-          className="text-sm text-primary hover:text-primary-accent transition-colors"
+          className="text-sm text-primary hover:text-primary-accent transition-colors font-medium"
         >
           {employee.role}
         </Link>
       </td>
-      <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
-      <td className="px-4 py-4 text-center">
+      <td className="px-4 py-3 w-[150px] text-sm text-muted-foreground">{employee.department}</td>
+      <td className="px-4 py-3 text-center">
         {skillMatch && (
-          <span className="text-sm text-muted-foreground font-medium">
+          <span className="text-sm font-medium bg-background px-2.5 py-1 rounded-full">
             {skillMatch}
           </span>
         )}
       </td>
-      <td className="px-4 py-4 text-center">
+      <td className="px-4 py-3 text-center">
         {benchmark !== null && benchmark > 0 && (
           <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
             getBenchmarkColor(benchmark)
@@ -171,11 +171,25 @@ export const EmployeeTableRow = ({
         )}
       </td>
       {selectedSkills.length > 0 && (
-        <td className="px-4 py-4">
-          {renderSkills()}
+        <td className="px-4 py-3">
+          <div className="flex flex-wrap gap-1.5 min-w-[300px]">
+            {selectedSkills.map(skillName => {
+              const employeeSkill = getEmployeeSkills(employee.id).find(empSkill => empSkill.title === skillName);
+              if (!employeeSkill) return null;
+              
+              return (
+                <SkillBubble
+                  key={skillName}
+                  skillName={skillName}
+                  level={employeeSkill.level || 'unspecified'}
+                  isRequired={false}
+                />
+              );
+            })}
+          </div>
         </td>
       )}
-      <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
+      <td className="px-4 py-3 w-[120px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
       </td>
     </tr>
