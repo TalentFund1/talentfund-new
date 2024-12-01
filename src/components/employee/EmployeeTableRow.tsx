@@ -81,6 +81,8 @@ export const EmployeeTableRow = ({
 
   const benchmark = getBenchmarkPercentage();
   const skillMatch = getSkillMatchCount();
+  const [matchingCount, totalCount] = skillMatch ? skillMatch.split(' / ').map(Number) : [0, 0];
+  const isPerfectSkillMatch = matchingCount === totalCount && totalCount > 0;
 
   const getBenchmarkColor = (percentage: number) => {
     if (percentage >= 90) return 'bg-green-100 text-green-800';
@@ -119,7 +121,7 @@ export const EmployeeTableRow = ({
   return (
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
       isExactMatch && selectedJobTitle.length > 0 ? 'bg-blue-50/50' : ''
-    }`}>
+    } ${isPerfectSkillMatch && selectedSkills.length > 0 ? 'bg-blue-50/50' : ''}`}>
       <td className="px-4 py-4 w-[48px]">
         <input 
           type="checkbox" 
