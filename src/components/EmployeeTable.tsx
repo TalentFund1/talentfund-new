@@ -135,19 +135,17 @@ const EmployeeTableContent = ({
                 </td>
               </tr>
             ) : (
-              <ToggledSkillsProvider>
-                {filteredEmployees.map((employee, index) => (
-                  <EmployeeTableRow
-                    key={employee.id}
-                    employee={employee}
-                    isSelected={selectedRows.includes(employee.name)}
-                    onSelect={handleSelectEmployee}
-                    imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
-                    selectedSkills={selectedSkills}
-                    selectedJobTitle={selectedJobTitle}
-                  />
-                ))}
-              </ToggledSkillsProvider>
+              filteredEmployees.map((employee, index) => (
+                <EmployeeTableRow
+                  key={employee.id}
+                  employee={employee}
+                  isSelected={selectedRows.includes(employee.name)}
+                  onSelect={handleSelectEmployee}
+                  imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
+                  selectedSkills={selectedSkills}
+                  selectedJobTitle={selectedJobTitle}
+                />
+              ))
             )}
           </tbody>
         </table>
@@ -159,7 +157,9 @@ const EmployeeTableContent = ({
 export const EmployeeTable = (props: EmployeeTableProps) => {
   return (
     <TrackProvider>
-      <EmployeeTableContent {...props} />
+      <ToggledSkillsProvider>
+        <EmployeeTableContent {...props} />
+      </ToggledSkillsProvider>
     </TrackProvider>
   );
 };
