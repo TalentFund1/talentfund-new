@@ -8,6 +8,7 @@ import { CheckCircle2 } from "lucide-react";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { roleSkills } from "../skills/data/roleSkills";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -34,6 +35,36 @@ export const EmployeeTableRow = ({
   const isExactMatch = selectedJobTitle.length > 0 && 
     selectedJobTitle.some(title => getBaseRole(title) === getBaseRole(employee.role));
 
+  const getSkillMatchCount = () => {
+    if (selectedJobTitle.length === 0) return null;
+    
+    const targetRoleId = getSkillProfileId(selectedJobTitle[0]);
+    const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
+    
+    if (!currentRoleSkills) {
+      console.warn('No skills found for role:', targetRoleId);
+      return "0 / 0";
+    }
+
+    const allSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const toggledSkillsList = Array.from(toggledSkills);
+    const totalSkills = toggledSkillsList.length;
+    
+    if (totalSkills === 0) return "0 / 0";
+
+    const matchingSkills = toggledSkillsList.filter(skillTitle => {
+      const competencyState = getSkillCompetencyState(skillTitle, employee.role.split(":")[1]?.trim() || "P4", targetRoleId);
+      return competencyState !== null;
+    }).length;
+
+    return `${matchingSkills} / ${totalSkills}`;
+  };
+
   const getBenchmarkPercentage = () => {
     if (selectedJobTitle.length === 0) return null;
     const targetRoleId = getSkillProfileId(selectedJobTitle[0]);
@@ -45,17 +76,6 @@ export const EmployeeTableRow = ({
       toggledSkills,
       getSkillCompetencyState
     );
-  };
-
-  const getSkillMatchCount = () => {
-    if (selectedJobTitle.length === 0) return null;
-    const targetRoleId = getSkillProfileId(selectedJobTitle[0]);
-    const employeeSkills = toggledSkills.size;
-    const matchingSkills = Array.from(toggledSkills).filter(skill => {
-      const competencyState = getSkillCompetencyState(skill, employee.role.split(":")[1]?.trim() || "P4", targetRoleId);
-      return competencyState !== null;
-    }).length;
-    return `${matchingSkills} / ${employeeSkills}`;
   };
 
   const benchmark = getBenchmarkPercentage();
