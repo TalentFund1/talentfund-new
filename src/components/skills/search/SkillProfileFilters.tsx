@@ -42,7 +42,7 @@ export const SkillProfileFilters = ({
 
   return (
     <Card className="p-6">
-      <div className="space-y-4">
+      <div className="space-y-2">
         <SearchFilter
           label=""
           placeholder="Search skills..."
@@ -68,7 +68,7 @@ export const SkillProfileFilters = ({
           ))}
         </div>
 
-        <div className="flex flex-wrap items-start gap-3">
+        <div className="flex flex-wrap items-start gap-3 mt-2">
           <SearchFilter
             label=""
             placeholder="Job Title"
@@ -102,7 +102,7 @@ export const SkillProfileFilters = ({
           <Button 
             variant="outline" 
             onClick={handleClearAll}
-            className="h-[40px] mt-4"
+            className="h-[40px]"
           >
             Clear All
           </Button>
