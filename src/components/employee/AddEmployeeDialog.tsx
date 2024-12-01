@@ -32,7 +32,8 @@ export const AddEmployeeDialog = () => {
     termDate: "",
     sex: "",
     category: "",
-    skills: ""
+    skills: "",
+    avatar: ""
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,7 +85,8 @@ export const AddEmployeeDialog = () => {
         termDate: "",
         sex: "",
         category: "",
-        skills: ""
+        skills: "",
+        avatar: ""
       });
     } catch (error) {
       console.error('Error creating employee:', error);
