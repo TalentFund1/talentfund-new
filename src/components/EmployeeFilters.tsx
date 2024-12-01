@@ -28,6 +28,8 @@ interface EmployeeFiltersProps {
   selectedRole?: string[];
 }
 
+type ValidRole = "Engineering Manager" | "AI Engineer" | "Backend Engineer" | "Frontend Engineer" | "DevOps Engineer";
+
 export const EmployeeFilters = ({ 
   onDepartmentChange, 
   selectedDepartment,
@@ -59,13 +61,24 @@ export const EmployeeFilters = ({
     const occupation = value.occupation;
     switch (occupation) {
       case "Software Developer":
-        return value === roleSkills["126"] ? "Engineering Manager" : value === roleSkills["123"] ? "AI Engineer" : value === roleSkills["124"] ? "Backend Engineer" : value === roleSkills["125"] ? "Frontend Engineer" : value === roleSkills["127"] ? "DevOps Engineer" : null;
+        return value === roleSkills["126"] ? "Engineering Manager" : 
+               value === roleSkills["123"] ? "AI Engineer" : 
+               value === roleSkills["124"] ? "Backend Engineer" : 
+               value === roleSkills["125"] ? "Frontend Engineer" : 
+               value === roleSkills["127"] ? "DevOps Engineer" : 
+               null;
       case "Project Manager":
         return "Engineering Manager";
       default:
         return null;
     }
-  }).filter((role): role is string => role !== null);
+  }).filter((role): role is ValidRole => 
+    role === "Engineering Manager" || 
+    role === "AI Engineer" || 
+    role === "Backend Engineer" || 
+    role === "Frontend Engineer" || 
+    role === "DevOps Engineer"
+  );
 
   console.log('Available roles from database:', roles);
 
