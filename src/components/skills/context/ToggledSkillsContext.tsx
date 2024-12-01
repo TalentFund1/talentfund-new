@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
+import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -10,8 +11,6 @@ interface ToggledSkillsContextType {
 
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
-const getStorageKey = (roleId: string) => `toggled-skills-${roleId}`;
-
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const { id } = useParams();
@@ -19,13 +18,12 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     try {
-      const currentRoleId = selectedRole || id || "123";
-      const savedSkills = localStorage.getItem(getStorageKey(currentRoleId));
+      const savedSkills = loadToggledSkills(selectedRole || id || "123");
       console.log('Initial load of toggled skills:', {
-        roleId: currentRoleId,
-        savedSkills: savedSkills ? JSON.parse(savedSkills) : []
+        roleId: selectedRole || id || "123",
+        savedSkills
       });
-      return new Set(savedSkills ? JSON.parse(savedSkills) : []);
+      return new Set(savedSkills);
     } catch (error) {
       console.error('Error loading initial toggled skills:', error);
       return new Set();
@@ -36,14 +34,12 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   useEffect(() => {
     const currentRoleId = selectedRole || id || "123";
     try {
-      const savedSkills = localStorage.getItem(getStorageKey(currentRoleId));
+      const savedSkills = loadToggledSkills(currentRoleId);
       console.log('Reloading toggled skills for role change:', {
         roleId: currentRoleId,
-        savedSkills: savedSkills ? JSON.parse(savedSkills) : []
+        savedSkills
       });
-      if (savedSkills) {
-        setToggledSkills(new Set(JSON.parse(savedSkills)));
-      }
+      setToggledSkills(new Set(savedSkills));
     } catch (error) {
       console.error('Error reloading toggled skills:', error);
       setToggledSkills(new Set());
@@ -63,7 +59,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     // Save to localStorage immediately after state update
     try {
       const skillsArray = Array.from(newSkills);
-      localStorage.setItem(getStorageKey(currentRoleId), JSON.stringify(skillsArray));
+      saveToggledSkills(currentRoleId, skillsArray);
       
       // Broadcast the change to other components
       window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
