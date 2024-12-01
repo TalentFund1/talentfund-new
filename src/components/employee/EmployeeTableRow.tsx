@@ -31,17 +31,17 @@ export const EmployeeTableRow = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
-  const employeeRoleId = getSkillProfileId(employee.role);
+  
+  const targetRoleId = selectedJobTitle.length > 0 
+    ? getSkillProfileId(selectedJobTitle[0])
+    : getSkillProfileId(employee.role);
+    
   const employeeLevel = getLevel(employee.role);
   
   const isExactMatch = selectedJobTitle.length > 0 && 
-    selectedJobTitle.some(title => getSkillProfileId(title) === employeeRoleId);
+    selectedJobTitle.some(title => getSkillProfileId(title) === targetRoleId);
 
   const getSkillMatchCount = () => {
-    const targetRoleId = selectedJobTitle.length > 0 
-      ? getSkillProfileId(selectedJobTitle[0])
-      : employeeRoleId;
-      
     const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
     
     if (!currentRoleSkills) return null;
@@ -61,10 +61,6 @@ export const EmployeeTableRow = ({
   };
 
   const getBenchmarkPercentage = () => {
-    const targetRoleId = selectedJobTitle.length > 0 
-      ? getSkillProfileId(selectedJobTitle[0])
-      : employeeRoleId;
-      
     return calculateBenchmarkPercentage(
       employee.id,
       targetRoleId,
@@ -90,7 +86,7 @@ export const EmployeeTableRow = ({
     return (
       <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
         {selectedSkills.map(skillName => {
-          const competencyState = getSkillCompetencyState(skillName, employeeLevel, employeeRoleId);
+          const competencyState = getSkillCompetencyState(skillName, employeeLevel, targetRoleId);
           return competencyState ? (
             <SkillBubble
               key={skillName}
@@ -141,7 +137,7 @@ export const EmployeeTableRow = ({
       </td>
       <td className="px-4 py-4 w-[250px]">
         <Link 
-          to={`/skills/${employeeRoleId}`} 
+          to={`/skills/${targetRoleId}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
         >
           {employee.role}

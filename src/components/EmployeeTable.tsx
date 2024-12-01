@@ -39,8 +39,8 @@ export const getSkillProfileId = (role?: string) => {
 
   // Map role titles to IDs with consistent structure
   const roleMap: { [key: string]: string } = {
-    "AI Engineer": "123",
     "Backend Engineer": "124",
+    "AI Engineer": "123",
     "Frontend Engineer": "125",
     "Engineering Manager": "126",
     "Data Engineer": "127",
@@ -152,6 +152,7 @@ const EmployeeTableContent = ({
                   onSelect={handleSelectEmployee}
                   imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
                   selectedSkills={selectedSkills}
+                  selectedJobTitle={selectedRole}
                 />
               ))
             )}
