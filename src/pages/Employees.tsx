@@ -12,7 +12,8 @@ import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
-import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsProvider";
+import { getSkillProfileId, getBaseRole } from "@/components/EmployeeTable";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -58,18 +59,34 @@ const Employees = () => {
   // Apply skills filter
   const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
-  console.log('Filtered employees count:', filteredEmployees.length);
+  // Get exact role matches
+  const exactMatchEmployees = selectedRole.length > 0 
+    ? filteredEmployees.filter(emp => {
+        const employeeRoleId = getSkillProfileId(emp.role);
+        const selectedRoleId = getSkillProfileId(selectedRole[0]);
+        return employeeRoleId === selectedRoleId;
+      })
+    : filteredEmployees;
 
-  const totalEmployees = filteredEmployees.length;
+  console.log('Exact match employees:', {
+    total: exactMatchEmployees.length,
+    employees: exactMatchEmployees.map(e => ({
+      name: e.name,
+      role: e.role,
+      roleId: getSkillProfileId(e.role)
+    }))
+  });
+
+  const totalEmployees = exactMatchEmployees.length;
 
   const calculateFemalePercentage = () => {
-    if (filteredEmployees.length === 0) return 0;
-    const femaleCount = filteredEmployees.filter(emp => emp.sex === 'female').length;
-    return Math.round((femaleCount / filteredEmployees.length) * 100);
+    if (exactMatchEmployees.length === 0) return 0;
+    const femaleCount = exactMatchEmployees.filter(emp => emp.sex === 'female').length;
+    return Math.round((femaleCount / exactMatchEmployees.length) * 100);
   };
 
   // Calculate average tenure for filtered employees
-  const averageTenure = calculateAverageTenure(filteredEmployees);
+  const averageTenure = calculateAverageTenure(exactMatchEmployees);
 
   // Calculate employees added in the last year based on filtered results
   const calculateAddedLastYear = () => {
@@ -77,7 +94,7 @@ const Employees = () => {
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(today.getFullYear() - 1);
     
-    return filteredEmployees.filter(employee => {
+    return exactMatchEmployees.filter(employee => {
       if (!employee.startDate) return false;
       const startDate = new Date(employee.startDate);
       return startDate >= oneYearAgo;
