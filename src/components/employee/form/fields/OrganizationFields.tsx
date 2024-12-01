@@ -1,4 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useEmployeeStore } from "../../store/employeeStore";
+import { getLevel } from "../../../EmployeeTable";
 
 interface OrganizationFieldsProps {
   formData: {
@@ -10,11 +12,15 @@ interface OrganizationFieldsProps {
 }
 
 export const OrganizationFields = ({ formData, handleInputChange }: OrganizationFieldsProps) => {
-  console.log('Organization Fields Values:', {
-    office: formData.office,
-    department: formData.department,
-    manager: formData.manager
-  });
+  const employees = useEmployeeStore((state) => state.employees);
+  
+  // Filter managers based on their role level (M3-M6)
+  const managers = employees.filter(emp => {
+    const level = getLevel(emp.role);
+    return level && level.startsWith('M');
+  }).map(emp => emp.name);
+
+  console.log('Available managers:', managers);
 
   return (
     <>
@@ -58,7 +64,11 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
             <SelectValue placeholder="Select manager" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Sus Manu">Sus Manu</SelectItem>
+            {managers.map((manager) => (
+              <SelectItem key={manager} value={manager}>
+                {manager}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
