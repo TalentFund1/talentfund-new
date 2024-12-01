@@ -83,18 +83,28 @@ export const EmployeeTableRow = ({
   const renderSkills = () => {
     if (selectedSkills.length === 0) return null;
 
+    // Get employee's actual skills
+    const employeeSkills = getEmployeeSkills(employee.id);
+    
+    // Filter to show only selected skills that the employee actually has
+    const skillsToShow = selectedSkills.filter(skillName => 
+      employeeSkills.some(empSkill => empSkill.title === skillName)
+    );
+
     return (
       <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
-        {selectedSkills.map(skillName => {
-          const competencyState = getSkillCompetencyState(skillName, employeeLevel, targetRoleId);
-          return competencyState ? (
+        {skillsToShow.map(skillName => {
+          const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skillName);
+          if (!employeeSkill) return null;
+          
+          return (
             <SkillBubble
               key={skillName}
               skillName={skillName}
-              level={competencyState.level}
-              isRequired={competencyState.required === 'required' || competencyState.required === 'skill_goal'}
+              level={employeeSkill.level || 'unspecified'}
+              isRequired={false}
             />
-          ) : null;
+          );
         })}
       </div>
     );
