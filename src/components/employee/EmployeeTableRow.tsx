@@ -39,7 +39,7 @@ export const EmployeeTableRow = ({
   const employeeLevel = getLevel(employee.role);
   
   const isExactMatch = selectedJobTitle.length > 0 && 
-    selectedJobTitle.some(title => getSkillProfileId(title) === targetRoleId);
+    getSkillProfileId(employee.role) === targetRoleId;
 
   const getSkillMatchCount = () => {
     const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
