@@ -9,6 +9,7 @@ import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { roleSkills } from "../skills/data/roleSkills";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
 interface EmployeeTableRowProps {
   employee: Employee;
