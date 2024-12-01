@@ -16,7 +16,6 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { Card } from "@/components/ui/card";
-import { getBaseRole } from "./EmployeeTable";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -56,7 +55,7 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId;  
+  return mappedId;
 };
 
 export const getBaseRole = (role: string) => {
