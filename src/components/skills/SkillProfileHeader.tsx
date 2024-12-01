@@ -108,7 +108,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <p className="font-medium">{mappedTitle} {socCode && <span className="text-muted-foreground">SOC: {socCode}</span>}</p>
+            <p className="font-medium">{mappedTitle} <span className="text-muted-foreground">{socCode}</span></p>
           </div>
         </div>
         <div className="flex items-center gap-2">
