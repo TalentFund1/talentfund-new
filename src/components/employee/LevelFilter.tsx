@@ -1,6 +1,6 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { useTrack } from '../skills/context/TrackContext';
-import { getSkillProfileId } from '@/utils/roleUtils';
+import { getSkillProfileId } from '../EmployeeTable';
 
 interface LevelFilterProps {
   onLevelChange: (level: string[]) => void;

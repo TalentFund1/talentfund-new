@@ -1,56 +1,39 @@
-import { Employee } from "../types/employeeTypes";
-import { categorizeSkills } from "../skills/competency/skillCategories";
-import { getBaseRole } from '@/utils/roleUtils';
+import { employees } from "./EmployeeData";
+import { filterEmployees } from "./EmployeeFilters";
+import { getBaseRole } from "../EmployeeTable";
 
-export const filterEmployees = (
-  employees: Employee[],
-  searchedEmployees: string[],
-  selectedDepartment: string[],
-  selectedJobTitle: string[],
-  selectedLevel: string[],
-  selectedOffice: string[],
-  selectedEmploymentType: string[],
-  selectedSkills: string[]
-): Employee[] => {
-  return employees.filter(employee => {
-    const matchesEmployeeSearch = searchedEmployees.length === 0 || 
-      searchedEmployees.includes(employee.name);
-
-    const matchesDepartment = selectedDepartment.length === 0 || 
-      selectedDepartment.includes(employee.department);
-    
-    const matchesJobTitle = selectedJobTitle.length === 0 || 
-      selectedJobTitle.includes(getBaseRole(employee.role));
-    
-    const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(getLevel(employee.role));
-
-    const matchesOffice = selectedOffice.length === 0 || 
-      selectedOffice.includes(employee.location.split(',')[0].trim());
-
-    const matchesEmploymentType = selectedEmploymentType.length === 0 ||
-      selectedEmploymentType.includes(employee.category);
-
-    return matchesEmployeeSearch && matchesDepartment && matchesJobTitle && 
-           matchesLevel && matchesOffice && matchesEmploymentType;
-  });
-};
-
-export const processEmployeeSkills = (skills: string, role: string) => {
-  // Convert comma-separated string to array and clean up
-  const skillsList = skills
-    .split(',')
-    .map(skill => skill.trim())
-    .filter(skill => skill.length > 0);
-
-  // Get role ID for categorization
-  const roleId = getSkillProfileId(role);
+export const getEmployeesAddedLastYear = (
+  selectedEmployees: string[] = [],
+  selectedDepartment: string[] = [],
+  selectedLevel: string[] = [],
+  selectedOffice: string[] = [],
+  selectedEmploymentType: string[] = [],
+  selectedSkills: string[] = [],
+  selectedManager: string[] = []
+) => {
+  // First apply all filters
+  const filteredEmployees = filterEmployees(
+    employees,
+    selectedEmployees,
+    selectedDepartment,
+    selectedLevel,
+    selectedOffice,
+    selectedEmploymentType,
+    selectedSkills,
+    selectedManager
+  );
   
-  // Categorize skills
-  const categorizedSkills = categorizeSkills(skillsList, roleId);
-
-  return {
-    skillsList,
-    categorizedSkills
-  };
+  const today = new Date();
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(today.getFullYear() - 1);
+  
+  console.log('Calculating filtered employees added in the last year...');
+  console.log('One year ago:', oneYearAgo.toISOString());
+  
+  return filteredEmployees.filter(employee => {
+    if (!employee.startDate) return false;
+    const startDate = new Date(employee.startDate);
+    console.log(`Employee ${employee.name} start date:`, startDate.toISOString());
+    return startDate >= oneYearAgo;
+  }).length;
 };

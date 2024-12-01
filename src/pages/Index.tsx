@@ -3,7 +3,7 @@ import { SkillsOverview } from "@/components/SkillsOverview";
 import { Sidebar } from "@/components/Sidebar";
 import { Users, UserPlus, TrendingUp, Award } from "lucide-react";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
-import { getSkillProfileId } from '@/utils/roleUtils';
+import { getSkillProfileId } from "@/components/EmployeeTable";
 
 const Index = () => {
   const employees = useEmployeeStore((state) => state.employees);

@@ -9,13 +9,12 @@ import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./skills/competency/CompetencyStateReader";
 import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
-import { sortEmployeesByRoleMatch } from "../utils/employeeMatchUtils";
+import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
-import { getSkillProfileId, getBaseRole, getLevel } from "../utils/roleUtils";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -27,6 +26,51 @@ interface EmployeeTableProps {
   selectedManager?: string[];
   selectedRole?: string[];
 }
+
+export const getSkillProfileId = (role?: string) => {
+  if (!role) return "123"; // Default profile ID if role is undefined
+
+  // Validate role ID format first
+  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
+  if (validProfileIds.includes(role)) {
+    console.log('Using direct role ID:', role);
+    return role;
+  }
+
+  // Map role titles to IDs with consistent structure
+  const roleMap: { [key: string]: string } = {
+    "Backend Engineer": "124",
+    "AI Engineer": "123",
+    "Frontend Engineer": "125",
+    "Engineering Manager": "126",
+    "Data Engineer": "127",
+    "DevOps Engineer": "128",
+    "Product Manager": "129",
+    "Frontend Developer": "125"  // Alias for Frontend Engineer
+  };
+  
+  const baseRole = role.split(":")[0].trim();
+  const mappedId = roleMap[baseRole];
+  
+  console.log('Role mapping:', { 
+    originalRole: role,
+    baseRole,
+    mappedId
+  });
+  
+  return mappedId || "123"; // Return default if no mapping found
+};
+
+export const getBaseRole = (role?: string) => {
+  if (!role) return "";
+  return role.split(":")[0].trim();
+};
+
+export const getLevel = (role?: string) => {
+  if (!role) return "";
+  const parts = role.split(":");
+  return parts.length > 1 ? parts[1].trim() : "";
+};
 
 const EmployeeTableContent = ({ 
   selectedDepartment = [], 

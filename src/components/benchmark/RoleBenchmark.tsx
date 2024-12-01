@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTrack } from "../skills/context/TrackContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { professionalLevels, managerialLevels } from "./data/levelData";
-import { getSkillProfileId } from '@/utils/roleUtils';
+import { getSkillProfileId } from "../EmployeeTable";
 
 interface RoleStore {
   selectedRole: string;

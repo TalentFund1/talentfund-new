@@ -1,6 +1,6 @@
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
-import { getBaseRole } from '@/utils/roleUtils';
+import { getBaseRole } from "../EmployeeTable";
 
 export const calculateBenchmarkPercentage = (
   employeeId: string, 

@@ -1,5 +1,5 @@
 import { categorizeSkills } from "../../skills/competency/skillCategories";
-import { getSkillProfileId } from '@/utils/roleUtils';
+import { getSkillProfileId } from "../../EmployeeTable";
 
 export const processEmployeeSkills = (skills: string, role: string) => {
   // Convert comma-separated string to array and clean up

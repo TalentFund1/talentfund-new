@@ -9,7 +9,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useEmployeeStore } from "../employee/store/employeeStore";
-import { getSkillProfileId } from '@/utils/roleUtils';
+import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
 
 export const BenchmarkAnalysis = () => {

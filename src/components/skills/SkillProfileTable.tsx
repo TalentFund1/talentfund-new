@@ -6,7 +6,7 @@ import type { SkillProfileRow } from "./types";
 import { roleSkills } from './data/roleSkills';
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { employees } from "../employee/EmployeeData";
-import { getBaseRole } from '@/utils/roleUtils';
+import { getBaseRole } from "../EmployeeTable";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
