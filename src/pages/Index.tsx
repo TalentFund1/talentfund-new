@@ -2,8 +2,45 @@ import { StatCard } from "@/components/StatCard";
 import { SkillsOverview } from "@/components/SkillsOverview";
 import { Sidebar } from "@/components/Sidebar";
 import { Users, UserPlus, TrendingUp, Award } from "lucide-react";
+import { useEmployeeStore } from "@/components/employee/store/employeeStore";
+import { getSkillProfileId } from "@/components/EmployeeTable";
 
 const Index = () => {
+  const employees = useEmployeeStore((state) => state.employees);
+  const selectedRole = "Frontend Engineer"; // This should match your default selected role
+  const roleId = getSkillProfileId(selectedRole);
+
+  // Filter exact matches based on role ID
+  const exactMatches = employees.filter(
+    employee => getSkillProfileId(employee.role) === roleId
+  );
+
+  // Calculate statistics for exact matches only
+  const totalExactMatches = exactMatches.length;
+  const addedLastYear = exactMatches.filter(
+    emp => emp.startDate && new Date(emp.startDate) > new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
+  ).length;
+  
+  // Calculate female percentage
+  const femaleEmployees = exactMatches.filter(emp => emp.sex === 'female');
+  const femalePercentage = totalExactMatches > 0 
+    ? Math.round((femaleEmployees.length / totalExactMatches) * 100)
+    : 0;
+
+  // Calculate average tenure
+  const tenureSum = exactMatches.reduce((sum, emp) => {
+    if (emp.startDate) {
+      const startDate = new Date(emp.startDate);
+      const tenure = (Date.now() - startDate.getTime()) / (365 * 24 * 60 * 60 * 1000);
+      return sum + tenure;
+    }
+    return sum;
+  }, 0);
+  
+  const averageTenure = totalExactMatches > 0 
+    ? (tenureSum / totalExactMatches).toFixed(1)
+    : "0.0";
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -15,27 +52,23 @@ const Index = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
-              title="Total Employees"
-              value="124"
-              description="+12% from last month"
+              title="Total Number of Employees"
+              value={totalExactMatches}
               icon={<Users className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
               title="Added in Past 1 Year"
-              value="2"
-              description="New employees"
+              value={addedLastYear}
               icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
-              title="Growth Rate"
-              value="+15%"
-              description="Year over year"
+              title="Share of Female Employees"
+              value={`${femalePercentage}%`}
               icon={<TrendingUp className="h-6 w-6 text-primary-icon" />}
             />
             <StatCard
-              title="Skill Score"
-              value="4.8/5"
-              description="Team performance"
+              title="Average Tenure (Years)"
+              value={averageTenure}
               icon={<Award className="h-6 w-6 text-primary-icon" />}
             />
           </div>
