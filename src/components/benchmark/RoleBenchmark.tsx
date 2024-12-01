@@ -39,36 +39,23 @@ export const RoleBenchmark = () => {
   const { getTrackForRole } = useTrack();
 
   const employee = employees.find(emp => emp.id === id);
+  const employeeRoleId = employee ? getSkillProfileId(employee.role) : "";
+  const employeeTrack = employee ? getEmployeeTrack(employee.role) : "Professional";
   
-  // Extract role ID from employee's role (e.g., "DevOps Engineer: P3" -> "127")
-  const getEmployeeRoleId = (role: string) => {
-    const baseRole = role.split(':')[0].trim();
-    const roleMapping: { [key: string]: string } = {
-      "AI Engineer": "123",
-      "Backend Engineer": "124",
-      "Frontend Engineer": "125",
-      "Engineering Manager": "126",
-      "DevOps Engineer": "127"
-    };
-    return roleMapping[baseRole] || "";
-  };
-
   // Set initial role based on employee's assigned role
   useEffect(() => {
-    if (employee) {
-      const roleId = getEmployeeRoleId(employee.role);
-      console.log('Setting initial role based on employee data:', {
+    if (employeeRoleId) {
+      console.log('Setting initial role based on employee role:', {
         employeeId: id,
-        employeeRole: employee.role,
-        mappedRoleId: roleId
+        employeeRole: employee?.role,
+        roleId: employeeRoleId,
+        employeeTrack
       });
-      if (roleId) {
-        setSelectedRole(roleId);
-      }
+      setSelectedRole(employeeRoleId);
     }
-  }, [employee, setSelectedRole, id]);
+  }, [employeeRoleId, setSelectedRole]);
 
-  const employeeTrack = employee ? getEmployeeTrack(employee.role) : "Professional";
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
 
   // Set the appropriate level based on employee's track when role changes
@@ -84,7 +71,6 @@ export const RoleBenchmark = () => {
 
   // Handle skill updates when role changes
   useEffect(() => {
-    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
     if (!currentRoleSkills) return;
 
     const allSkills = [
@@ -96,7 +82,7 @@ export const RoleBenchmark = () => {
     .filter(skillTitle => toggledSkills.has(skillTitle));
     
     setBenchmarkSearchSkills(allSkills);
-  }, [selectedRole, setBenchmarkSearchSkills, toggledSkills]);
+  }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
 
   const getLevelDescription = (level: string) => {
     switch (level.toLowerCase()) {
@@ -119,8 +105,9 @@ export const RoleBenchmark = () => {
     selectedLevel,
     track,
     employeeTrack,
-    hasSkills: !!roleSkills[selectedRole as keyof typeof roleSkills],
-    employeeRole: employee?.role
+    hasSkills: !!currentRoleSkills,
+    employeeRole: employee?.role,
+    employeeRoleId
   });
 
   // Determine which levels to show based on employee's track
