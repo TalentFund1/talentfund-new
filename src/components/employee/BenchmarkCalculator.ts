@@ -33,7 +33,9 @@ export const calculateBenchmarkPercentage = (
   // 1. Basic Skill Match (33.33% weight)
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    return employeeSkill !== undefined;
+    const hasMatch = employeeSkill !== undefined;
+    console.log(`Skill match check for ${roleSkill.title}:`, hasMatch);
+    return hasMatch;
   });
 
   // 2. Competency Level Match (33.33% weight)
@@ -44,7 +46,7 @@ export const calculateBenchmarkPercentage = (
       return false;
     }
 
-    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const employeeSkillLevel = currentStates[skill.title]?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     console.log('Comparing skill levels:', {
@@ -54,21 +56,8 @@ export const calculateBenchmarkPercentage = (
       employeeAssignedLevel: level
     });
 
-    const getLevelPriority = (level: string = 'unspecified') => {
-      const priorities: { [key: string]: number } = {
-        'advanced': 3,
-        'intermediate': 2,
-        'beginner': 1,
-        'unspecified': 0
-      };
-      return priorities[level.toLowerCase()] ?? 0;
-    };
-
-    const employeePriority = getLevelPriority(employeeSkillLevel);
-    const rolePriority = getLevelPriority(roleSkillLevel);
-
-    // For partial matches, we want to be more lenient with level matching
-    return employeePriority > 0; // Consider any defined level as a match for partial matches
+    // For partial matches, consider any defined skill level as a potential match
+    return employeeSkillLevel !== 'unspecified';
   });
 
   // 3. Skill Goal Match (33.33% weight)
@@ -78,8 +67,9 @@ export const calculateBenchmarkPercentage = (
       console.log('No skill state found for skill:', skill.title);
       return false;
     }
-    return skillState.requirement === 'required' || 
-           skillState.requirement === 'skill_goal';
+    const isMatch = skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
+    console.log(`Skill goal match check for ${skill.title}:`, isMatch);
+    return isMatch;
   });
 
   // Calculate individual percentages

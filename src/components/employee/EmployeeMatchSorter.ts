@@ -46,8 +46,8 @@ export const sortEmployeesByRoleMatch = (
 
   employees.forEach(employee => {
     const employeeRoleId = getSkillProfileId(employee.role);
-    const isExactMatch = employeeRoleId === roleId;
     const employeeLevel = getLevel(employee.role);
+    const isExactMatch = employeeRoleId === roleId;
 
     // Calculate benchmark for all employees
     const benchmark = calculateBenchmarkPercentage(
@@ -66,8 +66,7 @@ export const sortEmployeesByRoleMatch = (
       targetRoleId: roleId,
       isExactMatch,
       benchmark,
-      employeeLevel,
-      willBePartialMatch: !isExactMatch && benchmark > 0
+      employeeLevel
     });
 
     const employeeWithBenchmark = {
