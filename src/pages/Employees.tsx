@@ -33,7 +33,6 @@ const calculateAverageTenure = (employeeList: any[]) => {
 
 const Employees = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
-  const [selectedJobTitle, setSelectedJobTitle] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
   const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
@@ -48,7 +47,7 @@ const Employees = () => {
     employees,
     selectedEmployees,
     selectedDepartment,
-    selectedJobTitle,
+    [],  // empty array for job title
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
@@ -61,7 +60,6 @@ const Employees = () => {
 
   console.log('Filtered employees count:', filteredEmployees.length);
 
-  // Calculate total employees based on filtered results
   const totalEmployees = filteredEmployees.length;
 
   const calculateFemalePercentage = () => {
@@ -104,8 +102,6 @@ const Employees = () => {
               <EmployeeFilters 
                 onDepartmentChange={setSelectedDepartment}
                 selectedDepartment={selectedDepartment}
-                onJobTitleChange={setSelectedJobTitle}
-                selectedJobTitle={selectedJobTitle}
                 onLevelChange={setSelectedLevel}
                 selectedLevel={selectedLevel}
                 onOfficeChange={setSelectedOffice}
@@ -147,7 +143,6 @@ const Employees = () => {
             <Card className="p-6">
               <EmployeeTable 
                 selectedDepartment={selectedDepartment}
-                selectedJobTitle={selectedJobTitle}
                 selectedLevel={selectedLevel}
                 selectedOffice={selectedOffice}
                 selectedEmploymentType={selectedEmploymentType}

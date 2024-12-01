@@ -18,7 +18,6 @@ import { TrackProvider } from "./skills/context/TrackContext";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
-  selectedJobTitle?: string[];
   selectedLevel?: string[];
   selectedOffice?: string[];
   selectedEmploymentType?: string[];
@@ -70,7 +69,6 @@ export const getLevel = (role: string) => {
 
 const EmployeeTableContent = ({ 
   selectedDepartment = [], 
-  selectedJobTitle = [],
   selectedLevel = [],
   selectedOffice = [],
   selectedEmploymentType = [],
@@ -91,7 +89,7 @@ const EmployeeTableContent = ({
     employees,
     selectedEmployees,
     selectedDepartment,
-    selectedJobTitle,
+    [],  // empty array for job title
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
@@ -107,7 +105,7 @@ const EmployeeTableContent = ({
 
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
-    selectedJobTitle,
+    [],  // empty array for job title
     currentStates,
     toggledSkills,
     getSkillCompetencyState
@@ -143,7 +141,7 @@ const EmployeeTableContent = ({
                   onSelect={handleSelectEmployee}
                   imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
                   selectedSkills={selectedSkills}
-                  selectedJobTitle={selectedJobTitle}
+                  selectedJobTitle={[]}
                 />
               ))
             )}

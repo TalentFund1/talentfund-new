@@ -6,14 +6,11 @@ import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
-import { jobTitles } from './skills/competency/skillProfileData';
 import { TrackProvider } from './skills/context/TrackContext';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
   selectedDepartment: string[];
-  onJobTitleChange: (jobTitle: string[]) => void;
-  selectedJobTitle: string[];
   onLevelChange: (level: string[]) => void;
   selectedLevel: string[];
   onOfficeChange: (office: string[]) => void;
@@ -31,8 +28,6 @@ interface EmployeeFiltersProps {
 export const EmployeeFilters = ({ 
   onDepartmentChange, 
   selectedDepartment,
-  onJobTitleChange,
-  selectedJobTitle,
   onLevelChange,
   selectedLevel,
   onOfficeChange,
@@ -54,17 +49,8 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  const availableJobTitles = Object.values(jobTitles);
-
-  console.log('Available job titles:', availableJobTitles);
-
-  useEffect(() => {
-    onLevelChange([]);
-  }, [selectedJobTitle, onLevelChange]);
-
   const handleClearAll = () => {
     onSkillsChange([]);
-    onJobTitleChange([]);
     onLevelChange([]);
     onOfficeChange([]);
     onDepartmentChange([]);
@@ -102,21 +88,11 @@ export const EmployeeFilters = ({
             singleSelect={true}
             className="w-[180px]"
           />
-
-          <SearchFilter
-            label=""
-            placeholder="Job Title"
-            items={availableJobTitles}
-            selectedItems={selectedJobTitle}
-            onItemsChange={(items) => onJobTitleChange(items.map(item => String(item)))}
-            singleSelect={true}
-            className="w-[180px]"
-          />
           
           <LevelFilter
             onLevelChange={onLevelChange}
             selectedLevel={selectedLevel}
-            selectedJobTitle={selectedJobTitle}
+            selectedJobTitle={[]}
           />
           
           <SearchFilter
