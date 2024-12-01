@@ -49,7 +49,7 @@ export const sortEmployeesByRoleMatch = (
 
   // Filter to keep only employees with benchmark > 0 or exact role matches
   const matchingEmployees = employeesWithBenchmarks.filter(
-    employee => employee.isExactMatch || employee.benchmark >= 50
+    employee => employee.isExactMatch || employee.benchmark > 0
   );
 
   console.log('Matching employees:', matchingEmployees.map(emp => ({
