@@ -4,14 +4,14 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
 import { useTrack } from "../skills/context/TrackContext";
 import { useSkillsFiltering } from "./skills-matrix/useSkillsFiltering";
 import { useBenchmarkSkillsMatrixState } from "./skills-matrix/BenchmarkSkillsMatrixState";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
-export const BenchmarkSkillsMatrix = () => {
+const BenchmarkSkillsMatrixContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState("all");
@@ -67,5 +67,13 @@ export const BenchmarkSkillsMatrix = () => {
         visibleItems={visibleItems}
       />
     </div>
+  );
+};
+
+export const BenchmarkSkillsMatrix = () => {
+  return (
+    <ToggledSkillsProvider>
+      <BenchmarkSkillsMatrixContent />
+    </ToggledSkillsProvider>
   );
 };
