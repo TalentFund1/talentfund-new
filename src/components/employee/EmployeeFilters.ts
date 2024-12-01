@@ -1,5 +1,6 @@
 import { Employee } from "../types/employeeTypes";
-import { getBaseRole, getLevel, getSkillProfileId } from "../EmployeeTable";
+import { getSkillProfileId } from "../EmployeeTable";
+import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 
 export const filterEmployees = (
   employees: Employee[],
@@ -29,28 +30,41 @@ export const filterEmployees = (
     const matchesDepartment = selectedDepartment.length === 0 || 
       selectedDepartment.includes(employee.department);
     
-    // Match by role ID or base role name
+    // Match only by exact role ID or benchmark percentage
     const matchesJobTitle = selectedJobTitle.length === 0 || 
       selectedJobTitle.some(title => {
         const titleRoleId = getSkillProfileId(title);
         const employeeRoleId = getSkillProfileId(employee.role);
-        const baseRoleMatch = getBaseRole(employee.role) === getBaseRole(title);
         
-        console.log('Role matching:', {
+        // First check exact role ID match
+        if (titleRoleId === employeeRoleId) {
+          console.log('Exact role match found:', {
+            employee: employee.name,
+            employeeRole: employee.role,
+            employeeRoleId,
+            selectedTitle: title,
+            titleRoleId
+          });
+          return true;
+        }
+        
+        // If no exact match, check benchmark percentage
+        const benchmark = employee.benchmark;
+        const isPartialMatch = benchmark > 0;
+        
+        console.log('Role matching result:', {
           employee: employee.name,
           employeeRole: employee.role,
-          employeeRoleId,
           selectedTitle: title,
-          titleRoleId,
-          baseRoleMatch,
-          isMatch: titleRoleId === employeeRoleId || baseRoleMatch
+          benchmark,
+          isPartialMatch
         });
         
-        return titleRoleId === employeeRoleId || baseRoleMatch;
+        return isPartialMatch;
       });
     
     const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(getLevel(employee.role));
+      selectedLevel.includes(employee.role.split(':')[1]?.trim());
 
     const matchesOffice = selectedOffice.length === 0 || 
       selectedOffice.includes(employee.location.split(',')[0].trim());
