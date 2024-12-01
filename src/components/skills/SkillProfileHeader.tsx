@@ -103,32 +103,32 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-2 flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
-          <div className="flex flex-col min-w-0">
+      <div className="grid grid-cols-6 gap-6">
+        <div className="col-span-1 flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
+          <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Function</span>
             <p className="font-medium truncate">{occupation}</p>
           </div>
         </div>
-        <div className="col-span-2 flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
-          <div className="flex flex-col min-w-0">
+        <div className="col-span-1 flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
+          <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">SOC</span>
             <p className="font-medium truncate">({soc})</p>
           </div>
         </div>
-        <div className="col-span-4 flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
-          <div className="flex flex-col min-w-0">
+        <div className="col-span-2 flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
+          <div className="flex flex-col w-full">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
             <p className="font-medium truncate">{mappedTitle}</p>
           </div>
         </div>
-        <div className="col-span-2 flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
-          <div className="flex flex-col min-w-0">
+        <div className="col-span-1 flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
+          <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Occupation</span>
             <p className="font-medium truncate">{occupation}</p>
           </div>
         </div>
-        <div className="col-span-2 flex items-center gap-2">
+        <div className="col-span-1 flex items-center gap-2">
           <div className="flex flex-col bg-[#F7F9FF] p-3 rounded-lg border-2 border-primary-accent/30 hover:border-primary-accent/50 transition-all duration-300 shadow-sm hover:shadow-md w-full">
             <span className="text-sm text-muted-foreground font-medium">Market Pricer</span>
             <p className="font-semibold text-lg text-primary-accent">${averagePrice.toLocaleString()}</p>
