@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Building2, DollarSign } from "lucide-react";
+import { Building2, Download, Users } from "lucide-react";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
@@ -124,9 +124,9 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex flex-col">
+          <div className="flex flex-col bg-[#F7F9FF] p-2 rounded-lg">
             <span className="text-sm text-muted-foreground">Market Pricer</span>
-            <p className="font-medium">${averagePrice.toLocaleString()}</p>
+            <p className="font-medium text-primary">${averagePrice.toLocaleString()}</p>
           </div>
         </div>
       </div>
