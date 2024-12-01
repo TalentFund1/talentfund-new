@@ -1,5 +1,5 @@
 export const roleSkills = {
-  "123": { // AI Engineer
+  "123": {
     specialized: [
       { title: "Machine Learning", subcategory: "AI & ML", level: "unspecified", growth: "30%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
       { title: "Deep Learning", subcategory: "AI & ML", level: "unspecified", growth: "28%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
@@ -17,7 +17,7 @@ export const roleSkills = {
       { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "unspecified", growth: "20%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } }
     ]
   },
-  "124": { // Backend Engineer
+  "124": {
     specialized: [
       { title: "Node.js", subcategory: "Backend Development", level: "unspecified", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Database Design", subcategory: "Data Management", level: "unspecified", growth: "15%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
@@ -35,7 +35,7 @@ export const roleSkills = {
       { title: "Kubernetes Administrator (CKA)", subcategory: "Container Certification", level: "unspecified", growth: "25%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } }
     ]
   },
-  "125": { // Frontend Engineer
+  "125": {
     specialized: [
       { title: "React", subcategory: "Frontend Frameworks", level: "unspecified", growth: "20%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
       { title: "TypeScript", subcategory: "Programming Languages", level: "unspecified", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
@@ -53,7 +53,7 @@ export const roleSkills = {
       { title: "Google Mobile Web Specialist", subcategory: "Web Development Certification", level: "unspecified", growth: "20%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } }
     ]
   },
-  "126": { // Engineering Manager
+  "126": {
     specialized: [
       { title: "System Design", subcategory: "Architecture", level: "unspecified", growth: "25%", salary: "$192,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Technical Architecture", subcategory: "Architecture", level: "unspecified", growth: "30%", salary: "$195,000", benchmarks: { J: true, B: true, O: true } },
@@ -71,7 +71,7 @@ export const roleSkills = {
       { title: "Certified Scrum Master (CSM)", subcategory: "Agile Certification", level: "unspecified", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } }
     ]
   },
-  "127": { // DevOps Engineer
+  "127": {
     specialized: [
       { title: "Docker", subcategory: "Container Technology", level: "unspecified", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Kubernetes", subcategory: "Container Orchestration", level: "unspecified", growth: "28%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } },
@@ -89,6 +89,47 @@ export const roleSkills = {
       { title: "AWS Certified DevOps Engineer", subcategory: "Cloud Certification", level: "unspecified", growth: "25%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Certified Kubernetes Administrator", subcategory: "Container Certification", level: "unspecified", growth: "28%", salary: "$180,000", benchmarks: { J: true, B: true, O: true } },
       { title: "HashiCorp Certified Terraform Associate", subcategory: "Infrastructure Certification", level: "unspecified", growth: "24%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } }
+    ]
+  },
+  "128": {
+    specialized: [
+      { title: "AWS", level: "advanced" },
+      { title: "Azure", level: "intermediate" },
+      { title: "GCP", level: "intermediate" },
+      { title: "Docker", level: "advanced" },
+      { title: "Kubernetes", level: "advanced" },
+      { title: "Terraform", level: "advanced" },
+      { title: "Prometheus", level: "advanced" },
+      { title: "Grafana", level: "advanced" },
+      { title: "ELK Stack", level: "intermediate" },
+      { title: "Jenkins", level: "advanced" },
+      { title: "CircleCI", level: "intermediate" },
+      { title: "Istio", level: "intermediate" },
+      { title: "Consul", level: "intermediate" },
+      { title: "Vault", level: "intermediate" }
+    ],
+    common: [
+      { title: "Git", level: "advanced" },
+      { title: "Python", level: "advanced" },
+      { title: "Bash", level: "advanced" },
+      { title: "Ruby", level: "intermediate" },
+      { title: "PostgreSQL", level: "intermediate" },
+      { title: "MySQL", level: "intermediate" },
+      { title: "MongoDB", level: "intermediate" },
+      { title: "Redis", level: "intermediate" },
+      { title: "Nginx", level: "advanced" },
+      { title: "Apache", level: "advanced" },
+      { title: "Linux", level: "advanced" },
+      { title: "PowerShell", level: "intermediate" },
+      { title: "Helm", level: "advanced" },
+      { title: "Ansible", level: "advanced" }
+    ],
+    certifications: [
+      { title: "AWS Certified DevOps Engineer Professional", level: "advanced" },
+      { title: "Certified Kubernetes Administrator (CKA)", level: "advanced" },
+      { title: "HashiCorp Certified Terraform Associate", level: "advanced" },
+      { title: "Google Cloud Professional DevOps Engineer", level: "intermediate" },
+      { title: "Microsoft Azure DevOps Engineer Expert", level: "intermediate" }
     ]
   }
 };
