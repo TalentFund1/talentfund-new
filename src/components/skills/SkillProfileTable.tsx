@@ -30,6 +30,8 @@ const SkillProfileTableContent = ({
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
+  console.log('Selected occupation:', selectedOccupation);
+  
   const getExactRoleMatches = (roleName: string) => {
     return employees.filter(emp => getBaseRole(emp.role) === roleName).length;
   };
@@ -60,11 +62,11 @@ const SkillProfileTableContent = ({
   };
 
   const rows: SkillProfileRow[] = [
-    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: String(getExactRoleMatches("AI Engineer")), matches: `${calculateAverageBenchmark("123", "AI Engineer")}%`, lastUpdated: "10/20/24", occupation: "Software Developer", soc: "15-2051" },
-    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: String(getExactRoleMatches("Backend Engineer")), matches: `${calculateAverageBenchmark("124", "Backend Engineer")}%`, lastUpdated: "10/20/24", occupation: "Software Developer", soc: "15-1252" },
-    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: String(getExactRoleMatches("Frontend Engineer")), matches: `${calculateAverageBenchmark("125", "Frontend Engineer")}%`, lastUpdated: "10/20/24", occupation: "Software Developer", soc: "15-1254" },
-    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: String(getExactRoleMatches("Engineering Manager")), matches: `${calculateAverageBenchmark("126", "Engineering Manager")}%`, lastUpdated: "10/20/24", occupation: "Project Manager", soc: "11-9041" },
-    { id: "127", name: "DevOps Engineer", function: "Engineering", skillCount: "13", employees: String(getExactRoleMatches("DevOps Engineer")), matches: `${calculateAverageBenchmark("127", "DevOps Engineer")}%`, lastUpdated: "10/20/24", occupation: "DevOps Engineer", soc: "15-1251" }
+    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: String(getExactRoleMatches("AI Engineer")), matches: `${calculateAverageBenchmark("123", "AI Engineer")}%`, lastUpdated: "10/20/24", occupation: "Software Developer" },
+    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: String(getExactRoleMatches("Backend Engineer")), matches: `${calculateAverageBenchmark("124", "Backend Engineer")}%`, lastUpdated: "10/20/24", occupation: "Software Developer" },
+    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: String(getExactRoleMatches("Frontend Engineer")), matches: `${calculateAverageBenchmark("125", "Frontend Engineer")}%`, lastUpdated: "10/20/24", occupation: "Software Developer" },
+    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: String(getExactRoleMatches("Engineering Manager")), matches: `${calculateAverageBenchmark("126", "Engineering Manager")}%`, lastUpdated: "10/20/24", occupation: "Project Manager" },
+    { id: "127", name: "DevOps Engineer", function: "Engineering", skillCount: "13", employees: String(getExactRoleMatches("DevOps Engineer")), matches: `${calculateAverageBenchmark("127", "DevOps Engineer")}%`, lastUpdated: "10/20/24", occupation: "DevOps Engineer" }
   ];
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +84,8 @@ const SkillProfileTableContent = ({
   };
 
   const filteredRows = rows.filter(row => {
+    console.log('Filtering row:', row.name, 'occupation:', row.occupation, 'selected occupation:', selectedOccupation);
+    
     const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
     const matchesJobTitle = !selectedJobTitle || row.name.toLowerCase() === selectedJobTitle.toLowerCase();
     const matchesOccupation = !selectedOccupation || row.occupation?.toLowerCase() === selectedOccupation.toLowerCase();
@@ -115,23 +119,22 @@ const SkillProfileTableContent = ({
                 checked={selectedRows.length === filteredRows.length && filteredRows.length > 0}
               />
             </TableHead>
-            <TableHead className="w-[20%] h-12">
+            <TableHead className="w-[22%] h-12">
               <div className="flex items-center gap-1">
                 Role Name <ChevronDown className="h-4 w-4" />
               </div>
             </TableHead>
-            <TableHead className="w-[15%] h-12">Function</TableHead>
-            <TableHead className="w-[10%] h-12">SOC</TableHead>
-            <TableHead className="w-[12%] text-center h-12">Skill Count</TableHead>
-            <TableHead className="w-[12%] text-center h-12">Employees</TableHead>
-            <TableHead className="w-[12%] text-center h-12">Benchmark</TableHead>
-            <TableHead className="w-[14%] text-right whitespace-nowrap h-12">Last Updated</TableHead>
+            <TableHead className="w-[18%] h-12">Function</TableHead>
+            <TableHead className="w-[15%] text-center h-12">Skill Count</TableHead>
+            <TableHead className="w-[15%] text-center h-12">Employees</TableHead>
+            <TableHead className="w-[15%] text-center h-12">Benchmark</TableHead>
+            <TableHead className="w-[10%] text-right whitespace-nowrap h-12">Last Updated</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredRows.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={8} className="text-center py-4 text-muted-foreground">
+              <TableCell colSpan={7} className="text-center py-4 text-muted-foreground">
                 No profile found
               </TableCell>
             </TableRow>
@@ -155,7 +158,6 @@ const SkillProfileTableContent = ({
                   </Link>
                 </TableCell>
                 <TableCell className="align-middle">{row.function}</TableCell>
-                <TableCell className="align-middle">{row.soc}</TableCell>
                 <TableCell className="text-center align-middle">{row.skillCount}</TableCell>
                 <TableCell className="text-center align-middle">{row.employees}</TableCell>
                 <TableCell className="text-center align-middle">

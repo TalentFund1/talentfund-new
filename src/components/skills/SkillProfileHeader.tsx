@@ -15,15 +15,15 @@ interface SkillProfileHeaderProps {
 interface JobTitle {
   title: string;
   mappedTitle: string;
-  soc: string;
+  soc?: string;
 }
 
 const jobTitles: { [key: string]: JobTitle } = {
-  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer", soc: "15-2051" },
-  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer", soc: "15-1252" },
-  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer", soc: "15-1254" },
-  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead", soc: "11-9041" },
-  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1251" }
+  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer", soc: "(11-9041)" },
+  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer", soc: "(15-1251)" },
+  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer", soc: "(15-1252)" },
+  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead", soc: "(11-9021)" },
+  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "(15-1244)" }
 };
 
 const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
@@ -108,10 +108,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <div className="flex items-center gap-2">
-              <p className="font-medium">{mappedTitle}</p>
-              <span className="text-sm text-muted-foreground">({socCode})</span>
-            </div>
+            <p className="font-medium">{mappedTitle} <span className="text-muted-foreground">{socCode}</span></p>
           </div>
         </div>
         <div className="flex items-center gap-2">
