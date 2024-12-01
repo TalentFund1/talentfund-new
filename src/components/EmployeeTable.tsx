@@ -108,19 +108,14 @@ const EmployeeTableContent = ({
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
+  // Remove the benchmark > 0 filter to show all matches
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     selectedRole,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
-  ).filter(employee => {
-    // Only include employees with benchmark > 0% when a role is selected
-    if (selectedRole.length > 0) {
-      return employee.benchmark > 0;
-    }
-    return true;
-  });
+  );
 
   console.log('Final filtered and sorted employees:', filteredEmployees);
 
