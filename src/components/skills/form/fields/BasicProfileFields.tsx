@@ -1,6 +1,19 @@
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+const companyFunctions = [
+  "Engineering",
+  "Product",
+  "Design",
+  "Marketing",
+  "Sales",
+  "Finance",
+  "Human Resources",
+  "Operations",
+  "Legal",
+  "Customer Success"
+];
+
 interface BasicProfileFieldsProps {
   formData: {
     roleId: string;
@@ -48,15 +61,15 @@ export const BasicProfileFields = ({
           value={formData.function} 
           onValueChange={(value) => handleInputChange('function', value)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="bg-white">
             <SelectValue placeholder="Select function" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Engineering">Engineering</SelectItem>
-            <SelectItem value="Product">Product</SelectItem>
-            <SelectItem value="Design">Design</SelectItem>
-            <SelectItem value="Marketing">Marketing</SelectItem>
-            <SelectItem value="Sales">Sales</SelectItem>
+            {companyFunctions.map((func) => (
+              <SelectItem key={func} value={func}>
+                {func}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
