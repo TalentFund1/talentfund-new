@@ -4,6 +4,7 @@ import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Link } from "react-router-dom";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useTrack } from "../skills/context/TrackContext";
+import { getEmployeeTrack } from "./utils/employeeTrackUtils";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -39,10 +40,12 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const roleId = getSkillProfileId(employee.role);
   const { getTrackForRole } = useTrack();
   const roleTrack = getTrackForRole(roleId);
+  const employeeTrack = getEmployeeTrack(employee.role);
 
   console.log(`Employee ${id} track info:`, {
     roleId,
     roleTrack,
+    employeeTrack,
     role: employee.role
   });
 
@@ -96,6 +99,12 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Role Track</span>
           <p className="font-medium text-gray-900">{roleTrack}</p>
+        </div>
+        <div className="space-y-1">
+          <span className="text-sm text-gray-500">Employee Track</span>
+          <Badge variant="secondary" className="mt-1">
+            {employeeTrack}
+          </Badge>
         </div>
       </div>
     </>
