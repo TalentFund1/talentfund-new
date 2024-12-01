@@ -26,7 +26,7 @@ export const useCompetencyStateReader = () => {
     const track = getTrackForRole(roleId);
     
     if (roleStates?.[skillName]) {
-      const normalizedLevelKey = normalizeLevel(levelKey, roleId);
+      const normalizedLevelKey = normalizeLevel(levelKey, roleId, track);
       const levelState = roleStates[skillName][normalizedLevelKey];
       
       console.log('Finding saved state:', { 
@@ -63,7 +63,7 @@ export const useCompetencyStateReader = () => {
     }
 
     const track = getTrackForRole(roleId);
-    const normalizedLevel = normalizeLevel(levelKey, roleId);
+    const normalizedLevel = normalizeLevel(levelKey, roleId, track);
     
     console.log('Reading competency state:', { 
       skillName, 
@@ -82,9 +82,38 @@ export const useCompetencyStateReader = () => {
     }
 
     // If no saved state, determine the appropriate state based on track and level
+    let defaultLevel = 'intermediate';
+    let defaultRequired = 'required';
+
+    if (track === "Managerial") {
+      // For managerial track, set progressive levels based on M3-M6
+      const levelNumber = parseInt(normalizedLevel.replace('m', ''));
+      if (levelNumber >= 5) {
+        defaultLevel = 'advanced';
+        defaultRequired = 'required';
+      } else if (levelNumber >= 4) {
+        defaultLevel = 'advanced';
+        defaultRequired = 'required';
+      } else {
+        defaultLevel = 'intermediate';
+        defaultRequired = 'required';
+      }
+    } else {
+      // For professional track, keep existing logic
+      defaultRequired = determineRequirement(normalizedLevel, track);
+      const levelNumber = parseInt(normalizedLevel.replace('p', ''));
+      if (levelNumber >= 5) {
+        defaultLevel = 'advanced';
+      } else if (levelNumber >= 3) {
+        defaultLevel = 'intermediate';
+      } else {
+        defaultLevel = 'beginner';
+      }
+    }
+
     const newDefaultState: SkillCompetencyState = {
-      level: normalizedLevel,
-      required: determineRequirement(normalizedLevel, track)
+      level: defaultLevel,
+      required: defaultRequired
     };
     
     console.log('No saved state found, using default state:', newDefaultState);
@@ -101,7 +130,7 @@ export const useCompetencyStateReader = () => {
     }
 
     const track = getTrackForRole(roleId);
-    const normalizedLevel = normalizeLevel(levelKey, roleId);
+    const normalizedLevel = normalizeLevel(levelKey, roleId, track);
     
     console.log('Getting all skill states for level:', { 
       levelKey, 

@@ -10,22 +10,7 @@ export const getLevelPriority = (level: string = 'unspecified') => {
 
 export const normalizeLevel = (level: string = "", roleId: string = "", track: string = "Professional"): string => {
   if (!level) {
-    return track === "Managerial" ? "m5" : "p4";
-  }
-  
-  // Handle professional track levels (P1-P6)
-  if (track === "Professional") {
-    const professionalMatch = level.toLowerCase().match(/p[1-6]/);
-    if (professionalMatch) {
-      return professionalMatch[0];
-    }
-    
-    const numberMatch = level.match(/[1-6]/);
-    if (numberMatch) {
-      return `p${numberMatch[0]}`;
-    }
-    
-    return level.toLowerCase().startsWith('p') ? level.toLowerCase() : 'p4';
+    return track === "Managerial" ? "m3" : "p4";
   }
   
   // Handle managerial track levels (M3-M6)
@@ -43,5 +28,16 @@ export const normalizeLevel = (level: string = "", roleId: string = "", track: s
     return level.toLowerCase().startsWith('m') ? level.toLowerCase() : 'm3';
   }
   
-  return level.toLowerCase().trim();
+  // Handle professional track levels (P1-P6)
+  const professionalMatch = level.toLowerCase().match(/p[1-6]/);
+  if (professionalMatch) {
+    return professionalMatch[0];
+  }
+  
+  const numberMatch = level.match(/[1-6]/);
+  if (numberMatch) {
+    return `p${numberMatch[0]}`;
+  }
+  
+  return level.toLowerCase().startsWith('p') ? level.toLowerCase() : 'p4';
 };
