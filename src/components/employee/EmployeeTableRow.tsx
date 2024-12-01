@@ -112,7 +112,7 @@ export const EmployeeTableRow = ({
     <tr className={`border-t border-border hover:bg-muted/50 transition-colors ${
       isExactMatch && selectedJobTitle.length > 0 ? 'bg-blue-50/50' : ''
     }`}>
-      <td className="px-6 py-5 w-[48px]">
+      <td className="px-4 py-4 w-[48px]">
         <input 
           type="checkbox" 
           className="rounded border-gray-300"
@@ -120,15 +120,15 @@ export const EmployeeTableRow = ({
           onChange={() => onSelect(employee.name)}
         />
       </td>
-      <td className="px-6 py-5 w-[200px]">
-        <div className="flex items-center gap-3">
+      <td className="px-4 py-4 w-[180px]">
+        <div className="flex items-center gap-2">
           <img 
             src={imageUrl}
             alt={employee.name}
-            className="w-8 h-8 rounded-full object-cover"
+            className="w-6 h-6 rounded-full object-cover"
           />
           <div className="flex items-center gap-2">
-            <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm font-medium">
+            <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
               {employee.name}
             </Link>
             {isExactMatch && selectedJobTitle.length > 0 && (
@@ -143,23 +143,23 @@ export const EmployeeTableRow = ({
           </div>
         </div>
       </td>
-      <td className="px-6 py-5 w-[220px]">
+      <td className="px-4 py-4 w-[220px]">
         <Link 
           to={`/skills/${targetRoleId}`} 
-          className="text-sm text-primary hover:text-primary-accent transition-colors font-medium"
+          className="text-sm text-primary hover:text-primary-accent transition-colors"
         >
           {employee.role}
         </Link>
       </td>
-      <td className="px-6 py-5 w-[150px] text-sm text-muted-foreground">{employee.department}</td>
-      <td className="px-6 py-5 text-center w-[120px]">
+      <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
+      <td className="px-4 py-4 text-center w-[120px]">
         {skillMatch && (
           <span className="text-sm text-muted-foreground font-medium">
             {skillMatch}
           </span>
         )}
       </td>
-      <td className="px-6 py-5 text-center w-[120px]">
+      <td className="px-4 py-4 text-center w-[120px]">
         {benchmark !== null && benchmark > 0 && (
           <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
             getBenchmarkColor(benchmark)
@@ -169,11 +169,11 @@ export const EmployeeTableRow = ({
         )}
       </td>
       {selectedSkills.length > 0 && (
-        <td className="px-6 py-5 min-w-[300px]">
+        <td className="px-4 py-4 min-w-[300px]">
           {renderSkills()}
         </td>
       )}
-      <td className="px-6 py-5 w-[120px] text-right text-sm text-muted-foreground">
+      <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
       </td>
     </tr>

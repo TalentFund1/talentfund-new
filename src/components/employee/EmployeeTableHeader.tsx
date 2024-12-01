@@ -12,8 +12,8 @@ export const EmployeeTableHeader = ({
   hasSelectedSkills = false 
 }: EmployeeTableHeaderProps) => {
   return (
-    <tr className="border-b border-border bg-secondary/50">
-      <th className="h-14 px-6 text-left w-[48px]">
+    <tr className="border-b border-border">
+      <th className="h-12 px-4 text-left w-[48px]">
         <input 
           type="checkbox" 
           className="rounded border-gray-300"
@@ -22,15 +22,15 @@ export const EmployeeTableHeader = ({
           disabled={!hasEmployees}
         />
       </th>
-      <th className="h-14 px-6 text-left text-sm font-medium text-muted-foreground w-[200px]">Employee Name</th>
-      <th className="h-14 px-6 text-left text-sm font-medium text-muted-foreground w-[220px]">Current Role</th>
-      <th className="h-14 px-6 text-left text-sm font-medium text-muted-foreground w-[150px]">Department</th>
-      <th className="h-14 px-6 text-center text-sm font-medium text-muted-foreground w-[120px]">Skill Match</th>
-      <th className="h-14 px-6 text-center text-sm font-medium text-muted-foreground w-[120px]">Benchmark</th>
+      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground w-[180px]">Employee Name</th>
+      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground w-[220px]">Current Role</th>
+      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground w-[150px]">Department</th>
+      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground w-[120px]">Skill Match</th>
+      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground w-[120px]">Benchmark</th>
       {hasSelectedSkills && (
-        <th className="h-14 px-6 text-center text-sm font-medium text-muted-foreground min-w-[300px]">Skills</th>
+        <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground min-w-[300px]">Skills</th>
       )}
-      <th className="h-14 px-6 text-right text-sm font-medium text-muted-foreground w-[120px]">Last Updated</th>
+      <th className="h-12 px-4 text-right text-sm font-medium text-muted-foreground w-[120px]">Last Updated</th>
     </tr>
   );
 };
