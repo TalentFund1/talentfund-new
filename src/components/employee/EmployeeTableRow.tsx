@@ -150,7 +150,6 @@ export const EmployeeTableRow = ({
           {employee.role}
         </Link>
       </td>
-      <td className="px-4 py-4 w-[100px] text-sm">{roleId}</td>
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 text-center">
         {skillMatch && (
