@@ -13,7 +13,7 @@ export const EmployeeTableHeader = ({
 }: EmployeeTableHeaderProps) => {
   return (
     <tr className="border-b border-border">
-      <th className="h-12 px-4 text-left">
+      <th className="h-12 px-4 text-left w-[48px]">
         <input 
           type="checkbox" 
           className="rounded border-gray-300"
@@ -22,15 +22,15 @@ export const EmployeeTableHeader = ({
           disabled={!hasEmployees}
         />
       </th>
-      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Employee Name</th>
-      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Current Role</th>
-      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground">Department</th>
-      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skill Match</th>
-      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Benchmark</th>
+      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground w-[180px]">Employee Name</th>
+      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground w-[220px]">Current Role</th>
+      <th className="h-12 px-4 text-left text-sm font-medium text-muted-foreground w-[150px]">Department</th>
+      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground w-[120px]">Skill Match</th>
+      <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground w-[120px]">Benchmark</th>
       {hasSelectedSkills && (
-        <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground">Skills</th>
+        <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground min-w-[300px]">Skills</th>
       )}
-      <th className="h-12 px-4 text-right text-sm font-medium text-muted-foreground">Last Updated</th>
+      <th className="h-12 px-4 text-right text-sm font-medium text-muted-foreground w-[120px]">Last Updated</th>
     </tr>
   );
 };
