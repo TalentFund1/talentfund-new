@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface BasicProfileFieldsProps {
   formData: {
     roleId: string;
+    roleTitle: string;
     function: string;
     mappedTitle: string;
     occupation: string;
@@ -17,26 +18,29 @@ export const BasicProfileFields = ({
   handleInputChange,
   jobTitles
 }: BasicProfileFieldsProps) => {
+  const isNewRole = !jobTitles[formData.roleId];
+
   return (
     <>
       <div className="space-y-2">
         <label className="text-sm font-medium">Role ID</label>
-        <Select 
-          value={formData.roleId} 
-          onValueChange={(value) => handleInputChange('roleId', value)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select role ID" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(jobTitles).map(([id, title]) => (
-              <SelectItem key={id} value={id}>
-                {id} - {title}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Input 
+          placeholder="e.g., 128"
+          value={formData.roleId}
+          onChange={(e) => handleInputChange('roleId', e.target.value)}
+        />
       </div>
+
+      {isNewRole && (
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Role Title</label>
+          <Input 
+            placeholder="e.g., Data Engineer"
+            value={formData.roleTitle}
+            onChange={(e) => handleInputChange('roleTitle', e.target.value)}
+          />
+        </div>
+      )}
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Function</label>
