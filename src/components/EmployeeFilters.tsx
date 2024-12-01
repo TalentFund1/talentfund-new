@@ -23,6 +23,8 @@ interface EmployeeFiltersProps {
   selectedEmployees: string[];
   onManagerChange?: (manager: string[]) => void;
   selectedManager?: string[];
+  onRoleChange?: (role: string[]) => void;
+  selectedRole?: string[];
 }
 
 export const EmployeeFilters = ({ 
@@ -39,7 +41,9 @@ export const EmployeeFilters = ({
   onEmployeeSearch,
   selectedEmployees,
   onManagerChange = () => {},
-  selectedManager = []
+  selectedManager = [],
+  onRoleChange = () => {},
+  selectedRole = []
 }: EmployeeFiltersProps) => {
   const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
@@ -49,6 +53,16 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
+  const roles = [
+    "Backend Engineer",
+    "AI Engineer",
+    "Frontend Engineer",
+    "Engineering Manager",
+    "Data Engineer",
+    "DevOps Engineer",
+    "Product Manager"
+  ];
+
   const handleClearAll = () => {
     onSkillsChange([]);
     onLevelChange([]);
@@ -57,6 +71,7 @@ export const EmployeeFilters = ({
     onEmploymentTypeChange([]);
     onEmployeeSearch([]);
     onManagerChange([]);
+    onRoleChange([]);
   };
 
   return (
@@ -88,11 +103,21 @@ export const EmployeeFilters = ({
             singleSelect={true}
             className="w-[180px]"
           />
+
+          <SearchFilter
+            label=""
+            placeholder="Role"
+            items={roles}
+            selectedItems={selectedRole}
+            onItemsChange={(items) => onRoleChange(items.map(item => String(item)))}
+            singleSelect={true}
+            className="w-[180px]"
+          />
           
           <LevelFilter
             onLevelChange={onLevelChange}
             selectedLevel={selectedLevel}
-            selectedJobTitle={[]}
+            selectedJobTitle={selectedRole}
           />
           
           <SearchFilter
