@@ -10,6 +10,7 @@ import { jobTitles } from '@/components/skills/competency/skillProfileData';
 import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
 import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import {
   Select,
   SelectContent,
@@ -32,7 +33,7 @@ const companyFunctions = [
   "Customer Success"
 ];
 
-const SkillsProfile = () => {
+const SkillsProfileContent = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
@@ -104,6 +105,14 @@ const SkillsProfile = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const SkillsProfile = () => {
+  return (
+    <ToggledSkillsProvider>
+      <SkillsProfileContent />
+    </ToggledSkillsProvider>
   );
 };
 
