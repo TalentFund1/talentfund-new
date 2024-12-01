@@ -38,11 +38,9 @@ export const sortEmployeesByRoleMatch = (
     ...roleData.certifications
   ].filter(skill => toggledSkills.has(skill.title));
 
-  const totalRequiredSkills = allRoleSkills.length;
-
   console.log('Role skills for matching:', {
     roleId,
-    totalSkills: totalRequiredSkills,
+    totalSkills: allRoleSkills.length,
     skills: allRoleSkills.map(s => s.title)
   });
 
@@ -81,6 +79,7 @@ export const sortEmployeesByRoleMatch = (
       exactMatches.push(employeeWithBenchmark);
     } else if (benchmark > 0) {
       // Add to partial matches if they have any matching skills (benchmark > 0)
+      // and they're not an exact match
       partialMatches.push(employeeWithBenchmark);
       console.log('Added to partial matches:', {
         employee: employee.name,

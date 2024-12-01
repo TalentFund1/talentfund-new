@@ -67,7 +67,8 @@ export const calculateBenchmarkPercentage = (
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    return employeePriority >= rolePriority;
+    // For partial matches, we want to be more lenient with level matching
+    return employeePriority > 0; // Consider any defined level as a match for partial matches
   });
 
   // 3. Skill Goal Match (33.33% weight)
