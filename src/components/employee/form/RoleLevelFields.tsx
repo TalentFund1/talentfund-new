@@ -9,15 +9,12 @@ interface RoleLevelFieldsProps {
   handleInputChange: (field: string, value: string) => void;
 }
 
-// Use the same role mapping as in RoleBenchmark
 const roleMapping = {
   "AI Engineer": "123",
   "Backend Engineer": "124",
   "Frontend Engineer": "125",
   "Engineering Manager": "126",
-  "DevOps Engineer": "127",
-  "Data Engineer": "128",
-  "Product Manager": "129"
+  "DevOps Engineer": "127"
 };
 
 export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFieldsProps) => {
@@ -67,9 +64,11 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
             <SelectValue placeholder="Select role" />
           </SelectTrigger>
           <SelectContent>
-            {Object.keys(roleMapping).map((role) => (
-              <SelectItem key={role} value={role}>{role}</SelectItem>
-            ))}
+            <SelectItem value="AI Engineer">AI Engineer (123)</SelectItem>
+            <SelectItem value="Backend Engineer">Backend Engineer (124)</SelectItem>
+            <SelectItem value="Frontend Engineer">Frontend Engineer (125)</SelectItem>
+            <SelectItem value="Engineering Manager">Engineering Manager (126)</SelectItem>
+            <SelectItem value="DevOps Engineer">DevOps Engineer (127)</SelectItem>
           </SelectContent>
         </Select>
       </div>

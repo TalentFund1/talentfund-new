@@ -5,26 +5,49 @@ import { roleSkills } from "../../skills/data/roleSkills";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { getEmployeeSkills } from "../skills-matrix/initialSkills";
 import { useTrack } from "../../skills/context/TrackContext";
-import { useParams } from "react-router-dom";
-import { useRoleStore } from "../RoleBenchmark";
 
-export const BenchmarkAnalysis = () => {
+interface BenchmarkAnalysisProps {
+  selectedRole: string;
+  roleLevel: string;
+  employeeId: string;
+}
+
+const getLevelPriority = (level: string = 'unspecified') => {
+  const priorities: { [key: string]: number } = {
+    'advanced': 0,
+    'intermediate': 1,
+    'beginner': 2,
+    'unspecified': 3
+  };
+  return priorities[level.toLowerCase()] ?? 3;
+};
+
+const getSkillGoalPriority = (requirement: string = 'unknown') => {
+  const priorities: { [key: string]: number } = {
+    'required': 0,
+    'skill_goal': 1,
+    'preferred': 2,
+    'not_interested': 3,
+    'unknown': 4
+  };
+  return priorities[requirement.toLowerCase()] ?? 4;
+};
+
+export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole } = useTrack();
-  const { id } = useParams<{ id: string }>();
-  const { selectedRole, selectedLevel } = useRoleStore();
   
   console.log('BenchmarkAnalysis - Selected Role Analysis:', {
     selectedRole,
-    selectedLevel,
-    employeeId: id,
+    roleLevel,
+    employeeId,
     track: getTrackForRole(selectedRole),
     currentStates
   });
 
-  const employeeSkills = getEmployeeSkills(id || "");
+  const employeeSkills = getEmployeeSkills(employeeId);
   console.log('Employee skills loaded for comparison:', employeeSkills);
 
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
@@ -43,7 +66,7 @@ export const BenchmarkAnalysis = () => {
     .filter(skill => toggledSkills.has(skill.title))
     .map(skill => {
       const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skill.title);
-      const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), selectedRole);
+      const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
       
       return {
         ...skill,
@@ -76,7 +99,7 @@ export const BenchmarkAnalysis = () => {
   });
 
   const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), selectedRole);
+    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
     if (!roleSkillState) return false;
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
@@ -126,25 +149,4 @@ export const BenchmarkAnalysis = () => {
       }}
     />
   );
-};
-
-const getLevelPriority = (level: string = 'unspecified') => {
-  const priorities: { [key: string]: number } = {
-    'advanced': 0,
-    'intermediate': 1,
-    'beginner': 2,
-    'unspecified': 3
-  };
-  return priorities[level.toLowerCase()] ?? 3;
-};
-
-const getSkillGoalPriority = (requirement: string = 'unknown') => {
-  const priorities: { [key: string]: number } = {
-    'required': 0,
-    'skill_goal': 1,
-    'preferred': 2,
-    'not_interested': 3,
-    'unknown': 4
-  };
-  return priorities[requirement.toLowerCase()] ?? 4;
 };

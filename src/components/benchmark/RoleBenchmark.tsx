@@ -29,21 +29,6 @@ export const useRoleStore = create<RoleStore>((set) => ({
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
 
-// Role mapping between form roles and role IDs
-const roleMapping: { [key: string]: string } = {
-  "AI Engineer": "123",
-  "Backend Engineer": "124",
-  "Frontend Engineer": "125",
-  "Engineering Manager": "126",
-  "DevOps Engineer": "127"
-};
-
-// Reverse mapping for displaying role names
-const reverseRoleMapping: { [key: string]: string } = Object.entries(roleMapping).reduce(
-  (acc, [key, value]) => ({ ...acc, [value]: key }),
-  {}
-);
-
 export const RoleBenchmark = () => {
   const navigate = useNavigate();
   const { toggledSkills } = useToggledSkills();
@@ -64,8 +49,7 @@ export const RoleBenchmark = () => {
         employeeId: id,
         employeeRole: employee?.role,
         roleId: employeeRoleId,
-        employeeTrack,
-        mappedRole: reverseRoleMapping[employeeRoleId]
+        employeeTrack
       });
       setSelectedRole(employeeRoleId);
     }
@@ -116,6 +100,16 @@ export const RoleBenchmark = () => {
     }
   };
 
+  console.log('RoleBenchmark rendering with:', {
+    selectedRole,
+    selectedLevel,
+    track,
+    employeeTrack,
+    hasSkills: !!currentRoleSkills,
+    employeeRole: employee?.role,
+    employeeRoleId
+  });
+
   // Determine which levels to show based on employee's track
   const availableLevels = employeeTrack === "Managerial" ? managerialLevels : professionalLevels;
 
@@ -139,9 +133,11 @@ export const RoleBenchmark = () => {
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(roleMapping).map(([title, id]) => (
-                <SelectItem key={id} value={id}>{title}</SelectItem>
-              ))}
+              <SelectItem value="123">AI Engineer</SelectItem>
+              <SelectItem value="124">Backend Engineer</SelectItem>
+              <SelectItem value="125">Frontend Engineer</SelectItem>
+              <SelectItem value="126">Engineering Manager</SelectItem>
+              <SelectItem value="127">DevOps Engineer</SelectItem>
             </SelectContent>
           </Select>
 
@@ -161,7 +157,11 @@ export const RoleBenchmark = () => {
 
         <Separator className="my-6" />
 
-        {id && <BenchmarkAnalysis />}
+        {id && <BenchmarkAnalysis 
+          selectedRole={selectedRole}
+          roleLevel={selectedLevel}
+          employeeId={id}
+        />}
       </div>
     </div>
   );
