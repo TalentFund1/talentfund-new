@@ -55,7 +55,6 @@ const Employees = () => {
     selectedManager
   );
 
-  // Apply skills filter
   const filteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
   console.log('Filtered employees count:', filteredEmployees.length);
@@ -68,10 +67,8 @@ const Employees = () => {
     return Math.round((femaleCount / filteredEmployees.length) * 100);
   };
 
-  // Calculate average tenure for filtered employees
   const averageTenure = calculateAverageTenure(filteredEmployees);
 
-  // Calculate employees added in the last year based on filtered results
   const calculateAddedLastYear = () => {
     const today = new Date();
     const oneYearAgo = new Date();
@@ -89,73 +86,75 @@ const Employees = () => {
       <Sidebar />
       <ToggledSkillsProvider>
         <div className="flex-1 p-6 ml-16 transition-all duration-300">
-          <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
-            <div className="flex justify-between items-center">
-              <h1 className="text-3xl font-bold text-foreground">Employees</h1>
-              <div className="space-x-2">
-                <Button variant="outline">Export Data</Button>
-                <AddEmployeeDialog />
+          <div className="max-w-7xl mx-auto space-y-6">
+            <div className="bg-white rounded-lg shadow-sm">
+              <div className="flex justify-between items-center p-6 bg-[#F7F9FF] rounded-t-lg border-b border-[#CCDBFF]">
+                <h1 className="text-3xl font-bold text-foreground">Employees</h1>
+                <div className="space-x-2">
+                  <Button variant="outline">Export Data</Button>
+                  <AddEmployeeDialog />
+                </div>
               </div>
+
+              <Card className="rounded-t-none border-t-0">
+                <EmployeeFilters 
+                  onDepartmentChange={setSelectedDepartment}
+                  selectedDepartment={selectedDepartment}
+                  onLevelChange={setSelectedLevel}
+                  selectedLevel={selectedLevel}
+                  onOfficeChange={setSelectedOffice}
+                  selectedOffice={selectedOffice}
+                  onEmploymentTypeChange={setSelectedEmploymentType}
+                  selectedEmploymentType={selectedEmploymentType}
+                  onSkillsChange={setSelectedSkills}
+                  selectedSkills={selectedSkills}
+                  onEmployeeSearch={setSelectedEmployees}
+                  selectedEmployees={selectedEmployees}
+                  onManagerChange={setSelectedManager}
+                  selectedManager={selectedManager}
+                  onRoleChange={setSelectedRole}
+                  selectedRole={selectedRole}
+                />
+              </Card>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                <StatCard
+                  title="Total Number of Employees"
+                  value={totalEmployees}
+                  icon={<Users className="h-6 w-6 text-primary-icon" />}
+                />
+                <StatCard
+                  title="Added in Past 1 year"
+                  value={calculateAddedLastYear()}
+                  icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
+                />
+                <StatCard
+                  title="Share of Female Employees"
+                  value={`${calculateFemalePercentage()}%`}
+                  icon={<Equal className="h-6 w-6 text-primary-icon" />}
+                />
+                <StatCard
+                  title="Average Tenure (Years)"
+                  value={averageTenure}
+                  icon={<Clock className="h-6 w-6 text-primary-icon" />}
+                />
+              </div>
+
+              <Card className="mt-6">
+                <EmployeeTable 
+                  selectedDepartment={selectedDepartment}
+                  selectedLevel={selectedLevel}
+                  selectedOffice={selectedOffice}
+                  selectedEmploymentType={selectedEmploymentType}
+                  selectedSkills={selectedSkills}
+                  selectedEmployees={selectedEmployees}
+                  selectedManager={selectedManager}
+                  selectedRole={selectedRole}
+                />
+                <Separator className="my-4" />
+                <TablePagination />
+              </Card>
             </div>
-
-            <Card className="p-6">
-              <EmployeeFilters 
-                onDepartmentChange={setSelectedDepartment}
-                selectedDepartment={selectedDepartment}
-                onLevelChange={setSelectedLevel}
-                selectedLevel={selectedLevel}
-                onOfficeChange={setSelectedOffice}
-                selectedOffice={selectedOffice}
-                onEmploymentTypeChange={setSelectedEmploymentType}
-                selectedEmploymentType={selectedEmploymentType}
-                onSkillsChange={setSelectedSkills}
-                selectedSkills={selectedSkills}
-                onEmployeeSearch={setSelectedEmployees}
-                selectedEmployees={selectedEmployees}
-                onManagerChange={setSelectedManager}
-                selectedManager={selectedManager}
-                onRoleChange={setSelectedRole}
-                selectedRole={selectedRole}
-              />
-            </Card>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatCard
-                title="Total Number of Employees"
-                value={totalEmployees}
-                icon={<Users className="h-6 w-6 text-primary-icon" />}
-              />
-              <StatCard
-                title="Added in Past 1 year"
-                value={calculateAddedLastYear()}
-                icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
-              />
-              <StatCard
-                title="Share of Female Employees"
-                value={`${calculateFemalePercentage()}%`}
-                icon={<Equal className="h-6 w-6 text-primary-icon" />}
-              />
-              <StatCard
-                title="Average Tenure (Years)"
-                value={averageTenure}
-                icon={<Clock className="h-6 w-6 text-primary-icon" />}
-              />
-            </div>
-
-            <Card className="p-6">
-              <EmployeeTable 
-                selectedDepartment={selectedDepartment}
-                selectedLevel={selectedLevel}
-                selectedOffice={selectedOffice}
-                selectedEmploymentType={selectedEmploymentType}
-                selectedSkills={selectedSkills}
-                selectedEmployees={selectedEmployees}
-                selectedManager={selectedManager}
-                selectedRole={selectedRole}
-              />
-              <Separator className="my-4" />
-              <TablePagination />
-            </Card>
           </div>
         </div>
       </ToggledSkillsProvider>
