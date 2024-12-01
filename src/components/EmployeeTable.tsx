@@ -24,7 +24,6 @@ interface EmployeeTableProps {
   selectedSkills?: string[];
   selectedEmployees?: string[];
   selectedManager?: string[];
-  selectedRole?: string;
 }
 
 export const getSkillProfileId = (role?: string) => {
@@ -79,8 +78,7 @@ const EmployeeTableContent = ({
   selectedEmploymentType = [],
   selectedSkills = [],
   selectedEmployees = [],
-  selectedManager = [],
-  selectedRole = ""
+  selectedManager = []
 }: EmployeeTableProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
@@ -110,7 +108,7 @@ const EmployeeTableContent = ({
 
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
-    selectedRole ? [selectedRole] : [],  // Use selected role for benchmarking if available
+    [],  // Empty array for selectedJobTitle
     currentStates,
     toggledSkills,
     getSkillCompetencyState
