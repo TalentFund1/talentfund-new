@@ -16,6 +16,7 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { Card } from "@/components/ui/card";
+import { EmployeeSkillCard } from "./EmployeeSkillCard";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -112,6 +113,8 @@ const EmployeeTableContent = ({
     getSkillCompetencyState
   );
 
+  const selectedRoleId = selectedJobTitle.length > 0 ? getSkillProfileId(selectedJobTitle[0]) : undefined;
+
   const exactMatches = sortedEmployees.filter(employee => 
     selectedJobTitle.length > 0 && selectedJobTitle.some(title => 
       getBaseRole(title) === getBaseRole(employee.role)
@@ -127,7 +130,7 @@ const EmployeeTableContent = ({
   console.log('Exact matches:', exactMatches);
   console.log('Skill matches:', skillMatches);
 
-  const renderEmployeeTable = (employees: Employee[], title: string) => (
+  const renderEmployeeCards = (employees: Employee[], title: string, useSelectedRole: boolean = false) => (
     <Card className="mb-6">
       <div className="p-4 border-b border-border">
         <h3 className="text-lg font-medium">{title}</h3>
@@ -135,38 +138,18 @@ const EmployeeTableContent = ({
           {employees.length} {employees.length === 1 ? 'employee' : 'employees'}
         </p>
       </div>
-      <div className="relative">
-        <table className="w-full">
-          <thead>
-            <EmployeeTableHeader 
-              onSelectAll={(e) => handleSelectAll(employees, e)}
-              isAllSelected={employees.length > 0 && selectedRows.length === employees.length}
-              hasEmployees={employees.length > 0}
-              hasSelectedSkills={selectedSkills.length > 0}
-            />
-          </thead>
-          <tbody>
-            {employees.length === 0 ? (
-              <tr>
-                <td colSpan={selectedSkills.length > 0 ? 6 : 5} className="text-center py-4 text-muted-foreground">
-                  No employees found
-                </td>
-              </tr>
-            ) : (
-              employees.map((employee, index) => (
-                <EmployeeTableRow
-                  key={employee.id}
-                  employee={employee}
-                  isSelected={selectedRows.includes(employee.name)}
-                  onSelect={handleSelectEmployee}
-                  imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
-                  selectedSkills={selectedSkills}
-                  selectedJobTitle={selectedJobTitle}
-                />
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {employees.map((employee, index) => (
+          <EmployeeSkillCard
+            key={employee.id}
+            name={employee.name}
+            role={employee.role}
+            avatar={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=96&h=96`}
+            skills={[]}
+            employeeId={employee.id}
+            benchmarkRoleId={useSelectedRole ? selectedRoleId : undefined}
+          />
+        ))}
       </div>
     </Card>
   );
@@ -175,11 +158,11 @@ const EmployeeTableContent = ({
     <div className="space-y-4">
       {selectedJobTitle.length > 0 ? (
         <>
-          {renderEmployeeTable(exactMatches, "People with this job")}
-          {renderEmployeeTable(skillMatches, "People with skills that match this job")}
+          {renderEmployeeCards(exactMatches, "People with this job")}
+          {renderEmployeeCards(skillMatches, "People with skills that match this job", true)}
         </>
       ) : (
-        renderEmployeeTable(sortedEmployees, "All Employees")
+        renderEmployeeCards(sortedEmployees, "All Employees")
       )}
     </div>
   );
