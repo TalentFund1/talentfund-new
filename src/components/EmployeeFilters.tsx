@@ -7,6 +7,7 @@ import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
 import { TrackProvider } from './skills/context/TrackContext';
+import { roleSkills } from './skills/data/roleSkills';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -53,15 +54,20 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  const roles = [
-    "Backend Engineer",
-    "AI Engineer",
-    "Frontend Engineer",
-    "Engineering Manager",
-    "Data Engineer",
-    "DevOps Engineer",
-    "Product Manager"
-  ];
+  // Get roles from roleSkills database
+  const roles = Object.entries(roleSkills).map(([_, value]) => {
+    const occupation = value.occupation;
+    switch (occupation) {
+      case "Software Developer":
+        return value === roleSkills["126"] ? "Engineering Manager" : value === roleSkills["123"] ? "AI Engineer" : value === roleSkills["124"] ? "Backend Engineer" : value === roleSkills["125"] ? "Frontend Engineer" : value === roleSkills["127"] ? "DevOps Engineer" : null;
+      case "Project Manager":
+        return "Engineering Manager";
+      default:
+        return null;
+    }
+  }).filter((role): role is string => role !== null);
+
+  console.log('Available roles from database:', roles);
 
   const handleClearAll = () => {
     onSkillsChange([]);
