@@ -98,7 +98,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-8">
+      <div className="grid grid-cols-5 gap-6">
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Function</span>
@@ -107,14 +107,14 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         </div>
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
-            <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <p className="font-medium">{mappedTitle}</p>
+            <span className="text-sm text-muted-foreground">SOC</span>
+            <p className="font-medium">({soc})</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex flex-col">
-            <span className="text-sm text-muted-foreground">SOC</span>
-            <p className="font-medium">({soc})</p>
+            <span className="text-sm text-muted-foreground">Mapped Title</span>
+            <p className="font-medium">{mappedTitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
