@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Building2, Download, Users } from "lucide-react";
+import { Download } from "lucide-react";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
@@ -105,14 +105,12 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
 
       <div className="grid grid-cols-5 gap-6">
         <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-border/40 hover:border-border/60 transition-colors">
-          <Building2 className="w-4 h-4 text-primary-accent/70" />
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Function</span>
             <p className="font-medium">Engineering</p>
           </div>
         </div>
         <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-border/40 hover:border-border/60 transition-colors">
-          <Users className="w-4 h-4 text-primary-accent/70" />
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">SOC</span>
             <p className="font-medium">({soc})</p>
