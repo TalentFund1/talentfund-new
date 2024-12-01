@@ -26,6 +26,13 @@ const jobTitles: { [key: string]: JobTitle } = {
   "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1244" }
 };
 
+const roleDescriptions = {
+  "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
+  "Backend Engineer": "We are seeking a skilled Backend Engineer to design and implement scalable server-side solutions. You will work with various databases, APIs, and server architectures to support our growing platform.",
+  "Frontend Engineer": "Join our team as a Frontend Engineer to create responsive and intuitive user interfaces. You will collaborate with designers and backend engineers to deliver seamless web applications.",
+  "Engineering Manager": "We're looking for an Engineering Manager to lead and mentor our technical teams. You will drive technical decisions, manage project deliverables, and foster a culture of innovation and growth."
+};
+
 const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { toggledSkills } = useToggledSkills();
@@ -66,13 +73,6 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
     }, 0);
 
     return Math.round(totalPrice / toggledSkillsData.length);
-  };
-
-  const roleDescriptions = {
-    "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
-    "Backend Engineer": "We are seeking a skilled Backend Engineer to design and implement scalable server-side solutions. You will work with various databases, APIs, and server architectures to support our growing platform.",
-    "Frontend Engineer": "Join our team as a Frontend Engineer to create responsive and intuitive user interfaces. You will collaborate with designers and backend engineers to deliver seamless web applications.",
-    "Engineering Manager": "We're looking for an Engineering Manager to lead and mentor our technical teams. You will drive technical decisions, manage project deliverables, and foster a culture of innovation and growth."
   };
 
   const fullDescription = roleDescriptions[jobTitle as keyof typeof roleDescriptions] || roleDescriptions["AI Engineer"];
@@ -124,7 +124,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex flex-col bg-[#F7F9FF] p-2 rounded-lg">
+          <div className="flex flex-col bg-[#F7F9FF] p-2 rounded-lg border border-border">
             <span className="text-sm text-muted-foreground">Market Pricer</span>
             <p className="font-medium text-primary">${averagePrice.toLocaleString()}</p>
           </div>
