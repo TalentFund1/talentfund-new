@@ -42,7 +42,7 @@ export const SkillProfileFilters = ({
 
   return (
     <Card className="p-6">
-      <div className="space-y-2">
+      <div className="space-y-1">
         <SearchFilter
           label=""
           placeholder="Search skills..."
@@ -68,7 +68,7 @@ export const SkillProfileFilters = ({
           ))}
         </div>
 
-        <div className="flex flex-wrap items-start gap-3 mt-2">
+        <div className="flex flex-wrap items-start gap-3 mt-1">
           <SearchFilter
             label=""
             placeholder="Job Title"
