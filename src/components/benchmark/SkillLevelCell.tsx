@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Heart, X } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillLevelCellProps {
@@ -42,7 +42,7 @@ export const SkillLevelCell = ({
   const getRequirementIcon = (requirement: string = 'unknown') => {
     switch (requirement?.toLowerCase()) {
       case 'required':
-        return <Check className="w-3.5 h-3.5" />;
+        return <Heart className="w-3.5 h-3.5" />;
       case 'not-interested':
         return <X className="w-3.5 h-3.5" />;
       case 'unknown':
@@ -145,7 +145,7 @@ export const SkillLevelCell = ({
           <SelectContent>
             <SelectItem value="required">
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5" />
+                <Heart className="w-3.5 h-3.5" />
                 Skill Goal
               </span>
             </SelectItem>
