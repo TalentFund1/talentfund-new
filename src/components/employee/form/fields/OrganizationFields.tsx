@@ -59,7 +59,6 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Sus Manu">Sus Manu</SelectItem>
-            <SelectItem value="Sarah Chen">Sarah Chen</SelectItem>
           </SelectContent>
         </Select>
       </div>
