@@ -22,7 +22,6 @@ interface FormData {
   function: string;
   mappedTitle: string;
   occupation: string;
-  marketPricer: string;
   jobDescription: string;
   skills: string;
   roleTrack: "Professional" | "Managerial";
@@ -38,7 +37,6 @@ export const AddSkillProfileForm = () => {
     function: "Engineering",
     mappedTitle: "",
     occupation: "",
-    marketPricer: "",
     jobDescription: "",
     skills: "",
     roleTrack: "Professional"

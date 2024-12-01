@@ -1,9 +1,7 @@
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 
 interface DescriptionFieldsProps {
   formData: {
-    marketPricer: string;
     jobDescription: string;
     skills: string;
   };
@@ -16,15 +14,6 @@ export const DescriptionFields = ({
 }: DescriptionFieldsProps) => {
   return (
     <>
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Market Pricer</label>
-        <Input 
-          placeholder="e.g., $184,085"
-          value={formData.marketPricer}
-          onChange={(e) => handleInputChange('marketPricer', e.target.value)}
-        />
-      </div>
-
       <div className="col-span-2 space-y-2">
         <label className="text-sm font-medium">Job Description</label>
         <Textarea 
