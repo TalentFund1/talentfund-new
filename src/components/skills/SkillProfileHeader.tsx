@@ -12,7 +12,12 @@ interface SkillProfileHeaderProps {
   jobTitle: string;
 }
 
-const jobTitles: { [key: string]: { title: string; mappedTitle: string } } = {
+interface JobTitle {
+  title: string;
+  mappedTitle: string;
+}
+
+const jobTitles: { [key: string]: JobTitle } = {
   "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer" },
   "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer" },
   "125": { title: "Frontend Engineer", mappedTitle: "UI Developer" },
