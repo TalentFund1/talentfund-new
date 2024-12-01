@@ -8,15 +8,37 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useEmployeeStore } from "../employee/store/employeeStore";
+import { getSkillProfileId } from "../EmployeeTable";
+import { useEffect } from "react";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "");
-  const { selectedRole, selectedLevel } = useRoleStore();
+  const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const employees = useEmployeeStore((state) => state.employees);
+  
+  const employee = employees.find(emp => emp.id === id);
+  const employeeRoleId = employee ? getSkillProfileId(employee.role) : "";
+  const employeeLevel = employee?.role.split(":")[1]?.trim().toLowerCase() || "p4";
+
+  // Set initial role and level based on employee's assigned role
+  useEffect(() => {
+    if (employeeRoleId) {
+      console.log('Setting initial role and level in BenchmarkAnalysis:', {
+        employeeId: id,
+        employeeRole: employee?.role,
+        roleId: employeeRoleId,
+        level: employeeLevel
+      });
+      setSelectedRole(employeeRoleId);
+      setSelectedLevel(employeeLevel);
+    }
+  }, [employeeRoleId, employeeLevel, setSelectedRole, setSelectedLevel]);
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   if (!currentRoleSkills) {
@@ -135,7 +157,7 @@ export const BenchmarkAnalysis = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Skill Match</span>
                 <span className="text-sm text-foreground">
-                  {matchingSkillsCount} out of {totalToggledSkills}
+                  {matchingSkills.length} out of {totalToggledSkills}
                 </span>
               </div>
               <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
