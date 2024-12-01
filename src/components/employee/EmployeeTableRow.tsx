@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
 import { SkillBubble } from "../skills/SkillBubble";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { getSkillProfileId, getLevel } from "../../utils/roleUtils";
+import { getSkillProfileId, getLevel } from '@/utils/roleUtils';
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";

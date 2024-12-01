@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Link } from "react-router-dom";
-import { getSkillProfileId } from "../EmployeeTable";
+import { getSkillProfileId } from '@/utils/roleUtils';
 import { useTrack } from "../skills/context/TrackContext";
 
 interface EmployeeDetailsProps {
