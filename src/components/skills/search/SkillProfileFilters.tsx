@@ -16,9 +16,12 @@ interface SkillProfileFiltersProps {
   setSelectedFunction: (func: string) => void;
   selectedJobTitle: string;
   setSelectedJobTitle: (title: string) => void;
+  selectedOccupation: string;
+  setSelectedOccupation: (occupation: string) => void;
   toggledSkillsList: string[];
   availableJobTitles: string[];
   companyFunctions: string[];
+  occupations: string[];
 }
 
 export const SkillProfileFilters = ({
@@ -28,9 +31,12 @@ export const SkillProfileFilters = ({
   setSelectedFunction,
   selectedJobTitle,
   setSelectedJobTitle,
+  selectedOccupation,
+  setSelectedOccupation,
   toggledSkillsList,
   availableJobTitles,
-  companyFunctions
+  companyFunctions,
+  occupations
 }: SkillProfileFiltersProps) => {
   return (
     <Card className="p-6">
@@ -70,12 +76,26 @@ export const SkillProfileFilters = ({
             </SelectContent>
           </Select>
 
+          <Select value={selectedOccupation} onValueChange={setSelectedOccupation}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Occupation" />
+            </SelectTrigger>
+            <SelectContent>
+              {occupations.map((occupation) => (
+                <SelectItem key={occupation} value={occupation.toLowerCase()}>
+                  {occupation}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           <Button 
             variant="outline" 
             onClick={() => {
               setSelectedSkills([]);
               setSelectedFunction("");
               setSelectedJobTitle("");
+              setSelectedOccupation("");
             }}
           >
             Clear All

@@ -16,12 +16,14 @@ interface SkillProfileTableProps {
   selectedFunction?: string;
   selectedSkills: string[];
   selectedJobTitle?: string;
+  selectedOccupation?: string;
 }
 
 const SkillProfileTableContent = ({ 
   selectedFunction,
   selectedSkills,
-  selectedJobTitle 
+  selectedJobTitle,
+  selectedOccupation 
 }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { toggledSkills } = useToggledSkills();
@@ -83,6 +85,7 @@ const SkillProfileTableContent = ({
   const filteredRows = rows.filter(row => {
     const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
     const matchesJobTitle = !selectedJobTitle || row.name.toLowerCase() === selectedJobTitle.toLowerCase();
+    const matchesOccupation = !selectedOccupation || row.occupation?.toLowerCase() === selectedOccupation.toLowerCase();
     
     const profileSkills = roleSkills[row.id as keyof typeof roleSkills] || { specialized: [], common: [], certifications: [] };
     const allProfileSkills = [
@@ -97,7 +100,7 @@ const SkillProfileTableContent = ({
       )
     );
 
-    return matchesFunction && matchesJobTitle && hasSelectedSkills;
+    return matchesFunction && matchesJobTitle && matchesOccupation && hasSelectedSkills;
   });
 
   return (
@@ -155,7 +158,7 @@ const SkillProfileTableContent = ({
                 <TableCell className="text-center align-middle">{row.skillCount}</TableCell>
                 <TableCell className="text-center align-middle">{row.employees}</TableCell>
                 <TableCell className="text-center align-middle">
-                  <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
+                  <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${
                     getBenchmarkColor(parseInt(row.matches))
                   }`}>
                     {row.matches}
