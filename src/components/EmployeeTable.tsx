@@ -15,8 +15,6 @@ import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
-import { Card } from "@/components/ui/card";
-import { EmployeeSkillCard } from "./EmployeeSkillCard";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -30,12 +28,14 @@ interface EmployeeTableProps {
 }
 
 export const getSkillProfileId = (role: string) => {
+  // Validate role ID format first
   const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
   if (validProfileIds.includes(role)) {
     console.log('Using direct role ID:', role);
     return role;
   }
 
+  // Map role titles to IDs with consistent structure
   const roleMap: { [key: string]: string } = {
     "AI Engineer": "123",
     "Backend Engineer": "124",
@@ -56,7 +56,7 @@ export const getSkillProfileId = (role: string) => {
     mappedId
   });
   
-  return mappedId;
+  return mappedId;  // Removed the "123" fallback
 };
 
 export const getBaseRole = (role: string) => {
@@ -105,7 +105,7 @@ const EmployeeTableContent = ({
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
-  const sortedEmployees = sortEmployeesByRoleMatch(
+  const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     selectedJobTitle,
     currentStates,
@@ -113,57 +113,43 @@ const EmployeeTableContent = ({
     getSkillCompetencyState
   );
 
-  const selectedRoleId = selectedJobTitle.length > 0 ? getSkillProfileId(selectedJobTitle[0]) : undefined;
-
-  const exactMatches = sortedEmployees.filter(employee => 
-    selectedJobTitle.length > 0 && selectedJobTitle.some(title => 
-      getBaseRole(title) === getBaseRole(employee.role)
-    )
-  );
-
-  const skillMatches = sortedEmployees.filter(employee => 
-    !selectedJobTitle.some(title => 
-      getBaseRole(title) === getBaseRole(employee.role)
-    )
-  );
-
-  console.log('Exact matches:', exactMatches);
-  console.log('Skill matches:', skillMatches);
-
-  const renderEmployeeCards = (employees: Employee[], title: string, useSelectedRole: boolean = false) => (
-    <Card className="mb-6">
-      <div className="p-4 border-b border-border">
-        <h3 className="text-lg font-medium">{title}</h3>
-        <p className="text-sm text-muted-foreground">
-          {employees.length} {employees.length === 1 ? 'employee' : 'employees'}
-        </p>
-      </div>
-      <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {employees.map((employee, index) => (
-          <EmployeeSkillCard
-            key={employee.id}
-            name={employee.name}
-            role={employee.role}
-            avatar={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=96&h=96`}
-            skills={[]}
-            employeeId={employee.id}
-            benchmarkRoleId={useSelectedRole ? selectedRoleId : undefined}
-          />
-        ))}
-      </div>
-    </Card>
-  );
+  console.log('Final filtered and sorted employees:', filteredEmployees);
 
   return (
-    <div className="space-y-4">
-      {selectedJobTitle.length > 0 ? (
-        <>
-          {renderEmployeeCards(exactMatches, "People with this job")}
-          {renderEmployeeCards(skillMatches, "People with skills that match this job", true)}
-        </>
-      ) : (
-        renderEmployeeCards(sortedEmployees, "All Employees")
-      )}
+    <div className="bg-white rounded-lg">
+      <div className="relative">
+        <table className="w-full">
+          <thead>
+            <EmployeeTableHeader 
+              onSelectAll={(e) => handleSelectAll(filteredEmployees, e)}
+              isAllSelected={filteredEmployees.length > 0 && selectedRows.length === filteredEmployees.length}
+              hasEmployees={filteredEmployees.length > 0}
+              hasSelectedSkills={selectedSkills.length > 0}
+            />
+          </thead>
+          <tbody>
+            {filteredEmployees.length === 0 ? (
+              <tr>
+                <td colSpan={selectedSkills.length > 0 ? 6 : 5} className="text-center py-4 text-muted-foreground">
+                  No employees found
+                </td>
+              </tr>
+            ) : (
+              filteredEmployees.map((employee, index) => (
+                <EmployeeTableRow
+                  key={employee.id}
+                  employee={employee}
+                  isSelected={selectedRows.includes(employee.name)}
+                  onSelect={handleSelectEmployee}
+                  imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
+                  selectedSkills={selectedSkills}
+                  selectedJobTitle={selectedJobTitle}
+                />
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
