@@ -2,12 +2,11 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
 import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
-import { getBaseRole, getSkillProfileId } from './EmployeeTable';
+import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
 import { TrackProvider } from './skills/context/TrackContext';
-import { roleSkills } from './skills/data/roleSkills';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -54,31 +53,15 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Get unique roles from employees and map them to their IDs
-  const availableRoles = Array.from(new Set(
-    employees.map(emp => getBaseRole(emp.role))
-  )).filter(Boolean);
-
-  console.log('Available roles from employees:', availableRoles);
-
-  // Get roles that have skill profiles defined
-  const rolesWithProfiles = Object.keys(roleSkills).map(id => {
-    const roleEntry = Object.entries(roleSkills).find(([key]) => key === id);
-    if (roleEntry) {
-      return { id, title: getBaseRole(id) };
-    }
-    return null;
-  }).filter(Boolean);
-
-  console.log('Roles with skill profiles:', rolesWithProfiles);
-
-  // Combine and deduplicate roles
-  const uniqueRoles = Array.from(new Set([
-    ...availableRoles,
-    ...rolesWithProfiles.map(role => role?.title)
-  ])).filter(Boolean) as string[];
-
-  console.log('Final unique roles:', uniqueRoles);
+  const roles = [
+    "Backend Engineer",
+    "AI Engineer",
+    "Frontend Engineer",
+    "Engineering Manager",
+    "Data Engineer",
+    "DevOps Engineer",
+    "Product Manager"
+  ];
 
   const handleClearAll = () => {
     onSkillsChange([]);
@@ -124,7 +107,7 @@ export const EmployeeFilters = ({
           <SearchFilter
             label=""
             placeholder="Role"
-            items={uniqueRoles}
+            items={roles}
             selectedItems={selectedRole}
             onItemsChange={(items) => onRoleChange(items.map(item => String(item)))}
             singleSelect={true}
