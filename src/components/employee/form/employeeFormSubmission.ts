@@ -3,6 +3,7 @@ import { getSkillProfileId } from "../../EmployeeTable";
 import { getEmployeeSkills } from "../../benchmark/skills-matrix/initialSkills";
 import { categorizeSkills } from "../../skills/competency/skillCategories";
 import { roleMapping } from "./RoleLevelFields";
+import { useSkillsMatrixStore } from "../../benchmark/skills-matrix/SkillsMatrixState";
 
 interface FormData {
   id: string;
@@ -98,16 +99,32 @@ export const processEmployeeData = (formData: FormData): Employee => {
   const roleId = roleMapping[formData.role as keyof typeof roleMapping];
   const roleSkills = getEmployeeSkills(roleId);
   
-  // Process skills list
+  // Process skills list and categorize them
   const skillsList = formData.skills
     .split(',')
     .map(skill => skill.trim())
     .filter(skill => skill.length > 0);
 
+  // Initialize each skill with default values in the SkillsMatrix store
+  const skillsMatrixStore = useSkillsMatrixStore.getState();
+  
+  skillsList.forEach(skillTitle => {
+    skillsMatrixStore.setSkillState(skillTitle, 'unspecified', 'unknown');
+    console.log('Initialized skill with defaults:', {
+      skill: skillTitle,
+      level: 'unspecified',
+      requirement: 'unknown'
+    });
+  });
+
+  // Categorize skills based on role profile
+  const categorizedSkills = categorizeSkills(skillsList, roleId);
+  
   console.log('Processed skills:', {
     roleId,
     roleSkillsCount: roleSkills.length,
-    userSkillsCount: skillsList.length
+    userSkillsCount: skillsList.length,
+    categorizedSkills
   });
 
   const lastUpdated = new Date().toLocaleDateString();
