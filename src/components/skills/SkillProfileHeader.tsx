@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Building2, DollarSign } from "lucide-react";
+import { Download } from "lucide-react";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
@@ -12,12 +12,33 @@ interface SkillProfileHeaderProps {
   jobTitle: string;
 }
 
+interface JobTitle {
+  title: string;
+  mappedTitle: string;
+  soc: string;
+}
+
+const jobTitles: { [key: string]: JobTitle } = {
+  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer", soc: "11-9041" },
+  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer", soc: "15-1251" },
+  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer", soc: "15-1252" },
+  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead", soc: "11-9041" },
+  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1244" }
+};
+
+const roleDescriptions = {
+  "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
+  "Backend Engineer": "We are seeking a skilled Backend Engineer to design and implement scalable server-side solutions. You will work with various databases, APIs, and server architectures to support our growing platform.",
+  "Frontend Engineer": "Join our team as a Frontend Engineer to create responsive and intuitive user interfaces. You will collaborate with designers and backend engineers to deliver seamless web applications.",
+  "Engineering Manager": "We're looking for an Engineering Manager to lead and mentor our technical teams. You will drive technical decisions, manage project deliverables, and foster a culture of innovation and growth."
+};
+
 const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { toggledSkills } = useToggledSkills();
   const { id } = useParams<{ id: string }>();
   const currentRoleId = id || '';
-  
+
   const formatTitle = (title: string) => {
     return title.split(' ').map(word => {
       if (word.toLowerCase() === 'ai') return 'AI';
@@ -43,12 +64,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
       toggledSkillsList.includes(skill.title) && 
       getCategoryForSkill(skill, currentRoleId) === 'critical'
     );
-    
-    console.log('Calculating average price for critical skills:', {
-      toggledSkillsData,
-      totalSkills: toggledSkillsData.length
-    });
-    
+
     if (toggledSkillsData.length === 0) return 0;
 
     const totalPrice = toggledSkillsData.reduce((sum, skill) => {
@@ -59,15 +75,12 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
     return Math.round(totalPrice / toggledSkillsData.length);
   };
 
-  const roleDescriptions = {
-    "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
-    "Backend Engineer": "We are seeking a skilled Backend Engineer to design and implement scalable server-side solutions. You will work with various databases, APIs, and server architectures to support our growing platform.",
-    "Frontend Engineer": "Join our team as a Frontend Engineer to create responsive and intuitive user interfaces. You will collaborate with designers and backend engineers to deliver seamless web applications.",
-    "Engineering Manager": "We're looking for an Engineering Manager to lead and mentor our technical teams. You will drive technical decisions, manage project deliverables, and foster a culture of innovation and growth."
-  };
-
   const fullDescription = roleDescriptions[jobTitle as keyof typeof roleDescriptions] || roleDescriptions["AI Engineer"];
   const averagePrice = calculateAveragePrice();
+  const currentRole = roleSkills[currentRoleId as keyof typeof roleSkills];
+  const occupation = currentRole?.occupation || "Not specified";
+  const mappedTitle = jobTitles[currentRoleId]?.mappedTitle || jobTitle;
+  const soc = jobTitles[currentRoleId]?.soc || "";
 
   return (
     <div className="space-y-6">
@@ -75,39 +88,50 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="space-y-1">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-semibold text-foreground">{formatTitle(jobTitle)}</h1>
-            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded">ID: {currentRoleId}</span>
+            <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded-md border border-border">ID: {currentRoleId}</span>
           </div>
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" className="bg-white">Export</Button>
-          <Button className="bg-[#1F2144]">Edit</Button>
+          <Button variant="outline" className="bg-white hover:bg-background">
+            <Download className="w-4 h-4 mr-2" />
+            Export
+          </Button>
+          <Button className="bg-primary hover:bg-primary/90">
+            Edit
+          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-8">
-        <div className="flex items-center gap-2">
+      <div className="grid grid-cols-5 gap-6">
+        <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Function</span>
             <p className="font-medium">Engineering</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
+          <div className="flex flex-col">
+            <span className="text-sm text-muted-foreground">SOC</span>
+            <p className="font-medium">({soc})</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <p className="font-medium">Artificial Engineer</p>
+            <p className="font-medium">{mappedTitle}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Occupation</span>
-            <p className="font-medium">Software Developer</p>
+            <p className="font-medium">{occupation}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex flex-col">
-            <span className="text-sm text-muted-foreground">Market Pricer</span>
-            <p className="font-medium">${averagePrice.toLocaleString()}</p>
+          <div className="flex flex-col bg-[#F7F9FF] p-3 rounded-lg border-2 border-primary-accent/30 hover:border-primary-accent/50 transition-all duration-300 shadow-sm hover:shadow-md w-full">
+            <span className="text-sm text-muted-foreground font-medium">Market Pricer</span>
+            <p className="font-semibold text-lg text-primary-accent">${averagePrice.toLocaleString()}</p>
           </div>
         </div>
       </div>
