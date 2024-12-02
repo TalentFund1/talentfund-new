@@ -131,7 +131,6 @@ export const AddSkillProfileForm = () => {
               <BasicProfileFields 
                 formData={formData}
                 handleInputChange={handleInputChange}
-                roleSkills={roleSkills}
               />
             </div>
 
