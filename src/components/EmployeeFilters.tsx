@@ -54,18 +54,15 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Get roles from roleSkills using the role names from the comments
+  // Dynamically get roles from roleSkills
   const roles = Object.entries(roleSkills).map(([id, data]) => {
-    // Extract role name from the comment in roleSkills
-    const comment = Object.keys(roleSkills).find(key => key === id);
-    switch(id) {
-      case "123": return "AI Engineer";
-      case "124": return "Backend Engineer";
-      case "125": return "Frontend Engineer";
-      case "126": return "Engineering Manager";
-      case "127": return "DevOps Engineer";
-      default: return data.occupation;
-    }
+    // Get the role name from the occupation field, or format it if needed
+    const roleName = data.occupation === "Software Developer" ? 
+      `${id.split(':')[0].replace(/([A-Z])/g, ' $1').trim()} Engineer` : 
+      data.occupation;
+    
+    console.log('Processing role:', { id, occupation: data.occupation, formattedName: roleName });
+    return roleName;
   });
 
   console.log('Available roles from roleSkills:', roles);
