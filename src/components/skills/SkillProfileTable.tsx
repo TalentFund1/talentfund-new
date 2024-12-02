@@ -16,26 +16,23 @@ interface SkillProfileTableProps {
   selectedFunction?: string;
   selectedSkills: string[];
   selectedJobTitle?: string;
-  selectedOccupation?: string;
 }
 
 const SkillProfileTableContent = ({ 
   selectedFunction,
   selectedSkills,
-  selectedJobTitle,
-  selectedOccupation 
+  selectedJobTitle 
 }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
-  console.log('Selected occupation:', selectedOccupation);
-  
   const getExactRoleMatches = (roleName: string) => {
     return employees.filter(emp => getBaseRole(emp.role) === roleName).length;
   };
 
+  // Calculate average benchmark for a role
   const calculateAverageBenchmark = (roleId: string, roleName: string) => {
     const matchingEmployees = employees.filter(emp => getBaseRole(emp.role) === roleName);
     if (matchingEmployees.length === 0) return 0;
@@ -62,11 +59,11 @@ const SkillProfileTableContent = ({
   };
 
   const rows: SkillProfileRow[] = [
-    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: String(getExactRoleMatches("AI Engineer")), matches: `${calculateAverageBenchmark("123", "AI Engineer")}%`, lastUpdated: "10/20/24", occupation: "Software Developer" },
-    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: String(getExactRoleMatches("Backend Engineer")), matches: `${calculateAverageBenchmark("124", "Backend Engineer")}%`, lastUpdated: "10/20/24", occupation: "Software Developer" },
-    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: String(getExactRoleMatches("Frontend Engineer")), matches: `${calculateAverageBenchmark("125", "Frontend Engineer")}%`, lastUpdated: "10/20/24", occupation: "Software Developer" },
-    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: String(getExactRoleMatches("Engineering Manager")), matches: `${calculateAverageBenchmark("126", "Engineering Manager")}%`, lastUpdated: "10/20/24", occupation: "Project Manager" },
-    { id: "127", name: "DevOps Engineer", function: "Engineering", skillCount: "13", employees: String(getExactRoleMatches("DevOps Engineer")), matches: `${calculateAverageBenchmark("127", "DevOps Engineer")}%`, lastUpdated: "10/20/24", occupation: "DevOps Engineer" }
+    { id: "123", name: "AI Engineer", function: "Engineering", skillCount: "16", employees: String(getExactRoleMatches("AI Engineer")), matches: `${calculateAverageBenchmark("123", "AI Engineer")}%`, lastUpdated: "10/20/24" },
+    { id: "124", name: "Backend Engineer", function: "Engineering", skillCount: "12", employees: String(getExactRoleMatches("Backend Engineer")), matches: `${calculateAverageBenchmark("124", "Backend Engineer")}%`, lastUpdated: "10/20/24" },
+    { id: "125", name: "Frontend Engineer", function: "Engineering", skillCount: "17", employees: String(getExactRoleMatches("Frontend Engineer")), matches: `${calculateAverageBenchmark("125", "Frontend Engineer")}%`, lastUpdated: "10/20/24" },
+    { id: "126", name: "Engineering Manager", function: "Engineering", skillCount: "11", employees: String(getExactRoleMatches("Engineering Manager")), matches: `${calculateAverageBenchmark("126", "Engineering Manager")}%`, lastUpdated: "10/20/24" },
+    { id: "127", name: "DevOps Engineer", function: "Engineering", skillCount: "13", employees: String(getExactRoleMatches("DevOps Engineer")), matches: `${calculateAverageBenchmark("127", "DevOps Engineer")}%`, lastUpdated: "10/20/24" }
   ];
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,11 +81,8 @@ const SkillProfileTableContent = ({
   };
 
   const filteredRows = rows.filter(row => {
-    console.log('Filtering row:', row.name, 'occupation:', row.occupation, 'selected occupation:', selectedOccupation);
-    
     const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
     const matchesJobTitle = !selectedJobTitle || row.name.toLowerCase() === selectedJobTitle.toLowerCase();
-    const matchesOccupation = !selectedOccupation || row.occupation?.toLowerCase() === selectedOccupation.toLowerCase();
     
     const profileSkills = roleSkills[row.id as keyof typeof roleSkills] || { specialized: [], common: [], certifications: [] };
     const allProfileSkills = [
@@ -103,7 +97,7 @@ const SkillProfileTableContent = ({
       )
     );
 
-    return matchesFunction && matchesJobTitle && matchesOccupation && hasSelectedSkills;
+    return matchesFunction && matchesJobTitle && hasSelectedSkills;
   });
 
   return (
@@ -161,7 +155,7 @@ const SkillProfileTableContent = ({
                 <TableCell className="text-center align-middle">{row.skillCount}</TableCell>
                 <TableCell className="text-center align-middle">{row.employees}</TableCell>
                 <TableCell className="text-center align-middle">
-                  <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${
+                  <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
                     getBenchmarkColor(parseInt(row.matches))
                   }`}>
                     {row.matches}
