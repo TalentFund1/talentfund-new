@@ -3,6 +3,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
+import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -18,9 +19,24 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     try {
-      const savedSkills = loadToggledSkills(selectedRole || id || "123");
+      const currentRoleId = selectedRole || id || "123";
+      const savedSkills = loadToggledSkills(currentRoleId);
+      
+      // If no saved skills exist for DevOps Engineer (127), initialize with default skills
+      if (currentRoleId === "127" && (!savedSkills || savedSkills.length === 0)) {
+        const devOpsSkills = roleSkills["127"];
+        const defaultSkills = [
+          ...(devOpsSkills.specialized?.slice(0, 5) || []).map(s => s.title),
+          ...(devOpsSkills.common?.slice(0, 3) || []).map(s => s.title)
+        ];
+        
+        console.log('Initializing default DevOps skills:', defaultSkills);
+        saveToggledSkills(currentRoleId, defaultSkills);
+        return new Set(defaultSkills);
+      }
+      
       console.log('Initial load of toggled skills:', {
-        roleId: selectedRole || id || "123",
+        roleId: currentRoleId,
         savedSkills
       });
       return new Set(savedSkills);
@@ -35,6 +51,21 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     const currentRoleId = selectedRole || id || "123";
     try {
       const savedSkills = loadToggledSkills(currentRoleId);
+      
+      // If switching to DevOps Engineer and no skills are saved, set defaults
+      if (currentRoleId === "127" && (!savedSkills || savedSkills.length === 0)) {
+        const devOpsSkills = roleSkills["127"];
+        const defaultSkills = [
+          ...(devOpsSkills.specialized?.slice(0, 5) || []).map(s => s.title),
+          ...(devOpsSkills.common?.slice(0, 3) || []).map(s => s.title)
+        ];
+        
+        console.log('Setting default DevOps skills on role change:', defaultSkills);
+        setToggledSkills(new Set(defaultSkills));
+        saveToggledSkills(currentRoleId, defaultSkills);
+        return;
+      }
+      
       console.log('Reloading toggled skills for role change:', {
         roleId: currentRoleId,
         savedSkills
