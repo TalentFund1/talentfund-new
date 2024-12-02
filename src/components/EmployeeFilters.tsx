@@ -7,6 +7,8 @@ import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
 import { TrackProvider } from './skills/context/TrackContext';
+import { roleSkills } from './skills/data/roleSkills';
+import { jobTitles } from './skills/competency/skillProfileData';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -53,15 +55,12 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  const roles = [
-    "Backend Engineer",
-    "AI Engineer",
-    "Frontend Engineer",
-    "Engineering Manager",
-    "Data Engineer",
-    "DevOps Engineer",
-    "Product Manager"
-  ];
+  // Get roles dynamically from roleSkills and jobTitles
+  const roles = Object.keys(roleSkills)
+    .filter(roleId => jobTitles[roleId])
+    .map(roleId => jobTitles[roleId]);
+
+  console.log('Available roles:', roles);
 
   const handleClearAll = () => {
     onSkillsChange([]);
