@@ -6,7 +6,6 @@ import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
 import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 import { roleSkills } from '@/components/skills/data/roleSkills';
-import { jobTitles } from '@/components/skills/competency/skillProfileData';
 import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
 import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -55,7 +54,7 @@ const SkillsProfileContent = () => {
   const [selectedOccupation, setSelectedOccupation] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
 
-  const availableJobTitles = Object.keys(jobTitles).map(id => jobTitles[id]);
+  const availableJobTitles = Object.values(roleSkills).map(role => role.occupation);
   const toggledSkillsList = Array.from(toggledSkills);
 
   return (
