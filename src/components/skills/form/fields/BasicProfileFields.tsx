@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { JobTitle } from "../AddSkillProfileForm";
 import { RoleTrackSelector } from "./RoleTrackSelector";
+import { roleSkills } from '../../data/roleSkills';
 
 const companyFunctions = [
   "Engineering",
@@ -27,15 +27,13 @@ interface BasicProfileFieldsProps {
     roleTrack: "Professional" | "Managerial";
   };
   handleInputChange: (field: string, value: string) => void;
-  jobTitles: { [key: string]: JobTitle };
 }
 
 export const BasicProfileFields = ({
   formData,
-  handleInputChange,
-  jobTitles
+  handleInputChange
 }: BasicProfileFieldsProps) => {
-  const isNewRole = !jobTitles[formData.roleId];
+  const isNewRole = !roleSkills[formData.roleId as keyof typeof roleSkills];
 
   return (
     <>
