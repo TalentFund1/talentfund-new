@@ -31,7 +31,7 @@ export const getSkillProfileId = (role?: string) => {
   if (!role) return "123"; // Default profile ID if role is undefined
 
   // Validate role ID format first
-  const validProfileIds = ["123", "124", "125", "126", "127"];
+  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
   if (validProfileIds.includes(role)) {
     console.log('Using direct role ID:', role);
     return role;
@@ -43,7 +43,9 @@ export const getSkillProfileId = (role?: string) => {
     "AI Engineer": "123",
     "Frontend Engineer": "125",
     "Engineering Manager": "126",
-    "DevOps Engineer": "127",  // Ensure DevOps Engineer maps to 127
+    "Data Engineer": "127",
+    "DevOps Engineer": "128",
+    "Product Manager": "129",
     "Frontend Developer": "125"  // Alias for Frontend Engineer
   };
   
@@ -53,8 +55,7 @@ export const getSkillProfileId = (role?: string) => {
   console.log('Role mapping:', { 
     originalRole: role,
     baseRole,
-    mappedId,
-    roleMapKeys: Object.keys(roleMap)
+    mappedId
   });
   
   return mappedId || "123"; // Return default if no mapping found
@@ -107,14 +108,19 @@ const EmployeeTableContent = ({
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
-  // Remove the benchmark > 0 filter to show all matches
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     selectedRole,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
-  );
+  ).filter(employee => {
+    // Only include employees with benchmark > 0% when a role is selected
+    if (selectedRole.length > 0) {
+      return employee.benchmark > 0;
+    }
+    return true;
+  });
 
   console.log('Final filtered and sorted employees:', filteredEmployees);
 

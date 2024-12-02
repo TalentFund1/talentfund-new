@@ -46,17 +46,3 @@ export const saveToggledSkills = (roleId: string, skills: string[]) => {
     throw error;
   }
 };
-
-export const clearToggledSkills = (roleId: string) => {
-  try {
-    if (!roleId) {
-      console.error('Cannot clear toggled skills: No role ID provided');
-      return;
-    }
-    
-    localStorage.removeItem(getStorageKey(roleId));
-    console.log('Cleared toggled skills for role:', roleId);
-  } catch (error) {
-    console.error('Error clearing toggled skills:', error);
-  }
-};

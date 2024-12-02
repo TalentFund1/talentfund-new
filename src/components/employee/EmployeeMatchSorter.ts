@@ -1,7 +1,7 @@
 import { Employee } from "../types/employeeTypes";
+import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { roleSkills } from "../skills/data/roleSkills";
-import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
@@ -12,15 +12,18 @@ export const sortEmployeesByRoleMatch = (
 ): Employee[] => {
   if (selectedJobTitle.length === 0) return employees;
 
-  const roleId = getSkillProfileId(selectedJobTitle[0]);
-  
+  const selectedRole = selectedJobTitle[0];
+  const roleId = getSkillProfileId(selectedRole);
+
   console.log('Sorting employees by role match:', { 
-    selectedJobTitle,
+    selectedRole, 
     roleId,
-    totalEmployees: employees.length,
-    toggledSkillsCount: toggledSkills.size,
-    toggledSkills: Array.from(toggledSkills)
+    totalEmployees: employees.length 
   });
+
+  // First separate exact matches and calculate benchmarks for remaining employees
+  const exactMatches: Employee[] = [];
+  const partialMatches: Employee[] = [];
 
   // Get role skills for benchmark comparison
   const roleData = roleSkills[roleId as keyof typeof roleSkills];
@@ -41,12 +44,12 @@ export const sortEmployeesByRoleMatch = (
     skills: allRoleSkills.map(s => s.title)
   });
 
-  // Calculate benchmarks for all employees
-  const exactMatches: (Employee & { benchmark: number })[] = [];
-  const partialMatches: (Employee & { benchmark: number })[] = [];
-
   employees.forEach(employee => {
+    const employeeRoleId = getSkillProfileId(employee.role);
     const employeeLevel = getLevel(employee.role);
+    const isExactMatch = employeeRoleId === roleId;
+
+    // Calculate benchmark for all employees
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
       roleId,
@@ -56,44 +59,56 @@ export const sortEmployeesByRoleMatch = (
       getSkillCompetencyState
     );
 
-    const employeeWithBenchmark = { ...employee, benchmark };
-    const isExactMatch = getSkillProfileId(employee.role) === roleId;
-
-    console.log('Employee match calculation:', {
+    console.log('Processing employee for matching:', {
       employee: employee.name,
-      role: employee.role,
+      employeeRole: employee.role,
+      employeeRoleId,
+      targetRoleId: roleId,
+      isExactMatch,
       benchmark,
-      isExactMatch
+      employeeLevel
     });
+
+    const employeeWithBenchmark = {
+      ...employee,
+      benchmark
+    };
 
     if (isExactMatch) {
       exactMatches.push(employeeWithBenchmark);
-    } else {
-      // Add to partial matches regardless of benchmark score
+    } else if (benchmark > 0) {
+      // Add to partial matches if they have any matching skills (benchmark > 0)
+      // and they're not an exact match
       partialMatches.push(employeeWithBenchmark);
       console.log('Added to partial matches:', {
         employee: employee.name,
         role: employee.role,
-        benchmark
+        benchmark,
+        skills: allRoleSkills.length
       });
     }
   });
 
-  // Sort both arrays by benchmark in descending order
-  const sortByBenchmark = (a: Employee & { benchmark: number }, b: Employee & { benchmark: number }) => 
-    (b.benchmark || 0) - (a.benchmark || 0);
-
-  exactMatches.sort(sortByBenchmark);
-  partialMatches.sort(sortByBenchmark);
-
-  // Combine exact matches followed by partial matches
-  const sortedEmployees = [...exactMatches, ...partialMatches];
-
-  console.log('Final sorted employees:', {
-    totalMatches: sortedEmployees.length,
-    exactMatches: exactMatches.length,
-    partialMatches: partialMatches.length
+  // Sort partial matches by benchmark percentage in descending order
+  const sortedPartialMatches = partialMatches.sort((a, b) => {
+    return (b.benchmark || 0) - (a.benchmark || 0);
   });
 
-  return sortedEmployees;
+  console.log('Final matching results:', {
+    exactMatches: exactMatches.map(e => ({ 
+      name: e.name, 
+      role: e.role,
+      benchmark: e.benchmark 
+    })),
+    partialMatches: sortedPartialMatches.map(e => ({ 
+      name: e.name, 
+      role: e.role,
+      benchmark: e.benchmark 
+    })),
+    totalExactMatches: exactMatches.length,
+    totalPartialMatches: sortedPartialMatches.length
+  });
+
+  // Combine exact matches first, followed by sorted partial matches
+  return [...exactMatches, ...sortedPartialMatches];
 };
