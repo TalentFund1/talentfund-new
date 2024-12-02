@@ -94,7 +94,6 @@ export const AddSkillProfileForm = () => {
       name: formData.roleTitle || roleSkills[formData.roleId as keyof typeof roleSkills]?.title,
       function: formData.function,
       mappedTitle: formData.mappedTitle,
-      occupation: formData.occupation,
       soc: formData.soc,
       roleTrack: formData.roleTrack,
       description: formData.jobDescription,
@@ -106,10 +105,10 @@ export const AddSkillProfileForm = () => {
 
     // Add to roleSkills
     roleSkills[formData.roleId as keyof typeof roleSkills] = {
+      title: formData.roleTitle || newProfile.name,
       specialized: [],
       common: [],
-      certifications: [],
-      occupation: formData.occupation
+      certifications: []
     };
 
     console.log('Profile created successfully');
