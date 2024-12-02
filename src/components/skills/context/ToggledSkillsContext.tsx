@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
-import { roleSkills } from '../data/roleSkills';
+import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -11,69 +11,39 @@ interface ToggledSkillsContextType {
 
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'toggled-skills';
-
-const getDefaultSkills = (roleId: string): string[] => {
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-  if (!currentRoleSkills) return [];
-
-  return [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ].map(skill => skill.title);
-};
-
-const loadToggledSkills = (roleId: string): string[] => {
-  try {
-    const savedSkills = localStorage.getItem(`${STORAGE_KEY}-${roleId}`);
-    if (savedSkills) {
-      console.log('Loading saved toggled skills for role:', roleId, JSON.parse(savedSkills));
-      return JSON.parse(savedSkills);
-    }
-    // If no saved skills, return all skills for the role as default
-    const defaultSkills = getDefaultSkills(roleId);
-    console.log('No saved skills found, using default skills for role:', roleId, defaultSkills);
-    return defaultSkills;
-  } catch (error) {
-    console.error('Error loading toggled skills:', error);
-    return getDefaultSkills(roleId);
-  }
-};
-
-const saveToggledSkills = (roleId: string, skills: string[]) => {
-  try {
-    localStorage.setItem(`${STORAGE_KEY}-${roleId}`, JSON.stringify(skills));
-    console.log('Saved toggled skills for role:', roleId, skills);
-  } catch (error) {
-    console.error('Error saving toggled skills:', error);
-  }
-};
-
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const { id } = useParams();
   const { selectedRole } = useRoleStore();
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
-    const currentRoleId = selectedRole || id || "123";
-    const savedSkills = loadToggledSkills(currentRoleId);
-    console.log('Initial load of toggled skills:', {
-      roleId: currentRoleId,
-      savedSkills
-    });
-    return new Set(savedSkills);
+    try {
+      const savedSkills = loadToggledSkills(selectedRole || id || "123");
+      console.log('Initial load of toggled skills:', {
+        roleId: selectedRole || id || "123",
+        savedSkills
+      });
+      return new Set(savedSkills);
+    } catch (error) {
+      console.error('Error loading initial toggled skills:', error);
+      return new Set();
+    }
   });
 
   // Effect to reload toggled skills when role changes
   useEffect(() => {
     const currentRoleId = selectedRole || id || "123";
-    const savedSkills = loadToggledSkills(currentRoleId);
-    console.log('Reloading toggled skills for role change:', {
-      roleId: currentRoleId,
-      savedSkills
-    });
-    setToggledSkills(new Set(savedSkills));
+    try {
+      const savedSkills = loadToggledSkills(currentRoleId);
+      console.log('Reloading toggled skills for role change:', {
+        roleId: currentRoleId,
+        savedSkills
+      });
+      setToggledSkills(new Set(savedSkills));
+    } catch (error) {
+      console.error('Error reloading toggled skills:', error);
+      setToggledSkills(new Set());
+    }
   }, [selectedRole, id]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
@@ -86,6 +56,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     
     setToggledSkills(newSkills);
     
+    // Save to localStorage immediately after state update
     try {
       const skillsArray = Array.from(newSkills);
       saveToggledSkills(currentRoleId, skillsArray);

@@ -32,7 +32,6 @@ export const EmployeeTableRow = ({
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   
-  // Use selected role if provided, otherwise use employee's assigned role
   const targetRoleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
@@ -43,10 +42,10 @@ export const EmployeeTableRow = ({
     getSkillProfileId(employee.role) === targetRoleId;
 
   const getSkillMatchCount = () => {
-    const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
-    if (!currentRoleSkills) return null;
-
     if (selectedSkills.length === 0) {
+      const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
+      if (!currentRoleSkills) return null;
+
       const allRoleSkills = [
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
@@ -60,6 +59,7 @@ export const EmployeeTableRow = ({
 
       return `${matchingSkills.length} / ${allRoleSkills.length}`;
     } else {
+      // Calculate matches based on selected skills
       const employeeSkills = getEmployeeSkills(employee.id);
       const matchingSkills = selectedSkills.filter(skillName => 
         employeeSkills.some(empSkill => empSkill.title === skillName)

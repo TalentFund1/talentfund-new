@@ -10,26 +10,8 @@ export const sortEmployeesByRoleMatch = (
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ): Employee[] => {
-  if (selectedJobTitle.length === 0) {
-    // When no role is selected, calculate benchmark against each employee's assigned role
-    return employees.map(employee => {
-      const employeeRoleId = getSkillProfileId(employee.role);
-      const employeeLevel = getLevel(employee.role);
-      
-      const benchmark = calculateBenchmarkPercentage(
-        employee.id,
-        employeeRoleId,
-        employeeLevel,
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      );
+  if (selectedJobTitle.length === 0) return employees;
 
-      return { ...employee, benchmark };
-    });
-  }
-
-  // If a role is selected, use the existing logic for role matching
   const selectedRole = selectedJobTitle[0];
   const roleId = getSkillProfileId(selectedRole);
 
@@ -39,9 +21,11 @@ export const sortEmployeesByRoleMatch = (
     totalEmployees: employees.length 
   });
 
+  // First separate exact matches and calculate benchmarks for remaining employees
   const exactMatches: Employee[] = [];
   const partialMatches: Employee[] = [];
 
+  // Get role skills for benchmark comparison
   const roleData = roleSkills[roleId as keyof typeof roleSkills];
   if (!roleData) {
     console.error('No role skills found for role:', roleId);
@@ -65,6 +49,7 @@ export const sortEmployeesByRoleMatch = (
     const employeeLevel = getLevel(employee.role);
     const isExactMatch = employeeRoleId === roleId;
 
+    // Calculate benchmark for all employees
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
       roleId,
@@ -74,6 +59,16 @@ export const sortEmployeesByRoleMatch = (
       getSkillCompetencyState
     );
 
+    console.log('Processing employee for matching:', {
+      employee: employee.name,
+      employeeRole: employee.role,
+      employeeRoleId,
+      targetRoleId: roleId,
+      isExactMatch,
+      benchmark,
+      employeeLevel
+    });
+
     const employeeWithBenchmark = {
       ...employee,
       benchmark
@@ -81,11 +76,20 @@ export const sortEmployeesByRoleMatch = (
 
     if (isExactMatch) {
       exactMatches.push(employeeWithBenchmark);
-    } else {
+    } else if (benchmark > 0) {
+      // Add to partial matches if they have any matching skills (benchmark > 0)
+      // and they're not an exact match
       partialMatches.push(employeeWithBenchmark);
+      console.log('Added to partial matches:', {
+        employee: employee.name,
+        role: employee.role,
+        benchmark,
+        skills: allRoleSkills.length
+      });
     }
   });
 
+  // Sort partial matches by benchmark percentage in descending order
   const sortedPartialMatches = partialMatches.sort((a, b) => {
     return (b.benchmark || 0) - (a.benchmark || 0);
   });
@@ -100,8 +104,11 @@ export const sortEmployeesByRoleMatch = (
       name: e.name, 
       role: e.role,
       benchmark: e.benchmark 
-    }))
+    })),
+    totalExactMatches: exactMatches.length,
+    totalPartialMatches: sortedPartialMatches.length
   });
 
+  // Combine exact matches first, followed by sorted partial matches
   return [...exactMatches, ...sortedPartialMatches];
 };

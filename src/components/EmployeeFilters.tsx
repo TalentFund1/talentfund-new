@@ -7,6 +7,7 @@ import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
 import { TrackProvider } from './skills/context/TrackContext';
+import { roleSkills } from './skills/data/roleSkills';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -26,6 +27,8 @@ interface EmployeeFiltersProps {
   onRoleChange?: (role: string[]) => void;
   selectedRole?: string[];
 }
+
+type ValidRole = "Engineering Manager" | "AI Engineer" | "Backend Engineer" | "Frontend Engineer" | "DevOps Engineer";
 
 export const EmployeeFilters = ({ 
   onDepartmentChange, 
@@ -53,15 +56,34 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  const roles = [
-    "Backend Engineer",
-    "AI Engineer",
-    "Frontend Engineer",
-    "Engineering Manager",
-    "Data Engineer",
-    "DevOps Engineer",
-    "Product Manager"
-  ];
+  // Get all roles directly from roleSkills database
+  const roles = Object.entries(roleSkills).map(([id, value]) => {
+    const occupation = value.occupation;
+    let role: ValidRole | null = null;
+
+    if (occupation === "Software Developer" || occupation === "Project Manager" || occupation === "DevOps Engineer") {
+      switch (id) {
+        case "123":
+          role = "AI Engineer";
+          break;
+        case "124":
+          role = "Backend Engineer";
+          break;
+        case "125":
+          role = "Frontend Engineer";
+          break;
+        case "126":
+          role = "Engineering Manager";
+          break;
+        case "127":
+          role = "DevOps Engineer";
+          break;
+      }
+    }
+    return role;
+  }).filter((role): role is ValidRole => role !== null);
+
+  console.log('Available roles from database:', roles);
 
   const handleClearAll = () => {
     onSkillsChange([]);

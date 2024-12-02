@@ -165,14 +165,10 @@ const EmployeeTableContent = ({
 
 export const EmployeeTable = (props: EmployeeTableProps) => {
   return (
-    <TooltipProvider>
-      <TrackProvider>
-        <ToggledSkillsProvider>
-          <EmployeeTableContent {...props} />
-          <Toaster />
-          <Sonner />
-        </ToggledSkillsProvider>
-      </TrackProvider>
-    </TooltipProvider>
+    <TrackProvider>
+      <ToggledSkillsProvider>
+        <EmployeeTableContent {...props} />
+      </ToggledSkillsProvider>
+    </TrackProvider>
   );
 };
