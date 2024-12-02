@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SearchFilter } from '@/components/market/SearchFilter';
+import { roleSkills } from '../data/roleSkills';
 
 interface SkillProfileFiltersProps {
   selectedSkills: string[];
@@ -9,12 +10,9 @@ interface SkillProfileFiltersProps {
   setSelectedFunction: (func: string) => void;
   selectedJobTitle: string;
   setSelectedJobTitle: (title: string) => void;
-  selectedOccupation: string;
-  setSelectedOccupation: (occupation: string) => void;
   toggledSkillsList: string[];
   availableJobTitles: string[];
   companyFunctions: string[];
-  occupations: string[];
 }
 
 export const SkillProfileFilters = ({
@@ -24,19 +22,17 @@ export const SkillProfileFilters = ({
   setSelectedFunction,
   selectedJobTitle,
   setSelectedJobTitle,
-  selectedOccupation,
-  setSelectedOccupation,
   toggledSkillsList,
-  availableJobTitles,
-  companyFunctions,
-  occupations
+  companyFunctions
 }: SkillProfileFiltersProps) => {
   const handleClearAll = () => {
     setSelectedSkills([]);
     setSelectedFunction("");
     setSelectedJobTitle("");
-    setSelectedOccupation("");
   };
+
+  // Get role names directly from roleSkills
+  const roleNames = Object.values(roleSkills).map(role => role.specialized[0]?.title || '').filter(Boolean);
 
   return (
     <Card className="p-6">
@@ -53,8 +49,8 @@ export const SkillProfileFilters = ({
         <div className="flex flex-wrap items-center gap-3">
           <SearchFilter
             label=""
-            placeholder="Job Title"
-            items={availableJobTitles}
+            placeholder="Role Name"
+            items={roleNames}
             selectedItems={selectedJobTitle ? [selectedJobTitle] : []}
             onItemsChange={(items) => setSelectedJobTitle(items[0] || "")}
             singleSelect={true}
@@ -67,16 +63,6 @@ export const SkillProfileFilters = ({
             items={companyFunctions}
             selectedItems={selectedFunction ? [selectedFunction] : []}
             onItemsChange={(items) => setSelectedFunction(items[0] || "")}
-            singleSelect={true}
-            className="w-[180px]"
-          />
-
-          <SearchFilter
-            label=""
-            placeholder="Occupation"
-            items={occupations}
-            selectedItems={selectedOccupation ? [selectedOccupation] : []}
-            onItemsChange={(items) => setSelectedOccupation(items[0] || "")}
             singleSelect={true}
             className="w-[180px]"
           />
