@@ -6,20 +6,6 @@ import { BasicProfileFields } from "./fields/BasicProfileFields";
 import { DescriptionFields } from "./fields/DescriptionFields";
 import { roleSkills } from '../data/roleSkills';
 
-export interface JobTitle {
-  title: string;
-  mappedTitle: string;
-  soc?: string;
-}
-
-export const jobTitles: { [key: string]: JobTitle } = {
-  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer", soc: "11-9041" },
-  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer", soc: "15-1251" },
-  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer", soc: "15-1252" },
-  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead", soc: "11-9041" },
-  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1244" }
-};
-
 interface FormData {
   roleId: string;
   roleTitle: string;
@@ -51,15 +37,19 @@ export const AddSkillProfileForm = () => {
     console.log(`Updating ${field} with value:`, value);
     
     if (field === 'roleId') {
-      const roleData = jobTitles[value];
-      const mappedTitle = roleData?.mappedTitle || formData.mappedTitle;
-      const soc = roleData?.soc || formData.soc;
-      console.log('Updating role title mapping:', { roleId: value, mappedTitle, soc });
+      const currentRole = roleSkills[value as keyof typeof roleSkills];
+      const mappedTitle = currentRole ? `${currentRole.occupation} Specialist` : '';
+      const soc = currentRole?.occupation === "Software Developer" ? "15-1252" : 
+                 currentRole?.occupation === "Project Manager" ? "11-9041" : 
+                 currentRole?.occupation === "DevOps Engineer" ? "15-1244" : "";
+      
+      console.log('Updating role mapping:', { roleId: value, mappedTitle, soc });
       setFormData(prev => ({
         ...prev,
         [field]: value,
         mappedTitle,
-        soc
+        soc,
+        occupation: currentRole?.occupation || ''
       }));
     } else {
       setFormData(prev => ({
@@ -88,7 +78,7 @@ export const AddSkillProfileForm = () => {
     }
 
     // If it's a new role, validate role title
-    if (!jobTitles[formData.roleId] && !formData.roleTitle) {
+    if (!roleSkills[formData.roleId as keyof typeof roleSkills] && !formData.roleTitle) {
       console.log('Validation failed - Missing role title for new role');
       toast({
         title: "Validation Error",
@@ -101,7 +91,7 @@ export const AddSkillProfileForm = () => {
     // Create new role profile
     const newProfile = {
       id: formData.roleId,
-      name: formData.roleTitle || jobTitles[formData.roleId]?.title,
+      name: formData.roleTitle || roleSkills[formData.roleId as keyof typeof roleSkills]?.occupation,
       function: formData.function,
       mappedTitle: formData.mappedTitle,
       occupation: formData.occupation,
@@ -114,22 +104,13 @@ export const AddSkillProfileForm = () => {
 
     console.log('Creating new skill profile:', newProfile);
 
-    // Add to roleSkills (you might want to implement this in a state management solution)
-    roleSkills[formData.roleId] = {
+    // Add to roleSkills
+    roleSkills[formData.roleId as keyof typeof roleSkills] = {
       specialized: [],
       common: [],
       certifications: [],
       occupation: formData.occupation
     };
-
-    // Add to jobTitles if it's a new role
-    if (!jobTitles[formData.roleId]) {
-      jobTitles[formData.roleId] = {
-        title: formData.roleTitle,
-        mappedTitle: formData.mappedTitle,
-        soc: formData.soc
-      };
-    }
 
     console.log('Profile created successfully');
     toast({
@@ -155,7 +136,7 @@ export const AddSkillProfileForm = () => {
               <BasicProfileFields 
                 formData={formData}
                 handleInputChange={handleInputChange}
-                jobTitles={jobTitles}
+                roleSkills={roleSkills}
               />
             </div>
 
