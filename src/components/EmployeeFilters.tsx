@@ -8,7 +8,6 @@ import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
 import { TrackProvider } from './skills/context/TrackContext';
 import { roleSkills } from './skills/data/roleSkills';
-import { jobTitles } from './skills/competency/skillProfileData';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -55,12 +54,11 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Get roles dynamically from roleSkills and jobTitles
-  const roles = Object.keys(roleSkills)
-    .filter(roleId => jobTitles[roleId])
-    .map(roleId => jobTitles[roleId]);
+  // Get roles dynamically from roleSkills
+  const roles = Object.entries(roleSkills).map(([id, data]) => data.occupation);
+  const uniqueRoles = Array.from(new Set(roles));
 
-  console.log('Available roles:', roles);
+  console.log('Available roles from roleSkills:', uniqueRoles);
 
   const handleClearAll = () => {
     onSkillsChange([]);
@@ -106,7 +104,7 @@ export const EmployeeFilters = ({
           <SearchFilter
             label=""
             placeholder="Role"
-            items={roles}
+            items={uniqueRoles}
             selectedItems={selectedRole}
             onItemsChange={(items) => onRoleChange(items.map(item => String(item)))}
             singleSelect={true}

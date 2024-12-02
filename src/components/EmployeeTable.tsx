@@ -15,6 +15,7 @@ import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
+import { roleSkills } from "./skills/data/roleSkills";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -28,40 +29,28 @@ interface EmployeeTableProps {
 }
 
 export const getSkillProfileId = (role?: string) => {
-  // Validate role ID format first
-  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
-  if (validProfileIds.includes(role || '')) {
-    console.log('Using direct role ID:', role);
-    return role;
-  }
-
-  // Map role titles to IDs with consistent structure
-  const roleMap: { [key: string]: string } = {
-    "Backend Engineer": "124",
-    "AI Engineer": "123",
-    "Frontend Engineer": "125",
-    "Engineering Manager": "126",
-    "Data Engineer": "127",
-    "DevOps Engineer": "128",
-    "Product Manager": "129",
-    "Frontend Developer": "125"  // Alias for Frontend Engineer
-  };
-  
   if (!role) {
     console.warn('No role provided to getSkillProfileId');
     return '';
   }
 
+  // First check if the role is a direct ID
+  if (roleSkills[role]) {
+    console.log('Using direct role ID:', role);
+    return role;
+  }
+
+  // If not, look up the role by occupation
   const baseRole = role.split(":")[0].trim();
-  const mappedId = roleMap[baseRole];
+  const roleEntry = Object.entries(roleSkills).find(([_, data]) => data.occupation === baseRole);
   
-  console.log('Role mapping:', { 
-    originalRole: role,
-    baseRole,
-    mappedId
-  });
-  
-  return mappedId || '';
+  if (roleEntry) {
+    console.log('Found role ID for occupation:', { baseRole, roleId: roleEntry[0] });
+    return roleEntry[0];
+  }
+
+  console.warn('No matching role ID found for:', baseRole);
+  return '';
 };
 
 export const getBaseRole = (role?: string) => {
