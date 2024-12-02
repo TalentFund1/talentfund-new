@@ -41,9 +41,6 @@ export const getSkillProfileId = (role?: string) => {
     acc[data.title] = id;
     return acc;
   }, {} as { [key: string]: string });
-
-  // Add aliases for common role variations
-  roleMap["Frontend Developer"] = "125"; // Alias for Frontend Engineer
   
   if (!role) {
     console.warn('No role provided to getSkillProfileId');
