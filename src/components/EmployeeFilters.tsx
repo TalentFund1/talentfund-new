@@ -54,10 +54,19 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Get unique roles from roleSkills
-  const roles = Array.from(new Set(
-    Object.values(roleSkills).map(role => role.occupation)
-  ));
+  // Get roles from roleSkills using the role names from the comments
+  const roles = Object.entries(roleSkills).map(([id, data]) => {
+    // Extract role name from the comment in roleSkills
+    const comment = Object.keys(roleSkills).find(key => key === id);
+    switch(id) {
+      case "123": return "AI Engineer";
+      case "124": return "Backend Engineer";
+      case "125": return "Frontend Engineer";
+      case "126": return "Engineering Manager";
+      case "127": return "DevOps Engineer";
+      default: return data.occupation;
+    }
+  });
 
   console.log('Available roles from roleSkills:', roles);
 
