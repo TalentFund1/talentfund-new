@@ -42,18 +42,7 @@ export const EmployeeTableRow = ({
     getSkillProfileId(employee.role) === targetRoleId;
 
   const getSkillMatchCount = () => {
-    const employeeSkills = getEmployeeSkills(employee.id);
-
-    // If specific skills are selected, match against those
-    if (selectedSkills.length > 0) {
-      const matchingSkills = selectedSkills.filter(skillName => 
-        employeeSkills.some(empSkill => empSkill.title === skillName)
-      );
-      return `${matchingSkills.length} / ${selectedSkills.length}`;
-    }
-
-    // If a role is selected, match against role skills
-    if (selectedJobTitle.length > 0) {
+    if (selectedSkills.length === 0) {
       const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
       if (!currentRoleSkills) return null;
 
@@ -64,21 +53,22 @@ export const EmployeeTableRow = ({
       ].filter(skill => toggledSkills.has(skill.title));
 
       const matchingSkills = allRoleSkills.filter(roleSkill => {
-        const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+        const employeeSkill = getEmployeeSkills(employee.id).find(empSkill => empSkill.title === roleSkill.title);
         return employeeSkill !== undefined;
       });
 
       return `${matchingSkills.length} / ${allRoleSkills.length}`;
+    } else {
+      // Calculate matches based on selected skills
+      const employeeSkills = getEmployeeSkills(employee.id);
+      const matchingSkills = selectedSkills.filter(skillName => 
+        employeeSkills.some(empSkill => empSkill.title === skillName)
+      );
+      return `${matchingSkills.length} / ${selectedSkills.length}`;
     }
-
-    // If no role or skills are selected, show total skills count
-    const totalSkills = employeeSkills.length;
-    return `${totalSkills} skills`;
   };
 
   const getBenchmarkPercentage = () => {
-    if (selectedJobTitle.length === 0) return null;
-
     return calculateBenchmarkPercentage(
       employee.id,
       targetRoleId,
@@ -91,9 +81,7 @@ export const EmployeeTableRow = ({
 
   const benchmark = getBenchmarkPercentage();
   const skillMatch = getSkillMatchCount();
-  const [matchingCount, totalCount] = skillMatch?.includes('/') 
-    ? skillMatch.split(' / ').map(Number) 
-    : [0, 0];
+  const [matchingCount, totalCount] = skillMatch ? skillMatch.split(' / ').map(Number) : [0, 0];
   const isPerfectSkillMatch = matchingCount === totalCount && totalCount > 0;
 
   const getBenchmarkColor = (percentage: number) => {
