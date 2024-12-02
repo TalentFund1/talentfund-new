@@ -17,7 +17,10 @@ export const jobTitles: { [key: string]: JobTitle } = {
   "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer", soc: "15-1251" },
   "125": { title: "Frontend Engineer", mappedTitle: "UI Developer", soc: "15-1252" },
   "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead", soc: "11-9041" },
-  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1244" }
+  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1244" },
+  "128": { title: "Data Engineer", mappedTitle: "Data Infrastructure Engineer", soc: "15-1243" },
+  "129": { title: "Product Manager", mappedTitle: "Product Owner", soc: "15-1255" },
+  "130": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1244" }
 };
 
 interface FormData {
