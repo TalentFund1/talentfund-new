@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { CategorySection } from "./competency/CategorySection";
-import { useCompetencyStore } from "./competency/CompetencyState";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
+import { CategorySection } from "@/components/skills/competency/CategorySection";
+import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { useToast } from "@/hooks/use-toast";
-import { TrackSelection } from "./TrackSelection";
-import { roleSkills } from "./data/roleSkills";
+import { TrackSelection } from "@/components/skills/TrackSelection";
+import { roleSkills } from "@/components/skills/data/roleSkills";
 import { useParams } from "react-router-dom";
-import { CompetencyGraphHeader } from "./competency/CompetencyGraphHeader";
-import { CompetencyGraphTable } from "./competency/CompetencyGraphTable";
-import { generateSkillProgression } from "./competency/autoFillUtils";
+import { CompetencyGraphHeader } from "@/components/skills/competency/CompetencyGraphHeader";
+import { CompetencyGraphTable } from "@/components/skills/competency/CompetencyGraphTable";
+import { generateSkillProgression } from "@/components/skills/competency/autoFillUtils";
 import { Brain, RotateCcw } from "lucide-react";
-import { useTrack } from "./context/TrackContext";
+import { useTrack } from "@/components/skills/context/TrackContext";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
