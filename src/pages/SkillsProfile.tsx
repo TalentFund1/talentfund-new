@@ -34,27 +34,14 @@ const companyFunctions = [
   "Customer Success"
 ];
 
-// Define available occupations
-const occupations = [
-  "Software Developer",
-  "Data Scientist",
-  "Product Manager",
-  "UX Designer",
-  "DevOps Engineer",
-  "System Architect",
-  "Business Analyst",
-  "Project Manager",
-  "Quality Assurance Engineer"
-];
-
 const SkillsProfileContent = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
-  const [selectedOccupation, setSelectedOccupation] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
 
-  const availableJobTitles = Object.values(roleSkills).map(role => role.occupation);
+  // Get role titles directly from roleSkills
+  const availableJobTitles = Object.values(roleSkills).map(role => role.title);
   const toggledSkillsList = Array.from(toggledSkills);
 
   return (
@@ -79,12 +66,9 @@ const SkillsProfileContent = () => {
             setSelectedFunction={setSelectedFunction}
             selectedJobTitle={selectedJobTitle}
             setSelectedJobTitle={setSelectedJobTitle}
-            selectedOccupation={selectedOccupation}
-            setSelectedOccupation={setSelectedOccupation}
             toggledSkillsList={toggledSkillsList}
             availableJobTitles={availableJobTitles}
             companyFunctions={companyFunctions}
-            occupations={occupations}
           />
 
           <SkillProfileStats />
@@ -94,7 +78,6 @@ const SkillsProfileContent = () => {
               selectedFunction={selectedFunction} 
               selectedSkills={selectedSkills}
               selectedJobTitle={selectedJobTitle}
-              selectedOccupation={selectedOccupation}
             />
 
             <Separator className="my-4" />

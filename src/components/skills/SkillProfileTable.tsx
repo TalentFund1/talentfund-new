@@ -16,14 +16,12 @@ interface SkillProfileTableProps {
   selectedFunction?: string;
   selectedSkills: string[];
   selectedJobTitle?: string;
-  selectedOccupation?: string;
 }
 
 const SkillProfileTableContent = ({ 
   selectedFunction,
   selectedSkills,
-  selectedJobTitle,
-  selectedOccupation 
+  selectedJobTitle 
 }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { toggledSkills } = useToggledSkills();
@@ -61,11 +59,11 @@ const SkillProfileTableContent = ({
 
   const rows: SkillProfileRow[] = Object.entries(roleSkills).map(([id, role]) => ({
     id,
-    name: role.occupation,
+    name: role.title,
     function: "Engineering", // You might want to add this to roleSkills if you need different functions
     skillCount: String((role.specialized?.length || 0) + (role.common?.length || 0) + (role.certifications?.length || 0)),
-    employees: String(getExactRoleMatches(role.occupation)),
-    matches: `${calculateAverageBenchmark(id, role.occupation)}%`,
+    employees: String(getExactRoleMatches(role.title)),
+    matches: `${calculateAverageBenchmark(id, role.title)}%`,
     lastUpdated: "10/20/24"
   }));
 

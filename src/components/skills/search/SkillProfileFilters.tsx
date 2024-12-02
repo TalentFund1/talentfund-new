@@ -9,12 +9,9 @@ interface SkillProfileFiltersProps {
   setSelectedFunction: (func: string) => void;
   selectedJobTitle: string;
   setSelectedJobTitle: (title: string) => void;
-  selectedOccupation: string;
-  setSelectedOccupation: (occupation: string) => void;
   toggledSkillsList: string[];
   availableJobTitles: string[];
   companyFunctions: string[];
-  occupations: string[];
 }
 
 export const SkillProfileFilters = ({
@@ -24,18 +21,14 @@ export const SkillProfileFilters = ({
   setSelectedFunction,
   selectedJobTitle,
   setSelectedJobTitle,
-  selectedOccupation,
-  setSelectedOccupation,
   toggledSkillsList,
   availableJobTitles,
-  companyFunctions,
-  occupations
+  companyFunctions
 }: SkillProfileFiltersProps) => {
   const handleClearAll = () => {
     setSelectedSkills([]);
     setSelectedFunction("");
     setSelectedJobTitle("");
-    setSelectedOccupation("");
   };
 
   return (
@@ -53,7 +46,7 @@ export const SkillProfileFilters = ({
         <div className="flex flex-wrap items-center gap-3">
           <SearchFilter
             label=""
-            placeholder="Job Title"
+            placeholder="Role"
             items={availableJobTitles}
             selectedItems={selectedJobTitle ? [selectedJobTitle] : []}
             onItemsChange={(items) => setSelectedJobTitle(items[0] || "")}
@@ -67,16 +60,6 @@ export const SkillProfileFilters = ({
             items={companyFunctions}
             selectedItems={selectedFunction ? [selectedFunction] : []}
             onItemsChange={(items) => setSelectedFunction(items[0] || "")}
-            singleSelect={true}
-            className="w-[180px]"
-          />
-
-          <SearchFilter
-            label=""
-            placeholder="Occupation"
-            items={occupations}
-            selectedItems={selectedOccupation ? [selectedOccupation] : []}
-            onItemsChange={(items) => setSelectedOccupation(items[0] || "")}
             singleSelect={true}
             className="w-[180px]"
           />
