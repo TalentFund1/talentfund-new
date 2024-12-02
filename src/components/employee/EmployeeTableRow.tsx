@@ -55,19 +55,38 @@ export const EmployeeTableRow = ({
     const employeeSkills = getEmployeeSkills(employee.id);
     const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
     
-    if (!roleData) return "0 / 0";
+    if (!roleData) {
+      console.log('No role data found for:', targetRoleId);
+      return "0 / 0";
+    }
 
-    const allRoleSkills = [
+    // Get all required skills for the role
+    const requiredRoleSkills = [
       ...roleData.specialized,
       ...roleData.common,
       ...roleData.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
+    ];
 
-    const matchingSkills = allRoleSkills.filter(roleSkill => 
+    console.log('Calculating skill match:', {
+      employeeName: employee.name,
+      roleId: targetRoleId,
+      totalRoleSkills: requiredRoleSkills.length,
+      employeeSkillsCount: employeeSkills.length
+    });
+
+    // Find matching skills without filtering by toggledSkills
+    const matchingSkills = requiredRoleSkills.filter(roleSkill => 
       employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
     );
 
-    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+    console.log('Skill match results:', {
+      employeeName: employee.name,
+      matchingSkills: matchingSkills.map(s => s.title),
+      matchCount: matchingSkills.length,
+      totalRequired: requiredRoleSkills.length
+    });
+
+    return `${matchingSkills.length} / ${requiredRoleSkills.length}`;
   };
 
   const isExactMatch = selectedJobTitle.length > 0 && 
