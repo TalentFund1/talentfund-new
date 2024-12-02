@@ -11,6 +11,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
+import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -115,24 +116,12 @@ export const BenchmarkAnalysis = () => {
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
-  const matchingSkillsCount = matchingSkills.length;
-  const competencyMatchCount = competencyMatchingSkills.length;
-  const skillGoalMatchCount = skillGoalMatchingSkills.length;
-
-  const skillMatchPercentage = totalToggledSkills > 0 ? (matchingSkillsCount / totalToggledSkills) * 100 : 0;
-  const competencyMatchPercentage = totalToggledSkills > 0 ? (competencyMatchCount / totalToggledSkills) * 100 : 0;
-  const skillGoalMatchPercentage = totalToggledSkills > 0 ? (skillGoalMatchCount / totalToggledSkills) * 100 : 0;
-
-  const averagePercentage = Math.round(
-    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
-  );
 
   console.log('Benchmark Analysis Calculation:', {
     totalToggled: totalToggledSkills,
-    skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
-    competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
-    skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
-    averagePercentage,
+    skillMatch: { count: matchingSkills.length, total: totalToggledSkills },
+    competencyMatch: { count: competencyMatchingSkills.length, total: totalToggledSkills },
+    skillGoalMatch: { count: skillGoalMatchingSkills.length, total: totalToggledSkills },
     track,
     comparisonLevel
   });
@@ -140,35 +129,20 @@ export const BenchmarkAnalysis = () => {
   return (
     <div className="space-y-6">
       <Card className="p-8 bg-white space-y-8">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <h2 className="text-2xl font-bold text-foreground">
-              Benchmark Analysis
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Manage and track employee skills and competencies
-            </p>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">Skill Match</span>
-                <span className="text-sm text-foreground">
-                  {matchingSkills.length} out of {totalToggledSkills}
-                </span>
-              </div>
-              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${skillMatchPercentage}%` }} 
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        <BenchmarkAnalysisCard 
+          skillMatch={{
+            current: matchingSkills.length,
+            total: totalToggledSkills
+          }}
+          competencyMatch={{
+            current: competencyMatchingSkills.length,
+            total: totalToggledSkills
+          }}
+          skillGoals={{
+            current: skillGoalMatchingSkills.length,
+            total: totalToggledSkills
+          }}
+        />
       </Card>
     </div>
   );
