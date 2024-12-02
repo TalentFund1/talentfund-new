@@ -65,11 +65,11 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   const fullDescription = roleDescriptions[jobTitle] || roleDescriptions["AI Engineer"];
   const averagePrice = calculateAveragePrice();
   const currentRole = roleSkills[currentRoleId as keyof typeof roleSkills];
-  const occupation = currentRole?.occupation || "Not specified";
-  const mappedTitle = currentRole ? `${currentRole.occupation} Specialist` : jobTitle;
-  const soc = currentRole?.occupation === "Software Developer" ? "15-1252" : 
-              currentRole?.occupation === "Project Manager" ? "11-9041" : 
-              currentRole?.occupation === "DevOps Engineer" ? "15-1244" : "";
+  const occupation = currentRole?.title || "Not specified";
+  const mappedTitle = currentRole ? `${currentRole.title} Specialist` : jobTitle;
+  const soc = currentRole?.title === "Software Developer" ? "15-1252" : 
+              currentRole?.title === "Project Manager" ? "11-9041" : 
+              currentRole?.title === "DevOps Engineer" ? "15-1244" : "";
 
   return (
     <div className="space-y-6">

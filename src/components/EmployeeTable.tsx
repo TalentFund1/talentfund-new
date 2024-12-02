@@ -38,7 +38,7 @@ export const getSkillProfileId = (role?: string) => {
 
   // Map role titles to IDs using roleSkills
   const roleMap = Object.entries(roleSkills).reduce((acc, [id, data]) => {
-    acc[data.occupation] = id;
+    acc[data.title] = id;
     return acc;
   }, {} as { [key: string]: string });
 

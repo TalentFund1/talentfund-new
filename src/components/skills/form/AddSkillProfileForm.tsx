@@ -38,10 +38,10 @@ export const AddSkillProfileForm = () => {
     
     if (field === 'roleId') {
       const currentRole = roleSkills[value as keyof typeof roleSkills];
-      const mappedTitle = currentRole ? `${currentRole.occupation} Specialist` : '';
-      const soc = currentRole?.occupation === "Software Developer" ? "15-1252" : 
-                 currentRole?.occupation === "Project Manager" ? "11-9041" : 
-                 currentRole?.occupation === "DevOps Engineer" ? "15-1244" : "";
+      const mappedTitle = currentRole ? `${currentRole.title} Specialist` : '';
+      const soc = currentRole?.title === "Software Developer" ? "15-1252" : 
+                 currentRole?.title === "Project Manager" ? "11-9041" : 
+                 currentRole?.title === "DevOps Engineer" ? "15-1244" : "";
       
       console.log('Updating role mapping:', { roleId: value, mappedTitle, soc });
       setFormData(prev => ({
@@ -49,7 +49,7 @@ export const AddSkillProfileForm = () => {
         [field]: value,
         mappedTitle,
         soc,
-        occupation: currentRole?.occupation || ''
+        occupation: currentRole?.title || ''
       }));
     } else {
       setFormData(prev => ({
@@ -91,7 +91,7 @@ export const AddSkillProfileForm = () => {
     // Create new role profile
     const newProfile = {
       id: formData.roleId,
-      name: formData.roleTitle || roleSkills[formData.roleId as keyof typeof roleSkills]?.occupation,
+      name: formData.roleTitle || roleSkills[formData.roleId as keyof typeof roleSkills]?.title,
       function: formData.function,
       mappedTitle: formData.mappedTitle,
       occupation: formData.occupation,

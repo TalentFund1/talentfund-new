@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -23,7 +23,7 @@ const SkillProfileDetail = () => {
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
 
   const currentRole = roleSkills[id as keyof typeof roleSkills];
-  const jobTitle = currentRole ? currentRole.occupation : "AI Engineer";
+  const jobTitle = currentRole ? currentRole.title : "AI Engineer";
 
   const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
     setTrack(newTrack);

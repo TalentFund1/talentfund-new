@@ -145,7 +145,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       
       <div className="mb-8">
         <h3 className="text-2xl font-bold text-foreground mb-6">
-          {roleSkills[currentRoleId as keyof typeof roleSkills]?.occupation}
+          {roleSkills[currentRoleId as keyof typeof roleSkills]?.title}
         </h3>
         <div className="flex justify-between items-center mb-6">
           <TrackSelection onTrackChange={setTrack} />
