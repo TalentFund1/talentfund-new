@@ -16,14 +16,12 @@ interface SkillProfileTableProps {
   selectedFunction?: string;
   selectedSkills: string[];
   selectedJobTitle?: string;
-  selectedOccupation?: string;
 }
 
 const SkillProfileTableContent = ({ 
   selectedFunction,
   selectedSkills,
-  selectedJobTitle,
-  selectedOccupation 
+  selectedJobTitle
 }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { toggledSkills } = useToggledSkills();
