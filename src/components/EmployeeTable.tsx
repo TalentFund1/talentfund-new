@@ -34,12 +34,6 @@ export const getSkillProfileId = (role?: string) => {
     return '';
   }
 
-  // First check if the role is a direct ID
-  if (roleSkills[role]) {
-    console.log('Using direct role ID:', role);
-    return role;
-  }
-
   // If not, look up the role by occupation
   const baseRole = role.split(":")[0].trim();
   const roleEntry = Object.entries(roleSkills).find(([_, data]) => data.occupation === baseRole);
