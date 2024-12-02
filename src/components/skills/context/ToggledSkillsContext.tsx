@@ -3,7 +3,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
-import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -17,42 +16,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { id } = useParams();
   const { selectedRole } = useRoleStore();
   
-  const getDefaultSkillsForRole = (roleId: string) => {
-    const roleData = roleSkills[roleId as keyof typeof roleSkills];
-    if (!roleData) return [];
-
-    const defaultSkills = [
-      ...(roleData.specialized?.slice(0, 5) || []).map(s => s.title),
-      ...(roleData.common?.slice(0, 3) || []).map(s => s.title)
-    ];
-
-    console.log('Generated default skills for role:', {
-      roleId,
-      defaultSkills
-    });
-
-    return defaultSkills;
-  };
-
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     try {
-      const currentRoleId = selectedRole || id || "123";
-      const savedSkills = loadToggledSkills(currentRoleId);
-      
-      // If no saved skills exist for any role, initialize with default skills
-      if (!savedSkills || savedSkills.length === 0) {
-        const defaultSkills = getDefaultSkillsForRole(currentRoleId);
-        console.log('Initializing default skills for role:', {
-          roleId: currentRoleId,
-          defaultSkills
-        });
-        
-        saveToggledSkills(currentRoleId, defaultSkills);
-        return new Set(defaultSkills);
-      }
-      
+      const savedSkills = loadToggledSkills(selectedRole || id || "123");
       console.log('Initial load of toggled skills:', {
-        roleId: currentRoleId,
+        roleId: selectedRole || id || "123",
         savedSkills
       });
       return new Set(savedSkills);
@@ -67,20 +35,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     const currentRoleId = selectedRole || id || "123";
     try {
       const savedSkills = loadToggledSkills(currentRoleId);
-      
-      // If switching to any role and no skills are saved, set defaults
-      if (!savedSkills || savedSkills.length === 0) {
-        const defaultSkills = getDefaultSkillsForRole(currentRoleId);
-        console.log('Setting default skills on role change:', {
-          roleId: currentRoleId,
-          defaultSkills
-        });
-        
-        setToggledSkills(new Set(defaultSkills));
-        saveToggledSkills(currentRoleId, defaultSkills);
-        return;
-      }
-      
       console.log('Reloading toggled skills for role change:', {
         roleId: currentRoleId,
         savedSkills
