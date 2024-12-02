@@ -6,9 +6,8 @@ import { CategorySection } from "./competency/CategorySection";
 import { useCompetencyStore } from "./competency/CompetencyState";
 import { useToast } from "@/hooks/use-toast";
 import { TrackSelection } from "./TrackSelection";
-import { jobTitles } from "./competency/skillProfileData";
-import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
+import { useParams } from "react-router-dom";
 import { CompetencyGraphHeader } from "./competency/CompetencyGraphHeader";
 import { CompetencyGraphTable } from "./competency/CompetencyGraphTable";
 import { generateSkillProgression } from "./competency/autoFillUtils";
@@ -149,7 +148,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       
       <div className="mb-8">
         <h3 className="text-2xl font-bold text-foreground mb-6">
-          {jobTitles[currentRoleId]}
+          {roleSkills[currentRoleId as keyof typeof roleSkills]?.occupation}
         </h3>
         <div className="flex justify-between items-center mb-6">
           <TrackSelection onTrackChange={setTrack} />
