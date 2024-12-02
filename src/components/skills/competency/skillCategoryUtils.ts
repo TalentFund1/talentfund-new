@@ -1,22 +1,19 @@
-import { roleSkills } from '../data/roleSkills';
+import { specializedSkillsByProfile, commonSkillsByProfile, certificationSkillsByProfile } from './skillProfileData';
 
 export const isSpecializedSkill = (skill: string, profileId: string): boolean => {
-  const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
-  return currentRoleSkills?.specialized.some(spec => 
-    spec.title.toLowerCase() === skill.toLowerCase()
+  return specializedSkillsByProfile[profileId]?.some(spec => 
+    skill.toLowerCase() === spec.toLowerCase()
   ) || false;
 };
 
 export const isCommonSkill = (skill: string, profileId: string): boolean => {
-  const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
-  return currentRoleSkills?.common.some(common => 
-    common.title.toLowerCase() === skill.toLowerCase()
+  return commonSkillsByProfile[profileId]?.some(common => 
+    skill.toLowerCase() === common.toLowerCase()
   ) || false;
 };
 
 export const isCertificationSkill = (skill: string, profileId: string): boolean => {
-  const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
-  return currentRoleSkills?.certifications.some(cert => 
-    cert.title.toLowerCase() === skill.toLowerCase()
+  return certificationSkillsByProfile[profileId]?.some(cert => 
+    skill.toLowerCase() === cert.toLowerCase()
   ) || false;
 };
