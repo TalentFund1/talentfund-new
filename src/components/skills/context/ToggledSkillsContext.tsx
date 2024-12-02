@@ -11,7 +11,7 @@ interface ToggledSkillsContextType {
 
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
-const getStorageKey = (roleId: string) => `roleToggledSkills-${roleId}`;
+const getStorageKey = (roleId: string) => `roleToggledSkills-${roleId}-v2`;
 
 const loadToggledSkills = (roleId: string): string[] => {
   try {
@@ -59,32 +59,41 @@ const saveToggledSkills = (roleId: string, skills: string[]) => {
   }
 };
 
+const initializeSkillsForRole = (roleId: string): string[] => {
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  if (currentRoleSkills) {
+    const allSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ].map(skill => skill.title);
+    
+    console.log('Initializing skills for role:', {
+      roleId,
+      skillCount: allSkills.length,
+      skills: allSkills
+    });
+    
+    return allSkills;
+  }
+  return [];
+};
+
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const { id } = useParams();
   const { selectedRole } = useRoleStore();
+  const [initialized, setInitialized] = useState(false);
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     const currentRoleId = selectedRole || id || "123";
     const savedSkills = loadToggledSkills(currentRoleId);
     
     if (savedSkills.length === 0) {
-      // If no saved skills, initialize with all skills for the role
-      const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
-      if (currentRoleSkills) {
-        const allSkills = [
-          ...currentRoleSkills.specialized,
-          ...currentRoleSkills.common,
-          ...currentRoleSkills.certifications
-        ].map(skill => skill.title);
-        
-        console.log('Initializing with all role skills:', {
-          roleId: currentRoleId,
-          skillCount: allSkills.length
-        });
-        
-        saveToggledSkills(currentRoleId, allSkills);
-        return new Set(allSkills);
+      const initialSkills = initializeSkillsForRole(currentRoleId);
+      if (initialSkills.length > 0) {
+        saveToggledSkills(currentRoleId, initialSkills);
+        return new Set(initialSkills);
       }
     }
     
@@ -93,41 +102,51 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
   useEffect(() => {
     const currentRoleId = selectedRole || id || "123";
-    const savedSkills = loadToggledSkills(currentRoleId);
     
+    if (!initialized) {
+      setInitialized(true);
+      return;
+    }
+
+    const savedSkills = loadToggledSkills(currentRoleId);
     if (savedSkills.length === 0) {
-      // If no saved skills, initialize with all skills for the role
-      const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
-      if (currentRoleSkills) {
-        const allSkills = [
-          ...currentRoleSkills.specialized,
-          ...currentRoleSkills.common,
-          ...currentRoleSkills.certifications
-        ].map(skill => skill.title);
-        
-        console.log('Initializing with all role skills on role change:', {
+      const initialSkills = initializeSkillsForRole(currentRoleId);
+      if (initialSkills.length > 0) {
+        console.log('Initializing skills on role change:', {
           roleId: currentRoleId,
-          skillCount: allSkills.length
+          skillCount: initialSkills.length
         });
         
-        setToggledSkills(new Set(allSkills));
-        saveToggledSkills(currentRoleId, allSkills);
+        setToggledSkills(new Set(initialSkills));
+        saveToggledSkills(currentRoleId, initialSkills);
       }
     } else {
+      console.log('Loading saved skills on role change:', {
+        roleId: currentRoleId,
+        skillCount: savedSkills.length
+      });
+      
       setToggledSkills(new Set(savedSkills));
     }
-  }, [selectedRole, id]);
+  }, [selectedRole, id, initialized]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
     const currentRoleId = selectedRole || id || "123";
+    const skillsArray = Array.from(newSkills);
+    
     console.log('Setting toggled skills:', {
       roleId: currentRoleId,
-      skillCount: newSkills.size,
-      skills: Array.from(newSkills)
+      skillCount: skillsArray.length,
+      skills: skillsArray
     });
     
     setToggledSkills(newSkills);
-    saveToggledSkills(currentRoleId, Array.from(newSkills));
+    saveToggledSkills(currentRoleId, skillsArray);
+
+    toast({
+      title: "Skills Updated",
+      description: `${skillsArray.length} skills are now active for matching.`,
+    });
   };
 
   return (
