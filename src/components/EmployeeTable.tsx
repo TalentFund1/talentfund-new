@@ -28,51 +28,6 @@ interface EmployeeTableProps {
   selectedRole?: string[];
 }
 
-export const getSkillProfileId = (role?: string) => {
-  // Validate role ID format first
-  const validProfileIds = Object.keys(roleSkills);
-  if (validProfileIds.includes(role || '')) {
-    console.log('Using direct role ID:', role);
-    return role;
-  }
-
-  // Map role titles to IDs using roleSkills
-  const roleMap = Object.entries(roleSkills).reduce((acc, [id, data]) => {
-    acc[data.title] = id;
-    return acc;
-  }, {} as { [key: string]: string });
-
-  // Add aliases for common role variations
-  roleMap["Frontend Developer"] = "125"; // Alias for Frontend Engineer
-  
-  if (!role) {
-    console.warn('No role provided to getSkillProfileId');
-    return '';
-  }
-
-  const baseRole = role.split(":")[0].trim();
-  const mappedId = roleMap[baseRole];
-  
-  console.log('Role mapping:', { 
-    originalRole: role,
-    baseRole,
-    mappedId
-  });
-  
-  return mappedId || '';
-};
-
-export const getBaseRole = (role?: string) => {
-  if (!role) return "";
-  return role.split(":")[0].trim();
-};
-
-export const getLevel = (role?: string) => {
-  if (!role) return "";
-  const parts = role.split(":");
-  return parts.length > 1 ? parts[1].trim() : "";
-};
-
 const EmployeeTableContent = ({ 
   selectedDepartment = [], 
   selectedLevel = [],
