@@ -15,7 +15,6 @@ import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
-import { roleSkills } from './skills/data/roleSkills';
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -30,33 +29,36 @@ interface EmployeeTableProps {
 
 export const getSkillProfileId = (role?: string) => {
   // Validate role ID format first
-  const validProfileIds = Object.keys(roleSkills);
+  const validProfileIds = ["123", "124", "125", "126", "127", "128", "129", "130"];
   if (validProfileIds.includes(role || '')) {
     console.log('Using direct role ID:', role);
     return role;
   }
 
-  // Map role titles to IDs using roleSkills
-  const roleMapping = Object.entries(roleSkills).reduce((acc, [id, data]) => {
-    const occupation = data.occupation === "Software Developer" ? "Engineer" : data.occupation;
-    const roleName = Object.keys(roleSkills)[Number(id) - 123]; // Convert ID to index
-    acc[`${roleName.split('Engineer')[0]}${occupation}`] = id;
-    return acc;
-  }, {} as { [key: string]: string });
-
+  // Map role titles to IDs with consistent structure
+  const roleMap: { [key: string]: string } = {
+    "Backend Engineer": "124",
+    "AI Engineer": "123",
+    "Frontend Engineer": "125",
+    "Engineering Manager": "126",
+    "Data Engineer": "127",
+    "DevOps Engineer": "128",
+    "Product Manager": "129",
+    "Frontend Developer": "125"  // Alias for Frontend Engineer
+  };
+  
   if (!role) {
     console.warn('No role provided to getSkillProfileId');
     return '';
   }
 
   const baseRole = role.split(":")[0].trim();
-  const mappedId = roleMapping[baseRole];
+  const mappedId = roleMap[baseRole];
   
   console.log('Role mapping:', { 
     originalRole: role,
     baseRole,
-    mappedId,
-    roleMapping
+    mappedId
   });
   
   return mappedId || '';
