@@ -13,6 +13,7 @@ import { CompetencyGraphTable } from "@/components/skills/competency/CompetencyG
 import { generateSkillProgression } from "@/components/skills/competency/autoFillUtils";
 import { Brain, RotateCcw } from "lucide-react";
 import { useTrack } from "@/components/skills/context/TrackContext";
+import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
