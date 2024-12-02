@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SearchFilter } from '@/components/market/SearchFilter';
 
 interface SkillProfileFiltersProps {
@@ -9,12 +16,9 @@ interface SkillProfileFiltersProps {
   setSelectedFunction: (func: string) => void;
   selectedJobTitle: string;
   setSelectedJobTitle: (title: string) => void;
-  selectedOccupation: string;
-  setSelectedOccupation: (occupation: string) => void;
   toggledSkillsList: string[];
   availableJobTitles: string[];
   companyFunctions: string[];
-  occupations: string[];
 }
 
 export const SkillProfileFilters = ({
@@ -24,67 +28,55 @@ export const SkillProfileFilters = ({
   setSelectedFunction,
   selectedJobTitle,
   setSelectedJobTitle,
-  selectedOccupation,
-  setSelectedOccupation,
   toggledSkillsList,
   availableJobTitles,
-  companyFunctions,
-  occupations
+  companyFunctions
 }: SkillProfileFiltersProps) => {
-  const handleClearAll = () => {
-    setSelectedSkills([]);
-    setSelectedFunction("");
-    setSelectedJobTitle("");
-    setSelectedOccupation("");
-  };
-
   return (
     <Card className="p-6">
-      <div className="space-y-1">
+      <div className="space-y-4">
         <SearchFilter
           label=""
           placeholder="Search skills..."
           items={toggledSkillsList}
           selectedItems={selectedSkills}
           onItemsChange={setSelectedSkills}
-          singleSelect={false}
         />
-
-        <div className="flex flex-wrap items-center gap-3">
-          <SearchFilter
-            label=""
-            placeholder="Job Title"
-            items={availableJobTitles}
-            selectedItems={selectedJobTitle ? [selectedJobTitle] : []}
-            onItemsChange={(items) => setSelectedJobTitle(items[0] || "")}
-            singleSelect={true}
-            className="w-[180px]"
-          />
-
-          <SearchFilter
-            label=""
-            placeholder="Function"
-            items={companyFunctions}
-            selectedItems={selectedFunction ? [selectedFunction] : []}
-            onItemsChange={(items) => setSelectedFunction(items[0] || "")}
-            singleSelect={true}
-            className="w-[180px]"
-          />
-
-          <SearchFilter
-            label=""
-            placeholder="Occupation"
-            items={occupations}
-            selectedItems={selectedOccupation ? [selectedOccupation] : []}
-            onItemsChange={(items) => setSelectedOccupation(items[0] || "")}
-            singleSelect={true}
-            className="w-[180px]"
-          />
+        
+        <div className="flex flex-wrap gap-3">
+          <Select value={selectedJobTitle} onValueChange={setSelectedJobTitle}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Job Title" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableJobTitles.map((title) => (
+                <SelectItem key={title} value={title.toLowerCase()}>
+                  {title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Select value={selectedFunction} onValueChange={setSelectedFunction}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Function" />
+            </SelectTrigger>
+            <SelectContent>
+              {companyFunctions.map((func) => (
+                <SelectItem key={func} value={func.toLowerCase()}>
+                  {func}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           <Button 
             variant="outline" 
-            onClick={handleClearAll}
-            className="h-[40px]"
+            onClick={() => {
+              setSelectedSkills([]);
+              setSelectedFunction("");
+              setSelectedJobTitle("");
+            }}
           >
             Clear All
           </Button>

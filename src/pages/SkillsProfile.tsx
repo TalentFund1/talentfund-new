@@ -11,8 +11,6 @@ import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
 import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
-import { AddSkillProfileForm } from "@/components/skills/form/AddSkillProfileForm";
-import { TrackProvider } from "@/components/skills/context/TrackContext";
 import {
   Select,
   SelectContent,
@@ -35,24 +33,10 @@ const companyFunctions = [
   "Customer Success"
 ];
 
-// Define available occupations
-const occupations = [
-  "Software Developer",
-  "Data Scientist",
-  "Product Manager",
-  "UX Designer",
-  "DevOps Engineer",
-  "System Architect",
-  "Business Analyst",
-  "Project Manager",
-  "Quality Assurance Engineer"
-];
-
 const SkillsProfileContent = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
-  const [selectedOccupation, setSelectedOccupation] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
 
   const availableJobTitles = Object.keys(jobTitles).map(id => jobTitles[id]);
@@ -67,9 +51,7 @@ const SkillsProfileContent = () => {
             <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
             <div className="space-x-2">
               <Button variant="outline">Export Data</Button>
-              <TrackProvider>
-                <AddSkillProfileForm />
-              </TrackProvider>
+              <Button>Add Profile</Button>
             </div>
           </div>
 
@@ -80,12 +62,9 @@ const SkillsProfileContent = () => {
             setSelectedFunction={setSelectedFunction}
             selectedJobTitle={selectedJobTitle}
             setSelectedJobTitle={setSelectedJobTitle}
-            selectedOccupation={selectedOccupation}
-            setSelectedOccupation={setSelectedOccupation}
             toggledSkillsList={toggledSkillsList}
             availableJobTitles={availableJobTitles}
             companyFunctions={companyFunctions}
-            occupations={occupations}
           />
 
           <SkillProfileStats />
@@ -95,7 +74,6 @@ const SkillsProfileContent = () => {
               selectedFunction={selectedFunction} 
               selectedSkills={selectedSkills}
               selectedJobTitle={selectedJobTitle}
-              selectedOccupation={selectedOccupation}
             />
 
             <Separator className="my-4" />
