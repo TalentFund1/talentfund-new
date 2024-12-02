@@ -54,10 +54,12 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Get roles dynamically from roleSkills
-  const roles = Object.values(roleSkills).map(role => role.occupation);
+  // Get unique roles from roleSkills
+  const roles = Array.from(new Set(
+    Object.values(roleSkills).map(role => role.occupation)
+  ));
 
-  console.log('Available roles:', roles);
+  console.log('Available roles from roleSkills:', roles);
 
   const handleClearAll = () => {
     onSkillsChange([]);
