@@ -1,6 +1,7 @@
 export const roleSkills = {
   "123": { // AI Engineer
     title: "AI Engineer",
+    soc: "11-9041",
     specialized: [
       { title: "Machine Learning", subcategory: "AI & ML", level: "unspecified", growth: "30%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
       { title: "Deep Learning", subcategory: "AI & ML", level: "unspecified", growth: "28%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
@@ -20,6 +21,7 @@ export const roleSkills = {
   },
   "124": { // Backend Engineer
     title: "Backend Engineer",
+    soc: "15-1252",
     specialized: [
       { title: "Node.js", subcategory: "Backend Development", level: "unspecified", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Database Design", subcategory: "Data Management", level: "unspecified", growth: "15%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
@@ -39,6 +41,7 @@ export const roleSkills = {
   },
   "125": { // Frontend Engineer
     title: "Frontend Engineer",
+    soc: "15-1254",
     specialized: [
       { title: "React", subcategory: "Frontend Frameworks", level: "unspecified", growth: "20%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
       { title: "TypeScript", subcategory: "Programming Languages", level: "unspecified", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
@@ -58,6 +61,7 @@ export const roleSkills = {
   },
   "126": { // Engineering Manager
     title: "Engineering Manager",
+    soc: "11-9041",
     specialized: [
       { title: "System Design", subcategory: "Architecture", level: "unspecified", growth: "25%", salary: "$192,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Technical Architecture", subcategory: "Architecture", level: "unspecified", growth: "30%", salary: "$195,000", benchmarks: { J: true, B: true, O: true } },
@@ -77,6 +81,7 @@ export const roleSkills = {
   },
   "127": { // DevOps Engineer
     title: "DevOps Engineer",
+    soc: "15-1244",
     specialized: [
       { title: "Docker", subcategory: "Container Technology", level: "unspecified", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
       { title: "Kubernetes", subcategory: "Container Orchestration", level: "unspecified", growth: "28%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } },
