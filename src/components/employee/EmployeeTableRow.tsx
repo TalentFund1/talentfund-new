@@ -32,25 +32,38 @@ export const EmployeeTableRow = ({
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   
-  const targetRoleId = selectedJobTitle.length > 0 
-    ? getSkillProfileId(selectedJobTitle[0])
-    : getSkillProfileId(employee.role);
-    
+  // Get employee's assigned role ID for default comparison
+  const employeeRoleId = getSkillProfileId(employee.role);
   const employeeLevel = getLevel(employee.role);
   
-  const isExactMatch = selectedJobTitle.length > 0 && 
-    getSkillProfileId(employee.role) === targetRoleId;
+  // Use selected role if specified, otherwise use employee's assigned role
+  const targetRoleId = selectedJobTitle.length > 0 
+    ? getSkillProfileId(selectedJobTitle[0])
+    : employeeRoleId;
+    
+  const isExactMatch = selectedJobTitle.length > 0 && employeeRoleId === targetRoleId;
 
   const getSkillMatchCount = () => {
     if (selectedSkills.length === 0) {
-      const currentRoleSkills = roleSkills[targetRoleId as keyof typeof roleSkills];
-      if (!currentRoleSkills) return null;
+      // When no skills selected, compare against assigned role skills
+      const currentRoleSkills = roleSkills[employeeRoleId as keyof typeof roleSkills];
+      if (!currentRoleSkills) {
+        console.log('No role skills found for:', employeeRoleId);
+        return '0 / 0';
+      }
 
       const allRoleSkills = [
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
         ...currentRoleSkills.certifications
       ].filter(skill => toggledSkills.has(skill.title));
+
+      console.log('Comparing employee skills against role:', {
+        employeeName: employee.name,
+        roleId: employeeRoleId,
+        totalRoleSkills: allRoleSkills.length,
+        toggledSkills: Array.from(toggledSkills)
+      });
 
       const matchingSkills = allRoleSkills.filter(roleSkill => {
         const employeeSkill = getEmployeeSkills(employee.id).find(empSkill => empSkill.title === roleSkill.title);
@@ -59,7 +72,7 @@ export const EmployeeTableRow = ({
 
       return `${matchingSkills.length} / ${allRoleSkills.length}`;
     } else {
-      // Calculate matches based on selected skills
+      // When skills are selected, compare against selected skills
       const employeeSkills = getEmployeeSkills(employee.id);
       const matchingSkills = selectedSkills.filter(skillName => 
         employeeSkills.some(empSkill => empSkill.title === skillName)
@@ -69,6 +82,7 @@ export const EmployeeTableRow = ({
   };
 
   const getBenchmarkPercentage = () => {
+    // Calculate benchmark against assigned role when no role selected
     return calculateBenchmarkPercentage(
       employee.id,
       targetRoleId,
