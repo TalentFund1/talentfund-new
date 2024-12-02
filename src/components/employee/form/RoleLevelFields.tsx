@@ -1,5 +1,4 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { roleSkills } from '../../skills/data/roleSkills';
 
 interface RoleLevelFieldsProps {
   formData: {
@@ -9,9 +8,13 @@ interface RoleLevelFieldsProps {
   handleInputChange: (field: string, value: string) => void;
 }
 
-export const roleMapping = Object.fromEntries(
-  Object.entries(roleSkills).map(([id, data]) => [data.occupation, id])
-);
+export const roleMapping = {
+  "AI Engineer": "123",
+  "Backend Engineer": "124",
+  "Frontend Engineer": "125",
+  "Engineering Manager": "126",
+  "DevOps Engineer": "127"
+};
 
 export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFieldsProps) => {
   const isManagerialRole = formData.role.toLowerCase().includes('manager') || 
@@ -19,7 +22,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
   
   console.log('Role and Level Fields State:', {
     currentRole: formData.role,
-    roleId: roleMapping[formData.role],
+    roleId: roleMapping[formData.role as keyof typeof roleMapping],
     currentLevel: formData.level,
     isManagerialRole
   });
@@ -58,11 +61,6 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
 
   const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
 
-  // Get unique roles from roleSkills
-  const availableRoles = Array.from(new Set(
-    Object.values(roleSkills).map(data => data.occupation)
-  ));
-
   return (
     <>
       <div className="space-y-2">
@@ -70,7 +68,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
         <Select 
           value={formData.role} 
           onValueChange={(value) => {
-            console.log('Role selected:', value, 'Role ID:', roleMapping[value]);
+            console.log('Role selected:', value, 'Role ID:', roleMapping[value as keyof typeof roleMapping]);
             handleInputChange('role', value);
             // Reset level when role changes
             handleInputChange('level', '');
@@ -80,9 +78,11 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
             <SelectValue placeholder="Select role" />
           </SelectTrigger>
           <SelectContent>
-            {availableRoles.map((role) => (
-              <SelectItem key={role} value={role}>{role}</SelectItem>
-            ))}
+            <SelectItem value="AI Engineer">AI Engineer</SelectItem>
+            <SelectItem value="Backend Engineer">Backend Engineer</SelectItem>
+            <SelectItem value="Frontend Engineer">Frontend Engineer</SelectItem>
+            <SelectItem value="Engineering Manager">Engineering Manager</SelectItem>
+            <SelectItem value="DevOps Engineer">DevOps Engineer</SelectItem>
           </SelectContent>
         </Select>
       </div>

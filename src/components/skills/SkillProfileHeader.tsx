@@ -12,6 +12,20 @@ interface SkillProfileHeaderProps {
   jobTitle: string;
 }
 
+interface JobTitle {
+  title: string;
+  mappedTitle: string;
+  soc: string;
+}
+
+const jobTitles: { [key: string]: JobTitle } = {
+  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer", soc: "11-9041" },
+  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer", soc: "15-1251" },
+  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer", soc: "15-1252" },
+  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead", soc: "11-9041" },
+  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1244" }
+};
+
 const roleDescriptions: { [key: string]: string } = {
   "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
   "Backend Engineer": "We are seeking a skilled Backend Engineer to design and implement scalable server-side solutions. You will work with various databases, APIs, and server architectures to support our growing platform.",
@@ -66,8 +80,8 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   const averagePrice = calculateAveragePrice();
   const currentRole = roleSkills[currentRoleId as keyof typeof roleSkills];
   const occupation = currentRole?.occupation || "Not specified";
-  const mappedTitle = currentRole?.occupation || jobTitle;
-  const soc = currentRoleId;
+  const mappedTitle = jobTitles[currentRoleId]?.mappedTitle || jobTitle;
+  const soc = jobTitles[currentRoleId]?.soc || "";
 
   return (
     <div className="space-y-6">
