@@ -17,7 +17,7 @@ interface SkillsMatrixTableProps {
   isRoleBenchmark?: boolean;
 }
 
-const SkillsMatrixTableContent = ({
+export const SkillsMatrixTable = ({
   filteredSkills,
   showCompanySkill = true,
   isRoleBenchmark = false
@@ -29,32 +29,26 @@ const SkillsMatrixTableContent = ({
   });
 
   return (
-    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
-      <Table>
-        <SkillsMatrixTableHeader 
-          showCompanySkill={showCompanySkill}
-          isRoleBenchmark={isRoleBenchmark}
-        />
-        <TableBody>
-          {filteredSkills.map((skill) => (
-            <SkillsMatrixRow 
-              key={skill.title} 
-              skill={skill}
+    <TrackProvider>
+      <ToggledSkillsProvider>
+        <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
+          <Table>
+            <SkillsMatrixTableHeader 
               showCompanySkill={showCompanySkill}
               isRoleBenchmark={isRoleBenchmark}
             />
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
-};
-
-export const SkillsMatrixTable = (props: SkillsMatrixTableProps) => {
-  return (
-    <TrackProvider>
-      <ToggledSkillsProvider>
-        <SkillsMatrixTableContent {...props} />
+            <TableBody>
+              {filteredSkills.map((skill) => (
+                <SkillsMatrixRow 
+                  key={skill.title} 
+                  skill={skill}
+                  showCompanySkill={showCompanySkill}
+                  isRoleBenchmark={isRoleBenchmark}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </ToggledSkillsProvider>
     </TrackProvider>
   );

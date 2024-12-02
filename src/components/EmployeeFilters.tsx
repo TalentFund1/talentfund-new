@@ -56,32 +56,29 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Get all roles directly from roleSkills database
-  const roles = Object.entries(roleSkills).map(([id, value]) => {
+  // Get roles from roleSkills database
+  const roles = Object.entries(roleSkills).map(([_, value]) => {
     const occupation = value.occupation;
-    let role: ValidRole | null = null;
-
-    if (occupation === "Software Developer" || occupation === "Project Manager" || occupation === "DevOps Engineer") {
-      switch (id) {
-        case "123":
-          role = "AI Engineer";
-          break;
-        case "124":
-          role = "Backend Engineer";
-          break;
-        case "125":
-          role = "Frontend Engineer";
-          break;
-        case "126":
-          role = "Engineering Manager";
-          break;
-        case "127":
-          role = "DevOps Engineer";
-          break;
-      }
+    switch (occupation) {
+      case "Software Developer":
+        return value === roleSkills["126"] ? "Engineering Manager" : 
+               value === roleSkills["123"] ? "AI Engineer" : 
+               value === roleSkills["124"] ? "Backend Engineer" : 
+               value === roleSkills["125"] ? "Frontend Engineer" : 
+               value === roleSkills["127"] ? "DevOps Engineer" : 
+               null;
+      case "Project Manager":
+        return "Engineering Manager";
+      default:
+        return null;
     }
-    return role;
-  }).filter((role): role is ValidRole => role !== null);
+  }).filter((role): role is ValidRole => 
+    role === "Engineering Manager" || 
+    role === "AI Engineer" || 
+    role === "Backend Engineer" || 
+    role === "Frontend Engineer" || 
+    role === "DevOps Engineer"
+  );
 
   console.log('Available roles from database:', roles);
 

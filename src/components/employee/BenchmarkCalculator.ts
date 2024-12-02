@@ -32,11 +32,7 @@ export const calculateBenchmarkPercentage = (
   const totalToggledSkills = toggledRoleSkills.length;
 
   if (totalToggledSkills === 0) {
-    console.log('No toggled skills found for benchmark calculation:', {
-      employeeId,
-      roleId,
-      totalRoleSkills: allRoleSkills.length
-    });
+    console.log('No toggled skills found, returning 0%');
     return 0;
   }
 
