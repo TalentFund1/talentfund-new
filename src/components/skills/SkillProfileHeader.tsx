@@ -12,28 +12,6 @@ interface SkillProfileHeaderProps {
   jobTitle: string;
 }
 
-interface JobTitle {
-  title: string;
-  mappedTitle: string;
-  soc: string;
-}
-
-const jobTitles: { [key: string]: JobTitle } = {
-  "123": { title: "AI Engineer", mappedTitle: "Machine Learning Engineer", soc: "11-9041" },
-  "124": { title: "Backend Engineer", mappedTitle: "Server-Side Developer", soc: "15-1251" },
-  "125": { title: "Frontend Engineer", mappedTitle: "UI Developer", soc: "15-1252" },
-  "126": { title: "Engineering Manager", mappedTitle: "Technical Project Lead", soc: "11-9041" },
-  "127": { title: "DevOps Engineer", mappedTitle: "Infrastructure Engineer", soc: "15-1244" }
-};
-
-const roleDescriptions: { [key: string]: string } = {
-  "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
-  "Backend Engineer": "We are seeking a skilled Backend Engineer to design and implement scalable server-side solutions. You will work with various databases, APIs, and server architectures to support our growing platform.",
-  "Frontend Engineer": "Join our team as a Frontend Engineer to create responsive and intuitive user interfaces. You will collaborate with designers and backend engineers to deliver seamless web applications.",
-  "Engineering Manager": "We're looking for an Engineering Manager to lead and mentor our technical teams. You will drive technical decisions, manage project deliverables, and foster a culture of innovation and growth.",
-  "DevOps Engineer": "We are looking for a DevOps Engineer to help us build and maintain our cloud infrastructure. You will work with our engineering teams to implement CI/CD pipelines and ensure system reliability."
-};
-
 const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { toggledSkills } = useToggledSkills();
@@ -76,12 +54,22 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
     return Math.round(totalPrice / toggledSkillsData.length);
   };
 
-  const fullDescription = roleDescriptions[jobTitle as keyof typeof roleDescriptions] || roleDescriptions["AI Engineer"];
+  const roleDescriptions: { [key: string]: string } = {
+    "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
+    "Backend Engineer": "We are seeking a skilled Backend Engineer to design and implement scalable server-side solutions. You will work with various databases, APIs, and server architectures to support our growing platform.",
+    "Frontend Engineer": "Join our team as a Frontend Engineer to create responsive and intuitive user interfaces. You will collaborate with designers and backend engineers to deliver seamless web applications.",
+    "Engineering Manager": "We're looking for an Engineering Manager to lead and mentor our technical teams. You will drive technical decisions, manage project deliverables, and foster a culture of innovation and growth.",
+    "DevOps Engineer": "We are looking for a DevOps Engineer to help us build and maintain our cloud infrastructure. You will work with our engineering teams to implement CI/CD pipelines and ensure system reliability."
+  };
+
+  const fullDescription = roleDescriptions[jobTitle] || roleDescriptions["AI Engineer"];
   const averagePrice = calculateAveragePrice();
   const currentRole = roleSkills[currentRoleId as keyof typeof roleSkills];
   const occupation = currentRole?.occupation || "Not specified";
-  const mappedTitle = jobTitles[currentRoleId]?.mappedTitle || jobTitle;
-  const soc = jobTitles[currentRoleId]?.soc || "";
+  const mappedTitle = currentRole ? `${currentRole.occupation} Specialist` : jobTitle;
+  const soc = currentRole?.occupation === "Software Developer" ? "15-1252" : 
+              currentRole?.occupation === "Project Manager" ? "11-9041" : 
+              currentRole?.occupation === "DevOps Engineer" ? "15-1244" : "";
 
   return (
     <div className="space-y-6">
