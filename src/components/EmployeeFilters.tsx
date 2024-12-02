@@ -54,16 +54,10 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Dynamically get roles from roleSkills
-  const roles = Object.entries(roleSkills).map(([id, data]) => {
-    // Get the role name from the occupation field, or format it if needed
-    const roleName = data.occupation === "Software Developer" ? 
-      `${id.split(':')[0].replace(/([A-Z])/g, ' $1').trim()} Engineer` : 
-      data.occupation;
-    
-    console.log('Processing role:', { id, occupation: data.occupation, formattedName: roleName });
-    return roleName;
-  });
+  // Get unique roles from roleSkills
+  const roles = Array.from(new Set(
+    Object.values(roleSkills).map(role => role.occupation)
+  ));
 
   console.log('Available roles from roleSkills:', roles);
 
