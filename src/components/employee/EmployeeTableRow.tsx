@@ -5,6 +5,12 @@ import { getSkillProfileId } from "../EmployeeTable";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
+import { roleSkills } from "../skills/data/roleSkills";
+import { getLevel } from "../EmployeeTable";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -23,30 +29,49 @@ export const EmployeeTableRow = ({
   selectedSkills = [],
   selectedJobTitle = []
 }: EmployeeTableRowProps) => {
+  const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+
+  // Determine which role ID to use for benchmark calculation
+  const targetRoleId = selectedJobTitle.length > 0 
+    ? getSkillProfileId(selectedJobTitle[0])
+    : getSkillProfileId(employee.role);
+
+  const employeeLevel = getLevel(employee.role);
+  
+  // Calculate benchmark percentage
+  const benchmark = calculateBenchmarkPercentage(
+    employee.id,
+    targetRoleId,
+    employeeLevel,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
+  );
+
+  // Calculate skill match ratio
+  const getSkillMatch = () => {
+    const employeeSkills = getEmployeeSkills(employee.id);
+    const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
+    
+    if (!roleData) return "0 / 0";
+
+    const allRoleSkills = [
+      ...roleData.specialized,
+      ...roleData.common,
+      ...roleData.certifications
+    ].filter(skill => toggledSkills.has(skill.title));
+
+    const matchingSkills = allRoleSkills.filter(roleSkill => 
+      employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
+    );
+
+    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+  };
+
   const isExactMatch = selectedJobTitle.length > 0 && 
     getSkillProfileId(employee.role) === getSkillProfileId(selectedJobTitle[0]);
-
-  // Hardcoded skill match values
-  const getSkillMatch = (employeeId: string) => {
-    const matches: { [key: string]: string } = {
-      "123": "6 / 6",
-      "124": "10 / 10",
-      "125": "6 / 8",
-      "126": "9 / 10"
-    };
-    return matches[employeeId] || "0 / 0";
-  };
-
-  // Hardcoded benchmark values
-  const getBenchmark = (employeeId: string) => {
-    const benchmarks: { [key: string]: number } = {
-      "123": 72,
-      "124": 83,
-      "125": 75,
-      "126": 73
-    };
-    return benchmarks[employeeId] || 0;
-  };
 
   const getBenchmarkColor = (percentage: number) => {
     if (percentage >= 90) return 'bg-green-100 text-green-800';
@@ -81,6 +106,15 @@ export const EmployeeTableRow = ({
       </div>
     );
   };
+
+  console.log('Employee Row Rendering:', {
+    employee: employee.name,
+    targetRoleId,
+    employeeLevel,
+    benchmark,
+    skillMatch: getSkillMatch(),
+    isExactMatch
+  });
 
   return (
     <tr className={`group border-t border-border hover:bg-muted/50 transition-colors w-full ${
@@ -128,15 +162,15 @@ export const EmployeeTableRow = ({
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
-          {getSkillMatch(employee.id)}
+          {getSkillMatch()}
         </span>
       </td>
       {selectedSkills.length === 0 && (
         <td className="px-4 py-4 text-center w-[120px]">
           <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
-            getBenchmarkColor(getBenchmark(employee.id))
+            getBenchmarkColor(benchmark)
           }`}>
-            {getBenchmark(employee.id)}%
+            {Math.round(benchmark)}%
           </span>
         </td>
       )}
