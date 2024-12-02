@@ -17,7 +17,9 @@ export const sortEmployeesByRoleMatch = (
   console.log('Sorting employees by role match:', { 
     selectedJobTitle,
     roleId,
-    totalEmployees: employees.length 
+    totalEmployees: employees.length,
+    toggledSkillsCount: toggledSkills.size,
+    toggledSkills: Array.from(toggledSkills)
   });
 
   // Get role skills for benchmark comparison
@@ -40,7 +42,10 @@ export const sortEmployeesByRoleMatch = (
   });
 
   // Calculate benchmarks for all employees
-  const employeesWithBenchmarks = employees.map(employee => {
+  const exactMatches: (Employee & { benchmark: number })[] = [];
+  const partialMatches: (Employee & { benchmark: number })[] = [];
+
+  employees.forEach(employee => {
     const employeeLevel = getLevel(employee.role);
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
@@ -51,22 +56,44 @@ export const sortEmployeesByRoleMatch = (
       getSkillCompetencyState
     );
 
-    console.log('Employee benchmark calculation:', {
+    const employeeWithBenchmark = { ...employee, benchmark };
+    const isExactMatch = getSkillProfileId(employee.role) === roleId;
+
+    console.log('Employee match calculation:', {
       employee: employee.name,
       role: employee.role,
       benchmark,
-      roleId
+      isExactMatch
     });
 
-    return {
-      ...employee,
-      benchmark
-    };
+    if (isExactMatch) {
+      exactMatches.push(employeeWithBenchmark);
+    } else {
+      // Add to partial matches regardless of benchmark score
+      partialMatches.push(employeeWithBenchmark);
+      console.log('Added to partial matches:', {
+        employee: employee.name,
+        role: employee.role,
+        benchmark
+      });
+    }
   });
 
-  // Filter to only show employees with benchmarks > 0%
-  const matchingEmployees = employeesWithBenchmarks.filter(emp => emp.benchmark > 0);
+  // Sort both arrays by benchmark in descending order
+  const sortByBenchmark = (a: Employee & { benchmark: number }, b: Employee & { benchmark: number }) => 
+    (b.benchmark || 0) - (a.benchmark || 0);
 
-  // Sort by benchmark percentage in descending order
-  return matchingEmployees.sort((a, b) => (b.benchmark || 0) - (a.benchmark || 0));
+  exactMatches.sort(sortByBenchmark);
+  partialMatches.sort(sortByBenchmark);
+
+  // Combine exact matches followed by partial matches
+  const sortedEmployees = [...exactMatches, ...partialMatches];
+
+  console.log('Final sorted employees:', {
+    totalMatches: sortedEmployees.length,
+    exactMatches: exactMatches.length,
+    partialMatches: partialMatches.length
+  });
+
+  return sortedEmployees;
 };
