@@ -17,7 +17,12 @@ export const useSkillsFiltering = (
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+
+  if (!currentRoleSkills) {
+    console.warn('No role skills found for role:', selectedRole);
+    return { filteredSkills: [] };
+  }
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
