@@ -15,28 +15,22 @@ import { Sidebar } from "@/components/Sidebar";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { Separator } from "@/components/ui/separator";
+import { roleSkills } from "../components/skills/data/roleSkills";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
 
-  const jobTitles: { [key: string]: string } = {
-    "123": "AI Engineer",
-    "124": "Backend Engineer",
-    "125": "Frontend Engineer",
-    "126": "Engineering Manager",
-    "127": "DevOps Engineer"
-  };
-
-  const jobTitle = jobTitles[id || ""] || "AI Engineer";
+  const currentRole = roleSkills[id as keyof typeof roleSkills];
+  const jobTitle = currentRole ? currentRole.occupation : "AI Engineer";
 
   const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
     setTrack(newTrack);
   };
 
   const handleNavigation = (direction: 'prev' | 'next') => {
-    const profileIds = Object.keys(jobTitles);
+    const profileIds = Object.keys(roleSkills);
     const currentIndex = profileIds.indexOf(id || "123");
     
     let newIndex;
@@ -49,8 +43,8 @@ const SkillProfileDetail = () => {
     navigate(`/skills/${profileIds[newIndex]}`);
   };
 
-  const currentIndex = Object.keys(jobTitles).indexOf(id || "123") + 1;
-  const totalProfiles = Object.keys(jobTitles).length;
+  const currentIndex = Object.keys(roleSkills).indexOf(id || "123") + 1;
+  const totalProfiles = Object.keys(roleSkills).length;
 
   return (
     <ToastProvider>
