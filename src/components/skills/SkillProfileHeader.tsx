@@ -67,9 +67,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   const currentRole = roleSkills[currentRoleId as keyof typeof roleSkills];
   const occupation = currentRole?.title || "Not specified";
   const mappedTitle = currentRole ? `${currentRole.title} Specialist` : jobTitle;
-  const soc = currentRole?.title === "Software Developer" ? "15-1252" : 
-              currentRole?.title === "Project Manager" ? "11-9041" : 
-              currentRole?.title === "DevOps Engineer" ? "15-1244" : "";
+  const soc = currentRole?.soc || "(11-9041)";
 
   return (
     <div className="space-y-6">
@@ -102,7 +100,7 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">SOC</span>
-            <p className="font-medium">({soc})</p>
+            <p className="font-medium">{soc}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
