@@ -53,8 +53,17 @@ export const EmployeeTableRow = ({
   // Calculate skill match ratio
   const getSkillMatch = () => {
     const employeeSkills = getEmployeeSkills(employee.id);
+
+    // If we're in skills filter view (selectedSkills.length > 0)
+    if (selectedSkills.length > 0) {
+      const matchingSkills = selectedSkills.filter(skillName => 
+        employeeSkills.some(empSkill => empSkill.title === skillName)
+      );
+      return `${matchingSkills.length} / ${selectedSkills.length}`;
+    }
+
+    // Default role-based skill matching
     const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
-    
     if (!roleData) return "0 / 0";
 
     const allRoleSkills = [
@@ -113,7 +122,8 @@ export const EmployeeTableRow = ({
     employeeLevel,
     benchmark,
     skillMatch: getSkillMatch(),
-    isExactMatch
+    isExactMatch,
+    selectedSkills: selectedSkills.length
   });
 
   return (
