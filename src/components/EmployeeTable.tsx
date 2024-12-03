@@ -17,7 +17,7 @@ import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
 import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -84,6 +84,8 @@ const EmployeeTableContent = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
+  const [employeesWithBenchmarks, setEmployeesWithBenchmarks] = useState<(Employee & { benchmark?: number })[]>([]);
+  
   const employees = useEmployeeStore((state) => {
     console.log('Current employees in store:', state.employees);
     return state.employees;
@@ -92,7 +94,8 @@ const EmployeeTableContent = ({
   // Calculate benchmarks for each employee against their current role on initial load
   useEffect(() => {
     if (employees.length > 0) {
-      const employeesWithBenchmarks = employees.map(employee => {
+      console.log('Calculating initial benchmarks for employees');
+      const updatedEmployees = employees.map(employee => {
         const roleId = getSkillProfileId(employee.role);
         const level = getLevel(employee.role);
         const benchmark = calculateBenchmarkPercentage(
@@ -106,16 +109,18 @@ const EmployeeTableContent = ({
         return { ...employee, benchmark };
       });
 
-      console.log('Initial benchmark calculation:', employeesWithBenchmarks.map(e => ({
+      console.log('Updated employees with benchmarks:', updatedEmployees.map(e => ({
         name: e.name,
         role: e.role,
         benchmark: e.benchmark
       })));
+
+      setEmployeesWithBenchmarks(updatedEmployees);
     }
   }, [employees, currentStates, toggledSkills, getSkillCompetencyState]);
 
   const preFilteredEmployees = filterEmployees(
-    employees,
+    employeesWithBenchmarks,
     selectedEmployees,
     selectedDepartment,
     selectedLevel,
@@ -139,7 +144,7 @@ const EmployeeTableContent = ({
     getSkillCompetencyState
   ).filter(employee => {
     if (selectedRole.length > 0) {
-      return employee.benchmark > 0;
+      return (employee.benchmark || 0) > 0;
     }
     return true;
   });
