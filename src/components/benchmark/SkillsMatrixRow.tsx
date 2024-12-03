@@ -7,6 +7,7 @@ import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -21,7 +22,7 @@ interface SkillsMatrixRowProps {
   isRoleBenchmark?: boolean;
 }
 
-export const SkillsMatrixRow = ({ 
+const SkillsMatrixRowContent = ({ 
   skill, 
   showCompanySkill = true,
   isRoleBenchmark = false
@@ -159,5 +160,13 @@ export const SkillsMatrixRow = ({
         </div>
       </TableCell>
     </TableRow>
+  );
+};
+
+export const SkillsMatrixRow = (props: SkillsMatrixRowProps) => {
+  return (
+    <ToggledSkillsProvider>
+      <SkillsMatrixRowContent {...props} />
+    </ToggledSkillsProvider>
   );
 };
