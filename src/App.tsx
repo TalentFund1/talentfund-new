@@ -19,15 +19,14 @@ const App = () => {
         staleTime: 1000 * 60 * 5, // 5 minutes
         retry: 1,
         refetchOnWindowFocus: false, // Disable automatic refetching
-        baseURL: window.location.origin, // Ensure proper base URL
       },
     },
   });
 
   console.log('App component rendering with QueryClient config:', {
-    baseURL: window.location.origin,
     staleTime: '5 minutes',
-    retry: 1
+    retry: 1,
+    refetchOnWindowFocus: false
   });
 
   return (
