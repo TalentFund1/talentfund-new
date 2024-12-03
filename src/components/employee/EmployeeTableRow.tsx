@@ -33,41 +33,34 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
-  // Determine which role ID to use for benchmark calculation
-  const targetRoleId = selectedJobTitle.length > 0 
-    ? getSkillProfileId(selectedJobTitle[0])
-    : getSkillProfileId(employee.role);
-
-  const employeeLevel = getLevel(employee.role);
-  
-  // Calculate benchmark percentage
-  const benchmark = calculateBenchmarkPercentage(
-    employee.id,
-    targetRoleId,
-    employeeLevel,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
-  );
-
-  // Calculate skill match ratio
-  const getSkillMatch = () => {
-    const employeeSkills = getEmployeeSkills(employee.id);
-    const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
+  // Get skill match count when skills are selected
+  const getSkillMatchCount = () => {
+    if (selectedSkills.length === 0) return null;
     
-    if (!roleData) return "0 / 0";
-
-    const allRoleSkills = [
-      ...roleData.specialized,
-      ...roleData.common,
-      ...roleData.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
-
-    const matchingSkills = allRoleSkills.filter(roleSkill => 
-      employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
+    const employeeSkills = getEmployeeSkills(employee.id);
+    const matchingSkills = selectedSkills.filter(skillName => 
+      employeeSkills.some(empSkill => empSkill.title === skillName)
     );
+    
+    return `${matchingSkills.length} / ${selectedSkills.length}`;
+  };
 
-    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+  // Get role benchmark when no skills are selected
+  const getRoleBenchmark = () => {
+    const targetRoleId = selectedJobTitle.length > 0 
+      ? getSkillProfileId(selectedJobTitle[0])
+      : getSkillProfileId(employee.role);
+
+    const employeeLevel = getLevel(employee.role);
+    
+    return calculateBenchmarkPercentage(
+      employee.id,
+      targetRoleId,
+      employeeLevel,
+      currentStates,
+      toggledSkills,
+      getSkillCompetencyState
+    );
   };
 
   const isExactMatch = selectedJobTitle.length > 0 && 
@@ -109,10 +102,8 @@ export const EmployeeTableRow = ({
 
   console.log('Employee Row Rendering:', {
     employee: employee.name,
-    targetRoleId,
-    employeeLevel,
-    benchmark,
-    skillMatch: getSkillMatch(),
+    skillMatch: getSkillMatchCount(),
+    selectedSkills: selectedSkills.length,
     isExactMatch
   });
 
@@ -162,15 +153,15 @@ export const EmployeeTableRow = ({
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
-          {getSkillMatch()}
+          {getSkillMatchCount() || `${getRoleBenchmark()}%`}
         </span>
       </td>
       {selectedSkills.length === 0 && (
         <td className="px-4 py-4 text-center w-[120px]">
           <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
-            getBenchmarkColor(benchmark)
+            getBenchmarkColor(getRoleBenchmark())
           }`}>
-            {Math.round(benchmark)}%
+            {Math.round(getRoleBenchmark())}%
           </span>
         </td>
       )}
