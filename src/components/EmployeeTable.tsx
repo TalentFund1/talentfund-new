@@ -11,7 +11,7 @@ import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
 import { calculateEmployeeBenchmarks } from "./employee/table/EmployeeBenchmarkCalculator";
-import { EmployeeTableContent } from "./employee/table/EmployeeTableContent";
+import { EmployeeTableContent as TableContent } from "./employee/table/EmployeeTableContent";
 import React from "react";
 
 interface EmployeeTableProps {
@@ -57,6 +57,12 @@ export const getSkillProfileId = (role?: string) => {
 export const getBaseRole = (role?: string) => {
   if (!role) return "";
   return role.split(":")[0].trim();
+};
+
+export const getLevel = (role?: string) => {
+  if (!role) return "";
+  const parts = role.split(":");
+  return parts.length > 1 ? parts[1].trim().toLowerCase() : "";
 };
 
 const EmployeeTableContent = ({ 
@@ -120,7 +126,7 @@ const EmployeeTableContent = ({
   console.log('Final filtered and sorted employees:', filteredEmployees);
 
   return (
-    <EmployeeTableContent
+    <TableContent
       filteredEmployees={filteredEmployees}
       selectedRows={selectedRows}
       handleSelectAll={handleSelectAll}
