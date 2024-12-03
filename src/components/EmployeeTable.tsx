@@ -16,6 +16,8 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
+import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
+import React, { useEffect } from "react";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -88,7 +90,7 @@ const EmployeeTableContent = ({
   });
 
   // Calculate benchmarks for each employee against their current role on initial load
-  React.useEffect(() => {
+  useEffect(() => {
     if (employees.length > 0) {
       const employeesWithBenchmarks = employees.map(employee => {
         const roleId = getSkillProfileId(employee.role);
