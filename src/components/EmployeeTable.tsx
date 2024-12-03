@@ -1,4 +1,9 @@
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Employee } from "./types/employeeTypes";
+import { EmployeeTableHeader } from "./employee/EmployeeTableHeader";
+import { EmployeeTableRow } from "./employee/EmployeeTableRow";
 import { useSkillsMatrixStore } from "./benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./skills/competency/CompetencyStateReader";
@@ -6,13 +11,13 @@ import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
 import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
+import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
-import { calculateEmployeeBenchmarks } from "./employee/table/EmployeeBenchmarkCalculator";
-import { EmployeeTableContent as TableContent } from "./employee/table/EmployeeTableContent";
-import React from "react";
+import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
+import React, { useEffect } from "react";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -62,7 +67,7 @@ export const getBaseRole = (role?: string) => {
 export const getLevel = (role?: string) => {
   if (!role) return "";
   const parts = role.split(":");
-  return parts.length > 1 ? parts[1].trim().toLowerCase() : "";
+  return parts.length > 1 ? parts[1].trim() : "";
 };
 
 const EmployeeTableContent = ({ 
@@ -79,22 +84,38 @@ const EmployeeTableContent = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
-  
   const employees = useEmployeeStore((state) => {
     console.log('Current employees in store:', state.employees);
     return state.employees;
   });
 
-  // Calculate benchmarks immediately
-  const employeesWithBenchmarks = calculateEmployeeBenchmarks(
-    employees,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
-  );
+  // Calculate benchmarks for each employee against their current role on initial load
+  useEffect(() => {
+    if (employees.length > 0) {
+      const employeesWithBenchmarks = employees.map(employee => {
+        const roleId = getSkillProfileId(employee.role);
+        const level = getLevel(employee.role);
+        const benchmark = calculateBenchmarkPercentage(
+          employee.id,
+          roleId,
+          level,
+          currentStates,
+          toggledSkills,
+          getSkillCompetencyState
+        );
+        return { ...employee, benchmark };
+      });
+
+      console.log('Initial benchmark calculation:', employeesWithBenchmarks.map(e => ({
+        name: e.name,
+        role: e.role,
+        benchmark: e.benchmark
+      })));
+    }
+  }, [employees, currentStates, toggledSkills, getSkillCompetencyState]);
 
   const preFilteredEmployees = filterEmployees(
-    employeesWithBenchmarks,
+    employees,
     selectedEmployees,
     selectedDepartment,
     selectedLevel,
@@ -118,7 +139,7 @@ const EmployeeTableContent = ({
     getSkillCompetencyState
   ).filter(employee => {
     if (selectedRole.length > 0) {
-      return (employee.benchmark || 0) > 0;
+      return employee.benchmark > 0;
     }
     return true;
   });
@@ -126,14 +147,41 @@ const EmployeeTableContent = ({
   console.log('Final filtered and sorted employees:', filteredEmployees);
 
   return (
-    <TableContent
-      filteredEmployees={filteredEmployees}
-      selectedRows={selectedRows}
-      handleSelectAll={handleSelectAll}
-      handleSelectEmployee={handleSelectEmployee}
-      selectedSkills={selectedSkills}
-      selectedRole={selectedRole}
-    />
+    <div className="bg-white rounded-lg">
+      <div className="relative">
+        <table className="w-full">
+          <thead>
+            <EmployeeTableHeader 
+              onSelectAll={(e) => handleSelectAll(filteredEmployees, e)}
+              isAllSelected={filteredEmployees.length > 0 && selectedRows.length === filteredEmployees.length}
+              hasEmployees={filteredEmployees.length > 0}
+              hasSelectedSkills={selectedSkills.length > 0}
+            />
+          </thead>
+          <tbody>
+            {filteredEmployees.length === 0 ? (
+              <tr>
+                <td colSpan={selectedSkills.length > 0 ? 6 : 5} className="text-center py-4 text-muted-foreground">
+                  No employees found
+                </td>
+              </tr>
+            ) : (
+              filteredEmployees.map((employee, index) => (
+                <EmployeeTableRow
+                  key={employee.id}
+                  employee={employee}
+                  isSelected={selectedRows.includes(employee.name)}
+                  onSelect={handleSelectEmployee}
+                  imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
+                  selectedSkills={selectedSkills}
+                  selectedJobTitle={selectedRole}
+                />
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 
