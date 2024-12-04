@@ -18,6 +18,12 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   const { id } = useParams<{ id: string }>();
   const currentRoleId = id || '';
 
+  console.log('SkillProfileHeader - Rendering with:', {
+    jobTitle,
+    currentRoleId,
+    toggledSkillsCount: toggledSkills.size
+  });
+
   const formatTitle = (title: string) => {
     return title.split(' ').map(word => {
       if (word.toLowerCase() === 'ai') return 'AI';
