@@ -116,9 +116,11 @@ export const AddSkillProfileForm = () => {
         certifications: []
       };
 
-      // Store in SkillsMatrixStore
+      // Store in SkillsMatrixStore with all required properties
       skillsMatrixStore.addRole(formData.roleId, {
         title: formData.roleTitle || newProfile.name,
+        description: formData.jobDescription || '',  // Added description
+        skills: formData.skills.split(',').map(skill => skill.trim()),  // Added skills array
         soc: formData.soc,
         function: formData.function,
         track: formData.roleTrack
