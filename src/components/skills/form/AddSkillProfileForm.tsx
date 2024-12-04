@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { BasicProfileFields } from "./fields/BasicProfileFields";
 import { DescriptionFields } from "./fields/DescriptionFields";
 import { roleSkills } from '../data/roleSkills';
+import { useSkillsMatrixStore } from "../../benchmark/skills-matrix/SkillsMatrixState";
 
 interface FormData {
   roleId: string;
@@ -21,6 +22,8 @@ interface FormData {
 export const AddSkillProfileForm = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const skillsMatrixStore = useSkillsMatrixStore();
+  
   const [formData, setFormData] = useState<FormData>({
     roleId: "",
     roleTitle: "",
@@ -88,36 +91,53 @@ export const AddSkillProfileForm = () => {
       return;
     }
 
-    // Create new role profile
-    const newProfile = {
-      id: formData.roleId,
-      name: formData.roleTitle || roleSkills[formData.roleId as keyof typeof roleSkills]?.title,
-      function: formData.function,
-      mappedTitle: formData.mappedTitle,
-      soc: formData.soc,
-      roleTrack: formData.roleTrack,
-      description: formData.jobDescription,
-      skills: formData.skills.split(',').map(skill => skill.trim()),
-      lastUpdated: new Date().toLocaleDateString()
-    };
+    try {
+      // Create new role profile
+      const newProfile = {
+        id: formData.roleId,
+        name: formData.roleTitle || roleSkills[formData.roleId as keyof typeof roleSkills]?.title,
+        function: formData.function,
+        mappedTitle: formData.mappedTitle,
+        soc: formData.soc,
+        roleTrack: formData.roleTrack,
+        description: formData.jobDescription,
+        skills: formData.skills.split(',').map(skill => skill.trim()),
+        lastUpdated: new Date().toLocaleDateString()
+      };
 
-    console.log('Creating new skill profile:', newProfile);
+      console.log('Creating new skill profile:', newProfile);
 
-    // Add to roleSkills
-    roleSkills[formData.roleId as keyof typeof roleSkills] = {
-      title: formData.roleTitle || newProfile.name,
-      soc: formData.soc,
-      specialized: [],
-      common: [],
-      certifications: []
-    };
+      // Add to roleSkills
+      roleSkills[formData.roleId as keyof typeof roleSkills] = {
+        title: formData.roleTitle || newProfile.name,
+        soc: formData.soc,
+        specialized: [],
+        common: [],
+        certifications: []
+      };
 
-    console.log('Profile created successfully');
-    toast({
-      title: "Success",
-      description: "Skill profile created successfully",
-    });
-    setOpen(false);
+      // Store in SkillsMatrixStore
+      skillsMatrixStore.addRole(formData.roleId, {
+        title: formData.roleTitle || newProfile.name,
+        soc: formData.soc,
+        function: formData.function,
+        track: formData.roleTrack
+      });
+
+      console.log('Profile created successfully');
+      toast({
+        title: "Success",
+        description: "Skill profile created successfully",
+      });
+      setOpen(false);
+    } catch (error) {
+      console.error('Error creating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create skill profile",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
