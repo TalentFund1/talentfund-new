@@ -39,7 +39,7 @@ export const CompetencyMatrix = () => {
   };
 
   return (
-    <div className="space-y-6 bg-white rounded-lg border border-border p-6">
+    <div className="space-y-6 bg-white rounded-lg border border-border p-6 mb-8">
       <CompetencyMatrixHeader selectedLevels={selectedLevels} />
       
       <CompetencyLevels 
