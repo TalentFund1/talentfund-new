@@ -4,14 +4,24 @@ import { employees as initialEmployees } from '../EmployeeData';
 
 interface EmployeeStore {
   employees: Employee[];
+  initialized: boolean;
   addEmployee: (employee: Employee) => void;
   updateEmployee: (updatedEmployee: Employee) => void;
   getEmployeeById: (id: string) => Employee | undefined;
+  initialize: () => void;
 }
 
 export const useEmployeeStore = create<EmployeeStore>((set, get) => ({
-  // Initialize with data immediately
-  employees: initialEmployees,
+  employees: [],
+  initialized: false,
+
+  initialize: () => {
+    console.log('Initializing employee store with data:', initialEmployees);
+    set({ 
+      employees: initialEmployees,
+      initialized: true 
+    });
+  },
   
   addEmployee: (employee) => {
     console.log('Adding employee to store:', employee);
@@ -37,3 +47,6 @@ export const useEmployeeStore = create<EmployeeStore>((set, get) => ({
     return employee;
   }
 }));
+
+// Initialize the store immediately
+useEmployeeStore.getState().initialize();
