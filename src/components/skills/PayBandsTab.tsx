@@ -106,7 +106,7 @@ export const PayBandsTab = () => {
           </div>
 
           <div className="mt-8">
-            <div className="overflow-x-auto rounded-lg border border-border">
+            <div className="overflow-x-auto rounded-lg border border-border mb-8">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-secondary/50 hover:bg-secondary/50">
