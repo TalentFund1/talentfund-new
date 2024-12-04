@@ -30,13 +30,13 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
     
     if (savedTrack && (savedTrack === "Professional" || savedTrack === "Managerial")) {
       setTrackForRole(id || "", savedTrack);
+      saveTrackSelection(); // Save immediately to ensure hasUnsavedChanges is false initially
     }
-  }, [id, setTrackForRole]);
+  }, [id, setTrackForRole, saveTrackSelection]);
 
   const handleTrackChange = (value: "Professional" | "Managerial") => {
     console.log('Changing track:', { roleId: id, newTrack: value });
     setTrackForRole(id || "", value);
-    localStorage.setItem(`track-selection-${id}`, value);
     onTrackChange?.(value);
   };
 
