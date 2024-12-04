@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { useTrack } from "./context/TrackContext";
+import { useToast } from "@/hooks/use-toast";
 import { useParams } from "react-router-dom";
 import { HelpCircle } from "lucide-react";
 import {
@@ -18,6 +20,9 @@ interface TrackSelectionProps {
 export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
   const { id } = useParams<{ id: string }>();
   const { getTrackForRole, setTrackForRole } = useTrack();
+  const { toast } = useToast();
+  const [showSaveButton, setShowSaveButton] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState<"Professional" | "Managerial" | null>(null);
 
   const track = getTrackForRole(id || "");
 
@@ -33,9 +38,23 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
 
   const handleTrackChange = (value: "Professional" | "Managerial") => {
     console.log('Changing track:', { roleId: id, newTrack: value });
-    setTrackForRole(id || "", value);
-    localStorage.setItem(`track-selection-${id}`, value);
-    onTrackChange?.(value);
+    setSelectedTrack(value);
+    setShowSaveButton(true);
+  };
+
+  const handleSaveTrack = () => {
+    if (selectedTrack) {
+      console.log('Saving track selection:', { roleId: id, track: selectedTrack });
+      setTrackForRole(id || "", selectedTrack);
+      localStorage.setItem(`track-selection-${id}`, selectedTrack);
+      onTrackChange?.(selectedTrack);
+      setShowSaveButton(false);
+      
+      toast({
+        title: "Track Selection Saved",
+        description: `Selected track: ${selectedTrack}`,
+      });
+    }
   };
 
   return (
@@ -78,7 +97,7 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
             </TooltipProvider>
           </div>
           <RadioGroup
-            value={track}
+            value={selectedTrack || track}
             onValueChange={handleTrackChange}
             className="flex items-center space-x-4"
           >
@@ -92,6 +111,16 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
             </div>
           </RadioGroup>
         </div>
+        {showSaveButton && (
+          <Button 
+            onClick={handleSaveTrack}
+            size="sm"
+            variant="outline"
+            className="ml-auto bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
+          >
+            Save Track
+          </Button>
+        )}
       </div>
     </div>
   );
