@@ -7,42 +7,72 @@ import { Sidebar } from "@/components/Sidebar";
 import { EmployeeFilters } from "@/components/EmployeeFilters";
 import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { getSkillProfileId, getBaseRole } from "@/components/EmployeeTable";
-
-const calculateAverageTenure = (employeeList: any[]) => {
-  if (employeeList.length === 0) return 0;
-
-  const tenures = employeeList.map(emp => {
-    if (!emp.startDate) return 0;
-    const start = new Date(emp.startDate);
-    const end = emp.termDate && emp.termDate !== "-" ? new Date(emp.termDate) : new Date();
-    if (isNaN(start.getTime())) return 0;
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
-    return diffYears;
-  });
-
-  const totalTenure = tenures.reduce((sum, tenure) => sum + tenure, 0);
-  return Number((totalTenure / employeeList.length).toFixed(1));
-};
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 const Employees = () => {
-  const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
-  const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
-  const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
-  const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
-  const [selectedManager, setSelectedManager] = useState<string[]>([]);
-  const [selectedRole, setSelectedRole] = useState<string[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Initialize state from URL parameters
+  const [selectedDepartment, setSelectedDepartment] = useState<string[]>(
+    searchParams.get('department')?.split(',').filter(Boolean) || []
+  );
+  const [selectedLevel, setSelectedLevel] = useState<string[]>(
+    searchParams.get('level')?.split(',').filter(Boolean) || []
+  );
+  const [selectedOffice, setSelectedOffice] = useState<string[]>(
+    searchParams.get('office')?.split(',').filter(Boolean) || []
+  );
+  const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>(
+    searchParams.get('employmentType')?.split(',').filter(Boolean) || []
+  );
+  const [selectedSkills, setSelectedSkills] = useState<string[]>(
+    searchParams.get('skills')?.split(',').filter(Boolean) || []
+  );
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>(
+    searchParams.get('employees')?.split(',').filter(Boolean) || []
+  );
+  const [selectedManager, setSelectedManager] = useState<string[]>(
+    searchParams.get('manager')?.split(',').filter(Boolean) || []
+  );
+  const [selectedRole, setSelectedRole] = useState<string[]>(
+    searchParams.get('role')?.split(',').filter(Boolean) || []
+  );
   
   const employees = useEmployeeStore((state) => state.employees);
+
+  // Update URL parameters when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (selectedDepartment.length) params.set('department', selectedDepartment.join(','));
+    if (selectedLevel.length) params.set('level', selectedLevel.join(','));
+    if (selectedOffice.length) params.set('office', selectedOffice.join(','));
+    if (selectedEmploymentType.length) params.set('employmentType', selectedEmploymentType.join(','));
+    if (selectedSkills.length) params.set('skills', selectedSkills.join(','));
+    if (selectedEmployees.length) params.set('employees', selectedEmployees.join(','));
+    if (selectedManager.length) params.set('manager', selectedManager.join(','));
+    if (selectedRole.length) params.set('role', selectedRole.join(','));
+
+    setSearchParams(params);
+  }, [
+    selectedDepartment,
+    selectedLevel,
+    selectedOffice,
+    selectedEmploymentType,
+    selectedSkills,
+    selectedEmployees,
+    selectedManager,
+    selectedRole,
+    setSearchParams
+  ]);
 
   // Get filtered employees
   const preFilteredEmployees = filterEmployees(
@@ -68,13 +98,18 @@ const Employees = () => {
       })
     : filteredEmployees;
 
-  console.log('Exact match employees:', {
-    total: exactMatchEmployees.length,
-    employees: exactMatchEmployees.map(e => ({
-      name: e.name,
-      role: e.role,
-      roleId: getSkillProfileId(e.role)
-    }))
+  console.log('Filtered employees with URL params:', {
+    filters: {
+      department: selectedDepartment,
+      level: selectedLevel,
+      office: selectedOffice,
+      employmentType: selectedEmploymentType,
+      skills: selectedSkills,
+      employees: selectedEmployees,
+      manager: selectedManager,
+      role: selectedRole
+    },
+    totalMatches: exactMatchEmployees.length
   });
 
   const totalEmployees = exactMatchEmployees.length;
@@ -86,6 +121,23 @@ const Employees = () => {
   };
 
   // Calculate average tenure for filtered employees
+  const calculateAverageTenure = (employeeList: any[]) => {
+    if (employeeList.length === 0) return 0;
+
+    const tenures = employeeList.map(emp => {
+      if (!emp.startDate) return 0;
+      const start = new Date(emp.startDate);
+      const end = emp.termDate && emp.termDate !== "-" ? new Date(emp.termDate) : new Date();
+      if (isNaN(start.getTime())) return 0;
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+      return diffYears;
+    });
+
+    const totalTenure = tenures.reduce((sum, tenure) => sum + tenure, 0);
+    return Number((totalTenure / employeeList.length).toFixed(1));
+  };
+
   const averageTenure = calculateAverageTenure(exactMatchEmployees);
 
   // Calculate employees added in the last year based on filtered results
