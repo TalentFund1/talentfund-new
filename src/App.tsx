@@ -18,17 +18,22 @@ const App = () => {
       queries: {
         staleTime: 1000 * 60 * 5, // 5 minutes
         retry: 1,
+        refetchOnWindowFocus: false, // Disable automatic refetching
       },
     },
   });
 
-  console.log('App component rendering with new QueryClient instance');
+  console.log('App component rendering with QueryClient config:', {
+    staleTime: '5 minutes',
+    retry: 1,
+    refetchOnWindowFocus: false
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
       <ToggledSkillsProvider>
         <TooltipProvider>
-          <BrowserRouter>
+          <BrowserRouter basename="/">
             <Toaster />
             <Sonner />
             <Routes>

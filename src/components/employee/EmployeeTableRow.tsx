@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
+import { SkillBubble } from "../skills/SkillBubble";
 import { getSkillProfileId } from "../EmployeeTable";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { SkillsDisplay } from "./SkillsDisplay";
-import { 
-  calculateEmployeeBenchmark, 
-  getSkillMatch, 
-  getBenchmarkColor 
-} from "./utils/benchmarkUtils";
+import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
+import { roleSkills } from "../skills/data/roleSkills";
+import { getLevel } from "../EmployeeTable";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -34,21 +33,88 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
+  // Determine which role ID to use for benchmark calculation
   const targetRoleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
 
-  const benchmark = calculateEmployeeBenchmark(
-    employee,
-    selectedJobTitle,
+  const employeeLevel = getLevel(employee.role);
+  
+  // Calculate benchmark percentage
+  const benchmark = calculateBenchmarkPercentage(
+    employee.id,
+    targetRoleId,
+    employeeLevel,
     currentStates,
     toggledSkills,
     getSkillCompetencyState
   );
 
-  const skillMatch = getSkillMatch(employee, selectedSkills, targetRoleId, toggledSkills);
+  // Calculate skill match ratio
+  const getSkillMatch = () => {
+    const employeeSkills = getEmployeeSkills(employee.id);
+    const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
+    
+    if (!roleData) return "0 / 0";
+
+    const allRoleSkills = [
+      ...roleData.specialized,
+      ...roleData.common,
+      ...roleData.certifications
+    ].filter(skill => toggledSkills.has(skill.title));
+
+    const matchingSkills = allRoleSkills.filter(roleSkill => 
+      employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
+    );
+
+    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+  };
+
   const isExactMatch = selectedJobTitle.length > 0 && 
     getSkillProfileId(employee.role) === getSkillProfileId(selectedJobTitle[0]);
+
+  const getBenchmarkColor = (percentage: number) => {
+    if (percentage >= 90) return 'bg-green-100 text-green-800';
+    if (percentage >= 70) return 'bg-orange-100 text-orange-800';
+    return 'bg-red-100 text-red-800';
+  };
+
+  const renderSkills = () => {
+    if (selectedSkills.length === 0) return null;
+
+    const employeeSkills = getEmployeeSkills(employee.id);
+    
+    const skillsToShow = selectedSkills.filter(skillName => 
+      employeeSkills.some(empSkill => empSkill.title === skillName)
+    );
+
+    return (
+      <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
+        {skillsToShow.map(skillName => {
+          const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skillName);
+          if (!employeeSkill) return null;
+          
+          return (
+            <SkillBubble
+              key={skillName}
+              skillName={skillName}
+              level={employeeSkill.level || 'unspecified'}
+              isRequired={false}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
+  console.log('Employee Row Rendering:', {
+    employee: employee.name,
+    targetRoleId,
+    employeeLevel,
+    benchmark,
+    skillMatch: getSkillMatch(),
+    isExactMatch
+  });
 
   return (
     <tr className={`group border-t border-border hover:bg-muted/50 transition-colors w-full ${
@@ -96,7 +162,7 @@ export const EmployeeTableRow = ({
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
-          {skillMatch}
+          {getSkillMatch()}
         </span>
       </td>
       {selectedSkills.length === 0 && (
@@ -110,10 +176,7 @@ export const EmployeeTableRow = ({
       )}
       {selectedSkills.length > 0 && (
         <td className="px-4 py-4 min-w-[300px]">
-          <SkillsDisplay 
-            employeeId={employee.id}
-            selectedSkills={selectedSkills}
-          />
+          {renderSkills()}
         </td>
       )}
       <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">

@@ -1,60 +1,48 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/StatCard";
+import { Users, UserPlus, Equal, Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { EmployeeFilters } from "@/components/EmployeeFilters";
 import { EmployeeTable } from "@/components/EmployeeTable";
 import { TablePagination } from "@/components/TablePagination";
+import { useState } from "react";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFilter";
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
-import { getSkillProfileId } from "@/components/EmployeeTable";
-import { useEmployeeFilters } from "@/components/employee/hooks/useEmployeeFilters";
-import { EmployeeStats } from "@/components/employee/EmployeeStats";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { employees as initialEmployees } from "@/components/employee/EmployeeData";
+import { getSkillProfileId, getBaseRole } from "@/components/EmployeeTable";
+
+const calculateAverageTenure = (employeeList: any[]) => {
+  if (employeeList.length === 0) return 0;
+
+  const tenures = employeeList.map(emp => {
+    if (!emp.startDate) return 0;
+    const start = new Date(emp.startDate);
+    const end = emp.termDate && emp.termDate !== "-" ? new Date(emp.termDate) : new Date();
+    if (isNaN(start.getTime())) return 0;
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+    return diffYears;
+  });
+
+  const totalTenure = tenures.reduce((sum, tenure) => sum + tenure, 0);
+  return Number((totalTenure / employeeList.length).toFixed(1));
+};
 
 const Employees = () => {
-  const [searchParams] = useSearchParams();
-  const [isInitialized, setIsInitialized] = useState(false);
-  const {
-    selectedDepartment,
-    setSelectedDepartment,
-    selectedLevel,
-    setSelectedLevel,
-    selectedOffice,
-    setSelectedOffice,
-    selectedEmploymentType,
-    setSelectedEmploymentType,
-    selectedSkills,
-    setSelectedSkills,
-    selectedEmployees,
-    setSelectedEmployees,
-    selectedManager,
-    setSelectedManager,
-    selectedRole,
-    setSelectedRole
-  } = useEmployeeFilters();
-
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
+  const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
+  const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
+  const [selectedEmploymentType, setSelectedEmploymentType] = useState<string[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [selectedManager, setSelectedManager] = useState<string[]>([]);
+  const [selectedRole, setSelectedRole] = useState<string[]>([]);
+  
   const employees = useEmployeeStore((state) => state.employees);
-  const addEmployee = useEmployeeStore((state) => state.addEmployee);
-
-  // Initialize employee data on component mount
-  useEffect(() => {
-    console.log('Initializing employee data on component mount');
-    if (employees.length === 0) {
-      initialEmployees.forEach(employee => {
-        console.log('Adding employee:', employee.name);
-        addEmployee(employee);
-      });
-    }
-    setIsLoading(false);
-    setIsInitialized(true);
-  }, []);
 
   // Get filtered employees
   const preFilteredEmployees = filterEmployees(
@@ -80,37 +68,38 @@ const Employees = () => {
       })
     : filteredEmployees;
 
-  console.log('Current employee state:', {
-    isLoading,
-    isInitialized,
-    totalEmployees: employees.length,
-    filteredCount: exactMatchEmployees.length,
-    filters: {
-      department: selectedDepartment,
-      level: selectedLevel,
-      office: selectedOffice,
-      employmentType: selectedEmploymentType,
-      skills: selectedSkills,
-      employees: selectedEmployees,
-      manager: selectedManager,
-      role: selectedRole
-    }
+  console.log('Exact match employees:', {
+    total: exactMatchEmployees.length,
+    employees: exactMatchEmployees.map(e => ({
+      name: e.name,
+      role: e.role,
+      roleId: getSkillProfileId(e.role)
+    }))
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen bg-background">
-        <Sidebar />
-        <div className="flex-1 p-6 ml-16 transition-all duration-300">
-          <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const totalEmployees = exactMatchEmployees.length;
+
+  const calculateFemalePercentage = () => {
+    if (exactMatchEmployees.length === 0) return 0;
+    const femaleCount = exactMatchEmployees.filter(emp => emp.sex === 'female').length;
+    return Math.round((femaleCount / exactMatchEmployees.length) * 100);
+  };
+
+  // Calculate average tenure for filtered employees
+  const averageTenure = calculateAverageTenure(exactMatchEmployees);
+
+  // Calculate employees added in the last year based on filtered results
+  const calculateAddedLastYear = () => {
+    const today = new Date();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(today.getFullYear() - 1);
+    
+    return exactMatchEmployees.filter(employee => {
+      if (!employee.startDate) return false;
+      const startDate = new Date(employee.startDate);
+      return startDate >= oneYearAgo;
+    }).length;
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -147,7 +136,28 @@ const Employees = () => {
               />
             </Card>
 
-            <EmployeeStats filteredEmployees={exactMatchEmployees} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatCard
+                title="Total Number of Employees"
+                value={totalEmployees}
+                icon={<Users className="h-6 w-6 text-primary-icon" />}
+              />
+              <StatCard
+                title="Added in Past 1 year"
+                value={calculateAddedLastYear()}
+                icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
+              />
+              <StatCard
+                title="Share of Female Employees"
+                value={`${calculateFemalePercentage()}%`}
+                icon={<Equal className="h-6 w-6 text-primary-icon" />}
+              />
+              <StatCard
+                title="Average Tenure (Years)"
+                value={averageTenure}
+                icon={<Clock className="h-6 w-6 text-primary-icon" />}
+              />
+            </div>
 
             <Card className="p-6">
               <EmployeeTable 

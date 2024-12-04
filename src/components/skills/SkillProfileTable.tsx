@@ -57,24 +57,11 @@ const SkillProfileTableContent = ({
     return 'bg-red-100 text-red-800';
   };
 
-  const getToggledSkillCount = (roleId: string) => {
-    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-    if (!currentRoleSkills) return 0;
-
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    return allSkills.filter(skill => toggledSkills.has(skill.title)).length;
-  };
-
   const rows: SkillProfileRow[] = Object.entries(roleSkills).map(([id, role]) => ({
     id,
     name: role.title,
-    function: "Engineering",
-    skillCount: String(getToggledSkillCount(id)),
+    function: "Engineering", // You might want to add this to roleSkills if you need different functions
+    skillCount: String((role.specialized?.length || 0) + (role.common?.length || 0) + (role.certifications?.length || 0)),
     employees: String(getExactRoleMatches(role.title)),
     matches: `${calculateAverageBenchmark(id, role.title)}%`,
     lastUpdated: "10/20/24"

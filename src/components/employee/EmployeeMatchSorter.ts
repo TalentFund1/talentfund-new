@@ -10,27 +10,8 @@ export const sortEmployeesByRoleMatch = (
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ): Employee[] => {
-  // If no role selected, calculate benchmarks against employees' current roles
-  if (selectedJobTitle.length === 0) {
-    console.log('No role selected, calculating benchmarks against current roles');
-    return employees.map(employee => {
-      const employeeRoleId = getSkillProfileId(employee.role);
-      const employeeLevel = getLevel(employee.role);
+  if (selectedJobTitle.length === 0) return employees;
 
-      const benchmark = calculateBenchmarkPercentage(
-        employee.id,
-        employeeRoleId,
-        employeeLevel,
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      );
-
-      return { ...employee, benchmark };
-    });
-  }
-
-  // If role is selected, proceed with role matching logic
   const selectedRole = selectedJobTitle[0];
   const roleId = getSkillProfileId(selectedRole);
 
@@ -96,18 +77,38 @@ export const sortEmployeesByRoleMatch = (
     if (isExactMatch) {
       exactMatches.push(employeeWithBenchmark);
     } else if (benchmark > 0) {
+      // Add to partial matches if they have any matching skills (benchmark > 0)
+      // and they're not an exact match
       partialMatches.push(employeeWithBenchmark);
+      console.log('Added to partial matches:', {
+        employee: employee.name,
+        role: employee.role,
+        benchmark,
+        skills: allRoleSkills.length
+      });
     }
   });
 
-  // Sort partial matches by benchmark percentage
-  const sortedPartialMatches = partialMatches.sort((a, b) => b.benchmark - a.benchmark);
-
-  console.log('Final matching results:', {
-    exactMatches: exactMatches.length,
-    partialMatches: sortedPartialMatches.length,
-    totalEmployees: employees.length
+  // Sort partial matches by benchmark percentage in descending order
+  const sortedPartialMatches = partialMatches.sort((a, b) => {
+    return (b.benchmark || 0) - (a.benchmark || 0);
   });
 
+  console.log('Final matching results:', {
+    exactMatches: exactMatches.map(e => ({ 
+      name: e.name, 
+      role: e.role,
+      benchmark: e.benchmark 
+    })),
+    partialMatches: sortedPartialMatches.map(e => ({ 
+      name: e.name, 
+      role: e.role,
+      benchmark: e.benchmark 
+    })),
+    totalExactMatches: exactMatches.length,
+    totalPartialMatches: sortedPartialMatches.length
+  });
+
+  // Combine exact matches first, followed by sorted partial matches
   return [...exactMatches, ...sortedPartialMatches];
 };
