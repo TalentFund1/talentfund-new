@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { Employee } from '../../types/employeeTypes';
 import { employees as initialEmployees } from '../EmployeeData';
+import { calculateBenchmarkPercentage } from '../BenchmarkCalculator';
+import { getSkillProfileId } from '../../EmployeeTable';
 
 const STORAGE_KEY = 'employee-store';
 const ROLES_STORAGE_KEY = 'employee-roles';
@@ -14,6 +16,23 @@ interface EmployeeStore {
   initialize: () => void;
 }
 
+const initializeBenchmarks = (employees: Employee[]) => {
+  console.log('Initializing benchmarks for employees');
+  return employees.map(employee => {
+    const roleId = getSkillProfileId(employee.role);
+    if (!roleId) {
+      console.log(`No role ID found for employee ${employee.id}`);
+      return employee;
+    }
+
+    // Initialize with 0 benchmark, it will be calculated properly when needed
+    return {
+      ...employee,
+      benchmark: 0
+    };
+  });
+};
+
 const loadFromStorage = (): Employee[] => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -23,7 +42,6 @@ const loadFromStorage = (): Employee[] => {
       console.log('Loading employees from localStorage');
       const employees = JSON.parse(stored);
       
-      // If we have stored roles, merge them with employees
       if (storedRoles) {
         console.log('Loading roles from localStorage');
         const roles = JSON.parse(storedRoles);
@@ -34,13 +52,13 @@ const loadFromStorage = (): Employee[] => {
         });
       }
       
-      return employees;
+      return initializeBenchmarks(employees);
     }
   } catch (error) {
     console.error('Error loading from localStorage:', error);
   }
-  console.log('No stored employees found, using initial data');
-  return initialEmployees;
+  console.log('No stored employees found, initializing with default data');
+  return initializeBenchmarks(initialEmployees);
 };
 
 const saveToStorage = (employees: Employee[]) => {
