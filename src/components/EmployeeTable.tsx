@@ -16,7 +16,6 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
-import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -54,8 +53,7 @@ export const getSkillProfileId = (role?: string) => {
   console.log('Role mapping:', { 
     originalRole: role,
     baseRole,
-    mappedId,
-    roleMap
+    mappedId
   });
   
   return mappedId || '';
