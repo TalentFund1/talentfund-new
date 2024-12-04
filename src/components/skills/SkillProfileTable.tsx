@@ -105,7 +105,7 @@ const SkillProfileTableContent = ({
     <div className="space-y-4">
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-transparent border-y border-border">
+          <TableRow className="hover:bg-transparent">
             <TableHead className="w-[5%] h-12">
               <input 
                 type="checkbox" 
@@ -135,7 +135,7 @@ const SkillProfileTableContent = ({
             </TableRow>
           ) : (
             filteredRows.map((row) => (
-              <TableRow key={row.id} className="h-16 hover:bg-muted/50 transition-colors border-b border-border">
+              <TableRow key={row.id} className="h-16 hover:bg-muted/50 transition-colors">
                 <TableCell className="align-middle">
                   <input 
                     type="checkbox" 
