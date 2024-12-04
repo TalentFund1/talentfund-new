@@ -1,79 +1,58 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { useRoleStore } from "./RoleBenchmark";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { roleSkills } from "../skills/data/roleSkills";
-import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
-import { useTrack } from "../skills/context/TrackContext";
-import { useSkillsFiltering } from "./skills-matrix/useSkillsFiltering";
-import { useBenchmarkSkillsMatrixState } from "./skills-matrix/BenchmarkSkillsMatrixState";
+import { Card } from "@/components/ui/card";
+import { BenchmarkSkillsMatrixContent } from "./skills-matrix/BenchmarkSkillsMatrixContent";
+import { useRef } from "react";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { TrackProvider } from "../skills/context/TrackContext";
 
-const BenchmarkSkillsMatrixContent = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
-  const [selectedLevel, setSelectedLevel] = useState("all");
-  const [selectedInterest, setSelectedInterest] = useState("all");
-  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
-  const { id } = useParams<{ id: string }>();
-  const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
-  const { toggledSkills } = useToggledSkills();
-  const { getTrackForRole } = useTrack();
-  const { visibleItems } = useBenchmarkSkillsMatrixState();
+interface BenchmarkSkillsMatrixProps {
+  roleId: string;
+  employeeId: string;
+  roleLevel: string;
+  filteredSkills: any[];
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  selectedLevel: string;
+  setSelectedLevel: (level: string) => void;
+  selectedInterest: string;
+  setSelectedInterest: (interest: string) => void;
+  selectedSkillLevel: string;
+  setSelectedSkillLevel: (level: string) => void;
+  selectedSearchSkills: string[];
+  setSelectedSearchSkills: (skills: string[]) => void;
+  visibleItems: number;
+}
 
-  const track = getTrackForRole(selectedRole);
-  const comparisonLevel = track === "Managerial" ? "m3" : roleLevel.toLowerCase();
-
-  const { filteredSkills } = useSkillsFiltering(
-    id || "",
-    selectedRole,
-    comparisonLevel,
-    selectedLevel,
-    selectedInterest,
-    selectedSkillLevel,
-    searchTerm,
-    toggledSkills
-  );
-
-  const paginatedSkills = filteredSkills.slice(0, visibleItems);
-  
+export const BenchmarkSkillsMatrix = ({ 
+  roleId,
+  employeeId,
+  roleLevel,
+  filteredSkills,
+  ...props
+}: BenchmarkSkillsMatrixProps) => {
   console.log('BenchmarkSkillsMatrix - Current state:', {
-    selectedRole,
-    roleLevel: comparisonLevel,
-    track,
+    selectedRole: roleId,
+    roleLevel,
+    track: 'Professional',
     filteredSkillsCount: filteredSkills.length,
-    toggledSkillsCount: toggledSkills.size
+    toggledSkillsCount: 0 // This will be managed by ToggledSkillsProvider
   });
 
-  return (
-    <div className="space-y-6">
-      <BenchmarkSkillsMatrixView
-        roleId={selectedRole}
-        employeeId={id || ""}
-        roleLevel={comparisonLevel}
-        filteredSkills={paginatedSkills}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-        selectedSkillLevel={selectedSkillLevel}
-        setSelectedSkillLevel={setSelectedSkillLevel}
-        selectedSearchSkills={selectedSearchSkills}
-        setSelectedSearchSkills={setSelectedSearchSkills}
-        visibleItems={visibleItems}
-      />
-    </div>
-  );
-};
+  const observerTarget = useRef<HTMLDivElement>(null);
 
-export const BenchmarkSkillsMatrix = () => {
   return (
-    <ToggledSkillsProvider>
-      <BenchmarkSkillsMatrixContent />
-    </ToggledSkillsProvider>
+    <TrackProvider>
+      <ToggledSkillsProvider>
+        <Card className="p-6 space-y-6 animate-fade-in bg-white">
+          <BenchmarkSkillsMatrixContent 
+            roleId={roleId}
+            employeeId={employeeId}
+            roleLevel={roleLevel}
+            filteredSkills={filteredSkills}
+            {...props}
+            observerTarget={observerTarget}
+          />
+        </Card>
+      </ToggledSkillsProvider>
+    </TrackProvider>
   );
 };
