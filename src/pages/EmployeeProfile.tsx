@@ -17,6 +17,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { getSkillProfileId } from "@/components/EmployeeTable";
+import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
 
 const employeeImages = {
   "123": "photo-1488590528505-98d2b5aba04b",
@@ -30,6 +32,7 @@ const EmployeeProfile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
+  const { selectedRole, selectedLevel } = useRoleStore();
   const employee = getEmployeeById(id || "");
 
   useEffect(() => {
@@ -153,7 +156,23 @@ const EmployeeProfile = () => {
                     <Card className="p-8 bg-white">
                       <RoleBenchmark />
                     </Card>
-                    <BenchmarkSkillsMatrix />
+                    <BenchmarkSkillsMatrix 
+                      roleId={selectedRole}
+                      employeeId={id || ""}
+                      roleLevel={selectedLevel}
+                      filteredSkills={[]}
+                      searchTerm=""
+                      setSearchTerm={() => {}}
+                      selectedLevel="all"
+                      setSelectedLevel={() => {}}
+                      selectedInterest="all"
+                      setSelectedInterest={() => {}}
+                      selectedSkillLevel="all"
+                      setSelectedSkillLevel={() => {}}
+                      selectedSearchSkills={[]}
+                      setSelectedSearchSkills={() => {}}
+                      visibleItems={10}
+                    />
                   </SelectedSkillsProvider>
                 </BenchmarkSearchProvider>
               </TabsContent>
