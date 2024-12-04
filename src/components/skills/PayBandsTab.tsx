@@ -4,8 +4,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useTrack } from "./context/TrackContext";
 import { useParams } from "react-router-dom";
 import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
-import { Separator } from "@/components/ui/separator";
-import { roleSkills } from './data/roleSkills';
 
 const professionalData = [
   {
@@ -92,27 +90,11 @@ export const PayBandsTab = () => {
 
   const data = track === "Professional" ? professionalData : managerialData;
   const levels = track === "Professional" ? professionalLevels : managerialLevels;
-  
-  const currentRole = roleSkills[id as keyof typeof roleSkills];
-  const jobTitle = currentRole ? currentRole.title : "AI Engineer";
 
   return (
     <div className="bg-white rounded-lg">
       <Card className="p-6">
         <div className="space-y-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-foreground">{jobTitle}</h2>
-              <div className="flex items-center gap-2 bg-[#F7F9FF] p-3 rounded-lg border-2 border-primary-accent/30 hover:border-primary-accent/50 transition-all duration-300 shadow-sm hover:shadow-md">
-                <div className="flex flex-col">
-                  <span className="text-sm text-muted-foreground font-medium">Market Pricer</span>
-                  <p className="font-semibold text-lg text-primary-accent">$150,000</p>
-                </div>
-              </div>
-            </div>
-            <Separator className="my-6" />
-          </div>
-
           <div>
             <h3 className="text-xl font-semibold text-primary mb-4">Pay Bands</h3>
             <div className="space-y-4 text-secondary-foreground">
