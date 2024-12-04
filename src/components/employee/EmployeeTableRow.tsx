@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 import { Employee } from "../types/employeeTypes";
 import { SkillBubble } from "../skills/SkillBubble";
 import { getSkillProfileId } from "../EmployeeTable";
@@ -33,25 +34,41 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
-  // Determine which role ID to use for benchmark calculation
-  const targetRoleId = selectedJobTitle.length > 0 
-    ? getSkillProfileId(selectedJobTitle[0])
-    : getSkillProfileId(employee.role);
-
-  const employeeLevel = getLevel(employee.role);
-  
-  // Calculate benchmark percentage
-  const benchmark = calculateBenchmarkPercentage(
-    employee.id,
-    targetRoleId,
-    employeeLevel,
-    currentStates,
-    toggledSkills,
-    getSkillCompetencyState
+  // Memoize target role ID calculation
+  const targetRoleId = useMemo(() => 
+    selectedJobTitle.length > 0 
+      ? getSkillProfileId(selectedJobTitle[0])
+      : getSkillProfileId(employee.role),
+    [selectedJobTitle, employee.role]
   );
 
-  // Calculate skill match ratio
-  const getSkillMatch = () => {
+  const employeeLevel = useMemo(() => 
+    getLevel(employee.role),
+    [employee.role]
+  );
+  
+  // Memoize benchmark calculation
+  const benchmark = useMemo(() => 
+    calculateBenchmarkPercentage(
+      employee.id,
+      targetRoleId,
+      employeeLevel,
+      currentStates,
+      toggledSkills,
+      getSkillCompetencyState
+    ),
+    [
+      employee.id,
+      targetRoleId,
+      employeeLevel,
+      currentStates,
+      toggledSkills,
+      getSkillCompetencyState
+    ]
+  );
+
+  // Memoize skill match calculation
+  const skillMatch = useMemo(() => {
     const employeeSkills = getEmployeeSkills(employee.id);
     const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
     
@@ -68,10 +85,13 @@ export const EmployeeTableRow = ({
     );
 
     return `${matchingSkills.length} / ${allRoleSkills.length}`;
-  };
+  }, [employee.id, targetRoleId, toggledSkills]);
 
-  const isExactMatch = selectedJobTitle.length > 0 && 
-    getSkillProfileId(employee.role) === getSkillProfileId(selectedJobTitle[0]);
+  const isExactMatch = useMemo(() => 
+    selectedJobTitle.length > 0 && 
+    getSkillProfileId(employee.role) === getSkillProfileId(selectedJobTitle[0]),
+    [employee.role, selectedJobTitle]
+  );
 
   const getBenchmarkColor = (percentage: number) => {
     if (percentage >= 90) return 'bg-green-100 text-green-800';
@@ -112,7 +132,7 @@ export const EmployeeTableRow = ({
     targetRoleId,
     employeeLevel,
     benchmark,
-    skillMatch: getSkillMatch(),
+    skillMatch,
     isExactMatch
   });
 
@@ -162,7 +182,7 @@ export const EmployeeTableRow = ({
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
-          {getSkillMatch()}
+          {skillMatch}
         </span>
       </td>
       {selectedSkills.length === 0 && (
