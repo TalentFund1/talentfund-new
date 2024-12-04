@@ -24,7 +24,6 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
 
   const track = getTrackForRole(id || "");
 
-  // Load the saved track when component mounts
   useEffect(() => {
     const savedTrack = localStorage.getItem(`track-selection-${id}`);
     console.log('Loading saved track selection:', { roleId: id, savedTrack });
