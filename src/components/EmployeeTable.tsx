@@ -18,6 +18,17 @@ import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
 import { useEffect } from "react";
 
+export interface EmployeeTableProps {
+  selectedDepartment?: string[];
+  selectedLevel?: string[];
+  selectedOffice?: string[];
+  selectedEmploymentType?: string[];
+  selectedSkills?: string[];
+  selectedEmployees?: string[];
+  selectedManager?: string[];
+  selectedRole?: string[];
+}
+
 export const getSkillProfileId = (role?: string) => {
   const validProfileIds = Object.keys(roleSkills);
   if (validProfileIds.includes(role || '')) {
@@ -50,6 +61,12 @@ export const getSkillProfileId = (role?: string) => {
 export const getBaseRole = (role?: string) => {
   if (!role) return "";
   return role.split(":")[0].trim();
+};
+
+export const getLevel = (role?: string) => {
+  if (!role) return "";
+  const parts = role.split(":");
+  return parts.length > 1 ? parts[1].trim() : "";
 };
 
 const EmployeeTableContent = ({ 
