@@ -127,7 +127,7 @@ export const CompetencyGraphTable = ({
   })));
 
   return (
-    <div className="rounded-lg border border-border bg-white overflow-hidden">
+    <div className="rounded-lg border border-border bg-white overflow-hidden mb-8">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
