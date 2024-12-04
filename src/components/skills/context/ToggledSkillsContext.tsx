@@ -56,12 +56,10 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     
     setToggledSkills(newSkills);
     
-    // Save to localStorage immediately after state update
     try {
       const skillsArray = Array.from(newSkills);
       saveToggledSkills(currentRoleId, skillsArray);
       
-      // Broadcast the change to other components
       window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
         detail: { role: currentRoleId, skills: skillsArray }
       }));
@@ -80,7 +78,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     }
   };
 
-  // Listen for changes from other components
   useEffect(() => {
     const currentRoleId = selectedRole || id || "";
     const handleSkillsChanged = (event: Event) => {

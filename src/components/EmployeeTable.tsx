@@ -16,27 +16,15 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
-
-interface EmployeeTableProps {
-  selectedDepartment?: string[];
-  selectedLevel?: string[];
-  selectedOffice?: string[];
-  selectedEmploymentType?: string[];
-  selectedSkills?: string[];
-  selectedEmployees?: string[];
-  selectedManager?: string[];
-  selectedRole?: string[];
-}
+import { useEffect } from "react";
 
 export const getSkillProfileId = (role?: string) => {
-  // Validate role ID format first
   const validProfileIds = Object.keys(roleSkills);
   if (validProfileIds.includes(role || '')) {
     console.log('Using direct role ID:', role);
     return role;
   }
 
-  // Map role titles to IDs using roleSkills
   const roleMap = Object.entries(roleSkills).reduce((acc, [id, data]) => {
     acc[data.title] = id;
     return acc;
@@ -64,12 +52,6 @@ export const getBaseRole = (role?: string) => {
   return role.split(":")[0].trim();
 };
 
-export const getLevel = (role?: string) => {
-  if (!role) return "";
-  const parts = role.split(":");
-  return parts.length > 1 ? parts[1].trim() : "";
-};
-
 const EmployeeTableContent = ({ 
   selectedDepartment = [], 
   selectedLevel = [],
@@ -81,13 +63,41 @@ const EmployeeTableContent = ({
   selectedRole = []
 }: EmployeeTableProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
   const employees = useEmployeeStore((state) => {
     console.log('Current employees in store:', state.employees);
     return state.employees;
   });
+
+  // Load toggled skills on mount
+  useEffect(() => {
+    const loadToggledSkills = () => {
+      try {
+        const savedSkills = localStorage.getItem('employeeTableToggledSkills');
+        if (savedSkills) {
+          console.log('Loading saved toggled skills:', JSON.parse(savedSkills));
+          setToggledSkills(new Set(JSON.parse(savedSkills)));
+        }
+      } catch (error) {
+        console.error('Error loading toggled skills:', error);
+      }
+    };
+
+    loadToggledSkills();
+  }, [setToggledSkills]);
+
+  // Save toggled skills whenever they change
+  useEffect(() => {
+    try {
+      const skillsArray = Array.from(toggledSkills);
+      console.log('Saving toggled skills:', skillsArray);
+      localStorage.setItem('employeeTableToggledSkills', JSON.stringify(skillsArray));
+    } catch (error) {
+      console.error('Error saving toggled skills:', error);
+    }
+  }, [toggledSkills]);
 
   const preFilteredEmployees = filterEmployees(
     employees,
@@ -100,11 +110,7 @@ const EmployeeTableContent = ({
     selectedManager
   );
 
-  console.log('Pre-filtered employees:', preFilteredEmployees);
-
   const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
-
-  console.log('Skill filtered employees:', skillFilteredEmployees);
 
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
@@ -113,14 +119,11 @@ const EmployeeTableContent = ({
     toggledSkills,
     getSkillCompetencyState
   ).filter(employee => {
-    // Only include employees with benchmark > 0% when a role is selected
     if (selectedRole.length > 0) {
       return employee.benchmark > 0;
     }
     return true;
   });
-
-  console.log('Final filtered and sorted employees:', filteredEmployees);
 
   return (
     <div className="bg-white rounded-lg">
