@@ -57,15 +57,29 @@ const SkillProfileTableContent = ({
     return 'bg-red-100 text-red-800';
   };
 
-  const rows: SkillProfileRow[] = Object.entries(roleSkills).map(([id, role]) => ({
-    id,
-    name: role.title,
-    function: "Engineering", // You might want to add this to roleSkills if you need different functions
-    skillCount: String((role.specialized?.length || 0) + (role.common?.length || 0) + (role.certifications?.length || 0)),
-    employees: String(getExactRoleMatches(role.title)),
-    matches: `${calculateAverageBenchmark(id, role.title)}%`,
-    lastUpdated: "10/20/24"
-  }));
+  const rows: SkillProfileRow[] = Object.entries(roleSkills).map(([id, role]) => {
+    // Get all skills for the role
+    const allRoleSkills = [
+      ...role.specialized,
+      ...role.common,
+      ...role.certifications
+    ];
+    
+    // Filter to only get toggled skills
+    const toggledSkillsCount = allRoleSkills.filter(skill => 
+      toggledSkills.has(skill.title)
+    ).length;
+
+    return {
+      id,
+      name: role.title,
+      function: "Engineering",
+      skillCount: String(toggledSkillsCount),
+      employees: String(getExactRoleMatches(role.title)),
+      matches: `${calculateAverageBenchmark(id, role.title)}%`,
+      lastUpdated: "10/20/24"
+    };
+  });
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSelection = e.target.checked ? filteredRows.map(row => row.id) : [];
