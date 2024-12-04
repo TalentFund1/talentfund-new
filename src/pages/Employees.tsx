@@ -15,6 +15,7 @@ import { useEmployeeFilters } from "@/components/employee/hooks/useEmployeeFilte
 import { EmployeeStats } from "@/components/employee/EmployeeStats";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { employees as initialEmployees } from "@/components/employee/EmployeeData";
 
 const Employees = () => {
   const [searchParams] = useSearchParams();
@@ -40,18 +41,20 @@ const Employees = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const employees = useEmployeeStore((state) => state.employees);
+  const addEmployee = useEmployeeStore((state) => state.addEmployee);
 
-  // Initialize filters from URL only after employees are loaded
+  // Initialize employee data on component mount
   useEffect(() => {
-    if (employees.length > 0 && !isInitialized) {
-      console.log('Initializing filters with employees loaded:', {
-        employeesCount: employees.length,
-        currentParams: Object.fromEntries(searchParams.entries())
+    console.log('Initializing employee data on component mount');
+    if (employees.length === 0) {
+      initialEmployees.forEach(employee => {
+        console.log('Adding employee:', employee.name);
+        addEmployee(employee);
       });
-      setIsInitialized(true);
-      setIsLoading(false);
     }
-  }, [employees, isInitialized, searchParams]);
+    setIsLoading(false);
+    setIsInitialized(true);
+  }, []);
 
   // Get filtered employees
   const preFilteredEmployees = filterEmployees(
@@ -77,10 +80,11 @@ const Employees = () => {
       })
     : filteredEmployees;
 
-  console.log('Current filter state:', {
+  console.log('Current employee state:', {
     isLoading,
     isInitialized,
-    employeesLoaded: employees.length > 0,
+    totalEmployees: employees.length,
+    filteredCount: exactMatchEmployees.length,
     filters: {
       department: selectedDepartment,
       level: selectedLevel,
@@ -90,8 +94,7 @@ const Employees = () => {
       employees: selectedEmployees,
       manager: selectedManager,
       role: selectedRole
-    },
-    totalMatches: exactMatchEmployees.length
+    }
   });
 
   if (isLoading) {
