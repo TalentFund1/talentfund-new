@@ -18,20 +18,10 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   const { selectedLevel } = useRoleStore();
 
-  console.log('CategorizedSkills - Current role and skills:', { 
-    roleId, 
-    hasRoleSkills: !!currentRoleSkills,
-    skillsCount: currentRoleSkills ? Object.keys(currentRoleSkills).length : 0 
-  });
-
-  // Early return if no role skills found
-  if (!currentRoleSkills) {
-    console.warn('No role skills found for roleId:', roleId);
-    return null;
-  }
+  console.log('CategorizedSkills - Using selected level:', selectedLevel);
 
   const filterSkillsByCategory = (skills: any[]) => {
     if (selectedCategory === "all") return skills;
@@ -48,9 +38,9 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   };
 
   const allRoleSkills = [
-    ...(currentRoleSkills.specialized || []),
-    ...(currentRoleSkills.common || []),
-    ...(currentRoleSkills.certifications || [])
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
   ];
 
   const getLevelPriority = (level: string = 'unspecified') => {

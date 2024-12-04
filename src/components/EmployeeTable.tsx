@@ -16,7 +16,6 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
-import { calculateBenchmarkPercentage } from "./employee/BenchmarkCalculator";
 
 interface EmployeeTableProps {
   selectedDepartment?: string[];
@@ -45,7 +44,7 @@ export const getSkillProfileId = (role?: string) => {
   
   if (!role) {
     console.warn('No role provided to getSkillProfileId');
-    return Object.keys(roleSkills)[0]; // Return first available role as default
+    return '';
   }
 
   const baseRole = role.split(":")[0].trim();
@@ -54,11 +53,10 @@ export const getSkillProfileId = (role?: string) => {
   console.log('Role mapping:', { 
     originalRole: role,
     baseRole,
-    mappedId,
-    roleMap
+    mappedId
   });
   
-  return mappedId || Object.keys(roleSkills)[0]; // Return first available role as default
+  return mappedId || '';
 };
 
 export const getBaseRole = (role?: string) => {

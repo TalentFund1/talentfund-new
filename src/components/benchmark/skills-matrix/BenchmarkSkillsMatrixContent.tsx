@@ -30,22 +30,11 @@ export const BenchmarkSkillsMatrixContent = ({
   employeeId,
   roleLevel,
   filteredSkills,
-  searchTerm,
-  setSearchTerm,
-  selectedLevel,
-  setSelectedLevel,
-  selectedInterest,
-  setSelectedInterest,
-  selectedSkillLevel,
-  setSelectedSkillLevel,
-  selectedSearchSkills,
-  setSelectedSearchSkills,
-  visibleItems,
-  observerTarget,
+  ...props
 }: BenchmarkSkillsMatrixContentProps) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
-  const { selectedLevel: roleSelectedLevel } = useRoleStore();
+  const { selectedLevel } = useRoleStore();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
   // Get all toggled skills as an array and filter by category
@@ -92,25 +81,24 @@ export const BenchmarkSkillsMatrixContent = ({
 
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-foreground">
-          {roleSkills[roleId as keyof typeof roleSkills]?.title}: {roleSelectedLevel.toUpperCase()}
+          {getRoleTitle(roleId)}: {selectedLevel.toUpperCase()}
         </h2>
       </div>
 
       <SkillsMatrixContent 
         filteredSkills={filteredSkills}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-        selectedSkillLevel={selectedSkillLevel}
-        setSelectedSkillLevel={setSelectedSkillLevel}
-        selectedSearchSkills={selectedSearchSkills}
-        setSelectedSearchSkills={setSelectedSearchSkills}
-        visibleItems={visibleItems}
-        observerTarget={observerTarget}
+        {...props}
       />
     </>
   );
+};
+
+const getRoleTitle = (id: string) => {
+  const roleTitles: { [key: string]: string } = {
+    "123": "AI Engineer",
+    "124": "Backend Engineer",
+    "125": "Frontend Engineer",
+    "126": "Engineering Manager"
+  };
+  return roleTitles[id] || "AI Engineer";
 };

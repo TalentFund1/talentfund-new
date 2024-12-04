@@ -1,5 +1,4 @@
 import { Employee } from "../types/employeeTypes";
-import { getBaseRole } from "../EmployeeTable";
 
 export const filterEmployees = (
   employees: Employee[],
@@ -17,8 +16,7 @@ export const filterEmployees = (
     selectedLevel,
     selectedOffice,
     selectedEmploymentType,
-    selectedManager,
-    totalEmployees: employees.length
+    selectedManager
   });
 
   return employees.filter(employee => {
@@ -43,17 +41,7 @@ export const filterEmployees = (
     const matches = matchesEmployeeSearch && matchesDepartment && 
            matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
 
-    console.log(`Employee ${employee.name} filtering results:`, {
-      role: employee.role,
-      level: employee.role.split(':')[1]?.trim(),
-      matches,
-      matchesEmployeeSearch,
-      matchesDepartment,
-      matchesLevel,
-      matchesOffice,
-      matchesEmploymentType,
-      matchesManager
-    });
+    console.log(`Employee ${employee.name} matches filters:`, matches);
 
     return matches;
   });
