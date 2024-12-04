@@ -54,7 +54,8 @@ export const getSkillProfileId = (role?: string) => {
   console.log('Role mapping:', { 
     originalRole: role,
     baseRole,
-    mappedId
+    mappedId,
+    roleMap
   });
   
   return mappedId || '';
