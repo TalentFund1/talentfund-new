@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { Employee } from '../../types/employeeTypes';
 import { employees as initialEmployees } from '../EmployeeData';
-import { calculateBenchmarkPercentage } from '../BenchmarkCalculator';
 import { getSkillProfileId } from '../../EmployeeTable';
 
 const STORAGE_KEY = 'employee-store';
@@ -22,10 +21,10 @@ const initializeBenchmarks = (employees: Employee[]) => {
     const roleId = getSkillProfileId(employee.role);
     if (!roleId) {
       console.log(`No role ID found for employee ${employee.id}`);
-      return employee;
+      return { ...employee, benchmark: 0 };
     }
 
-    // Initialize with 0 benchmark, it will be calculated properly when needed
+    // Initialize with 0 benchmark - it will be calculated when needed in the components
     return {
       ...employee,
       benchmark: 0
