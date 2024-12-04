@@ -92,7 +92,7 @@ export const PayBandsTab = () => {
   const levels = track === "Professional" ? professionalLevels : managerialLevels;
 
   return (
-    <div className="bg-white rounded-lg">
+    <div className="bg-white rounded-lg pb-12">
       <Card className="p-6">
         <div className="space-y-6">
           <div>
