@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
 import { Employee } from "../types/employeeTypes";
 import { SkillBubble } from "../skills/SkillBubble";
 import { getSkillProfileId } from "../EmployeeTable";
@@ -34,44 +33,37 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
-  // Memoize target role ID calculation
-  const targetRoleId = useMemo(() => 
-    selectedJobTitle.length > 0 
-      ? getSkillProfileId(selectedJobTitle[0])
-      : getSkillProfileId(employee.role),
-    [selectedJobTitle, employee.role]
-  );
+  // Determine which role ID to use for benchmark calculation
+  const targetRoleId = selectedJobTitle.length > 0 
+    ? getSkillProfileId(selectedJobTitle[0])
+    : getSkillProfileId(employee.role);
 
-  const employeeLevel = useMemo(() => 
-    getLevel(employee.role),
-    [employee.role]
-  );
+  const employeeLevel = getLevel(employee.role);
   
-  // Memoize benchmark calculation
-  const benchmark = useMemo(() => 
-    calculateBenchmarkPercentage(
-      employee.id,
-      targetRoleId,
-      employeeLevel,
-      currentStates,
-      toggledSkills,
-      getSkillCompetencyState
-    ),
-    [
-      employee.id,
-      targetRoleId,
-      employeeLevel,
-      currentStates,
-      toggledSkills,
-      getSkillCompetencyState
-    ]
+  // Calculate benchmark percentage
+  const benchmark = calculateBenchmarkPercentage(
+    employee.id,
+    targetRoleId,
+    employeeLevel,
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
   );
 
-  // Memoize skill match calculation
-  const skillMatch = useMemo(() => {
+  // Calculate skill match ratio
+  const getSkillMatch = () => {
     const employeeSkills = getEmployeeSkills(employee.id);
+
+    // If we're in skills filter view (selectedSkills.length > 0)
+    if (selectedSkills.length > 0) {
+      const matchingSkills = selectedSkills.filter(skillName => 
+        employeeSkills.some(empSkill => empSkill.title === skillName)
+      );
+      return `${matchingSkills.length} / ${selectedSkills.length}`;
+    }
+
+    // Default role-based skill matching
     const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
-    
     if (!roleData) return "0 / 0";
 
     const allRoleSkills = [
@@ -85,13 +77,10 @@ export const EmployeeTableRow = ({
     );
 
     return `${matchingSkills.length} / ${allRoleSkills.length}`;
-  }, [employee.id, targetRoleId, toggledSkills]);
+  };
 
-  const isExactMatch = useMemo(() => 
-    selectedJobTitle.length > 0 && 
-    getSkillProfileId(employee.role) === getSkillProfileId(selectedJobTitle[0]),
-    [employee.role, selectedJobTitle]
-  );
+  const isExactMatch = selectedJobTitle.length > 0 && 
+    getSkillProfileId(employee.role) === getSkillProfileId(selectedJobTitle[0]);
 
   const getBenchmarkColor = (percentage: number) => {
     if (percentage >= 90) return 'bg-green-100 text-green-800';
@@ -132,8 +121,9 @@ export const EmployeeTableRow = ({
     targetRoleId,
     employeeLevel,
     benchmark,
-    skillMatch,
-    isExactMatch
+    skillMatch: getSkillMatch(),
+    isExactMatch,
+    selectedSkills: selectedSkills.length
   });
 
   return (
@@ -182,7 +172,7 @@ export const EmployeeTableRow = ({
       <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
-          {skillMatch}
+          {getSkillMatch()}
         </span>
       </td>
       {selectedSkills.length === 0 && (
