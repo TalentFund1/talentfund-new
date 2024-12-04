@@ -7,9 +7,8 @@ interface SkillState {
 
 interface RoleData {
   title: string;
-  soc: string;
-  function: string;
-  track: string;
+  description: string;
+  skills: string[];
 }
 
 interface SkillsMatrixStore {
@@ -43,7 +42,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixStore>((set, get) => ({
     }));
   },
   addRole: (roleId, roleData) => {
-    console.log('Adding role to SkillsMatrixStore:', { roleId, roleData });
+    console.log('Adding role:', { roleId, roleData });
     set((state) => ({
       roles: {
         ...state.roles,
