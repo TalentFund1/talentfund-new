@@ -9,11 +9,13 @@ export const SkillProfileStats = () => {
   const employees = useEmployeeStore((state) => state.employees);
   const { id: selectedRoleId } = useParams<{ id: string }>();
   
-  // Filter employees based on exact role ID match
-  const filteredEmployees = employees.filter(employee => {
-    const employeeRoleId = getSkillProfileId(employee.role);
-    return employeeRoleId === selectedRoleId;
-  });
+  // Filter employees based on role ID if selected, otherwise show all employees
+  const filteredEmployees = selectedRoleId 
+    ? employees.filter(employee => {
+        const employeeRoleId = getSkillProfileId(employee.role);
+        return employeeRoleId === selectedRoleId;
+      })
+    : employees;
 
   // Calculate employees added in the last year
   const addedLastYear = filteredEmployees.filter(employee => {
