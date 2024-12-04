@@ -3,14 +3,16 @@ import { Users, UserPlus, Equal, Clock } from "lucide-react";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { getSkillProfileId } from "@/components/EmployeeTable";
+import { useParams } from "react-router-dom";
 
 export const SkillProfileStats = () => {
   const employees = useEmployeeStore((state) => state.employees);
+  const { id: selectedRoleId } = useParams<{ id: string }>();
   
-  // Filter employees based on role matching
+  // Filter employees based on exact role ID match
   const filteredEmployees = employees.filter(employee => {
     const employeeRoleId = getSkillProfileId(employee.role);
-    return employeeRoleId; // Only include employees with valid role IDs
+    return employeeRoleId === selectedRoleId;
   });
 
   // Calculate employees added in the last year
@@ -28,24 +30,25 @@ export const SkillProfileStats = () => {
     ? Math.round((femaleEmployees.length / filteredEmployees.length) * 100)
     : 0;
 
-  // Calculate average tenure
+  // Calculate average tenure using the exact tenure values from employees
   const averageTenure = (() => {
     if (filteredEmployees.length === 0) return 0;
     
     const tenures = filteredEmployees.map(emp => {
       if (!emp.startDate) return 0;
       const start = new Date(emp.startDate);
-      const end = new Date();
+      const end = emp.termDate && emp.termDate !== "-" ? new Date(emp.termDate) : new Date();
       const diffTime = Math.abs(end.getTime() - start.getTime());
       const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
-      return diffYears;
+      return Number(diffYears.toFixed(1));
     });
 
     const totalTenure = tenures.reduce((sum, tenure) => sum + tenure, 0);
-    return Number((totalTenure / filteredEmployees.length).toFixed(2));
+    return Number((totalTenure / filteredEmployees.length).toFixed(1));
   })();
 
   console.log('Stats calculation:', {
+    selectedRoleId,
     totalEmployees: filteredEmployees.length,
     addedLastYear,
     femalePercentage,
@@ -53,7 +56,8 @@ export const SkillProfileStats = () => {
     employeeRoles: filteredEmployees.map(e => ({
       name: e.name,
       role: e.role,
-      roleId: getSkillProfileId(e.role)
+      roleId: getSkillProfileId(e.role),
+      tenure: e.startDate ? ((new Date().getTime() - new Date(e.startDate).getTime()) / (1000 * 60 * 60 * 24 * 365.25)).toFixed(1) : 0
     }))
   });
 
