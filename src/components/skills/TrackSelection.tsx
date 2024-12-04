@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { useTrack } from "./context/TrackContext";
-import { useToast } from "@/hooks/use-toast";
 import { useParams } from "react-router-dom";
 import { HelpCircle } from "lucide-react";
 import {
@@ -19,8 +17,7 @@ interface TrackSelectionProps {
 
 export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
   const { id } = useParams<{ id: string }>();
-  const { getTrackForRole, setTrackForRole, hasUnsavedChanges, saveTrackSelection } = useTrack();
-  const { toast } = useToast();
+  const { getTrackForRole, setTrackForRole } = useTrack();
 
   const track = getTrackForRole(id || "");
 
@@ -39,15 +36,6 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
     setTrackForRole(id || "", value);
     localStorage.setItem(`track-selection-${id}`, value);
     onTrackChange?.(value);
-  };
-
-  const handleSave = () => {
-    saveTrackSelection();
-    localStorage.setItem(`track-selection-${id}`, track);
-    toast({
-      title: "Track Selection Saved",
-      description: `Selected track: ${track}`,
-    });
   };
 
   return (
@@ -104,16 +92,6 @@ export const TrackSelection = ({ onTrackChange }: TrackSelectionProps) => {
             </div>
           </RadioGroup>
         </div>
-        {hasUnsavedChanges && (
-          <Button 
-            onClick={handleSave} 
-            size="sm" 
-            variant="outline"
-            className="ml-auto bg-[#F7F9FF] text-[#1F2144] hover:bg-[#F7F9FF]/90 border border-[#CCDBFF]"
-          >
-            Save Track
-          </Button>
-        )}
       </div>
     </div>
   );
