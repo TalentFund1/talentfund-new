@@ -32,6 +32,17 @@ export const useEmployeeFilters = () => {
 
   // Update URL parameters when filters change
   useEffect(() => {
+    console.log('Updating URL parameters with current filter state:', {
+      department: selectedDepartment,
+      level: selectedLevel,
+      office: selectedOffice,
+      employmentType: selectedEmploymentType,
+      skills: selectedSkills,
+      employees: selectedEmployees,
+      manager: selectedManager,
+      role: selectedRole
+    });
+
     const params = new URLSearchParams();
 
     if (selectedDepartment.length) params.set('department', selectedDepartment.join(','));

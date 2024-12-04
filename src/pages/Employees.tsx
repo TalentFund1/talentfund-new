@@ -14,8 +14,11 @@ import { getSkillProfileId } from "@/components/EmployeeTable";
 import { useEmployeeFilters } from "@/components/employee/hooks/useEmployeeFilters";
 import { EmployeeStats } from "@/components/employee/EmployeeStats";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const Employees = () => {
+  const [searchParams] = useSearchParams();
+  const [isInitialized, setIsInitialized] = useState(false);
   const {
     selectedDepartment,
     setSelectedDepartment,
@@ -38,12 +41,17 @@ const Employees = () => {
   const [isLoading, setIsLoading] = useState(true);
   const employees = useEmployeeStore((state) => state.employees);
 
-  // Wait for employee data to be loaded
+  // Initialize filters from URL only after employees are loaded
   useEffect(() => {
-    if (employees.length > 0) {
+    if (employees.length > 0 && !isInitialized) {
+      console.log('Initializing filters with employees loaded:', {
+        employeesCount: employees.length,
+        currentParams: Object.fromEntries(searchParams.entries())
+      });
+      setIsInitialized(true);
       setIsLoading(false);
     }
-  }, [employees]);
+  }, [employees, isInitialized, searchParams]);
 
   // Get filtered employees
   const preFilteredEmployees = filterEmployees(
@@ -69,7 +77,10 @@ const Employees = () => {
       })
     : filteredEmployees;
 
-  console.log('Filtered employees with URL params:', {
+  console.log('Current filter state:', {
+    isLoading,
+    isInitialized,
+    employeesLoaded: employees.length > 0,
     filters: {
       department: selectedDepartment,
       level: selectedLevel,
