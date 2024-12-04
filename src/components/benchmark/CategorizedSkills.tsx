@@ -18,7 +18,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   const { selectedLevel } = useRoleStore();
 
   console.log('CategorizedSkills - Using selected level:', selectedLevel);

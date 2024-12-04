@@ -45,7 +45,7 @@ export const getSkillProfileId = (role?: string) => {
   
   if (!role) {
     console.warn('No role provided to getSkillProfileId');
-    return '';
+    return Object.keys(roleSkills)[0]; // Return first available role as default
   }
 
   const baseRole = role.split(":")[0].trim();
@@ -58,7 +58,7 @@ export const getSkillProfileId = (role?: string) => {
     roleMap
   });
   
-  return mappedId || '';
+  return mappedId || Object.keys(roleSkills)[0]; // Return first available role as default
 };
 
 export const getBaseRole = (role?: string) => {
