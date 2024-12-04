@@ -98,7 +98,7 @@ export const PayBandsTab = () => {
           <div>
             <h3 className="text-xl font-semibold text-primary mb-4">Market Pricer</h3>
             <Separator className="my-6" />
-            <h2 className="text-xl font-semibold text-foreground mb-6">AI Engineer</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-6">AI Engineer</h2>
             <div className="space-y-4 text-secondary-foreground">
               <p>Salary Range: <span className="font-bold">$130,456 - $170,439</span></p>
               <p>There are 749 advertised salary observations (11% of the 6,749 matching postings).</p>
