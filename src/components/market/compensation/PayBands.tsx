@@ -145,11 +145,6 @@ export const PayBands = () => {
               ))}
             </TableBody>
           </Table>
-          <div className="flex justify-end p-4 border-t border-border">
-            <p className="text-sm text-secondary-foreground">
-              Powered by <span className="text-[#FF0000]">Lightcast</span>
-            </p>
-          </div>
         </div>
       </div>
     </Card>
