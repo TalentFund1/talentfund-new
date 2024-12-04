@@ -1,9 +1,9 @@
 import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTrack } from "./context/TrackContext";
 import { useParams } from "react-router-dom";
 import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
+import { Separator } from "@/components/ui/separator";
 
 const professionalData = [
   {
@@ -96,7 +96,9 @@ export const PayBandsTab = () => {
       <Card className="p-6">
         <div className="space-y-6">
           <div>
-            <h3 className="text-xl font-semibold text-primary mb-4">Pay Bands</h3>
+            <h3 className="text-xl font-semibold text-primary mb-4">Market Pricer</h3>
+            <Separator className="my-6" />
+            <h2 className="text-xl font-semibold text-foreground mb-6">AI Engineer</h2>
             <div className="space-y-4 text-secondary-foreground">
               <p>Salary Range: <span className="font-bold">$130,456 - $170,439</span></p>
               <p>There are 749 advertised salary observations (11% of the 6,749 matching postings).</p>
