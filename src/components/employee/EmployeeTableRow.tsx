@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Employee } from "../types/employeeTypes";
 import { SkillBubble } from "../skills/SkillBubble";
-import { getSkillProfileId } from "../EmployeeTable";
+import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
@@ -10,7 +10,6 @@ import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { roleSkills } from "../skills/data/roleSkills";
-import { getLevel } from "../EmployeeTable";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -33,13 +32,21 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
-  // Determine which role ID to use for benchmark calculation
+  // Get role ID based on selection or employee's current role
   const targetRoleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
 
   const employeeLevel = getLevel(employee.role);
   
+  console.log('Calculating benchmark for employee:', {
+    employeeName: employee.name,
+    employeeRole: employee.role,
+    targetRoleId,
+    selectedJobTitle,
+    employeeLevel
+  });
+
   // Calculate benchmark percentage
   const benchmark = calculateBenchmarkPercentage(
     employee.id,
