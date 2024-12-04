@@ -9,6 +9,9 @@ interface RoleData {
   title: string;
   description: string;
   skills: string[];
+  soc?: string;  // Added soc as optional property
+  function?: string;  // Added function as it's used in AddSkillProfileForm
+  track?: string;    // Added track as it's used in AddSkillProfileForm
 }
 
 interface SkillsMatrixStore {
