@@ -92,64 +92,66 @@ export const PayBandsTab = () => {
   const levels = track === "Professional" ? professionalLevels : managerialLevels;
 
   return (
-    <Card className="p-6">
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-xl font-semibold text-primary mb-4">Pay Bands</h3>
-          <div className="space-y-4 text-secondary-foreground">
-            <p>Salary Range: <span className="font-bold">$130,456 - $170,439</span></p>
-            <p>There are 749 advertised salary observations (11% of the 6,749 matching postings).</p>
+    <div className="bg-white rounded-lg">
+      <Card className="p-6">
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-xl font-semibold text-primary mb-4">Pay Bands</h3>
+            <div className="space-y-4 text-secondary-foreground">
+              <p>Salary Range: <span className="font-bold">$130,456 - $170,439</span></p>
+              <p>There are 749 advertised salary observations (11% of the 6,749 matching postings).</p>
+            </div>
           </div>
-        </div>
 
-        <div className="mt-8">
-          <div className="overflow-x-auto rounded-lg border border-border">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-secondary/50 hover:bg-secondary/50">
-                  <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Role Name</TableHead>
-                  <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Level</TableHead>
-                  <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Currency</TableHead>
-                  <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Salary Range</TableHead>
-                  <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border">10th</TableHead>
-                  <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border">25th</TableHead>
-                  <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border">50th</TableHead>
-                  <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border">75th</TableHead>
-                  <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4">90th</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.map((row, index) => (
-                  <TableRow 
-                    key={`${row.role}-${row.level}`}
-                    className={`group transition-all duration-200 hover:bg-muted/50 ${
-                      index % 2 === 0 ? 'bg-muted/5' : ''
-                    }`}
-                  >
-                    <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.role}</TableCell>
-                    <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.level}</TableCell>
-                    <TableCell className="px-4 py-4 text-sm border-r border-border">{row.currency}</TableCell>
-                    <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.range}</TableCell>
-                    {row.percentiles.map((value, i) => (
-                      <TableCell 
-                        key={i} 
-                        className="px-4 py-4 text-center font-medium text-sm border-r last:border-r-0 border-border"
-                      >
-                        {value}
-                      </TableCell>
-                    ))}
+          <div className="mt-8">
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-secondary/50 hover:bg-secondary/50">
+                    <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Role Name</TableHead>
+                    <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Level</TableHead>
+                    <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Currency</TableHead>
+                    <TableHead className="h-12 px-4 text-left font-semibold text-sm text-primary py-4 border-r border-border">Salary Range</TableHead>
+                    <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border">10th</TableHead>
+                    <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border">25th</TableHead>
+                    <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border">50th</TableHead>
+                    <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4 border-r border-border">75th</TableHead>
+                    <TableHead className="h-12 px-4 text-center font-semibold text-sm text-primary py-4">90th</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <div className="flex justify-end p-4 border-t border-border">
-              <p className="text-sm text-secondary-foreground">
-                Powered by <span className="text-[#FF0000]">Lightcast</span>
-              </p>
+                </TableHeader>
+                <TableBody>
+                  {data.map((row, index) => (
+                    <TableRow 
+                      key={`${row.role}-${row.level}`}
+                      className={`group transition-all duration-200 hover:bg-muted/50 ${
+                        index % 2 === 0 ? 'bg-muted/5' : ''
+                      }`}
+                    >
+                      <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.role}</TableCell>
+                      <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.level}</TableCell>
+                      <TableCell className="px-4 py-4 text-sm border-r border-border">{row.currency}</TableCell>
+                      <TableCell className="px-4 py-4 font-medium text-sm border-r border-border">{row.range}</TableCell>
+                      {row.percentiles.map((value, i) => (
+                        <TableCell 
+                          key={i} 
+                          className="px-4 py-4 text-center font-medium text-sm border-r last:border-r-0 border-border"
+                        >
+                          {value}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <div className="flex justify-end p-4 border-t border-border">
+                <p className="text-sm text-secondary-foreground">
+                  Powered by <span className="text-[#FF0000]">Lightcast</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 };
