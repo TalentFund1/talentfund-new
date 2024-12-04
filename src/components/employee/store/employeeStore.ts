@@ -3,6 +3,7 @@ import { Employee } from '../../types/employeeTypes';
 import { employees as initialEmployees } from '../EmployeeData';
 
 const STORAGE_KEY = 'employee-store';
+const ROLES_STORAGE_KEY = 'employee-roles';
 
 interface EmployeeStore {
   employees: Employee[];
@@ -16,9 +17,24 @@ interface EmployeeStore {
 const loadFromStorage = (): Employee[] => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
+    const storedRoles = localStorage.getItem(ROLES_STORAGE_KEY);
+    
     if (stored) {
       console.log('Loading employees from localStorage');
-      return JSON.parse(stored);
+      const employees = JSON.parse(stored);
+      
+      // If we have stored roles, merge them with employees
+      if (storedRoles) {
+        console.log('Loading roles from localStorage');
+        const roles = JSON.parse(storedRoles);
+        employees.forEach((emp: Employee) => {
+          if (roles[emp.id]) {
+            emp.role = roles[emp.id];
+          }
+        });
+      }
+      
+      return employees;
     }
   } catch (error) {
     console.error('Error loading from localStorage:', error);
@@ -31,6 +47,15 @@ const saveToStorage = (employees: Employee[]) => {
   try {
     console.log('Saving employees to localStorage:', employees);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
+    
+    // Save roles separately
+    const roles = employees.reduce((acc, emp) => ({
+      ...acc,
+      [emp.id]: emp.role
+    }), {});
+    
+    console.log('Saving roles to localStorage:', roles);
+    localStorage.setItem(ROLES_STORAGE_KEY, JSON.stringify(roles));
   } catch (error) {
     console.error('Error saving to localStorage:', error);
   }
