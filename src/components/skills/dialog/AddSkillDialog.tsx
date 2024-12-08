@@ -10,9 +10,14 @@ import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { getUnifiedSkillData } from '../data/centralSkillsDatabase';
 import { saveToggledSkills, loadToggledSkills } from '../context/utils/storageUtils';
+import { useCompetencyStore } from "@/components/benchmark/CompetencyState";
 
 const STORAGE_KEY = 'added-skills';
 const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
+
+// Professional and managerial level arrays for initialization
+const professionalLevels = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
+const managerialLevels = ['m3', 'm4', 'm5', 'm6'];
 
 const loadAddedSkills = (roleId: string): string[] => {
   try {
@@ -40,9 +45,29 @@ export const AddSkillDialog = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const { id } = useParams();
+  const { setSkillState } = useCompetencyStore();
 
   const allSkills = [...technicalSkills, ...softSkills];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
+
+  const initializeSkillStates = (skillName: string) => {
+    console.log('Initializing states for skill:', skillName);
+    
+    // Determine which levels to use based on role type
+    const isManagerial = currentRole?.title?.toLowerCase().includes('manager');
+    const levels = isManagerial ? managerialLevels : professionalLevels;
+    
+    // Initialize each level with unspecified/preferred
+    levels.forEach(level => {
+      console.log('Setting initial state for level:', {
+        skillName,
+        level,
+        state: { level: 'unspecified', required: 'preferred' }
+      });
+      
+      setSkillState(skillName, 'unspecified', level, 'preferred');
+    });
+  };
 
   const handleAddSkills = () => {
     console.log('Adding skills:', selectedSkills);
@@ -66,6 +91,9 @@ export const AddSkillDialog = () => {
     };
     
     selectedSkills.forEach(skillTitle => {
+      // Initialize competency states for the skill
+      initializeSkillStates(skillTitle);
+      
       newToggledSkills.add(skillTitle);
       
       // Get complete skill data from centralized database
@@ -77,7 +105,7 @@ export const AddSkillDialog = () => {
         return;
       }
 
-      // Categorize skill based on its type from the unified database
+      // Categorize skill based on its type
       const category = skillData.category || 'common';
       switch (category) {
         case 'specialized':
@@ -95,7 +123,7 @@ export const AddSkillDialog = () => {
       }
     });
 
-    // Update the role's skill arrays with complete skill data
+    // Update the role's skill arrays
     currentRole.specialized = [...currentRole.specialized, ...addedSkills.specialized];
     currentRole.common = [...currentRole.common, ...addedSkills.common];
     currentRole.certifications = [...currentRole.certifications, ...addedSkills.certifications];
@@ -119,7 +147,7 @@ export const AddSkillDialog = () => {
     saveToggledSkills(id, toggledSkillsArray);
     console.log('Saved toggled skills:', { roleId: id, skills: toggledSkillsArray });
 
-    // Load existing toggled skills from other profiles to preserve them
+    // Preserve existing toggled skills from other profiles
     const allProfiles = Object.keys(roleSkills);
     allProfiles.forEach(profileId => {
       if (profileId !== id) {
@@ -131,7 +159,7 @@ export const AddSkillDialog = () => {
       }
     });
 
-    // Dispatch event to notify other components
+    // Notify other components
     window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
       detail: { role: id, skills: toggledSkillsArray }
     }));
