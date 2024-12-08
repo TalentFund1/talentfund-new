@@ -64,7 +64,11 @@ export const technicalSkills = [
   "Team Leadership",
   "Project Management",
   "Strategic Planning",
-  "Stakeholder Management"
+  "Stakeholder Management",
+  "Jenkins",
+  "Terraform",
+  "Linux Administration",
+  "Shell Scripting"
 ];
 
 export const softSkills = [
@@ -97,29 +101,36 @@ export const skillCategorization = {
   "Git Version Control": { category: "common", subcategory: "Development Tools" },
   "API Development": { category: "specialized", subcategory: "Backend Development" },
   "System Architecture": { category: "specialized", subcategory: "Software Architecture" },
-  "Code Review": { category: "common", subcategory: "Development Practices" },
-  "Agile Methodologies": { category: "common", subcategory: "Project Management" },
   
-  // DevOps & Cloud
+  // DevOps & Infrastructure
   "Docker": { category: "specialized", subcategory: "Container Technology" },
   "Kubernetes": { category: "specialized", subcategory: "Container Orchestration" },
+  "Jenkins": { category: "specialized", subcategory: "CI/CD" },
+  "Terraform": { category: "specialized", subcategory: "Infrastructure as Code" },
   "AWS": { category: "specialized", subcategory: "Cloud Platforms" },
+  "Linux Administration": { category: "specialized", subcategory: "System Administration" },
+  "Shell Scripting": { category: "common", subcategory: "System Administration" },
   
-  // Soft Skills & Communication
+  // Common Skills
   "Problem Solving": { category: "common", subcategory: "Soft Skills" },
   "Technical Writing": { category: "common", subcategory: "Communication" },
   "Team Leadership": { category: "common", subcategory: "Leadership" },
+  "Code Review": { category: "common", subcategory: "Development Practices" },
+  "Agile Methodologies": { category: "common", subcategory: "Project Management" },
   
   // Certifications
-  "AWS Certified Machine Learning - Specialty": { category: "certification", subcategory: "Cloud Certification" },
-  "TensorFlow Developer Certificate": { category: "certification", subcategory: "AI Certification" },
+  "AWS Certified DevOps Engineer": { category: "certification", subcategory: "Cloud Certification" },
+  "Certified Kubernetes Administrator": { category: "certification", subcategory: "Container Certification" },
+  "HashiCorp Certified Terraform Associate": { category: "certification", subcategory: "Infrastructure Certification" },
+  "AWS Certified Machine Learning - Specialty": { category: "certification", subcategory: "AI/ML Certification" },
+  "TensorFlow Developer Certificate": { category: "certification", subcategory: "AI/ML Certification" },
   "AWS Certified Developer - Associate": { category: "certification", subcategory: "Cloud Certification" },
   "Google Mobile Web Specialist": { category: "certification", subcategory: "Web Development Certification" },
   "Kubernetes Administrator (CKA)": { category: "certification", subcategory: "Container Certification" },
   "Project Management Professional (PMP)": { category: "certification", subcategory: "Project Management Certification" },
   "Certified Scrum Master (CSM)": { category: "certification", subcategory: "Agile Certification" },
   
-  // New management skills categorization
+  // Management skills
   "System Design": { category: "specialized", subcategory: "Software Architecture" },
   "Technical Architecture": { category: "specialized", subcategory: "Software Architecture" },
   "Risk Management": { category: "specialized", subcategory: "Management" },
