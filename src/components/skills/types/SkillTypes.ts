@@ -22,6 +22,7 @@ export interface UnifiedSkill extends Skill {
 export type SkillType = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 
+// Add this type for simpler skill display
 export interface SimpleSkill {
   title: string;
   subcategory: string;

@@ -1,44 +1,30 @@
-import { UnifiedSkill } from '../../types/SkillTypes';
+import { SkillData } from '../skillLevels';
 
-export const commonSkills: UnifiedSkill[] = [
-  {
-    title: "Python",
-    subcategory: "General Skills",
-    category: "common",
-    type: "technical",
-    growth: "0%",
-    salary: "$0",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
+export const commonSkills: SkillData[] = [
   {
     title: "Problem Solving",
-    subcategory: "Soft Skills",
     category: "common",
-    type: "necessary",
-    growth: "15%",
-    salary: "$158,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    subcategory: "Soft Skills",
+    professionalTrack: {
+      P1: { level: 'intermediate', requirement: 'required' },
+      P2: { level: 'intermediate', requirement: 'required' },
+      P3: { level: 'advanced', requirement: 'required' },
+      P4: { level: 'advanced', requirement: 'required' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
   },
   {
     title: "Technical Writing",
-    subcategory: "General Skills",
     category: "common",
-    type: "necessary",
-    growth: "0%",
-    salary: "$0",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    title: "Git Version Control",
-    subcategory: "Development Tools",
-    category: "common",
-    type: "technical",
-    growth: "15%",
-    salary: "$130,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    subcategory: "Communication",
+    professionalTrack: {
+      P1: { level: 'beginner', requirement: 'preferred' },
+      P2: { level: 'intermediate', requirement: 'preferred' },
+      P3: { level: 'intermediate', requirement: 'preferred' },
+      P4: { level: 'advanced', requirement: 'required' },
+      P5: { level: 'advanced', requirement: 'required' },
+      P6: { level: 'advanced', requirement: 'required' }
+    }
   }
 ];
