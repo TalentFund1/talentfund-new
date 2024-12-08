@@ -9,8 +9,8 @@ export interface Skill {
   confidence: 'low' | 'medium' | 'high';
   benchmarks: {
     B: boolean;  // Business
-    C: boolean;  // Company
-    B2: boolean; // Benchmark
+    R: boolean;  // Role
+    M: boolean;  // Manager
     O: boolean;  // Organization
   };
 }

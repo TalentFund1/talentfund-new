@@ -26,8 +26,8 @@ const convertSkill = (skill: any, type: SkillCategory): Skill => {
     confidence: skill.confidence || 'medium',
     benchmarks: {
       B: true,
-      C: true,
-      B2: true,
+      R: true,
+      M: true,
       O: true
     }
   };
