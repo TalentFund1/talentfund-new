@@ -6,6 +6,7 @@ import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
+import { determineCategory } from "../data/skillsDatabase";
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -20,14 +21,34 @@ export const AddSkillDialog = () => {
     console.log('Current toggled skills before addition:', Array.from(toggledSkills));
     
     const newToggledSkills = new Set(toggledSkills);
-    selectedSkills.forEach(skill => newToggledSkills.add(skill));
+    
+    // Categorize and add each skill
+    selectedSkills.forEach(skill => {
+      const category = determineCategory(skill.growth || "0%", "specialized");
+      console.log(`Categorizing skill ${skill} as ${category}`);
+      newToggledSkills.add(skill);
+    });
     
     console.log('New toggled skills after addition:', Array.from(newToggledSkills));
     setToggledSkills(newToggledSkills);
 
+    // Show categorization in toast message
+    const criticalCount = selectedSkills.filter(skill => 
+      determineCategory(skill.growth || "0%", "specialized") === "critical"
+    ).length;
+    const technicalCount = selectedSkills.filter(skill => 
+      determineCategory(skill.growth || "0%", "specialized") === "technical"
+    ).length;
+    const necessaryCount = selectedSkills.filter(skill => 
+      determineCategory(skill.growth || "0%", "specialized") === "necessary"
+    ).length;
+
     toast({
       title: "Skills Added",
-      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile.`,
+      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile:\n
+        Critical: ${criticalCount}\n
+        Technical: ${technicalCount}\n
+        Necessary: ${necessaryCount}`,
     });
 
     setSelectedSkills([]);
