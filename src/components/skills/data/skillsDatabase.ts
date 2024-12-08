@@ -1,60 +1,62 @@
-import { SkillEntry } from '../types/SkillTypes';
-import { aiSkills } from './skills/aiSkills';
-import { backendSkills } from './skills/backendSkills';
-import { commonSkills } from './skills/commonSkills';
-import { certificationSkills } from './skills/certificationSkills';
-
-// Helper function to determine skill category based on growth and type
-const determineCategory = (growth: string, type: string): 'critical' | 'technical' | 'necessary' => {
-  const growthValue = parseFloat(growth);
-  if (growthValue >= 25) return 'critical';
-  if (type === 'specialized' || type === 'common') return 'technical';
-  return 'necessary';
-};
-
-// Convert existing skills to new format
-const convertSkill = (skill: any, type: 'specialized' | 'common' | 'certification'): SkillEntry => {
-  console.log('Converting skill:', { title: skill.title, type });
-  
-  return {
-    title: skill.title,
-    category: determineCategory(skill.growth || '0%', type),
-    subcategory: skill.subcategory,
-    type,
-    growth: skill.growth,
-    tracks: {
-      professional: skill.professionalTrack,
-      managerial: skill.managerialTrack
-    }
+export interface Skill {
+  title: string;
+  subcategory: string;
+  category: 'critical' | 'technical' | 'necessary';
+  growth: string;
+  salary: string;
+  benchmarks: {
+    B: boolean; // Basic
+    R: boolean; // Required
+    M: boolean; // Management
+    O: boolean; // Optional
   };
+}
+
+// Centralized skills database
+export const skillsDatabase: Record<string, Skill> = {
+  "Machine Learning": {
+    title: "Machine Learning",
+    subcategory: "AI & ML",
+    category: "critical",
+    growth: "30%",
+    salary: "$180,256",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  "Deep Learning": {
+    title: "Deep Learning",
+    subcategory: "AI & ML",
+    category: "critical",
+    growth: "28%",
+    salary: "$182,000",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  "CSS/SASS": {
+    title: "CSS/SASS",
+    subcategory: "Frontend Development",
+    category: "technical",
+    growth: "15%",
+    salary: "$165,000",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  "React": {
+    title: "React",
+    subcategory: "Frontend Frameworks",
+    category: "critical",
+    growth: "20%",
+    salary: "$170,000",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  // ... Add all other skills with consistent categorization
 };
 
-// Combine and convert all skills
-const consolidateSkills = (): SkillEntry[] => {
-  console.log('Starting skills consolidation...');
-  
-  const allSkills: SkillEntry[] = [
-    ...aiSkills.map(skill => convertSkill(skill, skill.category)),
-    ...backendSkills.map(skill => convertSkill(skill, skill.category)),
-    ...commonSkills.map(skill => convertSkill(skill, skill.category)),
-    ...certificationSkills.map(skill => convertSkill(skill, skill.category))
-  ];
-
-  console.log('Consolidated skills count:', allSkills.length);
-  return allSkills;
+export const getSkillData = (skillTitle: string): Skill | undefined => {
+  return skillsDatabase[skillTitle];
 };
 
-export const skillsDatabase = consolidateSkills();
-
-// Helper functions
-export const getSkillByTitle = (title: string): SkillEntry | undefined => {
-  return skillsDatabase.find(skill => skill.title === title);
+export const getAllSkills = (): Skill[] => {
+  return Object.values(skillsDatabase);
 };
 
-export const getSkillsByCategory = (category: 'critical' | 'technical' | 'necessary'): SkillEntry[] => {
-  return skillsDatabase.filter(skill => skill.category === category);
-};
-
-export const getSkillsByType = (type: 'specialized' | 'common' | 'certification'): SkillEntry[] => {
-  return skillsDatabase.filter(skill => skill.type === type);
+export const getSkillsByCategory = (category: 'critical' | 'technical' | 'necessary'): Skill[] => {
+  return Object.values(skillsDatabase).filter(skill => skill.category === category);
 };
