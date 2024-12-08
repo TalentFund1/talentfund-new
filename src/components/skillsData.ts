@@ -170,8 +170,25 @@ export const skills = [
   }
 ];
 
-// Categorize skills into technical and soft skills
-export const technicalSkills = skills.filter(skill => 
+// Categorize skills into technical and soft skills and map to titles
+export const technicalSkills = skills
+  .filter(skill => 
+    ['Web Services', 'Artificial Intelligence and Machine Learning', 'Software Development Tools', 
+     'Machine Learning Frameworks', 'AI Applications', 'Container Orchestration', 'Version Control',
+     'Databases', 'Web Development', 'Programming Languages', 'Mobile Development', 
+     'Software Architecture', 'API Development', 'Development Operations', 'Security',
+     'Data Management', 'Distributed Systems'].includes(skill.subcategory)
+  )
+  .map(skill => skill.title);
+
+export const softSkills = skills
+  .filter(skill => 
+    ['Design', 'Analytics'].includes(skill.subcategory)
+  )
+  .map(skill => skill.title);
+
+// Export full skill objects for when we need the complete data
+export const technicalSkillObjects = skills.filter(skill => 
   ['Web Services', 'Artificial Intelligence and Machine Learning', 'Software Development Tools', 
    'Machine Learning Frameworks', 'AI Applications', 'Container Orchestration', 'Version Control',
    'Databases', 'Web Development', 'Programming Languages', 'Mobile Development', 
@@ -179,7 +196,7 @@ export const technicalSkills = skills.filter(skill =>
    'Data Management', 'Distributed Systems'].includes(skill.subcategory)
 );
 
-export const softSkills = skills.filter(skill => 
+export const softSkillObjects = skills.filter(skill => 
   ['Design', 'Analytics'].includes(skill.subcategory)
 );
 
