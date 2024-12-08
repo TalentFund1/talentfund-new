@@ -81,43 +81,9 @@ export const useCompetencyStateReader = () => {
       return savedState;
     }
 
-    // If no saved state, determine the appropriate state based on track and level
-    let defaultLevel = 'intermediate';
-    let defaultRequired = 'required';
-
-    if (track === "Managerial") {
-      // For managerial track, set progressive levels based on M3-M6
-      const levelNumber = parseInt(normalizedLevel.replace('m', ''));
-      if (levelNumber >= 5) {
-        defaultLevel = 'advanced';
-        defaultRequired = 'required';
-      } else if (levelNumber >= 4) {
-        defaultLevel = 'advanced';
-        defaultRequired = 'required';
-      } else {
-        defaultLevel = 'intermediate';
-        defaultRequired = 'required';
-      }
-    } else {
-      // For professional track, keep existing logic
-      defaultRequired = determineRequirement(normalizedLevel, track);
-      const levelNumber = parseInt(normalizedLevel.replace('p', ''));
-      if (levelNumber >= 5) {
-        defaultLevel = 'advanced';
-      } else if (levelNumber >= 3) {
-        defaultLevel = 'intermediate';
-      } else {
-        defaultLevel = 'beginner';
-      }
-    }
-
-    const newDefaultState: SkillCompetencyState = {
-      level: defaultLevel,
-      required: defaultRequired
-    };
-    
-    console.log('No saved state found, using default state:', newDefaultState);
-    return newDefaultState;
+    // If no saved state, return default state
+    console.log('No saved state found, using default state:', defaultState);
+    return { ...defaultState };
   };
 
   const getAllSkillStatesForLevel = (
