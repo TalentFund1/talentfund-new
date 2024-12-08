@@ -109,3 +109,25 @@ export const categorizeSkills = (skills: string[], profileId: string) => {
     certification: certifications.length
   };
 };
+
+// Add new export for single skill categorization
+export const categorizeSkill = (skill: string, profileId: string): 'specialized' | 'common' | 'certification' => {
+  console.log('Categorizing skill:', skill, 'for profile:', profileId);
+  
+  if (isSpecializedSkill(skill, profileId)) {
+    console.log(`${skill} categorized as specialized`);
+    return 'specialized';
+  }
+  if (isCertificationSkill(skill, profileId)) {
+    console.log(`${skill} categorized as certification`);
+    return 'certification';
+  }
+  if (isCommonSkill(skill, profileId)) {
+    console.log(`${skill} categorized as common`);
+    return 'common';
+  }
+  
+  // Default to common if no specific category is found
+  console.log(`${skill} defaulting to common category`);
+  return 'common';
+};
