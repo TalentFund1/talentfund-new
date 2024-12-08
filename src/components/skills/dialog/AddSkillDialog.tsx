@@ -6,23 +6,56 @@ import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
+import { roleSkills } from '../data/roleSkills';
+import { useParams } from 'react-router-dom';
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const { id } = useParams();
 
   const allSkills = [...technicalSkills, ...softSkills];
+  const currentRole = roleSkills[id as keyof typeof roleSkills];
 
   const handleAddSkills = () => {
     console.log('Adding skills:', selectedSkills);
-    console.log('Current toggled skills before addition:', Array.from(toggledSkills));
+    console.log('Current role:', currentRole?.title);
     
+    if (!currentRole) {
+      toast({
+        title: "Error",
+        description: "Could not find the current role profile.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Add selected skills to toggledSkills
     const newToggledSkills = new Set(toggledSkills);
-    selectedSkills.forEach(skill => newToggledSkills.add(skill));
+    selectedSkills.forEach(skill => {
+      newToggledSkills.add(skill);
+      
+      // Add the skill to the role's specialized skills if it doesn't exist
+      const skillExists = currentRole.specialized.some(s => s.title === skill) ||
+                         currentRole.common.some(s => s.title === skill) ||
+                         currentRole.certifications.some(s => s.title === skill);
+      
+      if (!skillExists) {
+        console.log('Adding new skill to role:', skill);
+        currentRole.specialized.push({
+          title: skill,
+          subcategory: "Added Skills",
+          level: "unspecified",
+          growth: "20%",
+          salary: "$150,000",
+          benchmarks: { J: true, B: true, O: true }
+        });
+      }
+    });
     
-    console.log('New toggled skills after addition:', Array.from(newToggledSkills));
+    console.log('Updated role skills:', currentRole);
     setToggledSkills(newToggledSkills);
 
     toast({
