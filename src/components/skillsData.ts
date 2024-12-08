@@ -1,8 +1,25 @@
-import { initialSkills } from "./benchmark/skills-matrix/initialSkills";
+import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
+import { roleSkills } from "./skills/data/roleSkills";
 
-// Extract unique skills from initialSkills by combining all employee skills
-const matrixSkills = Object.values(initialSkills)
-  .flatMap(skills => skills.map(skill => skill.title));
+// Extract unique skills from all sources
+const getAllSkills = () => {
+  // Get skills from all employees
+  const employeeSkills = Object.keys(roleSkills).flatMap(id => 
+    getEmployeeSkills(id).map(skill => skill.title)
+  );
+
+  // Get skills from all roles
+  const roleBasedSkills = Object.values(roleSkills).flatMap(role => [
+    ...role.specialized.map(skill => skill.title),
+    ...role.common.map(skill => skill.title),
+    ...role.certifications.map(skill => skill.title)
+  ]);
+
+  // Combine and deduplicate
+  return [...new Set([...employeeSkills, ...roleBasedSkills])];
+};
+
+const matrixSkills = getAllSkills();
 
 // Universal skill categorization mapping
 export const skillCategorization = {
