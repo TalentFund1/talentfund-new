@@ -33,12 +33,15 @@ export const saveToggledSkills = (roleId: string, skills: string[]) => {
     }
     
     const storageKey = getStorageKey(roleId);
-    localStorage.setItem(storageKey, JSON.stringify(skills));
+    const existingSkills = loadToggledSkills(roleId);
+    const mergedSkills = [...new Set([...existingSkills, ...skills])];
+    
+    localStorage.setItem(storageKey, JSON.stringify(mergedSkills));
     
     console.log('Saved toggled skills:', {
       roleId,
-      skillCount: skills.length,
-      skills,
+      skillCount: mergedSkills.length,
+      skills: mergedSkills,
       storageKey
     });
   } catch (error) {
