@@ -4,6 +4,41 @@ import { initialSkills } from "./benchmark/skills-matrix/initialSkills";
 const matrixSkills = Object.values(initialSkills)
   .flatMap(skills => skills.map(skill => skill.title));
 
+// Universal skill categorization mapping
+export const skillCategorization = {
+  // AI & ML
+  "Machine Learning": { category: "specialized", subcategory: "AI & ML" },
+  "Deep Learning": { category: "specialized", subcategory: "AI & ML" },
+  "Natural Language Processing": { category: "specialized", subcategory: "AI Applications" },
+  "Computer Vision": { category: "specialized", subcategory: "AI Applications" },
+  "TensorFlow": { category: "specialized", subcategory: "ML Frameworks" },
+  "PyTorch": { category: "specialized", subcategory: "ML Frameworks" },
+  
+  // Programming & Development
+  "Python": { category: "common", subcategory: "Programming Languages" },
+  "JavaScript": { category: "common", subcategory: "Programming Languages" },
+  "TypeScript": { category: "common", subcategory: "Programming Languages" },
+  "React": { category: "specialized", subcategory: "Frontend Frameworks" },
+  "Node.js": { category: "specialized", subcategory: "Backend Development" },
+  "CSS/SASS": { category: "common", subcategory: "Styling" },
+  
+  // DevOps & Cloud
+  "Docker": { category: "specialized", subcategory: "Container Technology" },
+  "Kubernetes": { category: "specialized", subcategory: "Container Orchestration" },
+  "AWS": { category: "specialized", subcategory: "Cloud Platforms" },
+  "Git Version Control": { category: "common", subcategory: "Development Tools" },
+  
+  // Soft Skills & Communication
+  "Problem Solving": { category: "common", subcategory: "Soft Skills" },
+  "Technical Writing": { category: "common", subcategory: "Communication" },
+  "Team Leadership": { category: "common", subcategory: "Leadership" },
+  
+  // Certifications
+  "AWS Certified Machine Learning - Specialty": { category: "certification", subcategory: "Cloud Certification" },
+  "TensorFlow Developer Certificate": { category: "certification", subcategory: "AI Certification" },
+  "Kubernetes Administrator (CKA)": { category: "certification", subcategory: "Container Certification" }
+};
+
 export const technicalSkills = [
   ...new Set([
     ...matrixSkills,
@@ -74,3 +109,13 @@ export const softSkills = [
   "Customer Service", "User Experience", "Client Communication",
   "Needs Assessment", "Customer Feedback Management"
 ];
+
+// Helper function to get skill categorization
+export const getSkillCategorization = (skillTitle: string) => {
+  const defaultCategorization = {
+    category: "common",
+    subcategory: "General Skills"
+  };
+
+  return skillCategorization[skillTitle] || defaultCategorization;
+};

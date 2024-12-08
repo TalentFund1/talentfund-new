@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
-import { technicalSkills, softSkills } from '@/components/skillsData';
+import { technicalSkills, softSkills, getSkillCategorization } from '@/components/skillsData';
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
@@ -44,12 +44,13 @@ export const AddSkillDialog = () => {
     selectedSkills.forEach(skill => {
       newToggledSkills.add(skill);
       
-      // Determine the category for each skill
-      console.log('Categorizing skill:', skill);
+      // Get universal categorization for the skill
+      const categorization = getSkillCategorization(skill);
+      console.log('Categorizing skill:', skill, 'with universal categorization:', categorization);
       
       const newSkill = {
         title: skill,
-        subcategory: 'Uncategorized',
+        subcategory: categorization.subcategory,
         level: "unspecified",
         growth: "20%",
         salary: "$150,000",
