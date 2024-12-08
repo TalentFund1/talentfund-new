@@ -1,24 +1,40 @@
 import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "./skills/data/roleSkills";
 
-// Extract unique skills from all sources
+// Extract unique skills from all sources after roleSkills is initialized
 const getAllSkills = () => {
-  // Get skills from all employees
-  const employeeSkills = Object.keys(roleSkills).flatMap(id => 
-    getEmployeeSkills(id).map(skill => skill.title)
-  );
+  console.log('Getting all skills from employees and roles...');
+  
+  try {
+    // Get skills from all employees
+    const employeeSkills = Object.keys(roleSkills).flatMap(id => {
+      const skills = getEmployeeSkills(id).map(skill => skill.title);
+      console.log(`Found ${skills.length} skills for employee ${id}`);
+      return skills;
+    });
 
-  // Get skills from all roles
-  const roleBasedSkills = Object.values(roleSkills).flatMap(role => [
-    ...role.specialized.map(skill => skill.title),
-    ...role.common.map(skill => skill.title),
-    ...role.certifications.map(skill => skill.title)
-  ]);
+    // Get skills from all roles
+    const roleBasedSkills = Object.values(roleSkills).flatMap(role => {
+      const skills = [
+        ...role.specialized.map(skill => skill.title),
+        ...role.common.map(skill => skill.title),
+        ...role.certifications.map(skill => skill.title)
+      ];
+      console.log(`Found ${skills.length} skills for role ${role.title}`);
+      return skills;
+    });
 
-  // Combine and deduplicate
-  return [...new Set([...employeeSkills, ...roleBasedSkills])];
+    // Combine and deduplicate
+    const uniqueSkills = [...new Set([...employeeSkills, ...roleBasedSkills])];
+    console.log(`Total unique skills found: ${uniqueSkills.length}`);
+    return uniqueSkills;
+  } catch (error) {
+    console.error('Error getting all skills:', error);
+    return [];
+  }
 };
 
+// Initialize skills after roleSkills is imported
 const matrixSkills = getAllSkills();
 
 // Universal skill categorization mapping
@@ -63,78 +79,6 @@ export const skillCategorization = {
   "Kubernetes Administrator (CKA)": { category: "certification", subcategory: "Container Certification" }
 };
 
-export const technicalSkills = [
-  ...new Set([
-    ...matrixSkills,
-    // Programming Languages
-    "JavaScript", "TypeScript", "Python", "Java", "C++", "Ruby", "Go", "Rust", "PHP", "Swift",
-    "IPA Development", // Added new skill here
-    
-    // Web Development
-    "React", "Angular", "Vue.js", "Next.js", "Node.js", "Express.js", "Django", "Flask",
-    "HTML5", "CSS3", "Sass", "Tailwind CSS", "Bootstrap", "Material UI",
-    
-    // Database
-    "SQL", "PostgreSQL", "MongoDB", "Redis", "Elasticsearch", "Oracle", "MySQL",
-    
-    // Cloud & DevOps
-    "AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Jenkins", "GitLab CI",
-    "Terraform", "Ansible", "Linux", "Nginx", "Apache",
-    
-    // AI & ML
-    "TensorFlow", "PyTorch", "Scikit-learn", "Natural Language Processing",
-    "Computer Vision", "Machine Learning", "Deep Learning", "Data Science",
-    
-    // Mobile Development
-    "React Native", "Flutter", "iOS Development", "Android Development",
-    "Kotlin", "SwiftUI", "Mobile App Architecture",
-    
-    // Testing
-    "Jest", "Cypress", "Selenium", "JUnit", "TestNG", "Mocha", "Testing Methodologies",
-    
-    // Version Control
-    "Git", "GitHub", "Bitbucket", "GitLab", "Version Control Best Practices"
-  ])
-];
-
-export const softSkills = [
-  // Leadership & Management
-  "Team Leadership", "Project Management", "Strategic Planning", "Decision Making",
-  "Conflict Resolution", "Change Management", "Performance Management",
-  "Mentoring", "Coaching", "Team Building",
-  
-  // Communication
-  "Verbal Communication", "Written Communication", "Public Speaking",
-  "Presentation Skills", "Technical Writing", "Active Listening",
-  "Interpersonal Communication", "Cross-cultural Communication",
-  
-  // Problem Solving
-  "Critical Thinking", "Analytical Skills", "Problem Analysis",
-  "Creative Problem Solving", "Research Skills", "Logical Reasoning",
-  "Innovation", "Design Thinking",
-  
-  // Collaboration
-  "Team Collaboration", "Cross-functional Collaboration", "Remote Collaboration",
-  "Stakeholder Management", "Client Relations", "Partnership Building",
-  
-  // Work Management
-  "Time Management", "Task Prioritization", "Organization Skills",
-  "Meeting Management", "Deadline Management", "Multitasking",
-  
-  // Personal Development
-  "Adaptability", "Learning Agility", "Growth Mindset", "Self-motivation",
-  "Emotional Intelligence", "Resilience", "Work Ethics", "Initiative",
-  
-  // Business Skills
-  "Business Acumen", "Strategic Thinking", "Requirements Gathering",
-  "Process Improvement", "Risk Management", "Quality Assurance",
-  
-  // Customer Focus
-  "Customer Service", "User Experience", "Client Communication",
-  "Needs Assessment", "Customer Feedback Management"
-];
-
-// Helper function to get skill categorization
 export const getSkillCategorization = (skillTitle: string) => {
   const defaultCategorization = {
     category: "common",
@@ -143,3 +87,6 @@ export const getSkillCategorization = (skillTitle: string) => {
 
   return skillCategorization[skillTitle] || defaultCategorization;
 };
+
+// Export matrixSkills after initialization
+export { matrixSkills };
