@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { UnifiedSkill, getUnifiedSkillData } from '../data/centralSkillsDatabase';
+import { UnifiedSkill } from '../types/SkillTypes';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -19,12 +19,6 @@ export const AddSkillToProfileDialog = () => {
   const currentRole = roleSkills[id as keyof typeof roleSkills];
 
   const handleAddSkills = () => {
-    console.log('Adding skills to profile:', {
-      roleId: id,
-      selectedSkills,
-      currentRole: currentRole?.title
-    });
-
     if (!currentRole) {
       toast({
         title: "Error",
@@ -34,33 +28,22 @@ export const AddSkillToProfileDialog = () => {
       return;
     }
 
-    // Get unified skill data for each selected skill
-    const newSpecializedSkills = selectedSkills.map(skillTitle => {
-      const skillData = getUnifiedSkillData(skillTitle);
-      console.log('Retrieved unified skill data:', { skillTitle, skillData });
-      
-      // Ensure all required properties are present
-      if (!skillData.title || !skillData.subcategory) {
-        console.warn(`Missing required data for skill: ${skillTitle}`);
-        return {
-          title: skillTitle,
-          subcategory: skillData.subcategory || "General Skills",
-          category: skillData.category || "specialized",
-          type: skillData.type || "technical",
-          level: skillData.level || "unspecified",
-          growth: skillData.growth || "0%",
-          salary: skillData.salary || "$0",
-          confidence: skillData.confidence || "medium",
-          benchmarks: skillData.benchmarks || { B: true, R: true, M: true, O: true }
-        };
+    const newSpecializedSkills: UnifiedSkill[] = selectedSkills.map(skillTitle => ({
+      title: skillTitle,
+      subcategory: "General Skills",
+      category: "specialized",
+      type: "technical",
+      growth: "0%",
+      salary: "$0",
+      confidence: "medium",
+      benchmarks: {
+        B: true,
+        C: true,
+        B2: true,
+        O: true
       }
-      
-      return skillData;
-    });
+    }));
 
-    console.log('New specialized skills to be added:', newSpecializedSkills);
-
-    // Update the role's specialized skills
     currentRole.specialized = [...currentRole.specialized, ...newSpecializedSkills];
 
     toast({
@@ -76,7 +59,7 @@ export const AddSkillToProfileDialog = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button 
-          className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm"
+          className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white rounded-lg px-4 py-2 flex items-center gap-2"
         >
           <div className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
             <Plus className="h-3 w-3 stroke-[2]" />
@@ -92,7 +75,7 @@ export const AddSkillToProfileDialog = () => {
         <div className="space-y-6 py-4">
           <SearchFilter
             label=""
-            placeholder="Search skills to add to profile..."
+            placeholder="Search skills..."
             items={allSkills}
             selectedItems={selectedSkills}
             onItemsChange={setSelectedSkills}

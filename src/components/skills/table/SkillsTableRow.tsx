@@ -1,13 +1,9 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { SkillLevelIcon } from "../SkillLevelIcon";
+import { SimpleSkill } from "../types/SkillTypes";
 
 interface SkillsTableRowProps {
-  skill: {
-    title: string;
-    subcategory: string;
-    level: string;
-    growth: string;
-  };
+  skill: SimpleSkill;
   isEven: boolean;
 }
 
