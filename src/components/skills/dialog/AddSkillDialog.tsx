@@ -46,7 +46,7 @@ export const AddSkillDialog = () => {
       toast({
         title: "Duplicate Skills",
         description: `${duplicateSkills.join(", ")} already exist in the profile.`,
-        variant: "default", // Changed from "warning" to "default"
+        variant: "warning",
       });
 
       if (newSkills.length === 0) {
