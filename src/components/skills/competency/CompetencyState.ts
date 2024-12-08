@@ -19,9 +19,9 @@ export const useCompetencyStore = create<CompetencyState>()(
           const newRoleStates = setSkillStateAction(
             state.roleStates,
             skillName,
-            level,
+            level || 'unspecified',
             levelKey,
-            required,
+            required || 'preferred',
             roleId
           );
 
