@@ -38,8 +38,8 @@ export const AddSkillToProfileDialog = () => {
       confidence: "medium",
       benchmarks: {
         B: true,
-        C: true,
-        B2: true,
+        R: true,
+        M: true,
         O: true
       }
     }));

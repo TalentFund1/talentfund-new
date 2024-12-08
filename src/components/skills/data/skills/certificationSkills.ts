@@ -9,7 +9,7 @@ export const certificationSkills: UnifiedSkill[] = [
     growth: "35%",
     salary: "$180,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Certified Kubernetes Administrator",
@@ -19,7 +19,7 @@ export const certificationSkills: UnifiedSkill[] = [
     growth: "32%",
     salary: "$175,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "HashiCorp Certified Terraform Associate",
@@ -29,7 +29,7 @@ export const certificationSkills: UnifiedSkill[] = [
     growth: "28%",
     salary: "$165,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "AWS Certified Machine Learning - Specialty",
@@ -39,7 +39,7 @@ export const certificationSkills: UnifiedSkill[] = [
     growth: "38%",
     salary: "$190,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "TensorFlow Developer Certificate",
@@ -49,7 +49,7 @@ export const certificationSkills: UnifiedSkill[] = [
     growth: "28%",
     salary: "$170,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Project Management Professional (PMP)",
@@ -59,7 +59,7 @@ export const certificationSkills: UnifiedSkill[] = [
     growth: "25%",
     salary: "$175,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Certified Scrum Master (CSM)",
@@ -69,6 +69,6 @@ export const certificationSkills: UnifiedSkill[] = [
     growth: "22%",
     salary: "$150,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];

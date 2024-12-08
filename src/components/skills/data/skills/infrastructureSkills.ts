@@ -9,7 +9,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     growth: "28%",
     salary: "$160,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Kubernetes",
@@ -19,7 +19,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     growth: "32%",
     salary: "$170,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Jenkins",
@@ -29,7 +29,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     growth: "25%",
     salary: "$145,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Terraform",
@@ -39,7 +39,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     growth: "30%",
     salary: "$155,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "AWS",
@@ -49,7 +49,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     growth: "35%",
     salary: "$175,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Linux Administration",
@@ -59,7 +59,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     growth: "22%",
     salary: "$140,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Shell Scripting",
@@ -69,7 +69,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     growth: "18%",
     salary: "$135,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Git Version Control",
@@ -79,6 +79,6 @@ export const infrastructureSkills: UnifiedSkill[] = [
     growth: "15%",
     salary: "$130,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];

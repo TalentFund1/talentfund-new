@@ -9,7 +9,7 @@ export const backendSkills: UnifiedSkill[] = [
     growth: "24%",
     salary: "$155,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Database Design",
@@ -19,7 +19,7 @@ export const backendSkills: UnifiedSkill[] = [
     growth: "26%",
     salary: "$160,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "API Development",
@@ -29,7 +29,7 @@ export const backendSkills: UnifiedSkill[] = [
     growth: "26%",
     salary: "$150,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "System Architecture",
@@ -39,6 +39,6 @@ export const backendSkills: UnifiedSkill[] = [
     growth: "30%",
     salary: "$180,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];

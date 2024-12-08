@@ -11,8 +11,8 @@ export const frontendSkills: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: {
       B: true,
-      C: true,
-      B2: true,
+      R: true,
+      M: true,
       O: true
     }
   },
@@ -26,8 +26,8 @@ export const frontendSkills: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: {
       B: true,
-      C: true,
-      B2: true,
+      R: true,
+      M: true,
       O: true
     }
   },
@@ -41,8 +41,8 @@ export const frontendSkills: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: {
       B: true,
-      C: true,
-      B2: true,
+      R: true,
+      M: true,
       O: true
     }
   },
@@ -56,8 +56,8 @@ export const frontendSkills: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: {
       B: true,
-      C: true,
-      B2: true,
+      R: true,
+      M: true,
       O: true
     }
   },
@@ -71,8 +71,8 @@ export const frontendSkills: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: {
       B: true,
-      C: true,
-      B2: true,
+      R: true,
+      M: true,
       O: true
     }
   }

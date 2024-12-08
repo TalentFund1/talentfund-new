@@ -9,7 +9,7 @@ export const managementSkills: UnifiedSkill[] = [
     growth: "28%",
     salary: "$165,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Technical Architecture",
@@ -19,7 +19,7 @@ export const managementSkills: UnifiedSkill[] = [
     growth: "30%",
     salary: "$175,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Risk Management",
@@ -29,7 +29,7 @@ export const managementSkills: UnifiedSkill[] = [
     growth: "24%",
     salary: "$180,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Team Leadership",
@@ -39,7 +39,7 @@ export const managementSkills: UnifiedSkill[] = [
     growth: "22%",
     salary: "$180,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Project Management",
@@ -49,7 +49,7 @@ export const managementSkills: UnifiedSkill[] = [
     growth: "25%",
     salary: "$175,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Strategic Planning",
@@ -59,7 +59,7 @@ export const managementSkills: UnifiedSkill[] = [
     growth: "20%",
     salary: "$185,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Stakeholder Management",
@@ -69,7 +69,7 @@ export const managementSkills: UnifiedSkill[] = [
     growth: "18%",
     salary: "$160,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Agile Methodologies",
@@ -79,6 +79,6 @@ export const managementSkills: UnifiedSkill[] = [
     growth: "20%",
     salary: "$150,000",
     confidence: "high",
-    benchmarks: { B: true, C: true, B2: true, O: true }
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];
