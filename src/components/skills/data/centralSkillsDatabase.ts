@@ -3,13 +3,19 @@ import { backendSkills } from './skills/backendSkills';
 import { infrastructureSkills } from './skills/infrastructureSkills';
 import { softSkills } from './skills/softSkills';
 import { certificationSkills } from './skills/certificationSkills';
+import { frontendSkills } from './skills/frontendSkills';
+import { aiSkills } from './skills/aiSkills';
+import { managementSkills } from './skills/managementSkills';
 
 // Combine all skills into the centralized database
 export const centralizedSkills: UnifiedSkill[] = [
   ...backendSkills,
   ...infrastructureSkills,
   ...softSkills,
-  ...certificationSkills
+  ...certificationSkills,
+  ...frontendSkills,
+  ...aiSkills,
+  ...managementSkills
 ];
 
 // Helper functions to access the centralized database
@@ -29,7 +35,7 @@ export const getSkillsByType = (type: 'critical' | 'technical' | 'necessary'): U
 };
 
 // Function to ensure skill data consistency
-export const getUnifiedSkillData = (skillTitle: string): Partial<UnifiedSkill> => {
+export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   console.log('Fetching unified skill data for:', skillTitle);
   const skill = getSkillByTitle(skillTitle);
   if (!skill) {
@@ -48,3 +54,5 @@ export const getUnifiedSkillData = (skillTitle: string): Partial<UnifiedSkill> =
   console.log('Found skill data:', skill);
   return skill;
 };
+
+export type { UnifiedSkill };

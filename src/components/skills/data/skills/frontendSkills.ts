@@ -1,53 +1,53 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
 
-export const aiSkills: UnifiedSkill[] = [
+export const frontendSkills: UnifiedSkill[] = [
   {
-    title: "Machine Learning",
-    subcategory: "AI & ML",
-    category: "specialized",
-    type: "critical",
-    growth: "35%",
-    salary: "$185,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    title: "Deep Learning",
-    subcategory: "AI & ML",
-    category: "specialized",
-    type: "critical",
-    growth: "32%",
-    salary: "$180,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    title: "Natural Language Processing",
-    subcategory: "AI Applications",
-    category: "specialized",
-    type: "critical",
-    growth: "30%",
-    salary: "$175,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    title: "Computer Vision",
-    subcategory: "AI Applications",
+    title: "React",
+    subcategory: "Frontend Frameworks",
     category: "specialized",
     type: "critical",
     growth: "28%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "TypeScript",
+    subcategory: "Programming Languages",
+    category: "specialized",
+    type: "critical",
+    growth: "32%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Next.js",
+    subcategory: "Frontend Frameworks",
+    category: "specialized",
+    type: "critical",
+    growth: "35%",
     salary: "$170,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "TensorFlow",
-    subcategory: "ML Frameworks",
+    title: "CSS/SASS",
+    subcategory: "Frontend Development",
     category: "specialized",
-    type: "critical",
+    type: "technical",
+    growth: "18%",
+    salary: "$145,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Performance Optimization",
+    subcategory: "Frontend Development",
+    category: "specialized",
+    type: "technical",
     growth: "25%",
-    salary: "$165,000",
+    salary: "$155,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }
