@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
+import { UnifiedSkill } from '../data/centralSkillsDatabase';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -34,13 +35,13 @@ export const AddSkillToProfileDialog = () => {
     }
 
     // Add selected skills to the role's specialized skills array
-    const newSpecializedSkills = selectedSkills.map(skill => ({
+    const newSpecializedSkills: Partial<UnifiedSkill>[] = selectedSkills.map(skill => ({
       title: skill,
-      subcategory: "Added Skills", // Default subcategory for added skills
+      subcategory: "Added Skills",
       level: "unspecified",
       growth: "0%",
       salary: "$0",
-      benchmarks: { J: false, B: false, O: false }
+      benchmarks: { B: false, R: false, M: false, O: false }
     }));
 
     console.log('New specialized skills to be added:', newSpecializedSkills);
