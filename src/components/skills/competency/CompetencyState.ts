@@ -16,6 +16,27 @@ export const useCompetencyStore = create<CompetencyState>()(
       setSkillState: (skillName, level, levelKey, required, roleId) => {
         console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
         set((state) => {
+          // Initialize the skill's state if it doesn't exist
+          if (!state.roleStates[roleId]?.[skillName]) {
+            console.log('Initializing new skill state:', { skillName, roleId });
+            const professionalLevels = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
+            const managerialLevels = ['m3', 'm4', 'm5', 'm6'];
+            const levels = levelKey.startsWith('m') ? managerialLevels : professionalLevels;
+            
+            const initialState = {};
+            levels.forEach(level => {
+              initialState[level] = {
+                level: 'unspecified',
+                required: 'preferred'
+              };
+            });
+
+            state.roleStates[roleId] = {
+              ...state.roleStates[roleId],
+              [skillName]: initialState
+            };
+          }
+
           const newRoleStates = setSkillStateAction(
             state.roleStates,
             skillName,
@@ -150,7 +171,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 21,
+      version: 22,
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,

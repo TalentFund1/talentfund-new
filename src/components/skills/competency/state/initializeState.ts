@@ -17,10 +17,23 @@ export const initializeRoleState = (roleId: string): RoleState => {
   ];
 
   const initialStates: RoleState = {};
+  const professionalLevels = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
+  const managerialLevels = ['m3', 'm4', 'm5', 'm6'];
   
   allSkills.forEach(skill => {
     initialStates[skill.title] = {};
-    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
+    
+    // Determine which levels to use based on role type
+    const isManagerial = currentRoleSkills.title?.toLowerCase().includes('manager');
+    const levels = isManagerial ? managerialLevels : professionalLevels;
+    
+    levels.forEach(level => {
+      console.log('Initializing level state:', {
+        skill: skill.title,
+        level,
+        state: { level: 'unspecified', required: 'preferred' }
+      });
+      
       initialStates[skill.title][level] = {
         level: 'unspecified',
         required: 'preferred'
