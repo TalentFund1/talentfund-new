@@ -1,30 +1,24 @@
-import { SkillData } from '../skillLevels';
+import { UnifiedSkill } from '../types/SkillTypes';
 
-export const certificationSkills: SkillData[] = [
+export const certificationSkills: UnifiedSkill[] = [
   {
-    title: "AWS Certified Solutions Architect",
+    title: "Project Management Professional (PMP)",
+    subcategory: "Project Management Certification",
     category: "certification",
-    subcategory: "Cloud Certification",
-    professionalTrack: {
-      P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'beginner', requirement: 'preferred' },
-      P3: { level: 'intermediate', requirement: 'preferred' },
-      P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'advanced', requirement: 'required' },
-      P6: { level: 'advanced', requirement: 'required' }
-    }
+    type: "technical",
+    growth: "28%",
+    salary: "$175,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Kubernetes Administrator (CKA)",
+    title: "Certified Scrum Master (CSM)",
+    subcategory: "Agile Certification",
     category: "certification",
-    subcategory: "Container Certification",
-    professionalTrack: {
-      P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'beginner', requirement: 'preferred' },
-      P3: { level: 'intermediate', requirement: 'preferred' },
-      P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'advanced', requirement: 'required' },
-      P6: { level: 'advanced', requirement: 'required' }
-    }
+    type: "technical",
+    growth: "25%",
+    salary: "$155,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];
