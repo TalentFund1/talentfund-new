@@ -10,6 +10,7 @@ import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { getUnifiedSkillData } from '../data/centralSkillsDatabase';
 import { saveToggledSkills, loadToggledSkills } from '../context/utils/storageUtils';
+import { useCompetencyStore } from "../competency/CompetencyState";
 
 const STORAGE_KEY = 'added-skills';
 const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
@@ -40,6 +41,7 @@ export const AddSkillDialog = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const { id } = useParams();
+  const { initializeState } = useCompetencyStore();
 
   const allSkills = [...technicalSkills, ...softSkills];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
@@ -76,6 +78,10 @@ export const AddSkillDialog = () => {
         console.warn(`No data found for skill: ${skillTitle}`);
         return;
       }
+
+      // Initialize the skill state with default values
+      initializeState(id);
+      console.log('Initialized competency state for new skill:', skillTitle);
 
       // Categorize skill based on its type from the unified database
       const category = skillData.category || 'common';
