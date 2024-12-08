@@ -1,30 +1,24 @@
-import { SkillData } from '../skillLevels';
+import { UnifiedSkill } from '../../types/SkillTypes';
 
-export const certificationSkills: SkillData[] = [
+export const certificationSkills: UnifiedSkill[] = [
   {
     title: "AWS Certified Solutions Architect",
-    category: "certification",
     subcategory: "Cloud Certification",
-    professionalTrack: {
-      P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'beginner', requirement: 'preferred' },
-      P3: { level: 'intermediate', requirement: 'preferred' },
-      P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'advanced', requirement: 'required' },
-      P6: { level: 'advanced', requirement: 'required' }
-    }
+    category: "certification",
+    type: "critical",
+    growth: "35%",
+    salary: "$185,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Kubernetes Administrator (CKA)",
-    category: "certification",
     subcategory: "Container Certification",
-    professionalTrack: {
-      P1: { level: 'unspecified', requirement: 'preferred' },
-      P2: { level: 'beginner', requirement: 'preferred' },
-      P3: { level: 'intermediate', requirement: 'preferred' },
-      P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'advanced', requirement: 'required' },
-      P6: { level: 'advanced', requirement: 'required' }
-    }
+    category: "certification",
+    type: "critical",
+    growth: "35%",
+    salary: "$175,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];

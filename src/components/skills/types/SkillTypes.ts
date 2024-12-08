@@ -30,3 +30,21 @@ export interface SkillEntry {
     managerial?: SkillTrackLevels;
   };
 }
+
+export interface UnifiedSkill {
+  title: string;
+  subcategory: string;
+  category: 'specialized' | 'common' | 'certification';
+  type: 'critical' | 'technical' | 'necessary';
+  level?: string;
+  growth: string;
+  salary: string;
+  confidence: 'high' | 'medium' | 'low';
+  requirement?: 'required' | 'preferred' | 'skill_goal' | 'not_interested';
+  benchmarks: {
+    B: boolean; // Business
+    R: boolean; // Role
+    M: boolean; // Market
+    O: boolean; // Organization
+  };
+}

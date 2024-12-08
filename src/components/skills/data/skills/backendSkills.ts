@@ -1,30 +1,44 @@
-import { SkillData } from '../skillLevels';
+import { UnifiedSkill } from '../../types/SkillTypes';
 
-export const backendSkills: SkillData[] = [
+export const backendSkills: UnifiedSkill[] = [
   {
     title: "Node.js",
-    category: "specialized",
     subcategory: "Backend Development",
-    professionalTrack: {
-      P1: { level: 'beginner', requirement: 'required' },
-      P2: { level: 'intermediate', requirement: 'required' },
-      P3: { level: 'advanced', requirement: 'required' },
-      P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'advanced', requirement: 'required' },
-      P6: { level: 'advanced', requirement: 'required' }
-    }
+    category: "specialized",
+    type: "technical",
+    growth: "24%",
+    salary: "$155,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Database Design",
-    category: "specialized",
     subcategory: "Data Management",
-    professionalTrack: {
-      P1: { level: 'beginner', requirement: 'preferred' },
-      P2: { level: 'intermediate', requirement: 'required' },
-      P3: { level: 'advanced', requirement: 'required' },
-      P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'advanced', requirement: 'required' },
-      P6: { level: 'advanced', requirement: 'required' }
-    }
+    category: "specialized",
+    type: "technical",
+    growth: "26%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "API Development",
+    subcategory: "Backend Development",
+    category: "specialized",
+    type: "technical",
+    growth: "26%",
+    salary: "$150,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "System Architecture",
+    subcategory: "Software Architecture",
+    category: "specialized",
+    type: "critical",
+    growth: "30%",
+    salary: "$180,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];
