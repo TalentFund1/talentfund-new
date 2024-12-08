@@ -40,6 +40,7 @@ export const getSkillsByType = (type: 'critical' | 'technical' | 'necessary'): U
 export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   console.log('Fetching unified skill data for:', skillTitle);
   const skill = getSkillByTitle(skillTitle);
+  
   if (!skill) {
     console.warn(`Skill "${skillTitle}" not found in centralized database, using default values`);
     return {
@@ -53,7 +54,8 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
       benchmarks: { B: false, R: false, M: false, O: false }
     };
   }
-  console.log('Found skill data:', skill);
+  
+  console.log('Found unified skill data:', skill);
   return skill;
 };
 

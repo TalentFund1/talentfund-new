@@ -35,7 +35,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     title: "Terraform",
     subcategory: "Infrastructure as Code",
     category: "specialized",
-    type: "technical",
+    type: "critical",
     growth: "30%",
     salary: "$155,000",
     confidence: "high",
