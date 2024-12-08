@@ -11,7 +11,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { Separator } from "@/components/ui/separator";
-import { sortSkills } from "./skills-matrix/sortingUtils";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -30,6 +29,37 @@ export const SkillsMatrix = () => {
   const allSkills = [...technicalSkills, ...softSkills];
 
   const employeeSkills = getEmployeeSkills(id || "");
+
+  const getLevelPriority = (level: string) => {
+    const priorities: { [key: string]: number } = {
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
+    };
+    return priorities[level.toLowerCase()] ?? 3;
+  };
+
+  const getInterestPriority = (requirement: string) => {
+    const priorities: { [key: string]: number } = {
+      'required': 0,
+      'skill_goal': 0,
+      'preferred': 1,
+      'not_interested': 2,
+      'unknown': 3
+    };
+    return priorities[requirement.toLowerCase()] ?? 3;
+  };
+
+  const getRoleLevelPriority = (level: string) => {
+    const priorities: { [key: string]: number } = {
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
+    };
+    return priorities[level.toLowerCase()] ?? 3;
+  };
 
   const filteredSkills = filterSkillsByCategory(employeeSkills, selectedCategory)
     .filter(skill => {
@@ -68,9 +98,34 @@ export const SkillsMatrix = () => {
       }
 
       return matchesLevel && matchesInterest && matchesSearch;
-    });
+    })
+    .sort((a, b) => {
+      // Sort by Role Skills level first
+      const aRoleLevel = (a.roleLevel || 'unspecified').toLowerCase();
+      const bRoleLevel = (b.roleLevel || 'unspecified').toLowerCase();
+      
+      const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
+      if (roleLevelDiff !== 0) return roleLevelDiff;
 
-  const sortedSkills = sortSkills(filteredSkills, currentStates);
+      // If Role Skills levels are the same, sort by current skill level
+      const aState = currentStates[a.title];
+      const bState = currentStates[b.title];
+      
+      const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
+      const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
+      
+      const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
+      if (levelDiff !== 0) return levelDiff;
+
+      // If levels are the same, sort by interest/requirement
+      const aInterest = (aState?.requirement || a.requirement || 'unknown').toLowerCase();
+      const bInterest = (bState?.requirement || b.requirement || 'unknown').toLowerCase();
+      const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
+      if (interestDiff !== 0) return interestDiff;
+
+      // Finally, sort alphabetically by title
+      return a.title.localeCompare(b.title);
+    });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -109,7 +164,7 @@ export const SkillsMatrix = () => {
     });
   };
 
-  const paginatedSkills = sortedSkills.slice(0, visibleItems).map(skill => ({
+  const paginatedSkills = filteredSkills.slice(0, visibleItems).map(skill => ({
     ...skill,
     subcategory: skill.subcategory || '',
     level: skill.level || 'unspecified',

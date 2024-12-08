@@ -1,85 +1,26 @@
-import { skillsDatabase, Skill } from '../../skills/data/skillsDatabase';
-
-interface EmployeeSkill extends Skill {
-  level: string;
-  requirement?: string;
-  isCompanySkill: boolean;
-}
-
-export const initialSkills: Record<string, EmployeeSkill[]> = {
+export const initialSkills = {
   "124": [
-    {
-      ...skillsDatabase["Node.js"],
-      level: "unspecified",
-      requirement: "preferred",
-      isCompanySkill: true
-    },
-    {
-      ...skillsDatabase["Database Design"],
-      level: "unspecified",
-      requirement: "preferred",
-      isCompanySkill: true
-    },
-    {
-      ...skillsDatabase["API Development"],
-      level: "unspecified",
-      requirement: "preferred",
-      isCompanySkill: true
-    }
+    // Specialized Skills
+    { title: "Node.js", subcategory: "Backend Development", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Database Design", subcategory: "Data Management", level: "unspecified", growth: "15%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "API Development", subcategory: "Backend Development", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true }
   ],
   "123": [
-    {
-      ...skillsDatabase["Machine Learning"],
-      level: "advanced",
-      requirement: "required",
-      isCompanySkill: true
-    },
-    {
-      ...skillsDatabase["Deep Learning"],
-      level: "advanced",
-      requirement: "required",
-      isCompanySkill: true
-    },
-    {
-      ...skillsDatabase["Natural Language Processing"],
-      level: "beginner",
-      requirement: "unknown",
-      isCompanySkill: true
-    },
-    {
-      ...skillsDatabase["TensorFlow"],
-      level: "beginner",
-      requirement: "skill_goal",
-      isCompanySkill: true
-    }
+    // AI Engineer Skills
+    { title: "Machine Learning", subcategory: "AI & ML", level: "advanced", growth: "30%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Deep Learning", subcategory: "AI & ML", level: "advanced", growth: "28%", confidence: "high", requirement: "required", isCompanySkill: true },
+    { title: "Natural Language Processing", subcategory: "AI Applications", level: "beginner", growth: "28%", confidence: "high", requirement: "unknown", isCompanySkill: true },
+    { title: "TensorFlow", subcategory: "ML Frameworks", level: "beginner", growth: "20%", confidence: "high", requirement: "skill_goal", isCompanySkill: true }
   ],
   "125": [
-    {
-      ...skillsDatabase["React"],
-      level: "unspecified",
-      requirement: "preferred",
-      isCompanySkill: true
-    },
-    {
-      ...skillsDatabase["TypeScript"],
-      level: "unspecified",
-      requirement: "preferred",
-      isCompanySkill: true
-    }
+    // Frontend Skills
+    { title: "React", subcategory: "Frontend Frameworks", level: "unspecified", growth: "20%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "TypeScript", subcategory: "Programming Languages", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true }
   ],
   "126": [
-    {
-      ...skillsDatabase["Team Leadership"],
-      level: "unspecified",
-      requirement: "preferred",
-      isCompanySkill: true
-    },
-    {
-      ...skillsDatabase["Project Management"],
-      level: "unspecified",
-      requirement: "preferred",
-      isCompanySkill: true
-    }
+    // Management Skills
+    { title: "Team Leadership", subcategory: "Leadership", level: "unspecified", growth: "22%", confidence: "high", requirement: "preferred", isCompanySkill: true },
+    { title: "Project Management", subcategory: "Management", level: "unspecified", growth: "25%", confidence: "high", requirement: "preferred", isCompanySkill: true }
   ]
 };
 

@@ -1,117 +1,110 @@
-import { skillsDatabase, Skill } from './skillsDatabase';
+import { skillCategorization } from '../../skillsData';
 
-const getSkillWithDefaults = (skillTitle: string): Skill => {
-  return skillsDatabase[skillTitle] || {
-    title: skillTitle,
-    subcategory: "General Skills",
-    category: "technical",
-    growth: "0%",
-    salary: "$0",
-    benchmarks: { B: false, R: false, M: false, O: false }
-  };
+const getSubcategory = (skillTitle: string) => {
+  return skillCategorization[skillTitle]?.subcategory || "General Skills";
 };
 
 export const roleSkills = {
-  "123": {
+  "123": { // AI Engineer
     title: "AI Engineer",
     soc: "11-9041",
     specialized: [
-      getSkillWithDefaults("Machine Learning"),
-      getSkillWithDefaults("Deep Learning"),
-      getSkillWithDefaults("Natural Language Processing"),
-      getSkillWithDefaults("Computer Vision"),
-      getSkillWithDefaults("TensorFlow")
+      { title: "Machine Learning", subcategory: getSubcategory("Machine Learning"), level: "unspecified", growth: "30%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
+      { title: "Deep Learning", subcategory: getSubcategory("Deep Learning"), level: "unspecified", growth: "28%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Natural Language Processing", subcategory: getSubcategory("Natural Language Processing"), level: "unspecified", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Computer Vision", subcategory: getSubcategory("Computer Vision"), level: "unspecified", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "TensorFlow", subcategory: getSubcategory("TensorFlow"), level: "unspecified", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } }
     ],
     common: [
-      getSkillWithDefaults("Python"),
-      getSkillWithDefaults("Problem Solving"),
-      getSkillWithDefaults("Technical Writing")
+      { title: "Python", subcategory: getSubcategory("Python"), level: "unspecified", growth: "25%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
+      { title: "Problem Solving", subcategory: getSubcategory("Problem Solving"), level: "unspecified", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Technical Writing", subcategory: getSubcategory("Technical Writing"), level: "unspecified", growth: "12%", salary: "$156,000", benchmarks: { J: true, B: true, O: true } }
     ],
     certifications: [
-      getSkillWithDefaults("AWS Certified Machine Learning - Specialty"),
-      getSkillWithDefaults("TensorFlow Developer Certificate")
+      { title: "AWS Certified Machine Learning - Specialty", subcategory: getSubcategory("AWS Certified Machine Learning - Specialty"), level: "unspecified", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "TensorFlow Developer Certificate", subcategory: getSubcategory("TensorFlow Developer Certificate"), level: "unspecified", growth: "20%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } }
     ]
   },
-  "124": {
+  "124": { // Backend Engineer
     title: "Backend Engineer",
     soc: "15-1252",
     specialized: [
-      getSkillWithDefaults("Node.js"),
-      getSkillWithDefaults("Database Design"),
-      getSkillWithDefaults("API Development"),
-      getSkillWithDefaults("System Architecture"),
-      getSkillWithDefaults("Kubernetes")
+      { title: "Node.js", subcategory: "Backend Development", level: "unspecified", growth: "20%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Database Design", subcategory: "Data Management", level: "unspecified", growth: "15%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "API Development", subcategory: "Backend Development", level: "unspecified", growth: "25%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "System Architecture", subcategory: "Software Architecture", level: "unspecified", growth: "30%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Kubernetes", subcategory: "Container Orchestration", level: "unspecified", growth: "28%", salary: "$178,208", benchmarks: { J: true, B: true, O: true } }
     ],
     common: [
-      getSkillWithDefaults("Problem Solving"),
-      getSkillWithDefaults("Code Review"),
-      getSkillWithDefaults("Agile Methodologies")
+      { title: "Problem Solving", subcategory: "Soft Skills", level: "unspecified", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Code Review", subcategory: "Development Practices", level: "unspecified", growth: "12%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Agile Methodologies", subcategory: "Project Management", level: "unspecified", growth: "15%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } }
     ],
     certifications: [
-      getSkillWithDefaults("AWS Certified Solutions Architect"),
-      getSkillWithDefaults("Kubernetes Administrator (CKA)")
+      { title: "AWS Certified Solutions Architect", subcategory: "Cloud Certification", level: "unspecified", growth: "30%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Kubernetes Administrator (CKA)", subcategory: "Container Certification", level: "unspecified", growth: "25%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } }
     ]
   },
-  "125": {
+  "125": { // Frontend Engineer
     title: "Frontend Engineer",
     soc: "15-1254",
     specialized: [
-      getSkillWithDefaults("React"),
-      getSkillWithDefaults("TypeScript"),
-      getSkillWithDefaults("Next.js"),
-      getSkillWithDefaults("CSS/SASS"),
-      getSkillWithDefaults("Performance Optimization")
+      { title: "React", subcategory: "Frontend Frameworks", level: "unspecified", growth: "20%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "TypeScript", subcategory: "Programming Languages", level: "unspecified", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Next.js", subcategory: "Frontend Frameworks", level: "unspecified", growth: "28%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "CSS/SASS", subcategory: "Styling", level: "unspecified", growth: "15%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Performance Optimization", subcategory: "Frontend Development", level: "unspecified", growth: "22%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } }
     ],
     common: [
-      getSkillWithDefaults("Problem Solving"),
-      getSkillWithDefaults("Code Review"),
-      getSkillWithDefaults("Agile Methodologies")
+      { title: "Problem Solving", subcategory: "Soft Skills", level: "unspecified", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Code Review", subcategory: "Development Practices", level: "unspecified", growth: "12%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Agile Methodologies", subcategory: "Project Management", level: "unspecified", growth: "15%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } }
     ],
     certifications: [
-      getSkillWithDefaults("AWS Certified Developer - Associate"),
-      getSkillWithDefaults("Google Mobile Web Specialist")
+      { title: "AWS Certified Developer - Associate", subcategory: "Cloud Certification", level: "unspecified", growth: "25%", salary: "$170,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Google Mobile Web Specialist", subcategory: "Web Development Certification", level: "unspecified", growth: "20%", salary: "$168,000", benchmarks: { J: true, B: true, O: true } }
     ]
   },
-  "126": {
+  "126": { // Engineering Manager
     title: "Engineering Manager",
     soc: "11-9041",
     specialized: [
-      getSkillWithDefaults("System Design"),
-      getSkillWithDefaults("Technical Architecture"),
-      getSkillWithDefaults("Risk Management"),
-      getSkillWithDefaults("Team Leadership"),
-      getSkillWithDefaults("Project Management")
+      { title: "System Design", subcategory: "Architecture", level: "unspecified", growth: "25%", salary: "$192,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Technical Architecture", subcategory: "Architecture", level: "unspecified", growth: "30%", salary: "$195,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Risk Management", subcategory: "Management", level: "unspecified", growth: "20%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Team Leadership", subcategory: "Leadership", level: "unspecified", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Project Management", subcategory: "Management", level: "unspecified", growth: "25%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } }
     ],
     common: [
-      getSkillWithDefaults("Strategic Planning"),
-      getSkillWithDefaults("Stakeholder Management"),
-      getSkillWithDefaults("Agile Methodologies")
+      { title: "Strategic Planning", subcategory: "Management", level: "unspecified", growth: "30%", salary: "$192,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Stakeholder Management", subcategory: "Leadership", level: "unspecified", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Agile Methodologies", subcategory: "Project Management", level: "unspecified", growth: "15%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } }
     ],
     certifications: [
-      getSkillWithDefaults("Project Management Professional (PMP)"),
-      getSkillWithDefaults("Certified Scrum Master (CSM)")
+      { title: "Project Management Professional (PMP)", subcategory: "Management Certification", level: "unspecified", growth: "25%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Certified Scrum Master (CSM)", subcategory: "Agile Certification", level: "unspecified", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } }
     ]
   },
-  "127": {
+  "127": { // DevOps Engineer
     title: "DevOps Engineer",
     soc: "15-1244",
     specialized: [
-      getSkillWithDefaults("Docker"),
-      getSkillWithDefaults("Kubernetes"),
-      getSkillWithDefaults("Jenkins"),
-      getSkillWithDefaults("Terraform"),
-      getSkillWithDefaults("AWS")
+      { title: "Docker", subcategory: "Container Technology", level: "unspecified", growth: "25%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Kubernetes", subcategory: "Container Orchestration", level: "unspecified", growth: "28%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Jenkins", subcategory: "CI/CD", level: "unspecified", growth: "22%", salary: "$172,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Terraform", subcategory: "Infrastructure as Code", level: "unspecified", growth: "30%", salary: "$180,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "AWS", subcategory: "Cloud Platforms", level: "unspecified", growth: "26%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } }
     ],
     common: [
-      getSkillWithDefaults("Linux Administration"),
-      getSkillWithDefaults("Shell Scripting"),
-      getSkillWithDefaults("Git"),
-      getSkillWithDefaults("Problem Solving")
+      { title: "Linux Administration", subcategory: "System Administration", level: "unspecified", growth: "20%", salary: "$165,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Shell Scripting", subcategory: "Scripting", level: "unspecified", growth: "18%", salary: "$162,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Git", subcategory: "Version Control", level: "unspecified", growth: "15%", salary: "$160,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Problem Solving", subcategory: "Soft Skills", level: "unspecified", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } }
     ],
     certifications: [
-      getSkillWithDefaults("AWS Certified DevOps Engineer"),
-      getSkillWithDefaults("Certified Kubernetes Administrator"),
-      getSkillWithDefaults("HashiCorp Certified Terraform Associate")
+      { title: "AWS Certified DevOps Engineer", subcategory: "Cloud Certification", level: "unspecified", growth: "25%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Certified Kubernetes Administrator", subcategory: "Container Certification", level: "unspecified", growth: "28%", salary: "$180,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "HashiCorp Certified Terraform Associate", subcategory: "Infrastructure Certification", level: "unspecified", growth: "24%", salary: "$175,000", benchmarks: { J: true, B: true, O: true } }
     ]
   }
 };
