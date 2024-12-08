@@ -92,14 +92,7 @@ export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProp
             </TableRow>
           ) : (
             skills.map((skill, index) => (
-              <SkillsTableRow 
-                key={skill.title} 
-                skill={{
-                  ...skill,
-                  level: skill.level || 'unspecified'
-                }} 
-                isEven={index % 2 === 0} 
-              />
+              <SkillsTableRow key={skill.title} skill={skill} isEven={index % 2 === 0} />
             ))
           )}
         </TableBody>

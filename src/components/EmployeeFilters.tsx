@@ -1,6 +1,6 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
-import { technicalSkillTitles, softSkillTitles } from './skillsData';
+import { technicalSkills, softSkills } from './skillsData';
 import { Button } from '@/components/ui/button';
 import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
@@ -46,7 +46,7 @@ export const EmployeeFilters = ({
   onRoleChange = () => {},
   selectedRole = []
 }: EmployeeFiltersProps) => {
-  const allSkills = [...technicalSkillTitles, ...softSkillTitles];
+  const allSkills = [...technicalSkills, ...softSkills];
   const employees = useEmployeeStore((state) => state.employees);
   const managers = Array.from(new Set(
     employees

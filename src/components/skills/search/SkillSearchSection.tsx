@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { SearchFilter } from "@/components/market/SearchFilter";
-import { technicalSkillTitles, softSkillTitles } from '@/components/skillsData';
+import { technicalSkills, softSkills } from '@/components/skillsData';
 import { Separator } from "@/components/ui/separator";
 
 interface SkillSearchSectionProps {
@@ -14,7 +14,7 @@ export const SkillSearchSection = ({
   onSkillsChange,
   onClearAll 
 }: SkillSearchSectionProps) => {
-  const allSkills = [...technicalSkillTitles, ...softSkillTitles];
+  const allSkills = [...technicalSkills, ...softSkills];
 
   return (
     <div className="space-y-4">
