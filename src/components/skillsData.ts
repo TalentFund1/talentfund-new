@@ -110,6 +110,7 @@ export const skillCategorization = {
   "AWS": { category: "specialized", subcategory: "Cloud Platforms" },
   "Linux Administration": { category: "specialized", subcategory: "System Administration" },
   "Shell Scripting": { category: "common", subcategory: "System Administration" },
+  "Git Version Control": { category: "common", subcategory: "Development Tools" },
   
   // Common Skills
   "Problem Solving": { category: "common", subcategory: "Soft Skills" },
