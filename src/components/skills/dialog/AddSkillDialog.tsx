@@ -68,9 +68,17 @@ export const AddSkillDialog = () => {
         console.log(`${skill} added to certifications`);
         addedSkills.certifications.push(newSkill);
       } else {
-        // Default to common skills if no category is found
-        console.log(`${skill} defaulted to common skills`);
-        addedSkills.common.push(newSkill);
+        // Use the universal categorization to determine the category
+        if (categorization.category === 'specialized') {
+          console.log(`${skill} added to specialized skills based on universal categorization`);
+          addedSkills.specialized.push(newSkill);
+        } else if (categorization.category === 'certification') {
+          console.log(`${skill} added to certifications based on universal categorization`);
+          addedSkills.certifications.push(newSkill);
+        } else {
+          console.log(`${skill} added to common skills based on universal categorization`);
+          addedSkills.common.push(newSkill);
+        }
       }
     });
 
