@@ -9,7 +9,12 @@ export const frontendSkills: UnifiedSkill[] = [
     growth: "28%",
     salary: "$165,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: {
+      B: true,
+      C: true,
+      B2: true,
+      O: true
+    }
   },
   {
     title: "TypeScript",
@@ -19,7 +24,12 @@ export const frontendSkills: UnifiedSkill[] = [
     growth: "32%",
     salary: "$160,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: {
+      B: true,
+      C: true,
+      B2: true,
+      O: true
+    }
   },
   {
     title: "Next.js",
@@ -29,7 +39,12 @@ export const frontendSkills: UnifiedSkill[] = [
     growth: "35%",
     salary: "$170,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: {
+      B: true,
+      C: true,
+      B2: true,
+      O: true
+    }
   },
   {
     title: "CSS/SASS",
@@ -39,7 +54,12 @@ export const frontendSkills: UnifiedSkill[] = [
     growth: "18%",
     salary: "$145,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: {
+      B: true,
+      C: true,
+      B2: true,
+      O: true
+    }
   },
   {
     title: "Performance Optimization",
@@ -49,6 +69,11 @@ export const frontendSkills: UnifiedSkill[] = [
     growth: "25%",
     salary: "$155,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: {
+      B: true,
+      C: true,
+      B2: true,
+      O: true
+    }
   }
 ];

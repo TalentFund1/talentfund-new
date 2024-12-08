@@ -1,50 +1,39 @@
 export interface Skill {
   title: string;
   subcategory: string;
-  level: string;
+  level?: string;
   growth: string;
+  salary: string;
+  confidence: 'low' | 'medium' | 'high';
+  category: 'specialized' | 'common' | 'certification';
+  type: 'critical' | 'technical' | 'necessary';
+  benchmarks: {
+    B: boolean;  // Business
+    C: boolean;  // Company
+    B2: boolean; // Benchmark
+    O: boolean;  // Organization
+  };
 }
 
-export interface SkillsTableProps {
-  selectedFilter: string;
-  setSelectedFilter: (filter: string) => void;
-}
-
-export interface SkillLevel {
-  level: 'unspecified' | 'beginner' | 'intermediate' | 'advanced';
-  requirement: 'required' | 'preferred';
-}
-
-export interface SkillTrackLevels {
-  [key: string]: SkillLevel;  // P1-P6 or M3-M6
+export interface UnifiedSkill extends Skill {
+  requirement?: 'required' | 'preferred' | 'skill_goal' | 'not_interested';
 }
 
 export interface SkillEntry {
   title: string;
-  category: 'critical' | 'technical' | 'necessary';
+  category: 'specialized' | 'common' | 'certification';
   subcategory: string;
-  type: 'specialized' | 'common' | 'certification';
-  growth?: string;
-  tracks?: {
-    professional?: SkillTrackLevels;
-    managerial?: SkillTrackLevels;
+  type: 'critical' | 'technical' | 'necessary';
+  growth: string;
+  salary: string;
+  confidence: 'low' | 'medium' | 'high';
+  benchmarks: {
+    B: boolean;
+    C: boolean;
+    B2: boolean;
+    O: boolean;
   };
 }
 
-export interface UnifiedSkill {
-  title: string;
-  subcategory: string;
-  category: 'specialized' | 'common' | 'certification';
-  type: 'critical' | 'technical' | 'necessary';
-  level?: string;
-  growth: string;
-  salary: string;
-  confidence: 'high' | 'medium' | 'low';
-  requirement?: 'required' | 'preferred' | 'skill_goal' | 'not_interested';
-  benchmarks: {
-    B: boolean; // Business
-    R: boolean; // Role
-    M: boolean; // Market
-    O: boolean; // Organization
-  };
-}
+export type SkillType = 'critical' | 'technical' | 'necessary';
+export type SkillCategory = 'specialized' | 'common' | 'certification';
