@@ -5,7 +5,7 @@ import { commonSkills } from './skills/commonSkills';
 import { certificationSkills } from './skills/certificationSkills';
 
 // Helper function to determine skill category based on growth and type
-export const determineCategory = (growth: string, type: string): 'critical' | 'technical' | 'necessary' => {
+const determineCategory = (growth: string, type: string): 'critical' | 'technical' | 'necessary' => {
   const growthValue = parseFloat(growth);
   if (growthValue >= 25) return 'critical';
   if (type === 'specialized' || type === 'common') return 'technical';
