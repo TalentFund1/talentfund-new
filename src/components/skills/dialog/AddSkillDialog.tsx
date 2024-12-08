@@ -8,7 +8,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { isSpecializedSkill, isCommonSkill, isCertificationSkill } from '../competency/skillCategories';
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -57,28 +56,16 @@ export const AddSkillDialog = () => {
         benchmarks: { B: true, R: true, M: true, O: true }
       };
 
-      // Check each category and add to appropriate array
-      if (isSpecializedSkill(skill, id || "123")) {
-        console.log(`${skill} added to specialized skills`);
+      // Always use universal categorization
+      if (categorization.category === 'specialized') {
+        console.log(`${skill} added to specialized skills based on universal categorization`);
         addedSkills.specialized.push(newSkill);
-      } else if (isCommonSkill(skill, id || "123")) {
-        console.log(`${skill} added to common skills`);
-        addedSkills.common.push(newSkill);
-      } else if (isCertificationSkill(skill, id || "123")) {
-        console.log(`${skill} added to certifications`);
+      } else if (categorization.category === 'certification') {
+        console.log(`${skill} added to certifications based on universal categorization`);
         addedSkills.certifications.push(newSkill);
       } else {
-        // Use the universal categorization to determine the category
-        if (categorization.category === 'specialized') {
-          console.log(`${skill} added to specialized skills based on universal categorization`);
-          addedSkills.specialized.push(newSkill);
-        } else if (categorization.category === 'certification') {
-          console.log(`${skill} added to certifications based on universal categorization`);
-          addedSkills.certifications.push(newSkill);
-        } else {
-          console.log(`${skill} added to common skills based on universal categorization`);
-          addedSkills.common.push(newSkill);
-        }
+        console.log(`${skill} added to common skills based on universal categorization`);
+        addedSkills.common.push(newSkill);
       }
     });
 
