@@ -8,7 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { categorizeSkill } from '../competency/skillCategories';
+import { isSpecializedSkill, isCommonSkill, isCertificationSkill } from '../competency/skillCategories';
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -35,46 +35,48 @@ export const AddSkillDialog = () => {
 
     // Add selected skills to toggledSkills
     const newToggledSkills = new Set(toggledSkills);
+    const addedSkills = {
+      specialized: [] as any[],
+      common: [] as any[],
+      certifications: [] as any[]
+    };
     
     selectedSkills.forEach(skill => {
       newToggledSkills.add(skill);
       
-      // Check if skill already exists in any category
-      const skillExists = currentRole.specialized.some(s => s.title === skill) ||
-                         currentRole.common.some(s => s.title === skill) ||
-                         currentRole.certifications.some(s => s.title === skill);
+      // Determine the category for each skill
+      console.log('Categorizing skill:', skill);
       
-      if (!skillExists) {
-        console.log('Categorizing new skill:', skill);
-        const category = categorizeSkill(skill, id || "123");
-        
-        const newSkill = {
-          title: skill,
-          subcategory: category === 'specialized' ? 'Specialized Skills' :
-                       category === 'common' ? 'Common Skills' : 'Certifications',
-          level: "unspecified",
-          growth: "20%",
-          salary: "$150,000",
-          benchmarks: { J: true, B: true, O: true }
-        };
+      const newSkill = {
+        title: skill,
+        subcategory: 'Uncategorized',
+        level: "unspecified",
+        growth: "20%",
+        salary: "$150,000",
+        benchmarks: { B: true, R: true, M: true, O: true }
+      };
 
-        // Add to appropriate category array
-        switch(category) {
-          case 'specialized':
-            console.log('Adding to specialized skills:', skill);
-            currentRole.specialized.push(newSkill);
-            break;
-          case 'common':
-            console.log('Adding to common skills:', skill);
-            currentRole.common.push(newSkill);
-            break;
-          case 'certification':
-            console.log('Adding to certifications:', skill);
-            currentRole.certifications.push(newSkill);
-            break;
-        }
+      // Check each category and add to appropriate array
+      if (isSpecializedSkill(skill, id || "123")) {
+        console.log(`${skill} added to specialized skills`);
+        addedSkills.specialized.push(newSkill);
+      } else if (isCommonSkill(skill, id || "123")) {
+        console.log(`${skill} added to common skills`);
+        addedSkills.common.push(newSkill);
+      } else if (isCertificationSkill(skill, id || "123")) {
+        console.log(`${skill} added to certifications`);
+        addedSkills.certifications.push(newSkill);
+      } else {
+        // Default to common skills if no category is found
+        console.log(`${skill} defaulted to common skills`);
+        addedSkills.common.push(newSkill);
       }
     });
+
+    // Update the role's skill arrays
+    currentRole.specialized = [...currentRole.specialized, ...addedSkills.specialized];
+    currentRole.common = [...currentRole.common, ...addedSkills.common];
+    currentRole.certifications = [...currentRole.certifications, ...addedSkills.certifications];
     
     console.log('Updated role skills:', {
       specialized: currentRole.specialized.length,
