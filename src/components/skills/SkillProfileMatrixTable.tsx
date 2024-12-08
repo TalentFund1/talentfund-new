@@ -7,10 +7,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { getUnifiedSkillData } from './data/centralSkillsDatabase';
 
 interface Skill {
   title: string;
   subcategory: string;
+  category?: string;
   level: string;
   growth: string;
   salary: string;
@@ -34,16 +36,20 @@ export const SkillProfileMatrixTable = ({
   sortDirection,
   onSort
 }: SkillProfileMatrixTableProps) => {
-  // Remove duplicate skills by title
+  // Remove duplicate skills by title and enrich with unified data
   const uniqueSkills = paginatedSkills.reduce((acc: Skill[], current) => {
     const exists = acc.find(skill => skill.title === current.title);
     if (!exists) {
-      acc.push(current);
+      const unifiedData = getUnifiedSkillData(current.title);
+      acc.push({
+        ...current,
+        category: unifiedData.category || 'common'
+      });
     }
     return acc;
   }, []);
 
-  console.log('Filtered unique skills:', uniqueSkills.map(s => s.title));
+  console.log('Filtered and enriched unique skills:', uniqueSkills.map(s => ({ title: s.title, category: s.category })));
 
   const renderSortArrow = (field: 'growth' | 'salary') => {
     if (sortField !== field) {
@@ -56,13 +62,46 @@ export const SkillProfileMatrixTable = ({
     );
   };
 
+  const getCategoryColor = (category: string) => {
+    switch (category?.toLowerCase()) {
+      case 'specialized':
+        return 'bg-blue-100 text-blue-800';
+      case 'common':
+        return 'bg-green-100 text-green-800';
+      case 'certification':
+        return 'bg-purple-100 text-purple-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   return (
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Skill Title</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">Subcategory</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
+            Category
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="ml-1">
+                    <HelpCircle className="h-4 w-4 inline-block text-muted-foreground hover:text-foreground transition-colors" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-left">Skill Category:</h4>
+                    <p className="text-sm text-left font-normal">
+                      Indicates whether the skill is specialized, common, or a certification requirement
+                    </p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
             <Button
               variant="ghost"
               className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
@@ -70,26 +109,9 @@ export const SkillProfileMatrixTable = ({
             >
               Projected Growth
               {renderSortArrow('growth')}
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-left">Projected Growth:</h4>
-                      <p className="text-sm text-left font-normal">
-                        Indicates the projected growth rate for this skill over the next year based on market demand and industry trends.
-                      </p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </Button>
           </th>
-          <th className="py-4 px-2 text-sm font-medium text-muted-foreground w-[10%]">
+          <th className="py-4 px-2 text-sm font-medium text-muted-foreground w-[15%]">
             <Button
               variant="ghost"
               className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
@@ -97,27 +119,10 @@ export const SkillProfileMatrixTable = ({
             >
               Skill Pricer
               {renderSortArrow('salary')}
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-left">Skill Pricer:</h4>
-                      <p className="text-sm text-left font-normal">
-                        Reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill.
-                      </p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </Button>
           </th>
-          <th className="py-4 px-8 text-sm font-medium text-muted-foreground text-center whitespace-nowrap">
-            Appears In <ChevronUp className="h-4 w-4 inline-block ml-1" />
+          <th className="py-4 px-8 text-sm font-medium text-muted-foreground text-center whitespace-nowrap w-[10%]">
+            Appears In
           </th>
         </tr>
       </thead>
@@ -140,6 +145,11 @@ export const SkillProfileMatrixTable = ({
             <td className="py-3 px-4">
               <span className="text-sm block truncate" title={skill.subcategory}>
                 {skill.subcategory}
+              </span>
+            </td>
+            <td className="py-3 px-4">
+              <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${getCategoryColor(skill.category || '')}`}>
+                {skill.category?.charAt(0).toUpperCase() + skill.category?.slice(1) || 'Common'}
               </span>
             </td>
             <td className="py-3 px-4">
