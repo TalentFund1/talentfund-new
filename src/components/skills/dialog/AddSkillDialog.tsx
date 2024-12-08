@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
-import { technicalSkills, softSkills } from '@/components/skillsData';
+import { technicalSkillTitles, softSkillTitles } from '@/components/skillsData';
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
@@ -41,7 +41,7 @@ export const AddSkillDialog = () => {
   const [open, setOpen] = useState(false);
   const { id } = useParams();
 
-  const allSkills = [...technicalSkills, ...softSkills];
+  const allSkills = [...technicalSkillTitles, ...softSkillTitles];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
 
   const handleAddSkills = () => {

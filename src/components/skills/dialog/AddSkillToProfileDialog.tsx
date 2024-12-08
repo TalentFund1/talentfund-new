@@ -2,12 +2,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
-import { technicalSkills, softSkills } from '@/components/skillsData';
+import { technicalSkillTitles, softSkillTitles } from '@/components/skillsData';
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { UnifiedSkill, getUnifiedSkillData } from '../data/centralSkillsDatabase';
+import { getUnifiedSkillData } from '../data/centralSkillsDatabase';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -15,7 +15,7 @@ export const AddSkillToProfileDialog = () => {
   const [open, setOpen] = useState(false);
   const { id } = useParams();
   
-  const allSkills = [...technicalSkills, ...softSkills];
+  const allSkills = [...technicalSkillTitles, ...softSkillTitles];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
 
   const handleAddSkills = () => {

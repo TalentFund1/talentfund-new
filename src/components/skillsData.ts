@@ -1,23 +1,23 @@
-import { technicalSkills } from './skills/data/categories/technicalSkills';
-import { softSkills } from './skills/data/categories/softSkills';
-import { certificationSkills } from './skills/data/categories/certificationSkills';
+import { technicalSkills as techSkills } from './skills/data/categories/technicalSkills';
+import { softSkills as softSkillsData } from './skills/data/categories/softSkills';
+import { certificationSkills as certSkills } from './skills/data/categories/certificationSkills';
 
 // Combine all skills
 export const skills = [
-  ...technicalSkills,
-  ...softSkills,
-  ...certificationSkills
+  ...techSkills,
+  ...softSkillsData,
+  ...certSkills
 ];
 
 // Map skills to titles for components that expect string arrays
-export const technicalSkillTitles = technicalSkills.map(skill => skill.title);
-export const softSkillTitles = softSkills.map(skill => skill.title);
-export const certificationTitles = certificationSkills.map(skill => skill.title);
+export const technicalSkillTitles = techSkills.map(skill => skill.title);
+export const softSkillTitles = softSkillsData.map(skill => skill.title);
+export const certificationTitles = certSkills.map(skill => skill.title);
 
 // Export full skill objects for when we need the complete data
-export const technicalSkillObjects = technicalSkills;
-export const softSkillObjects = softSkills;
-export const certificationSkillObjects = certificationSkills;
+export const technicalSkills = techSkills;
+export const softSkills = softSkillsData;
+export const certificationSkills = certSkills;
 
 console.log('Loaded skills:', {
   total: skills.length,
