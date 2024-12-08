@@ -94,8 +94,8 @@ export const AddSkillDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
+        <Button className="bg-[#1F2144] hover:bg-[#1F2144]/90">
+          <Plus className="h-5 w-5 mr-2" />
           Add Skill
         </Button>
       </DialogTrigger>
