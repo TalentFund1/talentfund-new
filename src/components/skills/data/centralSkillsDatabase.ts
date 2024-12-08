@@ -21,7 +21,9 @@ export const centralizedSkills: UnifiedSkill[] = [
 // Helper functions to access the centralized database
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
   console.log('Getting skill data for:', title);
-  return centralizedSkills.find(skill => skill.title === title);
+  const skill = centralizedSkills.find(skill => skill.title === title);
+  console.log('Found skill data:', skill || 'Not found');
+  return skill;
 };
 
 export const getSkillsByCategory = (category: 'specialized' | 'common' | 'certification'): UnifiedSkill[] => {
