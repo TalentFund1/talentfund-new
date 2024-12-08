@@ -1,3 +1,4 @@
+// Define the skills array
 export const skills = [
   {
     title: "Amazon Web Services",
@@ -168,3 +169,22 @@ export const skills = [
     growth: "29%"
   }
 ];
+
+// Categorize skills into technical and soft skills
+export const technicalSkills = skills.filter(skill => 
+  ['Web Services', 'Artificial Intelligence and Machine Learning', 'Software Development Tools', 
+   'Machine Learning Frameworks', 'AI Applications', 'Container Orchestration', 'Version Control',
+   'Databases', 'Web Development', 'Programming Languages', 'Mobile Development', 
+   'Software Architecture', 'API Development', 'Development Operations', 'Security',
+   'Data Management', 'Distributed Systems'].includes(skill.subcategory)
+);
+
+export const softSkills = skills.filter(skill => 
+  ['Design', 'Analytics'].includes(skill.subcategory)
+);
+
+console.log('Loaded skills:', {
+  total: skills.length,
+  technical: technicalSkills.length,
+  soft: softSkills.length
+});
