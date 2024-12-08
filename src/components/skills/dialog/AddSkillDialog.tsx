@@ -43,28 +43,22 @@ export const AddSkillDialog = () => {
     selectedSkills.forEach(skill => {
       newToggledSkills.add(skill);
       
-      // Get universal categorization for the skill
-      const categorization = getSkillCategorization(skill);
-      console.log('Categorizing skill:', skill, 'with universal categorization:', categorization);
-      
+      // Default categorization logic
       const newSkill = {
         title: skill,
-        subcategory: categorization.subcategory,
+        subcategory: "Added Skills",
         level: "unspecified",
         growth: "20%",
         salary: "$150,000",
         benchmarks: { B: true, R: true, M: true, O: true }
       };
 
-      // Always use universal categorization
-      if (categorization.category === 'specialized') {
-        console.log(`${skill} added to specialized skills based on universal categorization`);
+      // Simple categorization based on skill type
+      if (technicalSkills.includes(skill)) {
+        console.log(`${skill} added to specialized skills`);
         addedSkills.specialized.push(newSkill);
-      } else if (categorization.category === 'certification') {
-        console.log(`${skill} added to certifications based on universal categorization`);
-        addedSkills.certifications.push(newSkill);
       } else {
-        console.log(`${skill} added to common skills based on universal categorization`);
+        console.log(`${skill} added to common skills`);
         addedSkills.common.push(newSkill);
       }
     });
@@ -97,7 +91,9 @@ export const AddSkillDialog = () => {
         <Button 
           className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm"
         >
-          <Plus className="h-4 w-4 stroke-[1.5]" />
+          <div className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
+            <Plus className="h-3 w-3 stroke-[2]" />
+          </div>
           <span className="text-sm font-medium">Add Skill</span>
         </Button>
       </DialogTrigger>
