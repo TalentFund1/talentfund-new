@@ -4,6 +4,8 @@ export interface Skill {
   category: 'critical' | 'technical' | 'necessary';
   growth: string;
   salary: string;
+  level?: string;  // Made optional since not all skills have levels
+  requirement?: string; // Made optional for the same reason
   benchmarks: {
     B: boolean; // Basic
     R: boolean; // Required
