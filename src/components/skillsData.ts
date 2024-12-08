@@ -37,6 +37,38 @@ const getAllSkills = () => {
 // Initialize skills after roleSkills is imported
 const matrixSkills = getAllSkills();
 
+// Split skills into technical and soft skills
+export const technicalSkills = [
+  "Machine Learning",
+  "Deep Learning",
+  "Natural Language Processing",
+  "Computer Vision",
+  "TensorFlow",
+  "PyTorch",
+  "Python",
+  "JavaScript",
+  "TypeScript",
+  "React",
+  "Next.js",
+  "Node.js",
+  "CSS/SASS",
+  "Git Version Control",
+  "API Development",
+  "System Architecture",
+  "Docker",
+  "Kubernetes",
+  "AWS"
+];
+
+export const softSkills = [
+  "Problem Solving",
+  "Technical Writing",
+  "Team Leadership",
+  "Communication",
+  "Project Management",
+  "Agile Methodologies"
+];
+
 // Universal skill categorization mapping
 export const skillCategorization = {
   // AI & ML
