@@ -17,9 +17,12 @@ export const AddSkillDialog = () => {
 
   const handleAddSkills = () => {
     console.log('Adding skills:', selectedSkills);
+    console.log('Current toggled skills before addition:', Array.from(toggledSkills));
     
     const newToggledSkills = new Set(toggledSkills);
     selectedSkills.forEach(skill => newToggledSkills.add(skill));
+    
+    console.log('New toggled skills after addition:', Array.from(newToggledSkills));
     setToggledSkills(newToggledSkills);
 
     toast({

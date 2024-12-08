@@ -9,6 +9,7 @@ export const technicalSkills = [
     ...matrixSkills,
     // Programming Languages
     "JavaScript", "TypeScript", "Python", "Java", "C++", "Ruby", "Go", "Rust", "PHP", "Swift",
+    "IPA Development", // Added new skill here
     
     // Web Development
     "React", "Angular", "Vue.js", "Next.js", "Node.js", "Express.js", "Django", "Flask",
