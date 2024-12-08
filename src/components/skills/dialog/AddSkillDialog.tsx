@@ -16,6 +16,7 @@ const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
 const loadAddedSkills = (roleId: string): string[] => {
   try {
     const savedSkills = localStorage.getItem(getStorageKey(roleId));
+    console.log('Loading saved skills:', { roleId, savedSkills });
     return savedSkills ? JSON.parse(savedSkills) : [];
   } catch (error) {
     console.error('Error loading added skills:', error);
@@ -110,6 +111,11 @@ export const AddSkillDialog = () => {
     const existingSkills = loadAddedSkills(id || "");
     const updatedSkills = [...new Set([...existingSkills, ...selectedSkills])];
     saveAddedSkills(id || "", updatedSkills);
+
+    // Save toggled skills state
+    const toggledSkillsArray = Array.from(newToggledSkills);
+    localStorage.setItem(`roleToggledSkills-${id}`, JSON.stringify(toggledSkillsArray));
+    console.log('Saved toggled skills:', { roleId: id, skills: toggledSkillsArray });
 
     toast({
       title: "Skills Added",
