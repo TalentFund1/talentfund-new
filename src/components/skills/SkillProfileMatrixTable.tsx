@@ -34,6 +34,17 @@ export const SkillProfileMatrixTable = ({
   sortDirection,
   onSort
 }: SkillProfileMatrixTableProps) => {
+  // Remove duplicate skills by title
+  const uniqueSkills = paginatedSkills.reduce((acc: Skill[], current) => {
+    const exists = acc.find(skill => skill.title === current.title);
+    if (!exists) {
+      acc.push(current);
+    }
+    return acc;
+  }, []);
+
+  console.log('Filtered unique skills:', uniqueSkills.map(s => s.title));
+
   const renderSortArrow = (field: 'growth' | 'salary') => {
     if (sortField !== field) {
       return <ChevronUp className="h-4 w-4 text-muted-foreground opacity-50" />;
@@ -111,7 +122,7 @@ export const SkillProfileMatrixTable = ({
         </tr>
       </thead>
       <tbody>
-        {paginatedSkills.map((skill) => (
+        {uniqueSkills.map((skill) => (
           <tr 
             key={skill.title}
             className="border-t border-border hover:bg-muted/50 transition-colors"
