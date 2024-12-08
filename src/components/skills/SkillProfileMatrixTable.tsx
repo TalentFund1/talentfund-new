@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 interface Skill {
   title: string;
   subcategory: string;
-  occupation: string;
   level: string;
   growth: string;
   salary: string;
@@ -35,6 +34,7 @@ export const SkillProfileMatrixTable = ({
   sortDirection,
   onSort
 }: SkillProfileMatrixTableProps) => {
+  // Remove duplicate skills by title
   const uniqueSkills = paginatedSkills.reduce((acc: Skill[], current) => {
     const exists = acc.find(skill => skill.title === current.title);
     if (!exists) {
@@ -60,30 +60,8 @@ export const SkillProfileMatrixTable = ({
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
-            <div className="flex items-center gap-1">
-              Occupation
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-left">Occupation:</h4>
-                      <p className="text-sm text-left font-normal">
-                        Indicates the primary occupational role associated with this skill
-                      </p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          </th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Skill Title</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">
             <Button
               variant="ghost"
@@ -162,11 +140,6 @@ export const SkillProfileMatrixTable = ({
             <td className="py-3 px-4">
               <span className="text-sm block truncate" title={skill.subcategory}>
                 {skill.subcategory}
-              </span>
-            </td>
-            <td className="py-3 px-4">
-              <span className="text-sm block truncate" title={skill.occupation}>
-                {skill.occupation}
               </span>
             </td>
             <td className="py-3 px-4">

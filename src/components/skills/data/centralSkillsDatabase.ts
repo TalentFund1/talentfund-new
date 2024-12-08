@@ -1,9 +1,10 @@
+import { SkillEntry } from '../types/SkillTypes';
+
 export interface UnifiedSkill {
   title: string;
   subcategory: string;
   category: 'specialized' | 'common' | 'certification';
   type: 'critical' | 'technical' | 'necessary';
-  occupation: string;  // New field
   level?: string;
   growth: string;
   salary: string;
@@ -24,7 +25,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Frontend Frameworks",
     category: "specialized",
     type: "critical",
-    occupation: "Software Developer",
     growth: "28%",
     salary: "$175,000",
     confidence: "high",
@@ -35,7 +35,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Programming Languages",
     category: "specialized",
     type: "critical",
-    occupation: "Software Developer",
     growth: "25%",
     salary: "$165,000",
     confidence: "high",
@@ -46,7 +45,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Frontend Frameworks",
     category: "specialized",
     type: "technical",
-    occupation: "Software Developer",
     growth: "32%",
     salary: "$170,000",
     confidence: "high",
@@ -57,7 +55,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Frontend Development",
     category: "specialized",
     type: "technical",
-    occupation: "Software Developer",
     growth: "18%",
     salary: "$145,000",
     confidence: "high",
@@ -68,7 +65,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Soft Skills",
     category: "common",
     type: "necessary",
-    occupation: "All Roles",
     growth: "15%",
     salary: "$158,000",
     confidence: "high",
@@ -79,7 +75,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Development Practices",
     category: "common",
     type: "technical",
-    occupation: "Software Developer",
     growth: "20%",
     salary: "$160,000",
     confidence: "high",
@@ -90,7 +85,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Project Management",
     category: "common",
     type: "necessary",
-    occupation: "Project Manager",
     growth: "16%",
     salary: "$155,000",
     confidence: "high",
@@ -101,7 +95,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Cloud Certification",
     category: "certification",
     type: "technical",
-    occupation: "Cloud Developer",
     growth: "22%",
     salary: "$180,000",
     confidence: "high",
@@ -112,7 +105,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Web Development Certification",
     category: "certification",
     type: "technical",
-    occupation: "Mobile Developer",
     growth: "20%",
     salary: "$165,000",
     confidence: "high",
@@ -123,7 +115,6 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Frontend Development",
     category: "specialized",
     type: "technical",
-    occupation: "Software Developer",
     growth: "24%",
     salary: "$168,000",
     confidence: "high",
@@ -158,7 +149,6 @@ export const getUnifiedSkillData = (skillTitle: string): Partial<UnifiedSkill> =
       subcategory: "General Skills",
       category: "common",
       type: "necessary",
-      occupation: "Other",
       growth: "0%",
       salary: "$0",
       confidence: "low",
