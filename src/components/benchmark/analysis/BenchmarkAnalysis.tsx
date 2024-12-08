@@ -1,28 +1,33 @@
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
-import { roleSkills } from "../skills/data/roleSkills";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useTrack } from "../skills/context/TrackContext";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { useRoleStore } from "./RoleBenchmark";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { useEmployeeStore } from "../employee/store/employeeStore";
-import { getSkillProfileId } from "../EmployeeTable";
+import { roleSkills } from "@/components/skills/data/roleSkills";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
+import { useTrack } from "@/components/skills/context/TrackContext";
+import { useSkillsMatrixStore } from "@/components/benchmark/skills-matrix/SkillsMatrixState";
+import { getEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
+import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
+import { useCompetencyStateReader } from "@/components/skills/competency/CompetencyStateReader";
+import { useEmployeeStore } from "@/components/employee/store/employeeStore";
+import { getSkillProfileId } from "@/components/EmployeeTable";
 import { useEffect } from "react";
 
-export const BenchmarkAnalysis = () => {
-  const { id } = useParams<{ id: string }>();
+interface BenchmarkAnalysisProps {
+  selectedRole?: string;
+  roleLevel?: string;
+  employeeId?: string;
+}
+
+export const BenchmarkAnalysis = ({ selectedRole: propSelectedRole, roleLevel: propRoleLevel, employeeId: propEmployeeId }: BenchmarkAnalysisProps = {}) => {
+  const { id } = useParams();
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
-  const employeeSkills = getEmployeeSkills(id || "");
+  const employeeSkills = getEmployeeSkills(propEmployeeId || id || "");
   const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employees = useEmployeeStore((state) => state.employees);
   
-  const employee = employees.find(emp => emp.id === id);
+  const employee = employees.find(emp => emp.id === (propEmployeeId || id));
   const employeeRoleId = employee ? getSkillProfileId(employee.role) : "";
   const employeeLevel = employee?.role.split(":")[1]?.trim().toLowerCase() || "p4";
 

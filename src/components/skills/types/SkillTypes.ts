@@ -3,31 +3,20 @@ export interface Skill {
   subcategory: string;
   level?: string;
   growth: string;
-  salary?: string;
-}
-
-export interface CertificationSkill extends Skill {
-  salary: string;  // Make salary required for certifications
-}
-
-export interface UnifiedSkill {
-  title: string;
-  subcategory: string;
-  category: 'specialized' | 'common' | 'certification';
-  type: 'critical' | 'technical' | 'necessary';
-  level?: string;
-  growth: string;
   salary: string;
-  confidence: 'low' | 'medium' | 'high';
-  benchmarks: { [key: string]: boolean };
-}
-
-export interface SkillEntry extends UnifiedSkill {
-  tracks?: {
-    professional?: Record<string, any>;
-    managerial?: Record<string, any>;
+  confidence: "low" | "medium" | "high";
+  type: "critical" | "technical" | "necessary";
+  category: "specialized" | "common" | "certification";
+  requirement?: string;
+  isCompanySkill?: boolean;
+  benchmarks: {
+    C: boolean;
+    B: boolean;
+    B2: boolean;
+    O: boolean;
   };
 }
 
-export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillType = 'critical' | 'technical' | 'necessary';
+export interface UnifiedSkill extends Skill {
+  level?: string;
+}
