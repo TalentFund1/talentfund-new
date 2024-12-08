@@ -6,10 +6,11 @@ import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { determineCategory, getSkillByTitle } from "../data/skillsDatabase";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [skillType, setSkillType] = useState<'specialized' | 'common' | 'certification'>('specialized');
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
@@ -18,45 +19,26 @@ export const AddSkillDialog = () => {
 
   const handleAddSkills = () => {
     console.log('Adding skills:', selectedSkills);
+    console.log('Skill type:', skillType);
     console.log('Current toggled skills before addition:', Array.from(toggledSkills));
     
     const newToggledSkills = new Set(toggledSkills);
     
-    // Categorize and add each skill
-    selectedSkills.forEach(skillTitle => {
-      const skill = getSkillByTitle(skillTitle);
-      if (skill) {
-        const category = determineCategory(skill.growth || "0%", skill.type);
-        console.log(`Categorizing skill ${skillTitle} as ${category}`);
-        newToggledSkills.add(skillTitle);
-      }
+    // Add each skill with its type
+    selectedSkills.forEach(skill => {
+      console.log(`Adding skill ${skill} as ${skillType}`);
+      newToggledSkills.add(skill);
     });
     
     console.log('New toggled skills after addition:', Array.from(newToggledSkills));
     setToggledSkills(newToggledSkills);
 
-    // Show categorization in toast message
-    const criticalCount = selectedSkills.filter(skillTitle => {
-      const skill = getSkillByTitle(skillTitle);
-      return skill && determineCategory(skill.growth || "0%", skill.type) === "critical";
-    }).length;
-
-    const technicalCount = selectedSkills.filter(skillTitle => {
-      const skill = getSkillByTitle(skillTitle);
-      return skill && determineCategory(skill.growth || "0%", skill.type) === "technical";
-    }).length;
-
-    const necessaryCount = selectedSkills.filter(skillTitle => {
-      const skill = getSkillByTitle(skillTitle);
-      return skill && determineCategory(skill.growth || "0%", skill.type) === "necessary";
-    }).length;
+    // Count skills by type for the toast message
+    const addedCount = selectedSkills.length;
 
     toast({
       title: "Skills Added",
-      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile:\n
-        Critical: ${criticalCount}\n
-        Technical: ${technicalCount}\n
-        Necessary: ${necessaryCount}`,
+      description: `Added ${addedCount} ${skillType} skill${addedCount === 1 ? '' : 's'} to the profile.`,
     });
 
     setSelectedSkills([]);
@@ -77,14 +59,27 @@ export const AddSkillDialog = () => {
         </DialogHeader>
         
         <div className="space-y-6 py-4">
-          <SearchFilter
-            label=""
-            placeholder="Search skills..."
-            items={allSkills}
-            selectedItems={selectedSkills}
-            onItemsChange={setSelectedSkills}
-            singleSelect={false}
-          />
+          <div className="space-y-4">
+            <Select value={skillType} onValueChange={(value: 'specialized' | 'common' | 'certification') => setSkillType(value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select skill type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="specialized">Specialized Skills</SelectItem>
+                <SelectItem value="common">Common Skills</SelectItem>
+                <SelectItem value="certification">Certification</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <SearchFilter
+              label=""
+              placeholder="Search skills..."
+              items={allSkills}
+              selectedItems={selectedSkills}
+              onItemsChange={setSelectedSkills}
+              singleSelect={false}
+            />
+          </div>
 
           <div className="flex justify-end gap-2">
             <Button
