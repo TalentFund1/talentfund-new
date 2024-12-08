@@ -1,17 +1,13 @@
-import { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
+import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
-import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
-import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
-
-import { AddSkillDialog } from './dialog/AddSkillDialog';
+import { SkillProfileMatrixTable } from './SkillProfileMatrixTable';
+import { useParams } from "react-router-dom";
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -24,42 +20,8 @@ export const SkillProfileMatrix = () => {
   const [isDirty, setIsDirty] = useState(false);
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
-  const { toast } = useToast();
-  const observerTarget = useRef(null);
   const { id } = useParams<{ id: string }>();
-  const { toggledSkills, setToggledSkills } = useToggledSkills();
-
-  const handleToggleSkill = (skillTitle: string) => {
-    const newToggledSkills = new Set(toggledSkills);
-    if (newToggledSkills.has(skillTitle)) {
-      console.log('Removing skill:', skillTitle);
-      newToggledSkills.delete(skillTitle);
-    } else {
-      console.log('Adding skill:', skillTitle);
-      newToggledSkills.add(skillTitle);
-    }
-    setToggledSkills(newToggledSkills);
-    setIsDirty(true);
-    
-    toast({
-      title: "Skill Updated",
-      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
-    });
-  };
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      if (sortDirection === 'asc') {
-        setSortDirection('desc');
-      } else if (sortDirection === 'desc') {
-        setSortField(null);
-        setSortDirection(null);
-      }
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
+  const { toggledSkills } = useToggledSkills();
 
   // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
@@ -80,26 +42,19 @@ export const SkillProfileMatrix = () => {
       skills = currentRoleSkills.certifications;
     }
 
-    let sortedSkills = skills.filter(skill => {
-      const isInCurrentRole = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ].some(roleSkill => roleSkill.title === skill.title);
+    // Filter skills based on toggledSkills
+    let filteredSkills = skills.filter(skill => toggledSkills.has(skill.title));
 
-      // Apply category filter
-      if (selectedCategory !== 'all') {
+    // Apply category filter if selected
+    if (selectedCategory !== 'all') {
+      filteredSkills = filteredSkills.filter(skill => {
         const skillCategory = getCategoryForSkill(skill, id || "123");
-        if (skillCategory !== selectedCategory) {
-          return false;
-        }
-      }
-
-      return isInCurrentRole;
-    });
+        return skillCategory === selectedCategory;
+      });
+    }
 
     // Sort skills based on toggle state first
-    sortedSkills.sort((a, b) => {
+    filteredSkills.sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
       
@@ -110,7 +65,7 @@ export const SkillProfileMatrix = () => {
 
     // Apply additional sorting if specified
     if (sortField && sortDirection) {
-      const toggleSortedSkills = [...sortedSkills];
+      const toggleSortedSkills = [...filteredSkills];
       toggleSortedSkills.sort((a, b) => {
         // Preserve toggle-based ordering within each group
         const aIsToggled = toggledSkills.has(a.title);
@@ -124,22 +79,31 @@ export const SkillProfileMatrix = () => {
           const bGrowth = parseFloat(b.growth);
           return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
         } else if (sortField === 'salary') {
-          const aSalary = parseFloat(a.salary.replace(/[^0-9.-]+/g, ""));
-          const bSalary = parseFloat(b.salary.replace(/[^0-9.-]+/g, ""));
+          const aSalary = parseFloat(a.salary?.replace(/[^0-9.-]+/g, "") || "0");
+          const bSalary = parseFloat(b.salary?.replace(/[^0-9.-]+/g, "") || "0");
           return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
         }
         return 0;
       });
-      sortedSkills = toggleSortedSkills;
+      filteredSkills = toggleSortedSkills;
     }
 
-    return sortedSkills;
+    return filteredSkills;
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
   const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
     filteredSkills.some(fs => fs.title === skill)
   ).length;
+
+  // Debug logging
+  console.log('SkillProfileMatrix - Current state:', {
+    toggledSkills: Array.from(toggledSkills),
+    filteredSkills: filteredSkills.map(s => s.title),
+    skillType,
+    selectedCategory,
+    roleId: id
+  });
 
   return (
     <div className="space-y-6">
@@ -165,15 +129,14 @@ export const SkillProfileMatrix = () => {
           <SkillProfileMatrixTable 
             paginatedSkills={filteredSkills}
             toggledSkills={toggledSkills}
-            onToggleSkill={handleToggleSkill}
             sortField={sortField}
             sortDirection={sortDirection}
-            onSort={handleSort}
+            onSort={setSortField}
           />
         </div>
 
         {hasMore && (
-          <div ref={observerTarget} className="h-10" />
+          <div className="h-10" />
         )}
       </Card>
     </div>
