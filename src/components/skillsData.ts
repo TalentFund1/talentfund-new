@@ -57,7 +57,14 @@ export const technicalSkills = [
   "System Architecture",
   "Docker",
   "Kubernetes",
-  "AWS"
+  "AWS",
+  "System Design",
+  "Technical Architecture",
+  "Risk Management",
+  "Team Leadership",
+  "Project Management",
+  "Strategic Planning",
+  "Stakeholder Management"
 ];
 
 export const softSkills = [
@@ -108,16 +115,17 @@ export const skillCategorization = {
   "TensorFlow Developer Certificate": { category: "certification", subcategory: "AI Certification" },
   "AWS Certified Developer - Associate": { category: "certification", subcategory: "Cloud Certification" },
   "Google Mobile Web Specialist": { category: "certification", subcategory: "Web Development Certification" },
-  "Kubernetes Administrator (CKA)": { category: "certification", subcategory: "Container Certification" }
-};
-
-export const getSkillCategorization = (skillTitle: string) => {
-  const defaultCategorization = {
-    category: "common",
-    subcategory: "General Skills"
-  };
-
-  return skillCategorization[skillTitle] || defaultCategorization;
+  "Kubernetes Administrator (CKA)": { category: "certification", subcategory: "Container Certification" },
+  "Project Management Professional (PMP)": { category: "certification", subcategory: "Project Management Certification" },
+  "Certified Scrum Master (CSM)": { category: "certification", subcategory: "Agile Certification" },
+  
+  // New management skills categorization
+  "System Design": { category: "specialized", subcategory: "Software Architecture" },
+  "Technical Architecture": { category: "specialized", subcategory: "Software Architecture" },
+  "Risk Management": { category: "specialized", subcategory: "Management" },
+  "Stakeholder Management": { category: "specialized", subcategory: "Management" },
+  "Project Management": { category: "specialized", subcategory: "Management" },
+  "Strategic Planning": { category: "specialized", subcategory: "Management" },
 };
 
 // Export matrixSkills after initialization

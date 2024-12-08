@@ -2,6 +2,36 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const managementSkills: UnifiedSkill[] = [
   {
+    title: "System Design",
+    subcategory: "Software Architecture",
+    category: "specialized",
+    type: "technical",
+    growth: "28%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Technical Architecture",
+    subcategory: "Software Architecture",
+    category: "specialized",
+    type: "critical",
+    growth: "30%",
+    salary: "$175,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Risk Management",
+    subcategory: "Management",
+    category: "specialized",
+    type: "critical",
+    growth: "24%",
+    salary: "$180,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
     title: "Team Leadership",
     subcategory: "Leadership",
     category: "specialized",
@@ -32,12 +62,22 @@ export const managementSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Risk Management",
+    title: "Stakeholder Management",
     subcategory: "Management",
     category: "specialized",
-    type: "critical",
-    growth: "24%",
-    salary: "$180,000",
+    type: "technical",
+    growth: "18%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Agile Methodologies",
+    subcategory: "Project Management",
+    category: "common",
+    type: "technical",
+    growth: "20%",
+    salary: "$150,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }
