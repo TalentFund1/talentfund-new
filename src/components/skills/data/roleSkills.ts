@@ -1,22 +1,28 @@
+import { skillCategorization } from '../../skillsData';
+
+const getSubcategory = (skillTitle: string) => {
+  return skillCategorization[skillTitle]?.subcategory || "General Skills";
+};
+
 export const roleSkills = {
   "123": { // AI Engineer
     title: "AI Engineer",
     soc: "11-9041",
     specialized: [
-      { title: "Machine Learning", subcategory: "AI & ML", level: "unspecified", growth: "30%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
-      { title: "Deep Learning", subcategory: "AI & ML", level: "unspecified", growth: "28%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Natural Language Processing", subcategory: "AI Applications", level: "unspecified", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Computer Vision", subcategory: "AI Applications", level: "unspecified", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "TensorFlow", subcategory: "ML Frameworks", level: "unspecified", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "Machine Learning", subcategory: getSubcategory("Machine Learning"), level: "unspecified", growth: "30%", salary: "$180,256", benchmarks: { J: true, B: true, O: true } },
+      { title: "Deep Learning", subcategory: getSubcategory("Deep Learning"), level: "unspecified", growth: "28%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Natural Language Processing", subcategory: getSubcategory("Natural Language Processing"), level: "unspecified", growth: "28%", salary: "$190,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Computer Vision", subcategory: getSubcategory("Computer Vision"), level: "unspecified", growth: "22%", salary: "$188,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "TensorFlow", subcategory: getSubcategory("TensorFlow"), level: "unspecified", growth: "20%", salary: "$185,000", benchmarks: { J: true, B: true, O: true } }
     ],
     common: [
-      { title: "Python", subcategory: "Programming Languages", level: "unspecified", growth: "25%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
-      { title: "Problem Solving", subcategory: "Soft Skills", level: "unspecified", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "Technical Writing", subcategory: "Communication", level: "unspecified", growth: "12%", salary: "$156,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "Python", subcategory: getSubcategory("Python"), level: "unspecified", growth: "25%", salary: "$173,344", benchmarks: { J: true, B: true, O: true } },
+      { title: "Problem Solving", subcategory: getSubcategory("Problem Solving"), level: "unspecified", growth: "15%", salary: "$158,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "Technical Writing", subcategory: getSubcategory("Technical Writing"), level: "unspecified", growth: "12%", salary: "$156,000", benchmarks: { J: true, B: true, O: true } }
     ],
     certifications: [
-      { title: "AWS Certified Machine Learning - Specialty", subcategory: "Cloud Certification", level: "unspecified", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
-      { title: "TensorFlow Developer Certificate", subcategory: "AI Certification", level: "unspecified", growth: "20%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } }
+      { title: "AWS Certified Machine Learning - Specialty", subcategory: getSubcategory("AWS Certified Machine Learning - Specialty"), level: "unspecified", growth: "25%", salary: "$182,000", benchmarks: { J: true, B: true, O: true } },
+      { title: "TensorFlow Developer Certificate", subcategory: getSubcategory("TensorFlow Developer Certificate"), level: "unspecified", growth: "20%", salary: "$178,000", benchmarks: { J: true, B: true, O: true } }
     ]
   },
   "124": { // Backend Engineer
