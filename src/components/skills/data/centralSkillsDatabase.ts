@@ -18,65 +18,45 @@ export interface UnifiedSkill {
   };
 }
 
-// Centralized skills database
+// Centralized skills database with complete information
 export const centralizedSkills: UnifiedSkill[] = [
   {
-    title: "Machine Learning",
-    subcategory: "AI & ML",
-    category: "specialized",
-    type: "critical",
-    growth: "30%",
-    salary: "$180,256",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    title: "Deep Learning",
-    subcategory: "AI & ML",
+    title: "React",
+    subcategory: "Frontend Frameworks",
     category: "specialized",
     type: "critical",
     growth: "28%",
-    salary: "$182,000",
+    salary: "$175,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Natural Language Processing",
-    subcategory: "AI Applications",
-    category: "specialized",
-    type: "technical",
-    growth: "28%",
-    salary: "$190,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    title: "Computer Vision",
-    subcategory: "AI Applications",
-    category: "specialized",
-    type: "technical",
-    growth: "22%",
-    salary: "$188,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    title: "TensorFlow",
-    subcategory: "ML Frameworks",
-    category: "specialized",
-    type: "technical",
-    growth: "20%",
-    salary: "$185,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    title: "Python",
+    title: "TypeScript",
     subcategory: "Programming Languages",
-    category: "common",
-    type: "necessary",
+    category: "specialized",
+    type: "critical",
     growth: "25%",
-    salary: "$173,344",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Next.js",
+    subcategory: "Frontend Frameworks",
+    category: "specialized",
+    type: "technical",
+    growth: "32%",
+    salary: "$170,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "CSS/SASS",
+    subcategory: "Frontend Development",
+    category: "specialized",
+    type: "technical",
+    growth: "18%",
+    salary: "$145,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -91,42 +71,52 @@ export const centralizedSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Technical Writing",
-    subcategory: "Communication",
+    title: "Code Review",
+    subcategory: "Development Practices",
+    category: "common",
+    type: "technical",
+    growth: "20%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Agile Methodologies",
+    subcategory: "Project Management",
     category: "common",
     type: "necessary",
-    growth: "12%",
-    salary: "$156,000",
+    growth: "16%",
+    salary: "$155,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Node.js",
-    subcategory: "Backend Development",
-    category: "specialized",
+    title: "AWS Certified Developer - Associate",
+    subcategory: "Cloud Certification",
+    category: "certification",
     type: "technical",
-    growth: "25%",
-    salary: "$175,000",
+    growth: "22%",
+    salary: "$180,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Database Design",
-    subcategory: "Data Management",
-    category: "specialized",
+    title: "Google Mobile Web Specialist",
+    subcategory: "Web Development Certification",
+    category: "certification",
     type: "technical",
-    growth: "15%",
-    salary: "$172,000",
+    growth: "20%",
+    salary: "$165,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "API Development",
-    subcategory: "Backend Development",
+    title: "Performance Optimization",
+    subcategory: "Frontend Development",
     category: "specialized",
     type: "technical",
-    growth: "25%",
-    salary: "$178,000",
+    growth: "24%",
+    salary: "$168,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }
@@ -134,22 +124,26 @@ export const centralizedSkills: UnifiedSkill[] = [
 
 // Helper functions to access the centralized database
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
+  console.log('Getting skill data for:', title);
   return centralizedSkills.find(skill => skill.title === title);
 };
 
 export const getSkillsByCategory = (category: 'specialized' | 'common' | 'certification'): UnifiedSkill[] => {
+  console.log('Getting skills for category:', category);
   return centralizedSkills.filter(skill => skill.category === category);
 };
 
 export const getSkillsByType = (type: 'critical' | 'technical' | 'necessary'): UnifiedSkill[] => {
+  console.log('Getting skills by type:', type);
   return centralizedSkills.filter(skill => skill.type === type);
 };
 
 // Function to ensure skill data consistency
 export const getUnifiedSkillData = (skillTitle: string): Partial<UnifiedSkill> => {
+  console.log('Fetching unified skill data for:', skillTitle);
   const skill = getSkillByTitle(skillTitle);
   if (!skill) {
-    console.warn(`Skill "${skillTitle}" not found in centralized database`);
+    console.warn(`Skill "${skillTitle}" not found in centralized database, using default values`);
     return {
       title: skillTitle,
       subcategory: "General Skills",
@@ -161,5 +155,6 @@ export const getUnifiedSkillData = (skillTitle: string): Partial<UnifiedSkill> =
       benchmarks: { B: false, R: false, M: false, O: false }
     };
   }
+  console.log('Found skill data:', skill);
   return skill;
 };
