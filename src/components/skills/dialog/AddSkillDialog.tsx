@@ -9,6 +9,7 @@ import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { getUnifiedSkillData } from '../data/centralSkillsDatabase';
+import { saveToggledSkills } from '../context/utils/storageUtils';
 
 const STORAGE_KEY = 'added-skills';
 const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
@@ -47,7 +48,7 @@ export const AddSkillDialog = () => {
     console.log('Adding skills:', selectedSkills);
     console.log('Current role:', currentRole?.title);
     
-    if (!currentRole) {
+    if (!currentRole || !id) {
       toast({
         title: "Error",
         description: "Could not find the current role profile.",
@@ -105,17 +106,23 @@ export const AddSkillDialog = () => {
       certifications: currentRole.certifications.length
     });
     
+    // Save toggled skills state
     setToggledSkills(newToggledSkills);
 
     // Save added skills to localStorage
-    const existingSkills = loadAddedSkills(id || "");
+    const existingSkills = loadAddedSkills(id);
     const updatedSkills = [...new Set([...existingSkills, ...selectedSkills])];
-    saveAddedSkills(id || "", updatedSkills);
+    saveAddedSkills(id, updatedSkills);
 
-    // Save toggled skills state
+    // Save toggled skills state to localStorage
     const toggledSkillsArray = Array.from(newToggledSkills);
-    localStorage.setItem(`roleToggledSkills-${id}`, JSON.stringify(toggledSkillsArray));
+    saveToggledSkills(id, toggledSkillsArray);
     console.log('Saved toggled skills:', { roleId: id, skills: toggledSkillsArray });
+
+    // Dispatch event to notify other components
+    window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
+      detail: { role: id, skills: toggledSkillsArray }
+    }));
 
     toast({
       title: "Skills Added",
