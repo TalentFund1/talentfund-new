@@ -9,6 +9,29 @@ import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 
+const STORAGE_KEY = 'added-skills';
+
+const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
+
+const loadAddedSkills = (roleId: string): string[] => {
+  try {
+    const savedSkills = localStorage.getItem(getStorageKey(roleId));
+    return savedSkills ? JSON.parse(savedSkills) : [];
+  } catch (error) {
+    console.error('Error loading added skills:', error);
+    return [];
+  }
+};
+
+const saveAddedSkills = (roleId: string, skills: string[]) => {
+  try {
+    localStorage.setItem(getStorageKey(roleId), JSON.stringify(skills));
+    console.log('Saved added skills:', { roleId, skills });
+  } catch (error) {
+    console.error('Error saving added skills:', error);
+  }
+};
+
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const { toggledSkills, setToggledSkills } = useToggledSkills();
@@ -75,6 +98,11 @@ export const AddSkillDialog = () => {
     });
     
     setToggledSkills(newToggledSkills);
+
+    // Save added skills to localStorage
+    const existingSkills = loadAddedSkills(id || "");
+    const updatedSkills = [...new Set([...existingSkills, ...selectedSkills])];
+    saveAddedSkills(id || "", updatedSkills);
 
     toast({
       title: "Skills Added",
