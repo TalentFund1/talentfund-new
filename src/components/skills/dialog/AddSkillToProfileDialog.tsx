@@ -35,9 +35,26 @@ export const AddSkillToProfileDialog = () => {
     }
 
     // Get unified skill data for each selected skill
-    const newSpecializedSkills: Partial<UnifiedSkill>[] = selectedSkills.map(skillTitle => {
+    const newSpecializedSkills = selectedSkills.map(skillTitle => {
       const skillData = getUnifiedSkillData(skillTitle);
       console.log('Retrieved unified skill data:', { skillTitle, skillData });
+      
+      // Ensure all required properties are present
+      if (!skillData.title || !skillData.subcategory) {
+        console.warn(`Missing required data for skill: ${skillTitle}`);
+        return {
+          title: skillTitle,
+          subcategory: skillData.subcategory || "General Skills",
+          category: skillData.category || "specialized",
+          type: skillData.type || "technical",
+          level: skillData.level || "unspecified",
+          growth: skillData.growth || "0%",
+          salary: skillData.salary || "$0",
+          confidence: skillData.confidence || "medium",
+          benchmarks: skillData.benchmarks || { B: true, R: true, M: true, O: true }
+        };
+      }
+      
       return skillData;
     });
 
