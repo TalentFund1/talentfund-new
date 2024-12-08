@@ -32,31 +32,7 @@ export const AddSkillDialog = () => {
       return;
     }
 
-    // Check for duplicate skills before adding
-    const existingSkills = new Set([
-      ...currentRole.specialized.map(s => s.title),
-      ...currentRole.common.map(s => s.title),
-      ...currentRole.certifications.map(s => s.title)
-    ]);
-
-    const duplicateSkills = selectedSkills.filter(skill => existingSkills.has(skill));
-    const newSkills = selectedSkills.filter(skill => !existingSkills.has(skill));
-
-    if (duplicateSkills.length > 0) {
-      toast({
-        title: "Duplicate Skills",
-        description: `${duplicateSkills.join(", ")} already exist in the profile.`,
-        variant: "destructive",  // Changed from "warning" to "destructive"
-      });
-
-      if (newSkills.length === 0) {
-        setSelectedSkills([]);
-        setOpen(false);
-        return;
-      }
-    }
-
-    // Add only new skills to toggledSkills
+    // Add selected skills to toggledSkills
     const newToggledSkills = new Set(toggledSkills);
     const addedSkills = {
       specialized: [] as any[],
@@ -64,7 +40,7 @@ export const AddSkillDialog = () => {
       certifications: [] as any[]
     };
     
-    newSkills.forEach(skill => {
+    selectedSkills.forEach(skill => {
       newToggledSkills.add(skill);
       
       // Get universal categorization for the skill
@@ -93,7 +69,7 @@ export const AddSkillDialog = () => {
       }
     });
 
-    // Update the role's skill arrays with only new skills
+    // Update the role's skill arrays
     currentRole.specialized = [...currentRole.specialized, ...addedSkills.specialized];
     currentRole.common = [...currentRole.common, ...addedSkills.common];
     currentRole.certifications = [...currentRole.certifications, ...addedSkills.certifications];
@@ -106,12 +82,10 @@ export const AddSkillDialog = () => {
     
     setToggledSkills(newToggledSkills);
 
-    if (newSkills.length > 0) {
-      toast({
-        title: "Skills Added",
-        description: `Added ${newSkills.length} new skill${newSkills.length === 1 ? '' : 's'} to the profile.`,
-      });
-    }
+    toast({
+      title: "Skills Added",
+      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile.`,
+    });
 
     setSelectedSkills([]);
     setOpen(false);
