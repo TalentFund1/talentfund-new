@@ -9,7 +9,7 @@ export const aiSkills: UnifiedSkill[] = [
     growth: "35%",
     salary: "$185,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: { B: true, C: true, B2: true, O: true }
   },
   {
     title: "Deep Learning",
@@ -19,7 +19,7 @@ export const aiSkills: UnifiedSkill[] = [
     growth: "32%",
     salary: "$180,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: { B: true, C: true, B2: true, O: true }
   },
   {
     title: "Natural Language Processing",
@@ -29,7 +29,7 @@ export const aiSkills: UnifiedSkill[] = [
     growth: "30%",
     salary: "$175,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: { B: true, C: true, B2: true, O: true }
   },
   {
     title: "Computer Vision",
@@ -39,7 +39,7 @@ export const aiSkills: UnifiedSkill[] = [
     growth: "28%",
     salary: "$170,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: { B: true, C: true, B2: true, O: true }
   },
   {
     title: "TensorFlow",
@@ -49,6 +49,6 @@ export const aiSkills: UnifiedSkill[] = [
     growth: "25%",
     salary: "$165,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: { B: true, C: true, B2: true, O: true }
   }
 ];

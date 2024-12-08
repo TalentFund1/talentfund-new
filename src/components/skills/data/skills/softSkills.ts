@@ -9,7 +9,7 @@ export const softSkills: UnifiedSkill[] = [
     growth: "15%",
     salary: "$158,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: { B: true, C: true, B2: true, O: true }
   },
   {
     title: "Code Review",
@@ -19,7 +19,7 @@ export const softSkills: UnifiedSkill[] = [
     growth: "18%",
     salary: "$145,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: { B: true, C: true, B2: true, O: true }
   },
   {
     title: "Agile Methodologies",
@@ -29,6 +29,6 @@ export const softSkills: UnifiedSkill[] = [
     growth: "20%",
     salary: "$150,000",
     confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: { B: true, C: true, B2: true, O: true }
   }
 ];
