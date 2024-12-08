@@ -6,13 +6,12 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { roleSkills } from './data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { getCategoryForSkill } from './utils/skillCountUtils';
-import { ToggledSkillsProvider } from "./context/ToggledSkillsContext";
 
 interface SkillProfileHeaderProps {
   jobTitle: string;
 }
 
-const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
+const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { toggledSkills } = useToggledSkills();
   const { id } = useParams<{ id: string }>();
@@ -143,10 +142,4 @@ const SkillProfileHeaderContent = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   );
 };
 
-export const SkillProfileHeader = (props: SkillProfileHeaderProps) => {
-  return (
-    <ToggledSkillsProvider>
-      <SkillProfileHeaderContent {...props} />
-    </ToggledSkillsProvider>
-  );
-};
+export default SkillProfileHeader;
