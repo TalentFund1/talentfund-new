@@ -8,9 +8,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
+import { getUnifiedSkillData } from '../data/centralSkillsDatabase';
 
 const STORAGE_KEY = 'added-skills';
-
 const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
 
 const loadAddedSkills = (roleId: string): string[] => {
@@ -63,30 +63,37 @@ export const AddSkillDialog = () => {
       certifications: [] as any[]
     };
     
-    selectedSkills.forEach(skill => {
-      newToggledSkills.add(skill);
+    selectedSkills.forEach(skillTitle => {
+      newToggledSkills.add(skillTitle);
       
-      // Default categorization logic
-      const newSkill = {
-        title: skill,
-        subcategory: "Added Skills",
-        level: "unspecified",
-        growth: "20%",
-        salary: "$150,000",
-        benchmarks: { B: true, R: true, M: true, O: true }
-      };
+      // Get complete skill data from centralized database
+      const skillData = getUnifiedSkillData(skillTitle);
+      console.log('Retrieved unified skill data:', { skillTitle, skillData });
+      
+      if (!skillData) {
+        console.warn(`No data found for skill: ${skillTitle}`);
+        return;
+      }
 
-      // Simple categorization based on skill type
-      if (technicalSkills.includes(skill)) {
-        console.log(`${skill} added to specialized skills`);
-        addedSkills.specialized.push(newSkill);
-      } else {
-        console.log(`${skill} added to common skills`);
-        addedSkills.common.push(newSkill);
+      // Categorize skill based on its type from the unified database
+      const category = skillData.category || 'common';
+      switch (category) {
+        case 'specialized':
+          addedSkills.specialized.push(skillData);
+          break;
+        case 'common':
+          addedSkills.common.push(skillData);
+          break;
+        case 'certification':
+          addedSkills.certifications.push(skillData);
+          break;
+        default:
+          console.warn(`Unknown category for skill: ${skillTitle}`);
+          addedSkills.common.push(skillData);
       }
     });
 
-    // Update the role's skill arrays
+    // Update the role's skill arrays with complete skill data
     currentRole.specialized = [...currentRole.specialized, ...addedSkills.specialized];
     currentRole.common = [...currentRole.common, ...addedSkills.common];
     currentRole.certifications = [...currentRole.certifications, ...addedSkills.certifications];
