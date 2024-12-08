@@ -12,7 +12,7 @@ export const technicalSkills = [
     
     // Web Development
     "React", "Angular", "Vue.js", "Next.js", "Node.js", "Express.js", "Django", "Flask",
-    "HTML5", "CSS3", "Sass", "Tailwind CSS", "Bootstrap", "Material UI", "IPA Development",
+    "HTML5", "CSS3", "Sass", "Tailwind CSS", "Bootstrap", "Material UI",
     
     // Database
     "SQL", "PostgreSQL", "MongoDB", "Redis", "Elasticsearch", "Oracle", "MySQL",

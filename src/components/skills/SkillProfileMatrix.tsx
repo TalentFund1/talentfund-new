@@ -6,11 +6,12 @@ import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from "react-router-dom";
 import { roleSkills } from './data/roleSkills';
-import { CategoryCards } from '../benchmark/CategoryCards';
+import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
-import { technicalSkills, softSkills } from '../skillsData';
+
+import { AddSkillDialog } from './dialog/AddSkillDialog';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -29,7 +30,6 @@ export const SkillProfileMatrix = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
   const handleToggleSkill = (skillTitle: string) => {
-    console.log('Toggling skill:', skillTitle);
     const newToggledSkills = new Set(toggledSkills);
     if (newToggledSkills.has(skillTitle)) {
       console.log('Removing skill:', skillTitle);
@@ -63,22 +63,16 @@ export const SkillProfileMatrix = () => {
 
   // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-  console.log('Current role skills:', currentRoleSkills);
-
-  const allAvailableSkills = [...technicalSkills, ...softSkills].map(title => ({
-    title,
-    subcategory: "General",
-    level: "unspecified",
-    growth: "15%",
-    salary: "$150,000",
-    benchmarks: { C: true, B: true, B2: true, O: true }
-  }));
 
   const filteredSkills = (() => {
-    console.log('Filtering skills with type:', skillType);
-    let skills = allAvailableSkills;
-
-    if (skillType === "specialized") {
+    let skills = [];
+    if (skillType === "all") {
+      skills = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ];
+    } else if (skillType === "specialized") {
       skills = currentRoleSkills.specialized;
     } else if (skillType === "common") {
       skills = currentRoleSkills.common;
@@ -93,6 +87,7 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
+      // Apply category filter
       if (selectedCategory !== 'all') {
         const skillCategory = getCategoryForSkill(skill, id || "123");
         if (skillCategory !== selectedCategory) {
@@ -100,7 +95,7 @@ export const SkillProfileMatrix = () => {
         }
       }
 
-      return isInCurrentRole || skillType === "all";
+      return isInCurrentRole;
     });
 
     // Sort skills based on toggle state first
@@ -138,7 +133,6 @@ export const SkillProfileMatrix = () => {
       sortedSkills = toggleSortedSkills;
     }
 
-    console.log('Filtered skills:', sortedSkills);
     return sortedSkills;
   })();
 
@@ -157,8 +151,7 @@ export const SkillProfileMatrix = () => {
         <CategoryCards
           selectedCategory={selectedCategory}
           onCategorySelect={setSelectedCategory}
-          roleId={id || ""}
-          selectedLevel=""
+          skillCount={skillCounts}
         />
 
         <SkillTypeFilters
