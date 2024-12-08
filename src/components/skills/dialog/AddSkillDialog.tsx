@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { getSkillByTitle, skillsDatabase } from "../data/skillsDatabase";
+import { ConsolidatedSkill } from "../types/SkillTypes";
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -32,12 +33,21 @@ export const AddSkillDialog = () => {
       if (skillInfo) {
         newToggledSkills.add(skillTitle);
         categorizedCounts[skillInfo.category]++;
+        
+        // Log the categorization of each skill
+        console.log('Categorized skill:', {
+          title: skillTitle,
+          category: skillInfo.category,
+          type: skillInfo.type,
+          growth: skillInfo.growth
+        });
       }
     });
     
     console.log('New toggled skills after addition:', Array.from(newToggledSkills));
     setToggledSkills(newToggledSkills);
 
+    // Show a detailed toast message with categorization counts
     toast({
       title: "Skills Added",
       description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile:
@@ -49,6 +59,26 @@ export const AddSkillDialog = () => {
     setSelectedSkills([]);
     setOpen(false);
   };
+
+  // Get counts of skills by category for display
+  const getSkillCounts = () => {
+    const counts = {
+      critical: 0,
+      technical: 0,
+      necessary: 0
+    };
+
+    Array.from(toggledSkills).forEach(skillTitle => {
+      const skill = getSkillByTitle(skillTitle);
+      if (skill) {
+        counts[skill.category]++;
+      }
+    });
+
+    return counts;
+  };
+
+  const skillCounts = getSkillCounts();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -64,6 +94,15 @@ export const AddSkillDialog = () => {
         </DialogHeader>
         
         <div className="space-y-6 py-4">
+          <div className="text-sm text-muted-foreground space-y-1">
+            <p>Current skill distribution:</p>
+            <ul className="list-disc list-inside pl-2">
+              <li>Critical Skills: {skillCounts.critical}</li>
+              <li>Technical Skills: {skillCounts.technical}</li>
+              <li>Necessary Skills: {skillCounts.necessary}</li>
+            </ul>
+          </div>
+
           <SearchFilter
             label=""
             placeholder="Search skills..."
