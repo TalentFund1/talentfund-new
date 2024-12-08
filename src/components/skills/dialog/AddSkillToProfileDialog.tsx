@@ -60,9 +60,11 @@ export const AddSkillToProfileDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="gap-2">
+        <Button 
+          className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm"
+        >
           <Plus className="h-4 w-4" />
-          Add Skills to Profile
+          <span className="text-sm font-medium">Add Skill</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">

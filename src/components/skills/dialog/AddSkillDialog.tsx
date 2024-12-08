@@ -94,9 +94,11 @@ export const AddSkillDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#1F2144] hover:bg-[#1F2144]/90">
-          <Plus className="h-5 w-5 mr-2" />
-          Add Skill
+        <Button 
+          className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm"
+        >
+          <Plus className="h-4 w-4" />
+          <span className="text-sm font-medium">Add Skill</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
