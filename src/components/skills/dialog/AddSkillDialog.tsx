@@ -9,7 +9,7 @@ import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { getUnifiedSkillData } from '../data/centralSkillsDatabase';
-import { saveToggledSkills, loadToggledSkills } from '../context/utils/storageUtils';
+import { saveToggledSkills } from '../context/utils/storageUtils';
 
 const STORAGE_KEY = 'added-skills';
 const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
@@ -105,7 +105,7 @@ export const AddSkillDialog = () => {
       common: currentRole.common.length,
       certifications: currentRole.certifications.length
     });
-
+    
     // Save toggled skills state
     setToggledSkills(newToggledSkills);
 
@@ -118,18 +118,6 @@ export const AddSkillDialog = () => {
     const toggledSkillsArray = Array.from(newToggledSkills);
     saveToggledSkills(id, toggledSkillsArray);
     console.log('Saved toggled skills:', { roleId: id, skills: toggledSkillsArray });
-
-    // Load existing toggled skills from other profiles to preserve them
-    const allProfiles = Object.keys(roleSkills);
-    allProfiles.forEach(profileId => {
-      if (profileId !== id) {
-        const profileSkills = loadToggledSkills(profileId);
-        if (profileSkills.length > 0) {
-          saveToggledSkills(profileId, profileSkills);
-          console.log('Preserved toggled skills for profile:', { profileId, skills: profileSkills });
-        }
-      }
-    });
 
     // Dispatch event to notify other components
     window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
