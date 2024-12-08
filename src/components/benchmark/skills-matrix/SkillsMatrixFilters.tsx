@@ -62,8 +62,10 @@ export const SkillsMatrixFilters = ({
           </Select>
         </div>
         <Button className="bg-[#1F2144] hover:bg-[#1F2144]/90">
-          <Plus className="h-5 w-5 mr-2" />
-          Add Skill
+          <div className="w-5 h-5 rounded-full border-[1.75px] border-white flex items-center justify-center">
+            <Plus className="h-3 w-3 stroke-[2]" />
+          </div>
+          <span className="ml-2 text-sm font-medium">Add Skill</span>
         </Button>
       </div>
     </div>
