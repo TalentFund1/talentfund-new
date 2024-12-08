@@ -6,7 +6,7 @@ import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { determineCategory } from "../data/skillsDatabase";
+import { determineCategory, getSkillByTitle } from "../data/skillsDatabase";
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -23,25 +23,33 @@ export const AddSkillDialog = () => {
     const newToggledSkills = new Set(toggledSkills);
     
     // Categorize and add each skill
-    selectedSkills.forEach(skill => {
-      const category = determineCategory(skill.growth || "0%", "specialized");
-      console.log(`Categorizing skill ${skill} as ${category}`);
-      newToggledSkills.add(skill);
+    selectedSkills.forEach(skillTitle => {
+      const skill = getSkillByTitle(skillTitle);
+      if (skill) {
+        const category = determineCategory(skill.growth || "0%", skill.type);
+        console.log(`Categorizing skill ${skillTitle} as ${category}`);
+        newToggledSkills.add(skillTitle);
+      }
     });
     
     console.log('New toggled skills after addition:', Array.from(newToggledSkills));
     setToggledSkills(newToggledSkills);
 
     // Show categorization in toast message
-    const criticalCount = selectedSkills.filter(skill => 
-      determineCategory(skill.growth || "0%", "specialized") === "critical"
-    ).length;
-    const technicalCount = selectedSkills.filter(skill => 
-      determineCategory(skill.growth || "0%", "specialized") === "technical"
-    ).length;
-    const necessaryCount = selectedSkills.filter(skill => 
-      determineCategory(skill.growth || "0%", "specialized") === "necessary"
-    ).length;
+    const criticalCount = selectedSkills.filter(skillTitle => {
+      const skill = getSkillByTitle(skillTitle);
+      return skill && determineCategory(skill.growth || "0%", skill.type) === "critical";
+    }).length;
+
+    const technicalCount = selectedSkills.filter(skillTitle => {
+      const skill = getSkillByTitle(skillTitle);
+      return skill && determineCategory(skill.growth || "0%", skill.type) === "technical";
+    }).length;
+
+    const necessaryCount = selectedSkills.filter(skillTitle => {
+      const skill = getSkillByTitle(skillTitle);
+      return skill && determineCategory(skill.growth || "0%", skill.type) === "necessary";
+    }).length;
 
     toast({
       title: "Skills Added",
