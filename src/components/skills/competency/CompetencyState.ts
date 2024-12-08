@@ -5,11 +5,6 @@ import { setSkillStateAction, setSkillProgressionAction } from './state/stateAct
 import { loadPersistedState } from './state/persistenceUtils';
 import { initializeRoleState } from './state/initializeState';
 
-const defaultSkillState = {
-  level: 'unspecified',
-  required: 'preferred'
-};
-
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
     (set, get) => ({
@@ -24,9 +19,9 @@ export const useCompetencyStore = create<CompetencyState>()(
           const newRoleStates = setSkillStateAction(
             state.roleStates,
             skillName,
-            level || defaultSkillState.level,
+            level,
             levelKey,
-            required || defaultSkillState.required,
+            required,
             roleId
           );
 
