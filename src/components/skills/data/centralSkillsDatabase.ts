@@ -21,12 +21,82 @@ export interface UnifiedSkill {
 // Centralized skills database with complete information
 export const centralizedSkills: UnifiedSkill[] = [
   {
-    title: "React",
-    subcategory: "Frontend Frameworks",
+    title: "Machine Learning",
+    subcategory: "AI & ML",
+    category: "specialized",
+    type: "critical",
+    growth: "35%",
+    salary: "$185,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Deep Learning",
+    subcategory: "AI & ML",
+    category: "specialized",
+    type: "critical",
+    growth: "32%",
+    salary: "$180,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Natural Language Processing",
+    subcategory: "AI Applications",
+    category: "specialized",
+    type: "critical",
+    growth: "30%",
+    salary: "$175,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Computer Vision",
+    subcategory: "AI Applications",
     category: "specialized",
     type: "critical",
     growth: "28%",
-    salary: "$175,000",
+    salary: "$170,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "TensorFlow",
+    subcategory: "ML Frameworks",
+    category: "specialized",
+    type: "technical",
+    growth: "25%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "PyTorch",
+    subcategory: "ML Frameworks",
+    category: "specialized",
+    type: "technical",
+    growth: "28%",
+    salary: "$168,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Python",
+    subcategory: "Programming Languages",
+    category: "common",
+    type: "necessary",
+    growth: "22%",
+    salary: "$145,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "JavaScript",
+    subcategory: "Programming Languages",
+    category: "common",
+    type: "necessary",
+    growth: "20%",
+    salary: "$140,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -34,9 +104,19 @@ export const centralizedSkills: UnifiedSkill[] = [
     title: "TypeScript",
     subcategory: "Programming Languages",
     category: "specialized",
-    type: "critical",
+    type: "technical",
     growth: "25%",
-    salary: "$165,000",
+    salary: "$155,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "React",
+    subcategory: "Frontend Frameworks",
+    category: "specialized",
+    type: "technical",
+    growth: "28%",
+    salary: "$160,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -46,7 +126,17 @@ export const centralizedSkills: UnifiedSkill[] = [
     category: "specialized",
     type: "technical",
     growth: "32%",
-    salary: "$170,000",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Node.js",
+    subcategory: "Backend Development",
+    category: "specialized",
+    type: "technical",
+    growth: "24%",
+    salary: "$155,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -56,7 +146,67 @@ export const centralizedSkills: UnifiedSkill[] = [
     category: "specialized",
     type: "technical",
     growth: "18%",
-    salary: "$145,000",
+    salary: "$135,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Git Version Control",
+    subcategory: "Development Tools",
+    category: "common",
+    type: "necessary",
+    growth: "15%",
+    salary: "$130,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "API Development",
+    subcategory: "Backend Development",
+    category: "specialized",
+    type: "technical",
+    growth: "26%",
+    salary: "$150,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "System Architecture",
+    subcategory: "Software Architecture",
+    category: "specialized",
+    type: "critical",
+    growth: "30%",
+    salary: "$180,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Docker",
+    subcategory: "Container Technology",
+    category: "specialized",
+    type: "technical",
+    growth: "28%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Kubernetes",
+    subcategory: "Container Orchestration",
+    category: "specialized",
+    type: "technical",
+    growth: "32%",
+    salary: "$170,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "AWS",
+    subcategory: "Cloud Platforms",
+    category: "specialized",
+    type: "critical",
+    growth: "35%",
+    salary: "$175,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -71,22 +221,42 @@ export const centralizedSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Code Review",
-    subcategory: "Development Practices",
+    title: "Technical Writing",
+    subcategory: "Communication",
     category: "common",
-    type: "technical",
-    growth: "20%",
-    salary: "$160,000",
+    type: "necessary",
+    growth: "18%",
+    salary: "$140,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Agile Methodologies",
-    subcategory: "Project Management",
+    title: "Team Leadership",
+    subcategory: "Leadership",
     category: "common",
     type: "necessary",
-    growth: "16%",
-    salary: "$155,000",
+    growth: "20%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "AWS Certified Machine Learning - Specialty",
+    subcategory: "Cloud Certification",
+    category: "certification",
+    type: "technical",
+    growth: "40%",
+    salary: "$190,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "TensorFlow Developer Certificate",
+    subcategory: "AI Certification",
+    category: "certification",
+    type: "technical",
+    growth: "35%",
+    salary: "$180,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -95,8 +265,8 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Cloud Certification",
     category: "certification",
     type: "technical",
-    growth: "22%",
-    salary: "$180,000",
+    growth: "30%",
+    salary: "$165,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -105,18 +275,18 @@ export const centralizedSkills: UnifiedSkill[] = [
     subcategory: "Web Development Certification",
     category: "certification",
     type: "technical",
-    growth: "20%",
-    salary: "$165,000",
+    growth: "25%",
+    salary: "$155,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Performance Optimization",
-    subcategory: "Frontend Development",
-    category: "specialized",
+    title: "Kubernetes Administrator (CKA)",
+    subcategory: "Container Certification",
+    category: "certification",
     type: "technical",
-    growth: "24%",
-    salary: "$168,000",
+    growth: "35%",
+    salary: "$175,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }
