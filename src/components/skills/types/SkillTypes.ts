@@ -1,7 +1,7 @@
 export interface Skill {
   title: string;
   subcategory: string;
-  level: string;
+  level?: string;
   growth: string;
   salary?: string;
 }
@@ -15,6 +15,7 @@ export interface UnifiedSkill {
   subcategory: string;
   category: 'specialized' | 'common' | 'certification';
   type: 'critical' | 'technical' | 'necessary';
+  level?: string;
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
@@ -27,3 +28,6 @@ export interface SkillEntry extends UnifiedSkill {
     managerial?: Record<string, any>;
   };
 }
+
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+export type SkillType = 'critical' | 'technical' | 'necessary';
