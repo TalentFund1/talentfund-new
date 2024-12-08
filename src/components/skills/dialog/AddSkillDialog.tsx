@@ -41,7 +41,7 @@ export const AddSkillDialog = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const { id } = useParams();
-  const { initializeState } = useCompetencyStore();
+  const { initializeState, setSkillState } = useCompetencyStore();
 
   const allSkills = [...technicalSkills, ...softSkills];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
@@ -79,9 +79,24 @@ export const AddSkillDialog = () => {
         return;
       }
 
-      // Initialize the skill state with default values
+      // Initialize the skill state with default values for all levels
       initializeState(id);
-      console.log('Initialized competency state for new skill:', skillTitle);
+      
+      // Explicitly set default state for each level
+      ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(level => {
+        setSkillState(
+          skillTitle,
+          'unspecified',
+          level,
+          'preferred',
+          id
+        );
+        console.log('Set default state for skill:', {
+          skill: skillTitle,
+          level,
+          state: { level: 'unspecified', required: 'preferred' }
+        });
+      });
 
       // Categorize skill based on its type from the unified database
       const category = skillData.category || 'common';
@@ -124,23 +139,6 @@ export const AddSkillDialog = () => {
     const toggledSkillsArray = Array.from(newToggledSkills);
     saveToggledSkills(id, toggledSkillsArray);
     console.log('Saved toggled skills:', { roleId: id, skills: toggledSkillsArray });
-
-    // Load existing toggled skills from other profiles to preserve them
-    const allProfiles = Object.keys(roleSkills);
-    allProfiles.forEach(profileId => {
-      if (profileId !== id) {
-        const profileSkills = loadToggledSkills(profileId);
-        if (profileSkills.length > 0) {
-          saveToggledSkills(profileId, profileSkills);
-          console.log('Preserved toggled skills for profile:', { profileId, skills: profileSkills });
-        }
-      }
-    });
-
-    // Dispatch event to notify other components
-    window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
-      detail: { role: id, skills: toggledSkillsArray }
-    }));
 
     toast({
       title: "Skills Added",
