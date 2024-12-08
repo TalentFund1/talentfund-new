@@ -1,4 +1,4 @@
-import { SkillEntry, SkillType, SkillCategory } from '../types/SkillTypes';
+import { Skill, SkillType, SkillCategory } from '../types/SkillTypes';
 import { aiSkills } from './skills/aiSkills';
 import { backendSkills } from './skills/backendSkills';
 import { commonSkills } from './skills/commonSkills';
@@ -13,7 +13,7 @@ const determineCategory = (growth: string, type: string): SkillType => {
 };
 
 // Convert existing skills to new format
-const convertSkill = (skill: any, type: SkillCategory): SkillEntry => {
+const convertSkill = (skill: any, type: SkillCategory): Skill => {
   console.log('Converting skill:', { title: skill.title, type });
   
   return {
@@ -34,10 +34,10 @@ const convertSkill = (skill: any, type: SkillCategory): SkillEntry => {
 };
 
 // Combine and convert all skills
-const consolidateSkills = (): SkillEntry[] => {
+const consolidateSkills = (): Skill[] => {
   console.log('Starting skills consolidation...');
   
-  const allSkills: SkillEntry[] = [
+  const allSkills: Skill[] = [
     ...aiSkills.map(skill => convertSkill(skill, skill.category)),
     ...backendSkills.map(skill => convertSkill(skill, skill.category)),
     ...commonSkills.map(skill => convertSkill(skill, skill.category)),
@@ -51,14 +51,14 @@ const consolidateSkills = (): SkillEntry[] => {
 export const skillsDatabase = consolidateSkills();
 
 // Helper functions
-export const getSkillByTitle = (title: string): SkillEntry | undefined => {
+export const getSkillByTitle = (title: string): Skill | undefined => {
   return skillsDatabase.find(skill => skill.title === title);
 };
 
-export const getSkillsByCategory = (category: SkillType): SkillEntry[] => {
+export const getSkillsByCategory = (category: SkillType): Skill[] => {
   return skillsDatabase.filter(skill => skill.type === category);
 };
 
-export const getSkillsByType = (type: SkillCategory): SkillEntry[] => {
+export const getSkillsByType = (type: SkillCategory): Skill[] => {
   return skillsDatabase.filter(skill => skill.category === type);
 };

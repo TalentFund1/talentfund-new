@@ -51,7 +51,12 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
       growth: "0%",
       salary: "$0",
       confidence: "low",
-      benchmarks: { B: false, R: false, M: false, O: false }
+      benchmarks: {
+        B: false,
+        C: false,
+        B2: false,
+        O: false
+      }
     };
   }
   
