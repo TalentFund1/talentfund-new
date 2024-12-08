@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
+import { categorizeSkill } from '../competency/skillCategories';
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -34,28 +35,53 @@ export const AddSkillDialog = () => {
 
     // Add selected skills to toggledSkills
     const newToggledSkills = new Set(toggledSkills);
+    
     selectedSkills.forEach(skill => {
       newToggledSkills.add(skill);
       
-      // Add the skill to the role's specialized skills if it doesn't exist
+      // Check if skill already exists in any category
       const skillExists = currentRole.specialized.some(s => s.title === skill) ||
                          currentRole.common.some(s => s.title === skill) ||
                          currentRole.certifications.some(s => s.title === skill);
       
       if (!skillExists) {
-        console.log('Adding new skill to role:', skill);
-        currentRole.specialized.push({
+        console.log('Categorizing new skill:', skill);
+        const category = categorizeSkill(skill, id || "123");
+        
+        const newSkill = {
           title: skill,
-          subcategory: "Added Skills",
+          subcategory: category === 'specialized' ? 'Specialized Skills' :
+                       category === 'common' ? 'Common Skills' : 'Certifications',
           level: "unspecified",
           growth: "20%",
           salary: "$150,000",
           benchmarks: { J: true, B: true, O: true }
-        });
+        };
+
+        // Add to appropriate category array
+        switch(category) {
+          case 'specialized':
+            console.log('Adding to specialized skills:', skill);
+            currentRole.specialized.push(newSkill);
+            break;
+          case 'common':
+            console.log('Adding to common skills:', skill);
+            currentRole.common.push(newSkill);
+            break;
+          case 'certification':
+            console.log('Adding to certifications:', skill);
+            currentRole.certifications.push(newSkill);
+            break;
+        }
       }
     });
     
-    console.log('Updated role skills:', currentRole);
+    console.log('Updated role skills:', {
+      specialized: currentRole.specialized.length,
+      common: currentRole.common.length,
+      certifications: currentRole.certifications.length
+    });
+    
     setToggledSkills(newToggledSkills);
 
     toast({
