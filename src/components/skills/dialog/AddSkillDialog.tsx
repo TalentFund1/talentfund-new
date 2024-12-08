@@ -6,7 +6,6 @@ import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { getSkillByTitle, skillsDatabase } from "../data/skillsDatabase";
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -21,29 +20,14 @@ export const AddSkillDialog = () => {
     console.log('Current toggled skills before addition:', Array.from(toggledSkills));
     
     const newToggledSkills = new Set(toggledSkills);
-    const categorizedCounts = {
-      critical: 0,
-      technical: 0,
-      necessary: 0
-    };
-
-    selectedSkills.forEach(skillTitle => {
-      const skillInfo = getSkillByTitle(skillTitle);
-      if (skillInfo) {
-        newToggledSkills.add(skillTitle);
-        categorizedCounts[skillInfo.category]++;
-      }
-    });
+    selectedSkills.forEach(skill => newToggledSkills.add(skill));
     
     console.log('New toggled skills after addition:', Array.from(newToggledSkills));
     setToggledSkills(newToggledSkills);
 
     toast({
       title: "Skills Added",
-      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile:
-        ${categorizedCounts.critical} critical, 
-        ${categorizedCounts.technical} technical, 
-        ${categorizedCounts.necessary} necessary`,
+      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile.`,
     });
 
     setSelectedSkills([]);
