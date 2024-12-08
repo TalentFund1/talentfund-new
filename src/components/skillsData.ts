@@ -19,14 +19,19 @@ export const skillCategorization = {
   "JavaScript": { category: "common", subcategory: "Programming Languages" },
   "TypeScript": { category: "common", subcategory: "Programming Languages" },
   "React": { category: "specialized", subcategory: "Frontend Frameworks" },
+  "Next.js": { category: "specialized", subcategory: "Frontend Frameworks" },
   "Node.js": { category: "specialized", subcategory: "Backend Development" },
-  "CSS/SASS": { category: "common", subcategory: "Styling" },
+  "CSS/SASS": { category: "specialized", subcategory: "Frontend Development" },
+  "Git Version Control": { category: "common", subcategory: "Development Tools" },
+  "API Development": { category: "specialized", subcategory: "Backend Development" },
+  "System Architecture": { category: "specialized", subcategory: "Software Architecture" },
+  "Code Review": { category: "common", subcategory: "Development Practices" },
+  "Agile Methodologies": { category: "common", subcategory: "Project Management" },
   
   // DevOps & Cloud
   "Docker": { category: "specialized", subcategory: "Container Technology" },
   "Kubernetes": { category: "specialized", subcategory: "Container Orchestration" },
   "AWS": { category: "specialized", subcategory: "Cloud Platforms" },
-  "Git Version Control": { category: "common", subcategory: "Development Tools" },
   
   // Soft Skills & Communication
   "Problem Solving": { category: "common", subcategory: "Soft Skills" },
@@ -36,6 +41,8 @@ export const skillCategorization = {
   // Certifications
   "AWS Certified Machine Learning - Specialty": { category: "certification", subcategory: "Cloud Certification" },
   "TensorFlow Developer Certificate": { category: "certification", subcategory: "AI Certification" },
+  "AWS Certified Developer - Associate": { category: "certification", subcategory: "Cloud Certification" },
+  "Google Mobile Web Specialist": { category: "certification", subcategory: "Web Development Certification" },
   "Kubernetes Administrator (CKA)": { category: "certification", subcategory: "Container Certification" }
 };
 
