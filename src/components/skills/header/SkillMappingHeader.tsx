@@ -1,4 +1,5 @@
-import { AddSkillDialog } from "../dialog/AddSkillDialog";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 
 interface SkillMappingHeaderProps {
   skillCount: number;
@@ -18,7 +19,10 @@ export const SkillMappingHeader = ({ skillCount }: SkillMappingHeaderProps) => {
           </div>
         </div>
       </div>
-      <AddSkillDialog />
+      <Button className="flex items-center gap-2">
+        <PlusCircle className="h-4 w-4" />
+        Add Skill
+      </Button>
     </div>
   );
 };

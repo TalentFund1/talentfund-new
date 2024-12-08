@@ -10,7 +10,6 @@ import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
-
 import { AddSkillDialog } from './dialog/AddSkillDialog';
 
 type SortDirection = 'asc' | 'desc' | null;
@@ -144,7 +143,10 @@ export const SkillProfileMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white mb-8">
-        <SkillMappingHeader skillCount={toggledSkillCount} />
+        <div className="flex justify-between items-center">
+          <SkillMappingHeader skillCount={toggledSkillCount} />
+          <AddSkillDialog />
+        </div>
         
         <Separator className="my-4" />
 
