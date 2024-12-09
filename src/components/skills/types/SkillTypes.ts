@@ -8,7 +8,6 @@ export interface Skill {
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
-  occupation?: string;
   benchmarks: {
     B: boolean;  // Business
     R: boolean;  // Role
@@ -22,6 +21,7 @@ export interface UnifiedSkill extends Skill {
 }
 
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
+
 export type SkillCategory = 
   | 'Information Technology'
   | 'Analysis'
