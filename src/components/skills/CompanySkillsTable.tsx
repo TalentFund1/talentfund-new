@@ -15,7 +15,7 @@ export const CompanySkillsTable = () => {
   console.log('Displaying toggled skills:', skills);
 
   return (
-    <Card className="p-6">
+    <Card className="p-6 bg-white">
       <h2 className="text-2xl font-bold mb-6">Company Skills</h2>
       <div className="overflow-x-auto">
         <div className="bg-white rounded-lg border border-border">
