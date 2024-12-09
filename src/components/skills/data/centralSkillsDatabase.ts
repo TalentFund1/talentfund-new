@@ -6,7 +6,6 @@ import { certificationSkills } from './skills/certificationSkills';
 import { frontendSkills } from './skills/frontendSkills';
 import { aiSkills } from './skills/aiSkills';
 import { managementSkills } from './skills/managementSkills';
-import { generalSkills } from './skills/generalSkills';
 
 // Combine all skills into the centralized database
 export const centralizedSkills: UnifiedSkill[] = [
@@ -16,8 +15,7 @@ export const centralizedSkills: UnifiedSkill[] = [
   ...certificationSkills,
   ...frontendSkills,
   ...aiSkills,
-  ...managementSkills,
-  ...generalSkills
+  ...managementSkills
 ];
 
 // Helper functions to access the centralized database
@@ -65,3 +63,5 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   console.log('Found unified skill data:', skill);
   return skill;
 };
+
+export type { UnifiedSkill };
