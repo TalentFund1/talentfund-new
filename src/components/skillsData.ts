@@ -1,172 +1,206 @@
-// Define the skills array with unique entries
 export const skills = [
   {
     title: "Amazon Web Services",
-    subcategory: "Web Services",
+    subcategory: "Cloud Platforms",
     level: "Advanced",
-    growth: "12%"
+    growth: "35%",
+    salary: "$175,000"
   },
   {
     title: "Artificial Intelligence",
-    subcategory: "Artificial Intelligence and Machine Learning",
+    subcategory: "AI & ML",
     level: "Advanced",
-    growth: "19%"
+    growth: "35%",
+    salary: "$185,000"
   },
   {
     title: "Conversational AI",
-    subcategory: "Natural Language Processing (NLP)",
+    subcategory: "AI Applications",
     level: "Advanced",
-    growth: "12%"
+    growth: "30%",
+    salary: "$175,000"
   },
   {
     title: "Deep Learning",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "Intermediate",
-    growth: "19%"
+    subcategory: "AI & ML",
+    level: "Advanced",
+    growth: "32%",
+    salary: "$180,000"
   },
   {
     title: "Machine Learning",
-    subcategory: "Artificial Intelligence and Machine Learning",
-    level: "Intermediate",
-    growth: "10%"
+    subcategory: "AI & ML",
+    level: "Advanced",
+    growth: "35%",
+    salary: "$185,000"
   },
   {
     title: "Docker",
-    subcategory: "Software Development Tools",
-    level: "Intermediate",
-    growth: "15%"
+    subcategory: "Container Technology",
+    level: "Advanced",
+    growth: "28%",
+    salary: "$160,000"
   },
   {
     title: "MLflow",
-    subcategory: "Artificial Intelligence and Machine Learning",
+    subcategory: "ML Frameworks",
     level: "Beginner",
-    growth: "11%"
+    growth: "25%",
+    salary: "$150,000"
   },
   {
     title: "TensorFlow",
-    subcategory: "Machine Learning Frameworks",
+    subcategory: "ML Frameworks",
     level: "Advanced",
-    growth: "16%"
+    growth: "25%",
+    salary: "$165,000"
   },
   {
     title: "PyTorch",
-    subcategory: "Machine Learning Frameworks",
+    subcategory: "ML Frameworks",
     level: "Intermediate",
-    growth: "18%"
+    growth: "28%",
+    salary: "$160,000"
   },
   {
     title: "Natural Language Processing",
     subcategory: "AI Applications",
     level: "Advanced",
-    growth: "20%"
+    growth: "30%",
+    salary: "$175,000"
   },
   {
     title: "Computer Vision",
     subcategory: "AI Applications",
     level: "Intermediate",
-    growth: "22%"
+    growth: "28%",
+    salary: "$170,000"
   },
   {
     title: "Kubernetes",
     subcategory: "Container Orchestration",
     level: "Advanced",
-    growth: "17%"
+    growth: "32%",
+    salary: "$170,000"
   },
   {
     title: "Git Version Control",
-    subcategory: "Version Control",
+    subcategory: "Development Tools",
     level: "Advanced",
-    growth: "8%"
+    growth: "15%",
+    salary: "$130,000"
   },
   {
     title: "SQL",
     subcategory: "Databases",
     level: "Advanced",
-    growth: "9%"
+    growth: "22%",
+    salary: "$145,000"
   },
   {
     title: "MongoDB",
     subcategory: "Databases",
     level: "Intermediate",
-    growth: "14%"
+    growth: "24%",
+    salary: "$140,000"
   },
   {
     title: "REST APIs",
-    subcategory: "Web Development",
+    subcategory: "Backend Development",
     level: "Advanced",
-    growth: "11%"
+    growth: "26%",
+    salary: "$150,000"
   },
   {
     title: "Python",
     subcategory: "Programming Languages",
     level: "Advanced",
-    growth: "15%"
+    growth: "15%",
+    salary: "$158,000"
   },
   {
     title: "Data Science",
     subcategory: "Analytics",
     level: "Intermediate",
-    growth: "21%"
+    growth: "30%",
+    salary: "$165,000"
   },
   {
-    title: "React Native",
-    subcategory: "Mobile Development",
+    title: "React",
+    subcategory: "Frontend Frameworks",
     level: "Advanced",
-    growth: "25%"
+    growth: "28%",
+    salary: "$165,000"
   },
   {
     title: "System Design",
     subcategory: "Software Architecture",
     level: "Advanced",
-    growth: "21%"
+    growth: "28%",
+    salary: "$165,000"
   },
   {
     title: "GraphQL",
     subcategory: "API Development",
     level: "Intermediate",
-    growth: "24%"
+    growth: "26%",
+    salary: "$155,000"
   },
   {
     title: "DevOps",
     subcategory: "Development Operations",
     level: "Advanced",
-    growth: "28%"
+    growth: "32%",
+    salary: "$170,000"
   },
   {
     title: "Cybersecurity",
     subcategory: "Security",
     level: "Advanced",
-    growth: "30%"
+    growth: "35%",
+    salary: "$180,000"
   },
   {
     title: "Data Engineering",
     subcategory: "Data Management",
     level: "Intermediate",
-    growth: "26%"
+    growth: "26%",
+    salary: "$160,000"
   },
   {
     title: "UI/UX Design",
     subcategory: "Design",
     level: "Intermediate",
-    growth: "22%"
+    growth: "22%",
+    salary: "$155,000"
   },
   {
     title: "Microservices",
     subcategory: "Software Architecture",
     level: "Advanced",
-    growth: "27%"
+    growth: "30%",
+    salary: "$170,000"
   },
   {
     title: "Flutter",
     subcategory: "Mobile Development",
     level: "Beginner",
-    growth: "23%"
+    growth: "25%",
+    salary: "$145,000"
   },
   {
     title: "Blockchain",
     subcategory: "Distributed Systems",
     level: "Intermediate",
-    growth: "29%"
+    growth: "32%",
+    salary: "$175,000"
+  },
+  {
+    title: "Communication",
+    subcategory: "Soft Skills",
+    level: "Advanced",
+    growth: "18%",
+    salary: "$140,000"
   }
 ];
 
