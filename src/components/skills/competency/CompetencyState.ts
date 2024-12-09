@@ -19,9 +19,9 @@ export const useCompetencyStore = create<CompetencyState>()(
           const newRoleStates = setSkillStateAction(
             state.roleStates,
             skillName,
-            level,
+            level || 'unspecified',
             levelKey,
-            required,
+            required || 'preferred',
             roleId
           );
 
@@ -150,7 +150,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 21,
+      version: 24, // Increment version to ensure clean state
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
