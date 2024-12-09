@@ -17,10 +17,10 @@ export const CompanySkillsTable = () => {
   const getSkillType = (skillTitle: string): string => {
     for (const role of Object.values(roleSkills)) {
       if (role.specialized.some(s => s.title === skillTitle)) {
-        return 'Specialized Skill';
+        return 'Specialized';
       }
       if (role.common.some(s => s.title === skillTitle)) {
-        return 'Common Skill';
+        return 'Common';
       }
       if (role.certifications.some(s => s.title === skillTitle)) {
         return 'Certification';
