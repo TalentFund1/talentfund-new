@@ -63,7 +63,7 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   });
 
   const categories = [
-    { id: "all", name: "All Types", count: totalCount },
+    { id: "all", name: "All Categories", count: totalCount },
     { id: "specialized", name: "Specialized Skills", count: specializedCount },
     { id: "common", name: "Common Skills", count: commonCount },
     { id: "certification", name: "Certification", count: certificationCount }

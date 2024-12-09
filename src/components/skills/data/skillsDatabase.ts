@@ -1,27 +1,26 @@
-import { Skill, SkillWeight, SkillType } from '../types/SkillTypes';
+import { Skill, SkillType, SkillCategory } from '../types/SkillTypes';
 import { aiSkills } from './skills/aiSkills';
 import { backendSkills } from './skills/backendSkills';
 import { commonSkills } from './skills/commonSkills';
 import { certificationSkills } from './skills/certificationSkills';
 
-// Helper function to determine skill category based on growth and weight
-const determineCategory = (growth: string, weight: string): SkillWeight => {
+// Helper function to determine skill category based on growth and type
+const determineCategory = (growth: string, type: string): SkillType => {
   const growthValue = parseFloat(growth);
   if (growthValue >= 25) return 'critical';
-  if (weight === 'specialized' || weight === 'common') return 'technical';
+  if (type === 'specialized' || type === 'common') return 'technical';
   return 'necessary';
 };
 
 // Convert existing skills to new format
-const convertSkill = (skill: any, type: SkillType): Skill => {
+const convertSkill = (skill: any, type: SkillCategory): Skill => {
   console.log('Converting skill:', { title: skill.title, type });
   
   return {
-    id: skill.id || `CONV_${Date.now()}_${skill.title.replace(/\s+/g, '_')}`,
     title: skill.title,
-    type,
+    category: type,
     subcategory: skill.subcategory,
-    weight: determineCategory(skill.growth || '0%', type),
+    type: determineCategory(skill.growth || '0%', type),
     growth: skill.growth || '0%',
     salary: skill.salary || '$0',
     confidence: skill.confidence || 'medium',
@@ -39,10 +38,10 @@ const consolidateSkills = (): Skill[] => {
   console.log('Starting skills consolidation...');
   
   const allSkills: Skill[] = [
-    ...aiSkills.map(skill => convertSkill(skill, skill.type)),
-    ...backendSkills.map(skill => convertSkill(skill, skill.type)),
-    ...commonSkills.map(skill => convertSkill(skill, skill.type)),
-    ...certificationSkills.map(skill => convertSkill(skill, skill.type))
+    ...aiSkills.map(skill => convertSkill(skill, skill.category)),
+    ...backendSkills.map(skill => convertSkill(skill, skill.category)),
+    ...commonSkills.map(skill => convertSkill(skill, skill.category)),
+    ...certificationSkills.map(skill => convertSkill(skill, skill.category))
   ];
 
   console.log('Consolidated skills count:', allSkills.length);
@@ -56,10 +55,10 @@ export const getSkillByTitle = (title: string): Skill | undefined => {
   return skillsDatabase.find(skill => skill.title === title);
 };
 
-export const getSkillsByType = (type: SkillType): Skill[] => {
-  return skillsDatabase.filter(skill => skill.type === type);
+export const getSkillsByCategory = (category: SkillType): Skill[] => {
+  return skillsDatabase.filter(skill => skill.type === category);
 };
 
-export const getSkillsByWeight = (weight: SkillWeight): Skill[] => {
-  return skillsDatabase.filter(skill => skill.weight === weight);
+export const getSkillsByType = (type: SkillCategory): Skill[] => {
+  return skillsDatabase.filter(skill => skill.category === type);
 };
