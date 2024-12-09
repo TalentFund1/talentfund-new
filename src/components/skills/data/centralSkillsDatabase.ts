@@ -44,6 +44,48 @@ export const normalizeSkillTitle = (title: string): string => {
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
+  // Define subcategories based on the skill
+  const getSubcategory = (skillTitle: string): string => {
+    const subcategories: { [key: string]: string } = {
+      'Machine Learning': 'AI & ML',
+      'Deep Learning': 'AI & ML',
+      'Natural Language Processing': 'AI Applications',
+      'Computer Vision': 'AI Applications',
+      'TensorFlow': 'ML Frameworks',
+      'PyTorch': 'ML Frameworks',
+      'Node.js': 'Backend Development',
+      'API Development': 'Backend Development',
+      'Database Design': 'Data Management',
+      'System Design': 'Software Architecture',
+      'Technical Architecture': 'Architecture',
+      'Docker': 'Container Technology',
+      'Kubernetes': 'Container Orchestration',
+      'React': 'Frontend Frameworks',
+      'Next.js': 'Frontend Frameworks',
+      'TypeScript': 'Programming Languages',
+      'Python': 'Programming Languages',
+      'CSS/SASS': 'Frontend Development',
+      'Git Version Control': 'Development Tools',
+      'Team Leadership': 'Leadership',
+      'Project Management': 'Project Management',
+      'Risk Management': 'Management',
+      'Problem Solving': 'Development Practices',
+      'Code Review': 'Development Practices',
+      'Agile Methodologies': 'Development Practices',
+      'Technical Writing': 'Communication',
+      'AWS Certified Machine Learning Specialty': 'AI Certification',
+      'TensorFlow Developer Certification': 'AI Certification',
+      'AWS Certified Solutions Architect': 'Cloud Certification',
+      'AWS Certified Developer - Associate': 'Cloud Certification',
+      'Certified Kubernetes Administrator': 'Container Certification',
+      'HashiCorp Certified Terraform Associate': 'Infrastructure Certification',
+      'Project Management Professional (PMP)': 'Management Certification',
+      'Certified Scrum Master (CSM)': 'Agile Certification'
+    };
+    
+    return subcategories[skillTitle] || 'General';
+  };
+
   // Define business categories based on the skill
   const getBusinessCategory = (skillTitle: string): string => {
     const categories = {
@@ -67,7 +109,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'Database Design': 'Information Technology'
     };
     
-    return categories[skillTitle as keyof typeof categories] || 'General';
+    return categories[skillTitle as keyof typeof categories] || 'Information Technology';
   };
 
   return {
@@ -75,7 +117,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     title: normalizeSkillTitle(title),
     category: 'specialized',
     businessCategory: getBusinessCategory(title),
-    subcategory: 'General',
+    subcategory: getSubcategory(title),
     weight: 'technical',
     level: 'unspecified',
     growth: '0%',
