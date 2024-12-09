@@ -12,12 +12,6 @@ export const skills = [
     growth: "19%"
   },
   {
-    title: "Conversational AI",
-    subcategory: "Natural Language Processing (NLP)",
-    level: "Advanced",
-    growth: "12%"
-  },
-  {
     title: "Deep Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "Intermediate",

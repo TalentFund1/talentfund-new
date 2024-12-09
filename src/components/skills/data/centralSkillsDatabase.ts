@@ -34,7 +34,7 @@ export const normalizeSkillTitle = (title: string): string => {
     'Kubernetes Container': 'Kubernetes',
     'K8s': 'Kubernetes',
     'Amazon Web Service': 'Amazon Web Services',
-    'TensorFlow': 'TensorFlow',
+    'TensorFlow': 'TensorFlow'
   };
   
   const normalized = normalizations[title] || title;
