@@ -174,10 +174,23 @@ export const skills = [
 const getUniqueSkills = (skillsArray: typeof skills) => {
   const seen = new Set();
   return skillsArray.filter(skill => {
-    const duplicate = seen.has(skill.title);
-    seen.add(skill.title);
+    const normalizedTitle = normalizeSkillTitle(skill.title);
+    const duplicate = seen.has(normalizedTitle);
+    seen.add(normalizedTitle);
     return !duplicate;
   });
+};
+
+// Helper function to normalize skill titles
+const normalizeSkillTitle = (title: string) => {
+  const normalizations: { [key: string]: string } = {
+    'Git': 'Git Version Control',
+    'Version Control': 'Git Version Control',
+    'AWS': 'Amazon Web Services',
+    'Amazon AWS': 'Amazon Web Services',
+  };
+  
+  return normalizations[title] || title;
 };
 
 // Categorize skills into technical and soft skills and map to titles

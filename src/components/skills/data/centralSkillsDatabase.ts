@@ -8,7 +8,19 @@ import { aiSkills } from './skills/aiSkills';
 import { managementSkills } from './skills/managementSkills';
 import { commonSkills } from './skills/commonSkills';
 
-// Combine all skills into the centralized database
+// Normalize skill titles to ensure consistency
+const normalizeSkillTitle = (title: string): string => {
+  const normalizations: { [key: string]: string } = {
+    'Git': 'Git Version Control',
+    'Version Control': 'Git Version Control',
+    'AWS': 'Amazon Web Services',
+    'Amazon AWS': 'Amazon Web Services',
+  };
+  
+  return normalizations[title] || title;
+};
+
+// Combine all skills into the centralized database with normalized titles
 export const centralizedSkills: UnifiedSkill[] = [
   ...backendSkills,
   ...infrastructureSkills,
@@ -18,12 +30,16 @@ export const centralizedSkills: UnifiedSkill[] = [
   ...aiSkills,
   ...managementSkills,
   ...commonSkills
-];
+].map(skill => ({
+  ...skill,
+  title: normalizeSkillTitle(skill.title)
+}));
 
 // Helper functions to access the centralized database
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
-  console.log('Getting skill data for:', title);
-  const skill = centralizedSkills.find(skill => skill.title === title);
+  const normalizedTitle = normalizeSkillTitle(title);
+  console.log('Getting skill data for:', normalizedTitle);
+  const skill = centralizedSkills.find(skill => normalizeSkillTitle(skill.title) === normalizedTitle);
   console.log('Found skill data:', skill || 'Not found');
   return skill;
 };
