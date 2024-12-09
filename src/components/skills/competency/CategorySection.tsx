@@ -1,3 +1,6 @@
+import { useToggledSkills } from "../context/ToggledSkillsContext";
+import { SkillType } from "../types/SkillTypes";
+
 interface CategorySectionProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
