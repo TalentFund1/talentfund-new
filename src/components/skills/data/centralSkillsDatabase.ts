@@ -112,7 +112,10 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'Communication',
       'System Administration',
       'Development Tools',
-      'Programming Languages'
+      'Programming Languages',
+      'Leadership',
+      'Project Management',
+      'Management'
     ];
 
     if (certificationSubcategories.includes(subcategory)) {
@@ -132,7 +135,8 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     'TypeScript': 'specialized',
     'Flutter Mobile Development': 'specialized',
     'TensorFlow': 'specialized',
-    'React': 'specialized'
+    'React': 'specialized',
+    'Communication': 'common'  // Explicitly set Communication as common
   };
 
   const finalCategory = specialCases[title] || category;
