@@ -1,15 +1,9 @@
-import { technicalSkills as importedTechnicalSkills } from './skills/data/categories/technicalSkills';
-import { aiSkills } from './skills/data/categories/aiSkills';
-import { softSkills as importedSoftSkills } from './skills/data/categories/softSkills';
+import { Skills, getAllSkills } from './skills/data/skills/allSkills';
 import { UnifiedSkill } from './skills/types/SkillTypes';
 import { normalizeSkillTitle } from './skills/data/centralSkillsDatabase';
 
 // Combine all skills with normalized titles
-const skills: UnifiedSkill[] = [
-  ...importedTechnicalSkills,
-  ...aiSkills,
-  ...importedSoftSkills
-].map(skill => ({
+const skills: UnifiedSkill[] = getAllSkills().map(skill => ({
   ...skill,
   title: normalizeSkillTitle(skill.title)
 }));
