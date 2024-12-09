@@ -22,8 +22,8 @@ export const CompanySkillsTable = () => {
       title: skillTitle,
       subcategory: skillData.subcategory,
       category: skillData.category || 'common',
-      type: skillData.type || 'technical',
-      occupation: skillData.occupation || 'Software Developer', // Default occupation if not specified
+      weight: skillData.weight || 'necessary',
+      occupation: skillData.occupation || 'Software Developer',
       growth: skillData.growth,
       salary: skillData.salary
     };
@@ -39,7 +39,7 @@ export const CompanySkillsTable = () => {
               <TableHead className="w-[200px]">Skill Title</TableHead>
               <TableHead className="w-[200px]">Subcategory</TableHead>
               <TableHead className="w-[150px]">Category</TableHead>
-              <TableHead className="w-[150px]">Type</TableHead>
+              <TableHead className="w-[150px]">Weight</TableHead>
               <TableHead className="w-[200px]">Occupation</TableHead>
               <TableHead className="w-[150px] text-right">Projected Growth</TableHead>
               <TableHead className="w-[150px] text-right">Skill Pricer</TableHead>
@@ -51,7 +51,7 @@ export const CompanySkillsTable = () => {
                 <TableCell className="font-medium">{skill.title}</TableCell>
                 <TableCell>{skill.subcategory}</TableCell>
                 <TableCell className="capitalize">{skill.category}</TableCell>
-                <TableCell className="capitalize">{skill.type}</TableCell>
+                <TableCell className="capitalize">{skill.weight}</TableCell>
                 <TableCell>{skill.occupation}</TableCell>
                 <TableCell className="text-right">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">

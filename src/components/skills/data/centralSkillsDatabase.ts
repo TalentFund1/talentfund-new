@@ -31,9 +31,9 @@ export const getSkillsByCategory = (category: 'specialized' | 'common' | 'certif
   return centralizedSkills.filter(skill => skill.category === category);
 };
 
-export const getSkillsByType = (type: 'critical' | 'technical' | 'necessary'): UnifiedSkill[] => {
-  console.log('Getting skills by type:', type);
-  return centralizedSkills.filter(skill => skill.type === type);
+export const getSkillsByWeight = (weight: 'critical' | 'technical' | 'necessary'): UnifiedSkill[] => {
+  console.log('Getting skills by weight:', weight);
+  return centralizedSkills.filter(skill => skill.weight === weight);
 };
 
 // Function to ensure skill data consistency with proper salary information
@@ -48,9 +48,9 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
       title: skillTitle,
       subcategory: "Software Development",
       category: "common",
-      type: "necessary",
+      weight: "necessary",
       growth: "15%",
-      salary: "$150,000", // Updated default salary
+      salary: "$150,000",
       confidence: "medium",
       benchmarks: {
         B: false,

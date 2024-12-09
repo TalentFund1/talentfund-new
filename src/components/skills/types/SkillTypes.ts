@@ -1,9 +1,9 @@
 export interface Skill {
-  id: string;  // Added unique ID field
+  id: string;
   title: string;
   subcategory: string;
   category: 'specialized' | 'common' | 'certification';
-  type: 'critical' | 'technical' | 'necessary';
+  weight: 'critical' | 'technical' | 'necessary';
   level?: string;
   growth: string;
   salary: string;
@@ -21,7 +21,7 @@ export interface UnifiedSkill extends Skill {
   requirement?: 'required' | 'preferred' | 'skill_goal' | 'not_interested';
 }
 
-export type SkillType = 'critical' | 'technical' | 'necessary';
+export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 
 export interface SimpleSkill {
