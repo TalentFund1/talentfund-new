@@ -2,42 +2,92 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const generalSkills: UnifiedSkill[] = [
   {
-    title: "Python",
-    subcategory: "Programming Languages",
-    category: "common",
+    title: "AWS Certified Solutions Architect",
+    subcategory: "Cloud Certification",
+    category: "certification",
+    type: "critical",
+    growth: "30%",
+    salary: "$175,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Project Management Professional (PMP)",
+    subcategory: "Project Management",
+    category: "certification",
+    type: "critical",
+    growth: "25%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Certified Scrum Master (CSM)",
+    subcategory: "Agile Certification",
+    category: "certification",
     type: "technical",
-    growth: "15%",
+    growth: "22%",
     salary: "$145,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Technical Writing",
-    subcategory: "Documentation",
-    category: "common",
-    type: "necessary",
-    growth: "12%",
-    salary: "$120,000",
+    title: "AWS Certified Developer - Associate",
+    subcategory: "Cloud Certification",
+    category: "certification",
+    type: "technical",
+    growth: "28%",
+    salary: "$160,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Communication",
-    subcategory: "Soft Skills",
-    category: "common",
-    type: "necessary",
-    growth: "10%",
-    salary: "$125,000",
+    title: "Google Mobile Web Specialist",
+    subcategory: "Mobile Development",
+    category: "certification",
+    type: "technical",
+    growth: "25%",
+    salary: "$150,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Git",
-    subcategory: "Version Control",
+    title: "GraphQL",
+    subcategory: "API Development",
+    category: "specialized",
+    type: "technical",
+    growth: "28%",
+    salary: "$155,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "React Native",
+    subcategory: "Mobile Development",
+    category: "specialized",
+    type: "critical",
+    growth: "32%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Agile Methodologies",
+    subcategory: "Project Management",
     category: "common",
     type: "technical",
-    growth: "15%",
-    salary: "$130,000",
+    growth: "20%",
+    salary: "$150,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Stakeholder Management",
+    subcategory: "Management",
+    category: "specialized",
+    type: "critical",
+    growth: "18%",
+    salary: "$160,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }

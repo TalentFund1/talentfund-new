@@ -2,17 +2,17 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const certificationSkills: UnifiedSkill[] = [
   {
-    title: "AWS Certified DevOps Engineer",
+    title: "AWS Certified Solutions Architect",
     subcategory: "Cloud Certification",
     category: "certification",
     type: "critical",
-    growth: "35%",
+    growth: "30%",
     salary: "$175,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "Certified Kubernetes Administrator",
+    title: "Kubernetes Administrator (CKA)",
     subcategory: "Container Certification",
     category: "certification",
     type: "critical",
@@ -22,12 +22,12 @@ export const certificationSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    title: "HashiCorp Certified Terraform Associate",
-    subcategory: "Infrastructure Certification",
+    title: "AWS Certified Developer - Associate",
+    subcategory: "Cloud Certification",
     category: "certification",
     type: "technical",
-    growth: "30%",
-    salary: "$155,000",
+    growth: "28%",
+    salary: "$160,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }

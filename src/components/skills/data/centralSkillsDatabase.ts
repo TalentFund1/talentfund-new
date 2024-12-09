@@ -65,5 +65,3 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   console.log('Found unified skill data:', skill);
   return skill;
 };
-
-export type { UnifiedSkill };
