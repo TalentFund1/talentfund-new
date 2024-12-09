@@ -2,6 +2,16 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const commonSkills: UnifiedSkill[] = [
   {
+    title: "Git Version Control",
+    subcategory: "Development Tools",
+    category: "common",
+    type: "technical",
+    growth: "15%",
+    salary: "$130,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
     title: "Python",
     subcategory: "Programming Languages",
     category: "common",
@@ -28,16 +38,6 @@ export const commonSkills: UnifiedSkill[] = [
     type: "necessary",
     growth: "18%",
     salary: "$140,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    title: "Git Version Control",
-    subcategory: "Development Tools",
-    category: "common",
-    type: "technical",
-    growth: "15%",
-    salary: "$130,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
