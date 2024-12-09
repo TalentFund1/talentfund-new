@@ -38,9 +38,9 @@ export const CompanySkillsTable = () => {
             <TableRow>
               <TableHead className="w-[200px]">Skill Title</TableHead>
               <TableHead className="w-[200px]">Subcategory</TableHead>
+              <TableHead className="w-[200px]">Category</TableHead>
               <TableHead className="w-[150px]">Type</TableHead>
               <TableHead className="w-[150px]">Weight</TableHead>
-              <TableHead className="w-[200px]">Category</TableHead>
               <TableHead className="w-[150px] text-right">Projected Growth</TableHead>
               <TableHead className="w-[150px] text-right">Skill Pricer</TableHead>
             </TableRow>
@@ -50,9 +50,9 @@ export const CompanySkillsTable = () => {
               <TableRow key={skill.title}>
                 <TableCell className="font-medium">{skill.title}</TableCell>
                 <TableCell>{skill.subcategory}</TableCell>
+                <TableCell>{skill.category}</TableCell>
                 <TableCell className="capitalize">{skill.type}</TableCell>
                 <TableCell className="capitalize">{skill.weight}</TableCell>
-                <TableCell>{skill.category}</TableCell>
                 <TableCell className="text-right">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                     ↗ {skill.growth}
