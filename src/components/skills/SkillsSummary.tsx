@@ -9,7 +9,6 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
-import { roleSkills } from "./data/roleSkills";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -39,21 +38,12 @@ export const SkillsSummary = () => {
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
   const { setMatrixSearchSkills } = useSkillsMatrixSearch();
 
-  console.log('SkillsSummary - Current states:', currentStates);
-
   const employeeSkills = getEmployeeSkills(id || "");
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-
-  console.log('SkillsSummary - Employee skills:', {
-    employeeId: id,
-    skills: employeeSkills,
-    roleSkills: currentRoleSkills
-  });
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
     setSearchSkills(skills);
-    setMatrixSearchSkills(skills);
+    setMatrixSearchSkills(skills); // Sync with Skills Matrix search
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -74,14 +64,14 @@ export const SkillsSummary = () => {
   const handleClearAll = () => {
     setSelectedSkills([]);
     setSearchSkills([]);
-    setMatrixSearchSkills([]);
+    setMatrixSearchSkills([]); // Clear Skills Matrix search
   };
 
   const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
     return skills
       .map(skill => ({
         name: skill.title,
-        level: currentStates[skill.title]?.level || skill.level || 'unspecified',
+        level: currentStates[skill.title]?.level || skill.level,
         isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
                      currentStates[skill.title]?.requirement === 'skill_goal' ||
                      skill.level === 'advanced'
@@ -102,36 +92,17 @@ export const SkillsSummary = () => {
     );
   };
 
-  // Get specialized skills from current role
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
-    currentRoleSkills.specialized.filter(skill => 
-      employeeSkills.some(empSkill => empSkill.title === skill.title)
-    )
+    filterSkillsByCategory(employeeSkills, "specialized")
   );
 
-  // Get common skills from current role
   const commonSkills: DetailedSkill[] = transformAndSortSkills(
-    currentRoleSkills.common.filter(skill => 
-      employeeSkills.some(empSkill => empSkill.title === skill.title)
-    )
+    filterSkillsByCategory(employeeSkills, "common")
   );
 
-  // Get certifications from current role
   const certifications: DetailedSkill[] = transformAndSortSkills(
-    currentRoleSkills.certifications.filter(skill => 
-      employeeSkills.some(empSkill => empSkill.title === skill.title)
-    )
+    filterSkillsByCategory(employeeSkills, "certification")
   );
-
-  console.log('SkillsSummary - Processed skills:', {
-    specialized: specializedSkills.length,
-    common: commonSkills.length,
-    certifications: certifications.length
-  });
-
-  const filteredSpecializedSkills = filterSkills(specializedSkills);
-  const filteredCommonSkills = filterSkills(commonSkills);
-  const filteredCertifications = filterSkills(certifications);
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
@@ -139,6 +110,10 @@ export const SkillsSummary = () => {
       [section]: !prev[section]
     }));
   };
+
+  const filteredSpecializedSkills = filterSkills(specializedSkills);
+  const filteredCommonSkills = filterSkills(commonSkills);
+  const filteredCertifications = filterSkills(certifications);
 
   return (
     <div className="space-y-4 w-full">
