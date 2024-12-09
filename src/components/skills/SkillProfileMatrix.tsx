@@ -1,101 +1,198 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { CompetencyMatrixHeader } from "./CompetencyMatrixHeader";
-import { CompetencyLevels } from "./CompetencyLevels";
-import { SkillsGrid } from "./SkillsGrid";
+import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
+import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { useParams } from 'react-router-dom';
+import { roleSkills } from './data/roleSkills';
+import { CategoryCards } from './CategoryCards';
+import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
+import { SkillMappingHeader } from './header/SkillMappingHeader';
+import { SkillTypeFilters } from './filters/SkillTypeFilters';
 
-const skillCategories = [
-  { id: "all", name: "All Skills", count: 28 },
-  { id: "specialized", name: "Specialized Skills", count: 15 },
-  { id: "common", name: "Common Skills", count: 10 },
-  { id: "certification", name: "Certification", count: 3 }
-];
+type SortDirection = 'asc' | 'desc' | null;
+type SortField = 'growth' | 'salary' | null;
+
+const STORAGE_KEY = 'added-skills';
+const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
 
 export const SkillProfileMatrix = () => {
-  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [track, setTrack] = useState<"Technical" | "Managerial">("Technical");
-  const { toggledSkills } = useToggledSkills();
+  const [sortBy, setSortBy] = useState("benchmark");
+  const [skillType, setSkillType] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [hasMore, setHasMore] = useState(true);
+  const [isDirty, setIsDirty] = useState(false);
+  const [sortField, setSortField] = useState<SortField>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const { toast } = useToast();
+  const observerTarget = useRef(null);
+  const { id } = useParams();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
 
-  // Get all toggled skills as an array
-  const skillsArray = Array.from(toggledSkills);
+  // Load saved skills on component mount
+  useEffect(() => {
+    if (id) {
+      try {
+        const savedSkills = localStorage.getItem(getStorageKey(id));
+        if (savedSkills) {
+          const parsedSkills = JSON.parse(savedSkills);
+          console.log('Loading saved skills:', { roleId: id, skills: parsedSkills });
+          setToggledSkills(new Set([...toggledSkills, ...parsedSkills]));
+        }
+      } catch (error) {
+        console.error('Error loading saved skills:', error);
+      }
+    }
+  }, [id]);
 
-  const handleLevelSelect = (level: string) => {
-    setSelectedLevels(prev => 
-      prev.includes(level) 
-        ? prev.filter(l => l !== level)
-        : [...prev, level]
-    );
+  const handleToggleSkill = (skillTitle: string) => {
+    const newToggledSkills = new Set(toggledSkills);
+    if (newToggledSkills.has(skillTitle)) {
+      console.log('Removing skill:', skillTitle);
+      newToggledSkills.delete(skillTitle);
+    } else {
+      console.log('Adding skill:', skillTitle);
+      newToggledSkills.add(skillTitle);
+    }
+    setToggledSkills(newToggledSkills);
+    setIsDirty(true);
+    
+    toast({
+      title: "Skill Updated",
+      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
+    });
   };
 
-  const handleTrackChange = (newTrack: "Technical" | "Managerial") => {
-    setTrack(newTrack);
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortField(null);
+        setSortDirection(null);
+      }
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
   };
 
-  const handleCategorySelect = (categoryId: string) => {
-    setSelectedCategory(categoryId);
-  };
+  // Get only the skills for the current role
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+
+  const filteredSkills = (() => {
+    let skills = [];
+    if (skillType === "all") {
+      skills = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ];
+    } else if (skillType === "specialized") {
+      skills = currentRoleSkills.specialized;
+    } else if (skillType === "common") {
+      skills = currentRoleSkills.common;
+    } else if (skillType === "certification") {
+      skills = currentRoleSkills.certifications;
+    }
+
+    let sortedSkills = skills.filter(skill => {
+      const isInCurrentRole = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].some(roleSkill => roleSkill.title === skill.title);
+
+      // Apply category filter
+      if (selectedCategory !== 'all') {
+        const skillCategory = getCategoryForSkill(skill, id || "123");
+        if (skillCategory !== selectedCategory) {
+          return false;
+        }
+      }
+
+      return isInCurrentRole;
+    });
+
+    // Sort skills based on toggle state first
+    sortedSkills.sort((a, b) => {
+      const aIsToggled = toggledSkills.has(a.title);
+      const bIsToggled = toggledSkills.has(b.title);
+      
+      if (aIsToggled && !bIsToggled) return -1;
+      if (!aIsToggled && bIsToggled) return 1;
+      return 0;
+    });
+
+    // Apply additional sorting if specified
+    if (sortField && sortDirection) {
+      const toggleSortedSkills = [...sortedSkills];
+      toggleSortedSkills.sort((a, b) => {
+        // Preserve toggle-based ordering within each group
+        const aIsToggled = toggledSkills.has(a.title);
+        const bIsToggled = toggledSkills.has(b.title);
+        if (aIsToggled !== bIsToggled) {
+          return aIsToggled ? -1 : 1;
+        }
+
+        if (sortField === 'growth') {
+          const aGrowth = parseFloat(a.growth);
+          const bGrowth = parseFloat(b.growth);
+          return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+        } else if (sortField === 'salary') {
+          const aSalary = parseFloat(a.salary.replace(/[^0-9.-]+/g, ""));
+          const bSalary = parseFloat(b.salary.replace(/[^0-9.-]+/g, ""));
+          return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
+        }
+        return 0;
+      });
+      sortedSkills = toggleSortedSkills;
+    }
+
+    return sortedSkills;
+  })();
+
+  const skillCounts = calculateSkillCounts(id || "123");
+  const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
+    filteredSkills.some(fs => fs.title === skill)
+  ).length;
 
   return (
-    <div className="space-y-6 bg-white rounded-lg border border-border p-6 mb-8">
-      <CompetencyMatrixHeader selectedLevels={selectedLevels} />
-      
-      <CompetencyLevels 
-        selectedLevels={selectedLevels}
-        onLevelSelect={handleLevelSelect}
-        onTrackChange={handleTrackChange}
-      />
+    <div className="space-y-6">
+      <Card className="p-6 space-y-6 animate-fade-in bg-white mb-8">
+        <SkillMappingHeader skillCount={toggledSkillCount} />
+        
+        <Separator className="my-4" />
 
-      <div>
-        <div className="grid grid-cols-4 gap-4 mb-6">
-          {skillCategories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => handleCategorySelect(category.id)}
-              className={`rounded-lg p-4 transition-colors ${
-                selectedCategory === category.id
-                  ? 'bg-primary-accent/5 border border-primary-accent'
-                  : 'bg-background border border-border hover:border-primary-accent/50'
-              }`}
-            >
-              <div className="flex flex-col items-start">
-                <span className={`text-sm font-semibold mb-1 ${
-                  selectedCategory === category.id
-                    ? 'text-primary-accent'
-                    : 'text-foreground group-hover:text-primary-accent'
-                }`}>
-                  {category.name}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {skillsArray.filter(skill => 
-                    category.id === 'all' || getSkillCategory(skill) === category.id
-                  ).length} skills
-                </span>
-              </div>
-            </button>
-          ))}
+        <CategoryCards
+          selectedCategory={selectedCategory}
+          onCategorySelect={setSelectedCategory}
+          skillCount={skillCounts}
+        />
+
+        <SkillTypeFilters
+          skillType={skillType}
+          setSkillType={setSkillType}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+
+        <div className="rounded-lg border border-border overflow-hidden">
+          <SkillProfileMatrixTable 
+            paginatedSkills={filteredSkills}
+            toggledSkills={toggledSkills}
+            onToggleSkill={handleToggleSkill}
+            sortField={sortField}
+            sortDirection={sortDirection}
+            onSort={handleSort}
+          />
         </div>
 
-        <SkillsGrid 
-          skillsArray={skillsArray}
-          selectedCategory={selectedCategory}
-        />
-      </div>
+        {hasMore && (
+          <div ref={observerTarget} className="h-10" />
+        )}
+      </Card>
     </div>
   );
 };
-
-const getSkillCategory = (skill: string): string => {
-  const specializedSkills = ['Amazon Web Services', 'Machine Learning', 'Artificial Intelligence'];
-  const commonSkills = ['Python', 'JavaScript', 'Communication'];
-  const certifications = ['AWS Certified', 'Google Cloud', 'Azure'];
-
-  if (specializedSkills.some(s => skill.includes(s))) return 'specialized';
-  if (commonSkills.some(s => skill.includes(s))) return 'common';
-  if (certifications.some(s => skill.includes(s))) return 'certification';
-  return 'all';
-};
-
-export default SkillProfileMatrix;
