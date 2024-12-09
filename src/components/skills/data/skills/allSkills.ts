@@ -24,9 +24,22 @@ export const findSkillByTitle = (title: string): UnifiedSkill | undefined => {
   return getAllSkills().find(skill => skill.title === title);
 };
 
-console.log('Loaded skills:', {
-  total: getAllSkills().length,
-  byCategory: Object.fromEntries(
-    Object.entries(Skills).map(([key, skills]) => [key, skills.length])
-  )
+// Log detailed skill counts
+console.log('Skills Database Statistics:', {
+  totalSkills: getAllSkills().length,
+  categoryCounts: {
+    technical: technicalSkills.length,
+    management: managementSkills.length,
+    certification: certificationSkills.length
+  },
+  skillsByWeight: {
+    critical: getAllSkills().filter(skill => skill.weight === 'critical').length,
+    technical: getAllSkills().filter(skill => skill.weight === 'technical').length,
+    necessary: getAllSkills().filter(skill => skill.weight === 'necessary').length
+  },
+  skillsByCategory: {
+    specialized: getAllSkills().filter(skill => skill.category === 'specialized').length,
+    common: getAllSkills().filter(skill => skill.category === 'common').length,
+    certification: getAllSkills().filter(skill => skill.category === 'certification').length
+  }
 });
