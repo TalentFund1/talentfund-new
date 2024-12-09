@@ -60,14 +60,18 @@ export const AddSkillDialog = () => {
       }
 
       // Initialize skill with default state (unspecified/preferred)
-      ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
+      const levels = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'];
+      console.log('Initializing skill states for:', skillTitle);
+      
+      levels.forEach(level => {
         setSkillState(
           skillTitle,
-          'unspecified',
+          'unspecified',  // Default level
           level,
-          'preferred',
+          'preferred',    // Default requirement
           id
         );
+        console.log('Set default state for level:', { skillTitle, level, state: 'unspecified', required: 'preferred' });
       });
 
       // Categorize skill based on its type from the unified database
