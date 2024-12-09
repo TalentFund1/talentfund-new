@@ -10,6 +10,13 @@ const normalizeSkillTitle = (title: string): string => {
     'Version Control': 'Git Version Control',
     'AWS': 'Amazon Web Services',
     'Amazon AWS': 'Amazon Web Services',
+    'TensorFlow Developer Certificate': 'TensorFlow Developer Certification',
+    'AWS Certified Machine Learning - Specialty': 'AWS Certified Machine Learning Specialty',
+    'AWS DevOps': 'AWS Certified DevOps Engineer',
+    'Kubernetes Administrator': 'Certified Kubernetes Administrator',
+    'Terraform Associate': 'HashiCorp Certified Terraform Associate',
+    'Project Management Professional': 'Project Management Professional (PMP)',
+    'Scrum Master': 'Certified Scrum Master (CSM)',
   };
   
   return normalizations[title] || title;
