@@ -1,5 +1,3 @@
-import { AddSkillDialog } from "../dialog/AddSkillDialog";
-
 interface SkillMappingHeaderProps {
   skillCount: number;
 }
@@ -18,7 +16,6 @@ export const SkillMappingHeader = ({ skillCount }: SkillMappingHeaderProps) => {
           </div>
         </div>
       </div>
-      <AddSkillDialog />
     </div>
   );
 };
