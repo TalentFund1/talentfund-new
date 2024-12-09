@@ -3,6 +3,7 @@ export interface Skill {
   title: string;
   subcategory: string;
   category: 'specialized' | 'common' | 'certification';
+  businessCategory: string; // New field for broader business categorization
   weight: 'critical' | 'technical' | 'necessary';
   level: string;
   growth: string;

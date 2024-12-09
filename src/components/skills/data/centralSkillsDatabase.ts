@@ -43,10 +43,38 @@ export const normalizeSkillTitle = (title: string): string => {
 
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
+  
+  // Define business categories based on the skill
+  const getBusinessCategory = (skillTitle: string): string => {
+    const categories = {
+      'Amazon Web Services': 'Information Technology',
+      'Machine Learning': 'Information Technology',
+      'Deep Learning': 'Information Technology',
+      'Python': 'Information Technology',
+      'Docker': 'Information Technology',
+      'Kubernetes': 'Information Technology',
+      'Node.js': 'Information Technology',
+      'React': 'Information Technology',
+      'Communication': 'Media and Communications',
+      'Problem Solving': 'Physical and Inherent Abilities',
+      'Team Leadership': 'Initiative and Leadership',
+      'Project Management': 'Project Management',
+      'Data Science': 'Analysis',
+      'Computer Vision': 'Analysis',
+      'Natural Language Processing': 'Analysis',
+      'Risk Management': 'Risk and Compliance',
+      'System Design': 'Information Technology',
+      'Database Design': 'Information Technology'
+    };
+    
+    return categories[skillTitle as keyof typeof categories] || 'General';
+  };
+
   return {
     id: `SKILL_${title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
     title: normalizeSkillTitle(title),
     category: 'specialized',
+    businessCategory: getBusinessCategory(title),
     subcategory: 'General',
     weight: 'technical',
     level: 'unspecified',
