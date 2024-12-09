@@ -3,6 +3,8 @@ import { useCompetencyStore } from "./CompetencyState";
 import { useEffect, useRef } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
+import { Check, X } from "lucide-react";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 interface SkillCellProps {
   skillName: string;
@@ -21,6 +23,7 @@ export const SkillCell = ({
   levelKey 
 }: SkillCellProps) => {
   const { currentStates, setSkillState } = useCompetencyStore();
+  const { toggledSkills } = useToggledSkills();
   const initRef = useRef(false);
 
   // Initialize state only once when component mounts
@@ -68,20 +71,33 @@ export const SkillCell = ({
     setSkillState(skillName, currentState.level, levelKey, value);
   };
 
+  const isCompanySkill = toggledSkills.has(skillName);
+
   return (
     <TableCell 
       className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
     >
-      <div className="flex flex-col items-center gap-0">
-        <LevelSelector
-          currentLevel={currentState.level}
-          onLevelChange={handleLevelChange}
-        />
-        <RequirementSelector
-          currentRequired={currentState.required}
-          currentLevel={currentState.level}
-          onRequirementChange={handleRequirementChange}
-        />
+      <div className="flex flex-col items-center gap-2">
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+          isCompanySkill ? 'bg-green-100' : 'bg-red-100'
+        }`}>
+          {isCompanySkill ? (
+            <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
+          ) : (
+            <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
+          )}
+        </div>
+        <div className="flex flex-col items-center gap-0">
+          <LevelSelector
+            currentLevel={currentState.level}
+            onLevelChange={handleLevelChange}
+          />
+          <RequirementSelector
+            currentRequired={currentState.required}
+            currentLevel={currentState.level}
+            onRequirementChange={handleRequirementChange}
+          />
+        </div>
       </div>
     </TableCell>
   );
