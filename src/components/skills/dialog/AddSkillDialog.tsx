@@ -4,13 +4,12 @@ import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { getUnifiedSkillData } from '../data/centralSkillsDatabase';
 import { saveToggledSkills, loadToggledSkills } from '../context/utils/storageUtils';
-import { useCompetencyStore } from "../competency/CompetencyState";
 
 const STORAGE_KEY = 'added-skills';
 const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
@@ -41,25 +40,9 @@ export const AddSkillDialog = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const { id } = useParams();
-  const { setSkillState } = useCompetencyStore();
 
   const allSkills = [...technicalSkills, ...softSkills];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
-
-  const initializeSkillState = (skillName: string, roleId: string) => {
-    console.log('Initializing skill state:', { skillName, roleId });
-    
-    // Initialize state for all levels with unspecified/preferred
-    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
-      setSkillState(
-        skillName,
-        'unspecified',
-        level.toLowerCase(),
-        'preferred',
-        roleId
-      );
-    });
-  };
 
   const handleAddSkills = () => {
     console.log('Adding skills:', selectedSkills);
@@ -84,9 +67,6 @@ export const AddSkillDialog = () => {
     
     selectedSkills.forEach(skillTitle => {
       newToggledSkills.add(skillTitle);
-      
-      // Initialize skill state with unspecified/preferred for all levels
-      initializeSkillState(skillTitle, id);
       
       // Get complete skill data from centralized database
       const skillData = getUnifiedSkillData(skillTitle);

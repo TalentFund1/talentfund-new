@@ -1,30 +1,44 @@
-import { SkillData } from '../skillLevels';
+import { UnifiedSkill } from '../../types/SkillTypes';
 
-export const commonSkills: SkillData[] = [
+export const commonSkills: UnifiedSkill[] = [
+  {
+    title: "Python",
+    subcategory: "General Skills",
+    category: "common",
+    type: "technical",
+    growth: "0%",
+    salary: "$0",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
   {
     title: "Problem Solving",
-    category: "common",
     subcategory: "Soft Skills",
-    professionalTrack: {
-      P1: { level: 'intermediate', requirement: 'required' },
-      P2: { level: 'intermediate', requirement: 'required' },
-      P3: { level: 'advanced', requirement: 'required' },
-      P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'advanced', requirement: 'required' },
-      P6: { level: 'advanced', requirement: 'required' }
-    }
+    category: "common",
+    type: "necessary",
+    growth: "15%",
+    salary: "$158,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
     title: "Technical Writing",
+    subcategory: "General Skills",
     category: "common",
-    subcategory: "Communication",
-    professionalTrack: {
-      P1: { level: 'beginner', requirement: 'preferred' },
-      P2: { level: 'intermediate', requirement: 'preferred' },
-      P3: { level: 'intermediate', requirement: 'preferred' },
-      P4: { level: 'advanced', requirement: 'required' },
-      P5: { level: 'advanced', requirement: 'required' },
-      P6: { level: 'advanced', requirement: 'required' }
-    }
+    type: "necessary",
+    growth: "0%",
+    salary: "$0",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Git Version Control",
+    subcategory: "Development Tools",
+    category: "common",
+    type: "technical",
+    growth: "15%",
+    salary: "$130,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];

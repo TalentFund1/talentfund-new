@@ -11,28 +11,16 @@ export const setSkillStateAction = (
 ): Record<string, RoleState> => {
   console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
   
-  // Ensure we always have default values
-  const defaultLevel = 'unspecified';
-  const defaultRequired = 'preferred';
-
   const updatedRoleState = {
     ...roleStates,
     [roleId]: {
       ...roleStates[roleId],
       [skillName]: {
         ...roleStates[roleId]?.[skillName],
-        [levelKey]: { 
-          level: level || defaultLevel, 
-          required: required || defaultRequired 
-        }
+        [levelKey]: { level, required }
       }
     }
   };
-
-  console.log('Updated role state:', {
-    skillName,
-    newState: updatedRoleState[roleId]?.[skillName]?.[levelKey]
-  });
 
   persistState(roleId, updatedRoleState[roleId]);
   return updatedRoleState;
