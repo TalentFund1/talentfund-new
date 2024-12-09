@@ -4,8 +4,6 @@ export const normalizeSkillTitle = (title: string): string => {
   console.log('Normalizing skill title:', title);
   
   const normalizations: { [key: string]: string } = {
-    'Git': 'Git Version Control',
-    'Version Control': 'Git Version Control',
     'AWS': 'Amazon Web Services',
     'Amazon AWS': 'Amazon Web Services',
     'TensorFlow Developer Certificate': 'TensorFlow Developer Certification',
@@ -46,7 +44,6 @@ export const normalizeSkillTitle = (title: string): string => {
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
-  // Define subcategories based on the skill
   const getSubcategory = (skillTitle: string): string => {
     const subcategories: { [key: string]: string } = {
       'Machine Learning': 'AI & ML',
@@ -72,7 +69,6 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'TypeScript': 'Programming Languages',
       'Python': 'Programming Languages',
       'CSS/SASS': 'Frontend Development',
-      'Git Version Control': 'Development Tools',
       'Team Leadership': 'Leadership',
       'Project Management': 'Project Management',
       'Risk Management': 'Management',
@@ -87,7 +83,6 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     return subcategories[skillTitle] || 'Development Tools';
   };
 
-  // Helper function to determine the category based on subcategory
   const getCategory = (subcategory: string): 'specialized' | 'common' | 'certification' => {
     const certificationSubcategories = [
       'AI Certification',
@@ -120,7 +115,6 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   const subcategory = getSubcategory(title);
   const category = getCategory(subcategory);
 
-  // Special case handling for specific skills
   const specialCases: { [key: string]: 'specialized' | 'common' | 'certification' } = {
     'Python': 'common',
     'TypeScript': 'specialized',
@@ -154,7 +148,6 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   };
 };
 
-// Define business categories based on the skill
 const getBusinessCategory = (skillTitle: string): string => {
   const categories = {
     'Amazon Web Services': 'Information Technology',
