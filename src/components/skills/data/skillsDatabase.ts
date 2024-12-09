@@ -22,6 +22,7 @@ const convertSkill = (skill: any, type: SkillCategory): Skill => {
     category: type,
     subcategory: skill.subcategory,
     type: determineCategory(skill.growth || '0%', type),
+    level: skill.level || 'beginner', // Add default level
     growth: skill.growth || '0%',
     salary: skill.salary || '$0',
     confidence: skill.confidence || 'medium',
