@@ -6,6 +6,7 @@ import { certificationSkills } from './skills/certificationSkills';
 import { frontendSkills } from './skills/frontendSkills';
 import { aiSkills } from './skills/aiSkills';
 import { managementSkills } from './skills/managementSkills';
+import { generalSkills } from './skills/generalSkills';
 
 // Combine all skills into the centralized database
 export const centralizedSkills: UnifiedSkill[] = [
@@ -15,7 +16,8 @@ export const centralizedSkills: UnifiedSkill[] = [
   ...certificationSkills,
   ...frontendSkills,
   ...aiSkills,
-  ...managementSkills
+  ...managementSkills,
+  ...generalSkills
 ];
 
 // Helper functions to access the centralized database
