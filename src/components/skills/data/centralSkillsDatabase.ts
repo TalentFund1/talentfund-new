@@ -41,5 +41,17 @@ export const normalizeSkillTitle = (title: string): string => {
   return normalized;
 };
 
-// Re-export the UnifiedSkill type
-export type { UnifiedSkill };
+export const getUnifiedSkillData = (title: string): UnifiedSkill => {
+  console.log('Getting unified skill data for:', title);
+  return {
+    id: `SKILL_${title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
+    title: normalizeSkillTitle(title),
+    category: 'specialized',
+    subcategory: 'General',
+    type: 'technical',
+    growth: '0%',
+    salary: '$0',
+    confidence: 'medium',
+    benchmarks: { B: true, R: true, M: true, O: true }
+  };
+};
