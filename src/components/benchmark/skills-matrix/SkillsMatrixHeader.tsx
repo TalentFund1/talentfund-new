@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus } from "lucide-react";
 
 export interface SkillsMatrixHeaderProps {
   hasChanges: boolean;
@@ -37,14 +36,6 @@ export const SkillsMatrixHeader = ({ hasChanges, onSave, onCancel }: SkillsMatri
           disabled={!hasChanges}
         >
           Save
-        </Button>
-        <Button 
-          variant="default"
-          className="bg-[#1F2144] text-white hover:bg-[#1F2144]/90"
-          onClick={() => console.log('Add Skill clicked')}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Skill
         </Button>
       </div>
     </div>
