@@ -42,7 +42,7 @@ export const CompanySkillsTable = () => {
               <TableHead className="w-[150px]">Type</TableHead>
               <TableHead className="w-[200px]">Occupation</TableHead>
               <TableHead className="w-[150px] text-right">Projected Growth</TableHead>
-              <TableHead className="w-[150px] text-right">Skill Price</TableHead>
+              <TableHead className="w-[150px] text-right">Skill Pricer</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
