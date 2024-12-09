@@ -7,19 +7,15 @@ import { roleSkills } from './data/roleSkills';
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
   
-  // Count occurrences of each skill and get their data
-  const skillCounts = Array.from(toggledSkills).reduce((acc, skillTitle) => {
-    acc[skillTitle] = (acc[skillTitle] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  console.log('CompanySkillsTable - Toggled Skills:', Array.from(toggledSkills));
 
   // Get unique skills with their counts
-  const uniqueSkills = Array.from(new Set(Array.from(toggledSkills))).map(skillTitle => {
-    console.log('Getting data for unique toggled skill:', skillTitle);
+  const uniqueSkills = Array.from(toggledSkills).map(skillTitle => {
+    console.log('Getting data for toggled skill:', skillTitle);
     const skillData = getUnifiedSkillData(skillTitle);
     return {
       ...skillData,
-      count: skillCounts[skillTitle] || 1
+      count: 1 // Since we're using a Set, each skill can only appear once
     };
   });
 
@@ -39,7 +35,7 @@ export const CompanySkillsTable = () => {
     return 'Uncategorized';
   };
 
-  console.log('Displaying unique toggled skills with counts:', uniqueSkills);
+  console.log('Displaying filtered toggled skills:', uniqueSkills);
 
   return (
     <Card className="p-6 bg-white">
