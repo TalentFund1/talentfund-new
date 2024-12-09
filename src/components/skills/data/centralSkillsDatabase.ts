@@ -1,7 +1,7 @@
 import { UnifiedSkill } from '../types/SkillTypes';
 import { backendSkills } from './skills/backendSkills';
 import { infrastructureSkills } from './skills/infrastructureSkills';
-import { commonSkills } from './skills/commonSkills';
+import { softSkills } from './skills/softSkills';
 import { certificationSkills } from './skills/certificationSkills';
 import { frontendSkills } from './skills/frontendSkills';
 import { aiSkills } from './skills/aiSkills';
@@ -11,7 +11,7 @@ import { managementSkills } from './skills/managementSkills';
 export const centralizedSkills: UnifiedSkill[] = [
   ...backendSkills,
   ...infrastructureSkills,
-  ...commonSkills,
+  ...softSkills,
   ...certificationSkills,
   ...frontendSkills,
   ...aiSkills,
@@ -44,13 +44,13 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   if (!skill) {
     console.warn(`Skill "${skillTitle}" not found in centralized database, using default values`);
     return {
-      id: `GEN_${Date.now()}`,
+      id: `GEN_${Date.now()}`, // Generate a unique ID for unknown skills
       title: skillTitle,
-      subcategory: "Other Technical Skills", // Updated from "General Skills"
+      subcategory: "General Skills",
       category: "common",
       type: "necessary",
-      growth: "10%", // Updated from "0%"
-      salary: "$120,000", // Updated from "$0"
+      growth: "0%",
+      salary: "$0",
       confidence: "low",
       benchmarks: {
         B: false,
