@@ -3,11 +3,11 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 export const commonSkills: UnifiedSkill[] = [
   {
     title: "Python",
-    subcategory: "General Skills",
+    subcategory: "Programming Languages",
     category: "common",
     type: "technical",
-    growth: "0%",
-    salary: "$0",
+    growth: "28%",
+    salary: "$160,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -23,11 +23,11 @@ export const commonSkills: UnifiedSkill[] = [
   },
   {
     title: "Technical Writing",
-    subcategory: "General Skills",
+    subcategory: "Documentation",
     category: "common",
     type: "necessary",
-    growth: "0%",
-    salary: "$0",
+    growth: "18%",
+    salary: "$140,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -38,6 +38,26 @@ export const commonSkills: UnifiedSkill[] = [
     type: "technical",
     growth: "15%",
     salary: "$130,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Communication",
+    subcategory: "Soft Skills",
+    category: "common",
+    type: "necessary",
+    growth: "20%",
+    salary: "$145,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    title: "Shell Scripting",
+    subcategory: "System Administration",
+    category: "common",
+    type: "technical",
+    growth: "18%",
+    salary: "$135,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }
