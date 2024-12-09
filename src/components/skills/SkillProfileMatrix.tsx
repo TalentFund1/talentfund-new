@@ -1,198 +1,125 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
-import { useToast } from "@/components/ui/use-toast";
-import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { useParams } from 'react-router-dom';
-import { roleSkills } from './data/roleSkills';
-import { CategoryCards } from './CategoryCards';
-import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
-import { SkillMappingHeader } from './header/SkillMappingHeader';
-import { SkillTypeFilters } from './filters/SkillTypeFilters';
+import { Sidebar } from "@/components/Sidebar";
+import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
+import { roleSkills } from '@/components/skills/data/roleSkills';
+import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
+import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
+import { AddSkillProfileForm } from "@/components/skills/form/AddSkillProfileForm";
+import { TrackProvider } from "@/components/skills/context/TrackContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { AddSkillDialog } from './dialog/AddSkillDialog';
 
-type SortDirection = 'asc' | 'desc' | null;
-type SortField = 'growth' | 'salary' | null;
+// Define company functions/departments
+const companyFunctions = [
+  "Engineering",
+  "Product",
+  "Design",
+  "Marketing",
+  "Sales",
+  "Finance",
+  "Human Resources",
+  "Operations",
+  "Legal",
+  "Customer Success"
+];
 
-const STORAGE_KEY = 'added-skills';
-const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
+const SkillsProfileContent = () => {
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedFunction, setSelectedFunction] = useState<string>("");
+  const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
+  const { toggledSkills } = useToggledSkills();
 
-export const SkillProfileMatrix = () => {
-  const [sortBy, setSortBy] = useState("benchmark");
-  const [skillType, setSkillType] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [hasMore, setHasMore] = useState(true);
-  const [isDirty, setIsDirty] = useState(false);
-  const [sortField, setSortField] = useState<SortField>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
-  const { toast } = useToast();
-  const observerTarget = useRef(null);
-  const { id } = useParams();
-  const { toggledSkills, setToggledSkills } = useToggledSkills();
-
-  // Load saved skills on component mount
-  useEffect(() => {
-    if (id) {
-      try {
-        const savedSkills = localStorage.getItem(getStorageKey(id));
-        if (savedSkills) {
-          const parsedSkills = JSON.parse(savedSkills);
-          console.log('Loading saved skills:', { roleId: id, skills: parsedSkills });
-          setToggledSkills(new Set([...toggledSkills, ...parsedSkills]));
-        }
-      } catch (error) {
-        console.error('Error loading saved skills:', error);
-      }
-    }
-  }, [id]);
-
-  const handleToggleSkill = (skillTitle: string) => {
-    const newToggledSkills = new Set(toggledSkills);
-    if (newToggledSkills.has(skillTitle)) {
-      console.log('Removing skill:', skillTitle);
-      newToggledSkills.delete(skillTitle);
-    } else {
-      console.log('Adding skill:', skillTitle);
-      newToggledSkills.add(skillTitle);
-    }
-    setToggledSkills(newToggledSkills);
-    setIsDirty(true);
-    
-    toast({
-      title: "Skill Updated",
-      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
-    });
-  };
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      if (sortDirection === 'asc') {
-        setSortDirection('desc');
-      } else if (sortDirection === 'desc') {
-        setSortField(null);
-        setSortDirection(null);
-      }
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
-  // Get only the skills for the current role
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-
-  const filteredSkills = (() => {
-    let skills = [];
-    if (skillType === "all") {
-      skills = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ];
-    } else if (skillType === "specialized") {
-      skills = currentRoleSkills.specialized;
-    } else if (skillType === "common") {
-      skills = currentRoleSkills.common;
-    } else if (skillType === "certification") {
-      skills = currentRoleSkills.certifications;
-    }
-
-    let sortedSkills = skills.filter(skill => {
-      const isInCurrentRole = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ].some(roleSkill => roleSkill.title === skill.title);
-
-      // Apply category filter
-      if (selectedCategory !== 'all') {
-        const skillCategory = getCategoryForSkill(skill, id || "123");
-        if (skillCategory !== selectedCategory) {
-          return false;
-        }
-      }
-
-      return isInCurrentRole;
-    });
-
-    // Sort skills based on toggle state first
-    sortedSkills.sort((a, b) => {
-      const aIsToggled = toggledSkills.has(a.title);
-      const bIsToggled = toggledSkills.has(b.title);
-      
-      if (aIsToggled && !bIsToggled) return -1;
-      if (!aIsToggled && bIsToggled) return 1;
-      return 0;
-    });
-
-    // Apply additional sorting if specified
-    if (sortField && sortDirection) {
-      const toggleSortedSkills = [...sortedSkills];
-      toggleSortedSkills.sort((a, b) => {
-        // Preserve toggle-based ordering within each group
-        const aIsToggled = toggledSkills.has(a.title);
-        const bIsToggled = toggledSkills.has(b.title);
-        if (aIsToggled !== bIsToggled) {
-          return aIsToggled ? -1 : 1;
-        }
-
-        if (sortField === 'growth') {
-          const aGrowth = parseFloat(a.growth);
-          const bGrowth = parseFloat(b.growth);
-          return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
-        } else if (sortField === 'salary') {
-          const aSalary = parseFloat(a.salary.replace(/[^0-9.-]+/g, ""));
-          const bSalary = parseFloat(b.salary.replace(/[^0-9.-]+/g, ""));
-          return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
-        }
-        return 0;
-      });
-      sortedSkills = toggleSortedSkills;
-    }
-
-    return sortedSkills;
-  })();
-
-  const skillCounts = calculateSkillCounts(id || "123");
-  const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
-    filteredSkills.some(fs => fs.title === skill)
-  ).length;
+  // Get role titles directly from roleSkills
+  const availableJobTitles = Object.values(roleSkills).map(role => role.title);
+  const toggledSkillsList = Array.from(toggledSkills);
 
   return (
-    <div className="space-y-6">
-      <Card className="p-6 space-y-6 animate-fade-in bg-white mb-8">
-        <SkillMappingHeader skillCount={toggledSkillCount} />
-        
-        <Separator className="my-4" />
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
+      <div className="flex-1 p-6 ml-16 transition-all duration-300">
+        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
+            <div className="space-x-2">
+              <Button variant="outline">Export Data</Button>
+              <TrackProvider>
+                <AddSkillProfileForm />
+              </TrackProvider>
+              <AddSkillDialog />
+            </div>
+          </div>
 
-        <CategoryCards
-          selectedCategory={selectedCategory}
-          onCategorySelect={setSelectedCategory}
-          skillCount={skillCounts}
-        />
-
-        <SkillTypeFilters
-          skillType={skillType}
-          setSkillType={setSkillType}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-        />
-
-        <div className="rounded-lg border border-border overflow-hidden">
-          <SkillProfileMatrixTable 
-            paginatedSkills={filteredSkills}
-            toggledSkills={toggledSkills}
-            onToggleSkill={handleToggleSkill}
-            sortField={sortField}
-            sortDirection={sortDirection}
-            onSort={handleSort}
+          <SkillProfileFilters
+            selectedSkills={selectedSkills}
+            setSelectedSkills={setSelectedSkills}
+            selectedFunction={selectedFunction}
+            setSelectedFunction={setSelectedFunction}
+            selectedJobTitle={selectedJobTitle}
+            setSelectedJobTitle={setSelectedJobTitle}
+            toggledSkillsList={toggledSkillsList}
+            availableJobTitles={availableJobTitles}
+            companyFunctions={companyFunctions}
           />
-        </div>
 
-        {hasMore && (
-          <div ref={observerTarget} className="h-10" />
-        )}
-      </Card>
+          <SkillProfileStats />
+
+          <Card className="p-6">
+            <SkillProfileTable 
+              selectedFunction={selectedFunction} 
+              selectedSkills={selectedSkills}
+              selectedJobTitle={selectedJobTitle}
+            />
+
+            <Separator className="my-4" />
+            
+            <div className="flex justify-between items-center">
+              <Select defaultValue="10">
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue placeholder="10 rows" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10 rows</SelectItem>
+                  <SelectItem value="20">20 rows</SelectItem>
+                  <SelectItem value="50">50 rows</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">1-5 of 5</span>
+                <div className="flex gap-1">
+                  <Button variant="outline" size="icon" className="w-8 h-8">
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="icon" className="w-8 h-8">
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
+
+const SkillsProfile = () => {
+  return (
+    <ToggledSkillsProvider>
+      <SkillsProfileContent />
+    </ToggledSkillsProvider>
+  );
+};
+
+export default SkillsProfile;
