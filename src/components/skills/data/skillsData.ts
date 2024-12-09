@@ -72,6 +72,12 @@ export const skills = [
     growth: "17%"
   },
   {
+    title: "Git",
+    subcategory: "Version Control",
+    level: "Advanced",
+    growth: "8%"
+  },
+  {
     title: "SQL",
     subcategory: "Databases",
     level: "Advanced",
