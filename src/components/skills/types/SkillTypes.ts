@@ -8,6 +8,7 @@ export interface Skill {
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
+  occupation?: string;
   benchmarks: {
     B: boolean;  // Business
     R: boolean;  // Role
