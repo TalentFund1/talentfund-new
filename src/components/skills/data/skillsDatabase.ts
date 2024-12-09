@@ -1,4 +1,4 @@
-import { Skill, SkillWeight } from '../types/SkillTypes';
+import { Skill, SkillWeight, SkillCategory } from '../types/SkillTypes';
 import { aiSkills } from './skills/aiSkills';
 import { backendSkills } from './skills/backendSkills';
 import { commonSkills } from './skills/commonSkills';
@@ -19,7 +19,7 @@ const convertSkill = (skill: any, weight: string): Skill => {
   return {
     id: skill.id || `CONV_${Date.now()}_${skill.title.replace(/\s+/g, '_')}`,
     title: skill.title,
-    category: weight,
+    category: weight as SkillCategory,
     subcategory: skill.subcategory,
     weight: determineCategory(skill.growth || '0%', weight),
     growth: skill.growth || '0%',
