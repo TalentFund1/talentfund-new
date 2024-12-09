@@ -8,8 +8,8 @@ import { aiSkills } from './skills/aiSkills';
 import { managementSkills } from './skills/managementSkills';
 import { commonSkills } from './skills/commonSkills';
 
-// Normalize skill titles to ensure consistency
-const normalizeSkillTitle = (title: string): string => {
+// Export the normalize function
+export const normalizeSkillTitle = (title: string): string => {
   console.log('Normalizing skill title:', title);
   
   const normalizations: { [key: string]: string } = {
