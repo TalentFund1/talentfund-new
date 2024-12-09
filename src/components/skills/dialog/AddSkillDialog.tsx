@@ -78,19 +78,21 @@ export const AddSkillDialog = () => {
       });
 
       // Categorize skill based on its type from the unified database
-      const category = skillData.category || 'common';
-      switch (category) {
+      switch (skillData.category) {
         case 'specialized':
+          console.log(`Adding ${skillTitle} to specialized skills`);
           addedSkills.specialized.push(skillData);
           break;
         case 'common':
+          console.log(`Adding ${skillTitle} to common skills`);
           addedSkills.common.push(skillData);
           break;
         case 'certification':
+          console.log(`Adding ${skillTitle} to certifications`);
           addedSkills.certifications.push(skillData);
           break;
         default:
-          console.warn(`Unknown category for skill: ${skillTitle}`);
+          console.warn(`Unknown category for skill: ${skillTitle}, defaulting to common`);
           addedSkills.common.push(skillData);
       }
     });
