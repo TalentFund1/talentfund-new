@@ -57,8 +57,7 @@ export const roleSkills = {
       getUnifiedSkillData("Agile Methodologies")
     ],
     certifications: [
-      getUnifiedSkillData("AWS Certified Developer - Associate"),
-      getUnifiedSkillData("Google Mobile Web Specialist")
+      getUnifiedSkillData("AWS Certified Developer - Associate")
     ]
   },
   "126": {
