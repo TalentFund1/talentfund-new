@@ -91,22 +91,14 @@ export const CompanySkill = ({
     );
   };
 
-  // Check if the skill is toggled on in any role's skills
-  const isCompanySkill = Object.values(roleSkills).some(role => {
-    const allRoleSkills = [
-      ...role.specialized,
-      ...role.common,
-      ...role.certifications
-    ];
-    return allRoleSkills.some(skill => 
-      skill.title === skillName && toggledSkills.has(skill.title)
-    );
-  });
+  // Check if the skill is toggled on in the current role's skills
+  const isCompanySkill = toggledSkills.has(skillName);
 
   console.log('Checking company skill status:', {
     skillName,
     isCompanySkill,
-    toggledSkillsCount: toggledSkills.size
+    toggledSkillsCount: toggledSkills.size,
+    isToggled: toggledSkills.has(skillName)
   });
 
   return (
