@@ -17,6 +17,7 @@ const convertSkill = (skill: any, type: SkillCategory): Skill => {
   console.log('Converting skill:', { title: skill.title, type });
   
   return {
+    id: `SKILL_${skill.title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
     title: skill.title,
     category: type,
     subcategory: skill.subcategory,
