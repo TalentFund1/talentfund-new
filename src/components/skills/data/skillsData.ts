@@ -12,6 +12,12 @@ export const skills = [
     growth: "19%"
   },
   {
+    title: "Conversational AI",
+    subcategory: "Natural Language Processing (NLP)",
+    level: "Advanced",
+    growth: "12%"
+  },
+  {
     title: "Deep Learning",
     subcategory: "Artificial Intelligence and Machine Learning",
     level: "Intermediate",
@@ -102,10 +108,22 @@ export const skills = [
     growth: "21%"
   },
   {
+    title: "React Native",
+    subcategory: "Mobile Development",
+    level: "Advanced",
+    growth: "25%"
+  },
+  {
     title: "System Design",
     subcategory: "Software Architecture",
     level: "Advanced",
     growth: "21%"
+  },
+  {
+    title: "GraphQL",
+    subcategory: "API Development",
+    level: "Intermediate",
+    growth: "24%"
   },
   {
     title: "DevOps",
@@ -136,6 +154,12 @@ export const skills = [
     subcategory: "Software Architecture",
     level: "Advanced",
     growth: "27%"
+  },
+  {
+    title: "Flutter",
+    subcategory: "Mobile Development",
+    level: "Beginner",
+    growth: "23%"
   },
   {
     title: "Blockchain",

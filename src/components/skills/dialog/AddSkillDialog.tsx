@@ -2,15 +2,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
+import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { getUnifiedSkillData } from '../data/centralSkillsDatabase';
 import { saveToggledSkills } from '../context/utils/storageUtils';
 import { useCompetencyStore } from "../competency/CompetencyState";
-import { getAllSkills } from '../data/skills/allSkills';
 
 const STORAGE_KEY = 'added-skills';
 const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
@@ -23,10 +23,7 @@ export const AddSkillDialog = () => {
   const { id } = useParams();
   const { setSkillState } = useCompetencyStore();
 
-  // Get all skills from the universal database
-  const allSkills = getAllSkills().map(skill => skill.title);
-  console.log('Loaded all skills from universal database:', allSkills);
-
+  const allSkills = [...technicalSkills, ...softSkills];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
 
   const handleAddSkills = () => {
@@ -78,21 +75,19 @@ export const AddSkillDialog = () => {
       });
 
       // Categorize skill based on its type from the unified database
-      switch (skillData.category) {
+      const category = skillData.category || 'common';
+      switch (category) {
         case 'specialized':
-          console.log(`Adding ${skillTitle} to specialized skills`);
           addedSkills.specialized.push(skillData);
           break;
         case 'common':
-          console.log(`Adding ${skillTitle} to common skills`);
           addedSkills.common.push(skillData);
           break;
         case 'certification':
-          console.log(`Adding ${skillTitle} to certifications`);
           addedSkills.certifications.push(skillData);
           break;
         default:
-          console.warn(`Unknown category for skill: ${skillTitle}, defaulting to common`);
+          console.warn(`Unknown category for skill: ${skillTitle}`);
           addedSkills.common.push(skillData);
       }
     });

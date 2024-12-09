@@ -39,27 +39,23 @@ export const isCommonSkill = (skill: string, profileId: string): boolean => {
     "123": [ // AI Engineer
       "Python",
       "Problem Solving",
-      "Technical Writing",
-      "Communication"  // Explicitly add Communication as common
+      "Technical Writing"
     ],
     "124": [ // Backend Engineer
       "Problem Solving",
       "Code Review",
-      "Agile Methodologies",
-      "Communication"  // Explicitly add Communication as common
+      "Agile Methodologies"
     ],
     "125": [ // Frontend Engineer
       "Cross-browser Compatibility",
       "Responsive Design",
-      "Problem Solving",
-      "Communication"  // Explicitly add Communication as common
+      "Problem Solving"
     ],
     "126": [ // Engineering Manager
       "Team Leadership",
       "Project Management",
       "Strategic Planning",
-      "Stakeholder Management",
-      "Communication"  // Explicitly add Communication as common
+      "Stakeholder Management"
     ]
   };
   

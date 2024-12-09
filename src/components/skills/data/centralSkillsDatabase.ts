@@ -34,7 +34,6 @@ export const normalizeSkillTitle = (title: string): string => {
     'Kubernetes Container': 'Kubernetes',
     'K8s': 'Kubernetes',
     'Amazon Web Service': 'Amazon Web Services',
-    'TensorFlow': 'TensorFlow'
   };
   
   const normalized = normalizations[title] || title;
@@ -45,6 +44,7 @@ export const normalizeSkillTitle = (title: string): string => {
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
+  // Define subcategories based on the skill
   const getSubcategory = (skillTitle: string): string => {
     const subcategories: { [key: string]: string } = {
       'Machine Learning': 'AI & ML',
@@ -77,12 +77,23 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'Problem Solving': 'Development Practices',
       'Code Review': 'Development Practices',
       'Agile Methodologies': 'Development Practices',
-      'Technical Writing': 'Communication'
+      'Technical Writing': 'Communication',
+      'Communication': 'Communication',
+      'AWS Certified Machine Learning Specialty': 'AI Certification',
+      'TensorFlow Developer Certification': 'AI Certification',
+      'AWS Certified Solutions Architect': 'Cloud Certification',
+      'AWS Certified Developer - Associate': 'Cloud Certification',
+      'AWS Certified DevOps Engineer': 'Cloud Certification',
+      'Certified Kubernetes Administrator': 'Container Certification',
+      'HashiCorp Certified Terraform Associate': 'Infrastructure Certification',
+      'Project Management Professional (PMP)': 'Management Certification',
+      'Certified Scrum Master (CSM)': 'Agile Certification'
     };
     
     return subcategories[skillTitle] || 'Development Tools';
   };
 
+  // Helper function to determine the category based on subcategory
   const getCategory = (subcategory: string): 'specialized' | 'common' | 'certification' => {
     const certificationSubcategories = [
       'AI Certification',
@@ -95,12 +106,9 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
 
     const commonSubcategories = [
       'Development Practices',
+      'Communication',
       'System Administration',
-      'Development Tools',
-      'Programming Languages',
-      'Leadership',
-      'Project Management',
-      'Management'
+      'Development Tools'
     ];
 
     if (certificationSubcategories.includes(subcategory)) {
@@ -114,26 +122,10 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   const subcategory = getSubcategory(title);
   const category = getCategory(subcategory);
 
-  const specialCases: { [key: string]: 'specialized' | 'common' | 'certification' } = {
-    'Python': 'common',
-    'TypeScript': 'specialized',
-    'TensorFlow': 'specialized',
-    'React': 'specialized',
-    'Technical Writing': 'common'
-  };
-
-  const finalCategory = specialCases[title] || category;
-
-  console.log('Categorized skill:', {
-    title,
-    subcategory,
-    category: finalCategory
-  });
-
   return {
     id: `SKILL_${title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
     title: normalizeSkillTitle(title),
-    category: finalCategory,
+    category: category,
     businessCategory: getBusinessCategory(title),
     subcategory: subcategory,
     weight: 'technical',
@@ -145,6 +137,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   };
 };
 
+// Define business categories based on the skill
 const getBusinessCategory = (skillTitle: string): string => {
   const categories = {
     'Amazon Web Services': 'Information Technology',
@@ -158,6 +151,7 @@ const getBusinessCategory = (skillTitle: string): string => {
     'Linux Administration': 'Information Technology',
     'Node.js': 'Information Technology',
     'React': 'Information Technology',
+    'Communication': 'Media and Communications',
     'Problem Solving': 'Physical and Inherent Abilities',
     'Team Leadership': 'Initiative and Leadership',
     'Project Management': 'Project Management',
@@ -166,8 +160,7 @@ const getBusinessCategory = (skillTitle: string): string => {
     'Natural Language Processing': 'Analysis',
     'Risk Management': 'Risk and Compliance',
     'System Design': 'Information Technology',
-    'Database Design': 'Information Technology',
-    'TensorFlow': 'Information Technology'
+    'Database Design': 'Information Technology'
   };
   
   return categories[skillTitle as keyof typeof categories] || 'Information Technology';
