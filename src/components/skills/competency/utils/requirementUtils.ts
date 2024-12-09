@@ -1,11 +1,19 @@
 export const determineRequirement = (levelKey: string, track: string): string => {
+  const key = levelKey.toLowerCase();
+  
+  // For managerial track, all skills are required
   if (track === "Managerial") {
-    const level = parseInt(levelKey.replace(/[^\d]/g, ''));
-    // For managerial track, all skills are typically required
-    return level >= 3 ? "required" : "preferred";
+    return "required";
+  }
+
+  // For professional track, requirements vary by level
+  const levelNumber = parseInt(key.replace('p', ''));
+  
+  // P4 and above skills are required
+  if (levelNumber >= 4) {
+    return "required";
   }
   
-  // For professional track
-  const level = parseInt(levelKey.replace(/[^\d]/g, ''));
-  return level >= 4 ? "required" : "preferred";
+  // Lower level skills are preferred
+  return "preferred";
 };
