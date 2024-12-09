@@ -30,7 +30,7 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'TECH003',
     title: "Natural Language Processing",
-    subcategory: "Natural Language Processing (NLP)",
+    subcategory: "AI Applications",
     category: "specialized",
     businessCategory: "Analysis",
     weight: "critical",
@@ -43,7 +43,7 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'TECH004',
     title: "Computer Vision",
-    subcategory: "Computer Vision",
+    subcategory: "AI Applications",
     category: "specialized",
     businessCategory: "Analysis",
     weight: "critical",
