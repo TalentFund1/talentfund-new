@@ -2,6 +2,7 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const managementSkills: UnifiedSkill[] = [
   {
+    id: 'MGT001',
     title: "System Design",
     subcategory: "Software Architecture",
     category: "specialized",
@@ -12,6 +13,7 @@ export const managementSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'MGT002',
     title: "Technical Architecture",
     subcategory: "Software Architecture",
     category: "specialized",
@@ -22,6 +24,7 @@ export const managementSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'MGT003',
     title: "Risk Management",
     subcategory: "Management",
     category: "specialized",
@@ -32,6 +35,7 @@ export const managementSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'MGT004',
     title: "Team Leadership",
     subcategory: "Leadership",
     category: "specialized",
@@ -42,6 +46,7 @@ export const managementSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'MGT005',
     title: "Project Management",
     subcategory: "Management",
     category: "specialized",
@@ -52,6 +57,7 @@ export const managementSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'MGT006',
     title: "Strategic Planning",
     subcategory: "Management",
     category: "specialized",
@@ -62,6 +68,7 @@ export const managementSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'MGT007',
     title: "Stakeholder Management",
     subcategory: "Management",
     category: "specialized",
@@ -72,6 +79,7 @@ export const managementSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'MGT008',
     title: "Agile Methodologies",
     subcategory: "Project Management",
     category: "common",

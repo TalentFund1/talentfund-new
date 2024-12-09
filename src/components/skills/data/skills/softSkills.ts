@@ -2,6 +2,7 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const softSkills: UnifiedSkill[] = [
   {
+    id: 'SOFT001',
     title: "Problem Solving",
     subcategory: "Soft Skills",
     category: "common",
@@ -12,6 +13,7 @@ export const softSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'SOFT002',
     title: "Code Review",
     subcategory: "Development Practices",
     category: "common",
@@ -22,6 +24,7 @@ export const softSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'SOFT003',
     title: "Agile Methodologies",
     subcategory: "Project Management",
     category: "common",
