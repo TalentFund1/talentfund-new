@@ -8,7 +8,7 @@ export const aiSkills: UnifiedSkill[] = [
     level: "Advanced",
     growth: "19%",
     category: "specialized",
-    type: "technical",
+    weight: "technical",
     confidence: "high",
     salary: "$180,000",
     benchmarks: { B: true, R: true, M: true, O: true }
@@ -20,10 +20,9 @@ export const aiSkills: UnifiedSkill[] = [
     level: "Intermediate",
     growth: "10%",
     category: "specialized",
-    type: "technical",
+    weight: "technical",
     confidence: "high",
     salary: "$175,000",
     benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  // ... Add other AI skills with IDs
+  }
 ];

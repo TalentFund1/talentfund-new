@@ -8,7 +8,7 @@ export const technicalSkills: UnifiedSkill[] = [
     level: "Advanced",
     growth: "12%",
     category: "specialized",
-    type: "technical",
+    weight: "technical",
     confidence: "high",
     salary: "$160,000",
     benchmarks: { B: true, R: true, M: true, O: true }
@@ -20,10 +20,9 @@ export const technicalSkills: UnifiedSkill[] = [
     level: "Intermediate",
     growth: "15%",
     category: "specialized",
-    type: "technical",
+    weight: "technical",
     confidence: "high",
     salary: "$145,000",
     benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  // ... Add other technical skills with IDs
+  }
 ];

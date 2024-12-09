@@ -33,8 +33,8 @@ export const AddSkillToProfileDialog = () => {
       title: skillTitle,
       subcategory: "General Skills",
       category: "specialized",
-      type: "technical",
-      level: "beginner", // Add default level
+      weight: "technical",
+      level: "beginner",
       growth: "0%",
       salary: "$0",
       confidence: "medium",

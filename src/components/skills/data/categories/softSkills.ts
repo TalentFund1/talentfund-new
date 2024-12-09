@@ -8,7 +8,7 @@ export const softSkills: UnifiedSkill[] = [
     level: "Intermediate",
     growth: "22%",
     category: "common",
-    type: "necessary",
+    weight: "necessary",
     confidence: "high",
     salary: "$130,000",
     benchmarks: { B: true, R: true, M: true, O: true }
@@ -20,10 +20,9 @@ export const softSkills: UnifiedSkill[] = [
     level: "Intermediate",
     growth: "21%",
     category: "specialized",
-    type: "technical",
+    weight: "technical",
     confidence: "high",
     salary: "$165,000",
     benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  // ... Add other soft skills with IDs
+  }
 ];

@@ -27,11 +27,11 @@ const getUniqueSkills = (skillsArray: UnifiedSkill[]) => {
 
 // Categorize skills into technical and soft skills
 export const technicalSkillsList = getUniqueSkills(skills.filter(skill => 
-  skill.category === 'specialized' && skill.type === 'technical'
+  skill.category === 'specialized' && skill.weight === 'technical'
 ));
 
 export const softSkillsList = getUniqueSkills(skills.filter(skill => 
-  skill.category === 'common' && skill.type === 'necessary'
+  skill.category === 'common' && skill.weight === 'necessary'
 ));
 
 // Export skill titles for backward compatibility
