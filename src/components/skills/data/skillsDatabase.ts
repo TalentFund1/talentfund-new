@@ -1,4 +1,4 @@
-import { Skill, SkillWeight, SkillCategory } from '../types/SkillTypes';
+import { Skill, SkillWeight, SkillType } from '../types/SkillTypes';
 import { aiSkills } from './skills/aiSkills';
 import { backendSkills } from './skills/backendSkills';
 import { commonSkills } from './skills/commonSkills';
@@ -13,15 +13,15 @@ const determineCategory = (growth: string, weight: string): SkillWeight => {
 };
 
 // Convert existing skills to new format
-const convertSkill = (skill: any, weight: string): Skill => {
-  console.log('Converting skill:', { title: skill.title, weight });
+const convertSkill = (skill: any, type: SkillType): Skill => {
+  console.log('Converting skill:', { title: skill.title, type });
   
   return {
     id: skill.id || `CONV_${Date.now()}_${skill.title.replace(/\s+/g, '_')}`,
     title: skill.title,
-    category: weight as SkillCategory,
+    type,
     subcategory: skill.subcategory,
-    weight: determineCategory(skill.growth || '0%', weight),
+    weight: determineCategory(skill.growth || '0%', type),
     growth: skill.growth || '0%',
     salary: skill.salary || '$0',
     confidence: skill.confidence || 'medium',
@@ -39,10 +39,10 @@ const consolidateSkills = (): Skill[] => {
   console.log('Starting skills consolidation...');
   
   const allSkills: Skill[] = [
-    ...aiSkills.map(skill => convertSkill(skill, skill.category)),
-    ...backendSkills.map(skill => convertSkill(skill, skill.category)),
-    ...commonSkills.map(skill => convertSkill(skill, skill.category)),
-    ...certificationSkills.map(skill => convertSkill(skill, skill.category))
+    ...aiSkills.map(skill => convertSkill(skill, skill.type)),
+    ...backendSkills.map(skill => convertSkill(skill, skill.type)),
+    ...commonSkills.map(skill => convertSkill(skill, skill.type)),
+    ...certificationSkills.map(skill => convertSkill(skill, skill.type))
   ];
 
   console.log('Consolidated skills count:', allSkills.length);
@@ -56,10 +56,10 @@ export const getSkillByTitle = (title: string): Skill | undefined => {
   return skillsDatabase.find(skill => skill.title === title);
 };
 
-export const getSkillsByCategory = (category: SkillWeight): Skill[] => {
-  return skillsDatabase.filter(skill => skill.weight === category);
+export const getSkillsByType = (type: SkillType): Skill[] => {
+  return skillsDatabase.filter(skill => skill.type === type);
 };
 
-export const getSkillsByType = (type: string): Skill[] => {
-  return skillsDatabase.filter(skill => skill.category === type);
+export const getSkillsByWeight = (weight: SkillWeight): Skill[] => {
+  return skillsDatabase.filter(skill => skill.weight === weight);
 };

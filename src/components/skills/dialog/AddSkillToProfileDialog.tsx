@@ -76,7 +76,7 @@ export const AddSkillToProfileDialog = () => {
       });
 
       // Categorize skill based on its type from the unified database
-      const category = skillData.category || 'common';
+      const category = skillData.type || 'common';
       switch (category) {
         case 'specialized':
           addedSkills.specialized.push(skillData);
@@ -131,7 +131,7 @@ export const AddSkillToProfileDialog = () => {
       id: "SP001",
       title: "Machine Learning",
       subcategory: "AI & ML",
-      category: "specialized",
+      type: "specialized",
       weight: "critical",
       growth: "35%",
       salary: "$185,000",
@@ -142,7 +142,7 @@ export const AddSkillToProfileDialog = () => {
       id: "SP002",
       title: "Deep Learning",
       subcategory: "AI & ML",
-      category: "specialized",
+      type: "specialized",
       weight: "critical",
       growth: "32%",
       salary: "$180,000",
@@ -153,7 +153,7 @@ export const AddSkillToProfileDialog = () => {
       id: "SP003",
       title: "Natural Language Processing",
       subcategory: "AI Applications",
-      category: "specialized",
+      type: "specialized",
       weight: "critical",
       growth: "30%",
       salary: "$175,000",
@@ -164,7 +164,7 @@ export const AddSkillToProfileDialog = () => {
       id: "SP004",
       title: "Computer Vision",
       subcategory: "AI Applications",
-      category: "specialized",
+      type: "specialized",
       weight: "critical",
       growth: "28%",
       salary: "$170,000",
@@ -175,7 +175,7 @@ export const AddSkillToProfileDialog = () => {
       id: "SP005",
       title: "TensorFlow",
       subcategory: "ML Frameworks",
-      category: "specialized",
+      type: "specialized",
       weight: "critical",
       growth: "25%",
       salary: "$165,000",
