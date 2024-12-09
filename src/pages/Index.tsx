@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Users, UserPlus, TrendingUp, Award } from "lucide-react";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { getSkillProfileId } from "@/components/EmployeeTable";
+import { CompanySkillsTable } from "@/components/skills/CompanySkillsTable";
 
 const Index = () => {
   const employees = useEmployeeStore((state) => state.employees);
@@ -45,35 +46,39 @@ const Index = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-foreground">Skills Intelligence Dashboard</h1>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard
-              title="Total Number of Employees"
-              value={totalExactMatches}
-              icon={<Users className="h-6 w-6 text-primary-icon" />}
-            />
-            <StatCard
-              title="Added in Past 1 Year"
-              value={addedLastYear}
-              icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
-            />
-            <StatCard
-              title="Share of Female Employees"
-              value={`${femalePercentage}%`}
-              icon={<TrendingUp className="h-6 w-6 text-primary-icon" />}
-            />
-            <StatCard
-              title="Average Tenure (Years)"
-              value={averageTenure}
-              icon={<Award className="h-6 w-6 text-primary-icon" />}
-            />
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="bg-white rounded-lg p-6 shadow-sm">
+            <div className="flex justify-between items-center">
+              <h1 className="text-3xl font-bold text-foreground">Skills Intelligence Dashboard</h1>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+              <StatCard
+                title="Total Number of Employees"
+                value={totalExactMatches}
+                icon={<Users className="h-6 w-6 text-primary-icon" />}
+              />
+              <StatCard
+                title="Added in Past 1 Year"
+                value={addedLastYear}
+                icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
+              />
+              <StatCard
+                title="Share of Female Employees"
+                value={`${femalePercentage}%`}
+                icon={<TrendingUp className="h-6 w-6 text-primary-icon" />}
+              />
+              <StatCard
+                title="Average Tenure (Years)"
+                value={averageTenure}
+                icon={<Award className="h-6 w-6 text-primary-icon" />}
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6">
+          <CompanySkillsTable />
+
+          <div className="bg-white rounded-lg shadow-sm">
             <SkillsOverview />
           </div>
         </div>
