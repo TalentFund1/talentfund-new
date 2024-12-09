@@ -28,44 +28,8 @@ const getBusinessCategory = (skillTitle: string): string => {
   return categories[skillTitle] || 'Information Technology';
 };
 
-// Convert existing skills to new format
-const convertSkill = (skill: any, category: SkillCategory): Skill => {
-  console.log('Converting skill:', { title: skill.title, category });
-  
-  return {
-    id: `SKILL_${skill.title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
-    title: skill.title,
-    category: category,
-    subcategory: skill.subcategory,
-    businessCategory: getBusinessCategory(skill.title),
-    weight: determineWeight(skill.growth || '0%', category),
-    level: skill.level || 'beginner',
-    growth: skill.growth || '0%',
-    salary: skill.salary || '$0',
-    confidence: skill.confidence || 'medium',
-    benchmarks: {
-      B: true,
-      R: true,
-      M: true,
-      O: true
-    }
-  };
-};
-
-// Combine and convert all skills
-const consolidateSkills = (): Skill[] => {
-  console.log('Starting skills consolidation...');
-  
-  const allSkills = getAllSkills();
-  const convertedSkills = allSkills.map(skill => 
-    convertSkill(skill, skill.category as SkillCategory)
-  );
-
-  console.log('Consolidated skills count:', convertedSkills.length);
-  return convertedSkills;
-};
-
-export const skillsDatabase = consolidateSkills();
+// Use the consolidated skills directly
+export const skillsDatabase = getAllSkills();
 
 // Helper functions
 export const getSkillByTitle = (title: string): Skill | undefined => {
