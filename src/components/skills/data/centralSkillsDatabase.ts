@@ -60,6 +60,11 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'Technical Architecture': 'Architecture',
       'Docker': 'Container Technology',
       'Kubernetes': 'Container Orchestration',
+      'Jenkins': 'CI/CD Tools',
+      'Terraform': 'Infrastructure as Code',
+      'Amazon Web Services': 'Cloud Services',
+      'Linux Administration': 'System Administration',
+      'Shell Scripting': 'System Administration',
       'React': 'Frontend Frameworks',
       'Next.js': 'Frontend Frameworks',
       'TypeScript': 'Programming Languages',
@@ -83,7 +88,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'Certified Scrum Master (CSM)': 'Agile Certification'
     };
     
-    return subcategories[skillTitle] || 'General';
+    return subcategories[skillTitle] || 'Development Tools';
   };
 
   // Define business categories based on the skill
@@ -95,6 +100,9 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'Python': 'Information Technology',
       'Docker': 'Information Technology',
       'Kubernetes': 'Information Technology',
+      'Jenkins': 'Information Technology',
+      'Terraform': 'Information Technology',
+      'Linux Administration': 'Information Technology',
       'Node.js': 'Information Technology',
       'React': 'Information Technology',
       'Communication': 'Media and Communications',
