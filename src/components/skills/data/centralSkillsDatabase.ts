@@ -26,9 +26,9 @@ export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
   return skill;
 };
 
-export const getSkillsByCategory = (category: 'specialized' | 'common' | 'certification'): UnifiedSkill[] => {
-  console.log('Getting skills for category:', category);
-  return centralizedSkills.filter(skill => skill.category === category);
+export const getSkillsByType = (type: 'specialized' | 'common' | 'certification'): UnifiedSkill[] => {
+  console.log('Getting skills for type:', type);
+  return centralizedSkills.filter(skill => skill.type === type);
 };
 
 export const getSkillsByWeight = (weight: 'critical' | 'technical' | 'necessary'): UnifiedSkill[] => {
@@ -47,7 +47,7 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
       id: `GEN_${Date.now()}`,
       title: skillTitle,
       subcategory: "Software Development",
-      category: "common",
+      type: "common",
       weight: "necessary",
       growth: "15%",
       salary: "$150,000",

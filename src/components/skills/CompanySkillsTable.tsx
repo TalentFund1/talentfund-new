@@ -21,7 +21,7 @@ export const CompanySkillsTable = () => {
     return {
       title: skillTitle,
       subcategory: skillData.subcategory,
-      type: skillData.category || 'common',
+      type: skillData.type || 'common',
       weight: skillData.weight || 'necessary',
       category: skillData.occupation || 'Software Developer',
       growth: skillData.growth,

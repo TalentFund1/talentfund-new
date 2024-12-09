@@ -1,57 +1,57 @@
-import { roleSkills } from '../data/roleSkills';
-import { useParams } from 'react-router-dom';
-import { useToggledSkills } from '../context/ToggledSkillsContext';
-import { UnifiedSkill } from '../data/centralSkillsDatabase';
+import { Card } from "@/components/ui/card";
+import { useToggledSkills } from "../context/ToggledSkillsContext";
+import { SkillType } from "../types/SkillTypes";
 
 interface CategorySectionProps {
   selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
+  onCategoryChange: (category: string) => void;
 }
 
-interface SkillCounts {
-  specialized: number;
-  common: number;
-  certification: number;
-  all: number;
-}
-
-export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
-  const { id } = useParams<{ id: string }>();
+export const CategorySection = ({ selectedCategory, onCategoryChange }: CategorySectionProps) => {
   const { toggledSkills } = useToggledSkills();
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-
-  const getToggledSkillsCount = (skills: Partial<UnifiedSkill>[]) => {
-    return skills.filter(skill => skill.title && toggledSkills.has(skill.title)).length;
-  };
-
-  const skillCounts: SkillCounts = {
-    specialized: getToggledSkillsCount(currentRoleSkills.specialized || []),
-    common: getToggledSkillsCount(currentRoleSkills.common || []),
-    certification: getToggledSkillsCount(currentRoleSkills.certifications || []),
-    all: 0 // Will be updated below
-  };
-
-  skillCounts.all = skillCounts.specialized + skillCounts.common + skillCounts.certification;
-
-  console.log('CategorySection - Skill counts:', {
-    roleId: id,
-    counts: skillCounts,
-    toggledSkills: Array.from(toggledSkills)
-  });
+  
+  // Get all toggled skills as an array
+  const skillsArray = Array.from(toggledSkills);
 
   const categories = [
-    { id: "all", name: "All Categories", count: skillCounts.all },
-    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
-    { id: "common", name: "Common Skills", count: skillCounts.common },
-    { id: "certification", name: "Certification", count: skillCounts.certification }
+    { id: "all", name: "All Skill Types", count: skillsArray.length },
+    { 
+      id: "specialized", 
+      name: "Specialized Skills", 
+      count: skillsArray.filter(skill => 
+        getSkillType(skill) === 'specialized'
+      ).length 
+    },
+    { 
+      id: "common", 
+      name: "Common Skills", 
+      count: skillsArray.filter(skill => 
+        getSkillType(skill) === 'common'
+      ).length 
+    },
+    { 
+      id: "certification", 
+      name: "Certifications", 
+      count: skillsArray.filter(skill => 
+        getSkillType(skill) === 'certification'
+      ).length 
+    }
   ];
+
+  console.log('CategorySection render:', {
+    totalSkills: skillsArray.length,
+    categories: categories.map(cat => ({
+      name: cat.name,
+      count: cat.count
+    }))
+  });
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
       {categories.map((category) => (
         <button
           key={category.id}
-          onClick={() => setSelectedCategory(category.id)}
+          onClick={() => onCategoryChange(category.id)}
           className={`rounded-lg p-4 transition-colors ${
             selectedCategory === category.id
               ? 'bg-primary-accent/5 border border-primary-accent'
@@ -74,4 +74,15 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
       ))}
     </div>
   );
+};
+
+const getSkillType = (skill: string): SkillType => {
+  const specializedSkills = ['Amazon Web Services', 'Machine Learning', 'Artificial Intelligence'];
+  const commonSkills = ['Python', 'JavaScript', 'Communication'];
+  const certifications = ['AWS Certified', 'Google Cloud', 'Azure'];
+
+  if (specializedSkills.some(s => skill.includes(s))) return 'specialized';
+  if (commonSkills.some(s => skill.includes(s))) return 'common';
+  if (certifications.some(s => skill.includes(s))) return 'certification';
+  return 'common';
 };
