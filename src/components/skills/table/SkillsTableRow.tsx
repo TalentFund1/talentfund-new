@@ -29,6 +29,12 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
       <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
         {skill.subcategory}
       </TableCell>
+      <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
+        {skill.businessCategory || 'Information Technology'}
+      </TableCell>
+      <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
+        {skill.category}
+      </TableCell>
       <TableCell className={`text-center border-r border-blue-200/60 group-hover:bg-transparent py-4 w-[100px] ${getLevelBackgroundColor("Advanced")}`}>
         {skill.level === "Advanced" && <SkillLevelIcon level="advanced" />}
       </TableCell>

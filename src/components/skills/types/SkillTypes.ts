@@ -3,7 +3,7 @@ export interface Skill {
   title: string;
   subcategory: string;
   category: 'specialized' | 'common' | 'certification';
-  businessCategory: string; // New field for broader business categorization
+  businessCategory: string;
   weight: 'critical' | 'technical' | 'necessary';
   level: string;
   growth: string;
@@ -27,6 +27,8 @@ export type SkillCategory = 'specialized' | 'common' | 'certification';
 export interface SimpleSkill {
   title: string;
   subcategory: string;
+  category?: string;
+  businessCategory?: string;
   level: string;
   growth: string;
 }
