@@ -1,125 +1,101 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Sidebar } from "@/components/Sidebar";
-import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
-import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
-import { roleSkills } from '@/components/skills/data/roleSkills';
-import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
-import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
-import { AddSkillProfileForm } from "@/components/skills/form/AddSkillProfileForm";
-import { TrackProvider } from "@/components/skills/context/TrackContext";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { AddSkillDialog } from './dialog/AddSkillDialog';
+import { CompetencyMatrixHeader } from "./CompetencyMatrixHeader";
+import { CompetencyLevels } from "./CompetencyLevels";
+import { SkillsGrid } from "./SkillsGrid";
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 
-// Define company functions/departments
-const companyFunctions = [
-  "Engineering",
-  "Product",
-  "Design",
-  "Marketing",
-  "Sales",
-  "Finance",
-  "Human Resources",
-  "Operations",
-  "Legal",
-  "Customer Success"
+const skillCategories = [
+  { id: "all", name: "All Skills", count: 28 },
+  { id: "specialized", name: "Specialized Skills", count: 15 },
+  { id: "common", name: "Common Skills", count: 10 },
+  { id: "certification", name: "Certification", count: 3 }
 ];
 
-const SkillsProfileContent = () => {
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [selectedFunction, setSelectedFunction] = useState<string>("");
-  const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
+export const SkillProfileMatrix = () => {
+  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [track, setTrack] = useState<"Technical" | "Managerial">("Technical");
   const { toggledSkills } = useToggledSkills();
 
-  // Get role titles directly from roleSkills
-  const availableJobTitles = Object.values(roleSkills).map(role => role.title);
-  const toggledSkillsList = Array.from(toggledSkills);
+  // Get all toggled skills as an array
+  const skillsArray = Array.from(toggledSkills);
+
+  const handleLevelSelect = (level: string) => {
+    setSelectedLevels(prev => 
+      prev.includes(level) 
+        ? prev.filter(l => l !== level)
+        : [...prev, level]
+    );
+  };
+
+  const handleTrackChange = (newTrack: "Technical" | "Managerial") => {
+    setTrack(newTrack);
+  };
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+  };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
-            <div className="space-x-2">
-              <Button variant="outline">Export Data</Button>
-              <TrackProvider>
-                <AddSkillProfileForm />
-              </TrackProvider>
-              <AddSkillDialog />
-            </div>
-          </div>
+    <div className="space-y-6 bg-white rounded-lg border border-border p-6 mb-8">
+      <CompetencyMatrixHeader selectedLevels={selectedLevels} />
+      
+      <CompetencyLevels 
+        selectedLevels={selectedLevels}
+        onLevelSelect={handleLevelSelect}
+        onTrackChange={handleTrackChange}
+      />
 
-          <SkillProfileFilters
-            selectedSkills={selectedSkills}
-            setSelectedSkills={setSelectedSkills}
-            selectedFunction={selectedFunction}
-            setSelectedFunction={setSelectedFunction}
-            selectedJobTitle={selectedJobTitle}
-            setSelectedJobTitle={setSelectedJobTitle}
-            toggledSkillsList={toggledSkillsList}
-            availableJobTitles={availableJobTitles}
-            companyFunctions={companyFunctions}
-          />
-
-          <SkillProfileStats />
-
-          <Card className="p-6">
-            <SkillProfileTable 
-              selectedFunction={selectedFunction} 
-              selectedSkills={selectedSkills}
-              selectedJobTitle={selectedJobTitle}
-            />
-
-            <Separator className="my-4" />
-            
-            <div className="flex justify-between items-center">
-              <Select defaultValue="10">
-                <SelectTrigger className="w-[100px]">
-                  <SelectValue placeholder="10 rows" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10">10 rows</SelectItem>
-                  <SelectItem value="20">20 rows</SelectItem>
-                  <SelectItem value="50">50 rows</SelectItem>
-                </SelectContent>
-              </Select>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">1-5 of 5</span>
-                <div className="flex gap-1">
-                  <Button variant="outline" size="icon" className="w-8 h-8">
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" size="icon" className="w-8 h-8">
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
+      <div>
+        <div className="grid grid-cols-4 gap-4 mb-6">
+          {skillCategories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategorySelect(category.id)}
+              className={`rounded-lg p-4 transition-colors ${
+                selectedCategory === category.id
+                  ? 'bg-primary-accent/5 border border-primary-accent'
+                  : 'bg-background border border-border hover:border-primary-accent/50'
+              }`}
+            >
+              <div className="flex flex-col items-start">
+                <span className={`text-sm font-semibold mb-1 ${
+                  selectedCategory === category.id
+                    ? 'text-primary-accent'
+                    : 'text-foreground group-hover:text-primary-accent'
+                }`}>
+                  {category.name}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {skillsArray.filter(skill => 
+                    category.id === 'all' || getSkillCategory(skill) === category.id
+                  ).length} skills
+                </span>
               </div>
-            </div>
-          </Card>
+            </button>
+          ))}
         </div>
+
+        <SkillsGrid 
+          skillsArray={skillsArray}
+          selectedCategory={selectedCategory}
+        />
       </div>
     </div>
   );
 };
 
-const SkillsProfile = () => {
-  return (
-    <ToggledSkillsProvider>
-      <SkillsProfileContent />
-    </ToggledSkillsProvider>
-  );
+const getSkillCategory = (skill: string): string => {
+  const specializedSkills = ['Amazon Web Services', 'Machine Learning', 'Artificial Intelligence'];
+  const commonSkills = ['Python', 'JavaScript', 'Communication'];
+  const certifications = ['AWS Certified', 'Google Cloud', 'Azure'];
+
+  if (specializedSkills.some(s => skill.includes(s))) return 'specialized';
+  if (commonSkills.some(s => skill.includes(s))) return 'common';
+  if (certifications.some(s => skill.includes(s))) return 'certification';
+  return 'all';
 };
 
-export default SkillsProfile;
+export default SkillProfileMatrix;
