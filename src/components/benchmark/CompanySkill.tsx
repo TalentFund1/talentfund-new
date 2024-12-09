@@ -4,7 +4,6 @@ import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { Check, X } from "lucide-react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { roleSkills } from "../skills/data/roleSkills";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
 import { useParams } from "react-router-dom";
 
@@ -91,22 +90,14 @@ export const CompanySkill = ({
     );
   };
 
-  // Check if the skill is toggled on in any role's skills
-  const isCompanySkill = Object.values(roleSkills).some(role => {
-    const allRoleSkills = [
-      ...role.specialized,
-      ...role.common,
-      ...role.certifications
-    ];
-    return allRoleSkills.some(skill => 
-      skill.title === skillName && toggledSkills.has(skill.title)
-    );
-  });
+  // Check if the skill is toggled on
+  const isCompanySkill = toggledSkills.has(skillName);
 
   console.log('Checking company skill status:', {
     skillName,
     isCompanySkill,
-    toggledSkillsCount: toggledSkills.size
+    toggledSkillsCount: toggledSkills.size,
+    isToggled: toggledSkills.has(skillName)
   });
 
   return (
