@@ -2,8 +2,8 @@ export interface Skill {
   id: string;
   title: string;
   subcategory: string;
-  category: SkillCategory;
-  weight: SkillWeight;
+  category: 'specialized' | 'common' | 'certification';
+  weight: 'critical' | 'technical' | 'necessary';
   level?: string;
   growth: string;
   salary: string;
@@ -22,12 +22,7 @@ export interface UnifiedSkill extends Skill {
 }
 
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillCategory = 
-  | 'Information Technology'
-  | 'Analysis'
-  | 'Sales'
-  | 'Physical and Inherent Abilities'
-  | 'Media and Communications';
+export type SkillCategory = 'specialized' | 'common' | 'certification';
 
 export interface SimpleSkill {
   title: string;

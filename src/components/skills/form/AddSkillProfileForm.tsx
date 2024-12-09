@@ -11,7 +11,7 @@ interface FormData {
   roleTitle: string;
   function: string;
   mappedTitle: string;
-  category: string;
+  occupation: string;
   jobDescription: string;
   skills: string;
   roleTrack: "Professional" | "Managerial";
@@ -26,7 +26,7 @@ export const AddSkillProfileForm = () => {
     roleTitle: "",
     function: "Engineering",
     mappedTitle: "",
-    category: "Information Technology",
+    occupation: "",
     jobDescription: "",
     skills: "",
     roleTrack: "Professional",
@@ -95,7 +95,6 @@ export const AddSkillProfileForm = () => {
       function: formData.function,
       mappedTitle: formData.mappedTitle,
       soc: formData.soc,
-      category: formData.category,
       roleTrack: formData.roleTrack,
       description: formData.jobDescription,
       skills: formData.skills.split(',').map(skill => skill.trim()),
@@ -108,7 +107,6 @@ export const AddSkillProfileForm = () => {
     roleSkills[formData.roleId as keyof typeof roleSkills] = {
       title: formData.roleTitle || newProfile.name,
       soc: formData.soc,
-      category: formData.category,
       specialized: [],
       common: [],
       certifications: []
