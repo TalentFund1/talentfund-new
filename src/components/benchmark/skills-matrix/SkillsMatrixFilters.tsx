@@ -1,6 +1,4 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { useBenchmarkSearch } from "@/components/skills/context/BenchmarkSearchContext";
 
 interface SkillsMatrixFiltersProps {
@@ -61,12 +59,6 @@ export const SkillsMatrixFilters = ({
             </SelectContent>
           </Select>
         </div>
-        <Button className="bg-[#1F2144] hover:bg-[#1F2144]/90">
-          <div className="w-5 h-5 rounded-full border-[1.75px] border-white flex items-center justify-center">
-            <Plus className="h-3 w-3 stroke-[2]" />
-          </div>
-          <span className="ml-2 text-sm font-medium">Add Skill</span>
-        </Button>
       </div>
     </div>
   );
