@@ -15,7 +15,7 @@ export const roleSkills = {
       getUnifiedSkillData("Python"),
       getUnifiedSkillData("Problem Solving"),
       getUnifiedSkillData("Technical Writing"),
-      getUnifiedSkillData("Git Version Control")
+      getUnifiedSkillData("Communication")
     ],
     certifications: [
       getUnifiedSkillData("AWS Certified Machine Learning - Specialty"),
@@ -36,7 +36,7 @@ export const roleSkills = {
       getUnifiedSkillData("Problem Solving"),
       getUnifiedSkillData("Code Review"),
       getUnifiedSkillData("Agile Methodologies"),
-      getUnifiedSkillData("Git Version Control")
+      getUnifiedSkillData("Communication")
     ],
     certifications: [
       getUnifiedSkillData("AWS Certified Solutions Architect"),
@@ -57,7 +57,7 @@ export const roleSkills = {
       getUnifiedSkillData("Problem Solving"),
       getUnifiedSkillData("Code Review"),
       getUnifiedSkillData("Agile Methodologies"),
-      getUnifiedSkillData("Git Version Control")
+      getUnifiedSkillData("Communication")
     ],
     certifications: [
       getUnifiedSkillData("AWS Certified Developer - Associate"),
@@ -78,7 +78,7 @@ export const roleSkills = {
       getUnifiedSkillData("Strategic Planning"),
       getUnifiedSkillData("Stakeholder Management"),
       getUnifiedSkillData("Agile Methodologies"),
-      getUnifiedSkillData("Git Version Control")
+      getUnifiedSkillData("Communication")
     ],
     certifications: [
       getUnifiedSkillData("Project Management Professional (PMP)"),
@@ -98,7 +98,6 @@ export const roleSkills = {
     common: [
       getUnifiedSkillData("Linux Administration"),
       getUnifiedSkillData("Shell Scripting"),
-      getUnifiedSkillData("Git Version Control"),
       getUnifiedSkillData("Problem Solving")
     ],
     certifications: [
