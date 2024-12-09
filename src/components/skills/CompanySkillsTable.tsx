@@ -38,7 +38,7 @@ export const CompanySkillsTable = () => {
             <TableRow>
               <TableHead className="w-[200px]">Skill Title</TableHead>
               <TableHead className="w-[200px]">Subcategory</TableHead>
-              <TableHead className="w-[150px]">Category</TableHead>
+              <TableHead className="w-[150px]">Type</TableHead>
               <TableHead className="w-[150px]">Weight</TableHead>
               <TableHead className="w-[200px]">Occupation</TableHead>
               <TableHead className="w-[150px] text-right">Projected Growth</TableHead>

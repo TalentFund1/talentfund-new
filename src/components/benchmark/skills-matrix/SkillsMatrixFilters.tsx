@@ -26,10 +26,10 @@ export const SkillsMatrixFilters = ({
         <div className="flex gap-4">
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="All Categories" />
+              <SelectValue placeholder="All Types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="all">All Types</SelectItem>
               <SelectItem value="specialized">Specialized Skills</SelectItem>
               <SelectItem value="common">Common Skills</SelectItem>
               <SelectItem value="certification">Certifications</SelectItem>
