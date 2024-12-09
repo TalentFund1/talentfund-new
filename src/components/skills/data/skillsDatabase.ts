@@ -17,6 +17,7 @@ const convertSkill = (skill: any, type: SkillCategory): Skill => {
   console.log('Converting skill:', { title: skill.title, type });
   
   return {
+    id: skill.id || `CONV_${Date.now()}_${skill.title.replace(/\s+/g, '_')}`,
     title: skill.title,
     category: type,
     subcategory: skill.subcategory,

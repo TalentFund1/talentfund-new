@@ -29,6 +29,7 @@ export const AddSkillToProfileDialog = () => {
     }
 
     const newSpecializedSkills: UnifiedSkill[] = selectedSkills.map(skillTitle => ({
+      id: `NEW_${Date.now()}_${skillTitle.replace(/\s+/g, '_')}`,
       title: skillTitle,
       subcategory: "General Skills",
       category: "specialized",

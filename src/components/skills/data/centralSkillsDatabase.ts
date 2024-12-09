@@ -44,6 +44,7 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   if (!skill) {
     console.warn(`Skill "${skillTitle}" not found in centralized database, using default values`);
     return {
+      id: `GEN_${Date.now()}`, // Generate a unique ID for unknown skills
       title: skillTitle,
       subcategory: "General Skills",
       category: "common",
