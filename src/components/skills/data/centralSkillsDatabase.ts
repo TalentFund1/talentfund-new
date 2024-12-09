@@ -34,7 +34,6 @@ export const normalizeSkillTitle = (title: string): string => {
     'Kubernetes Container': 'Kubernetes',
     'K8s': 'Kubernetes',
     'Amazon Web Service': 'Amazon Web Services',
-    'Flutter': 'Flutter Mobile Development',
     'TensorFlow': 'TensorFlow',
   };
   
@@ -184,3 +183,4 @@ const getBusinessCategory = (skillTitle: string): string => {
   
   return categories[skillTitle as keyof typeof categories] || 'Information Technology';
 };
+
