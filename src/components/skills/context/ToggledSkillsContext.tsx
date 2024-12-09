@@ -21,23 +21,33 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     const savedSkills = loadToggledSkills(currentRoleId);
     console.log('Initial load of toggled skills:', {
       roleId: currentRoleId,
-      savedSkills
+      savedSkills,
+      source: 'useState initializer'
     });
     return new Set(savedSkills);
   });
 
-  // Effect to reload toggled skills when role changes
+  // Effect to reload toggled skills when role or employee ID changes
   useEffect(() => {
     const currentRoleId = selectedRole || id || "";
-    if (!currentRoleId) return;
+    if (!currentRoleId) {
+      console.warn('No role ID available for loading toggled skills');
+      return;
+    }
 
-    console.log('Role changed, reloading toggled skills for:', currentRoleId);
+    console.log('Role/ID changed, reloading toggled skills for:', {
+      roleId: currentRoleId,
+      employeeId: id,
+      selectedRole
+    });
     
     const savedSkills = loadToggledSkills(currentRoleId);
-    console.log('Reloading toggled skills for role change:', {
+    console.log('Reloaded toggled skills:', {
       roleId: currentRoleId,
-      savedSkills
+      skillCount: savedSkills.length,
+      skills: savedSkills
     });
+    
     setToggledSkills(new Set(savedSkills));
   }, [selectedRole, id]);
 
@@ -51,7 +61,8 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     console.log('Setting toggled skills:', {
       roleId: currentRoleId,
       skillCount: newSkills.size,
-      skills: Array.from(newSkills)
+      skills: Array.from(newSkills),
+      employeeId: id
     });
     
     setToggledSkills(newSkills);
@@ -68,6 +79,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
 
       console.log('Successfully saved toggled skills:', {
         roleId: currentRoleId,
+        skillCount: skillsArray.length,
         skills: skillsArray
       });
     } catch (error) {
