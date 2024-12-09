@@ -75,8 +75,8 @@ export const AddSkillDialog = () => {
       });
 
       // Categorize skill based on its type from the unified database
-      const category = skillData.category || 'common';
-      switch (category) {
+      const skillType = skillData.type || 'common';
+      switch (skillType) {
         case 'specialized':
           addedSkills.specialized.push(skillData);
           break;
@@ -87,7 +87,7 @@ export const AddSkillDialog = () => {
           addedSkills.certifications.push(skillData);
           break;
         default:
-          console.warn(`Unknown category for skill: ${skillTitle}`);
+          console.warn(`Unknown type for skill: ${skillTitle}`);
           addedSkills.common.push(skillData);
       }
     });
