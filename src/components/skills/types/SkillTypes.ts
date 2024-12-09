@@ -19,5 +19,12 @@ export interface UnifiedSkill extends Skill {
   requirement?: 'required' | 'preferred' | 'skill_goal' | 'not_interested';
 }
 
+export interface SimpleSkill {
+  title: string;
+  subcategory: string;
+  level?: string;
+  growth: string;
+}
+
 export type SkillType = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
