@@ -34,6 +34,8 @@ export const normalizeSkillTitle = (title: string): string => {
     'Kubernetes Container': 'Kubernetes',
     'K8s': 'Kubernetes',
     'Amazon Web Service': 'Amazon Web Services',
+    'Flutter': 'Flutter Mobile Development',
+    'TensorFlow': 'TensorFlow',
   };
   
   const normalized = normalizations[title] || title;
@@ -79,6 +81,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'Agile Methodologies': 'Development Practices',
       'Technical Writing': 'Communication',
       'Communication': 'Communication',
+      'Flutter Mobile Development': 'Mobile Development',
       'AWS Certified Machine Learning Specialty': 'AI Certification',
       'TensorFlow Developer Certification': 'AI Certification',
       'AWS Certified Solutions Architect': 'Cloud Certification',
@@ -108,7 +111,8 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'Development Practices',
       'Communication',
       'System Administration',
-      'Development Tools'
+      'Development Tools',
+      'Programming Languages'
     ];
 
     if (certificationSubcategories.includes(subcategory)) {
@@ -122,10 +126,27 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   const subcategory = getSubcategory(title);
   const category = getCategory(subcategory);
 
+  // Special case handling for specific skills
+  const specialCases: { [key: string]: 'specialized' | 'common' | 'certification' } = {
+    'Python': 'common',
+    'TypeScript': 'specialized',
+    'Flutter Mobile Development': 'specialized',
+    'TensorFlow': 'specialized',
+    'React': 'specialized'
+  };
+
+  const finalCategory = specialCases[title] || category;
+
+  console.log('Categorized skill:', {
+    title,
+    subcategory,
+    category: finalCategory
+  });
+
   return {
     id: `SKILL_${title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
     title: normalizeSkillTitle(title),
-    category: category,
+    category: finalCategory,
     businessCategory: getBusinessCategory(title),
     subcategory: subcategory,
     weight: 'technical',
@@ -160,7 +181,9 @@ const getBusinessCategory = (skillTitle: string): string => {
     'Natural Language Processing': 'Analysis',
     'Risk Management': 'Risk and Compliance',
     'System Design': 'Information Technology',
-    'Database Design': 'Information Technology'
+    'Database Design': 'Information Technology',
+    'Flutter Mobile Development': 'Information Technology',
+    'TensorFlow': 'Information Technology'
   };
   
   return categories[skillTitle as keyof typeof categories] || 'Information Technology';
