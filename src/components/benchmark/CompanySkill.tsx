@@ -97,6 +97,7 @@ export const CompanySkill = ({
     skillName,
     isCompanySkill,
     toggledSkillsCount: toggledSkills.size,
+    toggledSkills: Array.from(toggledSkills),
     isToggled: toggledSkills.has(skillName)
   });
 
