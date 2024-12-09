@@ -16,14 +16,23 @@ export const useCompetencyStore = create<CompetencyState>()(
       setSkillState: (skillName, level, levelKey, required, roleId) => {
         console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
         set((state) => {
+          // Always ensure we have default values
+          const defaultLevel = 'unspecified';
+          const defaultRequired = 'preferred';
+          
           const newRoleStates = setSkillStateAction(
             state.roleStates,
             skillName,
-            level || 'unspecified',
+            level || defaultLevel,
             levelKey,
-            required || 'preferred',
+            required || defaultRequired,
             roleId
           );
+
+          console.log('Updated role states:', {
+            skillName,
+            newState: newRoleStates[roleId]?.[skillName]
+          });
 
           return {
             roleStates: newRoleStates,
@@ -150,7 +159,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 24, // Increment version to ensure clean state
+      version: 25, // Increment version to ensure clean state
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
