@@ -8,7 +8,7 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
 import { useParams } from "react-router-dom";
 
-interface SkillCellProps {
+interface CompanySkillProps {
   skillName: string;
   details: {
     level: string;
@@ -18,12 +18,12 @@ interface SkillCellProps {
   levelKey: string;
 }
 
-export const SkillCell = ({ 
+export const CompanySkill = ({ 
   skillName, 
   details, 
   isLastColumn, 
   levelKey 
-}: SkillCellProps) => {
+}: CompanySkillProps) => {
   const { roleStates, setSkillState } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
   const { id: roleId } = useParams<{ id: string }>();
