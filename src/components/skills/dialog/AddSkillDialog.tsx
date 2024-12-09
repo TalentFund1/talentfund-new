@@ -4,35 +4,16 @@ import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { getUnifiedSkillData } from '../data/centralSkillsDatabase';
-import { saveToggledSkills, loadToggledSkills } from '../context/utils/storageUtils';
+import { saveToggledSkills } from '../context/utils/storageUtils';
+import { useCompetencyStore } from "../competency/CompetencyState";
 
 const STORAGE_KEY = 'added-skills';
 const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
-
-const loadAddedSkills = (roleId: string): string[] => {
-  try {
-    const savedSkills = localStorage.getItem(getStorageKey(roleId));
-    console.log('Loading saved skills:', { roleId, savedSkills });
-    return savedSkills ? JSON.parse(savedSkills) : [];
-  } catch (error) {
-    console.error('Error loading added skills:', error);
-    return [];
-  }
-};
-
-const saveAddedSkills = (roleId: string, skills: string[]) => {
-  try {
-    localStorage.setItem(getStorageKey(roleId), JSON.stringify(skills));
-    console.log('Saved added skills:', { roleId, skills });
-  } catch (error) {
-    console.error('Error saving added skills:', error);
-  }
-};
 
 export const AddSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -40,6 +21,7 @@ export const AddSkillDialog = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const { id } = useParams();
+  const { setSkillState } = useCompetencyStore();
 
   const allSkills = [...technicalSkills, ...softSkills];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
@@ -77,6 +59,17 @@ export const AddSkillDialog = () => {
         return;
       }
 
+      // Initialize skill with default state (unspecified/preferred)
+      ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
+        setSkillState(
+          skillTitle,
+          'unspecified',
+          level,
+          'preferred',
+          id
+        );
+      });
+
       // Categorize skill based on its type from the unified database
       const category = skillData.category || 'common';
       switch (category) {
@@ -109,27 +102,10 @@ export const AddSkillDialog = () => {
     // Save toggled skills state
     setToggledSkills(newToggledSkills);
 
-    // Save added skills to localStorage
-    const existingSkills = loadAddedSkills(id);
-    const updatedSkills = [...new Set([...existingSkills, ...selectedSkills])];
-    saveAddedSkills(id, updatedSkills);
-
     // Save toggled skills state to localStorage
     const toggledSkillsArray = Array.from(newToggledSkills);
     saveToggledSkills(id, toggledSkillsArray);
     console.log('Saved toggled skills:', { roleId: id, skills: toggledSkillsArray });
-
-    // Load existing toggled skills from other profiles to preserve them
-    const allProfiles = Object.keys(roleSkills);
-    allProfiles.forEach(profileId => {
-      if (profileId !== id) {
-        const profileSkills = loadToggledSkills(profileId);
-        if (profileSkills.length > 0) {
-          saveToggledSkills(profileId, profileSkills);
-          console.log('Preserved toggled skills for profile:', { profileId, skills: profileSkills });
-        }
-      }
-    });
 
     // Dispatch event to notify other components
     window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
