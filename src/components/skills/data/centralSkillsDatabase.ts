@@ -32,8 +32,6 @@ export const normalizeSkillTitle = (title: string): string => {
     'Terraform Associate': 'HashiCorp Certified Terraform Associate',
     'Project Management Professional': 'Project Management Professional (PMP)',
     'Scrum Master': 'Certified Scrum Master (CSM)',
-    'PMP': 'Project Management Professional (PMP)',
-    'CSM': 'Certified Scrum Master (CSM)',
     
     // Programming Languages & Frameworks
     'Node': 'Node.js',
