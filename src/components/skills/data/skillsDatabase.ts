@@ -7,9 +7,9 @@ import { certificationSkills } from './skills/certificationSkills';
 // Helper function to determine skill category based on growth and type
 const determineCategory = (growth: string, type: string): SkillWeight => {
   const growthValue = parseFloat(growth);
-  if (growthValue >= 25) return 'Critical';
-  if (type === 'specialized' || type === 'common') return 'Technical';
-  return 'Necessary';
+  if (growthValue >= 25) return 'critical' as SkillWeight;
+  if (type === 'specialized' || type === 'common') return 'technical' as SkillWeight;
+  return 'necessary' as SkillWeight;
 };
 
 // Convert existing skills to new format
