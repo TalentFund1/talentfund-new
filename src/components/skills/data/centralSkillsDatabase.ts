@@ -10,6 +10,8 @@ import { commonSkills } from './skills/commonSkills';
 
 // Normalize skill titles to ensure consistency
 const normalizeSkillTitle = (title: string): string => {
+  console.log('Normalizing skill title:', title);
+  
   const normalizations: { [key: string]: string } = {
     'Git': 'Git Version Control',
     'Version Control': 'Git Version Control',
@@ -22,9 +24,30 @@ const normalizeSkillTitle = (title: string): string => {
     'Terraform Associate': 'HashiCorp Certified Terraform Associate',
     'Project Management Professional': 'Project Management Professional (PMP)',
     'Scrum Master': 'Certified Scrum Master (CSM)',
+    'Node': 'Node.js',
+    'NodeJS': 'Node.js',
+    'React JS': 'React',
+    'ReactJS': 'React',
+    'Next': 'Next.js',
+    'NextJS': 'Next.js',
+    'TypeScript': 'TypeScript',
+    'TS': 'TypeScript',
+    'Machine Learning': 'Machine Learning',
+    'ML': 'Machine Learning',
+    'Artificial Intelligence': 'Artificial Intelligence',
+    'AI': 'Artificial Intelligence',
+    'CSS3': 'CSS/SASS',
+    'SASS': 'CSS/SASS',
+    'SCSS': 'CSS/SASS',
+    'Docker Container': 'Docker',
+    'Kubernetes Container': 'Kubernetes',
+    'K8s': 'Kubernetes',
+    'Amazon Web Service': 'Amazon Web Services',
   };
   
-  return normalizations[title] || title;
+  const normalized = normalizations[title] || title;
+  console.log('Normalized title:', normalized);
+  return normalized;
 };
 
 // Combine all skills into the centralized database with normalized titles
