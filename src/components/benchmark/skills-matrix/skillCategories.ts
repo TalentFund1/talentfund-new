@@ -22,14 +22,16 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
     ],
     common: [
       "Soft Skills",
-      "Communication",
+      "Communication",  // Explicitly add Communication here
       "Development Practices",
       "Project Management",
       "Frontend Development",
       "Web Development",
       "Development Tools",
       "Leadership",
-      "Management"
+      "Management",
+      "Technical Writing",  // Add Technical Writing as common
+      "System Administration"
     ],
     certification: [
       "Cloud Certification",
@@ -68,5 +70,16 @@ export const getCategoryCount = (skills: any[], category: string) => {
 
 export const categorizeSkill = (skillName: string): string => {
   // This function can be used for individual skill categorization if needed
-  return 'common'; // Default fallback
+  const commonSkills = [
+    "Communication",
+    "Technical Writing",
+    "Problem Solving",
+    "Team Leadership",
+    "Project Management"
+  ];
+  
+  if (commonSkills.includes(skillName)) {
+    return 'common';
+  }
+  return 'specialized'; // Default fallback
 };

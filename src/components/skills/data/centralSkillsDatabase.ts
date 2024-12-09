@@ -80,17 +80,8 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
       'Code Review': 'Development Practices',
       'Agile Methodologies': 'Development Practices',
       'Technical Writing': 'Communication',
-      'Communication': 'Communication',
+      'Communication': 'Communication',  // Explicitly set Communication subcategory
       'Flutter Mobile Development': 'Mobile Development',
-      'AWS Certified Machine Learning Specialty': 'AI Certification',
-      'TensorFlow Developer Certification': 'AI Certification',
-      'AWS Certified Solutions Architect': 'Cloud Certification',
-      'AWS Certified Developer - Associate': 'Cloud Certification',
-      'AWS Certified DevOps Engineer': 'Cloud Certification',
-      'Certified Kubernetes Administrator': 'Container Certification',
-      'HashiCorp Certified Terraform Associate': 'Infrastructure Certification',
-      'Project Management Professional (PMP)': 'Management Certification',
-      'Certified Scrum Master (CSM)': 'Agile Certification'
     };
     
     return subcategories[skillTitle] || 'Development Tools';
@@ -109,7 +100,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
 
     const commonSubcategories = [
       'Development Practices',
-      'Communication',
+      'Communication',  // Explicitly add Communication subcategory as common
       'System Administration',
       'Development Tools',
       'Programming Languages',
@@ -136,7 +127,8 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     'Flutter Mobile Development': 'specialized',
     'TensorFlow': 'specialized',
     'React': 'specialized',
-    'Communication': 'common'  // Explicitly set Communication as common
+    'Communication': 'common',  // Explicitly set Communication as common
+    'Technical Writing': 'common'  // Explicitly set Technical Writing as common
   };
 
   const finalCategory = specialCases[title] || category;
