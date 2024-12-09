@@ -49,6 +49,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     category: 'specialized',
     subcategory: 'General',
     type: 'technical',
+    level: 'unspecified',  // Add default level
     growth: '0%',
     salary: '$0',
     confidence: 'medium',

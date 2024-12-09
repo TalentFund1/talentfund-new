@@ -4,7 +4,7 @@ export interface Skill {
   subcategory: string;
   category: 'specialized' | 'common' | 'certification';
   type: 'critical' | 'technical' | 'necessary';
-  level?: string;
+  level: string;  // Make level required
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
@@ -26,6 +26,6 @@ export type SkillCategory = 'specialized' | 'common' | 'certification';
 export interface SimpleSkill {
   title: string;
   subcategory: string;
-  level?: string;
+  level: string;  // Make level required
   growth: string;
 }
