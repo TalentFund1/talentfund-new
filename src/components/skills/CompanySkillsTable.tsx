@@ -48,7 +48,7 @@ export const CompanySkillsTable = () => {
         <div className="bg-white rounded-lg border border-border">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/50">
+              <TableRow className="hover:bg-transparent border-b border-border">
                 <TableHead className="font-semibold">Skill Title</TableHead>
                 <TableHead className="font-semibold">Type</TableHead>
                 <TableHead className="font-semibold">Category</TableHead>
@@ -85,11 +85,6 @@ export const CompanySkillsTable = () => {
             </TableBody>
           </Table>
         </div>
-      </div>
-      <div className="flex justify-end p-4 border-t border-border bg-white">
-        <p className="text-sm text-muted-foreground">
-          Powered by <span className="text-[#FF0000]">Lightcast</span>
-        </p>
       </div>
     </Card>
   );
