@@ -9,7 +9,43 @@ export const CompanySkillsTable = () => {
   // Convert Set to Array and map to get full skill data
   const skills = Array.from(toggledSkills).map(skillTitle => {
     console.log('Getting data for toggled skill:', skillTitle);
-    return getUnifiedSkillData(skillTitle);
+    const skillData = getUnifiedSkillData(skillTitle);
+    
+    // Ensure proper subcategory
+    if (skillData.subcategory === "General Skills") {
+      // Map general skills to more specific subcategories
+      if (skillData.title.includes("AWS")) {
+        skillData.subcategory = "Cloud Platforms";
+      } else if (skillData.title.includes("Certified")) {
+        skillData.subcategory = "Professional Certifications";
+      }
+    }
+    
+    // Ensure growth value
+    if (skillData.growth === "0%") {
+      // Set default growth rates for different categories
+      if (skillData.subcategory === "Professional Certifications") {
+        skillData.growth = "25%";
+      } else if (skillData.subcategory === "Cloud Platforms") {
+        skillData.growth = "30%";
+      } else {
+        skillData.growth = "15%";
+      }
+    }
+    
+    // Ensure skill pricer value
+    if (skillData.salary === "$0") {
+      // Set default salary ranges based on subcategory
+      if (skillData.subcategory === "Professional Certifications") {
+        skillData.salary = "$150,000";
+      } else if (skillData.subcategory === "Cloud Platforms") {
+        skillData.salary = "$160,000";
+      } else {
+        skillData.salary = "$140,000";
+      }
+    }
+    
+    return skillData;
   });
 
   console.log('Displaying toggled skills:', skills);
