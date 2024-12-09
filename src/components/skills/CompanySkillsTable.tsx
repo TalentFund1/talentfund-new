@@ -7,10 +7,20 @@ import { roleSkills } from './data/roleSkills';
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
   
-  // Convert Set to Array, remove duplicates, and map to get full skill data
+  // Count occurrences of each skill and get their data
+  const skillCounts = Array.from(toggledSkills).reduce((acc, skillTitle) => {
+    acc[skillTitle] = (acc[skillTitle] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Get unique skills with their counts
   const uniqueSkills = Array.from(new Set(Array.from(toggledSkills))).map(skillTitle => {
     console.log('Getting data for unique toggled skill:', skillTitle);
-    return getUnifiedSkillData(skillTitle);
+    const skillData = getUnifiedSkillData(skillTitle);
+    return {
+      ...skillData,
+      count: skillCounts[skillTitle] || 1
+    };
   });
 
   // Helper function to get the type
@@ -29,7 +39,7 @@ export const CompanySkillsTable = () => {
     return 'Uncategorized';
   };
 
-  console.log('Displaying unique toggled skills:', uniqueSkills);
+  console.log('Displaying unique toggled skills with counts:', uniqueSkills);
 
   return (
     <Card className="p-6 bg-white">
@@ -46,6 +56,7 @@ export const CompanySkillsTable = () => {
                 <TableHead className="font-semibold">Weight</TableHead>
                 <TableHead className="font-semibold text-right">Projected Growth</TableHead>
                 <TableHead className="font-semibold text-right">Skill Pricer</TableHead>
+                <TableHead className="font-semibold text-center">Count</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -62,11 +73,23 @@ export const CompanySkillsTable = () => {
                     </span>
                   </TableCell>
                   <TableCell className="text-right">{skill.salary}</TableCell>
+                  <TableCell className="text-center">
+                    <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm ${
+                      skill.count > 1 ? 'bg-primary-accent/10 text-primary-accent' : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {skill.count}
+                    </span>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
+      </div>
+      <div className="flex justify-end p-4 border-t border-border bg-white">
+        <p className="text-sm text-muted-foreground">
+          Powered by <span className="text-[#FF0000]">Lightcast</span>
+        </p>
       </div>
     </Card>
   );
