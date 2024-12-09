@@ -7,9 +7,9 @@ import { roleSkills } from './data/roleSkills';
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
   
-  // Convert Set to Array and map to get full skill data
-  const skills = Array.from(toggledSkills).map(skillTitle => {
-    console.log('Getting data for toggled skill:', skillTitle);
+  // Convert Set to Array, remove duplicates, and map to get full skill data
+  const uniqueSkills = Array.from(new Set(Array.from(toggledSkills))).map(skillTitle => {
+    console.log('Getting data for unique toggled skill:', skillTitle);
     return getUnifiedSkillData(skillTitle);
   });
 
@@ -29,7 +29,7 @@ export const CompanySkillsTable = () => {
     return 'Uncategorized';
   };
 
-  console.log('Displaying toggled skills:', skills);
+  console.log('Displaying unique toggled skills:', uniqueSkills);
 
   return (
     <Card className="p-6 bg-white">
@@ -49,8 +49,8 @@ export const CompanySkillsTable = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {skills.map((skill, index) => (
-                <TableRow key={`${skill.title}-${index}`} className={index % 2 === 0 ? "bg-muted/5" : ""}>
+              {uniqueSkills.map((skill) => (
+                <TableRow key={skill.id} className="hover:bg-muted/5">
                   <TableCell className="font-medium">{skill.title}</TableCell>
                   <TableCell>{getSkillType(skill.title)}</TableCell>
                   <TableCell>{skill.businessCategory}</TableCell>
