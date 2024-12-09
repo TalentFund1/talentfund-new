@@ -1,4 +1,4 @@
-// Define the skills array
+// Define the skills array with unique entries
 export const skills = [
   {
     title: "Amazon Web Services",
@@ -170,35 +170,45 @@ export const skills = [
   }
 ];
 
+// Helper function to get unique skills by title
+const getUniqueSkills = (skillsArray: typeof skills) => {
+  const seen = new Set();
+  return skillsArray.filter(skill => {
+    const duplicate = seen.has(skill.title);
+    seen.add(skill.title);
+    return !duplicate;
+  });
+};
+
 // Categorize skills into technical and soft skills and map to titles
-export const technicalSkills = skills
+export const technicalSkills = getUniqueSkills(skills
   .filter(skill => 
     ['Web Services', 'Artificial Intelligence and Machine Learning', 'Software Development Tools', 
      'Machine Learning Frameworks', 'AI Applications', 'Container Orchestration', 'Version Control',
      'Databases', 'Web Development', 'Programming Languages', 'Mobile Development', 
      'Software Architecture', 'API Development', 'Development Operations', 'Security',
      'Data Management', 'Distributed Systems'].includes(skill.subcategory)
-  )
+  ))
   .map(skill => skill.title);
 
-export const softSkills = skills
+export const softSkills = getUniqueSkills(skills
   .filter(skill => 
     ['Design', 'Analytics'].includes(skill.subcategory)
-  )
+  ))
   .map(skill => skill.title);
 
 // Export full skill objects for when we need the complete data
-export const technicalSkillObjects = skills.filter(skill => 
+export const technicalSkillObjects = getUniqueSkills(skills.filter(skill => 
   ['Web Services', 'Artificial Intelligence and Machine Learning', 'Software Development Tools', 
    'Machine Learning Frameworks', 'AI Applications', 'Container Orchestration', 'Version Control',
    'Databases', 'Web Development', 'Programming Languages', 'Mobile Development', 
    'Software Architecture', 'API Development', 'Development Operations', 'Security',
    'Data Management', 'Distributed Systems'].includes(skill.subcategory)
-);
+));
 
-export const softSkillObjects = skills.filter(skill => 
+export const softSkillObjects = getUniqueSkills(skills.filter(skill => 
   ['Design', 'Analytics'].includes(skill.subcategory)
-);
+));
 
 console.log('Loaded skills:', {
   total: skills.length,
