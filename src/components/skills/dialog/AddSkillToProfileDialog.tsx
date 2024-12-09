@@ -32,6 +32,7 @@ export const AddSkillToProfileDialog = () => {
       id: `SKILL_${skillTitle.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
       title: skillTitle,
       subcategory: "General Skills",
+      businessCategory: "Information Technology", // Added businessCategory
       category: "specialized",
       weight: "technical",
       level: "beginner",

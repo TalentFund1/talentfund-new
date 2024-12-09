@@ -21,6 +21,7 @@ const convertSkill = (skill: any, category: SkillCategory): Skill => {
     title: skill.title,
     category: category,
     subcategory: skill.subcategory,
+    businessCategory: getBusinessCategory(skill.title), // Added businessCategory
     weight: determineWeight(skill.growth || '0%', category),
     level: skill.level || 'beginner',
     growth: skill.growth || '0%',
@@ -33,6 +34,25 @@ const convertSkill = (skill: any, category: SkillCategory): Skill => {
       O: true
     }
   };
+};
+
+// Helper function to determine business category
+const getBusinessCategory = (skillTitle: string): string => {
+  const categories: { [key: string]: string } = {
+    'AWS': 'Information Technology',
+    'Docker': 'Information Technology',
+    'Kubernetes': 'Information Technology',
+    'Machine Learning': 'Information Technology',
+    'React': 'Information Technology',
+    'Node.js': 'Information Technology',
+    'Communication': 'Media and Communications',
+    'Leadership': 'Initiative and Leadership',
+    'Project Management': 'Project Management',
+    'Data Science': 'Analysis',
+    'Risk Management': 'Risk and Compliance'
+  };
+  
+  return categories[skillTitle] || 'Information Technology';
 };
 
 // Combine and convert all skills
