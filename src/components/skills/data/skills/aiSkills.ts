@@ -2,6 +2,7 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const aiSkills: UnifiedSkill[] = [
   {
+    id: 'AI001',
     title: "Machine Learning",
     subcategory: "AI & ML",
     category: "specialized",
@@ -12,6 +13,7 @@ export const aiSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'AI002',
     title: "Deep Learning",
     subcategory: "AI & ML",
     category: "specialized",
@@ -22,6 +24,7 @@ export const aiSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'AI003',
     title: "Natural Language Processing",
     subcategory: "AI Applications",
     category: "specialized",
@@ -32,6 +35,7 @@ export const aiSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'AI004',
     title: "Computer Vision",
     subcategory: "AI Applications",
     category: "specialized",
@@ -42,6 +46,7 @@ export const aiSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'AI005',
     title: "TensorFlow",
     subcategory: "ML Frameworks",
     category: "specialized",

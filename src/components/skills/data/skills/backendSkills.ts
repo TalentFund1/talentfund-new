@@ -2,6 +2,7 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const backendSkills: UnifiedSkill[] = [
   {
+    id: 'BE001',
     title: "Node.js",
     subcategory: "Backend Development",
     category: "specialized",
@@ -12,6 +13,7 @@ export const backendSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'BE002',
     title: "Database Design",
     subcategory: "Data Management",
     category: "specialized",
@@ -22,6 +24,7 @@ export const backendSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'BE003',
     title: "API Development",
     subcategory: "Backend Development",
     category: "specialized",
@@ -32,6 +35,7 @@ export const backendSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'BE004',
     title: "System Architecture",
     subcategory: "Software Architecture",
     category: "specialized",

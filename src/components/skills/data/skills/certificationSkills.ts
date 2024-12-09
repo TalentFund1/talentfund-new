@@ -2,6 +2,7 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const certificationSkills: UnifiedSkill[] = [
   {
+    id: 'CT001',
     title: "AWS Certified Machine Learning - Specialty",
     subcategory: "AI/ML Certification",
     category: "certification",
@@ -12,6 +13,7 @@ export const certificationSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'CT002',
     title: "TensorFlow Developer Certificate",
     subcategory: "AI/ML Certification",
     category: "certification",

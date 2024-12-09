@@ -1,4 +1,5 @@
 export interface Skill {
+  id: string;  // Added unique ID field
   title: string;
   subcategory: string;
   category: 'specialized' | 'common' | 'certification';

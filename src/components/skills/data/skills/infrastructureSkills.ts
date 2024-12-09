@@ -2,6 +2,7 @@ import { UnifiedSkill } from '../../types/SkillTypes';
 
 export const infrastructureSkills: UnifiedSkill[] = [
   {
+    id: 'IN001',
     title: "Docker",
     subcategory: "Container Technology",
     category: "specialized",
@@ -12,6 +13,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'IN002',
     title: "Kubernetes",
     subcategory: "Container Orchestration",
     category: "specialized",
@@ -22,6 +24,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'IN003',
     title: "Jenkins",
     subcategory: "CI/CD",
     category: "specialized",
@@ -32,6 +35,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'IN004',
     title: "Terraform",
     subcategory: "Infrastructure as Code",
     category: "specialized",
@@ -42,6 +46,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'IN005',
     title: "AWS",
     subcategory: "Cloud Platforms",
     category: "specialized",
@@ -52,6 +57,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'IN006',
     title: "Linux Administration",
     subcategory: "System Administration",
     category: "specialized",
@@ -62,6 +68,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'IN007',
     title: "Shell Scripting",
     subcategory: "System Administration",
     category: "common",
@@ -72,6 +79,7 @@ export const infrastructureSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'IN008',
     title: "Git Version Control",
     subcategory: "Development Tools",
     category: "common",
