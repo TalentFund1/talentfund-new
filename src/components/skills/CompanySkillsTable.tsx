@@ -40,9 +40,9 @@ export const CompanySkillsTable = () => {
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="font-semibold">Skill Title</TableHead>
-                <TableHead className="font-semibold">Subcategory</TableHead>
-                <TableHead className="font-semibold">Category</TableHead>
                 <TableHead className="font-semibold">Type</TableHead>
+                <TableHead className="font-semibold">Category</TableHead>
+                <TableHead className="font-semibold">Subcategory</TableHead>
                 <TableHead className="font-semibold">Weight</TableHead>
                 <TableHead className="font-semibold text-right">Projected Growth</TableHead>
                 <TableHead className="font-semibold text-right">Skill Pricer</TableHead>
@@ -52,9 +52,9 @@ export const CompanySkillsTable = () => {
               {skills.map((skill, index) => (
                 <TableRow key={`${skill.title}-${index}`} className={index % 2 === 0 ? "bg-muted/5" : ""}>
                   <TableCell className="font-medium">{skill.title}</TableCell>
-                  <TableCell>{skill.subcategory}</TableCell>
-                  <TableCell>{skill.businessCategory}</TableCell>
                   <TableCell>{getSkillType(skill.title)}</TableCell>
+                  <TableCell>{skill.businessCategory}</TableCell>
+                  <TableCell>{skill.subcategory}</TableCell>
                   <TableCell>{skill.weight}</TableCell>
                   <TableCell className="text-right">
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm bg-green-100 text-green-800">
