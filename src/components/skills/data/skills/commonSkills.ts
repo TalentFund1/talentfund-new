@@ -19,7 +19,7 @@ export const commonSkills: UnifiedSkill[] = [
     category: "common",
     type: "necessary",
     growth: "15%",
-    salary: "$158,000",
+    salary: "$160,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -41,7 +41,7 @@ export const commonSkills: UnifiedSkill[] = [
     category: "common",
     type: "necessary",
     growth: "15%",
-    salary: "$130,000",
+    salary: "$145,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -52,7 +52,7 @@ export const commonSkills: UnifiedSkill[] = [
     category: "common",
     type: "necessary",
     growth: "18%",
-    salary: "$140,000",
+    salary: "$150,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -63,7 +63,7 @@ export const commonSkills: UnifiedSkill[] = [
     category: "common",
     type: "technical",
     growth: "18%",
-    salary: "$135,000",
+    salary: "$145,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }

@@ -88,7 +88,7 @@ export const skills = [
     subcategory: "Development Tools",
     level: "Advanced",
     growth: "15%",
-    salary: "$130,000"
+    salary: "$145,000"
   },
   {
     title: "SQL",
@@ -200,7 +200,7 @@ export const skills = [
     subcategory: "Soft Skills",
     level: "Advanced",
     growth: "18%",
-    salary: "$140,000"
+    salary: "$150,000"
   }
 ];
 

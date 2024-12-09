@@ -36,7 +36,7 @@ export const getSkillsByType = (type: 'critical' | 'technical' | 'necessary'): U
   return centralizedSkills.filter(skill => skill.type === type);
 };
 
-// Function to ensure skill data consistency
+// Function to ensure skill data consistency with proper salary information
 export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   console.log('Fetching unified skill data for:', skillTitle);
   const skill = getSkillByTitle(skillTitle);
@@ -44,14 +44,14 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   if (!skill) {
     console.warn(`Skill "${skillTitle}" not found in centralized database, using default values`);
     return {
-      id: `GEN_${Date.now()}`, // Generate a unique ID for unknown skills
+      id: `GEN_${Date.now()}`,
       title: skillTitle,
-      subcategory: "General Skills",
+      subcategory: "Software Development",
       category: "common",
       type: "necessary",
-      growth: "0%",
-      salary: "$0",
-      confidence: "low",
+      growth: "15%",
+      salary: "$150,000", // Updated default salary
+      confidence: "medium",
       benchmarks: {
         B: false,
         R: false,
