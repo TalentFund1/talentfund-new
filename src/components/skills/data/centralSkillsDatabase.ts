@@ -41,13 +41,33 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   console.log('Fetching unified skill data for:', skillTitle);
   const skill = getSkillByTitle(skillTitle);
   
+  // Helper function to determine category based on skill
+  const determineCategory = (title: string): string => {
+    if (title.toLowerCase().includes('software') || title.toLowerCase().includes('programming') || title.toLowerCase().includes('development')) {
+      return 'Information Technology';
+    }
+    if (title.toLowerCase().includes('analysis') || title.toLowerCase().includes('data')) {
+      return 'Analysis';
+    }
+    if (title.toLowerCase().includes('sales') || title.toLowerCase().includes('marketing')) {
+      return 'Sales';
+    }
+    if (title.toLowerCase().includes('physical') || title.toLowerCase().includes('manual')) {
+      return 'Physical and Inherent Abilities';
+    }
+    if (title.toLowerCase().includes('communication') || title.toLowerCase().includes('media')) {
+      return 'Media and Communications';
+    }
+    return 'Information Technology'; // Default category
+  };
+  
   if (!skill) {
     console.warn(`Skill "${skillTitle}" not found in centralized database, using default values`);
     return {
       id: `GEN_${Date.now()}`,
       title: skillTitle,
       subcategory: "Software Development",
-      category: "common",
+      category: determineCategory(skillTitle),
       weight: "necessary",
       growth: "15%",
       salary: "$150,000",
@@ -61,8 +81,12 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
     };
   }
   
-  console.log('Found unified skill data:', skill);
-  return skill;
+  // Update the category for existing skills
+  const updatedSkill = {
+    ...skill,
+    category: determineCategory(skill.title)
+  };
+  
+  console.log('Found unified skill data:', updatedSkill);
+  return updatedSkill;
 };
-
-export type { UnifiedSkill };

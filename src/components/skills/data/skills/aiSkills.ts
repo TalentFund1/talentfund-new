@@ -5,10 +5,10 @@ export const aiSkills: UnifiedSkill[] = [
     id: 'AI001',
     title: "Machine Learning",
     subcategory: "AI & ML",
-    category: "specialized",
+    category: "Information Technology",
     weight: "critical",
     growth: "35%",
-    salary: "$185,000",
+    salary: "$180,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -16,18 +16,7 @@ export const aiSkills: UnifiedSkill[] = [
     id: 'AI002',
     title: "Deep Learning",
     subcategory: "AI & ML",
-    category: "specialized",
-    weight: "critical",
-    growth: "32%",
-    salary: "$180,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'AI003',
-    title: "Natural Language Processing",
-    subcategory: "AI Applications",
-    category: "specialized",
+    category: "Information Technology",
     weight: "critical",
     growth: "30%",
     salary: "$175,000",
@@ -35,10 +24,10 @@ export const aiSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: 'AI004',
-    title: "Computer Vision",
-    subcategory: "AI Applications",
-    category: "specialized",
+    id: 'AI003',
+    title: "Natural Language Processing",
+    subcategory: "AI & ML",
+    category: "Information Technology",
     weight: "critical",
     growth: "28%",
     salary: "$170,000",
@@ -46,13 +35,24 @@ export const aiSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'AI004',
+    title: "Computer Vision",
+    subcategory: "AI & ML",
+    category: "Information Technology",
+    weight: "critical",
+    growth: "32%",
+    salary: "$180,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
     id: 'AI005',
     title: "TensorFlow",
-    subcategory: "ML Frameworks",
-    category: "specialized",
+    subcategory: "AI & ML",
+    category: "Information Technology",
     weight: "critical",
     growth: "25%",
-    salary: "$165,000",
+    salary: "$160,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }

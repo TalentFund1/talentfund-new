@@ -4,6 +4,7 @@ export const roleSkills = {
   "123": {
     title: "AI Engineer",
     soc: "11-9041",
+    category: "Information Technology",
     specialized: [
       getUnifiedSkillData("Machine Learning"),
       getUnifiedSkillData("Deep Learning"),
@@ -25,6 +26,7 @@ export const roleSkills = {
   "124": {
     title: "Backend Engineer",
     soc: "15-1252",
+    category: "Information Technology",
     specialized: [
       getUnifiedSkillData("Node.js"),
       getUnifiedSkillData("Database Design"),
@@ -46,6 +48,7 @@ export const roleSkills = {
   "125": {
     title: "Frontend Engineer",
     soc: "15-1254",
+    category: "Information Technology",
     specialized: [
       getUnifiedSkillData("React"),
       getUnifiedSkillData("TypeScript"),
@@ -67,6 +70,7 @@ export const roleSkills = {
   "126": {
     title: "Engineering Manager",
     soc: "11-9041",
+    category: "Information Technology",
     specialized: [
       getUnifiedSkillData("System Design"),
       getUnifiedSkillData("Technical Architecture"),
@@ -88,6 +92,7 @@ export const roleSkills = {
   "127": {
     title: "DevOps Engineer",
     soc: "15-1244",
+    category: "Information Technology",
     specialized: [
       getUnifiedSkillData("Docker"),
       getUnifiedSkillData("Kubernetes"),
