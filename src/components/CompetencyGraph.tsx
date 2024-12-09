@@ -173,6 +173,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       <CategorySection 
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        onCategoryChange={setSelectedCategory}
       />
 
       <CompetencyGraphTable 

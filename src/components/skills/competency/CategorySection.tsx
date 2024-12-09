@@ -1,13 +1,14 @@
-import { Card } from "@/components/ui/card";
-import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { SkillType } from "../types/SkillTypes";
-
 interface CategorySectionProps {
   selectedCategory: string;
-  onCategoryChange: (category: string) => void;
+  setSelectedCategory: (category: string) => void;
+  onCategoryChange?: (category: string) => void;
 }
 
-export const CategorySection = ({ selectedCategory, onCategoryChange }: CategorySectionProps) => {
+export const CategorySection = ({ 
+  selectedCategory, 
+  setSelectedCategory,
+  onCategoryChange 
+}: CategorySectionProps) => {
   const { toggledSkills } = useToggledSkills();
   
   // Get all toggled skills as an array
@@ -38,6 +39,13 @@ export const CategorySection = ({ selectedCategory, onCategoryChange }: Category
     }
   ];
 
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    if (onCategoryChange) {
+      onCategoryChange(category);
+    }
+  };
+
   console.log('CategorySection render:', {
     totalSkills: skillsArray.length,
     categories: categories.map(cat => ({
@@ -51,7 +59,7 @@ export const CategorySection = ({ selectedCategory, onCategoryChange }: Category
       {categories.map((category) => (
         <button
           key={category.id}
-          onClick={() => onCategoryChange(category.id)}
+          onClick={() => handleCategoryChange(category.id)}
           className={`rounded-lg p-4 transition-colors ${
             selectedCategory === category.id
               ? 'bg-primary-accent/5 border border-primary-accent'

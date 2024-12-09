@@ -3,7 +3,7 @@ export interface Skill {
   title: string;
   subcategory: string;
   type: SkillType;
-  weight: 'critical' | 'technical' | 'necessary';
+  weight: SkillWeight;
   level?: string;
   growth: string;
   salary: string;
@@ -19,14 +19,10 @@ export interface Skill {
 
 export interface UnifiedSkill extends Skill {
   requirement?: 'required' | 'preferred' | 'skill_goal' | 'not_interested';
+  type: SkillType;
+  category?: string; // Adding this to fix type errors
 }
 
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillType = 'specialized' | 'common' | 'certification';
-
-export interface SimpleSkill {
-  title: string;
-  subcategory: string;
-  level?: string;
-  growth: string;
-}
+export type SkillCategory = 'specialized' | 'common' | 'certification';
