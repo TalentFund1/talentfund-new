@@ -66,27 +66,5 @@ export const infrastructureSkills: UnifiedSkill[] = [
     salary: "$140,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'IN007',
-    title: "Shell Scripting",
-    subcategory: "System Administration",
-    category: "common",
-    type: "technical",
-    growth: "18%",
-    salary: "$135,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'IN008',
-    title: "Git Version Control",
-    subcategory: "Development Tools",
-    category: "common",
-    type: "necessary",
-    growth: "15%",
-    salary: "$130,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];

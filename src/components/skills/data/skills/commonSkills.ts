@@ -4,11 +4,11 @@ export const commonSkills: UnifiedSkill[] = [
   {
     id: 'CM001',
     title: "Python",
-    subcategory: "General Skills",
+    subcategory: "Programming Languages",
     category: "common",
-    type: "technical",
-    growth: "0%",
-    salary: "$0",
+    type: "necessary",
+    growth: "15%",
+    salary: "$158,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -26,11 +26,11 @@ export const commonSkills: UnifiedSkill[] = [
   {
     id: 'CM003',
     title: "Technical Writing",
-    subcategory: "General Skills",
+    subcategory: "Documentation",
     category: "common",
     type: "necessary",
-    growth: "0%",
-    salary: "$0",
+    growth: "12%",
+    salary: "$145,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -39,9 +39,31 @@ export const commonSkills: UnifiedSkill[] = [
     title: "Git Version Control",
     subcategory: "Development Tools",
     category: "common",
-    type: "technical",
+    type: "necessary",
     growth: "15%",
     salary: "$130,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'CM005',
+    title: "Communication",
+    subcategory: "Soft Skills",
+    category: "common",
+    type: "necessary",
+    growth: "18%",
+    salary: "$140,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'CM006',
+    title: "Shell Scripting",
+    subcategory: "System Administration",
+    category: "common",
+    type: "technical",
+    growth: "18%",
+    salary: "$135,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }
