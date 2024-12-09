@@ -9,14 +9,15 @@ export const roleSkills = {
       getUnifiedSkillData("Deep Learning"),
       getUnifiedSkillData("Natural Language Processing"),
       getUnifiedSkillData("Computer Vision"),
-      getUnifiedSkillData("TensorFlow")
+      getUnifiedSkillData("TensorFlow"),
+      getUnifiedSkillData("GraphQL")  // Added as specialized for AI Engineer
     ],
     common: [
       getUnifiedSkillData("Python"),
       getUnifiedSkillData("Problem Solving"),
       getUnifiedSkillData("Technical Writing"),
       getUnifiedSkillData("Git Version Control"),
-      getUnifiedSkillData("Communication")  // Added Communication to common skills
+      getUnifiedSkillData("Communication")
     ],
     certifications: [
       getUnifiedSkillData("AWS Certified Machine Learning - Specialty"),
@@ -31,14 +32,15 @@ export const roleSkills = {
       getUnifiedSkillData("Database Design"),
       getUnifiedSkillData("API Development"),
       getUnifiedSkillData("System Architecture"),
-      getUnifiedSkillData("Kubernetes")
+      getUnifiedSkillData("Kubernetes"),
+      getUnifiedSkillData("GraphQL")  // Added as specialized for Backend Engineer
     ],
     common: [
       getUnifiedSkillData("Problem Solving"),
       getUnifiedSkillData("Code Review"),
       getUnifiedSkillData("Agile Methodologies"),
       getUnifiedSkillData("Git Version Control"),
-      getUnifiedSkillData("Communication")  // Added Communication to common skills
+      getUnifiedSkillData("Communication")
     ],
     certifications: [
       getUnifiedSkillData("AWS Certified Solutions Architect"),
@@ -53,14 +55,17 @@ export const roleSkills = {
       getUnifiedSkillData("TypeScript"),
       getUnifiedSkillData("Next.js"),
       getUnifiedSkillData("CSS/SASS"),
-      getUnifiedSkillData("Performance Optimization")
+      getUnifiedSkillData("Performance Optimization"),
+      getUnifiedSkillData("React Native"),  // Added as specialized for Frontend Engineer
+      getUnifiedSkillData("Flutter"),       // Added as specialized for Frontend Engineer
+      getUnifiedSkillData("GraphQL")        // Added as specialized for Frontend Engineer
     ],
     common: [
       getUnifiedSkillData("Problem Solving"),
       getUnifiedSkillData("Code Review"),
       getUnifiedSkillData("Agile Methodologies"),
       getUnifiedSkillData("Git Version Control"),
-      getUnifiedSkillData("Communication")  // Added Communication to common skills
+      getUnifiedSkillData("Communication")
     ],
     certifications: [
       getUnifiedSkillData("AWS Certified Developer - Associate"),
