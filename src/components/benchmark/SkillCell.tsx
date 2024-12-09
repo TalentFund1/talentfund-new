@@ -5,6 +5,8 @@ import { RequirementSelector } from "./RequirementSelector";
 import { Check, X } from "lucide-react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { roleSkills } from "../skills/data/roleSkills";
+import { useCompetencyStore } from "../skills/competency/CompetencyState";
+import { useParams } from "react-router-dom";
 
 interface SkillCellProps {
   skillName: string;
@@ -22,11 +24,12 @@ export const SkillCell = ({
   isLastColumn, 
   levelKey 
 }: SkillCellProps) => {
-  const { currentStates, setSkillState } = useCompetencyStore();
+  const { roleStates, setSkillState } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
+  const { id: roleId } = useParams<{ id: string }>();
+  const currentRoleId = roleId || "123";
   const initRef = useRef(false);
 
-  // Initialize state only once when component mounts
   useEffect(() => {
     if (!initRef.current) {
       console.log('Initializing skill state:', {
@@ -40,13 +43,14 @@ export const SkillCell = ({
         skillName,
         details.level || "unspecified",
         levelKey,
-        details.required || "preferred"
+        details.required || "preferred",
+        currentRoleId
       );
       initRef.current = true;
     }
-  }, [skillName, levelKey, details.level, details.required, setSkillState]);
+  }, [skillName, levelKey, details.level, details.required, setSkillState, currentRoleId]);
 
-  const currentState = currentStates[skillName]?.[levelKey] || {
+  const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
     required: details.required || "preferred",
   };
@@ -56,9 +60,17 @@ export const SkillCell = ({
       skillName,
       levelKey,
       newLevel: value,
-      currentRequired: currentState.required
+      currentRequired: currentState.required,
+      roleId: currentRoleId
     });
-    setSkillState(skillName, value, levelKey, currentState.required);
+    
+    setSkillState(
+      skillName,
+      value,
+      levelKey,
+      currentState.required || 'preferred',
+      currentRoleId
+    );
   };
 
   const handleRequirementChange = (value: string) => {
@@ -66,9 +78,17 @@ export const SkillCell = ({
       skillName,
       levelKey,
       currentLevel: currentState.level,
-      newRequired: value
+      newRequired: value,
+      roleId: currentRoleId
     });
-    setSkillState(skillName, currentState.level, levelKey, value);
+    
+    setSkillState(
+      skillName,
+      currentState.level || 'unspecified',
+      levelKey,
+      value,
+      currentRoleId
+    );
   };
 
   // Check if the skill is toggled on in any role's skills
@@ -105,12 +125,12 @@ export const SkillCell = ({
         </div>
         <div className="flex flex-col items-center gap-0">
           <LevelSelector
-            currentLevel={currentState.level}
+            currentLevel={currentState.level || 'unspecified'}
             onLevelChange={handleLevelChange}
           />
           <RequirementSelector
-            currentRequired={currentState.required}
-            currentLevel={currentState.level}
+            currentRequired={currentState.required || 'preferred'}
+            currentLevel={currentState.level || 'unspecified'}
             onRequirementChange={handleRequirementChange}
           />
         </div>
