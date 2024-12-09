@@ -13,10 +13,18 @@ const normalizeSkillTitle = (title: string): string => {
   console.log('Normalizing skill title:', title);
   
   const normalizations: { [key: string]: string } = {
+    // Version Control
     'Git': 'Git Version Control',
     'Version Control': 'Git Version Control',
+    'Git/Version Control': 'Git Version Control',
+    
+    // Cloud Services
     'AWS': 'Amazon Web Services',
     'Amazon AWS': 'Amazon Web Services',
+    'Amazon Web Service': 'Amazon Web Services',
+    'Cloud Computing': 'Amazon Web Services',
+    
+    // Certifications
     'TensorFlow Developer Certificate': 'TensorFlow Developer Certification',
     'AWS Certified Machine Learning - Specialty': 'AWS Certified Machine Learning Specialty',
     'AWS DevOps': 'AWS Certified DevOps Engineer',
@@ -24,6 +32,10 @@ const normalizeSkillTitle = (title: string): string => {
     'Terraform Associate': 'HashiCorp Certified Terraform Associate',
     'Project Management Professional': 'Project Management Professional (PMP)',
     'Scrum Master': 'Certified Scrum Master (CSM)',
+    'PMP': 'Project Management Professional (PMP)',
+    'CSM': 'Certified Scrum Master (CSM)',
+    
+    // Programming Languages & Frameworks
     'Node': 'Node.js',
     'NodeJS': 'Node.js',
     'React JS': 'React',
@@ -32,17 +44,36 @@ const normalizeSkillTitle = (title: string): string => {
     'NextJS': 'Next.js',
     'TypeScript': 'TypeScript',
     'TS': 'TypeScript',
+    'JavaScript': 'JavaScript',
+    'JS': 'JavaScript',
+    
+    // AI/ML
     'Machine Learning': 'Machine Learning',
     'ML': 'Machine Learning',
     'Artificial Intelligence': 'Artificial Intelligence',
     'AI': 'Artificial Intelligence',
+    'NLP': 'Natural Language Processing',
+    
+    // Frontend
     'CSS3': 'CSS/SASS',
     'SASS': 'CSS/SASS',
     'SCSS': 'CSS/SASS',
+    'CSS': 'CSS/SASS',
+    
+    // Infrastructure
     'Docker Container': 'Docker',
     'Kubernetes Container': 'Kubernetes',
     'K8s': 'Kubernetes',
-    'Amazon Web Service': 'Amazon Web Services',
+    
+    // Development Practices
+    'Agile': 'Agile Methodologies',
+    'Scrum': 'Agile Methodologies',
+    'Code Reviews': 'Code Review',
+    
+    // Management
+    'Team Management': 'Team Leadership',
+    'Leadership': 'Team Leadership',
+    'Project Manager': 'Project Management',
   };
   
   const normalized = normalizations[title] || title;
@@ -50,7 +81,38 @@ const normalizeSkillTitle = (title: string): string => {
   return normalized;
 };
 
-// Combine all skills into the centralized database with normalized titles
+// Helper function to generate consistent IDs
+const generateSkillId = (skill: UnifiedSkill): string => {
+  const prefix = (() => {
+    switch (skill.category) {
+      case 'specialized':
+        if (skill.subcategory.includes('AI') || skill.subcategory.includes('Machine Learning')) return 'AI';
+        if (skill.subcategory.includes('Frontend')) return 'FE';
+        if (skill.subcategory.includes('Backend')) return 'BE';
+        if (skill.subcategory.includes('Infrastructure')) return 'INF';
+        if (skill.subcategory.includes('Management')) return 'MGT';
+        return 'SPEC';
+      case 'common':
+        return 'COM';
+      case 'certification':
+        return 'CERT';
+      default:
+        return 'SKILL';
+    }
+  })();
+
+  // Use existing ID if it follows our convention
+  if (skill.id && skill.id.startsWith(prefix)) {
+    return skill.id;
+  }
+
+  // Generate new ID based on normalized title
+  const normalizedTitle = normalizeSkillTitle(skill.title);
+  console.log('Generating ID for skill:', { title: normalizedTitle, category: skill.category });
+  return `${prefix}${Date.now().toString().slice(-4)}`;
+};
+
+// Combine all skills into the centralized database with normalized titles and consistent IDs
 export const centralizedSkills: UnifiedSkill[] = [
   ...backendSkills,
   ...infrastructureSkills,
@@ -62,8 +124,26 @@ export const centralizedSkills: UnifiedSkill[] = [
   ...commonSkills
 ].map(skill => ({
   ...skill,
-  title: normalizeSkillTitle(skill.title)
-}));
+  title: normalizeSkillTitle(skill.title),
+  id: generateSkillId(skill)
+}))
+// Remove duplicates based on normalized titles
+.filter((skill, index, self) => {
+  const normalizedTitle = normalizeSkillTitle(skill.title);
+  const firstIndex = self.findIndex(s => normalizeSkillTitle(s.title) === normalizedTitle);
+  const isDuplicate = index !== firstIndex;
+  
+  if (isDuplicate) {
+    console.log('Removing duplicate skill:', { 
+      title: skill.title, 
+      normalizedTitle,
+      originalId: skill.id,
+      keepingId: self[firstIndex].id 
+    });
+  }
+  
+  return !isDuplicate;
+});
 
 // Helper functions to access the centralized database
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
