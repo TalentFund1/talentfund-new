@@ -1,10 +1,10 @@
 import { TableCell } from "@/components/ui/table";
-import { useCompetencyStore } from "./CompetencyState";
 import { useEffect, useRef } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { Check, X } from "lucide-react";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { roleSkills } from "../skills/data/roleSkills";
 
 interface SkillCellProps {
   skillName: string;
@@ -71,7 +71,23 @@ export const SkillCell = ({
     setSkillState(skillName, currentState.level, levelKey, value);
   };
 
-  const isCompanySkill = toggledSkills.has(skillName);
+  // Check if the skill is toggled on in any role's skills
+  const isCompanySkill = Object.values(roleSkills).some(role => {
+    const allRoleSkills = [
+      ...role.specialized,
+      ...role.common,
+      ...role.certifications
+    ];
+    return allRoleSkills.some(skill => 
+      skill.title === skillName && toggledSkills.has(skill.title)
+    );
+  });
+
+  console.log('Checking company skill status:', {
+    skillName,
+    isCompanySkill,
+    toggledSkillsCount: toggledSkills.size
+  });
 
   return (
     <TableCell 
