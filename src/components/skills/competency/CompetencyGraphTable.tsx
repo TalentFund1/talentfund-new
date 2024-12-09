@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useCompetencyStore } from "./CompetencyState";
-import { SkillCell } from "./SkillCell";
+import { CompanySkill } from "../../benchmark/CompanySkill";
 import { roleSkills } from "../data/roleSkills";
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
 import { useParams } from "react-router-dom";
@@ -151,7 +151,7 @@ export const CompetencyGraphTable = ({
                 {skillName}
               </TableCell>
               {levels.map((level, index) => (
-                <SkillCell 
+                <CompanySkill 
                   key={level}
                   skillName={skillName}
                   details={getSkillDetails(skillName, level)}
