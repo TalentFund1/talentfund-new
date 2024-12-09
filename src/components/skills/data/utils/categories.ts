@@ -62,12 +62,14 @@ export const getSubcategory = (skillTitle: string): string => {
 
 export const getBusinessCategory = (skillTitle: string): string => {
   const categories: { [key: string]: string } = {
+    'React Native': 'Information Technology',
+    'Flutter': 'Information Technology',
+    'GraphQL': 'Information Technology',
+    
     // Technical Skills
+    'Amazon Web Services': 'Information Technology',
     'Machine Learning': 'Information Technology',
     'Deep Learning': 'Information Technology',
-    'Natural Language Processing': 'Science and Research',
-    'Computer Vision': 'Science and Research',
-    'TensorFlow': 'Information Technology',
     'Python': 'Information Technology',
     'Docker': 'Information Technology',
     'Kubernetes': 'Information Technology',
@@ -77,71 +79,31 @@ export const getBusinessCategory = (skillTitle: string): string => {
     'Node.js': 'Information Technology',
     'React': 'Information Technology',
     'Next.js': 'Information Technology',
-    'GraphQL': 'Information Technology',
-    'API Development': 'Information Technology',
     
     // Soft Skills
     'Communication': 'Media and Communications',
     'Technical Writing': 'Media and Communications',
     'Problem Solving': 'Physical and Inherent Abilities',
-    'Team Leadership': 'Administration',
-    'Project Management': 'Administration',
-    'Strategic Planning': 'Administration',
-    'Stakeholder Management': 'Business',
+    'Team Leadership': 'Initiative and Leadership',
+    'Project Management': 'Project Management',
+    'Strategic Planning': 'Project Management',
     
     // Analysis Skills
     'Data Science': 'Analysis',
-    'Data Analysis': 'Analysis',
-    'Business Analysis': 'Analysis',
+    'Computer Vision': 'Analysis',
+    'Natural Language Processing': 'Analysis',
     
     // Management Skills
-    'Risk Management': 'Law, Regulation, and Compliance',
-    'System Design': 'Engineering',
+    'Risk Management': 'Risk and Compliance',
+    'Stakeholder Management': 'Initiative and Leadership',
+    
+    // Architecture Skills
+    'System Design': 'Information Technology',
     'Database Design': 'Information Technology',
-    'Technical Architecture': 'Architecture and Construction'
+    'Technical Architecture': 'Information Technology'
   };
   
-  // Default mapping for unknown skills
-  const defaultCategories = [
-    'Administration',
-    'Agriculture, Horticulture, and Landscaping',
-    'Analysis',
-    'Architecture and Construction',
-    'Business',
-    'Customer and Client Support',
-    'Design',
-    'Economics, Policy, and Social Studies',
-    'Education and Training',
-    'Energy and Utilities',
-    'Engineering',
-    'Environment',
-    'Finance',
-    'Health Care',
-    'Hospitality and Food Services',
-    'Human Resources',
-    'Information Technology',
-    'Law, Regulation, and Compliance',
-    'Maintenance, Repair, and Facility Services',
-    'Manufacturing and Production',
-    'Marketing and Public Relations',
-    'Media and Communications',
-    'Performing Arts, Sports, and Recreation',
-    'Personal Care and Services',
-    'Physical and Inherent Abilities',
-    'Property and Real Estate',
-    'Public Safety and National Security',
-    'Sales',
-    'Science and Research',
-    'Social and Human Services',
-    'Transportation, Supply Chain, and Logistics'
-  ];
-
-  console.log('Categorizing skill:', skillTitle);
-  const category = categories[skillTitle];
-  if (!category) {
-    console.log(`No explicit mapping found for ${skillTitle}, using Information Technology as default`);
-  }
-  return category || 'Information Technology';
+  return categories[skillTitle] || 'Information Technology';
 };
 
 export const getSkillWeight = (skillTitle: string): 'critical' | 'technical' | 'necessary' => {
