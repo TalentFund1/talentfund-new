@@ -1,6 +1,6 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
-import { technicalSkills, softSkills } from './skillsData';
+import { technicalSkills, softSkills, technicalSkillObjects, softSkillObjects } from './skillsData';
 import { Button } from '@/components/ui/button';
 import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
@@ -46,7 +46,10 @@ export const EmployeeFilters = ({
   onRoleChange = () => {},
   selectedRole = []
 }: EmployeeFiltersProps) => {
-  const allSkills = [...technicalSkills, ...softSkills];
+  // Get all available skills from our skills database
+  const allSkills = [...technicalSkillObjects, ...softSkillObjects].map(skill => skill.title);
+  console.log('Available skills for search:', allSkills);
+
   const employees = useEmployeeStore((state) => state.employees);
   const managers = Array.from(new Set(
     employees
@@ -54,7 +57,6 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Get roles directly from roleSkills
   const roles = Object.entries(roleSkills).map(([id, data]) => {
     switch(id) {
       case "123": return "AI Engineer";
