@@ -75,7 +75,9 @@ export const skills = [
     title: "Git Version Control",
     subcategory: "Development Tools",
     level: "Advanced",
-    growth: "20%"
+    growth: "20%",
+    category: "specialized",
+    businessCategory: "Information Technology"
   },
   {
     title: "SQL",
@@ -174,7 +176,6 @@ export const normalizeSkillTitle = (title: string): string => {
   const normalizations: { [key: string]: string } = {
     'Git': 'Git Version Control',
     'Version Control': 'Git Version Control',
-    'Git Version Control': 'Git Version Control',
     'AWS': 'Amazon Web Services',
     'Amazon AWS': 'Amazon Web Services',
     'TensorFlow Developer Certificate': 'TensorFlow Developer Certification',

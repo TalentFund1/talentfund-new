@@ -11,7 +11,7 @@ export const getBusinessCategory = (skillTitle: string): string => {
     'Project Management': 'Project Management',
     'Data Science': 'Analysis',
     'Risk Management': 'Risk and Compliance',
-    'Git Version Control': 'Information Technology',
+    'Git Version Control': 'Information Technology'
   };
   
   return categories[skillTitle] || 'Information Technology';
