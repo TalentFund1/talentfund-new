@@ -21,6 +21,14 @@ export interface UnifiedSkill extends Skill {
   requirement?: 'required' | 'preferred' | 'skill_goal' | 'not_interested';
 }
 
+export interface RoleSkillData {
+  title: string;
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
+  soc?: string;
+}
+
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 

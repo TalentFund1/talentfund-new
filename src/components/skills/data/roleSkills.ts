@@ -1,8 +1,10 @@
 import { getUnifiedSkillData } from './centralSkillsDatabase';
+import { RoleSkillData } from '../types/SkillTypes';
 
-export const roleSkills = {
+export const roleSkills: { [key: string]: RoleSkillData } = {
   "123": {
     title: "AI Engineer",
+    soc: "15-2051",
     specialized: [
       getUnifiedSkillData("Machine Learning"),
       getUnifiedSkillData("Deep Learning"),
@@ -25,6 +27,7 @@ export const roleSkills = {
   },
   "124": {
     title: "Backend Engineer",
+    soc: "15-1252",
     specialized: [
       getUnifiedSkillData("Node.js"),
       getUnifiedSkillData("Database Design"),
@@ -47,6 +50,7 @@ export const roleSkills = {
   },
   "125": {
     title: "Frontend Engineer",
+    soc: "15-1252",
     specialized: [
       getUnifiedSkillData("React"),
       getUnifiedSkillData("TypeScript"),
@@ -71,6 +75,7 @@ export const roleSkills = {
   },
   "126": {
     title: "Engineering Manager",
+    soc: "11-9041",
     specialized: [
       getUnifiedSkillData("System Design"),
       getUnifiedSkillData("Technical Architecture"),
@@ -92,6 +97,7 @@ export const roleSkills = {
   },
   "127": {
     title: "DevOps Engineer",
+    soc: "15-1244",
     specialized: [
       getUnifiedSkillData("Docker"),
       getUnifiedSkillData("Kubernetes"),
