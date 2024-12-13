@@ -15,3 +15,5 @@ export const versionControlSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];
+
+console.log('Loaded version control skills:', versionControlSkills);
