@@ -3,14 +3,13 @@ import { getUnifiedSkillData } from './centralSkillsDatabase';
 export const roleSkills = {
   "123": {
     title: "AI Engineer",
-    soc: "11-9041",
     specialized: [
       getUnifiedSkillData("Machine Learning"),
       getUnifiedSkillData("Deep Learning"),
       getUnifiedSkillData("Natural Language Processing"),
       getUnifiedSkillData("Computer Vision"),
       getUnifiedSkillData("TensorFlow"),
-      getUnifiedSkillData("GraphQL")  // Added as specialized for AI Engineer
+      getUnifiedSkillData("GraphQL")
     ],
     common: [
       getUnifiedSkillData("Python"),
@@ -26,14 +25,13 @@ export const roleSkills = {
   },
   "124": {
     title: "Backend Engineer",
-    soc: "15-1252",
     specialized: [
       getUnifiedSkillData("Node.js"),
       getUnifiedSkillData("Database Design"),
       getUnifiedSkillData("API Development"),
       getUnifiedSkillData("System Architecture"),
       getUnifiedSkillData("Kubernetes"),
-      getUnifiedSkillData("GraphQL")  // Added as specialized for Backend Engineer
+      getUnifiedSkillData("GraphQL")
     ],
     common: [
       getUnifiedSkillData("Problem Solving"),
@@ -49,16 +47,15 @@ export const roleSkills = {
   },
   "125": {
     title: "Frontend Engineer",
-    soc: "15-1254",
     specialized: [
       getUnifiedSkillData("React"),
       getUnifiedSkillData("TypeScript"),
       getUnifiedSkillData("Next.js"),
       getUnifiedSkillData("CSS/SASS"),
       getUnifiedSkillData("Performance Optimization"),
-      getUnifiedSkillData("React Native"),  // Added as specialized for Frontend Engineer
-      getUnifiedSkillData("Flutter"),       // Added as specialized for Frontend Engineer
-      getUnifiedSkillData("GraphQL")        // Added as specialized for Frontend Engineer
+      getUnifiedSkillData("React Native"),
+      getUnifiedSkillData("Flutter"),
+      getUnifiedSkillData("GraphQL")
     ],
     common: [
       getUnifiedSkillData("Problem Solving"),
@@ -74,7 +71,6 @@ export const roleSkills = {
   },
   "126": {
     title: "Engineering Manager",
-    soc: "11-9041",
     specialized: [
       getUnifiedSkillData("System Design"),
       getUnifiedSkillData("Technical Architecture"),
@@ -87,7 +83,7 @@ export const roleSkills = {
       getUnifiedSkillData("Stakeholder Management"),
       getUnifiedSkillData("Agile Methodologies"),
       getUnifiedSkillData("Git Version Control"),
-      getUnifiedSkillData("Communication")  // Added Communication to common skills
+      getUnifiedSkillData("Communication")
     ],
     certifications: [
       getUnifiedSkillData("Project Management Professional (PMP)"),
@@ -96,7 +92,6 @@ export const roleSkills = {
   },
   "127": {
     title: "DevOps Engineer",
-    soc: "15-1244",
     specialized: [
       getUnifiedSkillData("Docker"),
       getUnifiedSkillData("Kubernetes"),
@@ -109,7 +104,7 @@ export const roleSkills = {
       getUnifiedSkillData("Shell Scripting"),
       getUnifiedSkillData("Git Version Control"),
       getUnifiedSkillData("Problem Solving"),
-      getUnifiedSkillData("Communication")  // Added Communication to common skills
+      getUnifiedSkillData("Communication")
     ],
     certifications: [
       getUnifiedSkillData("AWS Certified DevOps Engineer"),
