@@ -120,7 +120,8 @@ export const getSkillWeight = (skillTitle: string): 'critical' | 'technical' | '
     'System Design',
     'Technical Architecture',
     'AWS Certified Solutions Architect',
-    'AWS Certified Machine Learning - Specialty'
+    'AWS Certified Machine Learning - Specialty',
+    'Cloud Architecture'
   ];
 
   // Technical skills - specialized technical competencies
@@ -135,11 +136,7 @@ export const getSkillWeight = (skillTitle: string): 'critical' | 'technical' | '
     'Database Design',
     'Node.js',
     'React',
-    'TypeScript',
-    'Git Version Control',
-    'Code Review',
-    'Problem Solving',
-    'Technical Writing'
+    'TypeScript'
   ];
 
   // Necessary skills - important but not core technical requirements
@@ -148,10 +145,26 @@ export const getSkillWeight = (skillTitle: string): 'critical' | 'technical' | '
     'Agile Methodologies',
     'Documentation',
     'Collaboration',
-    'Time Management'
+    'Time Management',
+    'Problem Solving',
+    'Code Review',
+    'Technical Writing',
+    'Git Version Control',
+    'Development Practices',
+    'Shell Scripting',
+    'Linux Administration',
+    'Cross-browser Compatibility',
+    'Responsive Design',
+    'Stakeholder Management'
   ];
 
   console.log('Determining weight category for:', skillTitle);
+
+  // Check if the skill title contains certain keywords that indicate it's a necessary skill
+  const necessaryKeywords = ['practices', 'methodology', 'communication', 'collaboration', 'management'];
+  const containsNecessaryKeyword = necessaryKeywords.some(keyword => 
+    skillTitle.toLowerCase().includes(keyword.toLowerCase())
+  );
 
   if (criticalSkills.includes(skillTitle)) {
     console.log(`${skillTitle} identified as critical skill`);
@@ -163,12 +176,32 @@ export const getSkillWeight = (skillTitle: string): 'critical' | 'technical' | '
     return 'technical';
   }
 
-  if (necessarySkills.includes(skillTitle)) {
+  if (necessarySkills.includes(skillTitle) || containsNecessaryKeyword) {
     console.log(`${skillTitle} identified as necessary skill`);
     return 'necessary';
   }
 
-  // Default to technical if not explicitly categorized
+  // For skills related to practices, methodologies, or soft skills
+  if (skillTitle.toLowerCase().includes('practice') || 
+      skillTitle.toLowerCase().includes('methodology') ||
+      skillTitle.toLowerCase().includes('soft skill')) {
+    console.log(`${skillTitle} categorized as necessary based on keywords`);
+    return 'necessary';
+  }
+
+  // Check subcategory for additional context
+  const subcategory = getSubcategory(skillTitle);
+  if (subcategory.includes('Practices') || 
+      subcategory.includes('Methodology') || 
+      subcategory.includes('Communication') ||
+      subcategory === 'Development Practices') {
+    console.log(`${skillTitle} categorized as necessary based on subcategory ${subcategory}`);
+    return 'necessary';
+  }
+
+  // Default to technical if no other categorization applies
   console.log(`${skillTitle} defaulting to technical skill`);
   return 'technical';
 };
+
+// ... keep existing code (remaining utility functions)
