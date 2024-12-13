@@ -107,15 +107,68 @@ export const getBusinessCategory = (skillTitle: string): string => {
 };
 
 export const getSkillWeight = (skillTitle: string): 'critical' | 'technical' | 'necessary' => {
+  console.log('Calculating weight for skill:', skillTitle);
+
+  // Critical skills - high impact, core competencies
   const criticalSkills = [
     'Machine Learning',
     'Deep Learning',
-    'AWS Certified Solutions Architect',
+    'Natural Language Processing',
     'Team Leadership',
     'Project Management',
-    'React Native',  // Added as critical due to high growth
-    'GraphQL'        // Added as critical due to importance in modern development
+    'Strategic Planning',
+    'System Design',
+    'Technical Architecture',
+    'AWS Certified Solutions Architect',
+    'AWS Certified Machine Learning - Specialty'
   ];
 
-  return criticalSkills.includes(skillTitle) ? 'critical' : 'technical';
+  // Technical skills - specialized technical competencies
+  const technicalSkills = [
+    'Python',
+    'TensorFlow',
+    'Computer Vision',
+    'GraphQL',
+    'Docker',
+    'Kubernetes',
+    'API Development',
+    'Database Design',
+    'Node.js',
+    'React',
+    'TypeScript',
+    'Git Version Control',
+    'Code Review',
+    'Problem Solving',
+    'Technical Writing'
+  ];
+
+  // Necessary skills - important but not core technical requirements
+  const necessarySkills = [
+    'Communication',
+    'Agile Methodologies',
+    'Documentation',
+    'Collaboration',
+    'Time Management'
+  ];
+
+  console.log('Determining weight category for:', skillTitle);
+
+  if (criticalSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} identified as critical skill`);
+    return 'critical';
+  }
+
+  if (technicalSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} identified as technical skill`);
+    return 'technical';
+  }
+
+  if (necessarySkills.includes(skillTitle)) {
+    console.log(`${skillTitle} identified as necessary skill`);
+    return 'necessary';
+  }
+
+  // Default to technical if not explicitly categorized
+  console.log(`${skillTitle} defaulting to technical skill`);
+  return 'technical';
 };
