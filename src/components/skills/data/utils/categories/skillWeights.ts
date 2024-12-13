@@ -1,5 +1,5 @@
 import { getSubcategory } from './skillSubcategories';
-import { SkillWeight } from '../../types/SkillTypes';
+import { SkillWeight } from '../../../types/SkillTypes';
 
 export const getSkillWeight = (skillTitle: string): SkillWeight => {
   console.log('Calculating weight for skill:', skillTitle);
@@ -44,7 +44,7 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'Problem Solving',
     'Code Review',
     'Technical Writing',
-    'Git Version Control', // Removed duplicate, kept in necessary skills
+    'Git Version Control',
     'Development Practices',
     'Shell Scripting',
     'Linux Administration',
