@@ -7,6 +7,7 @@ import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { isSpecializedSkill, isCommonSkill, isCertificationSkill } from "../skills/competency/skillCategoryUtils";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -35,6 +36,19 @@ export const SkillsMatrixRow = ({
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
+  };
+
+  const getSkillType = () => {
+    if (isSpecializedSkill(skill.title, selectedRole)) {
+      return { text: "Specialized", classes: "bg-blue-100 text-blue-800" };
+    }
+    if (isCommonSkill(skill.title, selectedRole)) {
+      return { text: "Common", classes: "bg-green-100 text-green-800" };
+    }
+    if (isCertificationSkill(skill.title, selectedRole)) {
+      return { text: "Certification", classes: "bg-purple-100 text-purple-800" };
+    }
+    return { text: "Uncategorized", classes: "bg-gray-100 text-gray-800" };
   };
 
   const getBorderColorClass = (level: string) => {
@@ -68,11 +82,17 @@ export const SkillsMatrixRow = ({
   };
 
   const roleSkillState = getRoleSkillState();
+  const skillType = getSkillType();
 
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
+      <TableCell className="border-r border-blue-200 py-2">
+        <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${skillType.classes}`}>
+          {skillType.text}
+        </span>
+      </TableCell>
       {showCompanySkill && (
         <TableCell className="text-center border-r border-blue-200 py-2">
           <div className="flex justify-center">
