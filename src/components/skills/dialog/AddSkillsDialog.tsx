@@ -13,7 +13,9 @@ export const AddSkillsDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { toast } = useToast();
 
-  const allSkills = getAllSkills() || [];
+  // Initialize skills with empty array as fallback
+  const skills = getAllSkills();
+  const allSkills: UnifiedSkill[] = Array.isArray(skills) ? skills : [];
 
   console.log('AddSkillsDialog rendered with:', {
     selectedSkillsCount: selectedSkills.length,
@@ -63,7 +65,7 @@ export const AddSkillsDialog = () => {
             <CommandInput placeholder="Search skills..." />
             <CommandEmpty>No skills found.</CommandEmpty>
             <CommandGroup>
-              {allSkills.map((skill: UnifiedSkill) => (
+              {allSkills.map((skill) => (
                 <CommandItem
                   key={skill.id}
                   value={skill.title}
