@@ -33,11 +33,21 @@ export const AddSkillToProfileDialog = () => {
       ...Skills.devops.map(s => s.title)
     ])
   ];
-
+  
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
     sampleSkills: allSkills.slice(0, 5),
-    allSkills: allSkills
+    allSkills: allSkills,
+    sources: {
+      specialized: specializedSkills.length,
+      common: commonSkills.length,
+      certification: certificationSkills.length,
+      technical: Skills.technical.length,
+      management: Skills.management.length,
+      ai: Skills.ai.length,
+      web: Skills.web.length,
+      devops: Skills.devops.length
+    }
   });
 
   const handleAddSkills = () => {
@@ -68,16 +78,7 @@ export const AddSkillToProfileDialog = () => {
       }
     });
 
-    // Update toggled skills state
     setToggledSkills(newToggledSkills);
-
-    // Save to localStorage
-    try {
-      localStorage.setItem(`toggled-skills-${id}`, JSON.stringify(Array.from(newToggledSkills)));
-      console.log('Saved toggled skills to localStorage:', Array.from(newToggledSkills));
-    } catch (error) {
-      console.error('Error saving toggled skills:', error);
-    }
 
     toast({
       title: "Skills Added",
