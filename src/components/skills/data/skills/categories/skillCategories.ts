@@ -1,28 +1,32 @@
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+
 // Map of skills to their categories
-const skillCategoryMap: { [key: string]: string } = {
-  // Technical skills
-  'Machine Learning': 'technical',
-  'Deep Learning': 'technical',
-  'Natural Language Processing': 'technical',
-  'Computer Vision': 'technical',
-  'TensorFlow': 'technical',
-  'Python': 'technical',
-  'GraphQL': 'technical',
-  'Database Design': 'technical',
+const skillCategoryMap: { [key: string]: SkillCategory } = {
+  // Specialized skills
+  'Machine Learning': 'specialized',
+  'Deep Learning': 'specialized',
+  'Natural Language Processing': 'specialized',
+  'Computer Vision': 'specialized',
+  'TensorFlow': 'specialized',
+  'Python': 'specialized',
+  'GraphQL': 'specialized',
+  'Database Design': 'specialized',
   
-  // Critical skills
-  'Team Leadership': 'critical',
-  'Technical Writing': 'critical',
+  // Common skills
+  'Team Leadership': 'common',
+  'Technical Writing': 'common',
+  'Problem Solving': 'common',
+  'Code Review': 'common',
   
-  // Necessary skills
-  'Problem Solving': 'necessary',
-  'Code Review': 'necessary',
-  'AWS Certified DevOps Engineer': 'necessary'
+  // Certification skills
+  'AWS Certified DevOps Engineer': 'certification',
+  'AWS Certified Solutions Architect': 'certification',
+  'Kubernetes Administrator (CKA)': 'certification'
 };
 
-export const getSkillCategory = (skillTitle: string): string => {
+export const getSkillCategory = (skillTitle: string): SkillCategory => {
   console.log('Getting category for skill:', skillTitle);
-  const category = skillCategoryMap[skillTitle] || 'necessary';
+  const category = skillCategoryMap[skillTitle] || 'common';
   console.log('Skill category result:', { skill: skillTitle, category });
   return category;
 };
