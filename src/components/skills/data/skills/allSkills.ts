@@ -1,7 +1,7 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
 import { getSkillWeight } from './categories/skillWeights';
 import { defineSkills } from './skillDefinitions';
-import { initializeSkillsDatabase } from './categories/skillCategories';
+import { initializeSkillsDatabase, getSkillCategory } from './categories/skillCategories';
 
 // Initialize skills
 const allSkills = defineSkills();
