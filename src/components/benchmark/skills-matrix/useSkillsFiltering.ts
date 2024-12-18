@@ -2,7 +2,8 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
-import { filterSkillsByCategory } from "../skills-matrix/skillCategories";
+import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
+import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
 import { normalizeSkillTitle } from "../../skills/utils/normalization";
 
 export const useSkillsFiltering = (
@@ -13,7 +14,9 @@ export const useSkillsFiltering = (
   selectedInterest: string,
   selectedSkillLevel: string,
   searchTerm: string,
-  toggledSkills: Set<string>
+  toggledSkills: Set<string>,
+  skillType: string = 'all',
+  selectedCategory: string = 'all'
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -142,7 +145,9 @@ export const useSkillsFiltering = (
       selectedLevel,
       selectedInterest,
       selectedSkillLevel,
-      searchTerm
+      searchTerm,
+      skillType,
+      selectedCategory
     }
   });
 
