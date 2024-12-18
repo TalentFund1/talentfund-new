@@ -4,12 +4,23 @@ import { webSkills } from './categories/webSkills';
 import { devopsSkills } from './categories/devopsSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 
-// Combine all skills with normalized titles
+// Transform all skills to have proper benchmarks
+const transformSkill = (skill: UnifiedSkill): UnifiedSkill => ({
+  ...skill,
+  benchmarks: {
+    B: true,
+    R: true,
+    M: true,
+    O: true
+  }
+});
+
+// Combine all skills with normalized titles and proper benchmarks
 export const skills: UnifiedSkill[] = [
   ...aiSkills,
   ...webSkills,
   ...devopsSkills
-].map(skill => ({
+].map(skill => transformSkill({
   ...skill,
   title: normalizeSkillTitle(skill.title)
 }));

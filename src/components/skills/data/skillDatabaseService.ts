@@ -10,7 +10,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   const existingSkill = getSkillByTitle(normalizedTitle);
   
   if (existingSkill) {
-    console.log('Found existing skill:', existingSkill.title);
+    console.log('Found existing skill:', existingSkill);
     return {
       ...existingSkill,
       benchmarks: {
@@ -42,15 +42,29 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     }
   };
 
-  console.log('Created new skill entry:', newSkill.title);
+  console.log('Created new skill entry:', newSkill);
   return newSkill;
+};
+
+// Transform skill for display
+export const transformSkillForDisplay = (skill: UnifiedSkill) => {
+  console.log('Transforming skill for display:', skill);
+  return {
+    ...skill,
+    benchmarks: {
+      B: true,
+      R: true,
+      M: true,
+      O: true
+    }
+  };
 };
 
 // Export additional utility functions
 export { getAllSkills };
 
 export const getSkillsByWeight = (weight: string): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => skill.weight === weight);
+  return getAllSkills().filter(skill => skill.weight === weight).map(transformSkillForDisplay);
 };
 
 console.log('Skill database service initialized');
