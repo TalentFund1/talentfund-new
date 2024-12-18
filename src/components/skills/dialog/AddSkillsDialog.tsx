@@ -13,7 +13,6 @@ export const AddSkillsDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { toast } = useToast();
 
-  // Get all skills and ensure we have a valid array
   const allSkills = getAllSkills() || [];
 
   console.log('AddSkillsDialog rendered with:', {
@@ -77,7 +76,7 @@ export const AddSkillsDialog = () => {
                       onChange={() => {}}
                       className="h-4 w-4 rounded border-gray-300"
                     />
-                    {skill.title}
+                    <span>{skill.title}</span>
                   </div>
                 </CommandItem>
               ))}

@@ -15,7 +15,8 @@ export const SkillsTable = () => {
     title: skill.title,
     subcategory: skill.subcategory,
     level: skill.level,
-    growth: skill.growth
+    growth: skill.growth,
+    businessCategory: skill.businessCategory
   }));
 
   const handleSort = (field: 'growth' | 'salary') => {
