@@ -12,8 +12,8 @@ import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
 
-type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
+type SortDirection = 'asc' | 'desc' | null;
 
 const INITIAL_VISIBLE_COUNT = 12;
 
