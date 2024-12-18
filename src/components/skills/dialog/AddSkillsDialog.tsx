@@ -13,14 +13,15 @@ export const AddSkillsDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { toast } = useToast();
 
-  // Initialize skills with empty array as fallback
+  // Safely initialize skills with proper type checking
   const skills = getAllSkills();
   const allSkills: UnifiedSkill[] = Array.isArray(skills) ? skills : [];
 
   console.log('AddSkillsDialog rendered with:', {
     selectedSkillsCount: selectedSkills.length,
     toggledSkillsCount: toggledSkills.size,
-    availableSkillsCount: allSkills.length
+    availableSkillsCount: allSkills.length,
+    skills: allSkills
   });
 
   const handleSelectSkill = (skillTitle: string) => {
