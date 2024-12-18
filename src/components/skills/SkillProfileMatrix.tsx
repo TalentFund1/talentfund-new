@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
@@ -25,7 +25,6 @@ export const SkillProfileMatrix = () => {
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const { toast } = useToast();
-  const observerTarget = useRef(null);
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
@@ -74,6 +73,7 @@ export const SkillProfileMatrix = () => {
   const filteredSkills = (() => {
     let skills: UnifiedSkill[] = [];
     
+    // Get skills based on skill type
     if (skillType === "all") {
       skills = [
         ...currentRoleSkills.specialized.map(transformSkillToBenchmarkFormat),
@@ -90,22 +90,23 @@ export const SkillProfileMatrix = () => {
 
     console.log('Initial filtered skills:', skills.map(s => s.title));
 
-    // Get all skills that are either in the current role or are toggled
+    // Filter skills based on category and toggle state
     let sortedSkills = skills.filter(skill => {
-      const isInCurrentRole = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ].some(roleSkill => roleSkill.title === skill.title);
-
-      const isToggled = toggledSkills.has(skill.title);
-
       if (selectedCategory !== 'all') {
         const skillCategory = getCategoryForSkill(skill, id || "123");
-        return (skillCategory === selectedCategory) && (isInCurrentRole || isToggled);
+        return skillCategory === selectedCategory;
       }
+      return true;
+    });
 
-      return isInCurrentRole || isToggled;
+    // Add any toggled skills that aren't already in the list
+    Array.from(toggledSkills).forEach(skillTitle => {
+      if (!sortedSkills.some(skill => skill.title === skillTitle)) {
+        const unifiedSkill = getUnifiedSkillData(skillTitle);
+        if (unifiedSkill) {
+          sortedSkills.push(unifiedSkill);
+        }
+      }
     });
 
     console.log('Skills after category filtering:', sortedSkills.map(s => s.title));
@@ -186,7 +187,7 @@ export const SkillProfileMatrix = () => {
         </div>
 
         {hasMore && (
-          <div ref={observerTarget} className="h-10" />
+          <div className="h-10" />
         )}
       </Card>
     </div>
