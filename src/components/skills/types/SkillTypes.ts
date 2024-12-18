@@ -1,10 +1,13 @@
+export type SkillWeight = 'critical' | 'technical' | 'necessary';
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+
 export interface Skill {
   id: string;
   title: string;
   subcategory: string;
-  category: 'specialized' | 'common' | 'certification';
+  category: SkillCategory;
   businessCategory: string;
-  weight: 'critical' | 'technical' | 'necessary';
+  weight: SkillWeight;
   level: string;
   growth: string;
   salary: string;
@@ -28,9 +31,6 @@ export interface RoleSkillData {
   certifications: UnifiedSkill[];
   soc?: string;
 }
-
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillCategory = 'specialized' | 'common' | 'certification';
 
 export interface SimpleSkill {
   title: string;

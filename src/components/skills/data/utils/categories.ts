@@ -1,4 +1,4 @@
-import { SkillWeight } from '../../../types/SkillTypes';
+import { SkillWeight } from '../../types/SkillTypes';
 
 // Define the skill categories
 const specializedSkills = [
@@ -58,11 +58,21 @@ const certificationSkills = [
 ];
 
 export const getSkillCategory = (skillTitle: string): string => {
-  if (specializedSkills.includes(skillTitle)) return 'specialized';
-  if (commonSkills.includes(skillTitle)) return 'common';
-  if (certificationSkills.includes(skillTitle)) return 'certification';
+  console.log(`Categorizing skill: ${skillTitle}`);
+  if (specializedSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} categorized as specialized`);
+    return 'specialized';
+  }
+  if (commonSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} categorized as common`);
+    return 'common';
+  }
+  if (certificationSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} categorized as certification`);
+    return 'certification';
+  }
   
-  console.log(`Categorizing skill: ${skillTitle} as specialized (default)`);
+  console.log(`${skillTitle} defaulting to specialized category`);
   return 'specialized';
 };
 
@@ -151,9 +161,16 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'CSS/SASS'
   ];
 
-  if (criticalSkills.includes(skillTitle)) return 'critical';
-  if (technicalSkills.includes(skillTitle)) return 'technical';
+  if (criticalSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} categorized as critical skill`);
+    return 'critical';
+  }
   
-  console.log(`Setting weight for skill: ${skillTitle} as necessary (default)`);
+  if (technicalSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} categorized as technical skill`);
+    return 'technical';
+  }
+  
+  console.log(`${skillTitle} categorized as necessary skill`);
   return 'necessary';
 };
