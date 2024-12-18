@@ -1,7 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { AddSkillToProfileDialog } from "../dialog/AddSkillToProfileDialog";
-
 interface SkillMappingHeaderProps {
   skillCount: number;
 }
@@ -20,8 +16,6 @@ export const SkillMappingHeader = ({ skillCount }: SkillMappingHeaderProps) => {
           </div>
         </div>
       </div>
-
-      <AddSkillToProfileDialog />
     </div>
   );
 };
