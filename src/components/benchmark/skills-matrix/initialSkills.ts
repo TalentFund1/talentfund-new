@@ -43,6 +43,32 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       salary: "$140,000",
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
+    },
+    {
+      id: "db-1",
+      title: "Database Design",
+      category: "specialized",
+      businessCategory: "Backend",
+      subcategory: "Database",
+      weight: "critical",
+      level: "intermediate",
+      growth: "18%",
+      salary: "$135,000",
+      confidence: "high",
+      benchmarks: { B: true, R: true, M: true, O: true }
+    },
+    {
+      id: "api-1",
+      title: "API Development",
+      category: "specialized",
+      businessCategory: "Backend",
+      subcategory: "API",
+      weight: "critical",
+      level: "intermediate",
+      growth: "22%",
+      salary: "$138,000",
+      confidence: "high",
+      benchmarks: { B: true, R: true, M: true, O: true }
     }
   ],
   "125": [
@@ -79,5 +105,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
 
 export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', id);
-  return employeeSkills[id] || [];
+  const skills = employeeSkills[id] || [];
+  console.log('Retrieved skills:', skills);
+  return skills;
 };

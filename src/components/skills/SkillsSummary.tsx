@@ -7,7 +7,7 @@ import { useSelectedSkills } from "./context/SelectedSkillsContext";
 import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
-import { getEmployeeSkills } from "../employee/skills/employeeSkillsData";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
 
 const getLevelPriority = (level: string = 'unspecified') => {
@@ -38,7 +38,9 @@ export const SkillsSummary = () => {
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
   const { setMatrixSearchSkills } = useSkillsMatrixSearch();
 
+  console.log('Loading skills for employee:', id);
   const employeeSkills = getEmployeeSkills(id || "");
+  console.log('Loaded employee skills:', employeeSkills);
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
