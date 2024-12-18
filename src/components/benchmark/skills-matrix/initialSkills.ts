@@ -6,7 +6,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     {
       id: "ml-1",
       title: "Machine Learning",
-      category: "technical",
+      category: "specialized",
       businessCategory: "AI/ML",
       subcategory: "Machine Learning",
       weight: "critical",
@@ -19,7 +19,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     {
       id: "dl-1",
       title: "Deep Learning",
-      category: "technical",
+      category: "specialized",
       businessCategory: "AI/ML",
       subcategory: "Deep Learning",
       weight: "critical",
@@ -34,7 +34,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     {
       id: "node-1",
       title: "Node.js",
-      category: "technical",
+      category: "specialized",
       businessCategory: "Backend",
       subcategory: "Runtime",
       weight: "critical",
@@ -49,7 +49,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     {
       id: "react-1",
       title: "React",
-      category: "technical",
+      category: "specialized",
       businessCategory: "Frontend",
       subcategory: "Framework",
       weight: "critical",
@@ -64,7 +64,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     {
       id: "leadership-1",
       title: "Team Leadership",
-      category: "soft",
+      category: "common",
       businessCategory: "Management",
       subcategory: "Leadership",
       weight: "critical",
