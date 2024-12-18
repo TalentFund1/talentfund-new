@@ -8,6 +8,9 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { UnifiedSkill } from "./types/SkillTypes";
+import { roleSkills } from "./data/roleSkills";
+import { useParams } from "react-router-dom";
+import { getSkillWeight } from "./data/skills/categories/skillWeights";
 
 interface SkillProfileMatrixTableProps {
   paginatedSkills: UnifiedSkill[];
@@ -26,7 +29,6 @@ export const SkillProfileMatrixTable = ({
   sortDirection,
   onSort
 }: SkillProfileMatrixTableProps) => {
-  // Remove duplicate skills by title
   const uniqueSkills = paginatedSkills.reduce((acc: UnifiedSkill[], current) => {
     const exists = acc.find(skill => skill.title === current.title);
     if (!exists) {
@@ -34,8 +36,6 @@ export const SkillProfileMatrixTable = ({
     }
     return acc;
   }, []);
-
-  console.log('Filtered unique skills:', uniqueSkills.map(s => s.title));
 
   const renderSortArrow = (field: 'growth' | 'salary') => {
     if (sortField !== field) {
@@ -55,6 +55,7 @@ export const SkillProfileMatrixTable = ({
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Subcategory</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">Type</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[10%]">Weight</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
             <Button
               variant="ghost"
@@ -136,8 +137,13 @@ export const SkillProfileMatrixTable = ({
               </span>
             </td>
             <td className="py-3 px-4">
+              <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium`}>
+                {skill.category}
+              </span>
+            </td>
+            <td className="py-3 px-4">
               <span className="text-sm">
-                {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
+                {getSkillWeight(skill.title)}
               </span>
             </td>
             <td className="py-3 px-4">
