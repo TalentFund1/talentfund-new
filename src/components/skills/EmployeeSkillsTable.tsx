@@ -4,17 +4,21 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { categorizeSkill } from "./competency/skillCategories";
+import { useParams } from "react-router-dom";
 
 export const EmployeeSkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
   const employees = useEmployeeStore((state) => state.employees);
+  const { id: roleId } = useParams();
   
   // Get all employee skills
   const allEmployeeSkills = employees.flatMap(employee => {
     const skills = getEmployeeSkills(employee.id);
     return skills.map(skill => ({
       ...skill,
-      employeeName: employee.name
+      employeeName: employee.name,
+      category: categorizeSkill(skill.title, roleId || "123") // Properly categorize each skill
     }));
   });
 
@@ -24,17 +28,19 @@ export const EmployeeSkillsTable = () => {
     return acc;
   }, {} as Record<string, number>);
 
-  // Get unique skills with their counts
+  // Get unique skills with their counts and proper categorization
   const uniqueSkills = Array.from(new Set(allEmployeeSkills.map(skill => skill.title))).map(skillTitle => {
     console.log('Getting data for employee skill:', skillTitle);
     const skillData = getUnifiedSkillData(skillTitle);
+    const category = categorizeSkill(skillTitle, roleId || "123");
     return {
       ...skillData,
-      count: skillCounts[skillTitle] || 1
+      count: skillCounts[skillTitle] || 1,
+      category // Add the category to the skill data
     };
   });
 
-  console.log('Displaying employee skills:', uniqueSkills);
+  console.log('Displaying employee skills with categories:', uniqueSkills);
 
   return (
     <Card className="p-6 bg-white mt-6">
