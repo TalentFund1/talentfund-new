@@ -10,35 +10,6 @@ export const initializeSkillsDatabase = (skills: UnifiedSkill[]) => {
   universalSkillsDatabase = skills;
 };
 
-// Predefined specialized skills for fallback
-const specializedSkills = new Set([
-  'Machine Learning',
-  'Deep Learning',
-  'Natural Language Processing',
-  'Computer Vision',
-  'TensorFlow',
-  'Node.js',
-  'API Development',
-  'Database Design',
-  'System Architecture',
-  'Kubernetes',
-  'React',
-  'TypeScript',
-  'Next.js',
-  'CSS/SASS',
-  'Performance Optimization'
-]);
-
-// Predefined certification skills for fallback
-const certificationSkills = new Set([
-  'AWS Certified Solutions Architect',
-  'Kubernetes Administrator (CKA)',
-  'AWS Certified Machine Learning - Specialty',
-  'TensorFlow Developer Certificate',
-  'Project Management Professional (PMP)',
-  'Certified Scrum Master (CSM)'
-]);
-
 export const getSkillCategory = (skillTitle: string): SkillCategory => {
   console.log('Getting category for skill:', skillTitle);
   
@@ -56,18 +27,14 @@ export const getSkillCategory = (skillTitle: string): SkillCategory => {
     });
     return skill.category;
   }
-
-  // Fallback to predefined sets
-  console.log('Falling back to predefined categories for:', skillTitle);
   
-  if (specializedSkills.has(normalizedTitle)) {
-    return 'specialized';
-  }
-  
-  if (certificationSkills.has(normalizedTitle)) {
+  // If not found, determine category based on skill characteristics
+  if (skillTitle.includes('Certified') || skillTitle.includes('Certificate')) {
     return 'certification';
   }
   
+  // Default to common if we can't determine the category
+  console.log('Defaulting to common category for:', skillTitle);
   return 'common';
 };
 
