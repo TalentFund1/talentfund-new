@@ -10,7 +10,7 @@ import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUti
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
-import { SkillProfileMatrixTable } from "./table/SkillProfileMatrixTable";
+import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -174,6 +174,13 @@ export const SkillProfileMatrix = () => {
             toggledSkills={toggledSkills}
             onToggleSkill={(skillTitle) => {
               setIsDirty(true);
+              const newToggledSkills = new Set(toggledSkills);
+              if (newToggledSkills.has(skillTitle)) {
+                newToggledSkills.delete(skillTitle);
+              } else {
+                newToggledSkills.add(skillTitle);
+              }
+              setToggledSkills(newToggledSkills);
               toast({
                 title: "Skill Updated",
                 description: `${skillTitle} has been ${toggledSkills.has(skillTitle) ? 'removed from' : 'added to'} your skills.`,
