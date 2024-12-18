@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
@@ -10,12 +10,10 @@ import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
+import { UnifiedSkill } from './types/SkillTypes';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
-
-const STORAGE_KEY = 'added-skills';
-const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
@@ -29,22 +27,6 @@ export const SkillProfileMatrix = () => {
   const observerTarget = useRef(null);
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
-
-  // Load saved skills on component mount
-  useEffect(() => {
-    if (id) {
-      try {
-        const savedSkills = localStorage.getItem(getStorageKey(id));
-        if (savedSkills) {
-          const parsedSkills = JSON.parse(savedSkills);
-          console.log('Loading saved skills:', { roleId: id, skills: parsedSkills });
-          setToggledSkills(new Set([...toggledSkills, ...parsedSkills]));
-        }
-      } catch (error) {
-        console.error('Error loading saved skills:', error);
-      }
-    }
-  }, [id]);
 
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
@@ -81,20 +63,33 @@ export const SkillProfileMatrix = () => {
   // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
+  const transformSkillToBenchmarkFormat = (skill: any): UnifiedSkill => {
+    return {
+      ...skill,
+      benchmarks: {
+        B: true,
+        R: true,
+        M: true,
+        O: true
+      }
+    };
+  };
+
   const filteredSkills = (() => {
-    let skills = [];
+    let skills: UnifiedSkill[] = [];
+    
     if (skillType === "all") {
       skills = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
+        ...currentRoleSkills.specialized.map(transformSkillToBenchmarkFormat),
+        ...currentRoleSkills.common.map(transformSkillToBenchmarkFormat),
+        ...currentRoleSkills.certifications.map(transformSkillToBenchmarkFormat)
       ];
     } else if (skillType === "specialized") {
-      skills = currentRoleSkills.specialized;
+      skills = currentRoleSkills.specialized.map(transformSkillToBenchmarkFormat);
     } else if (skillType === "common") {
-      skills = currentRoleSkills.common;
+      skills = currentRoleSkills.common.map(transformSkillToBenchmarkFormat);
     } else if (skillType === "certification") {
-      skills = currentRoleSkills.certifications;
+      skills = currentRoleSkills.certifications.map(transformSkillToBenchmarkFormat);
     }
 
     let sortedSkills = skills.filter(skill => {
@@ -104,7 +99,6 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
-      // Apply category filter
       if (selectedCategory !== 'all') {
         const skillCategory = getCategoryForSkill(skill, id || "123");
         if (skillCategory !== selectedCategory) {
@@ -157,6 +151,8 @@ export const SkillProfileMatrix = () => {
   const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
     filteredSkills.some(fs => fs.title === skill)
   ).length;
+
+  console.log('Filtered skills:', filteredSkills);
 
   return (
     <div className="space-y-6">

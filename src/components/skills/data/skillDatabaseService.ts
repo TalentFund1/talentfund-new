@@ -11,7 +11,15 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   
   if (existingSkill) {
     console.log('Found existing skill:', existingSkill.title);
-    return existingSkill;
+    return {
+      ...existingSkill,
+      benchmarks: {
+        B: true,
+        R: true,
+        M: true,
+        O: true
+      }
+    };
   }
 
   // If skill not found, create a new one with default values
@@ -26,11 +34,11 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     growth: '20%',
     salary: '$150,000',
     confidence: 'medium',
-    benchmarks: { 
-      B: true, 
-      R: true, 
-      M: true, 
-      O: true 
+    benchmarks: {
+      B: true,
+      R: true,
+      M: true,
+      O: true
     }
   };
 
