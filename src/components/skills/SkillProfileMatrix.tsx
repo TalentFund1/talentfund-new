@@ -65,16 +65,16 @@ export const SkillProfileMatrix = () => {
 
     console.log('Initial skills array:', skills.length);
 
-    // Get all skills that aren't in the role skills
-    const allSkillTitles = new Set(skills.map(s => s.title));
-    const additionalSkills = Array.from(toggledSkills)
-      .filter(skillTitle => !allSkillTitles.has(skillTitle))
+    // Get all toggled skills that aren't in the role skills
+    const toggledSkillsArray = Array.from(toggledSkills);
+    const additionalSkills = toggledSkillsArray
+      .filter(skillTitle => !skills.some(s => s.title === skillTitle))
       .map(skillTitle => {
-        console.log('Adding skill:', skillTitle);
+        console.log('Adding toggled skill:', skillTitle);
         return getUnifiedSkillData(skillTitle);
       });
 
-    // Combine role skills with additional skills
+    // Combine role skills with additional toggled skills
     skills = [...skills, ...additionalSkills];
     console.log('Combined skills array:', skills.length);
 
