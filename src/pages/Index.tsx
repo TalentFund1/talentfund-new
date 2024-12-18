@@ -41,50 +41,50 @@ const Index = () => {
     : "0.0";
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="bg-white rounded-lg p-6 shadow-sm">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-3xl font-bold text-foreground">Skills Intelligence Dashboard</h1>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <StatCard
-                title="Total Number of Employees"
-                value={totalExactMatches}
-                icon={<Users className="h-6 w-6 text-primary-icon" />}
-              />
-              <StatCard
-                title="Added in Past 1 Year"
-                value={addedLastYear}
-                icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
-              />
-              <StatCard
-                title="Share of Female Employees"
-                value={`${femalePercentage}%`}
-                icon={<TrendingUp className="h-6 w-6 text-primary-icon" />}
-              />
-              <StatCard
-                title="Average Tenure (Years)"
-                value={averageTenure}
-                icon={<Award className="h-6 w-6 text-primary-icon" />}
-              />
+    <ToggledSkillsProvider>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <div className="flex-1 p-6 ml-16 transition-all duration-300">
+          <div className="max-w-7xl mx-auto space-y-6">
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-bold text-foreground">Skills Intelligence Dashboard</h1>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard
+                  title="Total Number of Employees"
+                  value={totalExactMatches}
+                  icon={<Users className="h-6 w-6 text-primary-icon" />}
+                />
+                <StatCard
+                  title="Added in Past 1 Year"
+                  value={addedLastYear}
+                  icon={<UserPlus className="h-6 w-6 text-primary-icon" />}
+                />
+                <StatCard
+                  title="Share of Female Employees"
+                  value={`${femalePercentage}%`}
+                  icon={<TrendingUp className="h-6 w-6 text-primary-icon" />}
+                />
+                <StatCard
+                  title="Average Tenure (Years)"
+                  value={averageTenure}
+                  icon={<Award className="h-6 w-6 text-primary-icon" />}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 mt-6">
+                <SkillsOverview />
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 mt-6">
-              <SkillsOverview />
-            </div>
-          </div>
-
-          <ToggledSkillsProvider>
             <CompanySkillsTable />
             <EmployeeSkillsTable />
-          </ToggledSkillsProvider>
+          </div>
         </div>
       </div>
-    </div>
+    </ToggledSkillsProvider>
   );
 };
 
