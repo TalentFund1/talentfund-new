@@ -48,19 +48,6 @@ export const SkillProfileMatrixTable = ({
     );
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case "specialized":
-        return "bg-blue-100 text-blue-800";
-      case "common":
-        return "bg-green-100 text-green-800";
-      case "certification":
-        return "bg-purple-100 text-purple-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   return (
     <table className="w-full">
       <thead>
@@ -149,7 +136,7 @@ export const SkillProfileMatrixTable = ({
               </span>
             </td>
             <td className="py-3 px-4">
-              <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${getTypeColor(skill.category)}`}>
+              <span className="text-sm">
                 {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
               </span>
             </td>
