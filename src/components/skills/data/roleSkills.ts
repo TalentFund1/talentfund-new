@@ -1,34 +1,24 @@
 import { getUnifiedSkillData } from './centralSkillsDatabase';
-import { RoleSkillData } from '../types/SkillTypes';
 
-// Helper function to ensure Git Version Control is only added once
-const getCommonSkillsWithoutDuplicateGit = (skills: string[]) => {
-  const hasGitVersionControl = skills.includes("Git Version Control");
-  return skills.filter(skill => 
-    skill !== "Git Version Control" || 
-    (skill === "Git Version Control" && !hasGitVersionControl)
-  ).map(getUnifiedSkillData);
-};
-
-export const roleSkills: { [key: string]: RoleSkillData } = {
+export const roleSkills = {
   "123": {
     title: "AI Engineer",
-    soc: "15-2051",
+    soc: "11-9041",
     specialized: [
       getUnifiedSkillData("Machine Learning"),
       getUnifiedSkillData("Deep Learning"),
       getUnifiedSkillData("Natural Language Processing"),
       getUnifiedSkillData("Computer Vision"),
       getUnifiedSkillData("TensorFlow"),
-      getUnifiedSkillData("GraphQL")
+      getUnifiedSkillData("GraphQL")  // Added as specialized for AI Engineer
     ],
-    common: getCommonSkillsWithoutDuplicateGit([
-      "Python",
-      "Problem Solving",
-      "Technical Writing",
-      "Git Version Control",
-      "Communication"
-    ]),
+    common: [
+      getUnifiedSkillData("Python"),
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Technical Writing"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")
+    ],
     certifications: [
       getUnifiedSkillData("AWS Certified Machine Learning - Specialty"),
       getUnifiedSkillData("TensorFlow Developer Certificate")
@@ -43,15 +33,15 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       getUnifiedSkillData("API Development"),
       getUnifiedSkillData("System Architecture"),
       getUnifiedSkillData("Kubernetes"),
-      getUnifiedSkillData("GraphQL")
+      getUnifiedSkillData("GraphQL")  // Added as specialized for Backend Engineer
     ],
-    common: getCommonSkillsWithoutDuplicateGit([
-      "Problem Solving",
-      "Code Review",
-      "Agile Methodologies",
-      "Git Version Control",
-      "Communication"
-    ]),
+    common: [
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Code Review"),
+      getUnifiedSkillData("Agile Methodologies"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")
+    ],
     certifications: [
       getUnifiedSkillData("AWS Certified Solutions Architect"),
       getUnifiedSkillData("Kubernetes Administrator (CKA)")
@@ -59,24 +49,24 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
   },
   "125": {
     title: "Frontend Engineer",
-    soc: "15-1252",
+    soc: "15-1254",
     specialized: [
       getUnifiedSkillData("React"),
       getUnifiedSkillData("TypeScript"),
       getUnifiedSkillData("Next.js"),
       getUnifiedSkillData("CSS/SASS"),
       getUnifiedSkillData("Performance Optimization"),
-      getUnifiedSkillData("React Native"),
-      getUnifiedSkillData("Flutter"),
-      getUnifiedSkillData("GraphQL")
+      getUnifiedSkillData("React Native"),  // Added as specialized for Frontend Engineer
+      getUnifiedSkillData("Flutter"),       // Added as specialized for Frontend Engineer
+      getUnifiedSkillData("GraphQL")        // Added as specialized for Frontend Engineer
     ],
-    common: getCommonSkillsWithoutDuplicateGit([
-      "Problem Solving",
-      "Code Review",
-      "Agile Methodologies",
-      "Git Version Control",
-      "Communication"
-    ]),
+    common: [
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Code Review"),
+      getUnifiedSkillData("Agile Methodologies"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")
+    ],
     certifications: [
       getUnifiedSkillData("AWS Certified Developer - Associate"),
       getUnifiedSkillData("Google Mobile Web Specialist")
@@ -92,13 +82,13 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       getUnifiedSkillData("Team Leadership"),
       getUnifiedSkillData("Project Management")
     ],
-    common: getCommonSkillsWithoutDuplicateGit([
-      "Strategic Planning",
-      "Stakeholder Management",
-      "Agile Methodologies",
-      "Git Version Control",
-      "Communication"
-    ]),
+    common: [
+      getUnifiedSkillData("Strategic Planning"),
+      getUnifiedSkillData("Stakeholder Management"),
+      getUnifiedSkillData("Agile Methodologies"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")  // Added Communication to common skills
+    ],
     certifications: [
       getUnifiedSkillData("Project Management Professional (PMP)"),
       getUnifiedSkillData("Certified Scrum Master (CSM)")
@@ -114,13 +104,13 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       getUnifiedSkillData("Terraform"),
       getUnifiedSkillData("AWS")
     ],
-    common: getCommonSkillsWithoutDuplicateGit([
-      "Linux Administration",
-      "Shell Scripting",
-      "Git Version Control",
-      "Problem Solving",
-      "Communication"
-    ]),
+    common: [
+      getUnifiedSkillData("Linux Administration"),
+      getUnifiedSkillData("Shell Scripting"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Communication")  // Added Communication to common skills
+    ],
     certifications: [
       getUnifiedSkillData("AWS Certified DevOps Engineer"),
       getUnifiedSkillData("Certified Kubernetes Administrator"),
@@ -128,10 +118,3 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
     ]
   }
 };
-
-console.log('Role skills loaded:', Object.keys(roleSkills).length, 'roles');
-console.log('Git Version Control occurrences:', 
-  Object.values(roleSkills).reduce((count, role) => 
-    count + role.common.filter(skill => skill.title === "Git Version Control").length, 0
-  )
-);
