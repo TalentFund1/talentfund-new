@@ -71,48 +71,46 @@ export const SkillProfileMatrix = () => {
   };
 
   const filteredSkills = (() => {
-    let skills: UnifiedSkill[] = [];
-    
-    // Get skills based on skill type
-    if (skillType === "all") {
-      skills = [
-        ...currentRoleSkills.specialized.map(transformSkillToBenchmarkFormat),
-        ...currentRoleSkills.common.map(transformSkillToBenchmarkFormat),
-        ...currentRoleSkills.certifications.map(transformSkillToBenchmarkFormat)
-      ];
-    } else if (skillType === "specialized") {
-      skills = currentRoleSkills.specialized.map(transformSkillToBenchmarkFormat);
-    } else if (skillType === "common") {
-      skills = currentRoleSkills.common.map(transformSkillToBenchmarkFormat);
-    } else if (skillType === "certification") {
-      skills = currentRoleSkills.certifications.map(transformSkillToBenchmarkFormat);
+    // First, get all role skills based on skill type
+    let roleSkills: UnifiedSkill[] = [];
+    if (skillType === "all" || skillType === "specialized") {
+      roleSkills = [...roleSkills, ...currentRoleSkills.specialized.map(transformSkillToBenchmarkFormat)];
+    }
+    if (skillType === "all" || skillType === "common") {
+      roleSkills = [...roleSkills, ...currentRoleSkills.common.map(transformSkillToBenchmarkFormat)];
+    }
+    if (skillType === "all" || skillType === "certification") {
+      roleSkills = [...roleSkills, ...currentRoleSkills.certifications.map(transformSkillToBenchmarkFormat)];
     }
 
-    console.log('Initial filtered skills:', skills.map(s => s.title));
+    console.log('Initial role skills:', roleSkills.map(s => s.title));
 
-    // Filter skills based on category and toggle state
-    let sortedSkills = skills.filter(skill => {
-      if (selectedCategory !== 'all') {
-        const skillCategory = getCategoryForSkill(skill, id || "123");
-        return skillCategory === selectedCategory;
-      }
-      return true;
-    });
-
-    // Add any toggled skills that aren't already in the list
+    // Add toggled skills that aren't already in the role skills
+    const allSkills = [...roleSkills];
     Array.from(toggledSkills).forEach(skillTitle => {
-      if (!sortedSkills.some(skill => skill.title === skillTitle)) {
+      if (!allSkills.some(skill => skill.title === skillTitle)) {
         const unifiedSkill = getUnifiedSkillData(skillTitle);
         if (unifiedSkill) {
-          sortedSkills.push(unifiedSkill);
+          allSkills.push(unifiedSkill);
         }
       }
     });
 
-    console.log('Skills after category filtering:', sortedSkills.map(s => s.title));
+    console.log('Skills after adding toggled:', allSkills.map(s => s.title));
+
+    // Apply category filtering if needed
+    let filteredSkills = allSkills;
+    if (selectedCategory !== 'all') {
+      filteredSkills = allSkills.filter(skill => {
+        const skillCategory = getCategoryForSkill(skill, id || "123");
+        return skillCategory === selectedCategory;
+      });
+    }
+
+    console.log('Skills after category filtering:', filteredSkills.map(s => s.title));
 
     // Sort skills based on toggle state first
-    sortedSkills.sort((a, b) => {
+    let sortedSkills = filteredSkills.sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
       
@@ -123,8 +121,7 @@ export const SkillProfileMatrix = () => {
 
     // Apply additional sorting if specified
     if (sortField && sortDirection) {
-      const toggleSortedSkills = [...sortedSkills];
-      toggleSortedSkills.sort((a, b) => {
+      sortedSkills = [...sortedSkills].sort((a, b) => {
         // Preserve toggle-based ordering within each group
         const aIsToggled = toggledSkills.has(a.title);
         const bIsToggled = toggledSkills.has(b.title);
@@ -143,7 +140,6 @@ export const SkillProfileMatrix = () => {
         }
         return 0;
       });
-      sortedSkills = toggleSortedSkills;
     }
 
     console.log('Final filtered and sorted skills:', sortedSkills.map(s => s.title));
