@@ -15,13 +15,10 @@ import { getUnifiedSkillData } from './data/skillDatabaseService';
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
 
-const INITIAL_VISIBLE_COUNT = 12;
-
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -78,21 +75,20 @@ export const SkillProfileMatrix = () => {
     skills = [...skills, ...additionalSkills];
     console.log('Combined skills array:', skills.length);
 
-    let filteredSkills = skills.filter(skill => {
-      // Apply category filter
-      if (selectedCategory !== 'all') {
+    // Filter by selected category first
+    let categoryFilteredSkills = skills;
+    if (selectedCategory !== 'all') {
+      categoryFilteredSkills = skills.filter(skill => {
         const skillCategory = getCategoryForSkill(skill, id || "123");
-        if (skillCategory !== selectedCategory) {
-          return false;
-        }
-      }
-      return true;
-    });
+        console.log(`Filtering skill ${skill.title}: category=${skillCategory}, selected=${selectedCategory}`);
+        return skillCategory === selectedCategory;
+      });
+    }
 
-    console.log('After filtering:', filteredSkills.length);
+    console.log('After category filtering:', categoryFilteredSkills.length);
 
     // Sort skills based on toggle state first
-    filteredSkills.sort((a, b) => {
+    categoryFilteredSkills.sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
       
@@ -103,7 +99,7 @@ export const SkillProfileMatrix = () => {
 
     // Apply additional sorting if specified
     if (sortField && sortDirection) {
-      const toggleSortedSkills = [...filteredSkills];
+      const toggleSortedSkills = [...categoryFilteredSkills];
       toggleSortedSkills.sort((a, b) => {
         // Preserve toggle-based ordering within each group
         const aIsToggled = toggledSkills.has(a.title);
@@ -123,11 +119,11 @@ export const SkillProfileMatrix = () => {
         }
         return 0;
       });
-      filteredSkills = toggleSortedSkills;
+      categoryFilteredSkills = toggleSortedSkills;
     }
 
-    console.log('Final filtered skills:', filteredSkills.length);
-    return filteredSkills;
+    console.log('Final filtered skills:', categoryFilteredSkills.length);
+    return categoryFilteredSkills;
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
