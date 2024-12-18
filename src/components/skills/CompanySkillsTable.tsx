@@ -13,11 +13,9 @@ export const CompanySkillsTable = () => {
     return acc;
   }, {} as Record<string, number>);
 
-  console.log('Processing toggled skills:', Array.from(toggledSkills));
-
   // Get unique skills with their counts
   const uniqueSkills = Array.from(new Set(Array.from(toggledSkills))).map(skillTitle => {
-    console.log('Getting data for skill:', skillTitle);
+    console.log('Getting data for unique toggled skill:', skillTitle);
     const skillData = getUnifiedSkillData(skillTitle);
     return {
       ...skillData,
@@ -28,20 +26,20 @@ export const CompanySkillsTable = () => {
   // Helper function to get the type
   const getSkillType = (skillTitle: string): string => {
     for (const role of Object.values(roleSkills)) {
-      if (role.specialized?.some(s => s.title === skillTitle)) {
+      if (role.specialized.some(s => s.title === skillTitle)) {
         return 'Specialized';
       }
-      if (role.common?.some(s => s.title === skillTitle)) {
+      if (role.common.some(s => s.title === skillTitle)) {
         return 'Common';
       }
-      if (role.certifications?.some(s => s.title === skillTitle)) {
+      if (role.certifications.some(s => s.title === skillTitle)) {
         return 'Certification';
       }
     }
     return 'Uncategorized';
   };
 
-  console.log('Displaying unique skills:', uniqueSkills);
+  console.log('Displaying unique toggled skills with counts:', uniqueSkills);
 
   return (
     <Card className="p-6 bg-white">
@@ -62,36 +60,28 @@ export const CompanySkillsTable = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {uniqueSkills.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={8} className="text-center py-4 text-muted-foreground">
-                    No skills found. Add skills to see them here.
+              {uniqueSkills.map((skill) => (
+                <TableRow key={skill.id} className="hover:bg-muted/5">
+                  <TableCell className="font-medium">{skill.title}</TableCell>
+                  <TableCell>{getSkillType(skill.title)}</TableCell>
+                  <TableCell>{skill.businessCategory}</TableCell>
+                  <TableCell>{skill.subcategory}</TableCell>
+                  <TableCell>{skill.weight}</TableCell>
+                  <TableCell className="text-right">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm bg-green-100 text-green-800">
+                      ↗ {skill.growth}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">{skill.salary}</TableCell>
+                  <TableCell className="text-center">
+                    <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm ${
+                      skill.count > 1 ? 'bg-primary-accent/10 text-primary-accent' : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {skill.count}
+                    </span>
                   </TableCell>
                 </TableRow>
-              ) : (
-                uniqueSkills.map((skill, index) => (
-                  <TableRow key={`${skill.title}-${index}`} className="hover:bg-muted/5">
-                    <TableCell className="font-medium">{skill.title}</TableCell>
-                    <TableCell>{getSkillType(skill.title)}</TableCell>
-                    <TableCell>{skill.businessCategory || 'Information Technology'}</TableCell>
-                    <TableCell>{skill.subcategory || 'General'}</TableCell>
-                    <TableCell>{skill.weight || 'technical'}</TableCell>
-                    <TableCell className="text-right">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm bg-green-100 text-green-800">
-                        ↗ {skill.growth || '0%'}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">{skill.salary || '$150,000'}</TableCell>
-                    <TableCell className="text-center">
-                      <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm ${
-                        skill.count > 1 ? 'bg-primary-accent/10 text-primary-accent' : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {skill.count}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
+              ))}
             </TableBody>
           </Table>
         </div>

@@ -1,10 +1,8 @@
 import { UnifiedSkill } from '../types/SkillTypes';
 import { skills, getSkillById, getSkillByTitle } from './skillsData';
 
-// Normalize skill titles
+// Normalize skill titles (moved from universalSkillsDatabase.ts)
 export const normalizeSkillTitle = (title: string): string => {
-  if (!title) return '';
-  
   if (title.toLowerCase().includes('certification') || 
       title.toLowerCase().includes('certificate')) {
     return title.replace(/certificate/i, 'Certification')
@@ -13,7 +11,7 @@ export const normalizeSkillTitle = (title: string): string => {
   return title;
 };
 
-// Get unified skill data
+// Get unified skill data (combines functionality from both database files)
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
