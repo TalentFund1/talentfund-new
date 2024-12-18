@@ -1,19 +1,21 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
-import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "./context/ToggledSkillsContext";
+import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
-import { getUnifiedSkillData } from './data/skillDatabaseService';
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
+
+const STORAGE_KEY = 'added-skills';
+const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
@@ -27,9 +29,22 @@ export const SkillProfileMatrix = () => {
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
+  useEffect(() => {
+    if (id) {
+      try {
+        const savedSkills = localStorage.getItem(getStorageKey(id));
+        if (savedSkills) {
+          const parsedSkills = JSON.parse(savedSkills);
+          console.log('Loading saved skills:', { roleId: id, skills: parsedSkills });
+          setToggledSkills(new Set([...toggledSkills, ...parsedSkills]));
+        }
+      } catch (error) {
+        console.error('Error loading saved skills:', error);
+      }
+    }
+  }, [id]);
+
   const handleSort = (field: SortField) => {
-    console.log('Handling sort:', { currentField: sortField, newField: field, currentDirection: sortDirection });
-    
     if (sortField === field) {
       if (sortDirection === 'asc') {
         setSortDirection('desc');
@@ -67,23 +82,12 @@ export const SkillProfileMatrix = () => {
 
     console.log('Initial skills array:', skills.length);
 
-    // Create a map of existing role skills for faster lookup
-    const roleSkillsMap = new Set(skills.map(skill => skill.title));
-
-    // Get all toggled skills that aren't in the role's default skills
-    const additionalSkills = Array.from(toggledSkills)
-      .filter(skillTitle => !roleSkillsMap.has(skillTitle))
-      .map(skillTitle => {
-        // Get or create unified skill data for the additional skill
-        return getUnifiedSkillData(skillTitle);
-      });
-
-    // Combine role skills with additional toggled skills
-    let allSkills = [...skills, ...additionalSkills];
-
-    // Filter based on toggle state and category
-    let sortedSkills = allSkills.filter(skill => {
-      const isToggled = toggledSkills.has(skill.title);
+    let sortedSkills = skills.filter(skill => {
+      const isInCurrentRole = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].some(roleSkill => roleSkill.title === skill.title);
 
       // Apply category filter
       if (selectedCategory !== 'all') {
@@ -93,7 +97,7 @@ export const SkillProfileMatrix = () => {
         }
       }
 
-      return isToggled;
+      return isInCurrentRole || toggledSkills.has(skill.title); // Include toggled skills
     });
 
     console.log('After filtering:', sortedSkills.length);
@@ -173,7 +177,6 @@ export const SkillProfileMatrix = () => {
             paginatedSkills={filteredSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={(skillTitle) => {
-              setIsDirty(true);
               const newToggledSkills = new Set(toggledSkills);
               if (newToggledSkills.has(skillTitle)) {
                 newToggledSkills.delete(skillTitle);
@@ -181,9 +184,11 @@ export const SkillProfileMatrix = () => {
                 newToggledSkills.add(skillTitle);
               }
               setToggledSkills(newToggledSkills);
+              setIsDirty(true);
+              
               toast({
                 title: "Skill Updated",
-                description: `${skillTitle} has been ${toggledSkills.has(skillTitle) ? 'removed from' : 'added to'} your skills.`,
+                description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
               });
             }}
             sortField={sortField}
