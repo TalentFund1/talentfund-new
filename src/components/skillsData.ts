@@ -19,7 +19,10 @@ const getUniqueSkills = (skillsArray: UnifiedSkill[]) => {
   });
 };
 
-// Categorize skills into technical and soft skills
+// Get all unique skills without filtering by category
+export const allSkillsList = getUniqueSkills(skills);
+
+// Categorize skills into technical and soft skills for backward compatibility
 export const technicalSkillsList = getUniqueSkills(skills.filter(skill => 
   skill.category === 'specialized' && skill.weight === 'technical'
 ));
@@ -35,9 +38,11 @@ export const softSkills = softSkillsList.map(skill => skill.title);
 // Export full skill objects
 export const technicalSkillObjects = technicalSkillsList;
 export const softSkillObjects = softSkillsList;
+export const allSkillObjects = allSkillsList;
 
 console.log('Loaded skills:', {
   total: skills.length,
+  allUnique: allSkillsList.length,
   technical: technicalSkills.length,
   soft: softSkills.length
 });
