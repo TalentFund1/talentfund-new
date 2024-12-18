@@ -2,7 +2,7 @@ import { UnifiedSkill } from '../types/SkillTypes';
 import { skills, getSkillById, getSkillByTitle } from './skillsData';
 
 // Normalize skill titles (moved from universalSkillsDatabase.ts)
-const normalizeSkillTitle = (title: string): string => {
+export const normalizeSkillTitle = (title: string): string => {
   if (title.toLowerCase().includes('certification') || 
       title.toLowerCase().includes('certificate')) {
     return title.replace(/certificate/i, 'Certification')
