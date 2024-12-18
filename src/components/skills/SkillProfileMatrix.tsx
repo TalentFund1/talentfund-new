@@ -10,6 +10,8 @@ import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -161,7 +163,15 @@ export const SkillProfileMatrix = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white mb-8">
-        <SkillMappingHeader skillCount={toggledSkillCount} />
+        <div className="flex justify-between items-center">
+          <SkillMappingHeader skillCount={toggledSkillCount} />
+          <Button className="bg-[#1F2144] hover:bg-[#1F2144]/90">
+            <div className="w-5 h-5 rounded-full border-[1.75px] border-white flex items-center justify-center">
+              <Plus className="h-3 w-3 stroke-[2]" />
+            </div>
+            <span className="ml-2 text-sm font-medium">Add Skill</span>
+          </Button>
+        </div>
         
         <Separator className="my-4" />
 
