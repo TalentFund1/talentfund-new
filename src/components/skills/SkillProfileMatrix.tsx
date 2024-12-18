@@ -9,9 +9,9 @@ import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { AddSkillDropdown } from './dropdown/AddSkillDropdown';
 import { SkillProfileTable } from './table/SkillProfileTable';
-import { useParams } from 'react-router-dom';
 import { filterSkillsByType } from './utils/filterUtils';
 import { sortSkills } from './utils/sortUtils';
+import { useParams } from 'react-router-dom';
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
