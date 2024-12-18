@@ -1,63 +1,73 @@
 import { getUnifiedSkillData } from './skillDatabaseService';
 import { RoleSkillData } from '../types/SkillTypes';
+import { Skills, getAllSkills } from './skills/allSkills';
 
-// Helper function to get skills based on their category from the unified database
+// Helper function to get skills and categorize them based on their category from allSkills
 const getSkillsByCategory = (titles: string[]) => {
   console.log('Getting skills for titles:', titles);
-  return titles.map(title => getUnifiedSkillData(title));
+  return titles.map(title => {
+    const skill = getUnifiedSkillData(title);
+    console.log(`Categorized skill ${title}:`, skill.category);
+    return skill;
+  });
+};
+
+// Helper function to filter skills by category from allSkills
+const filterSkillsByCategory = (skills: ReturnType<typeof getSkillsByCategory>, category: 'specialized' | 'common' | 'certification') => {
+  return skills.filter(skill => skill.category === category);
 };
 
 export const roleSkills: { [key: string]: RoleSkillData } = {
   "123": {
     title: "AI Engineer",
     soc: "15-2051",
-    specialized: getSkillsByCategory([
+    specialized: filterSkillsByCategory(getSkillsByCategory([
       "Machine Learning",
       "Deep Learning",
       "Natural Language Processing",
       "Computer Vision",
       "TensorFlow",
       "GraphQL"
-    ]),
-    common: getSkillsByCategory([
+    ]), 'specialized'),
+    common: filterSkillsByCategory(getSkillsByCategory([
       "Python",
       "Problem Solving",
       "Technical Writing",
       "Git Version Control",
       "Communication"
-    ]),
-    certifications: getSkillsByCategory([
+    ]), 'common'),
+    certifications: filterSkillsByCategory(getSkillsByCategory([
       "AWS Certified Machine Learning - Specialty",
       "TensorFlow Developer Certificate"
-    ])
+    ]), 'certification')
   },
   "124": {
     title: "Backend Engineer",
     soc: "15-1252",
-    specialized: getSkillsByCategory([
+    specialized: filterSkillsByCategory(getSkillsByCategory([
       "Node.js",
       "Database Design",
       "API Development",
       "System Architecture",
       "Kubernetes",
       "GraphQL"
-    ]),
-    common: getSkillsByCategory([
+    ]), 'specialized'),
+    common: filterSkillsByCategory(getSkillsByCategory([
       "Problem Solving",
       "Code Review",
       "Agile Methodologies",
       "Git Version Control",
       "Communication"
-    ]),
-    certifications: getSkillsByCategory([
+    ]), 'common'),
+    certifications: filterSkillsByCategory(getSkillsByCategory([
       "AWS Certified Solutions Architect",
       "Kubernetes Administrator (CKA)"
-    ])
+    ]), 'certification')
   },
   "125": {
     title: "Frontend Engineer",
     soc: "15-1252",
-    specialized: getSkillsByCategory([
+    specialized: filterSkillsByCategory(getSkillsByCategory([
       "React",
       "TypeScript",
       "Next.js",
@@ -66,63 +76,63 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       "React Native",
       "Flutter",
       "GraphQL"
-    ]),
-    common: getSkillsByCategory([
+    ]), 'specialized'),
+    common: filterSkillsByCategory(getSkillsByCategory([
       "Problem Solving",
       "Code Review",
       "Agile Methodologies",
       "Git Version Control",
       "Communication"
-    ]),
-    certifications: getSkillsByCategory([
+    ]), 'common'),
+    certifications: filterSkillsByCategory(getSkillsByCategory([
       "AWS Certified Developer - Associate",
       "Google Mobile Web Specialist"
-    ])
+    ]), 'certification')
   },
   "126": {
     title: "Engineering Manager",
     soc: "11-9041",
-    specialized: getSkillsByCategory([
+    specialized: filterSkillsByCategory(getSkillsByCategory([
       "System Design",
       "Technical Architecture",
       "Risk Management",
       "Team Leadership",
       "Project Management"
-    ]),
-    common: getSkillsByCategory([
+    ]), 'specialized'),
+    common: filterSkillsByCategory(getSkillsByCategory([
       "Strategic Planning",
       "Stakeholder Management",
       "Agile Methodologies",
       "Git Version Control",
       "Communication"
-    ]),
-    certifications: getSkillsByCategory([
+    ]), 'common'),
+    certifications: filterSkillsByCategory(getSkillsByCategory([
       "Project Management Professional (PMP)",
       "Certified Scrum Master (CSM)"
-    ])
+    ]), 'certification')
   },
   "127": {
     title: "DevOps Engineer",
     soc: "15-1244",
-    specialized: getSkillsByCategory([
+    specialized: filterSkillsByCategory(getSkillsByCategory([
       "Docker",
       "Kubernetes",
       "Jenkins",
       "Terraform",
       "AWS"
-    ]),
-    common: getSkillsByCategory([
+    ]), 'specialized'),
+    common: filterSkillsByCategory(getSkillsByCategory([
       "Linux Administration",
       "Shell Scripting",
       "Git Version Control",
       "Problem Solving",
       "Communication"
-    ]),
-    certifications: getSkillsByCategory([
+    ]), 'common'),
+    certifications: filterSkillsByCategory(getSkillsByCategory([
       "AWS Certified DevOps Engineer",
       "Certified Kubernetes Administrator",
       "HashiCorp Certified Terraform Associate"
-    ])
+    ]), 'certification')
   }
 };
 
