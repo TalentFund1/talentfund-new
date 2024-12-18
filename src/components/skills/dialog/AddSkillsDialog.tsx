@@ -13,9 +13,17 @@ export const AddSkillsDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { toast } = useToast();
 
-  // Safely initialize skills with proper type checking
-  const skills = getAllSkills();
-  const allSkills: UnifiedSkill[] = Array.isArray(skills) ? skills : [];
+  // Safely initialize skills with proper type checking and default value
+  const allSkills: UnifiedSkill[] = (() => {
+    try {
+      const skills = getAllSkills();
+      console.log('Retrieved skills:', skills);
+      return Array.isArray(skills) ? skills : [];
+    } catch (error) {
+      console.error('Error getting skills:', error);
+      return [];
+    }
+  })();
 
   console.log('AddSkillsDialog rendered with:', {
     selectedSkillsCount: selectedSkills.length,
@@ -68,7 +76,7 @@ export const AddSkillsDialog = () => {
             <CommandGroup>
               {allSkills.map((skill) => (
                 <CommandItem
-                  key={skill.id}
+                  key={skill.title}
                   value={skill.title}
                   onSelect={() => handleSelectSkill(skill.title)}
                 >
