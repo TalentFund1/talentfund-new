@@ -1,4 +1,4 @@
-import { SkillWeight } from '../../../types/SkillTypes';
+import { SkillWeight } from '../../types/SkillTypes';
 
 // Define the skill categories
 const specializedSkills = [
