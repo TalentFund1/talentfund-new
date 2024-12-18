@@ -1,17 +1,8 @@
 import { UnifiedSkill } from '../types/SkillTypes';
-import { skills, getSkillById, getSkillByTitle } from './skillsData';
+import { getAllSkills, getSkillById, getSkillByTitle } from './skillsData';
+import { normalizeSkillTitle } from '../utils/normalization';
 
-// Normalize skill titles (moved from universalSkillsDatabase.ts)
-export const normalizeSkillTitle = (title: string): string => {
-  if (title.toLowerCase().includes('certification') || 
-      title.toLowerCase().includes('certificate')) {
-    return title.replace(/certificate/i, 'Certification')
-               .replace(/certified/i, 'Certification');
-  }
-  return title;
-};
-
-// Get unified skill data (combines functionality from both database files)
+// Get unified skill data
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
@@ -43,10 +34,10 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
 };
 
 // Export additional utility functions
-export const getAllSkills = (): UnifiedSkill[] => skills;
+export { getAllSkills };
 
 export const getSkillsByWeight = (weight: string): UnifiedSkill[] => {
-  return skills.filter(skill => skill.weight === weight);
+  return getAllSkills().filter(skill => skill.weight === weight);
 };
 
 console.log('Skill database service initialized');
