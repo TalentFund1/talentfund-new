@@ -10,7 +10,6 @@ import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
-import { getUnifiedSkillData } from './data/skillDatabaseService';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -31,43 +30,80 @@ export const SkillProfileMatrix = () => {
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
-  // Get current role skills and combine with toggled skills
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-  
-  const getSkillsWithData = () => {
-    return Array.from(toggledSkills).map(skillTitle => {
-      console.log('Getting data for toggled skill:', skillTitle);
-      return getUnifiedSkillData(skillTitle);
+  // Load saved skills on component mount
+  useEffect(() => {
+    if (id) {
+      try {
+        const savedSkills = localStorage.getItem(getStorageKey(id));
+        if (savedSkills) {
+          const parsedSkills = JSON.parse(savedSkills);
+          console.log('Loading saved skills:', { roleId: id, skills: parsedSkills });
+          setToggledSkills(new Set([...toggledSkills, ...parsedSkills]));
+        }
+      } catch (error) {
+        console.error('Error loading saved skills:', error);
+      }
+    }
+  }, [id]);
+
+  const handleToggleSkill = (skillTitle: string) => {
+    const newToggledSkills = new Set(toggledSkills);
+    if (newToggledSkills.has(skillTitle)) {
+      console.log('Removing skill:', skillTitle);
+      newToggledSkills.delete(skillTitle);
+    } else {
+      console.log('Adding skill:', skillTitle);
+      newToggledSkills.add(skillTitle);
+    }
+    setToggledSkills(newToggledSkills);
+    setIsDirty(true);
+    
+    toast({
+      title: "Skill Updated",
+      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
     });
   };
 
-  const handleSort = (field: 'growth' | 'salary' | null) => {
-    console.log('Handling sort for field:', field);
-    if (field === sortField) {
-      // Toggle direction if same field
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortField(null);
+        setSortDirection(null);
+      }
     } else {
-      // Set new field and default to ascending
       setSortField(field);
       setSortDirection('asc');
     }
   };
 
-  const filteredSkills = (() => {
-    // Get all skills with their full data
-    const skillsWithData = getSkillsWithData();
-    console.log('Skills with data:', skillsWithData);
+  // Get only the skills for the current role
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-    let skills = skillsWithData;
-    if (skillType === "specialized") {
-      skills = skills.filter(skill => skill.category === "specialized");
+  const filteredSkills = (() => {
+    let skills = [];
+    if (skillType === "all") {
+      skills = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ];
+    } else if (skillType === "specialized") {
+      skills = currentRoleSkills.specialized;
     } else if (skillType === "common") {
-      skills = skills.filter(skill => skill.category === "common");
+      skills = currentRoleSkills.common;
     } else if (skillType === "certification") {
-      skills = skills.filter(skill => skill.category === "certification");
+      skills = currentRoleSkills.certifications;
     }
 
     let sortedSkills = skills.filter(skill => {
+      const isInCurrentRole = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].some(roleSkill => roleSkill.title === skill.title);
+
       // Apply category filter
       if (selectedCategory !== 'all') {
         const skillCategory = getCategoryForSkill(skill, id || "123");
@@ -75,12 +111,31 @@ export const SkillProfileMatrix = () => {
           return false;
         }
       }
-      return true;
+
+      return isInCurrentRole;
     });
 
-    // Apply sorting if specified
+    // Sort skills based on toggle state first
+    sortedSkills.sort((a, b) => {
+      const aIsToggled = toggledSkills.has(a.title);
+      const bIsToggled = toggledSkills.has(b.title);
+      
+      if (aIsToggled && !bIsToggled) return -1;
+      if (!aIsToggled && bIsToggled) return 1;
+      return 0;
+    });
+
+    // Apply additional sorting if specified
     if (sortField && sortDirection) {
-      sortedSkills.sort((a, b) => {
+      const toggleSortedSkills = [...sortedSkills];
+      toggleSortedSkills.sort((a, b) => {
+        // Preserve toggle-based ordering within each group
+        const aIsToggled = toggledSkills.has(a.title);
+        const bIsToggled = toggledSkills.has(b.title);
+        if (aIsToggled !== bIsToggled) {
+          return aIsToggled ? -1 : 1;
+        }
+
         if (sortField === 'growth') {
           const aGrowth = parseFloat(a.growth);
           const bGrowth = parseFloat(b.growth);
@@ -92,19 +147,16 @@ export const SkillProfileMatrix = () => {
         }
         return 0;
       });
+      sortedSkills = toggleSortedSkills;
     }
 
     return sortedSkills;
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
-  const toggledSkillCount = filteredSkills.length;
-
-  console.log('Filtered skills for display:', {
-    totalSkills: filteredSkills.length,
-    toggledSkills: Array.from(toggledSkills),
-    filteredSkills: filteredSkills.map(s => s.title)
-  });
+  const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
+    filteredSkills.some(fs => fs.title === skill)
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -130,16 +182,7 @@ export const SkillProfileMatrix = () => {
           <SkillProfileMatrixTable 
             paginatedSkills={filteredSkills}
             toggledSkills={toggledSkills}
-            onToggleSkill={(skillTitle) => {
-              const newToggledSkills = new Set(toggledSkills);
-              if (newToggledSkills.has(skillTitle)) {
-                newToggledSkills.delete(skillTitle);
-              } else {
-                newToggledSkills.add(skillTitle);
-              }
-              setToggledSkills(newToggledSkills);
-              setIsDirty(true);
-            }}
+            onToggleSkill={handleToggleSkill}
             sortField={sortField}
             sortDirection={sortDirection}
             onSort={handleSort}
