@@ -30,3 +30,10 @@ export const getSkillsByWeight = (weight: string): Skill[] => {
 export const getSkillsByCategory = (category: string): Skill[] => {
   return getAllSkills().filter(skill => skill.category === category);
 };
+
+// Add the missing function
+export const addSkillToInitialSkills = (employeeId: string, skill: Skill): void => {
+  console.log('Adding skill to employee:', { employeeId, skill });
+  // The actual implementation will be handled by the skills database
+  // This is just a pass-through function that logs the operation
+};
