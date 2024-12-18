@@ -11,6 +11,7 @@ import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUti
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
+import { getSkillCategory } from './data/skills/categories/skillCategories';
 
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -45,22 +46,12 @@ export const SkillProfileMatrix = () => {
   const filteredSkills = (() => {
     console.log('Filtering skills with type:', skillType);
     
-    let skills = [];
-    
-    // Initial category filtering
-    if (skillType === "all") {
-      skills = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ];
-    } else if (skillType === "specialized") {
-      skills = [...currentRoleSkills.specialized];
-    } else if (skillType === "common") {
-      skills = [...currentRoleSkills.common];
-    } else if (skillType === "certification") {
-      skills = [...currentRoleSkills.certifications];
-    }
+    // Get all skills first
+    let skills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
 
     console.log('Initial skills array:', skills.length);
 
@@ -70,21 +61,21 @@ export const SkillProfileMatrix = () => {
       .filter(skillTitle => !allSkillTitles.has(skillTitle))
       .map(skillTitle => {
         console.log('Adding skill:', skillTitle);
-        const skillData = getUnifiedSkillData(skillTitle);
-        // Only add the skill if it matches the selected category
-        if (skillType === "all" || 
-            (skillType === "specialized" && skillData.category === "specialized") ||
-            (skillType === "common" && skillData.category === "common") ||
-            (skillType === "certification" && skillData.category === "certification")) {
-          return skillData;
-        }
-        return null;
-      })
-      .filter(skill => skill !== null); // Remove null values
+        return getUnifiedSkillData(skillTitle);
+      });
 
     // Combine role skills with additional skills
     skills = [...skills, ...additionalSkills];
     console.log('Combined skills array:', skills.length);
+
+    // Filter by skill type using the centralized category system
+    if (skillType !== "all") {
+      skills = skills.filter(skill => {
+        const category = getSkillCategory(skill.title);
+        console.log(`Filtering skill ${skill.title}: category=${category}, selected=${skillType}`);
+        return category === skillType;
+      });
+    }
 
     // Filter by selected category first
     let categoryFilteredSkills = skills;
