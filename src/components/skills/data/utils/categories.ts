@@ -1,4 +1,4 @@
-import { SkillWeight } from '../../types/SkillTypes';
+import { SkillWeight } from '../../../types/SkillTypes';
 
 // Define the skill categories
 const specializedSkills = [
@@ -20,7 +20,8 @@ const specializedSkills = [
   'System Design',
   'Technical Architecture',
   'Risk Management',
-  'Git',  // Added Git to specialized skills
+  'Git Version Control',
+  'Git',  // Both Git and Git Version Control are specialized skills
   'CSS/SASS',
   'Team Leadership'
 ];
@@ -97,7 +98,7 @@ export const getSubcategory = (skillTitle: string): string => {
     'React': 'Frontend Frameworks',
     'Next.js': 'Frontend Frameworks',
     'Git Version Control': 'Development Tools',
-    'Git': 'Development Tools'  // Added Git mapping
+    'Git': 'Development Tools'  // Both Git and Git Version Control map to Development Tools
   };
 
   return subcategories[skillTitle] || 'Development Tools';
@@ -119,7 +120,8 @@ export const getBusinessCategory = (skillTitle: string): string => {
     'Node.js': 'Information Technology',
     'React': 'Information Technology',
     'Next.js': 'Information Technology',
-    'Git': 'Information Technology',  // Added Git mapping
+    'Git Version Control': 'Information Technology',
+    'Git': 'Information Technology',  // Both Git and Git Version Control are IT
     'Communication': 'Media and Communications',
     'Technical Writing': 'Media and Communications',
     'Problem Solving': 'Physical and Inherent Abilities',
@@ -133,8 +135,7 @@ export const getBusinessCategory = (skillTitle: string): string => {
     'Stakeholder Management': 'Initiative and Leadership',
     'System Design': 'Information Technology',
     'Database Design': 'Information Technology',
-    'Technical Architecture': 'Information Technology',
-    'Git Version Control': 'Development Tools'
+    'Technical Architecture': 'Information Technology'
   };
   
   return categories[skillTitle] || 'Information Technology';
@@ -147,7 +148,8 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'System Design',
     'Technical Architecture',
     'Team Leadership',
-    'Git'  // Added Git as a critical skill
+    'Git Version Control',
+    'Git'  // Both Git and Git Version Control are critical skills
   ];
 
   const technicalSkills = [
