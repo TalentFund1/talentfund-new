@@ -91,5 +91,70 @@ export const softSkills: UnifiedSkill[] = [
     salary: "$130,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL023',
+    title: "Project Management",
+    subcategory: "Management",
+    category: "common",
+    businessCategory: "Project Management",
+    weight: "critical",
+    level: "advanced",
+    growth: "18%",
+    salary: "$170,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL024',
+    title: "Risk Management",
+    subcategory: "Management",
+    category: "common",
+    businessCategory: "Risk and Compliance",
+    weight: "critical",
+    level: "advanced",
+    growth: "16%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL025',
+    title: "Strategic Planning",
+    subcategory: "Management",
+    category: "common",
+    businessCategory: "Initiative and Leadership",
+    weight: "critical",
+    level: "advanced",
+    growth: "17%",
+    salary: "$175,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL026',
+    title: "System Design",
+    subcategory: "Architecture",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "15%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL027',
+    title: "Technical Architecture",
+    subcategory: "Architecture",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "16%",
+    salary: "$175,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];
