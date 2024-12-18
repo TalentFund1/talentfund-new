@@ -108,8 +108,6 @@ export const generateSkillId = (title: string): string => {
 
 // Helper function to determine skill category
 export const getSkillCategory = (skillTitle: string): 'specialized' | 'common' | 'certification' => {
-  console.log('Categorizing skill:', skillTitle);
-  
   // First check exact matches
   if (specializedSkills.includes(skillTitle)) {
     console.log(`${skillTitle} found in specialized skills list`);
