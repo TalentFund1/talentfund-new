@@ -1,11 +1,9 @@
 export const getBusinessCategory = (skillTitle: string): string => {
   const categories: { [key: string]: string } = {
+    // Technical Skills
     'React Native': 'Information Technology',
     'Flutter': 'Information Technology',
     'GraphQL': 'Information Technology',
-    
-    // Technical Skills
-    'Amazon Web Services': 'Information Technology',
     'Machine Learning': 'Information Technology',
     'Deep Learning': 'Information Technology',
     'Python': 'Information Technology',
@@ -17,6 +15,10 @@ export const getBusinessCategory = (skillTitle: string): string => {
     'Node.js': 'Information Technology',
     'React': 'Information Technology',
     'Next.js': 'Information Technology',
+    'Git': 'Information Technology',
+    'Git Version Control': 'Information Technology',
+    'TensorFlow Developer Certificate': 'Information Technology',
+    'TensorFlow Developer Certification': 'Information Technology',
     
     // Soft Skills
     'Communication': 'Media and Communications',
@@ -40,8 +42,19 @@ export const getBusinessCategory = (skillTitle: string): string => {
     'Database Design': 'Information Technology',
     'Technical Architecture': 'Information Technology',
     
-    // Version Control
-    'Git Version Control': 'Development Tools'
+    // Certifications
+    'AWS Certified Machine Learning - Specialty': 'Information Technology',
+    'AWS Certified Solutions Architect': 'Information Technology',
+    'AWS Certified Developer - Associate': 'Information Technology',
+    'AWS Certified DevOps Engineer': 'Information Technology',
+    'Certified Kubernetes Administrator': 'Information Technology',
+    'HashiCorp Certified Terraform Associate': 'Information Technology',
+    'MongoDB Professional Developer': 'Information Technology',
+    'Google Mobile Web Specialist': 'Information Technology',
+    'Professional Scrum Developer': 'Information Technology',
+    'Project Management Professional (PMP)': 'Project Management',
+    'Certified Scrum Master (CSM)': 'Project Management',
+    'ITIL Foundation': 'Information Technology'
   };
   
   return categories[skillTitle] || 'Information Technology';

@@ -1,5 +1,6 @@
-export const getSkillWeight = (skillTitle: string): 'critical' | 'technical' | 'necessary' => {
-  // Critical skills - core competencies and essential skills
+import { SkillWeight } from '../../../types/SkillTypes';
+
+export const getSkillWeight = (skillTitle: string): SkillWeight => {
   const criticalSkills = [
     'Machine Learning',
     'Deep Learning',
@@ -8,22 +9,33 @@ export const getSkillWeight = (skillTitle: string): 'critical' | 'technical' | '
     'AWS Certified Solutions Architect',
     'AWS Certified Machine Learning - Specialty',
     'Cloud Architecture',
-    'Git',  // Added Git as a critical skill
-    'Team Leadership'
+    'Git',
+    'Git Version Control',
+    'Team Leadership',
+    'AWS',
+    'Kubernetes',
+    'Docker',
+    'Jenkins',
+    'Terraform'
   ];
 
-  // Technical skills - specialized technical competencies
   const technicalSkills = [
     'Node.js',
     'React',
     'TypeScript',
-    'Shell Scripting',  // Added Shell Scripting as technical skill
+    'Shell Scripting',
     'CSS/SASS',
     'Database Design',
-    'API Development'
+    'API Development',
+    'Flutter',
+    'GraphQL',
+    'Linux Administration',
+    'Python',
+    'TensorFlow',
+    'Natural Language Processing',
+    'Computer Vision'
   ];
 
-  // Check skill type
   if (criticalSkills.includes(skillTitle)) {
     console.log(`${skillTitle} categorized as critical skill`);
     return 'critical';
