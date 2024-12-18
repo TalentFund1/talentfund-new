@@ -1,5 +1,4 @@
-import { create } from 'zustand';
-import { useState } from 'react';
+import { create } from "zustand";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
@@ -12,54 +11,24 @@ interface SkillState {
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
-  originalStates: { [key: string]: SkillState };
-  hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
-  initializeState: (skillTitle: string, level: string, requirement: string) => void;
-  saveChanges: () => void;
-  cancelChanges: () => void;
+  setSkillState: (
+    skillTitle: string,
+    level: string,
+    requirement: string
+  ) => void;
+  resetSkills: () => void;
 }
 
-export const useSkillsMatrixStore = create<SkillsMatrixState>((set, get) => ({
+export const useSkillsMatrixStore = create<SkillsMatrixState>((set) => ({
   currentStates: {},
-  originalStates: {},
-  hasChanges: false,
-  setSkillState: (skillTitle, level, requirement) => {
-    console.log('Setting skill state:', { skillTitle, level, requirement });
+  setSkillState: (skillTitle, level, requirement) =>
     set((state) => ({
       currentStates: {
         ...state.currentStates,
-        [skillTitle]: { level, requirement }
+        [skillTitle]: { level, requirement },
       },
-      hasChanges: true
-    }));
-  },
-  initializeState: (skillTitle, level, requirement) => {
-    console.log('Initializing skill state:', { skillTitle, level, requirement });
-    const state = get();
-    if (!state.currentStates[skillTitle]) {
-      set((state) => ({
-        currentStates: {
-          ...state.currentStates,
-          [skillTitle]: { level, requirement }
-        },
-        originalStates: {
-          ...state.originalStates,
-          [skillTitle]: { level, requirement }
-        }
-      }));
-    }
-  },
-  saveChanges: () => {
-    console.log('Saving changes to skills matrix');
-    const { currentStates } = get();
-    set({ originalStates: { ...currentStates }, hasChanges: false });
-  },
-  cancelChanges: () => {
-    console.log('Canceling changes to skills matrix');
-    const { originalStates } = get();
-    set({ currentStates: { ...originalStates }, hasChanges: false });
-  }
+    })),
+  resetSkills: () => set({ currentStates: {} }),
 }));
 
 const getLevelPriority = (level: string = 'unspecified') => {
@@ -83,16 +52,6 @@ const getInterestPriority = (requirement: string) => {
   return priorities[requirement.toLowerCase()] ?? 3;
 };
 
-const getRoleLevelPriority = (level: string) => {
-  const priorities: { [key: string]: number } = {
-    'advanced': 0,
-    'intermediate': 1,
-    'beginner': 2,
-    'unspecified': 3
-  };
-  return priorities[level.toLowerCase()] ?? 3;
-};
-
 export const useSkillsMatrixState = (
   selectedCategory: string,
   selectedLevel: string,
@@ -103,68 +62,52 @@ export const useSkillsMatrixState = (
 
   const filterAndSortSkills = (employeeId: string) => {
     const employeeSkills = getEmployeeSkills(employeeId);
-    
-    return filterSkillsByCategory(employeeSkills, selectedCategory)
-      .filter(skill => {
-        let matchesLevel = true;
-        let matchesInterest = true;
-        let matchesSearch = true;
+    let filteredSkills = [...employeeSkills];
 
-        const currentSkillState = currentStates[skill.title];
-        const skillLevel = (currentSkillState?.level || skill.level || '').toLowerCase();
-        const requirement = (currentSkillState?.requirement || skill.requirement || '').toLowerCase();
+    // Filter by category
+    if (selectedCategory !== "all") {
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory, employeeId);
+    }
 
-        if (selectedLevel !== 'all') {
-          matchesLevel = skillLevel === selectedLevel.toLowerCase();
-        }
-
-        if (selectedInterest !== 'all') {
-          switch (selectedInterest.toLowerCase()) {
-            case 'skill_goal':
-              matchesInterest = requirement === 'required' || requirement === 'skill_goal';
-              break;
-            case 'not_interested':
-              matchesInterest = requirement === 'not_interested';
-              break;
-            case 'unknown':
-              matchesInterest = !requirement || requirement === 'unknown';
-              break;
-            default:
-              matchesInterest = requirement === selectedInterest.toLowerCase();
-          }
-        }
-
-        if (matrixSearchSkills.length > 0) {
-          matchesSearch = matrixSearchSkills.some(term => 
-            skill.title.toLowerCase().includes(term.toLowerCase())
-          );
-        }
-
-        return matchesLevel && matchesInterest && matchesSearch;
-      })
-      .sort((a, b) => {
-        const aRoleLevel = (a.roleLevel || 'unspecified').toLowerCase();
-        const bRoleLevel = (b.roleLevel || 'unspecified').toLowerCase();
-        
-        const roleLevelDiff = getRoleLevelPriority(aRoleLevel) - getRoleLevelPriority(bRoleLevel);
-        if (roleLevelDiff !== 0) return roleLevelDiff;
-
-        const aState = currentStates[a.title];
-        const bState = currentStates[b.title];
-        
-        const aLevel = (aState?.level || a.level || 'unspecified').toLowerCase();
-        const bLevel = (bState?.level || b.level || 'unspecified').toLowerCase();
-        
-        const levelDiff = getLevelPriority(aLevel) - getLevelPriority(bLevel);
-        if (levelDiff !== 0) return levelDiff;
-
-        const aInterest = (aState?.requirement || a.requirement || 'unknown').toLowerCase();
-        const bInterest = (bState?.requirement || b.requirement || 'unknown').toLowerCase();
-        const interestDiff = getInterestPriority(aInterest) - getInterestPriority(bInterest);
-        if (interestDiff !== 0) return interestDiff;
-
-        return a.title.localeCompare(b.title);
+    // Filter by level
+    if (selectedLevel !== "all") {
+      filteredSkills = filteredSkills.filter((skill) => {
+        const state = currentStates[skill.title];
+        return state?.level.toLowerCase() === selectedLevel.toLowerCase();
       });
+    }
+
+    // Filter by interest/requirement
+    if (selectedInterest !== "all") {
+      filteredSkills = filteredSkills.filter((skill) => {
+        const state = currentStates[skill.title];
+        return state?.requirement.toLowerCase() === selectedInterest.toLowerCase();
+      });
+    }
+
+    // Filter by search
+    if (matrixSearchSkills.length > 0) {
+      filteredSkills = filteredSkills.filter((skill) =>
+        matrixSearchSkills.includes(skill.title)
+      );
+    }
+
+    // Sort skills
+    return filteredSkills.sort((a, b) => {
+      const stateA = currentStates[a.title];
+      const stateB = currentStates[b.title];
+
+      // Sort by level first
+      const levelDiff = getLevelPriority(stateA?.level) - getLevelPriority(stateB?.level);
+      if (levelDiff !== 0) return levelDiff;
+
+      // Then by interest/requirement
+      const interestDiff = getInterestPriority(stateA?.requirement) - getInterestPriority(stateB?.requirement);
+      if (interestDiff !== 0) return interestDiff;
+
+      // Finally alphabetically
+      return a.title.localeCompare(b.title);
+    });
   };
 
   return { filterAndSortSkills };

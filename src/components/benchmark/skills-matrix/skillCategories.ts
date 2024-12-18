@@ -1,22 +1,26 @@
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { Skills } from '../../skills/data/skills/allSkills';
+import { UnifiedSkill } from "../../skills/types/SkillTypes";
+import { roleSkills } from "../../skills/data/roleSkills";
 
-export const filterSkillsByCategory = (skills: UnifiedSkill[], category: string) => {
-  console.log('Filtering skills by category:', category);
-  
-  if (category === "all") {
-    return skills;
-  }
+export const filterSkillsByCategory = (
+  skills: UnifiedSkill[],
+  selectedCategory: string,
+  roleId: string
+) => {
+  if (selectedCategory === "all") return skills;
 
-  return skills.filter(skill => skill.category === category.toLowerCase());
-};
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  if (!currentRoleSkills) return skills;
 
-export const getCategoryCount = (skills: UnifiedSkill[], category: string) => {
-  return filterSkillsByCategory(skills, category).length;
-};
-
-export const categorizeSkill = (skillName: string): string => {
-  const skill = Skills.all.find(s => s.title === skillName);
-  console.log('Categorizing skill:', { skillName, category: skill?.category || 'common' });
-  return skill?.category || 'common';
+  return skills.filter(skill => {
+    if (selectedCategory === "specialized") {
+      return currentRoleSkills.specialized.some(s => s.title === skill.title);
+    }
+    if (selectedCategory === "common") {
+      return currentRoleSkills.common.some(s => s.title === skill.title);
+    }
+    if (selectedCategory === "certification") {
+      return currentRoleSkills.certifications.some(s => s.title === skill.title);
+    }
+    return true;
+  });
 };
