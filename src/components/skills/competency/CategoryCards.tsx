@@ -12,8 +12,14 @@ export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCa
   // Get all toggled skills as an array
   const skillsArray = Array.from(toggledSkills);
 
+  console.log('CategoryCards - Toggled skills:', skillsArray);
+
   const categories = [
-    { id: "all", name: "All Skill Type", count: skillsArray.length },
+    { 
+      id: "all", 
+      name: "All Skill Type", 
+      count: skillsArray.length 
+    },
     { 
       id: "specialized", 
       name: "Specialized Skills", 
@@ -37,13 +43,10 @@ export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCa
     }
   ];
 
-  console.log('CategoryCards render:', {
-    totalSkills: skillsArray.length,
-    categories: categories.map(cat => ({
-      name: cat.name,
-      count: cat.count
-    }))
-  });
+  console.log('CategoryCards - Category counts:', categories.map(cat => ({
+    name: cat.name,
+    count: cat.count
+  })));
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
