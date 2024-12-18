@@ -1,6 +1,8 @@
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
-export const initialSkills = {
+// Employee-specific skills database
+const employeeSkills = {
   "124": [
     { ...getUnifiedSkillData("Node.js"), requirement: "preferred", isCompanySkill: true },
     { ...getUnifiedSkillData("Database Design"), requirement: "preferred", isCompanySkill: true },
@@ -24,7 +26,20 @@ export const initialSkills = {
 
 export const getEmployeeSkills = (id: string) => {
   console.log('Getting skills for employee:', id);
-  const skills = initialSkills[id as keyof typeof initialSkills] || [];
+  const skills = employeeSkills[id as keyof typeof employeeSkills] || [];
   console.log('Found employee skills:', skills);
   return skills;
+};
+
+// Helper functions for employee skills
+export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): string => {
+  const skills = getEmployeeSkills(employeeId);
+  const skill = skills.find(s => s.title === skillTitle);
+  return skill?.level || 'unspecified';
+};
+
+export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): string => {
+  const skills = getEmployeeSkills(employeeId);
+  const skill = skills.find(s => s.title === skillTitle);
+  return skill?.requirement || 'unknown';
 };

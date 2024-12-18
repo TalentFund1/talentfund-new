@@ -7,7 +7,7 @@ import { useSelectedSkills } from "./context/SelectedSkillsContext";
 import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { getEmployeeSkills } from "../employee/skills/employeeSkillsData";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
 
 const getLevelPriority = (level: string = 'unspecified') => {
