@@ -64,7 +64,9 @@ export const transformSkillForDisplay = (skill: UnifiedSkill) => {
 export { getAllSkills };
 
 export const getSkillsByWeight = (weight: string): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => skill.weight === weight).map(transformSkillForDisplay);
+  return getAllSkills()
+    .filter(skill => skill.weight === weight)
+    .map(transformSkillForDisplay);
 };
 
 console.log('Skill database service initialized');

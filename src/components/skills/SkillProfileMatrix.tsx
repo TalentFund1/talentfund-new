@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from 'react-router-dom';
@@ -11,6 +10,8 @@ import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUti
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { UnifiedSkill } from './types/SkillTypes';
+import { SkillProfileMatrixTable } from './SkillProfileMatrixTable';
+import { getUnifiedSkillData } from './data/skillDatabaseService';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -64,15 +65,9 @@ export const SkillProfileMatrix = () => {
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const transformSkillToBenchmarkFormat = (skill: any): UnifiedSkill => {
-    return {
-      ...skill,
-      benchmarks: {
-        B: true,
-        R: true,
-        M: true,
-        O: true
-      }
-    };
+    const unifiedSkill = getUnifiedSkillData(skill.title);
+    console.log('Transformed skill:', unifiedSkill);
+    return unifiedSkill;
   };
 
   const filteredSkills = (() => {
