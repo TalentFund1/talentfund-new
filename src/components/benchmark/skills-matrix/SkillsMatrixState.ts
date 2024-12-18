@@ -11,25 +11,14 @@ interface SkillState {
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
-  setSkillState: (
-    skillTitle: string,
-    level: string,
-    requirement: string
-  ) => void;
+  originalStates: { [key: string]: SkillState };
+  hasChanges: boolean;
+  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
   resetSkills: () => void;
+  initializeState: (skillTitle: string, level: string, requirement: string) => void;
+  saveChanges: () => void;
+  cancelChanges: () => void;
 }
-
-export const useSkillsMatrixStore = create<SkillsMatrixState>((set) => ({
-  currentStates: {},
-  setSkillState: (skillTitle, level, requirement) =>
-    set((state) => ({
-      currentStates: {
-        ...state.currentStates,
-        [skillTitle]: { level, requirement },
-      },
-    })),
-  resetSkills: () => set({ currentStates: {} }),
-}));
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -41,16 +30,56 @@ const getLevelPriority = (level: string = 'unspecified') => {
   return priorities[level.toLowerCase()] ?? 3;
 };
 
-const getInterestPriority = (requirement: string) => {
-  const priorities: { [key: string]: number } = {
-    'required': 0,
-    'skill_goal': 0,
-    'preferred': 1,
-    'not_interested': 2,
-    'unknown': 3
-  };
-  return priorities[requirement.toLowerCase()] ?? 3;
-};
+export const useSkillsMatrixStore = create<SkillsMatrixState>((set) => ({
+  currentStates: {},
+  originalStates: {},
+  hasChanges: false,
+
+  setSkillState: (skillTitle, level, requirement) =>
+    set((state) => ({
+      currentStates: {
+        ...state.currentStates,
+        [skillTitle]: { level, requirement },
+      },
+      hasChanges: true,
+    })),
+
+  resetSkills: () =>
+    set(() => ({
+      currentStates: {},
+      originalStates: {},
+      hasChanges: false,
+    })),
+
+  initializeState: (skillTitle, level, requirement) =>
+    set((state) => {
+      if (!state.currentStates[skillTitle]) {
+        return {
+          currentStates: {
+            ...state.currentStates,
+            [skillTitle]: { level, requirement },
+          },
+          originalStates: {
+            ...state.originalStates,
+            [skillTitle]: { level, requirement },
+          },
+        };
+      }
+      return state;
+    }),
+
+  saveChanges: () =>
+    set((state) => ({
+      originalStates: { ...state.currentStates },
+      hasChanges: false,
+    })),
+
+  cancelChanges: () =>
+    set((state) => ({
+      currentStates: { ...state.originalStates },
+      hasChanges: false,
+    })),
+}));
 
 export const useSkillsMatrixState = (
   selectedCategory: string,
@@ -60,13 +89,13 @@ export const useSkillsMatrixState = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
-  const filterAndSortSkills = (employeeId: string) => {
+  const filterAndSortSkills = (employeeId: string, roleId: string = "123") => {
     const employeeSkills = getEmployeeSkills(employeeId);
     let filteredSkills = [...employeeSkills];
 
     // Filter by category
     if (selectedCategory !== "all") {
-      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory, employeeId);
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory, roleId);
     }
 
     // Filter by level
@@ -100,10 +129,6 @@ export const useSkillsMatrixState = (
       // Sort by level first
       const levelDiff = getLevelPriority(stateA?.level) - getLevelPriority(stateB?.level);
       if (levelDiff !== 0) return levelDiff;
-
-      // Then by interest/requirement
-      const interestDiff = getInterestPriority(stateA?.requirement) - getInterestPriority(stateB?.requirement);
-      if (interestDiff !== 0) return interestDiff;
 
       // Finally alphabetically
       return a.title.localeCompare(b.title);

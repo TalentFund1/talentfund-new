@@ -4,7 +4,7 @@ import { roleSkills } from "../../skills/data/roleSkills";
 export const filterSkillsByCategory = (
   skills: UnifiedSkill[],
   selectedCategory: string,
-  roleId: string
+  roleId: string = "123"
 ) => {
   if (selectedCategory === "all") return skills;
 
