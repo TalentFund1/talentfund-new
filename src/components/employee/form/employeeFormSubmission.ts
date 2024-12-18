@@ -117,8 +117,8 @@ export const processEmployeeData = (formData: FormData): Employee => {
     });
   });
 
-  // Categorize skills based on role profile
-  const categorizedSkills = categorizeSkills(skillsList, roleId);
+  // Categorize skills based on universal database
+  const categorizedSkills = categorizeSkills(skillsList);
   
   console.log('Processed skills:', {
     roleId,

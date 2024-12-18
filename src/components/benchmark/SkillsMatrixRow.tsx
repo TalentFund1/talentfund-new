@@ -39,13 +39,13 @@ export const SkillsMatrixRow = ({
   };
 
   const getSkillType = () => {
-    if (isSpecializedSkill(skill.title, selectedRole)) {
+    if (isSpecializedSkill(skill.title)) {
       return { text: "Specialized", classes: "bg-blue-100 text-blue-800" };
     }
-    if (isCommonSkill(skill.title, selectedRole)) {
+    if (isCommonSkill(skill.title)) {
       return { text: "Common", classes: "bg-green-100 text-green-800" };
     }
-    if (isCertificationSkill(skill.title, selectedRole)) {
+    if (isCertificationSkill(skill.title)) {
       return { text: "Certification", classes: "bg-purple-100 text-purple-800" };
     }
     return { text: "Uncategorized", classes: "bg-gray-100 text-gray-800" };

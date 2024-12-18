@@ -9,7 +9,7 @@ export const processEmployeeSkills = (skills: string, role: string) => {
     .map(skill => skill.trim())
     .filter(skill => skill.length > 0);
 
-  // Get role ID for categorization
+  // Get role ID for logging purposes
   const roleId = getSkillProfileId(role);
   
   // Initialize skills with default values
@@ -24,8 +24,8 @@ export const processEmployeeSkills = (skills: string, role: string) => {
     });
   });
   
-  // Categorize skills
-  const categorizedSkills = categorizeSkills(skillsList, roleId);
+  // Categorize skills using universal database
+  const categorizedSkills = categorizeSkills(skillsList);
 
   console.log('Processed and categorized skills:', {
     roleId,
