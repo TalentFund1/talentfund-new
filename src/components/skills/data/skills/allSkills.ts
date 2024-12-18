@@ -1,23 +1,14 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
-import { technicalSkills } from './skillCategories/technicalSkills';
-import { managementSkills } from './skillCategories/managementSkills';
-import { certificationSkills } from './skillCategories/certificationSkills';
+import { getAllSkills, getSkillsByCategory } from '../centralSkillsDatabase';
 
 export const Skills = {
-  technical: technicalSkills,
-  management: managementSkills,
-  certification: certificationSkills
+  technical: getSkillsByCategory('specialized'),
+  management: getSkillsByCategory('common'),
+  certification: getSkillsByCategory('certification')
 };
 
 // Helper function to get all skills as a flat array
-export const getAllSkills = (): UnifiedSkill[] => {
-  return Object.values(Skills).flat();
-};
-
-// Helper function to get skills by category
-export const getSkillsByCategory = (category: keyof typeof Skills): UnifiedSkill[] => {
-  return Skills[category] || [];
-};
+export { getAllSkills };
 
 // Helper function to find a skill by title
 export const findSkillByTitle = (title: string): UnifiedSkill | undefined => {
