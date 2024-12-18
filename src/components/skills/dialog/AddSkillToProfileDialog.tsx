@@ -8,7 +8,7 @@ import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
-import { universalSkills } from '../data/universalSkillsDatabase';
+import { universalSkills, findSkillByTitle } from '../data/universalSkillsDatabase';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -22,7 +22,11 @@ export const AddSkillToProfileDialog = () => {
   const allSkills = universalSkills.map(skill => skill.title);
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
-    sampleSkills: allSkills.slice(0, 5)
+    sampleSkills: allSkills.slice(0, 5),
+    categories: universalSkills.reduce((acc, skill) => {
+      acc[skill.category] = (acc[skill.category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>)
   });
 
   const currentRole = roleSkills[id as keyof typeof roleSkills];
@@ -39,12 +43,20 @@ export const AddSkillToProfileDialog = () => {
 
     // Add skills to toggled skills
     const newToggledSkills = new Set(toggledSkills);
-    selectedSkills.forEach(skill => {
-      newToggledSkills.add(skill);
-      
-      // Initialize skill state in matrix
-      console.log('Initializing new skill in matrix:', skill);
-      setSkillState(skill, 'unspecified', 'p4', 'preferred', id || "123");
+    selectedSkills.forEach(skillTitle => {
+      const skillData = findSkillByTitle(skillTitle);
+      if (skillData) {
+        console.log('Adding skill to profile:', {
+          title: skillData.title,
+          category: skillData.category,
+          weight: skillData.weight
+        });
+        
+        newToggledSkills.add(skillTitle);
+        
+        // Initialize skill state in matrix
+        setSkillState(skillTitle, 'unspecified', 'p4', 'preferred', id || "123");
+      }
     });
 
     setToggledSkills(newToggledSkills);

@@ -3,33 +3,64 @@ import { skills } from './skillsData';
 import { aiSkills } from './categories/aiSkills';
 import { technicalSkills } from './categories/technicalSkills';
 import { softSkills } from './categories/softSkills';
-import { getUnifiedSkillData } from './centralSkillsDatabase';
+import { getSkillCategory } from './utils/categories';
+import { getBusinessCategory } from './utils/categories/businessCategories';
+import { getSkillWeight } from './utils/categories/skillWeights';
+import { generateSkillId } from './utils/categories/skillLists';
 
-// Consolidate all skills from different sources
+// Helper function to normalize and deduplicate skills
+const normalizeSkill = (skill: Partial<UnifiedSkill>): UnifiedSkill => {
+  const title = typeof skill === 'string' ? skill : skill.title;
+  const category = getSkillCategory(title);
+  const businessCategory = getBusinessCategory(title);
+  const weight = getSkillWeight(title);
+  
+  console.log(`Normalizing skill: ${title}`, {
+    category,
+    businessCategory,
+    weight
+  });
+
+  return {
+    id: generateSkillId(title),
+    title,
+    subcategory: skill.subcategory || category,
+    category: category,
+    businessCategory: businessCategory,
+    weight: weight,
+    level: skill.level || 'intermediate',
+    growth: skill.growth || '20%',
+    salary: skill.salary || '$150,000',
+    confidence: skill.confidence || 'high',
+    benchmarks: skill.benchmarks || { B: true, R: true, M: true, O: true }
+  };
+};
+
+// Combine all skills from different sources
 const getAllUniversalSkills = (): UnifiedSkill[] => {
   const skillSet = new Set<string>();
   const universalSkills: UnifiedSkill[] = [];
 
   // Helper function to add skills to our universal database
-  const addSkillToDatabase = (skill: string | UnifiedSkill) => {
-    const skillTitle = typeof skill === 'string' ? skill : skill.title;
+  const addSkillToDatabase = (skill: string | Partial<UnifiedSkill>) => {
+    const normalizedSkill = normalizeSkill(skill);
     
     // Only add if we haven't seen this skill before
-    if (!skillSet.has(skillTitle.toLowerCase())) {
-      skillSet.add(skillTitle.toLowerCase());
+    if (!skillSet.has(normalizedSkill.title.toLowerCase())) {
+      skillSet.add(normalizedSkill.title.toLowerCase());
+      universalSkills.push(normalizedSkill);
       
-      // If it's already a UnifiedSkill, add it directly
-      if (typeof skill !== 'string') {
-        universalSkills.push(skill);
-      } else {
-        // Convert simple skill to UnifiedSkill format
-        universalSkills.push(getUnifiedSkillData(skill));
-      }
+      console.log(`Added skill to universal database:`, {
+        title: normalizedSkill.title,
+        id: normalizedSkill.id,
+        category: normalizedSkill.category,
+        weight: normalizedSkill.weight
+      });
     }
   };
 
   // Add skills from skillsData.ts
-  skills.forEach(skill => addSkillToDatabase(skill.title));
+  skills.forEach(skill => addSkillToDatabase(skill));
 
   // Add skills from aiSkills
   aiSkills.forEach(skill => addSkillToDatabase(skill));
@@ -47,5 +78,22 @@ const getAllUniversalSkills = (): UnifiedSkill[] => {
 // Export the consolidated skills
 export const universalSkills = getAllUniversalSkills();
 
-// Export just the titles for the dropdown
+// Export just the titles for backward compatibility
 export const universalSkillTitles = universalSkills.map(skill => skill.title);
+
+// Helper function to find a skill by title
+export const findSkillByTitle = (title: string): UnifiedSkill | undefined => {
+  return universalSkills.find(skill => 
+    skill.title.toLowerCase() === title.toLowerCase()
+  );
+};
+
+// Helper function to get skills by category
+export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
+  return universalSkills.filter(skill => skill.category === category);
+};
+
+// Helper function to get skills by weight
+export const getSkillsByWeight = (weight: string): UnifiedSkill[] => {
+  return universalSkills.filter(skill => skill.weight === weight);
+};
