@@ -124,8 +124,21 @@ export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   return getAllSkills().filter(skill => getSkillCategory(skill.title) === category);
 };
 
+// Helper function to find a skill by ID
+export const getSkillById = (id: string): UnifiedSkill | undefined => {
+  console.log(`Finding skill by ID: ${id}`);
+  const skill = allSkills.find(skill => skill.id === id);
+  if (skill) {
+    return {
+      ...skill,
+      category: getSkillCategory(skill.title)
+    };
+  }
+  return undefined;
+};
+
 // Helper function to find a skill by title
-export const findSkillByTitle = (title: string): UnifiedSkill | undefined => {
+export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
   console.log(`Finding skill by title: ${title}`);
   const skill = allSkills.find(skill => skill.title.toLowerCase() === title.toLowerCase());
   if (skill) {
