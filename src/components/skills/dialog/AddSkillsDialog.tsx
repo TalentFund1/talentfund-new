@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useToast } from "@/hooks/use-toast";
-import { technicalSkills, softSkills } from '@/components/skillsData';
+import { technicalSkills, softSkills } from '../data/skillsData';
 
 export const AddSkillsDialog = () => {
   const [open, setOpen] = useState(false);
@@ -13,7 +13,8 @@ export const AddSkillsDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { toast } = useToast();
 
-  const allSkills = [...technicalSkills, ...softSkills];
+  // Ensure we have valid arrays before combining
+  const allSkills = [...(technicalSkills || []), ...(softSkills || [])];
 
   const handleSelectSkill = (skill: string) => {
     setSelectedSkills(prev => {
@@ -25,6 +26,8 @@ export const AddSkillsDialog = () => {
   };
 
   const handleAddSkills = () => {
+    if (!selectedSkills.length) return;
+
     const newSkills = new Set(toggledSkills);
     selectedSkills.forEach(skill => newSkills.add(skill));
     setToggledSkills(newSkills);
