@@ -2,13 +2,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
-import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
+import { getAllSkills } from '../data/skills/allSkills';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -18,7 +18,10 @@ export const AddSkillToProfileDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { setSkillState } = useCompetencyStore();
 
-  const allSkills = [...technicalSkills, ...softSkills];
+  // Get all available skills from the universal database
+  const allSkills = getAllSkills().map(skill => skill.title);
+  console.log('Available skills for selection:', allSkills);
+
   const currentRole = roleSkills[id as keyof typeof roleSkills];
 
   const handleAddSkills = () => {
@@ -38,7 +41,7 @@ export const AddSkillToProfileDialog = () => {
       
       // Initialize skill state in matrix
       console.log('Initializing new skill in matrix:', skill);
-      setSkillState(skill, 'unspecified', 'preferred', 'p4', id || "123");
+      setSkillState(skill, 'unspecified', 'p4', 'preferred', id || "123");
     });
 
     setToggledSkills(newToggledSkills);
