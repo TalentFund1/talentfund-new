@@ -46,42 +46,13 @@ export const SkillProfileMatrix = () => {
     }
   }, [id]);
 
-  const handleToggleSkill = (skillTitle: string) => {
-    const newToggledSkills = new Set(toggledSkills);
-    if (newToggledSkills.has(skillTitle)) {
-      console.log('Removing skill:', skillTitle);
-      newToggledSkills.delete(skillTitle);
-    } else {
-      console.log('Adding skill:', skillTitle);
-      newToggledSkills.add(skillTitle);
-    }
-    setToggledSkills(newToggledSkills);
-    setIsDirty(true);
-    
-    toast({
-      title: "Skill Updated",
-      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
-    });
-  };
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      if (sortDirection === 'asc') {
-        setSortDirection('desc');
-      } else if (sortDirection === 'desc') {
-        setSortField(null);
-        setSortDirection(null);
-      }
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
   // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const filteredSkills = (() => {
+    console.log('Filtering skills with type:', skillType);
+    console.log('Current toggled skills:', Array.from(toggledSkills));
+    
     let skills = [];
     if (skillType === "all") {
       skills = [
@@ -96,6 +67,8 @@ export const SkillProfileMatrix = () => {
     } else if (skillType === "certification") {
       skills = currentRoleSkills.certifications;
     }
+
+    console.log('Initial skills array:', skills.length);
 
     let sortedSkills = skills.filter(skill => {
       const isInCurrentRole = [
@@ -114,6 +87,8 @@ export const SkillProfileMatrix = () => {
 
       return isInCurrentRole;
     });
+
+    console.log('After filtering:', sortedSkills.length);
 
     // Sort skills based on toggle state first
     sortedSkills.sort((a, b) => {
@@ -150,6 +125,7 @@ export const SkillProfileMatrix = () => {
       sortedSkills = toggleSortedSkills;
     }
 
+    console.log('Final filtered skills:', sortedSkills.length);
     return sortedSkills;
   })();
 
@@ -157,6 +133,12 @@ export const SkillProfileMatrix = () => {
   const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
     filteredSkills.some(fs => fs.title === skill)
   ).length;
+
+  console.log('Skill counts:', {
+    total: filteredSkills.length,
+    toggled: toggledSkillCount,
+    categories: skillCounts
+  });
 
   return (
     <div className="space-y-6">
@@ -182,7 +164,21 @@ export const SkillProfileMatrix = () => {
           <SkillProfileMatrixTable 
             paginatedSkills={filteredSkills}
             toggledSkills={toggledSkills}
-            onToggleSkill={handleToggleSkill}
+            onToggleSkill={(skillTitle) => {
+              const newToggledSkills = new Set(toggledSkills);
+              if (newToggledSkills.has(skillTitle)) {
+                newToggledSkills.delete(skillTitle);
+              } else {
+                newToggledSkills.add(skillTitle);
+              }
+              setToggledSkills(newToggledSkills);
+              setIsDirty(true);
+              
+              toast({
+                title: "Skill Updated",
+                description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
+              });
+            }}
             sortField={sortField}
             sortDirection={sortDirection}
             onSort={handleSort}
