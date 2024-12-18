@@ -16,26 +16,24 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'Kubernetes',
     'Docker',
     'Jenkins',
-    'Terraform',
-    'Node.js',
-    'Database Design',
-    'API Development'
+    'Terraform'
   ];
 
   const technicalSkills = [
+    'Node.js',
     'React',
     'TypeScript',
     'Shell Scripting',
     'CSS/SASS',
+    'Database Design',
+    'API Development',
     'Flutter',
     'GraphQL',
     'Linux Administration',
     'Python',
     'TensorFlow',
     'Natural Language Processing',
-    'Computer Vision',
-    'System Architecture',
-    'Microservices'
+    'Computer Vision'
   ];
 
   if (criticalSkills.includes(skillTitle)) {
