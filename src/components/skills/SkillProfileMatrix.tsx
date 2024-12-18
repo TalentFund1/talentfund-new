@@ -90,6 +90,7 @@ export const SkillProfileMatrix = () => {
 
     console.log('Initial filtered skills:', skills.map(s => s.title));
 
+    // Get all skills that are either in the current role or are toggled
     let sortedSkills = skills.filter(skill => {
       const isInCurrentRole = [
         ...currentRoleSkills.specialized,
@@ -97,14 +98,14 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
+      const isToggled = toggledSkills.has(skill.title);
+
       if (selectedCategory !== 'all') {
         const skillCategory = getCategoryForSkill(skill, id || "123");
-        if (skillCategory !== selectedCategory) {
-          return false;
-        }
+        return (skillCategory === selectedCategory) && (isInCurrentRole || isToggled);
       }
 
-      return isInCurrentRole;
+      return isInCurrentRole || isToggled;
     });
 
     console.log('Skills after category filtering:', sortedSkills.map(s => s.title));
