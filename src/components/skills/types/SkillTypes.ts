@@ -20,4 +20,21 @@ export interface UnifiedSkill {
   };
 }
 
+export interface SimpleSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  businessCategory?: string;
+  category?: string;
+}
+
+export interface RoleSkillData {
+  title: string;
+  soc: string;
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
+}
+
 export interface Skill extends UnifiedSkill {}
