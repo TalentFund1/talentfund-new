@@ -1,91 +1,37 @@
-import { Skill, SkillWeight, SkillCategory, UnifiedSkill } from '../types/SkillTypes';
-import { Skills, getAllSkills } from './skills/allSkills';
-import { getSkillGrowth, getSkillSalary } from './utils/metrics';
-import { normalizeSkillTitle } from '../utils/normalization';
-import { technicalSkills } from './skills/categories/technicalSkills';
-import { certificationSkills } from './skills/categories/certificationSkills';
+import { Skill } from '../types/SkillTypes';
+import { Skills, getAllSkills, getSkillByTitle as getSkillFromAllSkills } from './skills/allSkills';
 
-// Initialize skills database with all skills
-const skillsDatabase = [
-  ...getAllSkills(),
-  ...technicalSkills,
-  ...certificationSkills
-].map(skill => ({
-  ...skill,
-  growth: skill.growth || getSkillGrowth(skill.title),
-  salary: skill.salary || getSkillSalary(skill.title),
-  businessCategory: skill.businessCategory || getBusinessCategory(skill.title)
-}));
-
-// Helper function to determine business category
-const getBusinessCategory = (skillTitle: string): string => {
-  const categories: { [key: string]: string } = {
-    'AWS': 'Information Technology',
-    'Docker': 'Information Technology',
-    'Kubernetes': 'Information Technology',
-    'Machine Learning': 'Information Technology',
-    'React': 'Information Technology',
-    'Node.js': 'Information Technology',
-    'Python': 'Information Technology',
-    'Communication': 'Media and Communications',
-    'Leadership': 'Initiative and Leadership',
-    'Project Management': 'Project Management',
-    'Data Science': 'Analysis',
-    'Risk Management': 'Risk and Compliance'
-  };
-  
-  return categories[skillTitle] || 'Information Technology';
-};
-
-console.log('Initialized skills database with complete metadata:', {
-  totalSkills: skillsDatabase.length,
-  withGrowth: skillsDatabase.filter(s => s.growth).length,
-  withSalary: skillsDatabase.filter(s => s.salary).length,
-  categories: skillsDatabase.reduce((acc, skill) => {
-    acc[skill.category] = (acc[skill.category] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>)
-});
-
-// Helper functions
-export const getSkillByTitle = (title: string): Skill | undefined => {
-  const normalizedTitle = normalizeSkillTitle(title);
-  const skill = skillsDatabase.find(skill => normalizeSkillTitle(skill.title) === normalizedTitle);
-  
-  if (skill) {
-    console.log('Found skill by title:', { title, skill });
-  } else {
-    console.warn('Skill not found:', title);
+export const getUnifiedSkillData = (title: string): Skill => {
+  const skill = getSkillFromAllSkills(title);
+  if (!skill) {
+    console.warn(`Skill not found in database: ${title}`);
+    return {
+      id: `generated-${title}`,
+      title,
+      subcategory: 'Other',
+      category: 'common',
+      businessCategory: 'Information Technology',
+      weight: 'necessary',
+      level: 'beginner',
+      growth: '0%',
+      salary: '$0',
+      confidence: 'low',
+      benchmarks: { B: false, R: false, M: false, O: false }
+    };
   }
   return skill;
 };
 
-export const getSkillsByWeight = (weight: SkillWeight): Skill[] => {
-  return skillsDatabase.filter(skill => skill.weight === weight);
+// Helper functions
+export const getSkillsByWeight = (weight: string): Skill[] => {
+  return getAllSkills().filter(skill => skill.weight === weight);
 };
 
-export const getSkillsByCategory = (category: SkillCategory): Skill[] => {
-  return skillsDatabase.filter(skill => skill.category === category);
+export const getSkillsByCategory = (category: string): Skill[] => {
+  return getAllSkills().filter(skill => skill.category === category);
 };
 
-export const getUnifiedSkillData = (title: string): UnifiedSkill | undefined => {
-  const normalizedTitle = normalizeSkillTitle(title);
-  const skill = skillsDatabase.find(s => normalizeSkillTitle(s.title) === normalizedTitle);
-  
-  if (skill) {
-    console.log('Found unified skill data:', { title, skill });
-    return {
-      ...skill,
-      requirement: 'preferred',
-      confidence: skill.confidence || 'medium',
-      benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false }
-    };
-  }
-  
-  console.warn('Unified skill data not found:', title);
-  return undefined;
-};
-
+// Add the missing function
 export const addSkillToInitialSkills = (employeeId: string, skill: Skill): void => {
   console.log('Adding skill to employee:', { employeeId, skill });
   // The actual implementation will be handled by the skills database

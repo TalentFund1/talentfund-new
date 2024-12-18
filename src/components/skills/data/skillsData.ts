@@ -1,14 +1,11 @@
 import { Skills, getAllSkills as getAllSkillsFromSource } from './skills/allSkills';
 import { UnifiedSkill } from '../types/SkillTypes';
 import { normalizeSkillTitle } from '../utils/normalization';
-import { getSkillGrowth, getSkillSalary } from './utils/metrics';
 
 // Get all skills and normalize their titles
 const skills: UnifiedSkill[] = getAllSkillsFromSource().map(skill => ({
   ...skill,
-  title: normalizeSkillTitle(skill.title),
-  growth: skill.growth || getSkillGrowth(skill.title),
-  salary: skill.salary || getSkillSalary(skill.title)
+  title: normalizeSkillTitle(skill.title)
 }));
 
 // Helper function to get unique skills by title
@@ -50,7 +47,5 @@ console.log('Loaded skills:', {
   total: skills.length,
   allUnique: allSkillsList.length,
   technical: technicalSkills.length,
-  soft: softSkills.length,
-  withGrowth: skills.filter(s => s.growth).length,
-  withSalary: skills.filter(s => s.salary).length
+  soft: softSkills.length
 });

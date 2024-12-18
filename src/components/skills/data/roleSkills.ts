@@ -1,39 +1,25 @@
 import { getUnifiedSkillData } from './skillDatabaseService';
-import { RoleSkillData, UnifiedSkill, SkillCategory, SkillWeight } from '../types/SkillTypes';
+import { RoleSkillData } from '../types/SkillTypes';
 import { Skills, getAllSkills } from './skills/allSkills';
 import { getSkillCategory } from './skills/categories/skillCategories';
-import { normalizeSkillTitle } from '../utils/normalization';
 
 // Get all skills from the universal database
 const allSkills = getAllSkills();
 console.log('Loaded all skills from universal database:', allSkills.length);
 
 // Helper function to get and validate a skill from the universal database
-const getValidatedSkill = (title: string): UnifiedSkill => {
+const getValidatedSkill = (title: string) => {
   const skill = getUnifiedSkillData(title);
   if (!skill) {
-    console.warn(`Skill not found in universal database: ${title}`);
-    // Return a properly typed default skill object
-    return {
-      id: `generated-${title.toLowerCase().replace(/\s+/g, '-')}`,
-      title: title,
-      category: title.includes('Certified') ? 'certification' : 'specialized' as SkillCategory,
-      subcategory: title.includes('Certified') ? 'Certification' : 'Skill',
-      businessCategory: 'Information Technology',
-      weight: 'necessary' as SkillWeight,
-      level: 'intermediate',
-      growth: '10%',
-      salary: '$150,000',
-      confidence: 'medium',
-      benchmarks: { B: true, R: true, M: true, O: true }
-    };
+    console.error(`Skill not found in universal database: ${title}`);
+    throw new Error(`Skill not found: ${title}`);
   }
   console.log(`Found skill ${title} with category:`, skill.category);
   return skill;
 };
 
 // Helper function to get skills by category from the universal database
-const getSkillsByCategory = (titles: string[], expectedCategory: 'specialized' | 'common' | 'certification'): UnifiedSkill[] => {
+const getSkillsByCategory = (titles: string[], expectedCategory: 'specialized' | 'common' | 'certification') => {
   console.log(`Getting ${expectedCategory} skills for titles:`, titles);
   
   const skills = titles.map(title => {
@@ -41,6 +27,8 @@ const getSkillsByCategory = (titles: string[], expectedCategory: 'specialized' |
     const actualCategory = getSkillCategory(title);
     if (actualCategory !== expectedCategory) {
       console.warn(`Warning: Skill ${title} has category ${actualCategory} but was requested as ${expectedCategory}`);
+      // Instead of throwing error, we'll use the actual category from the database
+      skill.category = actualCategory;
     }
     return skill;
   });
@@ -49,6 +37,7 @@ const getSkillsByCategory = (titles: string[], expectedCategory: 'specialized' |
   return skills;
 };
 
+// Define role skills using categories from the universal database
 export const roleSkills: { [key: string]: RoleSkillData } = {
   "123": {
     title: "AI Engineer",
