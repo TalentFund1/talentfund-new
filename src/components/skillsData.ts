@@ -22,23 +22,14 @@ const getUniqueSkills = (skillsArray: UnifiedSkill[]) => {
 // Get all unique skills without filtering by category
 export const allSkillsList = getUniqueSkills(skills);
 
-// Categorize skills into technical and soft skills for backward compatibility
-export const technicalSkillsList = getUniqueSkills(skills.filter(skill => 
-  skill.category === 'specialized' && skill.weight === 'technical'
-));
-
-export const softSkillsList = getUniqueSkills(skills.filter(skill => 
-  skill.category === 'common' && skill.weight === 'necessary'
-));
-
 // Export skill titles for backward compatibility
-export const technicalSkills = technicalSkillsList.map(skill => skill.title);
-export const softSkills = softSkillsList.map(skill => skill.title);
+export const technicalSkills = allSkillsList.map(skill => skill.title);
+export const softSkills = allSkillsList.map(skill => skill.title);
 
 // Export full skill objects
-export const technicalSkillObjects = technicalSkillsList;
-export const softSkillObjects = softSkillsList;
-export const allSkillObjects = getAllSkills();
+export const technicalSkillObjects = allSkillsList;
+export const softSkillObjects = allSkillsList;
+export const allSkillObjects = allSkillsList;
 
 console.log('Loaded skills:', {
   total: skills.length,

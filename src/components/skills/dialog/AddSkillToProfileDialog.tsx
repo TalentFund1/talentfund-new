@@ -19,18 +19,17 @@ export const AddSkillToProfileDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { setSkillState } = useCompetencyStore();
 
-  // Get all available skills from the universal database
+  // Get all available skills without any filtering
   const allSkills = allSkillObjects.map(skill => skill.title);
   
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
-    sampleSkills: allSkills.slice(0, 5)
+    sampleSkills: allSkills.slice(0, 5),
+    allSkills: allSkills
   });
 
-  const currentRole = roleSkills[id as keyof typeof roleSkills];
-
   const handleAddSkills = () => {
-    if (!currentRole) {
+    if (!id) {
       toast({
         title: "Error",
         description: "Could not find the current role profile.",
@@ -53,7 +52,7 @@ export const AddSkillToProfileDialog = () => {
         newToggledSkills.add(skillTitle);
         
         // Initialize skill state in matrix
-        setSkillState(skillTitle, 'unspecified', 'p4', 'preferred', id || "123");
+        setSkillState(skillTitle, 'unspecified', 'p4', 'preferred', id);
       }
     });
 
