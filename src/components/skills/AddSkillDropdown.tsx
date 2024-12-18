@@ -23,10 +23,22 @@ export const AddSkillDropdown = ({ onAddSkill, existingSkills }: AddSkillDropdow
   const [open, setOpen] = useState(false);
   
   // Use useMemo to ensure we don't recreate the skills array on every render
+  // and add proper error handling
   const allSkills = useMemo(() => {
-    const skills = getAllSkills();
-    console.log('Loaded skills for dropdown:', skills.length);
-    return skills;
+    try {
+      const skills = getAllSkills();
+      console.log('Loading skills for dropdown:', { count: skills?.length || 0 });
+      
+      if (!skills || !Array.isArray(skills)) {
+        console.warn('Invalid skills data returned:', skills);
+        return [];
+      }
+      
+      return skills;
+    } catch (error) {
+      console.error('Error loading skills:', error);
+      return [];
+    }
   }, []);
 
   const handleSelectSkill = (skillTitle: string) => {
@@ -54,9 +66,17 @@ export const AddSkillDropdown = ({ onAddSkill, existingSkills }: AddSkillDropdow
     });
   };
 
+  // Early return if no skills are available
   if (!allSkills || allSkills.length === 0) {
-    console.warn('No skills available in dropdown');
-    return null;
+    console.warn('No skills available for dropdown');
+    return (
+      <Button className="bg-[#1F2144] hover:bg-[#1F2144]/90" disabled>
+        <div className="w-5 h-5 rounded-full border-[1.75px] border-white flex items-center justify-center">
+          <Plus className="h-3 w-3 stroke-[2]" />
+        </div>
+        <span className="ml-2 text-sm font-medium">Add Skill</span>
+      </Button>
+    );
   }
 
   return (
