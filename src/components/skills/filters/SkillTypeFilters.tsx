@@ -7,15 +7,11 @@ import {
 } from "@/components/ui/select";
 
 interface SkillTypeFiltersProps {
-  skillType: string;
-  setSkillType: (value: string) => void;
   sortBy: string;
   setSortBy: (value: string) => void;
 }
 
 export const SkillTypeFilters = ({
-  skillType,
-  setSkillType,
   sortBy,
   setSortBy,
 }: SkillTypeFiltersProps) => {
