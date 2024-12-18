@@ -1,310 +1,149 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { aiSkills } from './data/aiSkills';
+import { webSkills } from './data/webSkills';
+import { commonSkills } from './data/commonSkills';
+import { certificationSkills } from './data/certificationSkills';
 
-// Employee skills database
+// Employee skills database with additional non-matching skills
 const employeeSkills: { [key: string]: UnifiedSkill[] } = {
   "123": [
+    ...aiSkills,
+    webSkills[0], // React
+    webSkills[1], // Vue.js
+    commonSkills[0], // Agile
+    commonSkills[1], // Technical Communication
+    certificationSkills[1], // GCP
+    certificationSkills[2], // Azure
     {
-      id: "ml-1",
-      title: "Machine Learning",
+      id: "data-1",
+      title: "Data Visualization",
       category: "specialized",
-      businessCategory: "AI/ML",
-      subcategory: "Machine Learning",
-      weight: "critical",
-      level: "advanced",
-      growth: "25%",
-      salary: "$150,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "dl-1",
-      title: "Deep Learning",
-      category: "specialized",
-      businessCategory: "AI/ML",
-      subcategory: "Deep Learning",
-      weight: "critical",
-      level: "advanced",
-      growth: "30%",
-      salary: "$160,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "py-1",
-      title: "Python",
-      category: "common",
-      businessCategory: "Programming",
-      subcategory: "Languages",
+      businessCategory: "Data",
+      subcategory: "Visualization",
       weight: "technical",
-      level: "advanced",
+      level: "intermediate",
+      growth: "15%",
+      salary: "$135,000",
+      confidence: "medium",
+      benchmarks: { B: true, R: true, M: true, O: true }
+    },
+    {
+      id: "mobile-1",
+      title: "React Native",
+      category: "specialized",
+      businessCategory: "Mobile",
+      subcategory: "Framework",
+      weight: "technical",
+      level: "beginner",
       growth: "20%",
       salary: "$140,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "tf-1",
-      title: "TensorFlow",
-      category: "specialized",
-      businessCategory: "AI/ML",
-      subcategory: "Frameworks",
-      weight: "critical",
-      level: "advanced",
-      growth: "28%",
-      salary: "$155,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "aws-ml-1",
-      title: "AWS Certified Machine Learning - Specialty",
-      category: "certification",
-      businessCategory: "Cloud",
-      subcategory: "AWS",
-      weight: "critical",
-      level: "advanced",
-      growth: "32%",
-      salary: "$170,000",
-      confidence: "high",
+      confidence: "medium",
       benchmarks: { B: true, R: true, M: true, O: true }
     }
   ],
   "124": [
+    ...webSkills,
+    aiSkills[0], // Machine Learning
+    commonSkills[2], // Team Leadership
+    certificationSkills[0], // AWS Solutions Architect
     {
-      id: "node-1",
-      title: "Node.js",
+      id: "ui-1",
+      title: "UI/UX Design",
       category: "specialized",
-      businessCategory: "Backend",
-      subcategory: "Runtime",
-      weight: "critical",
-      level: "intermediate",
-      growth: "20%",
-      salary: "$140,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "db-1",
-      title: "Database Design",
-      category: "specialized",
-      businessCategory: "Backend",
-      subcategory: "Database",
-      weight: "critical",
-      level: "intermediate",
-      growth: "18%",
-      salary: "$135,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "api-1",
-      title: "API Development",
-      category: "specialized",
-      businessCategory: "Backend",
-      subcategory: "API",
-      weight: "critical",
-      level: "intermediate",
-      growth: "22%",
-      salary: "$138,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "express-1",
-      title: "Express.js",
-      category: "specialized",
-      businessCategory: "Backend",
-      subcategory: "Framework",
+      businessCategory: "Design",
+      subcategory: "User Interface",
       weight: "technical",
       level: "intermediate",
-      growth: "15%",
+      growth: "18%",
       salary: "$130,000",
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
     },
     {
-      id: "mongo-1",
-      title: "MongoDB",
+      id: "devops-1",
+      title: "DevOps Practices",
       category: "specialized",
-      businessCategory: "Backend",
-      subcategory: "Database",
-      weight: "technical",
-      level: "intermediate",
-      growth: "20%",
-      salary: "$140,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "aws-1",
-      title: "AWS Certified Solutions Architect",
-      category: "certification",
-      businessCategory: "Cloud",
-      subcategory: "AWS",
+      businessCategory: "Operations",
+      subcategory: "DevOps",
       weight: "critical",
-      level: "intermediate",
+      level: "beginner",
       growth: "25%",
       salary: "$150,000",
-      confidence: "high",
+      confidence: "medium",
       benchmarks: { B: true, R: true, M: true, O: true }
     }
   ],
   "125": [
+    webSkills[0], // React
+    commonSkills[0], // Agile
+    commonSkills[1], // Technical Communication
+    certificationSkills[1], // GCP
     {
-      id: "react-1",
-      title: "React",
+      id: "analytics-1",
+      title: "Google Analytics",
       category: "specialized",
-      businessCategory: "Frontend",
-      subcategory: "Framework",
-      weight: "critical",
-      level: "advanced",
-      growth: "25%",
-      salary: "$145,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "ts-1",
-      title: "TypeScript",
-      category: "specialized",
-      businessCategory: "Frontend",
-      subcategory: "Language",
-      weight: "critical",
-      level: "advanced",
-      growth: "28%",
-      salary: "$150,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "next-1",
-      title: "Next.js",
-      category: "specialized",
-      businessCategory: "Frontend",
-      subcategory: "Framework",
-      weight: "critical",
-      level: "advanced",
-      growth: "30%",
-      salary: "$155,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "tailwind-1",
-      title: "Tailwind CSS",
-      category: "specialized",
-      businessCategory: "Frontend",
-      subcategory: "Styling",
-      weight: "technical",
-      level: "advanced",
-      growth: "22%",
-      salary: "$140,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "redux-1",
-      title: "Redux",
-      category: "specialized",
-      businessCategory: "Frontend",
-      subcategory: "State Management",
-      weight: "technical",
-      level: "advanced",
-      growth: "20%",
-      salary: "$145,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "web-cert-1",
-      title: "Google Mobile Web Specialist",
-      category: "certification",
-      businessCategory: "Frontend",
-      subcategory: "Web",
+      businessCategory: "Analytics",
+      subcategory: "Web Analytics",
       weight: "technical",
       level: "advanced",
       growth: "15%",
-      salary: "$140,000",
+      salary: "$125,000",
+      confidence: "high",
+      benchmarks: { B: true, R: true, M: true, O: true }
+    },
+    {
+      id: "seo-1",
+      title: "SEO Optimization",
+      category: "specialized",
+      businessCategory: "Marketing",
+      subcategory: "SEO",
+      weight: "technical",
+      level: "intermediate",
+      growth: "12%",
+      salary: "$120,000",
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
     }
   ],
   "126": [
+    commonSkills[2], // Team Leadership
+    certificationSkills[0], // AWS Solutions Architect
     {
-      id: "lead-1",
-      title: "Team Leadership",
-      category: "common",
-      businessCategory: "Management",
-      subcategory: "Leadership",
-      weight: "critical",
-      level: "advanced",
-      growth: "15%",
-      salary: "$180,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "pm-1",
+      id: "proj-1",
       title: "Project Management",
       category: "specialized",
       businessCategory: "Management",
       subcategory: "Project Management",
       weight: "critical",
       level: "advanced",
-      growth: "18%",
-      salary: "$175,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "arch-1",
-      title: "System Architecture",
-      category: "specialized",
-      businessCategory: "Engineering",
-      subcategory: "Architecture",
-      weight: "critical",
-      level: "advanced",
       growth: "22%",
-      salary: "$190,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "agile-1",
-      title: "Agile Methodologies",
-      category: "common",
-      businessCategory: "Management",
-      subcategory: "Process",
-      weight: "technical",
-      level: "advanced",
-      growth: "15%",
       salary: "$170,000",
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
     },
     {
-      id: "stake-1",
-      title: "Stakeholder Management",
-      category: "common",
+      id: "risk-1",
+      title: "Risk Management",
+      category: "specialized",
       businessCategory: "Management",
-      subcategory: "Communication",
-      weight: "technical",
+      subcategory: "Risk",
+      weight: "critical",
       level: "advanced",
-      growth: "12%",
+      growth: "18%",
       salary: "$165,000",
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
     },
     {
-      id: "pmp-1",
-      title: "Project Management Professional (PMP)",
-      category: "certification",
+      id: "strategy-1",
+      title: "Strategic Planning",
+      category: "specialized",
       businessCategory: "Management",
-      subcategory: "Project Management",
+      subcategory: "Strategy",
       weight: "critical",
       level: "advanced",
       growth: "20%",
-      salary: "$180,000",
+      salary: "$175,000",
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
     }
