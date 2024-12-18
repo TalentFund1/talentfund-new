@@ -4,16 +4,20 @@ import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { technicalSkills, softSkills } from '@/components/skillsData';
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { UnifiedSkill } from '../types/SkillTypes';
+import { useToggledSkills } from "../context/ToggledSkillsContext";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const { id } = useParams();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
+  const { setSkillState } = useSkillsMatrixStore();
   
   const allSkills = [...technicalSkills, ...softSkills];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
@@ -28,26 +32,17 @@ export const AddSkillToProfileDialog = () => {
       return;
     }
 
-    const newSpecializedSkills: UnifiedSkill[] = selectedSkills.map(skillTitle => ({
-      id: `SKILL_${skillTitle.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
-      title: skillTitle,
-      subcategory: "General Skills",
-      businessCategory: "Information Technology", // Added businessCategory
-      category: "specialized",
-      weight: "technical",
-      level: "beginner",
-      growth: "0%",
-      salary: "$0",
-      confidence: "medium",
-      benchmarks: {
-        B: true,
-        R: true,
-        M: true,
-        O: true
-      }
-    }));
+    // Add skills to toggled skills
+    const newToggledSkills = new Set(toggledSkills);
+    selectedSkills.forEach(skill => {
+      newToggledSkills.add(skill);
+      
+      // Initialize skill state in matrix
+      console.log('Initializing new skill in matrix:', skill);
+      setSkillState(skill, 'unspecified', 'preferred');
+    });
 
-    currentRole.specialized = [...currentRole.specialized, ...newSpecializedSkills];
+    setToggledSkills(newToggledSkills);
 
     toast({
       title: "Skills Added",
