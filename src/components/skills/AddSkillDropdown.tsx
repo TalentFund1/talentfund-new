@@ -21,9 +21,9 @@ interface AddSkillDropdownProps {
 export const AddSkillDropdown = ({ onAddSkill, existingSkills }: AddSkillDropdownProps) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   
   // Use useMemo to ensure we don't recreate the skills array on every render
-  // and add proper error handling
   const allSkills = useMemo(() => {
     try {
       const skills = getAllSkills();
@@ -34,7 +34,14 @@ export const AddSkillDropdown = ({ onAddSkill, existingSkills }: AddSkillDropdow
         return [];
       }
       
-      return skills;
+      // Ensure each skill has a valid title
+      return skills.filter(skill => {
+        if (!skill?.title) {
+          console.warn('Skill missing title:', skill);
+          return false;
+        }
+        return true;
+      });
     } catch (error) {
       console.error('Error loading skills:', error);
       return [];
@@ -60,6 +67,7 @@ export const AddSkillDropdown = ({ onAddSkill, existingSkills }: AddSkillDropdow
     console.log('Adding new skill:', skillTitle);
     onAddSkill(skillTitle);
     setOpen(false);
+    setSearchValue(""); // Reset search value after selection
     toast({
       title: "Skill added",
       description: `${skillTitle} has been added to your skills.`,
@@ -94,13 +102,17 @@ export const AddSkillDropdown = ({ onAddSkill, existingSkills }: AddSkillDropdow
           <DialogTitle>Add Skill</DialogTitle>
         </DialogHeader>
         <Command className="rounded-lg border shadow-md">
-          <CommandInput placeholder="Search skills..." />
+          <CommandInput 
+            placeholder="Search skills..." 
+            value={searchValue}
+            onValueChange={setSearchValue}
+          />
           <CommandEmpty>No skills found.</CommandEmpty>
           <ScrollArea className="h-72">
             <CommandGroup>
               {allSkills.map((skill) => (
                 <CommandItem
-                  key={skill.id}
+                  key={skill.id || skill.title}
                   value={skill.title}
                   onSelect={() => handleSelectSkill(skill.title)}
                   className="cursor-pointer"
