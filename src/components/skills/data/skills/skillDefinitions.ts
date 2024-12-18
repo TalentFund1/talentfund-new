@@ -8,7 +8,7 @@ export const defineSkills = (): UnifiedSkill[] => {
       id: 'SKILL001',
       title: "Machine Learning",
       subcategory: "AI & ML",
-      category: getSkillCategory("Machine Learning"),
+      category: "specialized", // Changed from common to specialized
       businessCategory: "Information Technology",
       weight: getSkillWeight("Machine Learning"),
       level: "advanced",
@@ -21,7 +21,7 @@ export const defineSkills = (): UnifiedSkill[] => {
       id: 'SKILL002',
       title: "Deep Learning",
       subcategory: "AI & ML",
-      category: getSkillCategory("Deep Learning"),
+      category: "specialized",
       businessCategory: "Information Technology",
       weight: getSkillWeight("Deep Learning"),
       level: "advanced",
@@ -370,3 +370,5 @@ export const defineSkills = (): UnifiedSkill[] => {
     }
   ];
 };
+
+console.log('Defined skills with updated categories');
