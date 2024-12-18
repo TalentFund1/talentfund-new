@@ -35,7 +35,11 @@ export const SkillProfileMatrix = () => {
         const savedSkills = localStorage.getItem(getStorageKey(id));
         if (savedSkills) {
           const parsedSkills = JSON.parse(savedSkills);
-          console.log('Loading saved skills:', { roleId: id, skills: parsedSkills });
+          console.log('Loading saved skills for profile:', {
+            profileId: id,
+            savedSkillsCount: parsedSkills.length,
+            skills: parsedSkills
+          });
           setToggledSkills(new Set([...toggledSkills, ...parsedSkills]));
         }
       } catch (error) {
@@ -150,6 +154,15 @@ export const SkillProfileMatrix = () => {
     total: filteredSkills.length,
     toggled: toggledSkillCount,
     categories: skillCounts
+  });
+
+  // Add detailed logging before return
+  console.log('Current skills state:', {
+    profileId: id,
+    toggledSkillsCount: toggledSkills.size,
+    toggledSkills: Array.from(toggledSkills),
+    filteredSkillsCount: filteredSkills.length,
+    filteredSkills: filteredSkills.map(s => s.title)
   });
 
   return (
