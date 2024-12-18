@@ -20,12 +20,6 @@ export const filterSkillsByCategory = (skills: UnifiedSkill[], category: string,
     }
   });
 
-  // Helper function to check if a skill exists in an array
-  const isSkillInArray = (skill: UnifiedSkill, array: UnifiedSkill[]) => {
-    const normalizedSkillTitle = skill.title.toLowerCase();
-    return array.some(s => s.title.toLowerCase() === normalizedSkillTitle);
-  };
-
   // Get the unified skill data to ensure consistent categorization
   const getSkillCategory = (skill: UnifiedSkill) => {
     const unifiedSkill = getUnifiedSkillData(skill.title);
@@ -34,14 +28,15 @@ export const filterSkillsByCategory = (skills: UnifiedSkill[], category: string,
 
   return skills.filter(skill => {
     const skillCategory = getSkillCategory(skill);
+    console.log(`Filtering skill ${skill.title} with category ${skillCategory}`);
     
     switch (category) {
       case "specialized":
-        return skillCategory === "specialized" && isSkillInArray(skill, currentRoleSkills.specialized);
+        return skillCategory === "specialized";
       case "common":
-        return skillCategory === "common" && isSkillInArray(skill, currentRoleSkills.common);
+        return skillCategory === "common";
       case "certification":
-        return skillCategory === "certification" && isSkillInArray(skill, currentRoleSkills.certifications);
+        return skillCategory === "certification";
       default:
         return false;
     }
@@ -54,5 +49,6 @@ export const getCategoryCount = (skills: UnifiedSkill[], category: string, roleI
 
 export const categorizeSkill = (skillTitle: string, roleId: string = "123"): string => {
   const unifiedSkill = getUnifiedSkillData(skillTitle);
+  console.log(`Categorizing skill ${skillTitle} as ${unifiedSkill.category}`);
   return unifiedSkill.category;
 };
