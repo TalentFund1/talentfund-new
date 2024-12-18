@@ -49,7 +49,7 @@ export const backendSkills: UnifiedSkill[] = [
     weight: "critical",
     level: "advanced",
     growth: "26%",
-    salary: "$145,000",
+    salary: "$165,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
