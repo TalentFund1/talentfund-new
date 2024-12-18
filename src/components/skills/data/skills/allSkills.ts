@@ -1,7 +1,7 @@
 import { UnifiedSkill, SkillCategory } from '../../types/SkillTypes';
 
 // Core skill classification structure - Single source of truth
-const skillClassifications: { [key: string]: SkillCategory } = {
+export const skillClassifications: { [key: string]: SkillCategory } = {
   // AI & ML Skills
   "Machine Learning": "specialized",
   "Deep Learning": "specialized",
@@ -16,21 +16,32 @@ const skillClassifications: { [key: string]: SkillCategory } = {
   "System Architecture": "specialized",
   "Kubernetes": "specialized",
   
+  // Frontend Skills
+  "React": "specialized",
+  "TypeScript": "specialized",
+  "Next.js": "specialized",
+  "CSS/SASS": "specialized",
+  "Performance Optimization": "specialized",
+  
   // Common Skills
   "Problem Solving": "common",
   "Code Review": "common",
   "Agile Methodologies": "common",
   "Communication": "common",
   "Team Leadership": "common",
+  "Git Version Control": "common",
+  "Technical Writing": "common",
   
   // Certifications
   "AWS Certified Solutions Architect": "certification",
   "Kubernetes Administrator (CKA)": "certification",
-  "MongoDB Professional Developer": "certification",
-  "TensorFlow Developer Certificate": "certification"
+  "AWS Certified Machine Learning - Specialty": "certification",
+  "TensorFlow Developer Certificate": "certification",
+  "Project Management Professional (PMP)": "certification",
+  "Certified Scrum Master (CSM)": "certification"
 };
 
-// Define all skills in a single array with their core categorization
+// Define all skills with their core categorization
 export const allSkills: UnifiedSkill[] = [
   // AI & ML Skills (Specialized)
   {
@@ -150,7 +161,7 @@ export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
   return undefined;
 };
 
-// New helper functions for role-specific skill categorization
+// Role-specific skill categorization helpers
 export const getSpecializedSkills = (): UnifiedSkill[] => {
   return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'specialized');
 };
