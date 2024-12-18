@@ -7,7 +7,7 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
-import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
+import { getCategoryForSkill } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
@@ -71,23 +71,37 @@ export const SkillProfileMatrix = () => {
       .filter(skillTitle => !allSkillTitles.has(skillTitle))
       .map(skillTitle => {
         console.log('Adding skill:', skillTitle);
-        return getUnifiedSkillData(skillTitle);
+        const skillData = getUnifiedSkillData(skillTitle);
+        // Determine the category based on the skill type
+        if (currentRoleSkills.specialized.some(s => s.title === skillTitle)) {
+          skillData.category = 'specialized';
+        } else if (currentRoleSkills.common.some(s => s.title === skillTitle)) {
+          skillData.category = 'common';
+        } else if (currentRoleSkills.certifications.some(s => s.title === skillTitle)) {
+          skillData.category = 'certification';
+        }
+        return skillData;
       });
 
     // Combine role skills with additional skills
     skills = [...skills, ...additionalSkills];
     console.log('Combined skills array:', skills.length);
 
-    let filteredSkills = skills.filter(skill => {
-      // Apply category filter
-      if (selectedCategory !== 'all') {
-        const skillCategory = getCategoryForSkill(skill, id || "123");
-        if (skillCategory !== selectedCategory) {
-          return false;
+    let filteredSkills = skills;
+
+    // Apply category filter
+    if (selectedCategory !== 'all') {
+      filteredSkills = filteredSkills.filter(skill => {
+        if (selectedCategory === 'specialized') {
+          return currentRoleSkills.specialized.some(s => s.title === skill.title);
+        } else if (selectedCategory === 'common') {
+          return currentRoleSkills.common.some(s => s.title === skill.title);
+        } else if (selectedCategory === 'certification') {
+          return currentRoleSkills.certifications.some(s => s.title === skill.title);
         }
-      }
-      return true;
-    });
+        return true;
+      });
+    }
 
     console.log('After filtering:', filteredSkills.length);
 
@@ -130,7 +144,19 @@ export const SkillProfileMatrix = () => {
     return filteredSkills;
   })();
 
-  const skillCounts = calculateSkillCounts(id || "123");
+  const skillCounts = {
+    all: filteredSkills.length,
+    specialized: filteredSkills.filter(skill => 
+      currentRoleSkills.specialized.some(s => s.title === skill.title)
+    ).length,
+    common: filteredSkills.filter(skill => 
+      currentRoleSkills.common.some(s => s.title === skill.title)
+    ).length,
+    certification: filteredSkills.filter(skill => 
+      currentRoleSkills.certifications.some(s => s.title === skill.title)
+    ).length
+  };
+
   const toggledSkillCount = Array.from(toggledSkills).length;
 
   console.log('Skill counts:', {
@@ -161,7 +187,7 @@ export const SkillProfileMatrix = () => {
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
-            paginatedSkills={filteredSkills}
+            paginatedSkills={filteredSkills} 
             toggledSkills={toggledSkills}
             onToggleSkill={(skillTitle) => {
               const newToggledSkills = new Set(toggledSkills);
