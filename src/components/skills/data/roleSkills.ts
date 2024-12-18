@@ -6,27 +6,32 @@ import { Skills, getAllSkills } from './skills/allSkills';
 const allSkills = getAllSkills();
 console.log('Loaded all skills from universal database:', allSkills.length);
 
-// Helper function to get and validate skills from the universal database
-const getSkillsByTitles = (titles: string[]) => {
-  console.log('Getting skills for titles:', titles);
-  return titles.map(title => {
-    const skill = getUnifiedSkillData(title);
-    if (!skill) {
-      console.error(`Skill not found in universal database: ${title}`);
-      throw new Error(`Skill not found: ${title}`);
-    }
-    console.log(`Found skill ${title} with category:`, skill.category);
-    return skill;
-  });
+// Helper function to get and validate a skill from the universal database
+const getValidatedSkill = (title: string) => {
+  const skill = getUnifiedSkillData(title);
+  if (!skill) {
+    console.error(`Skill not found in universal database: ${title}`);
+    throw new Error(`Skill not found: ${title}`);
+  }
+  console.log(`Found skill ${title} with category:`, skill.category);
+  return skill;
 };
 
-// Helper function to filter skills by their category from the universal database
-const filterSkillsByCategory = (titles: string[], category: 'specialized' | 'common' | 'certification') => {
-  console.log(`Filtering skills for category ${category}`);
-  const skills = getSkillsByTitles(titles);
-  const filtered = skills.filter(skill => skill.category === category);
-  console.log(`Found ${filtered.length} ${category} skills from ${titles.length} total skills`);
-  return filtered;
+// Helper function to get skills by category from the universal database
+const getSkillsByCategory = (titles: string[], category: 'specialized' | 'common' | 'certification') => {
+  console.log(`Getting ${category} skills for titles:`, titles);
+  
+  const skills = titles.map(title => {
+    const skill = getValidatedSkill(title);
+    if (skill.category !== category) {
+      console.error(`Skill ${title} has category ${skill.category} but was requested as ${category}`);
+      throw new Error(`Category mismatch for skill ${title}`);
+    }
+    return skill;
+  });
+
+  console.log(`Found ${skills.length} ${category} skills`);
+  return skills;
 };
 
 // Define role skills using categories from the universal database
@@ -34,7 +39,7 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
   "123": {
     title: "AI Engineer",
     soc: "15-2051",
-    specialized: filterSkillsByCategory([
+    specialized: getSkillsByCategory([
       "Machine Learning",
       "Deep Learning",
       "Natural Language Processing",
@@ -42,14 +47,14 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       "TensorFlow",
       "GraphQL"
     ], 'specialized'),
-    common: filterSkillsByCategory([
+    common: getSkillsByCategory([
       "Python",
       "Problem Solving",
       "Technical Writing",
       "Git Version Control",
       "Communication"
     ], 'common'),
-    certifications: filterSkillsByCategory([
+    certifications: getSkillsByCategory([
       "AWS Certified Machine Learning - Specialty",
       "TensorFlow Developer Certificate"
     ], 'certification')
@@ -57,7 +62,7 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
   "124": {
     title: "Backend Engineer",
     soc: "15-1252",
-    specialized: filterSkillsByCategory([
+    specialized: getSkillsByCategory([
       "Node.js",
       "Database Design",
       "API Development",
@@ -65,14 +70,14 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       "Kubernetes",
       "GraphQL"
     ], 'specialized'),
-    common: filterSkillsByCategory([
+    common: getSkillsByCategory([
       "Problem Solving",
       "Code Review",
       "Agile Methodologies",
       "Git Version Control",
       "Communication"
     ], 'common'),
-    certifications: filterSkillsByCategory([
+    certifications: getSkillsByCategory([
       "AWS Certified Solutions Architect",
       "Kubernetes Administrator (CKA)"
     ], 'certification')
@@ -80,7 +85,7 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
   "125": {
     title: "Frontend Engineer",
     soc: "15-1252",
-    specialized: filterSkillsByCategory([
+    specialized: getSkillsByCategory([
       "React",
       "TypeScript",
       "Next.js",
@@ -90,14 +95,14 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       "Flutter",
       "GraphQL"
     ], 'specialized'),
-    common: filterSkillsByCategory([
+    common: getSkillsByCategory([
       "Problem Solving",
       "Code Review",
       "Agile Methodologies",
       "Git Version Control",
       "Communication"
     ], 'common'),
-    certifications: filterSkillsByCategory([
+    certifications: getSkillsByCategory([
       "AWS Certified Developer - Associate",
       "Google Mobile Web Specialist"
     ], 'certification')
@@ -105,21 +110,21 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
   "126": {
     title: "Engineering Manager",
     soc: "11-9041",
-    specialized: filterSkillsByCategory([
+    specialized: getSkillsByCategory([
       "System Design",
       "Technical Architecture",
       "Risk Management",
       "Team Leadership",
       "Project Management"
     ], 'specialized'),
-    common: filterSkillsByCategory([
+    common: getSkillsByCategory([
       "Strategic Planning",
       "Stakeholder Management",
       "Agile Methodologies",
       "Git Version Control",
       "Communication"
     ], 'common'),
-    certifications: filterSkillsByCategory([
+    certifications: getSkillsByCategory([
       "Project Management Professional (PMP)",
       "Certified Scrum Master (CSM)"
     ], 'certification')
@@ -127,21 +132,21 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
   "127": {
     title: "DevOps Engineer",
     soc: "15-1244",
-    specialized: filterSkillsByCategory([
+    specialized: getSkillsByCategory([
       "Docker",
       "Kubernetes",
       "Jenkins",
       "Terraform",
       "AWS"
     ], 'specialized'),
-    common: filterSkillsByCategory([
+    common: getSkillsByCategory([
       "Linux Administration",
       "Shell Scripting",
       "Git Version Control",
       "Problem Solving",
       "Communication"
     ], 'common'),
-    certifications: filterSkillsByCategory([
+    certifications: getSkillsByCategory([
       "AWS Certified DevOps Engineer",
       "Certified Kubernetes Administrator",
       "HashiCorp Certified Terraform Associate"
