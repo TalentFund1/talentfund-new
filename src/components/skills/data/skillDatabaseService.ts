@@ -1,29 +1,14 @@
 import { UnifiedSkill } from '../types/SkillTypes';
-import { normalizeSkillTitle } from '../utils/normalization';
-import { managementSkills } from './categories/managementSkills';
-import { aiSkills } from './categories/aiSkills';
-import { webSkills } from './categories/webSkills';
-import { devopsSkills } from './categories/devopsSkills';
+import { skillsDatabase, getSkillByTitle, getSkillsByCategory, getAllSkills } from './skillsDatabase';
 
-// Combine all skills into one central database with proper categorization
-const allSkills = [
-  ...managementSkills,
-  ...aiSkills,
-  ...webSkills,
-  ...devopsSkills
-].map(skill => ({
-  ...skill,
-  title: normalizeSkillTitle(skill.title)
-}));
+// Re-export the core functions
+export { getSkillByTitle, getSkillsByCategory, getAllSkills };
 
 // Get unified skill data with proper categorization
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
-  const normalizedTitle = normalizeSkillTitle(title);
-  const existingSkill = allSkills.find(skill => 
-    normalizeSkillTitle(skill.title) === normalizedTitle
-  );
+  const existingSkill = getSkillByTitle(title);
   
   if (existingSkill) {
     console.log('Found existing skill:', existingSkill.title, 'with category:', existingSkill.category);
@@ -34,17 +19,16 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     };
   }
 
-  // If skill not found, create a new one with proper categorization based on type
-  const category = determineSkillCategory(normalizedTitle);
-  console.log('Creating new skill entry for:', normalizedTitle, 'with category:', category);
+  // If skill not found, create a new one with proper categorization
+  console.log('Creating new skill entry for:', title);
   
   const newSkill: UnifiedSkill = {
     id: `SKILL${Math.random().toString(36).substr(2, 9)}`,
-    title: normalizedTitle,
-    category: category,
-    businessCategory: determineBusinessCategory(normalizedTitle),
-    subcategory: determineSubcategory(normalizedTitle),
-    weight: determineWeight(normalizedTitle),
+    title: title,
+    category: determineSkillCategory(title),
+    businessCategory: determineBusinessCategory(title),
+    subcategory: determineSubcategory(title),
+    weight: determineWeight(title),
     level: 'unspecified',
     growth: '20%',
     salary: '$150,000',
@@ -66,7 +50,6 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
 const determineSkillCategory = (title: string): 'specialized' | 'common' | 'certification' => {
   const lowerTitle = title.toLowerCase();
   
-  // Check for certification first
   if (lowerTitle.includes('certification') || 
       lowerTitle.includes('certified') ||
       lowerTitle.includes('certificate')) {
@@ -91,7 +74,7 @@ const determineSkillCategory = (title: string): 'specialized' | 'common' | 'cert
     return 'common';
   }
 
-  // Specialized skills are typically technical or domain-specific
+  // Specialized skills keywords
   const specializedKeywords = [
     'machine learning',
     'deep learning',
@@ -122,7 +105,7 @@ const determineSkillCategory = (title: string): 'specialized' | 'common' | 'cert
   return 'common';
 };
 
-// Helper function to determine business category
+// Helper functions for business category and subcategory determination
 const determineBusinessCategory = (title: string): string => {
   const lowerTitle = title.toLowerCase();
   
@@ -137,7 +120,6 @@ const determineBusinessCategory = (title: string): string => {
   return 'Information Technology';
 };
 
-// Helper function to determine subcategory
 const determineSubcategory = (title: string): string => {
   const lowerTitle = title.toLowerCase();
   
@@ -151,7 +133,6 @@ const determineSubcategory = (title: string): string => {
   return 'General';
 };
 
-// Helper function to determine weight
 const determineWeight = (title: string): 'critical' | 'technical' | 'necessary' => {
   const lowerTitle = title.toLowerCase();
   
@@ -167,11 +148,7 @@ const determineWeight = (title: string): 'critical' | 'technical' | 'necessary' 
 
 // Export additional utility functions
 export const getAllUnifiedSkills = (): UnifiedSkill[] => {
-  return allSkills;
+  return skillsDatabase;
 };
 
-export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
-  return allSkills.filter(skill => skill.category === category);
-};
-
-console.log('Skill database service initialized with', allSkills.length, 'skills');
+console.log('Skill database service initialized with', skillsDatabase.length, 'skills');
