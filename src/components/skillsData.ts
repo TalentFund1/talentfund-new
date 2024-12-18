@@ -29,6 +29,11 @@ export const technicalSkillObjects = allSkillsList;
 export const softSkillObjects = allSkillsList;
 export const allSkillObjects = allSkillsList;
 
+// Export the complete skills array with deduplication
+export const getAllUniqueSkills = (): UnifiedSkill[] => {
+  return getUniqueSkills(skills);
+};
+
 console.log('Loaded skills:', {
   total: skills.length,
   allUnique: allSkillsList.length,

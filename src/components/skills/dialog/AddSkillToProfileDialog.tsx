@@ -11,6 +11,7 @@ import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
 import { addSkillToInitialSkills } from '../data/skillDatabaseService';
 import { roleSkills } from '../data/roleSkills';
+import { normalizeSkillTitle } from '../utils/normalization';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -22,9 +23,9 @@ export const AddSkillToProfileDialog = () => {
 
   // Get all unique skills from our core data structure
   const allSkills = Array.from(new Set([
-    ...Skills.specialized.map(s => s.title),
-    ...Skills.common.map(s => s.title),
-    ...Skills.certification.map(s => s.title)
+    ...Skills.specialized.map(s => normalizeSkillTitle(s.title)),
+    ...Skills.common.map(s => normalizeSkillTitle(s.title)),
+    ...Skills.certification.map(s => normalizeSkillTitle(s.title))
   ]));
   
   console.log('Available skills for selection:', {
@@ -52,7 +53,19 @@ export const AddSkillToProfileDialog = () => {
 
     // Add skills to toggled skills and role skills
     const newToggledSkills = new Set(toggledSkills);
+    const existingSkillTitles = new Set([
+      ...currentRole.specialized.map(s => normalizeSkillTitle(s.title)),
+      ...currentRole.common.map(s => normalizeSkillTitle(s.title)),
+      ...currentRole.certifications.map(s => normalizeSkillTitle(s.title))
+    ]);
+
     selectedSkills.forEach(skillTitle => {
+      const normalizedTitle = normalizeSkillTitle(skillTitle);
+      if (existingSkillTitles.has(normalizedTitle)) {
+        console.log('Skipping duplicate skill:', skillTitle);
+        return;
+      }
+
       const skillData = getUnifiedSkillData(skillTitle);
       if (skillData) {
         console.log('Processing skill:', skillData);
@@ -66,19 +79,20 @@ export const AddSkillToProfileDialog = () => {
         // Add to role skills based on category
         const category = skillData.category?.toLowerCase() || 'common';
         
-        if (category === 'specialized' && !currentRole.specialized.some(s => s.title === skillData.title)) {
+        if (category === 'specialized' && !currentRole.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
           console.log('Adding to specialized skills:', skillData.title);
           currentRole.specialized.push(skillData);
-        } else if (category === 'common' && !currentRole.common.some(s => s.title === skillData.title)) {
+        } else if (category === 'common' && !currentRole.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
           console.log('Adding to common skills:', skillData.title);
           currentRole.common.push(skillData);
-        } else if (category === 'certification' && !currentRole.certifications.some(s => s.title === skillData.title)) {
+        } else if (category === 'certification' && !currentRole.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
           console.log('Adding to certification skills:', skillData.title);
           currentRole.certifications.push(skillData);
         }
 
         // Add to initial skills for persistence
         addSkillToInitialSkills(id, skillData);
+        existingSkillTitles.add(normalizedTitle);
       }
     });
 
