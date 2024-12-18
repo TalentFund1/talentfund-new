@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
@@ -11,6 +11,9 @@ import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUti
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
+
+type SortDirection = 'asc' | 'desc' | null;
+type SortField = 'growth' | 'salary' | null;
 
 const INITIAL_VISIBLE_COUNT = 12;
 
@@ -25,6 +28,20 @@ export const SkillProfileMatrix = () => {
   const { toast } = useToast();
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortField(null);
+        setSortDirection(null);
+      }
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
 
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
