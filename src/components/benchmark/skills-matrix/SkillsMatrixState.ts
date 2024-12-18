@@ -1,7 +1,6 @@
 import { create } from "zustand";
-import { getEmployeeSkills } from "./initialSkills";
-import { roleSkills } from "../../skills/data/roleSkills";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
+import { getEmployeeSkills } from "./initialSkills";
 import { filterSkillsByCategory } from "./skillCategories";
 
 interface SkillState {
@@ -84,8 +83,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>((set) => ({
 export const useSkillsMatrixState = (
   selectedCategory: string,
   selectedLevel: string,
-  selectedInterest: string,
-  matrixSearchSkills: string[]
+  selectedInterest: string
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
@@ -110,15 +108,22 @@ export const useSkillsMatrixState = (
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
-        return state?.requirement.toLowerCase() === selectedInterest.toLowerCase();
-      });
-    }
+        if (!state) return false;
 
-    // Filter by search
-    if (matrixSearchSkills.length > 0) {
-      filteredSkills = filteredSkills.filter((skill) =>
-        matrixSearchSkills.includes(skill.title)
-      );
+        switch (selectedInterest.toLowerCase()) {
+          case "skill_goal":
+            return (
+              state.requirement === "required" ||
+              state.requirement === "skill_goal"
+            );
+          case "not_interested":
+            return state.requirement === "not_interested";
+          case "unknown":
+            return !state.requirement || state.requirement === "unknown";
+          default:
+            return state.requirement === selectedInterest.toLowerCase();
+        }
+      });
     }
 
     // Sort skills
@@ -126,7 +131,7 @@ export const useSkillsMatrixState = (
       const stateA = currentStates[a.title];
       const stateB = currentStates[b.title];
 
-      // Sort by level first
+      // First by level
       const levelDiff = getLevelPriority(stateA?.level) - getLevelPriority(stateB?.level);
       if (levelDiff !== 0) return levelDiff;
 
@@ -135,5 +140,7 @@ export const useSkillsMatrixState = (
     });
   };
 
-  return { filterAndSortSkills };
+  return {
+    filterAndSortSkills,
+  };
 };

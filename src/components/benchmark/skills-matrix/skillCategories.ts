@@ -11,16 +11,20 @@ export const filterSkillsByCategory = (
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   if (!currentRoleSkills) return skills;
 
-  return skills.filter(skill => {
-    if (selectedCategory === "specialized") {
-      return currentRoleSkills.specialized.some(s => s.title === skill.title);
-    }
-    if (selectedCategory === "common") {
-      return currentRoleSkills.common.some(s => s.title === skill.title);
-    }
-    if (selectedCategory === "certification") {
-      return currentRoleSkills.certifications.some(s => s.title === skill.title);
-    }
-    return true;
-  });
+  switch (selectedCategory) {
+    case "specialized":
+      return skills.filter(skill =>
+        currentRoleSkills.specialized.some(s => s.title === skill.title)
+      );
+    case "common":
+      return skills.filter(skill =>
+        currentRoleSkills.common.some(s => s.title === skill.title)
+      );
+    case "certification":
+      return skills.filter(skill =>
+        currentRoleSkills.certifications.some(s => s.title === skill.title)
+      );
+    default:
+      return skills;
+  }
 };
