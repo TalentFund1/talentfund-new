@@ -7,15 +7,21 @@ import { roleSkills } from './data/roleSkills';
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
   
-  console.log('CompanySkillsTable - Current toggled skills:', Array.from(toggledSkills));
+  // Count occurrences of each skill and get their data
+  const skillCounts = Array.from(toggledSkills).reduce((acc, skillTitle) => {
+    acc[skillTitle] = (acc[skillTitle] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
-  // Get unique skills with their data directly from toggled skills
-  const uniqueSkills = Array.from(toggledSkills).map(skillTitle => {
+  console.log('Processing toggled skills:', Array.from(toggledSkills));
+
+  // Get unique skills with their counts
+  const uniqueSkills = Array.from(new Set(Array.from(toggledSkills))).map(skillTitle => {
     console.log('Getting data for skill:', skillTitle);
     const skillData = getUnifiedSkillData(skillTitle);
     return {
       ...skillData,
-      count: 1 // Each toggled skill counts as 1
+      count: skillCounts[skillTitle] || 1
     };
   });
 
@@ -72,7 +78,7 @@ export const CompanySkillsTable = () => {
                     <TableCell>{skill.weight || 'technical'}</TableCell>
                     <TableCell className="text-right">
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm bg-green-100 text-green-800">
-                        ↗ {skill.growth || '20%'}
+                        ↗ {skill.growth || '0%'}
                       </span>
                     </TableCell>
                     <TableCell className="text-right">{skill.salary || '$150,000'}</TableCell>
