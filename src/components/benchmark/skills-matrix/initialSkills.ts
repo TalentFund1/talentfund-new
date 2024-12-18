@@ -1,19 +1,23 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { aiSkills } from './data/aiSkills';
-import { webSkills } from './data/webSkills';
-import { commonSkills } from './data/commonSkills';
-import { certificationSkills } from './data/certificationSkills';
+import { Skills, getAllSkills } from '../../skills/data/skills/allSkills';
+
+// Get base skills from allSkills
+const baseSkills = getAllSkills();
 
 // Employee skills database with additional non-matching skills
 const employeeSkills: { [key: string]: UnifiedSkill[] } = {
   "123": [
-    ...aiSkills,
-    webSkills[0], // React
-    webSkills[1], // Vue.js
-    commonSkills[0], // Agile
-    commonSkills[1], // Technical Communication
-    certificationSkills[1], // GCP
-    certificationSkills[2], // Azure
+    // Filter and map skills from allSkills based on employee's profile
+    ...baseSkills.filter(skill => 
+      ["Machine Learning", "Deep Learning", "Natural Language Processing", "Computer Vision", "TensorFlow", "GraphQL"].includes(skill.title)
+    ),
+    ...baseSkills.filter(skill => 
+      ["Python", "Problem Solving", "Technical Writing", "Git Version Control", "Communication"].includes(skill.title)
+    ),
+    ...baseSkills.filter(skill => 
+      ["AWS Certified Machine Learning - Specialty", "TensorFlow Developer Certificate"].includes(skill.title)
+    ),
+    // Keep custom skills that might not be in allSkills
     {
       id: "data-1",
       title: "Data Visualization",
@@ -42,10 +46,15 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     }
   ],
   "124": [
-    ...webSkills,
-    aiSkills[0], // Machine Learning
-    commonSkills[2], // Team Leadership
-    certificationSkills[0], // AWS Solutions Architect
+    ...baseSkills.filter(skill => 
+      ["Node.js", "Database Design", "API Development", "System Architecture", "Kubernetes", "GraphQL"].includes(skill.title)
+    ),
+    ...baseSkills.filter(skill => 
+      ["Problem Solving", "Code Review", "Agile Methodologies", "Git Version Control", "Communication"].includes(skill.title)
+    ),
+    ...baseSkills.filter(skill => 
+      ["AWS Certified Solutions Architect", "Kubernetes Administrator (CKA)"].includes(skill.title)
+    ),
     {
       id: "ui-1",
       title: "UI/UX Design",
@@ -74,10 +83,9 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     }
   ],
   "125": [
-    webSkills[0], // React
-    commonSkills[0], // Agile
-    commonSkills[1], // Technical Communication
-    certificationSkills[1], // GCP
+    ...baseSkills.filter(skill => 
+      ["React", "Agile", "Technical Communication", "GCP", "SEO Optimization"].includes(skill.title)
+    ),
     {
       id: "analytics-1",
       title: "Google Analytics",
@@ -90,24 +98,12 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       salary: "$125,000",
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
-    },
-    {
-      id: "seo-1",
-      title: "SEO Optimization",
-      category: "specialized",
-      businessCategory: "Marketing",
-      subcategory: "SEO",
-      weight: "technical",
-      level: "intermediate",
-      growth: "12%",
-      salary: "$120,000",
-      confidence: "high",
-      benchmarks: { B: true, R: true, M: true, O: true }
     }
   ],
   "126": [
-    commonSkills[2], // Team Leadership
-    certificationSkills[0], // AWS Solutions Architect
+    ...baseSkills.filter(skill => 
+      ["Team Leadership", "AWS Solutions Architect"].includes(skill.title)
+    ),
     {
       id: "proj-1",
       title: "Project Management",
