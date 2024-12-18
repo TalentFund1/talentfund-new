@@ -1,5 +1,7 @@
-import { getSubcategory, getBusinessCategory, getSkillWeight } from './utils/categories';
-import { getSkillGrowth, getSkillSalary } from './utils/metrics';
+import { getSubcategory } from './utils/categories/subcategories';
+import { getBusinessCategory } from './utils/categories/businessCategories';
+import { getSkillWeight } from './utils/categories/skillWeights';
+import { generateSkillId, getSkillCategory } from './utils/categories/skillLists';
 import { UnifiedSkill } from '../types/SkillTypes';
 
 export const normalizeSkillTitle = (title: string): string => title;
@@ -9,18 +11,27 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   
   const subcategory = getSubcategory(title);
   const businessCategory = getBusinessCategory(title);
+  const category = getSkillCategory(title);
+  const id = generateSkillId(title);
+
+  console.log('Skill categorization:', {
+    title,
+    id,
+    category,
+    subcategory,
+    businessCategory
+  });
 
   return {
-    id: `SKILL_${title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
+    id,
     title: title,
-    category: subcategory.includes('Certification') ? 'certification' : 
-             ['Mobile Development', 'API Development', 'Frontend Development', 'Backend Development'].includes(subcategory) ? 'specialized' : 'common',
+    category,
     businessCategory: businessCategory,
     subcategory: subcategory,
     weight: getSkillWeight(title),
     level: 'unspecified',
-    growth: getSkillGrowth(title),
-    salary: getSkillSalary(title),
+    growth: '20%',
+    salary: '$150,000',
     confidence: 'medium',
     benchmarks: { B: true, R: true, M: true, O: true }
   };

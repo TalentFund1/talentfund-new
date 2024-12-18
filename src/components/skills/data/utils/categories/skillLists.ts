@@ -9,6 +9,7 @@ export const specializedSkills = [
   'PyTorch',
   'MLflow',
   'Natural Language Understanding',
+  'Amazon Web Services', // Added AWS here as specialized
   
   // Backend & Infrastructure
   'Node.js',
@@ -19,6 +20,8 @@ export const specializedSkills = [
   'Docker',
   'DevOps',
   'Microservices',
+  'Linux Administration', // Added as specialized
+  'Shell Scripting', // Added as specialized
   
   // Frontend & Mobile
   'React',
@@ -35,13 +38,7 @@ export const specializedSkills = [
   'System Design',
   'Technical Architecture',
   'Data Engineering',
-  'Blockchain',
-  
-  // Cloud & Infrastructure
-  'Amazon Web Services',
-  'AWS',
-  'Jenkins',
-  'Terraform'
+  'Blockchain'
 ];
 
 export const commonSkills = [
@@ -49,7 +46,6 @@ export const commonSkills = [
   'Python',
   'Problem Solving',
   'Technical Writing',
-  'Shell Scripting',
   'Code Review',
   'Agile Methodologies',
   'Git',
@@ -64,7 +60,6 @@ export const commonSkills = [
   'Stakeholder Management',
   
   // Technical Skills
-  'Linux Administration',
   'Cross-browser Compatibility',
   'Responsive Design',
   'UI/UX Design',
@@ -96,3 +91,43 @@ export const certificationSkills = [
   'Certified Scrum Master (CSM)',
   'ITIL Foundation'
 ];
+
+// Helper function to generate a skill ID
+export const generateSkillId = (title: string): string => {
+  return `SKILL_${title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`;
+};
+
+// Helper function to determine skill category
+export const getSkillCategory = (skillTitle: string): 'specialized' | 'common' | 'certification' => {
+  if (specializedSkills.includes(skillTitle)) {
+    return 'specialized';
+  }
+  if (commonSkills.includes(skillTitle)) {
+    return 'common';
+  }
+  if (certificationSkills.includes(skillTitle)) {
+    return 'certification';
+  }
+  
+  // Fallback logic based on naming patterns
+  const lowerTitle = skillTitle.toLowerCase();
+  if (lowerTitle.includes('certification') || 
+      lowerTitle.includes('certified') ||
+      lowerTitle.includes('certificate')) {
+    return 'certification';
+  }
+  
+  // Check for specialized skill patterns
+  if (lowerTitle.includes('aws') ||
+      lowerTitle.includes('cloud') ||
+      lowerTitle.includes('ai') ||
+      lowerTitle.includes('ml') ||
+      lowerTitle.includes('architecture') ||
+      lowerTitle.includes('design') ||
+      lowerTitle.includes('development')) {
+    return 'specialized';
+  }
+  
+  // Default to common if no other match
+  return 'common';
+};
