@@ -8,6 +8,7 @@ import { roleSkills } from '../data/roleSkills';
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
   setToggledSkills: (skills: Set<string>) => void;
+  toggleSkill: (skillTitle: string) => void;  // Added this line
 }
 
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
@@ -26,7 +27,6 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       source: 'useState initializer'
     });
 
-    // If no saved skills exist, initialize with all skills toggled
     if (!savedSkills || savedSkills.length === 0) {
       const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
       if (currentRoleSkills) {
@@ -43,7 +43,16 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     return new Set(savedSkills);
   });
 
-  // Effect to reload toggled skills when role or employee ID changes
+  const toggleSkill = (skillTitle: string) => {
+    const newSkills = new Set(toggledSkills);
+    if (newSkills.has(skillTitle)) {
+      newSkills.delete(skillTitle);
+    } else {
+      newSkills.add(skillTitle);
+    }
+    handleSetToggledSkills(newSkills);
+  };
+
   useEffect(() => {
     const currentRoleId = selectedRole || id || "";
     if (!currentRoleId) {
@@ -131,7 +140,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   }, [selectedRole, id]);
 
   return (
-    <ToggledSkillsContext.Provider value={{ toggledSkills, setToggledSkills: handleSetToggledSkills }}>
+    <ToggledSkillsContext.Provider value={{ 
+      toggledSkills, 
+      setToggledSkills: handleSetToggledSkills,
+      toggleSkill 
+    }}>
       {children}
     </ToggledSkillsContext.Provider>
   );

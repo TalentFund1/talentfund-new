@@ -19,7 +19,7 @@ export const SkillProfileMatrix = () => {
     {
       title: "React",
       subcategory: "Frontend",
-      category: "Technical",
+      category: "specialized", // Changed from "Technical" to "specialized"
       growth: "10%",
       salary: "$120k",
       level: "Advanced"
