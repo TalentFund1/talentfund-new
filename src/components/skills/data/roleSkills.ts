@@ -7,16 +7,18 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
     soc: "15-2051",
     specialized: [
       getUnifiedSkillData("Machine Learning"),
-      getUnifiedSkillData("Deep Learning")
+      getUnifiedSkillData("Deep Learning"),
+      getUnifiedSkillData("Python"),
+      getUnifiedSkillData("TensorFlow"),
+      getUnifiedSkillData("Natural Language Processing")
     ],
     common: [
-      getUnifiedSkillData("Natural Language Processing"),
-      getUnifiedSkillData("TensorFlow"),
-      getUnifiedSkillData("Python"),
       getUnifiedSkillData("Problem Solving"),
       getUnifiedSkillData("Technical Writing"),
       getUnifiedSkillData("Git Version Control"),
-      getUnifiedSkillData("Communication")
+      getUnifiedSkillData("Communication"),
+      getUnifiedSkillData("Code Review"),
+      getUnifiedSkillData("Agile Methodologies")
     ],
     certifications: [
       getUnifiedSkillData("AWS Certified Machine Learning - Specialty"),

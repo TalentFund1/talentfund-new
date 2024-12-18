@@ -11,7 +11,6 @@ export const categorizeSkills = (skills: string[], profileId: string) => {
   };
 };
 
-// Add new export for single skill categorization
 export const categorizeSkill = (skill: string, profileId: string): 'specialized' | 'common' | 'certification' => {
   console.log('Categorizing skill:', skill, 'for profile:', profileId);
   const skillData = getUnifiedSkillData(skill);

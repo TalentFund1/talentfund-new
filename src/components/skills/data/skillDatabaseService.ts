@@ -70,28 +70,55 @@ const determineSkillCategory = (title: string): 'specialized' | 'common' | 'cert
   if (lowerTitle.includes('certification') || 
       lowerTitle.includes('certified') ||
       lowerTitle.includes('certificate')) {
+    console.log(`${title} categorized as certification based on name`);
     return 'certification';
   }
 
-  // Check for specialized skills
+  // Common skills list
+  const commonSkills = [
+    'team leadership',
+    'project management',
+    'communication',
+    'problem solving',
+    'git',
+    'agile',
+    'code review',
+    'technical writing'
+  ];
+
+  if (commonSkills.some(skill => lowerTitle.includes(skill))) {
+    console.log(`${title} categorized as common based on predefined list`);
+    return 'common';
+  }
+
+  // Specialized skills are typically technical or domain-specific
   const specializedKeywords = [
-    'architecture',
     'machine learning',
     'deep learning',
     'ai',
     'artificial intelligence',
+    'python',
+    'javascript',
+    'react',
+    'node',
+    'database',
+    'api',
     'cloud',
     'aws',
     'azure',
     'devops',
-    'security'
+    'kubernetes',
+    'docker',
+    'architecture',
+    'system design'
   ];
 
   if (specializedKeywords.some(keyword => lowerTitle.includes(keyword))) {
+    console.log(`${title} categorized as specialized based on keywords`);
     return 'specialized';
   }
 
-  // Default to common
+  console.log(`${title} defaulting to common category`);
   return 'common';
 };
 
@@ -114,11 +141,12 @@ const determineBusinessCategory = (title: string): string => {
 const determineSubcategory = (title: string): string => {
   const lowerTitle = title.toLowerCase();
   
-  if (lowerTitle.includes('backend')) return 'Backend Development';
-  if (lowerTitle.includes('frontend')) return 'Frontend Development';
-  if (lowerTitle.includes('database')) return 'Data Management';
-  if (lowerTitle.includes('machine learning')) return 'AI & ML';
-  if (lowerTitle.includes('management')) return 'Management';
+  if (lowerTitle.includes('machine learning') || lowerTitle.includes('deep learning')) {
+    return 'Artificial Intelligence and Machine Learning';
+  }
+  if (lowerTitle.includes('leadership') || lowerTitle.includes('management')) {
+    return 'Leadership';
+  }
   
   return 'General';
 };
@@ -127,8 +155,12 @@ const determineSubcategory = (title: string): string => {
 const determineWeight = (title: string): 'critical' | 'technical' | 'necessary' => {
   const lowerTitle = title.toLowerCase();
   
-  if (lowerTitle.includes('certification')) return 'critical';
-  if (lowerTitle.includes('management') || lowerTitle.includes('leadership')) return 'necessary';
+  if (lowerTitle.includes('certification') || lowerTitle.includes('certified')) {
+    return 'critical';
+  }
+  if (lowerTitle.includes('management') || lowerTitle.includes('leadership')) {
+    return 'necessary';
+  }
   
   return 'technical';
 };
