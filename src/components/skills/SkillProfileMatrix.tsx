@@ -41,6 +41,7 @@ export const SkillProfileMatrix = () => {
     }
   };
 
+  // Get current role skills
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const filteredSkills = (() => {
@@ -53,20 +54,7 @@ export const SkillProfileMatrix = () => {
       ...currentRoleSkills.certifications
     ];
 
-    console.log('Initial skills array:', skills.length);
-
-    // Get all skills that aren't in the role skills
-    const allSkillTitles = new Set(skills.map(s => s.title));
-    const additionalSkills = Array.from(toggledSkills)
-      .filter(skillTitle => !allSkillTitles.has(skillTitle))
-      .map(skillTitle => {
-        console.log('Adding skill:', skillTitle);
-        return getUnifiedSkillData(skillTitle);
-      });
-
-    // Combine role skills with additional skills
-    skills = [...skills, ...additionalSkills];
-    console.log('Combined skills array:', skills.length);
+    console.log('Initial role skills array:', skills.length);
 
     // Filter by skill type using the centralized category system
     if (skillType !== "all") {
@@ -88,7 +76,7 @@ export const SkillProfileMatrix = () => {
 
     console.log('After category filtering:', skills.length);
 
-    // Sort skills based on toggle state first, but don't filter them out
+    // Sort skills based on toggle state first
     const sortedSkills = [...skills].sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
@@ -113,8 +101,8 @@ export const SkillProfileMatrix = () => {
           const bGrowth = parseFloat(b.growth);
           return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
         } else if (sortField === 'salary') {
-          const aSalary = parseFloat(a.salary.replace(/[^0-9.-]+/g, ""));
-          const bSalary = parseFloat(b.salary.replace(/[^0-9.-]+/g, ""));
+          const aSalary = parseFloat(a.salary?.replace(/[^0-9.-]+/g, "") || "0");
+          const bSalary = parseFloat(b.salary?.replace(/[^0-9.-]+/g, "") || "0");
           return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
         }
         return 0;
