@@ -20,7 +20,7 @@ const specializedSkills = [
   'System Design',
   'Technical Architecture',
   'Risk Management',
-  'Git',
+  'Git',  // Added Git to specialized skills
   'CSS/SASS',
   'Team Leadership'
 ];
@@ -97,7 +97,7 @@ export const getSubcategory = (skillTitle: string): string => {
     'React': 'Frontend Frameworks',
     'Next.js': 'Frontend Frameworks',
     'Git Version Control': 'Development Tools',
-    'Git': 'Development Tools'
+    'Git': 'Development Tools'  // Added Git mapping
   };
 
   return subcategories[skillTitle] || 'Development Tools';
@@ -119,7 +119,7 @@ export const getBusinessCategory = (skillTitle: string): string => {
     'Node.js': 'Information Technology',
     'React': 'Information Technology',
     'Next.js': 'Information Technology',
-    'Git': 'Information Technology',
+    'Git': 'Information Technology',  // Added Git mapping
     'Communication': 'Media and Communications',
     'Technical Writing': 'Media and Communications',
     'Problem Solving': 'Physical and Inherent Abilities',
@@ -147,7 +147,7 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'System Design',
     'Technical Architecture',
     'Team Leadership',
-    'Git'
+    'Git'  // Added Git as a critical skill
   ];
 
   const technicalSkills = [
