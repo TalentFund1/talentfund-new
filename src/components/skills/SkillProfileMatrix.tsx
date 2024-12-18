@@ -30,7 +30,7 @@ export const SkillProfileMatrix = () => {
   // Get current role skills
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Calculate counts only for toggled skills
+  // Calculate counts only for toggled skills in the current role
   const calculateToggledSkillCounts = () => {
     const allSkills = [
       ...currentRoleSkills.specialized,
@@ -41,7 +41,9 @@ export const SkillProfileMatrix = () => {
     const toggledSkillsList = Array.from(toggledSkills);
     
     const counts = {
-      all: toggledSkillsList.length,
+      all: toggledSkillsList.filter(skillTitle => 
+        allSkills.some(skill => skill.title === skillTitle)
+      ).length,
       critical: allSkills.filter(skill => 
         toggledSkills.has(skill.title) && 
         getCategoryForSkill(skill, id || "123") === 'critical'
@@ -56,7 +58,7 @@ export const SkillProfileMatrix = () => {
       ).length
     };
 
-    console.log('Calculated toggled skill counts:', counts);
+    console.log('Calculated toggled skill counts for role:', id, counts);
     return counts;
   };
 
@@ -82,11 +84,19 @@ export const SkillProfileMatrix = () => {
   };
 
   const filteredSkills = (() => {
+    // Start with only the current role's skills
     let skills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
+
+    console.log(`Filtering skills for role ${id}:`, {
+      totalSkills: skills.length,
+      specialized: currentRoleSkills.specialized.length,
+      common: currentRoleSkills.common.length,
+      certifications: currentRoleSkills.certifications.length
+    });
 
     // Filter by skill type
     if (skillType !== "all") {
