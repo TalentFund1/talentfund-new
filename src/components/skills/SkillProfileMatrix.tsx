@@ -88,8 +88,8 @@ export const SkillProfileMatrix = () => {
 
     console.log('After category filtering:', skills.length);
 
-    // Sort skills based on toggle state first
-    skills.sort((a, b) => {
+    // Sort skills based on toggle state first, but don't filter them out
+    const sortedSkills = [...skills].sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
       
@@ -100,7 +100,6 @@ export const SkillProfileMatrix = () => {
 
     // Apply additional sorting if specified
     if (sortField && sortDirection) {
-      const sortedSkills = [...skills];
       sortedSkills.sort((a, b) => {
         // Preserve toggle-based ordering within each group
         const aIsToggled = toggledSkills.has(a.title);
@@ -120,11 +119,10 @@ export const SkillProfileMatrix = () => {
         }
         return 0;
       });
-      skills = sortedSkills;
     }
 
-    console.log('Final filtered and sorted skills:', skills.length);
-    return skills;
+    console.log('Final filtered and sorted skills:', sortedSkills.length);
+    return sortedSkills;
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
