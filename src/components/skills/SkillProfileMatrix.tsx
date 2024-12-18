@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
@@ -45,7 +45,6 @@ export const SkillProfileMatrix = () => {
   const filteredSkills = (() => {
     console.log('Filtering skills with type:', skillType);
     
-    // Get initial skills based on skillType
     let skills = [];
     if (skillType === "all") {
       skills = [
@@ -54,31 +53,23 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ];
     } else if (skillType === "specialized") {
-      skills = [...currentRoleSkills.specialized];
+      skills = currentRoleSkills.specialized;
     } else if (skillType === "common") {
-      skills = [...currentRoleSkills.common];
+      skills = currentRoleSkills.common;
     } else if (skillType === "certification") {
-      skills = [...currentRoleSkills.certifications];
+      skills = currentRoleSkills.certifications;
     }
 
     console.log('Initial skills array:', skills.length);
 
-    // Get all skills that aren't in the role skills but match the current type
+    // Get all skills that aren't in the role skills
     const allSkillTitles = new Set(skills.map(s => s.title));
     const additionalSkills = Array.from(toggledSkills)
       .filter(skillTitle => !allSkillTitles.has(skillTitle))
       .map(skillTitle => {
-        const skillData = getUnifiedSkillData(skillTitle);
-        const category = getCategoryForSkill(skillData, id || "123");
-        
-        // Only include additional skills if they match the current skillType
-        if (skillType === "all" || category === skillType) {
-          console.log(`Adding skill: ${skillTitle} with category: ${category}`);
-          return skillData;
-        }
-        return null;
-      })
-      .filter(skill => skill !== null); // Remove null entries
+        console.log('Adding skill:', skillTitle);
+        return getUnifiedSkillData(skillTitle);
+      });
 
     // Combine role skills with additional skills
     skills = [...skills, ...additionalSkills];
