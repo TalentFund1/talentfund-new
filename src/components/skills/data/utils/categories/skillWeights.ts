@@ -31,7 +31,8 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'Database Design',
     'Node.js',
     'React',
-    'TypeScript'
+    'TypeScript',
+    'Git Version Control'  // Added Git Version Control as technical skill
   ];
 
   // Necessary skills - important but not core technical requirements
