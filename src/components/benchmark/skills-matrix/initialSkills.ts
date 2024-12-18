@@ -1,4 +1,5 @@
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { roleSkills } from '../../skills/data/roleSkills';
 
 export const initialSkills = {
   "124": [
@@ -24,7 +25,33 @@ export const initialSkills = {
 
 export const getEmployeeSkills = (id: string) => {
   console.log('Getting skills for employee:', id);
-  const skills = initialSkills[id as keyof typeof initialSkills] || [];
-  console.log('Found employee skills:', skills);
-  return skills;
+  
+  // Get base skills
+  const baseSkills = initialSkills[id as keyof typeof initialSkills] || [];
+  
+  // Get role skills for categorization
+  const currentRole = roleSkills[id as keyof typeof roleSkills];
+  
+  // Map skills with correct categorization from roleSkills
+  const categorizedSkills = baseSkills.map(skill => {
+    let category = 'common'; // default
+    
+    if (currentRole) {
+      if (currentRole.specialized.some(s => s.title === skill.title)) {
+        category = 'specialized';
+      } else if (currentRole.certifications.some(s => s.title === skill.title)) {
+        category = 'certification';
+      }
+    }
+    
+    console.log(`Categorized skill "${skill.title}" as ${category}`);
+    
+    return {
+      ...skill,
+      category
+    };
+  });
+
+  console.log('Found employee skills:', categorizedSkills);
+  return categorizedSkills;
 };

@@ -22,7 +22,8 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
 
   console.log(`Filtering skills by category ${category}:`, {
     totalSkills: skills.length,
-    categorySkills: uniqueRoleSkills.length
+    categorySkills: uniqueRoleSkills.length,
+    skillTitles: skills.map(s => s.title)
   });
 
   return skills.filter(skill => {
@@ -30,6 +31,8 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
     
     if (isInCategory) {
       console.log(`Skill "${skill.title}" categorized as ${category}`);
+    } else {
+      console.log(`Skill "${skill.title}" not found in ${category} category`);
     }
     
     return isInCategory;
@@ -41,6 +44,8 @@ export const getCategoryCount = (skills: any[], category: string) => {
 };
 
 export const categorizeSkill = (skillName: string): string => {
+  console.log(`Categorizing skill: ${skillName}`);
+  
   // Check each role's skill categories
   for (const role of Object.values(roleSkills)) {
     if (role.specialized.some(s => s.title === skillName)) {
