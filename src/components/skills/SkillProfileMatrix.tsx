@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
@@ -7,7 +7,7 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
-import { getCategoryForSkill } from './utils/skillCountUtils';
+import { getSkillWeight } from './data/utils/categories/skillWeights';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
@@ -15,13 +15,10 @@ import { getUnifiedSkillData } from './data/skillDatabaseService';
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
 
-const INITIAL_VISIBLE_COUNT = 12;
-
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -80,6 +77,8 @@ export const SkillProfileMatrix = () => {
         } else if (currentRoleSkills.certifications.some(s => s.title === skillTitle)) {
           skillData.category = 'certification';
         }
+        // Determine weight (critical, technical, necessary)
+        skillData.weight = getSkillWeight(skillTitle);
         return skillData;
       });
 
@@ -89,17 +88,11 @@ export const SkillProfileMatrix = () => {
 
     let filteredSkills = skills;
 
-    // Apply category filter
+    // Apply category filter based on weight (critical, technical, necessary)
     if (selectedCategory !== 'all') {
       filteredSkills = filteredSkills.filter(skill => {
-        if (selectedCategory === 'specialized') {
-          return currentRoleSkills.specialized.some(s => s.title === skill.title);
-        } else if (selectedCategory === 'common') {
-          return currentRoleSkills.common.some(s => s.title === skill.title);
-        } else if (selectedCategory === 'certification') {
-          return currentRoleSkills.certifications.some(s => s.title === skill.title);
-        }
-        return true;
+        const weight = getSkillWeight(skill.title);
+        return weight === selectedCategory;
       });
     }
 
@@ -146,15 +139,9 @@ export const SkillProfileMatrix = () => {
 
   const skillCounts = {
     all: filteredSkills.length,
-    specialized: filteredSkills.filter(skill => 
-      currentRoleSkills.specialized.some(s => s.title === skill.title)
-    ).length,
-    common: filteredSkills.filter(skill => 
-      currentRoleSkills.common.some(s => s.title === skill.title)
-    ).length,
-    certification: filteredSkills.filter(skill => 
-      currentRoleSkills.certifications.some(s => s.title === skill.title)
-    ).length
+    critical: filteredSkills.filter(skill => getSkillWeight(skill.title) === 'critical').length,
+    technical: filteredSkills.filter(skill => getSkillWeight(skill.title) === 'technical').length,
+    necessary: filteredSkills.filter(skill => getSkillWeight(skill.title) === 'necessary').length
   };
 
   const toggledSkillCount = Array.from(toggledSkills).length;
@@ -187,7 +174,7 @@ export const SkillProfileMatrix = () => {
 
         <div className="rounded-lg border border-border overflow-hidden">
           <SkillProfileMatrixTable 
-            paginatedSkills={filteredSkills} 
+            paginatedSkills={filteredSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={(skillTitle) => {
               const newToggledSkills = new Set(toggledSkills);
