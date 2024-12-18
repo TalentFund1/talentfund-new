@@ -131,7 +131,9 @@ export const SkillProfileMatrix = () => {
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
-  const toggledSkillCount = Array.from(toggledSkills).length;
+  const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
+    filteredSkills.some(fs => fs.title === skill)
+  ).length;
 
   console.log('Skill counts:', {
     total: filteredSkills.length,
