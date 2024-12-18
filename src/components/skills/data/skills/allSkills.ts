@@ -1,6 +1,6 @@
 import { UnifiedSkill, SkillCategory } from '../../types/SkillTypes';
 
-// Core skill classification structure
+// Core skill classification structure - Single source of truth
 const skillClassifications: { [key: string]: SkillCategory } = {
   // AI & ML Skills
   "Machine Learning": "specialized",
