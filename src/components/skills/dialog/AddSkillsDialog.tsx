@@ -12,7 +12,7 @@ import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from "
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { technicalSkills, softSkills } from "../skillsData";
+import { technicalSkills, softSkills } from "@/components/skillsData";
 
 export const AddSkillsDialog = () => {
   const [open, setOpen] = useState(false);
