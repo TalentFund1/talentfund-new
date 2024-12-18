@@ -10,12 +10,10 @@ import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
+import { getUnifiedSkillData } from './data/skillDatabaseService';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
-
-const STORAGE_KEY = 'added-skills';
-const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
@@ -27,36 +25,7 @@ export const SkillProfileMatrix = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const { toast } = useToast();
   const { id } = useParams();
-  const { toggledSkills, setToggledSkills } = useToggledSkills();
-
-  useEffect(() => {
-    if (id) {
-      try {
-        const savedSkills = localStorage.getItem(getStorageKey(id));
-        if (savedSkills) {
-          const parsedSkills = JSON.parse(savedSkills);
-          console.log('Loading saved skills:', { roleId: id, skills: parsedSkills });
-          setToggledSkills(new Set([...toggledSkills, ...parsedSkills]));
-        }
-      } catch (error) {
-        console.error('Error loading saved skills:', error);
-      }
-    }
-  }, [id]);
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      if (sortDirection === 'asc') {
-        setSortDirection('desc');
-      } else if (sortDirection === 'desc') {
-        setSortField(null);
-        setSortDirection(null);
-      }
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
+  const { toggledSkills } = useToggledSkills();
 
   // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
@@ -82,12 +51,23 @@ export const SkillProfileMatrix = () => {
 
     console.log('Initial skills array:', skills.length);
 
-    let sortedSkills = skills.filter(skill => {
-      const isInCurrentRole = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ].some(roleSkill => roleSkill.title === skill.title);
+    // Create a map of existing role skills for faster lookup
+    const roleSkillsMap = new Set(skills.map(skill => skill.title));
+
+    // Get all toggled skills that aren't in the role's default skills
+    const additionalSkills = Array.from(toggledSkills)
+      .filter(skillTitle => !roleSkillsMap.has(skillTitle))
+      .map(skillTitle => {
+        // Get or create unified skill data for the additional skill
+        return getUnifiedSkillData(skillTitle);
+      });
+
+    // Combine role skills with additional toggled skills
+    let allSkills = [...skills, ...additionalSkills];
+
+    // Filter based on toggle state and category
+    let sortedSkills = allSkills.filter(skill => {
+      const isToggled = toggledSkills.has(skill.title);
 
       // Apply category filter
       if (selectedCategory !== 'all') {
@@ -97,7 +77,7 @@ export const SkillProfileMatrix = () => {
         }
       }
 
-      return isInCurrentRole || toggledSkills.has(skill.title); // Include toggled skills
+      return isToggled;
     });
 
     console.log('After filtering:', sortedSkills.length);
@@ -177,18 +157,10 @@ export const SkillProfileMatrix = () => {
             paginatedSkills={filteredSkills}
             toggledSkills={toggledSkills}
             onToggleSkill={(skillTitle) => {
-              const newToggledSkills = new Set(toggledSkills);
-              if (newToggledSkills.has(skillTitle)) {
-                newToggledSkills.delete(skillTitle);
-              } else {
-                newToggledSkills.add(skillTitle);
-              }
-              setToggledSkills(newToggledSkills);
               setIsDirty(true);
-              
               toast({
                 title: "Skill Updated",
-                description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
+                description: `${skillTitle} has been ${toggledSkills.has(skillTitle) ? 'removed from' : 'added to'} your skills.`,
               });
             }}
             sortField={sortField}
