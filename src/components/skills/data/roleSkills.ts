@@ -5,17 +5,25 @@ import { Skills, getAllSkills } from './skills/allSkills';
 // Helper function to get skills and categorize them based on their category from allSkills
 const getSkillsByCategory = (titles: string[]) => {
   console.log('Getting skills for titles:', titles);
-  return titles.map(title => {
+  const skills = titles.map(title => {
     const skill = getUnifiedSkillData(title);
     console.log(`Categorized skill ${title}:`, skill.category);
     return skill;
   });
+  return skills;
 };
 
-// Helper function to filter skills by category from allSkills
+// Helper function to filter skills by category from allSkills database
 const filterSkillsByCategory = (skills: ReturnType<typeof getSkillsByCategory>, category: 'specialized' | 'common' | 'certification') => {
-  return skills.filter(skill => skill.category === category);
+  console.log(`Filtering skills for category ${category}`);
+  const filtered = skills.filter(skill => skill.category === category);
+  console.log(`Found ${filtered.length} skills for category ${category}`);
+  return filtered;
 };
+
+// Get all skills first
+const allSkills = getAllSkills();
+console.log('Loaded all skills from universal database:', allSkills.length);
 
 export const roleSkills: { [key: string]: RoleSkillData } = {
   "123": {
@@ -140,5 +148,10 @@ console.log('Role skills loaded:', Object.keys(roleSkills).map(key => ({
   role: roleSkills[key].title,
   specialized: roleSkills[key].specialized.length,
   common: roleSkills[key].common.length,
-  certifications: roleSkills[key].certifications.length
+  certifications: roleSkills[key].certifications.length,
+  categories: {
+    specialized: roleSkills[key].specialized.map(s => s.title),
+    common: roleSkills[key].common.map(s => s.title),
+    certifications: roleSkills[key].certifications.map(s => s.title)
+  }
 })));
