@@ -2,14 +2,20 @@ import { Skill, SkillWeight, SkillCategory, UnifiedSkill } from '../types/SkillT
 import { Skills, getAllSkills } from './skills/allSkills';
 import { getSkillGrowth, getSkillSalary } from './utils/metrics';
 import { normalizeSkillTitle } from '../utils/normalization';
+import { technicalSkills } from './skills/categories/technicalSkills';
+import { certificationSkills } from './skills/categories/certificationSkills';
 
-// Helper function to determine skill weight based on growth and category
-const determineWeight = (growth: string, category: string): SkillWeight => {
-  const growthValue = parseFloat(growth);
-  if (growthValue >= 25) return 'critical';
-  if (category === 'specialized' || category === 'common') return 'technical';
-  return 'necessary';
-};
+// Initialize skills database with all skills
+const skillsDatabase = [
+  ...getAllSkills(),
+  ...technicalSkills,
+  ...certificationSkills
+].map(skill => ({
+  ...skill,
+  growth: skill.growth || getSkillGrowth(skill.title),
+  salary: skill.salary || getSkillSalary(skill.title),
+  businessCategory: skill.businessCategory || getBusinessCategory(skill.title)
+}));
 
 // Helper function to determine business category
 const getBusinessCategory = (skillTitle: string): string => {
@@ -31,14 +37,6 @@ const getBusinessCategory = (skillTitle: string): string => {
   return categories[skillTitle] || 'Information Technology';
 };
 
-// Use the consolidated skills directly
-export const skillsDatabase = getAllSkills().map(skill => ({
-  ...skill,
-  growth: skill.growth || getSkillGrowth(skill.title),
-  salary: skill.salary || getSkillSalary(skill.title),
-  businessCategory: skill.businessCategory || getBusinessCategory(skill.title)
-}));
-
 console.log('Initialized skills database with complete metadata:', {
   totalSkills: skillsDatabase.length,
   withGrowth: skillsDatabase.filter(s => s.growth).length,
@@ -51,7 +49,9 @@ console.log('Initialized skills database with complete metadata:', {
 
 // Helper functions
 export const getSkillByTitle = (title: string): Skill | undefined => {
-  const skill = skillsDatabase.find(skill => skill.title === title);
+  const normalizedTitle = normalizeSkillTitle(title);
+  const skill = skillsDatabase.find(skill => normalizeSkillTitle(skill.title) === normalizedTitle);
+  
   if (skill) {
     console.log('Found skill by title:', { title, skill });
   } else {
