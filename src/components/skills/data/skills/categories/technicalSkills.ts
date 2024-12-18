@@ -1,7 +1,20 @@
 import { UnifiedSkill } from '../../../types/SkillTypes';
 
 export const technicalSkills: UnifiedSkill[] = [
-  // AI Skills
+  // Programming Languages
+  {
+    id: 'SKILL028',
+    title: "Python",
+    subcategory: "Programming Languages",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "30%",
+    salary: "$150,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
   {
     id: 'SKILL001',
     title: "Machine Learning",
@@ -80,7 +93,6 @@ export const technicalSkills: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
-  // Backend Skills
   {
     id: 'SKILL007',
     title: "Node.js",
@@ -146,7 +158,6 @@ export const technicalSkills: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
-  // DevOps Skills
   {
     id: 'SKILL012',
     title: "Kubernetes",

@@ -20,15 +20,12 @@ const getBusinessCategory = (skillTitle: string): string => {
     'Machine Learning': 'Information Technology',
     'React': 'Information Technology',
     'Node.js': 'Information Technology',
+    'Python': 'Information Technology',
     'Communication': 'Media and Communications',
     'Leadership': 'Initiative and Leadership',
     'Project Management': 'Project Management',
     'Data Science': 'Analysis',
-    'Risk Management': 'Risk and Compliance',
-    'Problem Solving': 'Physical and Inherent Abilities',
-    'Team Leadership': 'Initiative and Leadership',
-    'Technical Writing': 'Media and Communications',
-    'Strategic Planning': 'Initiative and Leadership'
+    'Risk Management': 'Risk and Compliance'
   };
   
   return categories[skillTitle] || 'Information Technology';
@@ -71,7 +68,6 @@ export const getSkillsByCategory = (category: SkillCategory): Skill[] => {
   return skillsDatabase.filter(skill => skill.category === category);
 };
 
-// Add the missing getUnifiedSkillData function
 export const getUnifiedSkillData = (title: string): UnifiedSkill | undefined => {
   const normalizedTitle = normalizeSkillTitle(title);
   const skill = skillsDatabase.find(s => normalizeSkillTitle(s.title) === normalizedTitle);
@@ -90,7 +86,6 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill | undefined => 
   return undefined;
 };
 
-// Add the missing function
 export const addSkillToInitialSkills = (employeeId: string, skill: Skill): void => {
   console.log('Adding skill to employee:', { employeeId, skill });
   // The actual implementation will be handled by the skills database
