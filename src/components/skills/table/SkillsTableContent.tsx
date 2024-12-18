@@ -9,7 +9,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkillsTableRow } from "./SkillsTableRow";
 import { SimpleSkill } from "../types/SkillTypes";
-import { categorizeSkill } from "../competency/skillCategories";
 
 interface SkillsTableContentProps {
   skills: SimpleSkill[];
@@ -45,17 +44,6 @@ export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProp
       </TableCell>
     </TableRow>
   );
-
-  // Map skills with proper categorization
-  const categorizedSkills = skills.map(skill => ({
-    ...skill,
-    category: categorizeSkill(skill.title, "123") // Using default roleId "123" as fallback
-  }));
-
-  console.log('Categorized skills:', categorizedSkills.map(s => ({
-    title: s.title,
-    category: s.category
-  })));
 
   return (
     <div className="relative overflow-x-auto rounded-lg border border-blue-200/60">
@@ -108,14 +96,14 @@ export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProp
         <TableBody>
           {isLoading ? (
             Array(5).fill(0).map((_, index) => renderSkeletonRow())
-          ) : categorizedSkills.length === 0 ? (
+          ) : skills.length === 0 ? (
             <TableRow>
               <TableCell colSpan={8} className="h-32 text-center text-muted-foreground">
                 No skills found
               </TableCell>
             </TableRow>
           ) : (
-            categorizedSkills.map((skill, index) => (
+            skills.map((skill, index) => (
               <SkillsTableRow key={skill.title} skill={skill} isEven={index % 2 === 0} />
             ))
           )}
