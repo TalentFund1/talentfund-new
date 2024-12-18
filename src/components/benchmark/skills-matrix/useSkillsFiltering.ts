@@ -2,7 +2,79 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
-import { filterSkillsByCategory } from "../skills-matrix/skillCategories";
+
+const getSkillCategory = (skillTitle: string, subcategory: string): string => {
+  // First check by subcategory
+  const specializedSubcategories = [
+    "AI & ML",
+    "ML Frameworks",
+    "AI Applications",
+    "Artificial Intelligence and Machine Learning",
+    "Backend Development",
+    "Data Management",
+    "Software Architecture",
+    "Cloud Computing",
+    "DevOps",
+    "System Design",
+    "Data Engineering",
+    "API Development",
+    "Database Design"
+  ];
+
+  const commonSubcategories = [
+    "General",
+    "Soft Skills",
+    "Communication",
+    "Development Practices",
+    "Programming Languages",
+    "Web Development",
+    "Development Tools",
+    "Leadership",
+    "Management",
+    "Problem Solving",
+    "Team Collaboration",
+    "Testing",
+    "Documentation"
+  ];
+
+  // Check subcategory first
+  if (specializedSubcategories.includes(subcategory)) {
+    return 'specialized';
+  }
+  if (commonSubcategories.includes(subcategory)) {
+    return 'common';
+  }
+
+  // Then check title patterns
+  const title = skillTitle.toLowerCase();
+  
+  if (title.includes('certification') || 
+      title.includes('certified') || 
+      title.includes('certificate')) {
+    return 'certification';
+  }
+
+  const specializedPatterns = [
+    'machine learning',
+    'deep learning',
+    'tensorflow',
+    'pytorch',
+    'aws',
+    'cloud',
+    'docker',
+    'kubernetes',
+    'architecture',
+    'devops',
+    'ai',
+    'artificial intelligence'
+  ];
+
+  if (specializedPatterns.some(pattern => title.includes(pattern))) {
+    return 'specialized';
+  }
+
+  return 'common';
+};
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -47,7 +119,7 @@ export const useSkillsFiltering = (
       return isInRoleSkills && isToggled;
     });
 
-    return filterSkillsByCategory(matchingSkills, "all")
+    return matchingSkills
       .filter(skill => {
         let matchesLevel = true;
         let matchesInterest = true;
@@ -94,6 +166,7 @@ export const useSkillsFiltering = (
       })
       .map(skill => ({
         ...skill,
+        category: getSkillCategory(skill.title, skill.subcategory),
         employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
         roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
         requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
