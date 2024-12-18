@@ -7,18 +7,23 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { UnifiedSkill } from "./types/SkillTypes";
 
-type SortField = 'growth' | 'salary' | null;
-type SortDirection = 'asc' | 'desc' | null;
+interface Skill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  salary: string;
+  benchmarks: { C: boolean; B: boolean; B2: boolean; O: boolean };
+}
 
 interface SkillProfileMatrixTableProps {
-  paginatedSkills: UnifiedSkill[];
+  paginatedSkills: Skill[];
   toggledSkills: Set<string>;
   onToggleSkill: (skillTitle: string) => void;
-  sortField: SortField;
-  sortDirection: SortDirection;
-  onSort: (field: SortField) => void;
+  sortField: 'growth' | 'salary' | null;
+  sortDirection: 'asc' | 'desc' | null;
+  onSort: (field: 'growth' | 'salary' | null) => void;
 }
 
 export const SkillProfileMatrixTable = ({ 

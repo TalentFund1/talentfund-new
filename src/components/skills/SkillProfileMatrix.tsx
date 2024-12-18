@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
@@ -10,8 +10,14 @@ import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
-import { useSkillFiltering } from './hooks/useSkillFiltering';
+import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { UnifiedSkill } from './types/SkillTypes';
+
+type SortDirection = 'asc' | 'desc' | null;
+type SortField = 'growth' | 'salary' | null;
+
+const STORAGE_KEY = 'added-skills';
+const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
@@ -19,17 +25,28 @@ export const SkillProfileMatrix = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [hasMore, setHasMore] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
+  const [sortField, setSortField] = useState<SortField>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const { toast } = useToast();
   const observerTarget = useRef(null);
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
-  
-  const {
-    getSkillsByType,
-    handleSort,
-    sortField,
-    sortDirection
-  } = useSkillFiltering(id || "123", skillType);
+
+  // Load saved skills on component mount
+  useEffect(() => {
+    if (id) {
+      try {
+        const savedSkills = localStorage.getItem(getStorageKey(id));
+        if (savedSkills) {
+          const parsedSkills = JSON.parse(savedSkills);
+          console.log('Loading saved skills:', { roleId: id, skills: parsedSkills });
+          setToggledSkills(new Set([...toggledSkills, ...parsedSkills]));
+        }
+      } catch (error) {
+        console.error('Error loading saved skills:', error);
+      }
+    }
+  }, [id]);
 
   const handleToggleSkill = (skillTitle: string) => {
     const newToggledSkills = new Set(toggledSkills);
@@ -49,9 +66,75 @@ export const SkillProfileMatrix = () => {
     });
   };
 
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortField(null);
+        setSortDirection(null);
+      }
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  // Get only the skills for the current role and transform them to include benchmarks
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+
   const filteredSkills = (() => {
-    const skills = getSkillsByType();
-    console.log('Initial skills count:', skills.length);
+    let skills: UnifiedSkill[] = [];
+    if (skillType === "all") {
+      skills = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].map(skill => {
+        const unifiedSkill = getUnifiedSkillData(skill.title);
+        return {
+          ...unifiedSkill,
+          benchmarks: {
+            C: false,
+            B: unifiedSkill.benchmarks?.B || false,
+            B2: false,
+            O: unifiedSkill.benchmarks?.O || false
+          }
+        };
+      });
+    } else if (skillType === "specialized") {
+      skills = currentRoleSkills.specialized.map(skill => ({
+        ...getUnifiedSkillData(skill.title),
+        benchmarks: {
+          C: false,
+          B: true,
+          B2: false,
+          O: true
+        }
+      }));
+    } else if (skillType === "common") {
+      skills = currentRoleSkills.common.map(skill => ({
+        ...getUnifiedSkillData(skill.title),
+        benchmarks: {
+          C: false,
+          B: true,
+          B2: false,
+          O: true
+        }
+      }));
+    } else if (skillType === "certification") {
+      skills = currentRoleSkills.certifications.map(skill => ({
+        ...getUnifiedSkillData(skill.title),
+        benchmarks: {
+          C: false,
+          B: true,
+          B2: false,
+          O: true
+        }
+      }));
+    }
+
+    console.log('Filtered skills before filtering:', skills.length);
 
     let sortedSkills = skills.filter(skill => {
       const isInCurrentRole = [
@@ -60,6 +143,7 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ].some(roleSkill => roleSkill.title === skill.title);
 
+      // Apply category filter
       if (selectedCategory !== 'all') {
         const skillCategory = getCategoryForSkill(skill, id || "123");
         if (skillCategory !== selectedCategory) {
