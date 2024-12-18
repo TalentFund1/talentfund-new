@@ -126,7 +126,15 @@ export const SkillProfileMatrix = () => {
       });
     }
 
-    console.log('Final filtered and sorted skills:', sortedSkills.length);
+    console.log('Final filtered and sorted skills:', {
+      total: sortedSkills.length,
+      toggled: Array.from(toggledSkills).length,
+      skills: sortedSkills.map(s => ({
+        title: s.title,
+        isToggled: toggledSkills.has(s.title)
+      }))
+    });
+
     return sortedSkills;
   })();
 
