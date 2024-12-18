@@ -2,7 +2,7 @@ import { UnifiedSkill } from '../types/SkillTypes';
 import { aiSkills } from './categories/aiSkills';
 import { webSkills } from './categories/webSkills';
 import { devopsSkills } from './categories/devopsSkills';
-import { normalizeSkillTitle } from './skillDatabaseService';
+import { normalizeSkillTitle } from '../utils/normalization';
 
 // Combine all skills with normalized titles
 export const skills: UnifiedSkill[] = [
