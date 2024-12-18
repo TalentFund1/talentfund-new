@@ -2,17 +2,11 @@ import { roleSkills } from '../skills/data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from '../skills/context/ToggledSkillsContext';
 import { useRoleStore } from './RoleBenchmark';
+import { normalizeSkillTitle } from '../skills/utils/normalization';
 
 interface CategorySectionProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-}
-
-interface SkillCounts {
-  specialized: number;
-  common: number;
-  certification: number;
-  all: number;
 }
 
 export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
@@ -21,43 +15,49 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   const { selectedRole } = useRoleStore();
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
-  // Get all toggled skills that exist in the specialized category
-  const specializedCount = currentRoleSkills.specialized
-    .filter(skill => toggledSkills.has(skill.title))
+  // Create sets of normalized titles for deduplication
+  const specializedTitles = new Set(currentRoleSkills.specialized.map(skill => 
+    normalizeSkillTitle(skill.title)
+  ));
+  const commonTitles = new Set(currentRoleSkills.common.map(skill => 
+    normalizeSkillTitle(skill.title)
+  ));
+  const certificationTitles = new Set(currentRoleSkills.certifications.map(skill => 
+    normalizeSkillTitle(skill.title)
+  ));
+
+  // Get counts of unique toggled skills per category
+  const specializedCount = Array.from(toggledSkills)
+    .filter(skill => specializedTitles.has(normalizeSkillTitle(skill)))
     .length;
 
-  // Get all toggled skills that exist in the common category
-  const commonCount = currentRoleSkills.common
-    .filter(skill => toggledSkills.has(skill.title))
+  const commonCount = Array.from(toggledSkills)
+    .filter(skill => commonTitles.has(normalizeSkillTitle(skill)))
     .length;
 
-  // Get all toggled skills that exist in the certifications category
-  const certificationCount = currentRoleSkills.certifications
-    .filter(skill => toggledSkills.has(skill.title))
+  const certificationCount = Array.from(toggledSkills)
+    .filter(skill => certificationTitles.has(normalizeSkillTitle(skill)))
     .length;
 
-  // Total count is the sum of all categories
+  // Total count is the sum of all categories (already deduplicated)
   const totalCount = specializedCount + commonCount + certificationCount;
 
   console.log('CategorySection - Counts:', {
     roleId: selectedRole,
     specialized: {
       count: specializedCount,
-      skills: currentRoleSkills.specialized
-        .filter(skill => toggledSkills.has(skill.title))
-        .map(s => s.title)
+      skills: Array.from(toggledSkills)
+        .filter(skill => specializedTitles.has(normalizeSkillTitle(skill)))
     },
     common: {
       count: commonCount,
-      skills: currentRoleSkills.common
-        .filter(skill => toggledSkills.has(skill.title))
-        .map(s => s.title)
+      skills: Array.from(toggledSkills)
+        .filter(skill => commonTitles.has(normalizeSkillTitle(skill)))
     },
     certification: {
       count: certificationCount,
-      skills: currentRoleSkills.certifications
-        .filter(skill => toggledSkills.has(skill.title))
-        .map(s => s.title)
+      skills: Array.from(toggledSkills)
+        .filter(skill => certificationTitles.has(normalizeSkillTitle(skill)))
     },
     total: totalCount
   });

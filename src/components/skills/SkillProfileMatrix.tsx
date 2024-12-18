@@ -12,6 +12,7 @@ import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { getSkillCategory } from './data/skills/categories/skillCategories';
+import { normalizeSkillTitle } from './utils/normalization';
 
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -27,10 +28,8 @@ export const SkillProfileMatrix = () => {
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
-  // Get current role skills
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Calculate counts only for toggled skills in the current role
   const calculateToggledSkillCounts = () => {
     const allSkills = [
       ...currentRoleSkills.specialized,
@@ -84,31 +83,36 @@ export const SkillProfileMatrix = () => {
   };
 
   const filteredSkills = (() => {
-    // Start with only the current role's skills
+    const uniqueSkills = new Set();
     let skills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
-    ];
+    ].filter(skill => {
+      const normalizedTitle = normalizeSkillTitle(skill.title);
+      if (uniqueSkills.has(normalizedTitle)) {
+        return false;
+      }
+      uniqueSkills.add(normalizedTitle);
+      return true;
+    });
 
     console.log(`Filtering skills for role ${id}:`, {
       totalSkills: skills.length,
       specialized: currentRoleSkills.specialized.length,
       common: currentRoleSkills.common.length,
-      certifications: currentRoleSkills.certifications.length
+      certifications: currentRoleSkills.certifications.length,
+      uniqueCount: uniqueSkills.size
     });
 
-    // Filter by skill type
     if (skillType !== "all") {
       skills = skills.filter(skill => getSkillCategory(skill.title) === skillType);
     }
 
-    // Filter by selected category
     if (selectedCategory !== "all") {
       skills = skills.filter(skill => getCategoryForSkill(skill, id || "123") === selectedCategory);
     }
 
-    // Apply sorting if specified
     if (sortField && sortDirection) {
       skills.sort((a, b) => {
         if (sortField === 'growth') {
