@@ -2,7 +2,7 @@ import { Skills, getAllSkills } from './skills/data/skills/allSkills';
 import { UnifiedSkill } from './skills/types/SkillTypes';
 import { normalizeSkillTitle } from './skills/utils/normalization';
 
-// Combine all skills with normalized titles
+// Get all skills and normalize their titles
 const skills: UnifiedSkill[] = getAllSkills().map(skill => ({
   ...skill,
   title: normalizeSkillTitle(skill.title)
@@ -22,11 +22,9 @@ const getUniqueSkills = (skillsArray: UnifiedSkill[]) => {
 // Get all unique skills without filtering by category
 export const allSkillsList = getUniqueSkills(skills);
 
-// Export skill titles for backward compatibility
+// Export skill titles and objects
 export const technicalSkills = allSkillsList.map(skill => skill.title);
 export const softSkills = allSkillsList.map(skill => skill.title);
-
-// Export full skill objects
 export const technicalSkillObjects = allSkillsList;
 export const softSkillObjects = allSkillsList;
 export const allSkillObjects = allSkillsList;

@@ -4,12 +4,11 @@ import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
-import { allSkillObjects } from '@/components/skillsData';
+import { getAllSkills } from '../data/skills/allSkills';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -20,7 +19,7 @@ export const AddSkillToProfileDialog = () => {
   const { setSkillState } = useCompetencyStore();
 
   // Get all available skills without any filtering
-  const allSkills = allSkillObjects.map(skill => skill.title);
+  const allSkills = getAllSkills().map(skill => skill.title);
   
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
