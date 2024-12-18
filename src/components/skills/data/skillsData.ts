@@ -1,15 +1,9 @@
+import { Skills, getAllSkills } from './skills/allSkills';
 import { UnifiedSkill } from '../types/SkillTypes';
-import { aiSkills } from './categories/aiSkills';
-import { webSkills } from './categories/webSkills';
-import { devopsSkills } from './categories/devopsSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 
-// Combine all skills with normalized titles
-export const skills: UnifiedSkill[] = [
-  ...aiSkills,
-  ...webSkills,
-  ...devopsSkills
-].map(skill => ({
+// Get all skills and normalize their titles
+const skills: UnifiedSkill[] = getAllSkills().map(skill => ({
   ...skill,
   title: normalizeSkillTitle(skill.title)
 }));
@@ -25,44 +19,19 @@ const getUniqueSkills = (skillsArray: UnifiedSkill[]) => {
   });
 };
 
-// Categorize skills into technical and soft skills
-export const technicalSkillsList = getUniqueSkills(skills.filter(skill => 
-  skill.category === 'specialized' && skill.weight === 'technical'
-));
+// Get all unique skills without filtering by category
+export const allSkillsList = getUniqueSkills(skills);
 
-export const softSkillsList = getUniqueSkills(skills.filter(skill => 
-  skill.category === 'common' && skill.weight === 'necessary'
-));
-
-// Export skill titles for backward compatibility
-export const technicalSkills = technicalSkillsList.map(skill => skill.title);
-export const softSkills = softSkillsList.map(skill => skill.title);
-
-// Export full skill objects
-export const technicalSkillObjects = technicalSkillsList;
-export const softSkillObjects = softSkillsList;
+// Export skill titles and objects
+export const technicalSkills = allSkillsList.map(skill => skill.title);
+export const softSkills = allSkillsList.map(skill => skill.title);
+export const technicalSkillObjects = allSkillsList;
+export const softSkillObjects = allSkillsList;
+export const allSkillObjects = allSkillsList;
 
 console.log('Loaded skills:', {
   total: skills.length,
+  allUnique: allSkillsList.length,
   technical: technicalSkills.length,
-  soft: softSkills.length,
-  byCategory: {
-    ai: aiSkills.length,
-    web: webSkills.length,
-    devops: devopsSkills.length
-  }
+  soft: softSkills.length
 });
-
-// Export the complete skills array
-export const getAllSkills = (): UnifiedSkill[] => skills;
-
-// Helper function to find a skill by ID
-export const getSkillById = (id: string): UnifiedSkill | undefined => {
-  return skills.find(skill => skill.id === id);
-};
-
-// Helper function to find a skill by title
-export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
-  const normalizedTitle = normalizeSkillTitle(title);
-  return skills.find(skill => normalizeSkillTitle(skill.title) === normalizedTitle);
-};

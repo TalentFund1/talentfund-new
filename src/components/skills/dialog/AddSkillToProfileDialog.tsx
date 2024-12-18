@@ -25,12 +25,7 @@ export const AddSkillToProfileDialog = () => {
       ...specializedSkills,
       ...commonSkills, 
       ...certificationSkills,
-      ...Skills.technical.map(s => s.title),
-      ...Skills.management.map(s => s.title),
-      ...Skills.certification.map(s => s.title),
-      ...Skills.ai.map(s => s.title),
-      ...Skills.web.map(s => s.title),
-      ...Skills.devops.map(s => s.title)
+      ...Skills.all.map(s => s.title)
     ])
   ];
   
@@ -42,11 +37,7 @@ export const AddSkillToProfileDialog = () => {
       specialized: specializedSkills.length,
       common: commonSkills.length,
       certification: certificationSkills.length,
-      technical: Skills.technical.length,
-      management: Skills.management.length,
-      ai: Skills.ai.length,
-      web: Skills.web.length,
-      devops: Skills.devops.length
+      all: Skills.all.length
     }
   });
 
