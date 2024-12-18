@@ -1,40 +1,16 @@
-import { Skills } from '../data/skills/allSkills';
+import { getSkillCategory, categorizeSkills, isSpecializedSkill, isCommonSkill, isCertificationSkill } from '../data/skills/categories/skillCategories';
 
-export const isSpecializedSkill = (skill: string, profileId: string): boolean => {
-  const skillData = Skills.specialized.find(s => s.title.toLowerCase() === skill.toLowerCase());
-  return !!skillData;
+// Re-export the core categorization functions that now use the universal database
+export { 
+  getSkillCategory,
+  categorizeSkills,
+  isSpecializedSkill,
+  isCommonSkill,
+  isCertificationSkill
 };
 
-export const isCommonSkill = (skill: string, profileId: string): boolean => {
-  const skillData = Skills.common.find(s => s.title.toLowerCase() === skill.toLowerCase());
-  return !!skillData;
-};
-
-export const isCertificationSkill = (skill: string, profileId: string): boolean => {
-  const skillData = Skills.certification.find(s => s.title.toLowerCase() === skill.toLowerCase());
-  return !!skillData;
-};
-
-export const categorizeSkills = (skills: string[], profileId: string) => {
-  console.log('Categorizing skills for profile:', profileId);
-  
-  const specialized = skills.filter(skill => isSpecializedSkill(skill, profileId));
-  const common = skills.filter(skill => isCommonSkill(skill, profileId));
-  const certifications = skills.filter(skill => isCertificationSkill(skill, profileId));
-  
-  return {
-    all: skills.length,
-    specialized: specialized.length,
-    common: common.length,
-    certification: certifications.length
-  };
-};
-
-// Add new export for single skill categorization
+// Additional competency-specific categorization if needed
 export const categorizeSkill = (skill: string, profileId: string): 'specialized' | 'common' | 'certification' => {
-  console.log('Categorizing skill:', skill, 'for profile:', profileId);
-  
-  if (isSpecializedSkill(skill, profileId)) return 'specialized';
-  if (isCertificationSkill(skill, profileId)) return 'certification';
-  return 'common';
+  console.log('Categorizing skill for competency:', skill, 'profile:', profileId);
+  return getSkillCategory(skill);
 };
