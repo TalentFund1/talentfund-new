@@ -21,26 +21,34 @@ export const SkillsMatrix = () => {
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const { matrixSearchSkills } = useSkillsMatrixSearch();
 
-  // Get employee skills
+  const { filterAndSortSkills } = useSkillsMatrixState(
+    selectedCategory,
+    selectedLevel,
+    selectedInterest
+  );
+
+  // Get all skills for the current role
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  // Get employee skills and combine with role skills
   const employeeSkills = getEmployeeSkills(id || "");
+  const combinedSkills = [...allRoleSkills, ...employeeSkills];
+
+  // Remove duplicates while preserving order
+  const uniqueSkills = Array.from(
+    new Map(combinedSkills.map(skill => [skill.title, skill])).values()
+  );
 
   // Apply filtering and sorting
-  const filteredSkills = employeeSkills.filter(skill => {
-    // Apply level filter
-    if (selectedLevel !== "all" && skill.level?.toLowerCase() !== selectedLevel.toLowerCase()) {
-      return false;
-    }
-
-    // Apply interest/requirement filter
-    if (selectedInterest !== "all" && skill.requirement?.toLowerCase() !== selectedInterest.toLowerCase()) {
-      return false;
-    }
-
-    return true;
-  });
+  const filteredSkills = filterAndSortSkills(id || "");
 
   console.log('Skills matrix state:', {
-    totalSkills: employeeSkills.length,
+    totalSkills: uniqueSkills.length,
     filteredSkills: filteredSkills.length,
     visibleItems,
     selectedCategory,
