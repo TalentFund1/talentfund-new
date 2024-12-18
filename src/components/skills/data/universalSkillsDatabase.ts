@@ -1,4 +1,4 @@
-import { UnifiedSkill } from '../types/SkillTypes';
+import { UnifiedSkill, SkillCategory } from '../types/SkillTypes';
 import { skills } from './skillsData';
 import { aiSkills } from './categories/aiSkills';
 import { technicalSkills } from './categories/technicalSkills';
@@ -14,7 +14,7 @@ const normalizeSkill = (skillInput: Partial<UnifiedSkill>): UnifiedSkill => {
   const title = typeof skillInput === 'string' ? skillInput : skillInput.title || '';
   
   // Get categorization data
-  const category = getSkillCategory(title);
+  const category = getSkillCategory(title) as SkillCategory;
   const businessCategory = getBusinessCategory(title);
   const weight = getSkillWeight(title);
   
