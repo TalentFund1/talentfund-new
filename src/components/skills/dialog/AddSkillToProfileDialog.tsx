@@ -7,9 +7,8 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
-import { UnifiedSkill } from '../types/SkillTypes';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useSkillsMatrixStore } from "@/components/benchmark/skills-matrix/SkillsMatrixState";
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
