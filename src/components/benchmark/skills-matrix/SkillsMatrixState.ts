@@ -1,9 +1,65 @@
+import { create } from 'zustand';
 import { useState } from 'react';
-import { filterSkillsByCategory } from "./skillCategories";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
-import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
+
+interface SkillState {
+  level: string;
+  requirement: string;
+}
+
+interface SkillsMatrixState {
+  currentStates: { [key: string]: SkillState };
+  originalStates: { [key: string]: SkillState };
+  hasChanges: boolean;
+  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
+  initializeState: (skillTitle: string, level: string, requirement: string) => void;
+  saveChanges: () => void;
+  cancelChanges: () => void;
+}
+
+export const useSkillsMatrixStore = create<SkillsMatrixState>((set, get) => ({
+  currentStates: {},
+  originalStates: {},
+  hasChanges: false,
+  setSkillState: (skillTitle, level, requirement) => {
+    console.log('Setting skill state:', { skillTitle, level, requirement });
+    set((state) => ({
+      currentStates: {
+        ...state.currentStates,
+        [skillTitle]: { level, requirement }
+      },
+      hasChanges: true
+    }));
+  },
+  initializeState: (skillTitle, level, requirement) => {
+    console.log('Initializing skill state:', { skillTitle, level, requirement });
+    const state = get();
+    if (!state.currentStates[skillTitle]) {
+      set((state) => ({
+        currentStates: {
+          ...state.currentStates,
+          [skillTitle]: { level, requirement }
+        },
+        originalStates: {
+          ...state.originalStates,
+          [skillTitle]: { level, requirement }
+        }
+      }));
+    }
+  },
+  saveChanges: () => {
+    console.log('Saving changes to skills matrix');
+    const { currentStates } = get();
+    set({ originalStates: { ...currentStates }, hasChanges: false });
+  },
+  cancelChanges: () => {
+    console.log('Canceling changes to skills matrix');
+    const { originalStates } = get();
+    set({ currentStates: { ...originalStates }, hasChanges: false });
+  }
+}));
 
 export const useSkillsMatrixState = (
   selectedCategory: string,
@@ -32,16 +88,6 @@ export const useSkillsMatrixState = (
       'unknown': 3
     };
     return priorities[requirement.toLowerCase()] ?? 3;
-  };
-
-  const getRoleLevelPriority = (level: string) => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
   };
 
   const filterAndSortSkills = (employeeId: string) => {
