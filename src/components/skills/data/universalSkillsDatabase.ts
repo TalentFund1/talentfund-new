@@ -9,8 +9,11 @@ import { getSkillWeight } from './utils/categories/skillWeights';
 import { generateSkillId } from './utils/categories/skillLists';
 
 // Helper function to normalize and deduplicate skills
-const normalizeSkill = (skill: Partial<UnifiedSkill>): UnifiedSkill => {
-  const title = typeof skill === 'string' ? skill : skill.title;
+const normalizeSkill = (skillInput: Partial<UnifiedSkill>): UnifiedSkill => {
+  // Ensure we have a title
+  const title = typeof skillInput === 'string' ? skillInput : skillInput.title || '';
+  
+  // Get categorization data
   const category = getSkillCategory(title);
   const businessCategory = getBusinessCategory(title);
   const weight = getSkillWeight(title);
@@ -24,15 +27,15 @@ const normalizeSkill = (skill: Partial<UnifiedSkill>): UnifiedSkill => {
   return {
     id: generateSkillId(title),
     title,
-    subcategory: skill.subcategory || category,
+    subcategory: skillInput.subcategory || category,
     category: category,
     businessCategory: businessCategory,
     weight: weight,
-    level: skill.level || 'intermediate',
-    growth: skill.growth || '20%',
-    salary: skill.salary || '$150,000',
-    confidence: skill.confidence || 'high',
-    benchmarks: skill.benchmarks || { B: true, R: true, M: true, O: true }
+    level: skillInput.level || 'intermediate',
+    growth: skillInput.growth || '20%',
+    salary: skillInput.salary || '$150,000',
+    confidence: skillInput.confidence || 'high',
+    benchmarks: skillInput.benchmarks || { B: true, R: true, M: true, O: true }
   };
 };
 
@@ -42,7 +45,7 @@ const getAllUniversalSkills = (): UnifiedSkill[] => {
   const universalSkills: UnifiedSkill[] = [];
 
   // Helper function to add skills to our universal database
-  const addSkillToDatabase = (skill: string | Partial<UnifiedSkill>) => {
+  const addSkillToDatabase = (skill: Partial<UnifiedSkill>) => {
     const normalizedSkill = normalizeSkill(skill);
     
     // Only add if we haven't seen this skill before
