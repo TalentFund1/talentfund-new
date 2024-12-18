@@ -7,10 +7,11 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
-import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
+import { getCategoryForSkill } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
+import { getSkillCategory } from './data/utils/categories/skillLists';
 
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -49,18 +50,20 @@ export const SkillProfileMatrix = () => {
     console.log('Filtering skills with type:', skillType);
     
     let skills = [];
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    // Filter based on skill type
     if (skillType === "all") {
-      skills = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ];
-    } else if (skillType === "specialized") {
-      skills = currentRoleSkills.specialized;
-    } else if (skillType === "common") {
-      skills = currentRoleSkills.common;
-    } else if (skillType === "certification") {
-      skills = currentRoleSkills.certifications;
+      skills = allRoleSkills;
+    } else {
+      skills = allRoleSkills.filter(skill => {
+        const category = getSkillCategory(skill.title);
+        return category === skillType;
+      });
     }
 
     console.log('Initial skills array:', skills.length);
@@ -130,7 +133,12 @@ export const SkillProfileMatrix = () => {
     return filteredSkills;
   })();
 
-  const skillCounts = calculateSkillCounts(id || "123");
+  const skillCounts = {
+    specialized: filteredSkills.filter(skill => getSkillCategory(skill.title) === 'specialized').length,
+    common: filteredSkills.filter(skill => getSkillCategory(skill.title) === 'common').length,
+    certification: filteredSkills.filter(skill => getSkillCategory(skill.title) === 'certification').length
+  };
+
   const toggledSkillCount = Array.from(toggledSkills).length;
 
   console.log('Skill counts:', {
