@@ -1,25 +1,29 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
 import { getSkillWeight } from './categories/skillWeights';
-import { getSkillCategory } from './categories/skillCategories';
 import { defineSkills } from './skillDefinitions';
+import { initializeSkillsDatabase } from './categories/skillCategories';
 
-// Initialize skills with categorization
+// Initialize skills
 const allSkills = defineSkills();
 
 // Helper function to get all skills
 export const getAllSkills = (): UnifiedSkill[] => {
   console.log('Getting all skills:', allSkills.length, 'skills found');
-  return allSkills.map(skill => ({
+  const skills = allSkills.map(skill => ({
     ...skill,
-    category: getSkillCategory(skill.title),
     weight: getSkillWeight(skill.title)
   }));
+
+  // Initialize the universal database
+  initializeSkillsDatabase(skills);
+
+  return skills;
 };
 
 // Helper function to get skills by category
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   console.log(`Getting skills for category: ${category}`);
-  return getAllSkills().filter(skill => getSkillCategory(skill.title) === category);
+  return getAllSkills().filter(skill => skill.category === category);
 };
 
 // Helper function to find a skill by ID
@@ -52,15 +56,15 @@ export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
 
 // Role-specific skill categorization helpers
 export const getSpecializedSkills = (): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'specialized');
+  return getAllSkills().filter(skill => skill.category === 'specialized');
 };
 
 export const getCommonSkills = (): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'common');
+  return getAllSkills().filter(skill => skill.category === 'common');
 };
 
 export const getCertificationSkills = (): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'certification');
+  return getAllSkills().filter(skill => skill.category === 'certification');
 };
 
 // Export Skills object for backward compatibility
@@ -71,19 +75,11 @@ export const Skills = {
   certification: getCertificationSkills()
 };
 
-// Export getSkillCategory for external use
-export { getSkillCategory };
-
 console.log('Skills loaded:', {
   total: allSkills.length,
   byCategory: {
-    specialized: getSpecializedSkills().length,
-    common: getCommonSkills().length,
-    certification: getCertificationSkills().length
-  },
-  byWeight: {
-    critical: allSkills.filter(skill => getSkillWeight(skill.title) === 'critical').length,
-    technical: allSkills.filter(skill => getSkillWeight(skill.title) === 'technical').length,
-    necessary: allSkills.filter(skill => getSkillWeight(skill.title) === 'necessary').length
+    specialized: Skills.specialized.length,
+    common: Skills.common.length,
+    certification: Skills.certification.length
   }
 });

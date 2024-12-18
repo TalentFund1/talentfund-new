@@ -1,11 +1,17 @@
-import { Skills, getAllSkills } from '../allSkills';
 import { UnifiedSkill } from '../../../types/SkillTypes';
 import { normalizeSkillTitle } from '../../../utils/normalization';
 
-// Single source of truth for skill categories
-const universalSkillsDatabase = getAllSkills();
-
+// Define skill categories
 export type SkillCategory = 'specialized' | 'common' | 'certification';
+
+// Initialize with empty database, will be set after initialization
+let universalSkillsDatabase: UnifiedSkill[] = [];
+
+// Function to initialize the database
+export const initializeSkillsDatabase = (skills: UnifiedSkill[]) => {
+  console.log('Initializing universal skills database with', skills.length, 'skills');
+  universalSkillsDatabase = skills;
+};
 
 export const getSkillCategory = (skillTitle: string): SkillCategory => {
   console.log('Getting category for skill from universal database:', skillTitle);
@@ -60,7 +66,7 @@ export const categorizeSkills = (skills: string[]) => {
   };
 };
 
-// Export the universal database for direct access
+// Export the universal database getter for direct access
 export const getUniversalSkillsDatabase = (): UnifiedSkill[] => {
   return universalSkillsDatabase;
 };
