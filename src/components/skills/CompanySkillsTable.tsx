@@ -43,7 +43,12 @@ export const CompanySkillsTable = () => {
 
   return (
     <Card className="p-6 bg-white">
-      <h2 className="text-2xl font-bold mb-6">Company Skills</h2>
+      <div className="flex items-center gap-2 mb-6">
+        <h2 className="text-2xl font-bold">Company Skills</h2>
+        <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+          {uniqueSkills.length}
+        </span>
+      </div>
       <div className="overflow-x-auto">
         <div className="bg-white rounded-lg border border-border">
           <Table>
