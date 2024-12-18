@@ -7,18 +7,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-
-interface Skill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  salary: string;
-  benchmarks: { C: boolean; B: boolean; B2: boolean; O: boolean };
-}
+import { UnifiedSkill } from "./types/SkillTypes";
 
 interface SkillProfileMatrixTableProps {
-  paginatedSkills: Skill[];
+  paginatedSkills: UnifiedSkill[];
   toggledSkills: Set<string>;
   onToggleSkill: (skillTitle: string) => void;
   sortField: 'growth' | 'salary' | null;
@@ -35,7 +27,7 @@ export const SkillProfileMatrixTable = ({
   onSort
 }: SkillProfileMatrixTableProps) => {
   // Remove duplicate skills by title
-  const uniqueSkills = paginatedSkills.reduce((acc: Skill[], current) => {
+  const uniqueSkills = paginatedSkills.reduce((acc: UnifiedSkill[], current) => {
     const exists = acc.find(skill => skill.title === current.title);
     if (!exists) {
       acc.push(current);

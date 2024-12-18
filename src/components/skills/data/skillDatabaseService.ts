@@ -26,7 +26,12 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     growth: '20%',
     salary: '$150,000',
     confidence: 'medium',
-    benchmarks: { B: true, R: true, M: true, O: true }
+    benchmarks: { 
+      B: true, 
+      R: true, 
+      M: true, 
+      O: true 
+    }
   };
 
   console.log('Created new skill entry:', newSkill.title);
