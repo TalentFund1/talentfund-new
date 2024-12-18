@@ -14,9 +14,7 @@ export const useSkillsFiltering = (
   selectedInterest: string,
   selectedSkillLevel: string,
   searchTerm: string,
-  toggledSkills: Set<string>,
-  skillType: string = 'all',
-  selectedCategory: string = 'all'
+  toggledSkills: Set<string>
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -61,14 +59,6 @@ export const useSkillsFiltering = (
       }
     });
     skills = Array.from(uniqueSkills.values());
-
-    if (skillType !== "all") {
-      skills = skills.filter(skill => getSkillCategory(skill.title) === skillType);
-    }
-
-    if (selectedCategory !== "all") {
-      skills = skills.filter(skill => getCategoryForSkill(skill, employeeId) === selectedCategory);
-    }
 
     // Apply filters
     return skills.filter(skill => {
@@ -145,9 +135,7 @@ export const useSkillsFiltering = (
       selectedLevel,
       selectedInterest,
       selectedSkillLevel,
-      searchTerm,
-      skillType,
-      selectedCategory
+      searchTerm
     }
   });
 
