@@ -1,8 +1,8 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
 
-// Define all skills in a single array
+// Define all skills in a single array with their core categorization
 export const allSkills: UnifiedSkill[] = [
-  // AI & ML Skills
+  // AI & ML Skills (Specialized)
   {
     id: 'SKILL001',
     title: "Machine Learning",
@@ -29,7 +29,7 @@ export const allSkills: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
-  // Web Development Skills
+  // Web Development Skills (Specialized)
   {
     id: 'SKILL003',
     title: "React",
@@ -40,46 +40,6 @@ export const allSkills: UnifiedSkill[] = [
     level: "Advanced",
     growth: "25%",
     salary: "$165,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'SKILL004',
-    title: "GraphQL",
-    subcategory: "API Development",
-    category: "specialized",
-    businessCategory: "Information Technology",
-    weight: "technical",
-    level: "Intermediate",
-    growth: "24%",
-    salary: "$150,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  // DevOps Skills
-  {
-    id: 'SKILL005',
-    title: "Docker",
-    subcategory: "Container Technology",
-    category: "specialized",
-    businessCategory: "Information Technology",
-    weight: "technical",
-    level: "Advanced",
-    growth: "15%",
-    salary: "$145,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'SKILL006',
-    title: "Kubernetes",
-    subcategory: "Container Orchestration",
-    category: "specialized",
-    businessCategory: "Information Technology",
-    weight: "technical",
-    level: "Advanced",
-    growth: "17%",
-    salary: "$155,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -121,21 +81,41 @@ export const getAllSkills = (): UnifiedSkill[] => {
 
 // Helper function to get skills by category
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
+  console.log(`Getting skills for category: ${category}`);
   return allSkills.filter(skill => skill.category === category);
 };
 
 // Helper function to find a skill by title
 export const findSkillByTitle = (title: string): UnifiedSkill | undefined => {
+  console.log(`Finding skill by title: ${title}`);
   return allSkills.find(skill => skill.title.toLowerCase() === title.toLowerCase());
 };
 
+// New helper functions for role-specific skill categorization
+export const getSpecializedSkills = (): UnifiedSkill[] => {
+  return allSkills.filter(skill => skill.category === 'specialized');
+};
+
+export const getCommonSkills = (): UnifiedSkill[] => {
+  return allSkills.filter(skill => skill.category === 'common');
+};
+
+export const getCertificationSkills = (): UnifiedSkill[] => {
+  return allSkills.filter(skill => skill.category === 'certification');
+};
+
 export const Skills = {
-  all: allSkills
+  all: allSkills,
+  specialized: getSpecializedSkills(),
+  common: getCommonSkills(),
+  certification: getCertificationSkills()
 };
 
 console.log('Skills loaded:', {
   total: allSkills.length,
   byCategory: {
-    all: allSkills.length
+    specialized: getSpecializedSkills().length,
+    common: getCommonSkills().length,
+    certification: getCertificationSkills().length
   }
 });

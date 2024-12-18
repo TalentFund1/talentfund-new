@@ -1,72 +1,22 @@
-export const filterSkillsByCategory = (skills: any[], category: string) => {
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { Skills } from '../../skills/data/skills/allSkills';
+
+export const filterSkillsByCategory = (skills: UnifiedSkill[], category: string) => {
+  console.log('Filtering skills by category:', category);
+  
   if (category === "all") {
     return skills;
   }
 
-  // Define category mappings based on subcategories
-  const categoryMappings = {
-    specialized: [
-      "AI & ML",
-      "ML Frameworks",
-      "AI Applications",
-      "Backend Development",
-      "Data Management",
-      "Software Architecture",
-      "Container Orchestration",
-      "Frontend Frameworks",
-      "Programming Languages",
-      "State Management",
-      "Build Tools",
-      "Design",
-      "Architecture"
-    ],
-    common: [
-      "Soft Skills",
-      "Communication",
-      "Development Practices",
-      "Project Management",
-      "Frontend Development",
-      "Web Development",
-      "Development Tools",
-      "Leadership",
-      "Management"
-    ],
-    certification: [
-      "Cloud Certification",
-      "AI Certification",
-      "Container Certification",
-      "Database Certification",
-      "Web Development Certification",
-      "Development Certification",
-      "Frontend Certification",
-      "Programming Certification",
-      "Web Accessibility",
-      "Management Certification",
-      "Agile Certification",
-      "IT Service Management"
-    ]
-  };
-
-  return skills.filter(skill => {
-    const subcategory = skill.subcategory;
-    switch (category) {
-      case "specialized":
-        return categoryMappings.specialized.includes(subcategory);
-      case "common":
-        return categoryMappings.common.includes(subcategory);
-      case "certification":
-        return categoryMappings.certification.includes(subcategory);
-      default:
-        return false;
-    }
-  });
+  return skills.filter(skill => skill.category === category.toLowerCase());
 };
 
-export const getCategoryCount = (skills: any[], category: string) => {
+export const getCategoryCount = (skills: UnifiedSkill[], category: string) => {
   return filterSkillsByCategory(skills, category).length;
 };
 
 export const categorizeSkill = (skillName: string): string => {
-  // This function can be used for individual skill categorization if needed
-  return 'common'; // Default fallback
+  const skill = Skills.all.find(s => s.title === skillName);
+  console.log('Categorizing skill:', { skillName, category: skill?.category || 'common' });
+  return skill?.category || 'common';
 };
