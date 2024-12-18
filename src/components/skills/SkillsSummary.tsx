@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { DetailedSkill, EmployeeSkill, UnifiedSkill } from "./types";
+import { DetailedSkill, EmployeeSkill } from "./types";
+import { UnifiedSkill } from "./types/SkillTypes";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
