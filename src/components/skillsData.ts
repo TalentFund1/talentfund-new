@@ -1,11 +1,13 @@
 import { Skills, getAllSkills as getSkillsFromSource } from './skills/data/skills/allSkills';
 import { UnifiedSkill } from './skills/types/SkillTypes';
 import { normalizeSkillTitle } from './skills/utils/normalization';
+import { getSkillSalary } from './skills/data/utils/metrics';
 
 // Get all skills and normalize their titles
 const skills: UnifiedSkill[] = getSkillsFromSource().map(skill => ({
   ...skill,
-  title: normalizeSkillTitle(skill.title)
+  title: normalizeSkillTitle(skill.title),
+  salary: skill.salary || getSkillSalary(skill.title) // Ensure salary is always set
 }));
 
 // Helper function to get unique skills by title
