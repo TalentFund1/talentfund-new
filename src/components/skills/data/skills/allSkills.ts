@@ -215,6 +215,14 @@ export const getCertificationSkills = (): UnifiedSkill[] => {
   return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'certification');
 };
 
+// Export Skills object for backward compatibility
+export const Skills = {
+  all: getAllSkills(),
+  specialized: getSpecializedSkills(),
+  common: getCommonSkills(),
+  certification: getCertificationSkills()
+};
+
 console.log('Skills loaded with weights:', {
   total: allSkills.length,
   byWeight: {
