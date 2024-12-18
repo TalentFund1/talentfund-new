@@ -1,4 +1,4 @@
-import { getUnifiedSkillData } from '../../skills/data/centralSkillsDatabase';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 export const initialSkills = {
   "124": [
