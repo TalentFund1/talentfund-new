@@ -1,6 +1,8 @@
 import { UnifiedSkill } from '../types/SkillTypes';
-import { getAllSkills as getAllSkillsFromSource } from './skills/allSkills';
+import { Skills, getAllSkills as getAllSkillsFromSource, getSkillByTitle } from './skills/allSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
+import { getSkillCategory } from './skills/categories/skillCategories';
+import { getEmployeeSkills } from '../../benchmark/skills-matrix/initialSkills';
 
 // Get unified skill data
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
@@ -61,11 +63,10 @@ export const addSkillToInitialSkills = (roleId: string, skill: UnifiedSkill) => 
   }
 };
 
-// Export additional utility functions
-export { getAllSkills, getSkillCategory };
+// Export the getAllSkills function from the source
+export const getAllSkills = getAllSkillsFromSource;
 
-export const getSkillsByWeight = (weight: string): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => skill.weight === weight);
-};
+// Export getSkillCategory for external use
+export { getSkillCategory };
 
 console.log('Skill database service initialized');
