@@ -71,6 +71,9 @@ export const Skills = {
   certification: getCertificationSkills()
 };
 
+// Export getSkillCategory for external use
+export { getSkillCategory };
+
 console.log('Skills loaded:', {
   total: allSkills.length,
   byCategory: {
