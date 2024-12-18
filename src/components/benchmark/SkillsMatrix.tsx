@@ -24,7 +24,8 @@ export const SkillsMatrix = () => {
   const { filterAndSortSkills } = useSkillsMatrixState(
     selectedCategory,
     selectedLevel,
-    selectedInterest
+    selectedInterest,
+    false // This is not the role benchmark view
   );
 
   // Get all skills for the current role
