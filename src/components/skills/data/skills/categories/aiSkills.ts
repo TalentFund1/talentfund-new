@@ -65,5 +65,18 @@ export const aiSkills: UnifiedSkill[] = [
     salary: "$165,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL006',
+    title: "PyTorch",
+    subcategory: "ML Frameworks",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "28%",
+    salary: "$170,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];

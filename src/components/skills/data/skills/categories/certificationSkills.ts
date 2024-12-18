@@ -52,5 +52,31 @@ export const certificationSkills: UnifiedSkill[] = [
     salary: "$180,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL027',
+    title: "Project Management Professional (PMP)",
+    subcategory: "Management Certification",
+    category: "certification",
+    businessCategory: "Project Management",
+    weight: "critical",
+    level: "advanced",
+    growth: "20%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL028',
+    title: "Certified Scrum Master (CSM)",
+    subcategory: "Agile Certification",
+    category: "certification",
+    businessCategory: "Project Management",
+    weight: "critical",
+    level: "advanced",
+    growth: "18%",
+    salary: "$150,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];
