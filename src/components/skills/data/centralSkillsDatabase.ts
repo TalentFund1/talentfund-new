@@ -1,9 +1,8 @@
-import { normalizeSkillTitle } from './utils/normalization';
 import { getSubcategory, getBusinessCategory, getSkillWeight } from './utils/categories';
 import { getSkillGrowth, getSkillSalary } from './utils/metrics';
 import { UnifiedSkill } from '../types/SkillTypes';
 
-export { normalizeSkillTitle };
+export const normalizeSkillTitle = (title: string): string => title;
 
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
@@ -13,7 +12,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
 
   return {
     id: `SKILL_${title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
-    title: normalizeSkillTitle(title),
+    title: title,
     category: subcategory.includes('Certification') ? 'certification' : 
              ['Mobile Development', 'API Development', 'Frontend Development', 'Backend Development'].includes(subcategory) ? 'specialized' : 'common',
     businessCategory: businessCategory,
