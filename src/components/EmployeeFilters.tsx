@@ -1,6 +1,6 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
-import { technicalSkills, softSkills, technicalSkillObjects, softSkillObjects } from './skillsData';
+import { technicalSkills, softSkills, technicalSkillObjects, softSkillObjects } from '@/components/skillsData';
 import { Button } from '@/components/ui/button';
 import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
