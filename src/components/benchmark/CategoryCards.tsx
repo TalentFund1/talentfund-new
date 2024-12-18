@@ -37,7 +37,8 @@ export const CategoryCards = ({
     total: totalCount,
     specialized: specializedCount,
     common: commonCount,
-    certification: certificationCount
+    certification: certificationCount,
+    toggledSkills: Array.from(toggledSkills)
   });
 
   const categories = [
