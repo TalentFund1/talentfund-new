@@ -10,6 +10,7 @@ import { useCompetencyStore } from "@/components/skills/competency/CompetencySta
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
 import { addSkillToInitialSkills } from '../data/skillDatabaseService';
+import { roleSkills } from '../data/roleSkills';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -65,6 +66,30 @@ export const AddSkillToProfileDialog = () => {
 
         // Add to initial skills
         addSkillToInitialSkills(id, skillData);
+
+        // Add to roleSkills
+        const currentRole = roleSkills[id as keyof typeof roleSkills];
+        if (currentRole) {
+          // Determine which array to add the skill to based on its category
+          if (skillData.category === 'specialized') {
+            if (!currentRole.specialized.some(s => s.title === skillData.title)) {
+              currentRole.specialized.push(skillData);
+            }
+          } else if (skillData.category === 'common') {
+            if (!currentRole.common.some(s => s.title === skillData.title)) {
+              currentRole.common.push(skillData);
+            }
+          } else if (skillData.category === 'certification') {
+            if (!currentRole.certifications.some(s => s.title === skillData.title)) {
+              currentRole.certifications.push(skillData);
+            }
+          }
+          console.log('Added skill to roleSkills:', {
+            roleId: id,
+            skill: skillData.title,
+            category: skillData.category
+          });
+        }
       }
     });
 
