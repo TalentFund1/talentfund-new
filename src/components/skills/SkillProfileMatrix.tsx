@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
-import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from 'react-router-dom';
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
@@ -26,6 +25,22 @@ export const SkillProfileMatrix = () => {
   const { toast } = useToast();
   const { id } = useParams();
   const { toggledSkills } = useToggledSkills();
+
+  const handleSort = (field: SortField) => {
+    console.log('Handling sort:', { currentField: sortField, newField: field, currentDirection: sortDirection });
+    
+    if (sortField === field) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortField(null);
+        setSortDirection(null);
+      }
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
 
   // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
