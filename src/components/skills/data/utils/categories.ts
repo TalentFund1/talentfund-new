@@ -21,9 +21,10 @@ const specializedSkills = [
   'Technical Architecture',
   'Risk Management',
   'Git Version Control',
-  'Git',  // Both Git and Git Version Control are specialized skills
+  'Git',
   'CSS/SASS',
-  'Team Leadership'
+  'Team Leadership',
+  'Flutter'
 ];
 
 const commonSkills = [
@@ -43,6 +44,7 @@ const commonSkills = [
 const certificationSkills = [
   'AWS Certified Machine Learning - Specialty',
   'TensorFlow Developer Certificate',
+  'TensorFlow Developer Certification',
   'Google Cloud Professional Machine Learning Engineer',
   'AWS Certified Solutions Architect',
   'Kubernetes Administrator (CKA)',
@@ -98,7 +100,11 @@ export const getSubcategory = (skillTitle: string): string => {
     'React': 'Frontend Frameworks',
     'Next.js': 'Frontend Frameworks',
     'Git Version Control': 'Development Tools',
-    'Git': 'Development Tools'  // Both Git and Git Version Control map to Development Tools
+    'Git': 'Development Tools',
+    'Problem Solving': 'Development Tools',
+    'Technical Writing': 'Development Tools',
+    'TensorFlow Developer Certificate': 'AI Certification',
+    'TensorFlow Developer Certification': 'AI Certification'
   };
 
   return subcategories[skillTitle] || 'Development Tools';
@@ -121,7 +127,7 @@ export const getBusinessCategory = (skillTitle: string): string => {
     'React': 'Information Technology',
     'Next.js': 'Information Technology',
     'Git Version Control': 'Information Technology',
-    'Git': 'Information Technology',  // Both Git and Git Version Control are IT
+    'Git': 'Information Technology',
     'Communication': 'Media and Communications',
     'Technical Writing': 'Media and Communications',
     'Problem Solving': 'Physical and Inherent Abilities',
@@ -135,7 +141,10 @@ export const getBusinessCategory = (skillTitle: string): string => {
     'Stakeholder Management': 'Initiative and Leadership',
     'System Design': 'Information Technology',
     'Database Design': 'Information Technology',
-    'Technical Architecture': 'Information Technology'
+    'Technical Architecture': 'Information Technology',
+    'TensorFlow': 'Information Technology',
+    'TensorFlow Developer Certificate': 'Information Technology',
+    'TensorFlow Developer Certification': 'Information Technology'
   };
   
   return categories[skillTitle] || 'Information Technology';
@@ -149,7 +158,7 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'Technical Architecture',
     'Team Leadership',
     'Git Version Control',
-    'Git'  // Both Git and Git Version Control are critical skills
+    'Git'
   ];
 
   const technicalSkills = [
@@ -160,7 +169,9 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'React',
     'TypeScript',
     'Shell Scripting',
-    'CSS/SASS'
+    'CSS/SASS',
+    'TensorFlow',
+    'Flutter'
   ];
 
   if (criticalSkills.includes(skillTitle)) {
