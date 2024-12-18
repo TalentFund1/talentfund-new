@@ -48,13 +48,27 @@ export const SkillProfileMatrixTable = ({
     );
   };
 
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case "specialized":
+        return "bg-blue-100 text-blue-800";
+      case "common":
+        return "bg-green-100 text-green-800";
+      case "certification":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Skill Title</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[30%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Subcategory</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">Type</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
             <Button
               variant="ghost"
               className="flex items-center gap-1 hover:bg-transparent p-0 h-auto font-medium"
@@ -132,6 +146,11 @@ export const SkillProfileMatrixTable = ({
             <td className="py-3 px-4">
               <span className="text-sm block truncate" title={skill.subcategory}>
                 {skill.subcategory}
+              </span>
+            </td>
+            <td className="py-3 px-4">
+              <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${getTypeColor(skill.category)}`}>
+                {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
               </span>
             </td>
             <td className="py-3 px-4">
