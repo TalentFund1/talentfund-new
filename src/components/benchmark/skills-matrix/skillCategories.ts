@@ -1,64 +1,38 @@
+import { roleSkills } from '../../skills/data/roleSkills';
+
 export const filterSkillsByCategory = (skills: any[], category: string) => {
   if (category === "all") {
     return skills;
   }
 
-  // Define category mappings based on subcategories
-  const categoryMappings = {
-    specialized: [
-      "AI & ML",
-      "ML Frameworks",
-      "AI Applications",
-      "Backend Development",
-      "Data Management",
-      "Software Architecture",
-      "Container Orchestration",
-      "Frontend Frameworks",
-      "Programming Languages",
-      "State Management",
-      "Build Tools",
-      "Design",
-      "Architecture"
-    ],
-    common: [
-      "Soft Skills",
-      "Communication",
-      "Development Practices",
-      "Project Management",
-      "Frontend Development",
-      "Web Development",
-      "Development Tools",
-      "Leadership",
-      "Management"
-    ],
-    certification: [
-      "Cloud Certification",
-      "AI Certification",
-      "Container Certification",
-      "Database Certification",
-      "Web Development Certification",
-      "Development Certification",
-      "Frontend Certification",
-      "Programming Certification",
-      "Web Accessibility",
-      "Management Certification",
-      "Agile Certification",
-      "IT Service Management"
-    ]
-  };
+  // Get all role skills for proper categorization
+  const allRoleSkills = Object.values(roleSkills).reduce((acc, role) => {
+    if (category === 'specialized') {
+      acc.push(...role.specialized.map(s => s.title));
+    } else if (category === 'common') {
+      acc.push(...role.common.map(s => s.title));
+    } else if (category === 'certification') {
+      acc.push(...role.certifications.map(s => s.title));
+    }
+    return acc;
+  }, [] as string[]);
+
+  // Remove duplicates
+  const uniqueRoleSkills = Array.from(new Set(allRoleSkills));
+
+  console.log(`Filtering skills by category ${category}:`, {
+    totalSkills: skills.length,
+    categorySkills: uniqueRoleSkills.length
+  });
 
   return skills.filter(skill => {
-    const subcategory = skill.subcategory;
-    switch (category) {
-      case "specialized":
-        return categoryMappings.specialized.includes(subcategory);
-      case "common":
-        return categoryMappings.common.includes(subcategory);
-      case "certification":
-        return categoryMappings.certification.includes(subcategory);
-      default:
-        return false;
+    const isInCategory = uniqueRoleSkills.includes(skill.title);
+    
+    if (isInCategory) {
+      console.log(`Skill "${skill.title}" categorized as ${category}`);
     }
+    
+    return isInCategory;
   });
 };
 
@@ -67,6 +41,23 @@ export const getCategoryCount = (skills: any[], category: string) => {
 };
 
 export const categorizeSkill = (skillName: string): string => {
-  // This function can be used for individual skill categorization if needed
-  return 'common'; // Default fallback
+  // Check each role's skill categories
+  for (const role of Object.values(roleSkills)) {
+    if (role.specialized.some(s => s.title === skillName)) {
+      console.log(`${skillName} found in specialized skills`);
+      return 'specialized';
+    }
+    if (role.common.some(s => s.title === skillName)) {
+      console.log(`${skillName} found in common skills`);
+      return 'common';
+    }
+    if (role.certifications.some(s => s.title === skillName)) {
+      console.log(`${skillName} found in certifications`);
+      return 'certification';
+    }
+  }
+  
+  // Default to common if not found
+  console.log(`${skillName} not found in any category, defaulting to common`);
+  return 'common';
 };
