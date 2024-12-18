@@ -1,6 +1,16 @@
-import { SkillCategory } from '../../../types/SkillTypes';
+import { SkillCategory, UnifiedSkill } from '../../../types/SkillTypes';
 import { normalizeSkillTitle } from '../../../utils/normalization';
 
+// Initialize with empty database, will be set after initialization
+let universalSkillsDatabase: UnifiedSkill[] = [];
+
+// Function to initialize the database
+export const initializeSkillsDatabase = (skills: UnifiedSkill[]) => {
+  console.log('Initializing universal skills database with', skills.length, 'skills');
+  universalSkillsDatabase = skills;
+};
+
+// Predefined specialized skills for fallback
 const specializedSkills = new Set([
   'Machine Learning',
   'Deep Learning',
@@ -19,6 +29,7 @@ const specializedSkills = new Set([
   'Performance Optimization'
 ]);
 
+// Predefined certification skills for fallback
 const certificationSkills = new Set([
   'AWS Certified Solutions Architect',
   'Kubernetes Administrator (CKA)',
@@ -29,7 +40,25 @@ const certificationSkills = new Set([
 ]);
 
 export const getSkillCategory = (skillTitle: string): SkillCategory => {
+  console.log('Getting category for skill:', skillTitle);
+  
   const normalizedTitle = normalizeSkillTitle(skillTitle);
+  
+  // First try to get from universal database
+  const skill = universalSkillsDatabase.find(
+    s => normalizeSkillTitle(s.title) === normalizedTitle
+  );
+
+  if (skill) {
+    console.log('Found skill in universal database:', {
+      skill: skillTitle,
+      category: skill.category
+    });
+    return skill.category;
+  }
+
+  // Fallback to predefined sets
+  console.log('Falling back to predefined categories for:', skillTitle);
   
   if (specializedSkills.has(normalizedTitle)) {
     return 'specialized';
@@ -71,4 +100,9 @@ export const categorizeSkills = (skills: string[]) => {
     common: categories.common || 0,
     certification: categories.certification || 0
   };
+};
+
+// Export the universal database getter for direct access
+export const getUniversalSkillsDatabase = (): UnifiedSkill[] => {
+  return universalSkillsDatabase;
 };

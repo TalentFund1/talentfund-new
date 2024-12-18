@@ -1,6 +1,7 @@
 import { getUnifiedSkillData } from './skillDatabaseService';
 import { RoleSkillData } from '../types/SkillTypes';
 import { Skills, getAllSkills } from './skills/allSkills';
+import { getSkillCategory } from './skills/categories/skillCategories';
 
 // Get all skills from the universal database
 const allSkills = getAllSkills();
@@ -18,19 +19,21 @@ const getValidatedSkill = (title: string) => {
 };
 
 // Helper function to get skills by category from the universal database
-const getSkillsByCategory = (titles: string[], category: 'specialized' | 'common' | 'certification') => {
-  console.log(`Getting ${category} skills for titles:`, titles);
+const getSkillsByCategory = (titles: string[], expectedCategory: 'specialized' | 'common' | 'certification') => {
+  console.log(`Getting ${expectedCategory} skills for titles:`, titles);
   
   const skills = titles.map(title => {
     const skill = getValidatedSkill(title);
-    if (skill.category !== category) {
-      console.error(`Skill ${title} has category ${skill.category} but was requested as ${category}`);
-      throw new Error(`Category mismatch for skill ${title}`);
+    const actualCategory = getSkillCategory(title);
+    if (actualCategory !== expectedCategory) {
+      console.warn(`Warning: Skill ${title} has category ${actualCategory} but was requested as ${expectedCategory}`);
+      // Instead of throwing error, we'll use the actual category from the database
+      skill.category = actualCategory;
     }
     return skill;
   });
 
-  console.log(`Found ${skills.length} ${category} skills`);
+  console.log(`Found ${skills.length} ${expectedCategory} skills`);
   return skills;
 };
 
