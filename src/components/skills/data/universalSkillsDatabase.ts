@@ -45,8 +45,16 @@ const getAllUniversalSkills = (): UnifiedSkill[] => {
   const universalSkills: UnifiedSkill[] = [];
 
   // Helper function to add skills to our universal database
-  const addSkillToDatabase = (skill: Partial<UnifiedSkill>) => {
-    const normalizedSkill = normalizeSkill(skill);
+  const addSkillToDatabase = (skill: any) => {
+    // Convert skillsData.ts format to UnifiedSkill format
+    const skillToAdd = typeof skill === 'string' ? { title: skill } : {
+      title: skill.title,
+      subcategory: skill.subcategory,
+      level: skill.level,
+      growth: skill.growth
+    };
+    
+    const normalizedSkill = normalizeSkill(skillToAdd);
     
     // Only add if we haven't seen this skill before
     if (!skillSet.has(normalizedSkill.title.toLowerCase())) {
@@ -75,6 +83,15 @@ const getAllUniversalSkills = (): UnifiedSkill[] => {
   softSkills.forEach(skill => addSkillToDatabase(skill));
 
   console.log(`Universal Skills Database loaded with ${universalSkills.length} unique skills`);
+  
+  // Log category distribution
+  const categoryDistribution = universalSkills.reduce((acc, skill) => {
+    acc[skill.category] = (acc[skill.category] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
+  console.log('Skills distribution by category:', categoryDistribution);
+
   return universalSkills;
 };
 
