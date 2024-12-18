@@ -54,7 +54,7 @@ export const SkillProfileMatrix = () => {
       ...currentRoleSkills.certifications
     ];
 
-    console.log('Initial role skills array:', skills.length);
+    console.log('Total skills for role:', skills.length);
 
     // Filter by skill type using the centralized category system
     if (skillType !== "all") {
@@ -114,18 +114,22 @@ export const SkillProfileMatrix = () => {
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
-  const toggledSkillCount = Array.from(toggledSkills).length;
+  const totalRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ].length;
 
   console.log('Skill counts:', {
-    total: filteredSkills.length,
-    toggled: toggledSkillCount,
+    totalRoleSkills,
+    toggled: Array.from(toggledSkills).length,
     categories: skillCounts
   });
 
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white mb-8">
-        <SkillMappingHeader skillCount={toggledSkillCount} />
+        <SkillMappingHeader skillCount={totalRoleSkills} />
         
         <Separator className="my-4" />
 
