@@ -65,7 +65,7 @@ export const SkillProfileMatrix = () => {
 
   const transformSkillToBenchmarkFormat = (skill: any): UnifiedSkill => {
     console.log('Transforming skill to benchmark format:', skill.title);
-    const unifiedSkill = getUnifiedSkillData(skill.title);
+    const unifiedSkill = getUnifiedSkillData(skill.title, id);
     console.log('Transformed skill result:', unifiedSkill);
     return unifiedSkill;
   };
@@ -90,7 +90,7 @@ export const SkillProfileMatrix = () => {
     // Add toggled skills that aren't in role skills
     Array.from(toggledSkills).forEach(skillTitle => {
       if (!allSkills.some(skill => skill.title === skillTitle)) {
-        const unifiedSkill = getUnifiedSkillData(skillTitle);
+        const unifiedSkill = getUnifiedSkillData(skillTitle, id);
         if (unifiedSkill) {
           console.log('Adding toggled skill:', unifiedSkill);
           allSkills.push(unifiedSkill);
@@ -100,12 +100,12 @@ export const SkillProfileMatrix = () => {
 
     console.log('Skills after adding toggled:', allSkills.map(s => s.title));
 
-    // Apply category filtering
+    // Apply skill type filtering
     let filteredSkills = allSkills;
-    if (selectedCategory !== 'all') {
+    if (skillType !== "all") {
       filteredSkills = allSkills.filter(skill => {
-        const skillCategory = getCategoryForSkill(skill, id || "123");
-        return skillCategory === selectedCategory;
+        const category = getCategoryForSkill(skill, id || "123");
+        return category === skillType;
       });
     }
 

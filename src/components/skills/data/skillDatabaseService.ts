@@ -1,9 +1,10 @@
 import { UnifiedSkill } from '../types/SkillTypes';
 import { getAllSkills, getSkillById, getSkillByTitle } from './skillsData';
 import { normalizeSkillTitle } from '../utils/normalization';
+import { getSkillCategory } from '../competency/skillCategoryUtils';
 
 // Get unified skill data
-export const getUnifiedSkillData = (title: string): UnifiedSkill => {
+export const getUnifiedSkillData = (title: string, profileId?: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
   const normalizedTitle = normalizeSkillTitle(title);
@@ -23,10 +24,12 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   }
 
   // If skill not found, create a new one with complete data
+  const category = profileId ? getSkillCategory(normalizedTitle, profileId) : 'common';
+  
   const newSkill: UnifiedSkill = {
     id: `SKILL${Math.random().toString(36).substr(2, 9)}`,
     title: normalizedTitle,
-    category: 'common',
+    category: category,
     businessCategory: 'Information Technology',
     subcategory: 'General',
     weight: 'necessary',
