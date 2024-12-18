@@ -29,6 +29,20 @@ export const technicalSkillObjects = allSkillsList;
 export const softSkillObjects = allSkillsList;
 export const allSkillObjects = allSkillsList;
 
+// Export the complete skills array
+export const getAllSkills = (): UnifiedSkill[] => skills;
+
+// Helper function to find a skill by ID
+export const getSkillById = (id: string): UnifiedSkill | undefined => {
+  return skills.find(skill => skill.id === id);
+};
+
+// Helper function to find a skill by title
+export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
+  const normalizedTitle = normalizeSkillTitle(title);
+  return skills.find(skill => normalizeSkillTitle(skill.title) === normalizedTitle);
+};
+
 console.log('Loaded skills:', {
   total: skills.length,
   allUnique: allSkillsList.length,
