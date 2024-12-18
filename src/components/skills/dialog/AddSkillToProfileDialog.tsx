@@ -9,6 +9,7 @@ import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
+import { addSkillToInitialSkills } from '../data/skillDatabaseService';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -46,7 +47,7 @@ export const AddSkillToProfileDialog = () => {
       return;
     }
 
-    // Add skills to toggled skills
+    // Add skills to toggled skills and initial skills
     const newToggledSkills = new Set(toggledSkills);
     selectedSkills.forEach(skillTitle => {
       const skillData = getUnifiedSkillData(skillTitle);
@@ -61,6 +62,9 @@ export const AddSkillToProfileDialog = () => {
         
         // Initialize skill state in matrix
         setSkillState(skillTitle, 'unspecified', 'p4', 'preferred', id);
+
+        // Add to initial skills
+        addSkillToInitialSkills(id, skillData);
       }
     });
 
