@@ -8,16 +8,16 @@ import { useToast } from "@/hooks/use-toast";
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { useSkillsMatrixStore } from "@/components/benchmark/skills-matrix/SkillsMatrixState";
+import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
-  const { setSkillState } = useSkillsMatrixStore();
-  
+  const { setSkillState } = useCompetencyStore();
+
   const allSkills = [...technicalSkills, ...softSkills];
   const currentRole = roleSkills[id as keyof typeof roleSkills];
 
@@ -38,7 +38,7 @@ export const AddSkillToProfileDialog = () => {
       
       // Initialize skill state in matrix
       console.log('Initializing new skill in matrix:', skill);
-      setSkillState(skill, 'unspecified', 'preferred');
+      setSkillState(skill, 'unspecified', 'preferred', 'p4', id || "123");
     });
 
     setToggledSkills(newToggledSkills);
