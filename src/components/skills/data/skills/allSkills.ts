@@ -1,4 +1,34 @@
-import { UnifiedSkill } from '../../types/SkillTypes';
+import { UnifiedSkill, SkillCategory } from '../../types/SkillTypes';
+
+// Core skill classification structure
+const skillClassifications: { [key: string]: SkillCategory } = {
+  // AI & ML Skills
+  "Machine Learning": "specialized",
+  "Deep Learning": "specialized",
+  "Natural Language Processing": "specialized",
+  "Computer Vision": "specialized",
+  "TensorFlow": "specialized",
+  
+  // Backend Skills
+  "Node.js": "specialized",
+  "Database Design": "specialized",
+  "API Development": "specialized",
+  "System Architecture": "specialized",
+  "Kubernetes": "specialized",
+  
+  // Common Skills
+  "Problem Solving": "common",
+  "Code Review": "common",
+  "Agile Methodologies": "common",
+  "Communication": "common",
+  "Team Leadership": "common",
+  
+  // Certifications
+  "AWS Certified Solutions Architect": "certification",
+  "Kubernetes Administrator (CKA)": "certification",
+  "MongoDB Professional Developer": "certification",
+  "TensorFlow Developer Certificate": "certification"
+};
 
 // Define all skills in a single array with their core categorization
 export const allSkills: UnifiedSkill[] = [
@@ -73,39 +103,55 @@ export const allSkills: UnifiedSkill[] = [
   }
 ];
 
+// Helper function to get skill category from core classification
+export const getSkillCategory = (skillTitle: string): SkillCategory => {
+  console.log('Getting category for skill:', skillTitle);
+  return skillClassifications[skillTitle] || "common";
+};
+
 // Helper function to get all skills
 export const getAllSkills = (): UnifiedSkill[] => {
   console.log('Getting all skills:', allSkills.length, 'skills found');
-  return allSkills;
+  return allSkills.map(skill => ({
+    ...skill,
+    category: getSkillCategory(skill.title)
+  }));
 };
 
 // Helper function to get skills by category
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   console.log(`Getting skills for category: ${category}`);
-  return allSkills.filter(skill => skill.category === category);
+  return getAllSkills().filter(skill => getSkillCategory(skill.title) === category);
 };
 
 // Helper function to find a skill by title
 export const findSkillByTitle = (title: string): UnifiedSkill | undefined => {
   console.log(`Finding skill by title: ${title}`);
-  return allSkills.find(skill => skill.title.toLowerCase() === title.toLowerCase());
+  const skill = allSkills.find(skill => skill.title.toLowerCase() === title.toLowerCase());
+  if (skill) {
+    return {
+      ...skill,
+      category: getSkillCategory(skill.title)
+    };
+  }
+  return undefined;
 };
 
 // New helper functions for role-specific skill categorization
 export const getSpecializedSkills = (): UnifiedSkill[] => {
-  return allSkills.filter(skill => skill.category === 'specialized');
+  return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'specialized');
 };
 
 export const getCommonSkills = (): UnifiedSkill[] => {
-  return allSkills.filter(skill => skill.category === 'common');
+  return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'common');
 };
 
 export const getCertificationSkills = (): UnifiedSkill[] => {
-  return allSkills.filter(skill => skill.category === 'certification');
+  return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'certification');
 };
 
 export const Skills = {
-  all: allSkills,
+  all: getAllSkills(),
   specialized: getSpecializedSkills(),
   common: getCommonSkills(),
   certification: getCertificationSkills()
