@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { getUnifiedSkillData } from "./data/centralSkillsDatabase";
+import { getUnifiedSkillData } from "./data/skillDatabaseService";
 import { roleSkills } from './data/roleSkills';
 
 export const CompanySkillsTable = () => {

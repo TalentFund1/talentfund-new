@@ -1,4 +1,4 @@
-import { getUnifiedSkillData } from './centralSkillsDatabase';
+import { getUnifiedSkillData } from './skillDatabaseService';
 import { RoleSkillData } from '../types/SkillTypes';
 
 export const roleSkills: { [key: string]: RoleSkillData } = {
