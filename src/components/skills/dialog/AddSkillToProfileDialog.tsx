@@ -8,8 +8,7 @@ import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
-import { specializedSkills, commonSkills, certificationSkills } from '../data/utils/categories/skillLists';
-import { Skills } from '../data/skills/allSkills';
+import { Skills, getAllSkills } from '../data/skills/allSkills';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -19,25 +18,21 @@ export const AddSkillToProfileDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { setSkillState } = useCompetencyStore();
 
-  // Combine all skills from different sources
-  const allSkills = [
-    ...new Set([
-      ...specializedSkills,
-      ...commonSkills, 
-      ...certificationSkills,
-      ...Skills.all.map(s => s.title)
-    ])
-  ];
+  // Get all unique skills from our core data structure
+  const allSkills = Array.from(new Set([
+    ...Skills.specialized.map(s => s.title),
+    ...Skills.common.map(s => s.title),
+    ...Skills.certification.map(s => s.title)
+  ]));
   
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
     sampleSkills: allSkills.slice(0, 5),
     allSkills: allSkills,
     sources: {
-      specialized: specializedSkills.length,
-      common: commonSkills.length,
-      certification: certificationSkills.length,
-      all: Skills.all.length
+      specialized: Skills.specialized.length,
+      common: Skills.common.length,
+      certification: Skills.certification.length
     }
   });
 
