@@ -29,7 +29,13 @@ export const AddSkillToProfileDialog = () => {
   
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
-    sampleSkills: allSkills.slice(0, 5)
+    sampleSkills: allSkills.slice(0, 5),
+    allSkills: allSkills,
+    sources: {
+      specialized: Skills.specialized.length,
+      common: Skills.common.length,
+      certification: Skills.certification.length
+    }
   });
 
   const handleAddSkills = () => {
@@ -42,54 +48,52 @@ export const AddSkillToProfileDialog = () => {
       return;
     }
 
-    const currentRole = roleSkills[id as keyof typeof roleSkills];
-    if (!currentRole) {
-      console.error('Role not found:', id);
-      return;
-    }
-
-    console.log('Adding skills to role:', id);
-
-    // Add skills to toggled skills and role skills
+    // Add skills to toggled skills and initial skills
     const newToggledSkills = new Set(toggledSkills);
     selectedSkills.forEach(skillTitle => {
       const skillData = getUnifiedSkillData(skillTitle);
       if (skillData) {
-        console.log('Processing skill:', skillData);
+        console.log('Adding skill to profile:', {
+          title: skillData.title,
+          category: skillData.category,
+          weight: skillData.weight
+        });
         
-        // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
         // Initialize skill state in matrix
         setSkillState(skillTitle, 'unspecified', 'p4', 'preferred', id);
 
-        // Add to role skills based on category
-        const category = skillData.category?.toLowerCase() || 'common';
-        
-        if (category === 'specialized' && !currentRole.specialized.some(s => s.title === skillData.title)) {
-          console.log('Adding to specialized skills:', skillData.title);
-          currentRole.specialized.push(skillData);
-        } else if (category === 'common' && !currentRole.common.some(s => s.title === skillData.title)) {
-          console.log('Adding to common skills:', skillData.title);
-          currentRole.common.push(skillData);
-        } else if (category === 'certification' && !currentRole.certifications.some(s => s.title === skillData.title)) {
-          console.log('Adding to certification skills:', skillData.title);
-          currentRole.certifications.push(skillData);
-        }
-
-        // Add to initial skills for persistence
+        // Add to initial skills
         addSkillToInitialSkills(id, skillData);
+
+        // Add to roleSkills
+        const currentRole = roleSkills[id as keyof typeof roleSkills];
+        if (currentRole) {
+          // Determine which array to add the skill to based on its category
+          if (skillData.category === 'specialized') {
+            if (!currentRole.specialized.some(s => s.title === skillData.title)) {
+              currentRole.specialized.push(skillData);
+            }
+          } else if (skillData.category === 'common') {
+            if (!currentRole.common.some(s => s.title === skillData.title)) {
+              currentRole.common.push(skillData);
+            }
+          } else if (skillData.category === 'certification') {
+            if (!currentRole.certifications.some(s => s.title === skillData.title)) {
+              currentRole.certifications.push(skillData);
+            }
+          }
+          console.log('Added skill to roleSkills:', {
+            roleId: id,
+            skill: skillData.title,
+            category: skillData.category
+          });
+        }
       }
     });
 
     setToggledSkills(newToggledSkills);
-
-    console.log('Updated role skills:', {
-      roleId: id,
-      specialized: currentRole.specialized.length,
-      common: currentRole.common.length,
-      certifications: currentRole.certifications.length
-    });
 
     toast({
       title: "Skills Added",
