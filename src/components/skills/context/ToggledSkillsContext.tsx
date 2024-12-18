@@ -3,6 +3,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
+import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -24,6 +25,21 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       savedSkills,
       source: 'useState initializer'
     });
+
+    // If no saved skills exist, initialize with all skills toggled
+    if (!savedSkills || savedSkills.length === 0) {
+      const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
+      if (currentRoleSkills) {
+        const allSkills = [
+          ...currentRoleSkills.specialized.map(s => s.title),
+          ...currentRoleSkills.common.map(s => s.title),
+          ...currentRoleSkills.certifications.map(s => s.title)
+        ];
+        console.log('Initializing with all skills toggled:', allSkills);
+        return new Set(allSkills);
+      }
+    }
+    
     return new Set(savedSkills);
   });
 
@@ -42,13 +58,19 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     });
     
     const savedSkills = loadToggledSkills(currentRoleId);
-    console.log('Reloaded toggled skills:', {
-      roleId: currentRoleId,
-      skillCount: savedSkills.length,
-      skills: savedSkills
-    });
     
-    setToggledSkills(new Set(savedSkills));
+    // Only load saved skills if they exist
+    if (savedSkills && savedSkills.length > 0) {
+      console.log('Reloaded toggled skills:', {
+        roleId: currentRoleId,
+        skillCount: savedSkills.length,
+        skills: savedSkills
+      });
+      setToggledSkills(new Set(savedSkills));
+    } else {
+      // If no saved skills, keep current selection
+      console.log('No saved skills found, keeping current selection');
+    }
   }, [selectedRole, id]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
