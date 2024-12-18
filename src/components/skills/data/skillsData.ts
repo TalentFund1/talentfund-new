@@ -1,9 +1,9 @@
-import { Skills, getAllSkills } from './skills/allSkills';
+import { Skills, getAllSkills as getAllSkillsFromSource } from './skills/allSkills';
 import { UnifiedSkill } from '../types/SkillTypes';
 import { normalizeSkillTitle } from '../utils/normalization';
 
 // Get all skills and normalize their titles
-const skills: UnifiedSkill[] = getAllSkills().map(skill => ({
+const skills: UnifiedSkill[] = getAllSkillsFromSource().map(skill => ({
   ...skill,
   title: normalizeSkillTitle(skill.title)
 }));
