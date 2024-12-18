@@ -1,4 +1,4 @@
-import { UnifiedSkill, SkillCategory } from '../../types/SkillTypes';
+import { UnifiedSkill, SkillCategory, SkillWeight } from '../../types/SkillTypes';
 
 // Core skill classification structure - Single source of truth
 export const skillClassifications: { [key: string]: SkillCategory } = {
@@ -9,7 +9,6 @@ export const skillClassifications: { [key: string]: SkillCategory } = {
   "Computer Vision": "specialized",
   "TensorFlow": "specialized",
   
-  // Backend Skills
   "Node.js": "specialized",
   "Database Design": "specialized",
   "API Development": "specialized",
@@ -41,6 +40,48 @@ export const skillClassifications: { [key: string]: SkillCategory } = {
   "Certified Scrum Master (CSM)": "certification"
 };
 
+// Weight classifications - Single source of truth
+export const skillWeightClassifications: { [key: string]: SkillWeight } = {
+  // Critical Skills
+  "Machine Learning": "critical",
+  "Deep Learning": "critical",
+  "System Design": "critical",
+  "Technical Architecture": "critical",
+  "AWS Certified Solutions Architect": "critical",
+  "AWS Certified Machine Learning - Specialty": "critical",
+  "Cloud Architecture": "critical",
+  "Git": "critical",
+  "Git Version Control": "critical",
+  "Team Leadership": "critical",
+  "AWS": "critical",
+  "Kubernetes": "critical",
+  "Docker": "critical",
+  "Jenkins": "critical",
+  "Terraform": "critical",
+
+  // Technical Skills
+  "Node.js": "technical",
+  "React": "technical",
+  "TypeScript": "technical",
+  "Shell Scripting": "technical",
+  "CSS/SASS": "technical",
+  "Database Design": "technical",
+  "API Development": "technical",
+  "Flutter": "technical",
+  "GraphQL": "technical",
+  "Linux Administration": "technical",
+  "Python": "technical",
+  "TensorFlow": "technical",
+  "Natural Language Processing": "technical",
+  "Computer Vision": "technical"
+};
+
+// Helper function to get skill weight
+export const getSkillWeight = (skillTitle: string): SkillWeight => {
+  console.log(`Getting weight for skill: ${skillTitle}`);
+  return skillWeightClassifications[skillTitle] || "necessary";
+};
+
 // Define all skills with their core categorization
 export const allSkills: UnifiedSkill[] = [
   // AI & ML Skills (Specialized)
@@ -50,7 +91,7 @@ export const allSkills: UnifiedSkill[] = [
     subcategory: "AI & ML",
     category: "specialized",
     businessCategory: "Information Technology",
-    weight: "critical",
+    weight: getSkillWeight("Machine Learning"),
     level: "advanced",
     growth: "35%",
     salary: "$185,000",
@@ -174,18 +215,11 @@ export const getCertificationSkills = (): UnifiedSkill[] => {
   return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'certification');
 };
 
-export const Skills = {
-  all: getAllSkills(),
-  specialized: getSpecializedSkills(),
-  common: getCommonSkills(),
-  certification: getCertificationSkills()
-};
-
-console.log('Skills loaded:', {
+console.log('Skills loaded with weights:', {
   total: allSkills.length,
-  byCategory: {
-    specialized: getSpecializedSkills().length,
-    common: getCommonSkills().length,
-    certification: getCertificationSkills().length
+  byWeight: {
+    critical: allSkills.filter(skill => getSkillWeight(skill.title) === 'critical').length,
+    technical: allSkills.filter(skill => getSkillWeight(skill.title) === 'technical').length,
+    necessary: allSkills.filter(skill => getSkillWeight(skill.title) === 'necessary').length
   }
 });
