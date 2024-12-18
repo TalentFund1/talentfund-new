@@ -10,6 +10,8 @@ import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
+import { getUnifiedSkillData } from './data/skillDatabaseService';
+import { UnifiedSkill } from './types/SkillTypes';
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -78,24 +80,61 @@ export const SkillProfileMatrix = () => {
     }
   };
 
-  // Get only the skills for the current role
+  // Get only the skills for the current role and transform them to include benchmarks
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const filteredSkills = (() => {
-    let skills = [];
+    let skills: UnifiedSkill[] = [];
     if (skillType === "all") {
       skills = [
         ...currentRoleSkills.specialized,
         ...currentRoleSkills.common,
         ...currentRoleSkills.certifications
-      ];
+      ].map(skill => {
+        const unifiedSkill = getUnifiedSkillData(skill.title);
+        return {
+          ...unifiedSkill,
+          benchmarks: {
+            C: false,
+            B: unifiedSkill.benchmarks?.B || false,
+            B2: false,
+            O: unifiedSkill.benchmarks?.O || false
+          }
+        };
+      });
     } else if (skillType === "specialized") {
-      skills = currentRoleSkills.specialized;
+      skills = currentRoleSkills.specialized.map(skill => ({
+        ...getUnifiedSkillData(skill.title),
+        benchmarks: {
+          C: false,
+          B: true,
+          B2: false,
+          O: true
+        }
+      }));
     } else if (skillType === "common") {
-      skills = currentRoleSkills.common;
+      skills = currentRoleSkills.common.map(skill => ({
+        ...getUnifiedSkillData(skill.title),
+        benchmarks: {
+          C: false,
+          B: true,
+          B2: false,
+          O: true
+        }
+      }));
     } else if (skillType === "certification") {
-      skills = currentRoleSkills.certifications;
+      skills = currentRoleSkills.certifications.map(skill => ({
+        ...getUnifiedSkillData(skill.title),
+        benchmarks: {
+          C: false,
+          B: true,
+          B2: false,
+          O: true
+        }
+      }));
     }
+
+    console.log('Filtered skills before filtering:', skills.length);
 
     let sortedSkills = skills.filter(skill => {
       const isInCurrentRole = [
@@ -150,6 +189,7 @@ export const SkillProfileMatrix = () => {
       sortedSkills = toggleSortedSkills;
     }
 
+    console.log('Final filtered and sorted skills:', sortedSkills.length);
     return sortedSkills;
   })();
 
