@@ -47,7 +47,6 @@ export const SkillProfileMatrix = () => {
 
   const filteredSkills = (() => {
     console.log('Filtering skills with type:', skillType);
-    console.log('Current toggled skills:', Array.from(toggledSkills));
     
     let skills = [];
     if (skillType === "all") {
@@ -79,13 +78,7 @@ export const SkillProfileMatrix = () => {
     skills = [...skills, ...additionalSkills];
     console.log('Combined skills array:', skills.length);
 
-    let sortedSkills = skills.filter(skill => {
-      const isInCurrentRole = [
-        ...currentRoleSkills.specialized,
-        ...currentRoleSkills.common,
-        ...currentRoleSkills.certifications
-      ].some(roleSkill => roleSkill.title === skill.title);
-
+    let filteredSkills = skills.filter(skill => {
       // Apply category filter
       if (selectedCategory !== 'all') {
         const skillCategory = getCategoryForSkill(skill, id || "123");
@@ -93,14 +86,13 @@ export const SkillProfileMatrix = () => {
           return false;
         }
       }
-
-      return isInCurrentRole || toggledSkills.has(skill.title);
+      return true;
     });
 
-    console.log('After filtering:', sortedSkills.length);
+    console.log('After filtering:', filteredSkills.length);
 
     // Sort skills based on toggle state first
-    sortedSkills.sort((a, b) => {
+    filteredSkills.sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
       
@@ -111,7 +103,7 @@ export const SkillProfileMatrix = () => {
 
     // Apply additional sorting if specified
     if (sortField && sortDirection) {
-      const toggleSortedSkills = [...sortedSkills];
+      const toggleSortedSkills = [...filteredSkills];
       toggleSortedSkills.sort((a, b) => {
         // Preserve toggle-based ordering within each group
         const aIsToggled = toggledSkills.has(a.title);
@@ -131,11 +123,11 @@ export const SkillProfileMatrix = () => {
         }
         return 0;
       });
-      sortedSkills = toggleSortedSkills;
+      filteredSkills = toggleSortedSkills;
     }
 
-    console.log('Final filtered skills:', sortedSkills.length);
-    return sortedSkills;
+    console.log('Final filtered skills:', filteredSkills.length);
+    return filteredSkills;
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
