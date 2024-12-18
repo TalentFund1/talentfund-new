@@ -43,30 +43,35 @@ export const SkillProfileMatrix = () => {
 
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  const filteredSkills = (() => {
-    console.log('Filtering skills with type:', skillType);
-    
+  const getAllAvailableSkills = () => {
     // Get all skills from the role
-    let skills = [
+    const allSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
 
+    console.log('Available skills for selection:', {
+      totalSkills: allSkills.length,
+      sampleSkills: allSkills.slice(0, 5),
+      allSkills: allSkills.map(s => s.title),
+      sources: {
+        specialized: currentRoleSkills.specialized.length,
+        common: currentRoleSkills.common.length,
+        certification: currentRoleSkills.certifications.length
+      }
+    });
+
+    return allSkills;
+  };
+
+  const filteredSkills = (() => {
+    console.log('Filtering skills with type:', skillType);
+    
+    // Get all available skills
+    let skills = getAllAvailableSkills();
+    
     console.log('Initial skills array:', skills.length);
-
-    // Get all skills that aren't in the role skills
-    const allSkillTitles = new Set(skills.map(s => s.title));
-    const additionalSkills = Array.from(toggledSkills)
-      .filter(skillTitle => !allSkillTitles.has(skillTitle))
-      .map(skillTitle => {
-        console.log('Adding skill:', skillTitle);
-        return getUnifiedSkillData(skillTitle);
-      });
-
-    // Combine role skills with additional skills
-    skills = [...skills, ...additionalSkills];
-    console.log('Combined skills array:', skills.length);
 
     // Filter by skill type using the centralized category system
     if (skillType !== "all") {
@@ -88,7 +93,7 @@ export const SkillProfileMatrix = () => {
 
     console.log('After category filtering:', skills.length);
 
-    // Sort skills based on toggle state first, but don't filter them out
+    // Sort skills based on toggle state first
     const sortedSkills = [...skills].sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
