@@ -3,14 +3,6 @@ export const specializedSkills = [
   // AI & ML Skills
   'Machine Learning',
   'Deep Learning',
-  'Natural Language Processing',
-  'Computer Vision',
-  'TensorFlow',
-  'PyTorch',
-  'MLflow',
-  'Natural Language Understanding',
-  'Amazon Web Services',
-  'AWS',
   
   // Backend & Infrastructure
   'Node.js',
@@ -21,19 +13,12 @@ export const specializedSkills = [
   'Docker',
   'DevOps',
   'Microservices',
-  'Linux Administration',
-  'Shell Scripting',
   
   // Frontend & Mobile
   'React',
-  'TypeScript',
-  'Next.js',
-  'Vue.js',
   'React Native',
   'Flutter',
-  'GraphQL',
   'Performance Optimization',
-  'CSS/SASS',
   
   // Architecture & System Design
   'System Design',
@@ -43,6 +28,12 @@ export const specializedSkills = [
 ];
 
 export const commonSkills = [
+  // AI & ML Skills
+  'Natural Language Processing',
+  'TensorFlow',
+  'PyTorch',
+  'MLflow',
+  
   // Development Practices
   'Python',
   'Problem Solving',
@@ -51,6 +42,9 @@ export const commonSkills = [
   'Agile Methodologies',
   'Git',
   'Git Version Control',
+  'TypeScript',
+  'GraphQL',
+  'CSS/SASS',
   
   // Soft Skills
   'Communication',
@@ -59,15 +53,15 @@ export const commonSkills = [
   'Risk Management',
   'Strategic Planning',
   'Stakeholder Management',
-  'Jenkins',
-  'Terraform',
   
   // Technical Skills
   'Cross-browser Compatibility',
   'Responsive Design',
   'UI/UX Design',
   'Data Science',
-  'Cybersecurity'
+  'Cybersecurity',
+  'Linux Administration',
+  'Shell Scripting'
 ];
 
 export const certificationSkills = [

@@ -7,13 +7,11 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
     soc: "15-2051",
     specialized: [
       getUnifiedSkillData("Machine Learning"),
-      getUnifiedSkillData("Deep Learning"),
-      getUnifiedSkillData("Natural Language Processing"),
-      getUnifiedSkillData("Computer Vision"),
-      getUnifiedSkillData("TensorFlow"),
-      getUnifiedSkillData("GraphQL")
+      getUnifiedSkillData("Deep Learning")
     ],
     common: [
+      getUnifiedSkillData("Natural Language Processing"),
+      getUnifiedSkillData("TensorFlow"),
       getUnifiedSkillData("Python"),
       getUnifiedSkillData("Problem Solving"),
       getUnifiedSkillData("Technical Writing"),
