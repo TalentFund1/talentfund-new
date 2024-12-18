@@ -22,18 +22,6 @@ export const SkillTypeFilters = ({
   return (
     <div className="flex justify-between items-center mb-6">
       <div className="flex gap-3">
-        <Select value={skillType} onValueChange={setSkillType}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="specialized">Specialized Skills</SelectItem>
-            <SelectItem value="common">Common Skills</SelectItem>
-            <SelectItem value="certification">Certification</SelectItem>
-          </SelectContent>
-        </Select>
-
         <Select value={sortBy} onValueChange={setSortBy}>
           <SelectTrigger className="w-[220px] bg-white">
             <SelectValue placeholder="Sort by" />
