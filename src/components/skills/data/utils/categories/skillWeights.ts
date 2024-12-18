@@ -16,7 +16,8 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'Technical Architecture',
     'AWS Certified Solutions Architect',
     'AWS Certified Machine Learning - Specialty',
-    'Cloud Architecture'
+    'Cloud Architecture',
+    'Git'  // Added Git as a critical skill
   ];
 
   // Technical skills - specialized technical competencies
@@ -32,7 +33,7 @@ export const getSkillWeight = (skillTitle: string): SkillWeight => {
     'Node.js',
     'React',
     'TypeScript',
-    'Git Version Control'  // Added Git Version Control as technical skill
+    'Shell Scripting'  // Added Shell Scripting as technical skill
   ];
 
   // Necessary skills - important but not core technical requirements

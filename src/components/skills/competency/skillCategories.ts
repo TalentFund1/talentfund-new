@@ -6,26 +6,30 @@ export const isSpecializedSkill = (skill: string, profileId: string): boolean =>
       "TensorFlow",
       "PyTorch",
       "Natural Language Processing",
-      "Computer Vision"
+      "Computer Vision",
+      "Git"  // Added Git as specialized skill for AI Engineers
     ],
     "124": [ // Backend Engineer
       "Node.js",
       "Database Design",
       "API Development",
       "System Architecture",
-      "Kubernetes"
+      "Kubernetes",
+      "Git"  // Added Git as specialized skill for Backend Engineers
     ],
     "125": [ // Frontend Engineer
       "React",
       "TypeScript",
       "Next.js",
       "Vue.js",
-      "Webpack"
+      "Webpack",
+      "Git"  // Added Git as specialized skill for Frontend Engineers
     ],
     "126": [ // Engineering Manager
       "System Design",
       "Technical Architecture",
-      "Risk Management"
+      "Risk Management",
+      "Git"  // Added Git as specialized skill for Engineering Managers
     ]
   };
   
@@ -39,23 +43,27 @@ export const isCommonSkill = (skill: string, profileId: string): boolean => {
     "123": [ // AI Engineer
       "Python",
       "Problem Solving",
-      "Technical Writing"
+      "Technical Writing",
+      "Shell Scripting"  // Added Shell Scripting as common skill
     ],
     "124": [ // Backend Engineer
       "Problem Solving",
       "Code Review",
-      "Agile Methodologies"
+      "Agile Methodologies",
+      "Shell Scripting"  // Added Shell Scripting as common skill
     ],
     "125": [ // Frontend Engineer
       "Cross-browser Compatibility",
       "Responsive Design",
-      "Problem Solving"
+      "Problem Solving",
+      "Shell Scripting"  // Added Shell Scripting as common skill
     ],
     "126": [ // Engineering Manager
       "Team Leadership",
       "Project Management",
       "Strategic Planning",
-      "Stakeholder Management"
+      "Stakeholder Management",
+      "Shell Scripting"  // Added Shell Scripting as common skill
     ]
   };
   
@@ -69,22 +77,31 @@ export const isCertificationSkill = (skill: string, profileId: string): boolean 
     "123": [ // AI Engineer
       "AWS Certified Machine Learning - Specialty",
       "TensorFlow Developer Certificate",
-      "Google Cloud Professional Machine Learning Engineer"
+      "Google Cloud Professional Machine Learning Engineer",
+      "AWS Certified DevOps Engineer",
+      "Certified Kubernetes Administrator",
+      "HashiCorp Certified Terraform Associate"
     ],
     "124": [ // Backend Engineer
       "AWS Certified Solutions Architect",
       "Kubernetes Administrator (CKA)",
-      "MongoDB Professional Developer"
+      "MongoDB Professional Developer",
+      "AWS Certified DevOps Engineer",
+      "Certified Kubernetes Administrator",
+      "HashiCorp Certified Terraform Associate"
     ],
     "125": [ // Frontend Engineer
       "AWS Certified Developer - Associate",
       "Google Mobile Web Specialist",
-      "Professional Scrum Developer"
+      "Professional Scrum Developer",
+      "AWS Certified DevOps Engineer"
     ],
     "126": [ // Engineering Manager
       "Project Management Professional (PMP)",
       "Certified Scrum Master (CSM)",
-      "ITIL Foundation"
+      "ITIL Foundation",
+      "AWS Certified DevOps Engineer",
+      "Certified Kubernetes Administrator"
     ]
   };
   
