@@ -1,5 +1,6 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { roleSkills } from '../../skills/data/roleSkills';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 export const filterSkillsByCategory = (skills: UnifiedSkill[], category: string, roleId: string = "123") => {
   if (category === "all") {
@@ -21,17 +22,26 @@ export const filterSkillsByCategory = (skills: UnifiedSkill[], category: string,
 
   // Helper function to check if a skill exists in an array
   const isSkillInArray = (skill: UnifiedSkill, array: UnifiedSkill[]) => {
-    return array.some(s => s.title.toLowerCase() === skill.title.toLowerCase());
+    const normalizedSkillTitle = skill.title.toLowerCase();
+    return array.some(s => s.title.toLowerCase() === normalizedSkillTitle);
+  };
+
+  // Get the unified skill data to ensure consistent categorization
+  const getSkillCategory = (skill: UnifiedSkill) => {
+    const unifiedSkill = getUnifiedSkillData(skill.title);
+    return unifiedSkill.category;
   };
 
   return skills.filter(skill => {
+    const skillCategory = getSkillCategory(skill);
+    
     switch (category) {
       case "specialized":
-        return isSkillInArray(skill, currentRoleSkills.specialized);
+        return skillCategory === "specialized" && isSkillInArray(skill, currentRoleSkills.specialized);
       case "common":
-        return isSkillInArray(skill, currentRoleSkills.common);
+        return skillCategory === "common" && isSkillInArray(skill, currentRoleSkills.common);
       case "certification":
-        return isSkillInArray(skill, currentRoleSkills.certifications);
+        return skillCategory === "certification" && isSkillInArray(skill, currentRoleSkills.certifications);
       default:
         return false;
     }
@@ -43,18 +53,6 @@ export const getCategoryCount = (skills: UnifiedSkill[], category: string, roleI
 };
 
 export const categorizeSkill = (skillTitle: string, roleId: string = "123"): string => {
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-  
-  if (currentRoleSkills.specialized.some(s => s.title.toLowerCase() === skillTitle.toLowerCase())) {
-    return 'specialized';
-  }
-  if (currentRoleSkills.common.some(s => s.title.toLowerCase() === skillTitle.toLowerCase())) {
-    return 'common';
-  }
-  if (currentRoleSkills.certifications.some(s => s.title.toLowerCase() === skillTitle.toLowerCase())) {
-    return 'certification';
-  }
-  
-  // Default to common if no match is found
-  return 'common';
+  const unifiedSkill = getUnifiedSkillData(skillTitle);
+  return unifiedSkill.category;
 };

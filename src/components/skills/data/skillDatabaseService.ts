@@ -1,16 +1,30 @@
 import { UnifiedSkill } from '../types/SkillTypes';
 import { getAllSkills, getSkillById, getSkillByTitle } from './skillsData';
 import { normalizeSkillTitle } from '../utils/normalization';
+import { managementSkills } from './categories/managementSkills';
+import { aiSkills } from './categories/aiSkills';
+import { webSkills } from './categories/webSkills';
+import { devopsSkills } from './categories/devopsSkills';
+
+// Combine all skills into one central database
+const allSkills = [
+  ...managementSkills,
+  ...aiSkills,
+  ...webSkills,
+  ...devopsSkills
+];
 
 // Get unified skill data
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
   const normalizedTitle = normalizeSkillTitle(title);
-  const existingSkill = getSkillByTitle(normalizedTitle);
+  const existingSkill = allSkills.find(skill => 
+    normalizeSkillTitle(skill.title) === normalizedTitle
+  );
   
   if (existingSkill) {
-    console.log('Found existing skill:', existingSkill.title);
+    console.log('Found existing skill:', existingSkill.title, 'with category:', existingSkill.category);
     return {
       ...existingSkill,
       requirement: 'preferred' as const,
@@ -18,6 +32,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     };
   }
 
+  console.log('Creating new skill entry for:', normalizedTitle);
   // If skill not found, create a new one with default values
   const newSkill: UnifiedSkill = {
     id: `SKILL${Math.random().toString(36).substr(2, 9)}`,
@@ -40,15 +55,17 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     isCompanySkill: true
   };
 
-  console.log('Created new skill entry:', newSkill.title);
+  console.log('Created new skill entry:', newSkill.title, 'with category:', newSkill.category);
   return newSkill;
 };
 
 // Export additional utility functions
-export { getAllSkills };
-
-export const getSkillsByWeight = (weight: string): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => skill.weight === weight);
+export const getAllUnifiedSkills = (): UnifiedSkill[] => {
+  return allSkills;
 };
 
-console.log('Skill database service initialized');
+export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
+  return allSkills.filter(skill => skill.category === category);
+};
+
+console.log('Skill database service initialized with', allSkills.length, 'skills');

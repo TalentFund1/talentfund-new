@@ -68,17 +68,18 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       getUnifiedSkillData("Kubernetes Administrator (CKA)")
     ]
   },
+  
   "126": {
     title: "Engineering Manager",
     soc: "11-9041",
     specialized: [
       getUnifiedSkillData("System Design"),
       getUnifiedSkillData("Technical Architecture"),
-      getUnifiedSkillData("Risk Management"),
-      getUnifiedSkillData("Team Leadership"),
-      getUnifiedSkillData("Project Management")
+      getUnifiedSkillData("Risk Management")
     ],
     common: [
+      getUnifiedSkillData("Team Leadership"),
+      getUnifiedSkillData("Project Management"),
       getUnifiedSkillData("Strategic Planning"),
       getUnifiedSkillData("Stakeholder Management"),
       getUnifiedSkillData("Agile Methodologies"),
