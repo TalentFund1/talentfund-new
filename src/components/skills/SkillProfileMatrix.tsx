@@ -65,8 +65,9 @@ export const SkillProfileMatrix = () => {
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const transformSkillToBenchmarkFormat = (skill: any): UnifiedSkill => {
+    console.log('Transforming skill to benchmark format:', skill.title);
     const unifiedSkill = getUnifiedSkillData(skill.title);
-    console.log('Transformed skill:', unifiedSkill);
+    console.log('Transformed skill result:', unifiedSkill);
     return unifiedSkill;
   };
 
@@ -87,6 +88,8 @@ export const SkillProfileMatrix = () => {
       skills = currentRoleSkills.certifications.map(transformSkillToBenchmarkFormat);
     }
 
+    console.log('Initial filtered skills:', skills.map(s => s.title));
+
     let sortedSkills = skills.filter(skill => {
       const isInCurrentRole = [
         ...currentRoleSkills.specialized,
@@ -103,6 +106,8 @@ export const SkillProfileMatrix = () => {
 
       return isInCurrentRole;
     });
+
+    console.log('Skills after category filtering:', sortedSkills.map(s => s.title));
 
     // Sort skills based on toggle state first
     sortedSkills.sort((a, b) => {
@@ -139,6 +144,7 @@ export const SkillProfileMatrix = () => {
       sortedSkills = toggleSortedSkills;
     }
 
+    console.log('Final filtered and sorted skills:', sortedSkills.map(s => s.title));
     return sortedSkills;
   })();
 
@@ -146,8 +152,6 @@ export const SkillProfileMatrix = () => {
   const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
     filteredSkills.some(fs => fs.title === skill)
   ).length;
-
-  console.log('Filtered skills:', filteredSkills);
 
   return (
     <div className="space-y-6">
