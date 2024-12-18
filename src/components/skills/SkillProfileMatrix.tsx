@@ -98,9 +98,6 @@ export const SkillProfileMatrix = () => {
       skills = skills.filter(skill => getCategoryForSkill(skill, id || "123") === selectedCategory);
     }
 
-    // Filter to only show toggled skills
-    skills = skills.filter(skill => toggledSkills.has(skill.title));
-
     // Apply sorting if specified
     if (sortField && sortDirection) {
       skills.sort((a, b) => {
@@ -116,6 +113,13 @@ export const SkillProfileMatrix = () => {
         return 0;
       });
     }
+
+    console.log('Filtered skills:', {
+      total: skills.length,
+      toggledCount: Array.from(toggledSkills).length,
+      skillType,
+      selectedCategory
+    });
 
     return skills;
   })();
