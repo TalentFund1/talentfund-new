@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { roleSkills } from '../skills/data/roleSkills';
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { filterSkillsByCategory } from './skills-matrix/skillCategories';
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -19,28 +18,26 @@ export const CategoryCards = ({
   const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all skills for the current role
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
-  // Filter skills that are toggled
-  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
-
   // Get counts for each category based on toggled skills
-  const specializedCount = filterSkillsByCategory(toggledRoleSkills, "specialized", roleId).length;
-  const commonCount = filterSkillsByCategory(toggledRoleSkills, "common", roleId).length;
-  const certificationCount = filterSkillsByCategory(toggledRoleSkills, "certification", roleId).length;
+  const specializedCount = currentRoleSkills.specialized?.filter(skill => 
+    toggledSkills.has(skill.title)
+  ).length || 0;
+  
+  const commonCount = currentRoleSkills.common?.filter(skill => 
+    toggledSkills.has(skill.title)
+  ).length || 0;
+  
+  const certificationCount = currentRoleSkills.certifications?.filter(skill => 
+    toggledSkills.has(skill.title)
+  ).length || 0;
+
   const totalCount = specializedCount + commonCount + certificationCount;
 
   console.log('Category counts calculated:', {
     total: totalCount,
     specialized: specializedCount,
     common: commonCount,
-    certification: certificationCount,
-    roleId
+    certification: certificationCount
   });
 
   const categories = [

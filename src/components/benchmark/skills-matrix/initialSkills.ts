@@ -1,7 +1,6 @@
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
-export const initialSkills: { [key: string]: UnifiedSkill[] } = {
+export const initialSkills = {
   "124": [
     { ...getUnifiedSkillData("Node.js"), requirement: "preferred", isCompanySkill: true },
     { ...getUnifiedSkillData("Database Design"), requirement: "preferred", isCompanySkill: true },
@@ -23,7 +22,7 @@ export const initialSkills: { [key: string]: UnifiedSkill[] } = {
   ]
 };
 
-export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
+export const getEmployeeSkills = (id: string) => {
   console.log('Getting skills for employee:', id);
   const skills = initialSkills[id as keyof typeof initialSkills] || [];
   console.log('Found employee skills:', skills);

@@ -8,43 +8,21 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
     specialized: [
       getUnifiedSkillData("Machine Learning"),
       getUnifiedSkillData("Deep Learning"),
-      getUnifiedSkillData("Python"),
+      getUnifiedSkillData("Natural Language Processing"),
+      getUnifiedSkillData("Computer Vision"),
       getUnifiedSkillData("TensorFlow"),
-      getUnifiedSkillData("Natural Language Processing")
+      getUnifiedSkillData("GraphQL")
     ],
     common: [
+      getUnifiedSkillData("Python"),
       getUnifiedSkillData("Problem Solving"),
       getUnifiedSkillData("Technical Writing"),
-      getUnifiedSkillData("Git Version Control"),
-      getUnifiedSkillData("Communication"),
-      getUnifiedSkillData("Code Review"),
-      getUnifiedSkillData("Agile Methodologies")
-    ],
-    certifications: [
-      getUnifiedSkillData("AWS Certified Machine Learning - Specialty"),
-      getUnifiedSkillData("TensorFlow Developer Certificate")
-    ]
-  },
-  "125": {
-    title: "Frontend Engineer",
-    soc: "15-1252",
-    specialized: [
-      getUnifiedSkillData("React")
-    ],
-    common: [
-      getUnifiedSkillData("TypeScript"),
-      getUnifiedSkillData("Node.js"),
-      getUnifiedSkillData("Database Design"),
-      getUnifiedSkillData("API Development"),
-      getUnifiedSkillData("Problem Solving"),
-      getUnifiedSkillData("Code Review"),
-      getUnifiedSkillData("Agile Methodologies"),
       getUnifiedSkillData("Git Version Control"),
       getUnifiedSkillData("Communication")
     ],
     certifications: [
-      getUnifiedSkillData("AWS Certified Developer - Associate"),
-      getUnifiedSkillData("Google Mobile Web Specialist")
+      getUnifiedSkillData("AWS Certified Machine Learning - Specialty"),
+      getUnifiedSkillData("TensorFlow Developer Certificate")
     ]
   },
   "124": {
@@ -70,17 +48,42 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       getUnifiedSkillData("Kubernetes Administrator (CKA)")
     ]
   },
+  "125": {
+    title: "Frontend Engineer",
+    soc: "15-1252",
+    specialized: [
+      getUnifiedSkillData("React"),
+      getUnifiedSkillData("TypeScript"),
+      getUnifiedSkillData("Next.js"),
+      getUnifiedSkillData("CSS/SASS"),
+      getUnifiedSkillData("Performance Optimization"),
+      getUnifiedSkillData("React Native"),
+      getUnifiedSkillData("Flutter"),
+      getUnifiedSkillData("GraphQL")
+    ],
+    common: [
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Code Review"),
+      getUnifiedSkillData("Agile Methodologies"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")
+    ],
+    certifications: [
+      getUnifiedSkillData("AWS Certified Developer - Associate"),
+      getUnifiedSkillData("Google Mobile Web Specialist")
+    ]
+  },
   "126": {
     title: "Engineering Manager",
     soc: "11-9041",
     specialized: [
       getUnifiedSkillData("System Design"),
       getUnifiedSkillData("Technical Architecture"),
-      getUnifiedSkillData("Risk Management")
+      getUnifiedSkillData("Risk Management"),
+      getUnifiedSkillData("Team Leadership"),
+      getUnifiedSkillData("Project Management")
     ],
     common: [
-      getUnifiedSkillData("Team Leadership"),
-      getUnifiedSkillData("Project Management"),
       getUnifiedSkillData("Strategic Planning"),
       getUnifiedSkillData("Stakeholder Management"),
       getUnifiedSkillData("Agile Methodologies"),

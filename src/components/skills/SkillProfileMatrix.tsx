@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
@@ -10,12 +10,12 @@ import { CategoryCards } from './CategoryCards';
 import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
-import { getUnifiedSkillData } from './data/skillDatabaseService';
 
-type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
+type SortField = 'growth' | 'salary' | null;
 
-const INITIAL_VISIBLE_COUNT = 12;
+const STORAGE_KEY = 'added-skills';
+const getStorageKey = (roleId: string) => `${STORAGE_KEY}-${roleId}`;
 
 export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
@@ -28,6 +28,21 @@ export const SkillProfileMatrix = () => {
   const { toast } = useToast();
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
+
+  useEffect(() => {
+    if (id) {
+      try {
+        const savedSkills = localStorage.getItem(getStorageKey(id));
+        if (savedSkills) {
+          const parsedSkills = JSON.parse(savedSkills);
+          console.log('Loading saved skills:', { roleId: id, skills: parsedSkills });
+          setToggledSkills(new Set([...toggledSkills, ...parsedSkills]));
+        }
+      } catch (error) {
+        console.error('Error loading saved skills:', error);
+      }
+    }
+  }, [id]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -43,10 +58,12 @@ export const SkillProfileMatrix = () => {
     }
   };
 
+  // Get only the skills for the current role
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const filteredSkills = (() => {
     console.log('Filtering skills with type:', skillType);
+    console.log('Current toggled skills:', Array.from(toggledSkills));
     
     let skills = [];
     if (skillType === "all") {
@@ -65,20 +82,13 @@ export const SkillProfileMatrix = () => {
 
     console.log('Initial skills array:', skills.length);
 
-    // Get all toggled skills that aren't in the role skills
-    const toggledSkillsArray = Array.from(toggledSkills);
-    const additionalSkills = toggledSkillsArray
-      .filter(skillTitle => !skills.some(s => s.title === skillTitle))
-      .map(skillTitle => {
-        console.log('Adding toggled skill:', skillTitle);
-        return getUnifiedSkillData(skillTitle);
-      });
+    let sortedSkills = skills.filter(skill => {
+      const isInCurrentRole = [
+        ...currentRoleSkills.specialized,
+        ...currentRoleSkills.common,
+        ...currentRoleSkills.certifications
+      ].some(roleSkill => roleSkill.title === skill.title);
 
-    // Combine role skills with additional toggled skills
-    skills = [...skills, ...additionalSkills];
-    console.log('Combined skills array:', skills.length);
-
-    let filteredSkills = skills.filter(skill => {
       // Apply category filter
       if (selectedCategory !== 'all') {
         const skillCategory = getCategoryForSkill(skill, id || "123");
@@ -86,13 +96,14 @@ export const SkillProfileMatrix = () => {
           return false;
         }
       }
-      return true;
+
+      return isInCurrentRole || toggledSkills.has(skill.title); // Include toggled skills
     });
 
-    console.log('After filtering:', filteredSkills.length);
+    console.log('After filtering:', sortedSkills.length);
 
     // Sort skills based on toggle state first
-    filteredSkills.sort((a, b) => {
+    sortedSkills.sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
       
@@ -103,7 +114,7 @@ export const SkillProfileMatrix = () => {
 
     // Apply additional sorting if specified
     if (sortField && sortDirection) {
-      const toggleSortedSkills = [...filteredSkills];
+      const toggleSortedSkills = [...sortedSkills];
       toggleSortedSkills.sort((a, b) => {
         // Preserve toggle-based ordering within each group
         const aIsToggled = toggledSkills.has(a.title);
@@ -123,15 +134,17 @@ export const SkillProfileMatrix = () => {
         }
         return 0;
       });
-      filteredSkills = toggleSortedSkills;
+      sortedSkills = toggleSortedSkills;
     }
 
-    console.log('Final filtered skills:', filteredSkills.length);
-    return filteredSkills;
+    console.log('Final filtered skills:', sortedSkills.length);
+    return sortedSkills;
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
-  const toggledSkillCount = Array.from(toggledSkills).length;
+  const toggledSkillCount = Array.from(toggledSkills).filter(skill => 
+    filteredSkills.some(fs => fs.title === skill)
+  ).length;
 
   console.log('Skill counts:', {
     total: filteredSkills.length,

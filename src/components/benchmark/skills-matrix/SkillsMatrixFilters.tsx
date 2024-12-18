@@ -2,7 +2,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useBenchmarkSearch } from "@/components/skills/context/BenchmarkSearchContext";
-import { roleSkills } from '../../skills/data/roleSkills';
 
 interface SkillsMatrixFiltersProps {
   selectedCategory: string;
@@ -21,12 +20,6 @@ export const SkillsMatrixFilters = ({
   selectedInterest,
   setSelectedInterest,
 }: SkillsMatrixFiltersProps) => {
-  console.log('SkillsMatrixFilters - Current selection:', {
-    category: selectedCategory,
-    level: selectedLevel,
-    interest: selectedInterest
-  });
-
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-start gap-4">

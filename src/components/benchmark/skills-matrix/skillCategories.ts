@@ -1,54 +1,72 @@
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { roleSkills } from '../../skills/data/roleSkills';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-
-export const filterSkillsByCategory = (skills: UnifiedSkill[], category: string, roleId: string = "123") => {
+export const filterSkillsByCategory = (skills: any[], category: string) => {
   if (category === "all") {
     return skills;
   }
 
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-
-  console.log('Filtering skills by category:', {
-    category,
-    roleId,
-    totalSkills: skills.length,
-    roleSkills: {
-      specialized: currentRoleSkills.specialized.length,
-      common: currentRoleSkills.common.length,
-      certification: currentRoleSkills.certifications.length
-    }
-  });
-
-  // Get the unified skill data to ensure consistent categorization
-  const getSkillCategory = (skill: UnifiedSkill) => {
-    const unifiedSkill = getUnifiedSkillData(skill.title);
-    return unifiedSkill.category;
+  // Define category mappings based on subcategories
+  const categoryMappings = {
+    specialized: [
+      "AI & ML",
+      "ML Frameworks",
+      "AI Applications",
+      "Backend Development",
+      "Data Management",
+      "Software Architecture",
+      "Container Orchestration",
+      "Frontend Frameworks",
+      "Programming Languages",
+      "State Management",
+      "Build Tools",
+      "Design",
+      "Architecture"
+    ],
+    common: [
+      "Soft Skills",
+      "Communication",
+      "Development Practices",
+      "Project Management",
+      "Frontend Development",
+      "Web Development",
+      "Development Tools",
+      "Leadership",
+      "Management"
+    ],
+    certification: [
+      "Cloud Certification",
+      "AI Certification",
+      "Container Certification",
+      "Database Certification",
+      "Web Development Certification",
+      "Development Certification",
+      "Frontend Certification",
+      "Programming Certification",
+      "Web Accessibility",
+      "Management Certification",
+      "Agile Certification",
+      "IT Service Management"
+    ]
   };
 
   return skills.filter(skill => {
-    const skillCategory = getSkillCategory(skill);
-    console.log(`Filtering skill ${skill.title} with category ${skillCategory}`);
-    
+    const subcategory = skill.subcategory;
     switch (category) {
       case "specialized":
-        return skillCategory === "specialized";
+        return categoryMappings.specialized.includes(subcategory);
       case "common":
-        return skillCategory === "common";
+        return categoryMappings.common.includes(subcategory);
       case "certification":
-        return skillCategory === "certification";
+        return categoryMappings.certification.includes(subcategory);
       default:
         return false;
     }
   });
 };
 
-export const getCategoryCount = (skills: UnifiedSkill[], category: string, roleId: string = "123") => {
-  return filterSkillsByCategory(skills, category, roleId).length;
+export const getCategoryCount = (skills: any[], category: string) => {
+  return filterSkillsByCategory(skills, category).length;
 };
 
-export const categorizeSkill = (skillTitle: string, roleId: string = "123"): string => {
-  const unifiedSkill = getUnifiedSkillData(skillTitle);
-  console.log(`Categorizing skill ${skillTitle} as ${unifiedSkill.category}`);
-  return unifiedSkill.category;
+export const categorizeSkill = (skillName: string): string => {
+  // This function can be used for individual skill categorization if needed
+  return 'common'; // Default fallback
 };
