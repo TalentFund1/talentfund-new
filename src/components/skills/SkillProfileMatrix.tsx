@@ -18,7 +18,7 @@ export const SkillProfileMatrix = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
   const observerTarget = useRef(null);
   const { id } = useParams();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
 
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -54,6 +54,16 @@ export const SkillProfileMatrix = () => {
     filteredSkills.some(fs => fs.title === skill)
   ).length;
 
+  const handleToggleSkill = (skillTitle: string) => {
+    const newToggledSkills = new Set(toggledSkills);
+    if (newToggledSkills.has(skillTitle)) {
+      newToggledSkills.delete(skillTitle);
+    } else {
+      newToggledSkills.add(skillTitle);
+    }
+    setToggledSkills(newToggledSkills);
+  };
+
   return (
     <div className="space-y-6">
       <Card className="p-6 space-y-6 animate-fade-in bg-white mb-8">
@@ -76,6 +86,7 @@ export const SkillProfileMatrix = () => {
           <SkillProfileMatrixTable 
             paginatedSkills={filteredSkills}
             toggledSkills={toggledSkills}
+            onToggleSkill={handleToggleSkill}
             sortField={sortField}
             sortDirection={sortDirection}
             onSort={(field) => {
