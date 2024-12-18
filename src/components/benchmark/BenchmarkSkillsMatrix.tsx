@@ -34,7 +34,8 @@ const BenchmarkSkillsMatrixContent = () => {
     selectedInterest,
     selectedSkillLevel,
     searchTerm,
-    toggledSkills
+    toggledSkills,
+    true // This is the role benchmark view
   );
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
