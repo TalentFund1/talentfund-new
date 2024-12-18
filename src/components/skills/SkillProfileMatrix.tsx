@@ -46,6 +46,8 @@ export const SkillProfileMatrix = () => {
     console.log('Filtering skills with type:', skillType);
     
     let skills = [];
+    
+    // Initial category filtering
     if (skillType === "all") {
       skills = [
         ...currentRoleSkills.specialized,
@@ -53,11 +55,11 @@ export const SkillProfileMatrix = () => {
         ...currentRoleSkills.certifications
       ];
     } else if (skillType === "specialized") {
-      skills = currentRoleSkills.specialized;
+      skills = [...currentRoleSkills.specialized];
     } else if (skillType === "common") {
-      skills = currentRoleSkills.common;
+      skills = [...currentRoleSkills.common];
     } else if (skillType === "certification") {
-      skills = currentRoleSkills.certifications;
+      skills = [...currentRoleSkills.certifications];
     }
 
     console.log('Initial skills array:', skills.length);
@@ -68,8 +70,17 @@ export const SkillProfileMatrix = () => {
       .filter(skillTitle => !allSkillTitles.has(skillTitle))
       .map(skillTitle => {
         console.log('Adding skill:', skillTitle);
-        return getUnifiedSkillData(skillTitle);
-      });
+        const skillData = getUnifiedSkillData(skillTitle);
+        // Only add the skill if it matches the selected category
+        if (skillType === "all" || 
+            (skillType === "specialized" && skillData.category === "specialized") ||
+            (skillType === "common" && skillData.category === "common") ||
+            (skillType === "certification" && skillData.category === "certification")) {
+          return skillData;
+        }
+        return null;
+      })
+      .filter(skill => skill !== null); // Remove null values
 
     // Combine role skills with additional skills
     skills = [...skills, ...additionalSkills];
