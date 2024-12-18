@@ -1,6 +1,7 @@
-import { Skill, SkillWeight, SkillCategory } from '../types/SkillTypes';
+import { Skill, SkillWeight, SkillCategory, UnifiedSkill } from '../types/SkillTypes';
 import { Skills, getAllSkills } from './skills/allSkills';
 import { getSkillGrowth, getSkillSalary } from './utils/metrics';
+import { normalizeSkillTitle } from '../utils/normalization';
 
 // Helper function to determine skill weight based on growth and category
 const determineWeight = (growth: string, category: string): SkillWeight => {
@@ -68,6 +69,25 @@ export const getSkillsByWeight = (weight: SkillWeight): Skill[] => {
 
 export const getSkillsByCategory = (category: SkillCategory): Skill[] => {
   return skillsDatabase.filter(skill => skill.category === category);
+};
+
+// Add the missing getUnifiedSkillData function
+export const getUnifiedSkillData = (title: string): UnifiedSkill | undefined => {
+  const normalizedTitle = normalizeSkillTitle(title);
+  const skill = skillsDatabase.find(s => normalizeSkillTitle(s.title) === normalizedTitle);
+  
+  if (skill) {
+    console.log('Found unified skill data:', { title, skill });
+    return {
+      ...skill,
+      requirement: 'preferred',
+      confidence: skill.confidence || 'medium',
+      benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false }
+    };
+  }
+  
+  console.warn('Unified skill data not found:', title);
+  return undefined;
 };
 
 // Add the missing function
