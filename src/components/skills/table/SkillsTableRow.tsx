@@ -1,6 +1,8 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { SkillLevelIcon } from "../SkillLevelIcon";
 import { SimpleSkill } from "../types/SkillTypes";
+import { roleSkills } from "../data/roleSkills";
+import { useParams } from "react-router-dom";
 
 interface SkillsTableRowProps {
   skill: SimpleSkill;
@@ -8,6 +10,23 @@ interface SkillsTableRowProps {
 }
 
 export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
+  const { id } = useParams();
+  
+  const getSkillType = (skillTitle: string): string => {
+    const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+    
+    if (currentRoleSkills.specialized.some(s => s.title === skillTitle)) {
+      return 'Specialized';
+    }
+    if (currentRoleSkills.common.some(s => s.title === skillTitle)) {
+      return 'Common';
+    }
+    if (currentRoleSkills.certifications.some(s => s.title === skillTitle)) {
+      return 'Certification';
+    }
+    return 'Uncategorized';
+  };
+
   const getLevelBackgroundColor = (level: string) => {
     switch (level) {
       case "Advanced":
@@ -21,6 +40,21 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
     }
   };
 
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case "Specialized":
+        return "bg-blue-100 text-blue-800";
+      case "Common":
+        return "bg-green-100 text-green-800";
+      case "Certification":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const skillType = getSkillType(skill.title);
+
   return (
     <TableRow className={`group transition-all duration-200 hover:bg-muted/50 ${isEven ? 'bg-muted/5' : ''}`}>
       <TableCell className="font-medium border-x border-blue-200/60 group-hover:bg-transparent py-4">
@@ -32,8 +66,10 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
       <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
         {skill.businessCategory || 'Information Technology'}
       </TableCell>
-      <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
-        {skill.category}
+      <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4">
+        <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${getTypeColor(skillType)}`}>
+          {skillType}
+        </span>
       </TableCell>
       <TableCell className={`text-center border-r border-blue-200/60 group-hover:bg-transparent py-4 w-[100px] ${getLevelBackgroundColor("Advanced")}`}>
         {skill.level === "Advanced" && <SkillLevelIcon level="advanced" />}

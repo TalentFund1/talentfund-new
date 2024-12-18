@@ -30,6 +30,9 @@ export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProp
       <TableCell className="border-r border-blue-200/60">
         <Skeleton className="h-4 w-1/2" />
       </TableCell>
+      <TableCell className="border-r border-blue-200/60">
+        <Skeleton className="h-4 w-1/2" />
+      </TableCell>
       <TableCell className="text-center bg-[#F7F9FF]/30 border-r border-blue-200/60">
         <Skeleton className="h-6 w-6 mx-auto rounded-full" />
       </TableCell>
@@ -98,7 +101,7 @@ export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProp
             Array(5).fill(0).map((_, index) => renderSkeletonRow())
           ) : skills.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={8} className="h-32 text-center text-muted-foreground">
+              <TableCell colSpan={9} className="h-32 text-center text-muted-foreground">
                 No skills found
               </TableCell>
             </TableRow>
