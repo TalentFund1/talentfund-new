@@ -1,22 +1,16 @@
-import { roleSkills } from '../data/roleSkills';
+import { getUnifiedSkillData } from '../data/skillDatabaseService';
 
 export const isSpecializedSkill = (skill: string, profileId: string): boolean => {
-  const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
-  return currentRoleSkills?.specialized.some(spec => 
-    spec.title.toLowerCase() === skill.toLowerCase()
-  ) || false;
+  const skillData = getUnifiedSkillData(skill);
+  return skillData.category === 'specialized';
 };
 
 export const isCommonSkill = (skill: string, profileId: string): boolean => {
-  const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
-  return currentRoleSkills?.common.some(common => 
-    common.title.toLowerCase() === skill.toLowerCase()
-  ) || false;
+  const skillData = getUnifiedSkillData(skill);
+  return skillData.category === 'common';
 };
 
 export const isCertificationSkill = (skill: string, profileId: string): boolean => {
-  const currentRoleSkills = roleSkills[profileId as keyof typeof roleSkills];
-  return currentRoleSkills?.certifications.some(cert => 
-    cert.title.toLowerCase() === skill.toLowerCase()
-  ) || false;
+  const skillData = getUnifiedSkillData(skill);
+  return skillData.category === 'certification';
 };

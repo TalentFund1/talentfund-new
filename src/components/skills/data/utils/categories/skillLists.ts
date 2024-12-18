@@ -1,8 +1,8 @@
-import { getAllSkills } from '../../skillsData';
+import { getUnifiedSkillData, getAllUnifiedSkills } from '../../skillDatabaseService';
 
 // Helper function to get skills by category
 const getSkillsByCategory = (category: string) => {
-  return getAllSkills()
+  return getAllUnifiedSkills()
     .filter(skill => skill.category === category)
     .map(skill => skill.title);
 };
@@ -25,21 +25,7 @@ export const generateSkillId = (title: string): string => {
 
 // Helper function to determine skill category
 export const getSkillCategory = (skillTitle: string): 'specialized' | 'common' | 'certification' => {
-  // First check exact matches
-  if (specializedSkills.includes(skillTitle)) {
-    console.log(`${skillTitle} found in specialized skills list`);
-    return 'specialized';
-  }
-  if (commonSkills.includes(skillTitle)) {
-    console.log(`${skillTitle} found in common skills list`);
-    return 'common';
-  }
-  if (certificationSkills.includes(skillTitle)) {
-    console.log(`${skillTitle} found in certification skills list`);
-    return 'certification';
-  }
-  
-  // Default to common if no match is found
-  console.log(`${skillTitle} defaulting to common category`);
-  return 'common';
+  const skill = getUnifiedSkillData(skillTitle);
+  console.log(`Getting category for ${skillTitle} from central database:`, skill.category);
+  return skill.category;
 };

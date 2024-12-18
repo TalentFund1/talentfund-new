@@ -1,5 +1,4 @@
 import { UnifiedSkill } from '../types/SkillTypes';
-import { getAllSkills, getSkillById, getSkillByTitle } from './skillsData';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { managementSkills } from './categories/managementSkills';
 import { aiSkills } from './categories/aiSkills';
@@ -12,7 +11,10 @@ const allSkills = [
   ...aiSkills,
   ...webSkills,
   ...devopsSkills
-];
+].map(skill => ({
+  ...skill,
+  title: normalizeSkillTitle(skill.title)
+}));
 
 // Get unified skill data
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
@@ -66,6 +68,12 @@ export const getAllUnifiedSkills = (): UnifiedSkill[] => {
 
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   return allSkills.filter(skill => skill.category === category);
+};
+
+// Helper function to get skill category
+export const getSkillCategory = (skillTitle: string): 'specialized' | 'common' | 'certification' => {
+  const skill = getUnifiedSkillData(skillTitle);
+  return skill.category;
 };
 
 console.log('Skill database service initialized with', allSkills.length, 'skills');

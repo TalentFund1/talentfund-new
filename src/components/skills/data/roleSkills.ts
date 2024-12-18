@@ -68,7 +68,6 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       getUnifiedSkillData("Kubernetes Administrator (CKA)")
     ]
   },
-  
   "126": {
     title: "Engineering Manager",
     soc: "11-9041",
