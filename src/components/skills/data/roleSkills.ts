@@ -23,6 +23,28 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
       getUnifiedSkillData("TensorFlow Developer Certificate")
     ]
   },
+  "125": {
+    title: "Frontend Engineer",
+    soc: "15-1252",
+    specialized: [
+      getUnifiedSkillData("React")
+    ],
+    common: [
+      getUnifiedSkillData("TypeScript"),
+      getUnifiedSkillData("Node.js"),
+      getUnifiedSkillData("Database Design"),
+      getUnifiedSkillData("API Development"),
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Code Review"),
+      getUnifiedSkillData("Agile Methodologies"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")
+    ],
+    certifications: [
+      getUnifiedSkillData("AWS Certified Developer - Associate"),
+      getUnifiedSkillData("Google Mobile Web Specialist")
+    ]
+  },
   "124": {
     title: "Backend Engineer",
     soc: "15-1252",
@@ -44,31 +66,6 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
     certifications: [
       getUnifiedSkillData("AWS Certified Solutions Architect"),
       getUnifiedSkillData("Kubernetes Administrator (CKA)")
-    ]
-  },
-  "125": {
-    title: "Frontend Engineer",
-    soc: "15-1252",
-    specialized: [
-      getUnifiedSkillData("React"),
-      getUnifiedSkillData("TypeScript"),
-      getUnifiedSkillData("Next.js"),
-      getUnifiedSkillData("CSS/SASS"),
-      getUnifiedSkillData("Performance Optimization"),
-      getUnifiedSkillData("React Native"),
-      getUnifiedSkillData("Flutter"),
-      getUnifiedSkillData("GraphQL")
-    ],
-    common: [
-      getUnifiedSkillData("Problem Solving"),
-      getUnifiedSkillData("Code Review"),
-      getUnifiedSkillData("Agile Methodologies"),
-      getUnifiedSkillData("Git Version Control"),
-      getUnifiedSkillData("Communication")
-    ],
-    certifications: [
-      getUnifiedSkillData("AWS Certified Developer - Associate"),
-      getUnifiedSkillData("Google Mobile Web Specialist")
     ]
   },
   "126": {
