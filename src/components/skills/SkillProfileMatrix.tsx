@@ -54,6 +54,9 @@ export const SkillProfileMatrix = () => {
       ...currentRoleSkills.certifications
     ];
 
+    // Filter to only include toggled skills that belong to the current role
+    skills = skills.filter(skill => toggledSkills.has(skill.title));
+
     console.log('Initial role skills array:', skills.length);
 
     // Filter by skill type using the centralized category system
@@ -114,7 +117,7 @@ export const SkillProfileMatrix = () => {
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
-  const toggledSkillCount = Array.from(toggledSkills).length;
+  const toggledSkillCount = filteredSkills.length;
 
   console.log('Skill counts:', {
     total: filteredSkills.length,
