@@ -16,34 +16,23 @@ const skillClassifications: { [key: string]: SkillCategory } = {
   "System Architecture": "specialized",
   "Kubernetes": "specialized",
   
-  // Frontend Skills
-  "React": "specialized",
-  "TypeScript": "specialized",
-  "Next.js": "specialized",
-  "CSS/SASS": "specialized",
-  "Performance Optimization": "specialized",
-  
   // Common Skills
   "Problem Solving": "common",
   "Code Review": "common",
   "Agile Methodologies": "common",
   "Communication": "common",
   "Team Leadership": "common",
-  "Git Version Control": "common",
-  "Technical Writing": "common",
   
   // Certifications
   "AWS Certified Solutions Architect": "certification",
   "Kubernetes Administrator (CKA)": "certification",
-  "AWS Certified Machine Learning - Specialty": "certification",
-  "TensorFlow Developer Certificate": "certification",
-  "Project Management Professional (PMP)": "certification",
-  "Certified Scrum Master (CSM)": "certification"
+  "MongoDB Professional Developer": "certification",
+  "TensorFlow Developer Certificate": "certification"
 };
 
 // Define all skills in a single array with their core categorization
 export const allSkills: UnifiedSkill[] = [
-  // AI & ML Skills
+  // AI & ML Skills (Specialized)
   {
     id: 'SKILL001',
     title: "Machine Learning",
