@@ -10,6 +10,7 @@ import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUti
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
+import { SkillProfileMatrixTable } from "./table/SkillProfileMatrixTable";
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField = 'growth' | 'salary' | null;
@@ -24,7 +25,7 @@ export const SkillProfileMatrix = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const { toast } = useToast();
   const { id } = useParams();
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
 
   const handleSort = (field: SortField) => {
     console.log('Handling sort:', { currentField: sortField, newField: field, currentDirection: sortDirection });
