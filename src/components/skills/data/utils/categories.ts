@@ -7,6 +7,7 @@ import { getSkillWeight } from './categories/skillWeights';
 export const getSkillCategory = (skillTitle: string): string => {
   console.log(`Categorizing skill: ${skillTitle}`);
   
+  // First check if it's in our predefined lists
   if (specializedSkills.includes(skillTitle)) {
     console.log(`${skillTitle} categorized as specialized`);
     return 'specialized';
@@ -20,12 +21,25 @@ export const getSkillCategory = (skillTitle: string): string => {
     return 'certification';
   }
   
-  // If not found in any list, determine category based on name pattern
-  if (skillTitle.toLowerCase().includes('certification') || 
-      skillTitle.toLowerCase().includes('certified') ||
-      skillTitle.toLowerCase().includes('certificate')) {
+  // If not found in lists, determine category based on name patterns
+  const lowerTitle = skillTitle.toLowerCase();
+  if (lowerTitle.includes('certification') || 
+      lowerTitle.includes('certified') ||
+      lowerTitle.includes('certificate')) {
     console.log(`${skillTitle} auto-categorized as certification based on name`);
     return 'certification';
+  }
+  
+  // Check for specialized skill patterns
+  if (lowerTitle.includes('aws') ||
+      lowerTitle.includes('cloud') ||
+      lowerTitle.includes('ai') ||
+      lowerTitle.includes('ml') ||
+      lowerTitle.includes('architecture') ||
+      lowerTitle.includes('design') ||
+      lowerTitle.includes('development')) {
+    console.log(`${skillTitle} auto-categorized as specialized based on keywords`);
+    return 'specialized';
   }
   
   console.log(`${skillTitle} defaulting to common category`);
