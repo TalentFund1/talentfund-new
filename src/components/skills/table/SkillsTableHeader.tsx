@@ -1,12 +1,12 @@
 import { TableHeader, TableHead, TableRow } from "@/components/ui/table";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-interface SkillsTableHeaderProps {
+export interface SkillsTableHeaderProps {
   selectedFilter?: string;
   setSelectedFilter?: (value: string) => void;
-  sortField: 'growth' | 'salary' | null;
-  sortDirection: 'asc' | 'desc' | null;
-  onSort: (field: 'growth' | 'salary') => void;
+  sortField?: 'growth' | 'salary' | null;
+  sortDirection?: 'asc' | 'desc' | null;
+  onSort?: (field: 'growth' | 'salary') => void;
 }
 
 export const SkillsTableHeader = ({ 
@@ -35,7 +35,7 @@ export const SkillsTableHeader = ({
         <TableHead className="w-[25%]">Business Category</TableHead>
         <TableHead className="w-[25%]">
           <button 
-            onClick={() => onSort('salary')}
+            onClick={() => onSort?.('salary')}
             className="flex items-center gap-1 hover:text-primary"
           >
             Salary Impact {renderSortIcon('salary')}

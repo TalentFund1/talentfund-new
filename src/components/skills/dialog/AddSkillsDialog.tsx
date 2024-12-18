@@ -5,6 +5,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useToast } from "@/hooks/use-toast";
 import { getAllSkills } from '../data/skillsData';
+import { UnifiedSkill } from "../types/SkillTypes";
 
 export const AddSkillsDialog = () => {
   const [open, setOpen] = useState(false);
@@ -21,11 +22,11 @@ export const AddSkillsDialog = () => {
     availableSkillsCount: allSkills.length
   });
 
-  const handleSelectSkill = (skill: string) => {
-    console.log('Selecting skill:', skill);
+  const handleSelectSkill = (skillTitle: string) => {
+    console.log('Selecting skill:', skillTitle);
     setSelectedSkills(prev => {
-      const isSelected = prev.includes(skill);
-      return isSelected ? prev.filter(s => s !== skill) : [...prev, skill];
+      const isSelected = prev.includes(skillTitle);
+      return isSelected ? prev.filter(s => s !== skillTitle) : [...prev, skillTitle];
     });
   };
 
@@ -63,20 +64,20 @@ export const AddSkillsDialog = () => {
             <CommandInput placeholder="Search skills..." />
             <CommandEmpty>No skills found.</CommandEmpty>
             <CommandGroup>
-              {allSkills.map((skill) => (
+              {allSkills.map((skill: UnifiedSkill) => (
                 <CommandItem
-                  key={skill}
-                  value={skill}
-                  onSelect={() => handleSelectSkill(skill)}
+                  key={skill.id}
+                  value={skill.title}
+                  onSelect={() => handleSelectSkill(skill.title)}
                 >
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
-                      checked={selectedSkills.includes(skill)}
+                      checked={selectedSkills.includes(skill.title)}
                       onChange={() => {}}
                       className="h-4 w-4 rounded border-gray-300"
                     />
-                    {skill}
+                    {skill.title}
                   </div>
                 </CommandItem>
               ))}
