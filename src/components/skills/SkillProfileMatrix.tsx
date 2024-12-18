@@ -27,6 +27,46 @@ export const SkillProfileMatrix = () => {
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
+  // Get current role skills
+  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+
+  // Calculate counts only for toggled skills
+  const calculateToggledSkillCounts = () => {
+    const allSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    const toggledSkillsList = Array.from(toggledSkills);
+    
+    const counts = {
+      all: toggledSkillsList.length,
+      critical: allSkills.filter(skill => 
+        toggledSkills.has(skill.title) && 
+        getCategoryForSkill(skill, id || "123") === 'critical'
+      ).length,
+      technical: allSkills.filter(skill => 
+        toggledSkills.has(skill.title) && 
+        getCategoryForSkill(skill, id || "123") === 'technical'
+      ).length,
+      necessary: allSkills.filter(skill => 
+        toggledSkills.has(skill.title) && 
+        getCategoryForSkill(skill, id || "123") === 'necessary'
+      ).length
+    };
+
+    console.log('Calculated toggled skill counts:', counts);
+    return counts;
+  };
+
+  const skillCounts = calculateToggledSkillCounts();
+  const totalRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ].length;
+
   const handleSort = (field: SortField) => {
     if (sortField === field) {
       if (sortDirection === 'asc') {
@@ -41,61 +81,29 @@ export const SkillProfileMatrix = () => {
     }
   };
 
-  // Get current role skills
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-
   const filteredSkills = (() => {
-    console.log('Filtering skills with type:', skillType);
-    
-    // Get all skills from the role
     let skills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
 
-    console.log('Total skills for role:', skills.length);
-
-    // Filter by skill type using the centralized category system
+    // Filter by skill type
     if (skillType !== "all") {
-      skills = skills.filter(skill => {
-        const category = getSkillCategory(skill.title);
-        console.log(`Filtering skill ${skill.title}: category=${category}, selected=${skillType}`);
-        return category === skillType;
-      });
+      skills = skills.filter(skill => getSkillCategory(skill.title) === skillType);
     }
 
     // Filter by selected category
-    if (selectedCategory !== 'all') {
-      skills = skills.filter(skill => {
-        const skillCategory = getCategoryForSkill(skill, id || "123");
-        console.log(`Filtering skill ${skill.title}: category=${skillCategory}, selected=${selectedCategory}`);
-        return skillCategory === selectedCategory;
-      });
+    if (selectedCategory !== "all") {
+      skills = skills.filter(skill => getCategoryForSkill(skill, id || "123") === selectedCategory);
     }
 
-    console.log('After category filtering:', skills.length);
+    // Filter to only show toggled skills
+    skills = skills.filter(skill => toggledSkills.has(skill.title));
 
-    // Sort skills based on toggle state first
-    const sortedSkills = [...skills].sort((a, b) => {
-      const aIsToggled = toggledSkills.has(a.title);
-      const bIsToggled = toggledSkills.has(b.title);
-      
-      if (aIsToggled && !bIsToggled) return -1;
-      if (!aIsToggled && bIsToggled) return 1;
-      return 0;
-    });
-
-    // Apply additional sorting if specified
+    // Apply sorting if specified
     if (sortField && sortDirection) {
-      sortedSkills.sort((a, b) => {
-        // Preserve toggle-based ordering within each group
-        const aIsToggled = toggledSkills.has(a.title);
-        const bIsToggled = toggledSkills.has(b.title);
-        if (aIsToggled !== bIsToggled) {
-          return aIsToggled ? -1 : 1;
-        }
-
+      skills.sort((a, b) => {
         if (sortField === 'growth') {
           const aGrowth = parseFloat(a.growth);
           const bGrowth = parseFloat(b.growth);
@@ -109,22 +117,8 @@ export const SkillProfileMatrix = () => {
       });
     }
 
-    console.log('Final filtered and sorted skills:', sortedSkills.length);
-    return sortedSkills;
+    return skills;
   })();
-
-  const skillCounts = calculateSkillCounts(id || "123");
-  const totalRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ].length;
-
-  console.log('Skill counts:', {
-    totalRoleSkills,
-    toggled: Array.from(toggledSkills).length,
-    categories: skillCounts
-  });
 
   return (
     <div className="space-y-6">

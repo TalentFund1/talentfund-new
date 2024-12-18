@@ -21,6 +21,13 @@ export const CategoryCards = ({ selectedCategory, onCategorySelect, skillCount }
     { id: "necessary", name: "Necessary Skills", count: skillCount.necessary }
   ];
 
+  console.log('CategoryCards - Displaying counts for toggled skills:', {
+    total: skillCount.all,
+    critical: skillCount.critical,
+    technical: skillCount.technical,
+    necessary: skillCount.necessary
+  });
+
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
       {categories.map((category) => (
