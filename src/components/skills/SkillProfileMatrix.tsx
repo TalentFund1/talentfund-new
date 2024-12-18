@@ -43,33 +43,32 @@ export const SkillProfileMatrix = () => {
 
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  const getAllSkills = () => {
-    // Get all role skills
-    const roleSkillsList = [
+  const filteredSkills = (() => {
+    console.log('Filtering skills with type:', skillType);
+    
+    // Get all skills from the role
+    let skills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
     ];
 
-    // Create a Set of role skill titles for quick lookup
-    const roleSkillTitles = new Set(roleSkillsList.map(s => s.title));
+    console.log('Initial skills array:', skills.length);
 
-    // Get additional skills that aren't in role skills
+    // Get all skills that aren't in the role skills
+    const allSkillTitles = new Set(skills.map(s => s.title));
     const additionalSkills = Array.from(toggledSkills)
-      .filter(skillTitle => !roleSkillTitles.has(skillTitle))
-      .map(skillTitle => getUnifiedSkillData(skillTitle));
+      .filter(skillTitle => !allSkillTitles.has(skillTitle))
+      .map(skillTitle => {
+        console.log('Adding skill:', skillTitle);
+        return getUnifiedSkillData(skillTitle);
+      });
 
-    // Combine all skills
-    return [...roleSkillsList, ...additionalSkills];
-  };
+    // Combine role skills with additional skills
+    skills = [...skills, ...additionalSkills];
+    console.log('Combined skills array:', skills.length);
 
-  const filteredSkills = (() => {
-    console.log('Starting skill filtering process');
-    let skills = getAllSkills();
-    
-    console.log('Initial skills count:', skills.length);
-
-    // Filter by skill type if selected
+    // Filter by skill type using the centralized category system
     if (skillType !== "all") {
       skills = skills.filter(skill => {
         const category = getSkillCategory(skill.title);
@@ -78,7 +77,7 @@ export const SkillProfileMatrix = () => {
       });
     }
 
-    // Filter by selected category if not "all"
+    // Filter by selected category
     if (selectedCategory !== 'all') {
       skills = skills.filter(skill => {
         const skillCategory = getCategoryForSkill(skill, id || "123");
@@ -87,18 +86,28 @@ export const SkillProfileMatrix = () => {
       });
     }
 
-    console.log('Skills after category filtering:', skills.length);
+    console.log('After category filtering:', skills.length);
 
-    // Sort skills based on toggle state (toggled skills first)
+    // Sort skills based on toggle state first, but don't filter them out
     const sortedSkills = [...skills].sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
       
       if (aIsToggled && !bIsToggled) return -1;
       if (!aIsToggled && bIsToggled) return 1;
+      return 0;
+    });
 
-      // If both have same toggle state, apply additional sorting
-      if (sortField && sortDirection) {
+    // Apply additional sorting if specified
+    if (sortField && sortDirection) {
+      sortedSkills.sort((a, b) => {
+        // Preserve toggle-based ordering within each group
+        const aIsToggled = toggledSkills.has(a.title);
+        const bIsToggled = toggledSkills.has(b.title);
+        if (aIsToggled !== bIsToggled) {
+          return aIsToggled ? -1 : 1;
+        }
+
         if (sortField === 'growth') {
           const aGrowth = parseFloat(a.growth);
           const bGrowth = parseFloat(b.growth);
@@ -108,26 +117,22 @@ export const SkillProfileMatrix = () => {
           const bSalary = parseFloat(b.salary.replace(/[^0-9.-]+/g, ""));
           return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
         }
-      }
-      
-      // If no other sorting criteria, sort alphabetically
-      return a.title.localeCompare(b.title);
-    });
+        return 0;
+      });
+    }
 
-    console.log('Final filtered and sorted skills:', {
-      total: sortedSkills.length,
-      toggled: Array.from(toggledSkills).length,
-      sample: sortedSkills.slice(0, 3).map(s => ({
-        title: s.title,
-        isToggled: toggledSkills.has(s.title)
-      }))
-    });
-
+    console.log('Final filtered and sorted skills:', sortedSkills.length);
     return sortedSkills;
   })();
 
   const skillCounts = calculateSkillCounts(id || "123");
   const toggledSkillCount = Array.from(toggledSkills).length;
+
+  console.log('Skill counts:', {
+    total: filteredSkills.length,
+    toggled: toggledSkillCount,
+    categories: skillCounts
+  });
 
   return (
     <div className="space-y-6">
