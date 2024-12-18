@@ -41,6 +41,18 @@ export const SkillProfileMatrix = () => {
     });
   };
 
+  const handleSort = (field: 'growth' | 'salary' | null) => {
+    console.log('Handling sort for field:', field);
+    if (field === sortField) {
+      // Toggle direction if same field
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Set new field and default to ascending
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
   const filteredSkills = (() => {
     // Get all skills with their full data
     const skillsWithData = getSkillsWithData();
