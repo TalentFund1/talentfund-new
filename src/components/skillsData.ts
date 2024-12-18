@@ -38,7 +38,7 @@ export const softSkills = softSkillsList.map(skill => skill.title);
 // Export full skill objects
 export const technicalSkillObjects = technicalSkillsList;
 export const softSkillObjects = softSkillsList;
-export const allSkillObjects = allSkillsList;
+export const allSkillObjects = getAllSkills();
 
 console.log('Loaded skills:', {
   total: skills.length,

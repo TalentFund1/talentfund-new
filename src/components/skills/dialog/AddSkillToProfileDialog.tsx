@@ -21,6 +21,7 @@ export const AddSkillToProfileDialog = () => {
 
   // Get all available skills from the universal database
   const allSkills = allSkillObjects.map(skill => skill.title);
+  
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
     sampleSkills: allSkills.slice(0, 5)
