@@ -1,5 +1,6 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { getEmployeeSkills } from '../../benchmark/skills-matrix/initialSkills';
 
 // Helper functions for employee skills
 export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): string => {
