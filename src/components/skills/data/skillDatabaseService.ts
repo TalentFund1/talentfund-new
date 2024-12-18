@@ -22,7 +22,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     };
   }
 
-  // If skill not found, create a new one with default values
+  // If skill not found, create a new one with complete data
   const newSkill: UnifiedSkill = {
     id: `SKILL${Math.random().toString(36).substr(2, 9)}`,
     title: normalizedTitle,
@@ -42,7 +42,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     }
   };
 
-  console.log('Created new skill entry:', newSkill);
+  console.log('Created new skill entry with complete data:', newSkill);
   return newSkill;
 };
 
