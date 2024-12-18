@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
-import { getAllSkills } from '../data/skills/allSkills';
+import { specializedSkills, commonSkills, certificationSkills } from '../data/utils/categories/skillLists';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -18,8 +18,8 @@ export const AddSkillToProfileDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { setSkillState } = useCompetencyStore();
 
-  // Get all available skills without any filtering
-  const allSkills = getAllSkills().map(skill => skill.title);
+  // Combine all skills from different categories
+  const allSkills = [...new Set([...specializedSkills, ...commonSkills, ...certificationSkills])];
   
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,

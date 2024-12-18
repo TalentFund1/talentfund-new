@@ -84,7 +84,7 @@ export const certificationSkills = [
   
   // Development Certifications
   'TensorFlow Developer Certificate',
-  'TensorFlow Developer Certification', // Added both variations
+  'TensorFlow Developer Certification',
   'MongoDB Professional Developer',
   'Google Mobile Web Specialist',
   'Professional Scrum Developer',
