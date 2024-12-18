@@ -5,7 +5,7 @@ import { devopsSkills } from './categories/devopsSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 
 // Combine all skills with normalized titles
-export const skills: UnifiedSkill[] = [
+const skills: UnifiedSkill[] = [
   ...aiSkills,
   ...webSkills,
   ...devopsSkills
@@ -18,6 +18,10 @@ export const skills: UnifiedSkill[] = [
 const getUniqueSkills = (skillsArray: UnifiedSkill[]) => {
   const seen = new Set();
   return skillsArray.filter(skill => {
+    if (!skill?.title) {
+      console.warn('Invalid skill detected:', skill);
+      return false;
+    }
     const normalizedTitle = normalizeSkillTitle(skill.title);
     const duplicate = seen.has(normalizedTitle);
     seen.add(normalizedTitle);
@@ -53,8 +57,11 @@ console.log('Loaded skills:', {
   }
 });
 
-// Export the complete skills array
-export const getAllSkills = (): UnifiedSkill[] => skills;
+// Export the complete skills array with validation
+export const getAllSkills = (): UnifiedSkill[] => {
+  console.log('Getting all skills, total count:', skills.length);
+  return getUniqueSkills(skills);
+};
 
 // Helper function to find a skill by ID
 export const getSkillById = (id: string): UnifiedSkill | undefined => {

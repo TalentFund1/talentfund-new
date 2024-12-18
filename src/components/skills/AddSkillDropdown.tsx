@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getAllSkills } from "./data/skills/allSkills";
+import { getAllSkills } from "./data/skillsData";
 import { useToast } from "@/components/ui/use-toast";
 import { useState, useMemo } from "react";
 
@@ -29,8 +29,8 @@ export const AddSkillDropdown = ({ onAddSkill, existingSkills }: AddSkillDropdow
       const skills = getAllSkills();
       console.log('Loading skills for dropdown:', { count: skills?.length || 0 });
       
-      if (!skills || !Array.isArray(skills)) {
-        console.warn('Invalid skills data returned:', skills);
+      if (!Array.isArray(skills)) {
+        console.warn('Skills data is not an array:', skills);
         return [];
       }
       
