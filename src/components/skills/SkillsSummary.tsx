@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DetailedSkill, EmployeeSkill } from "./types/SkillTypes";
+import { DetailedSkill, UnifiedSkill } from "./types/SkillTypes";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
@@ -43,7 +43,7 @@ export const SkillsSummary = () => {
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
     setSearchSkills(skills);
-    setMatrixSearchSkills(skills); // Sync with Skills Matrix search
+    setMatrixSearchSkills(skills);
     
     const allExistingSkills = [
       ...specializedSkills.map(s => s.name),
@@ -64,10 +64,10 @@ export const SkillsSummary = () => {
   const handleClearAll = () => {
     setSelectedSkills([]);
     setSearchSkills([]);
-    setMatrixSearchSkills([]); // Clear Skills Matrix search
+    setMatrixSearchSkills([]);
   };
 
-  const transformAndSortSkills = (skills: EmployeeSkill[]): DetailedSkill[] => {
+  const transformAndSortSkills = (skills: UnifiedSkill[]): DetailedSkill[] => {
     return skills
       .map(skill => ({
         name: skill.title,
@@ -93,15 +93,15 @@ export const SkillsSummary = () => {
   };
 
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills, "specialized")
+    filterSkillsByCategory(employeeSkills, "specialized") as UnifiedSkill[]
   );
 
   const commonSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills, "common")
+    filterSkillsByCategory(employeeSkills, "common") as UnifiedSkill[]
   );
 
   const certifications: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills, "certification")
+    filterSkillsByCategory(employeeSkills, "certification") as UnifiedSkill[]
   );
 
   const toggleSection = (section: keyof typeof expandedSections) => {

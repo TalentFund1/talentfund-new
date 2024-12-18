@@ -33,6 +33,14 @@ export interface UnifiedSkill extends Skill {
   isCompanySkill?: boolean;
 }
 
+export interface RoleSkillData {
+  title: string;
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
+  soc?: string;
+}
+
 export interface SimpleSkill {
   title: string;
   subcategory: string;
