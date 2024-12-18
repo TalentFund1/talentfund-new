@@ -9,7 +9,8 @@ export const specializedSkills = [
   'PyTorch',
   'MLflow',
   'Natural Language Understanding',
-  'Amazon Web Services', // Added AWS here as specialized
+  'Amazon Web Services',
+  'AWS',
   
   // Backend & Infrastructure
   'Node.js',
@@ -20,8 +21,8 @@ export const specializedSkills = [
   'Docker',
   'DevOps',
   'Microservices',
-  'Linux Administration', // Added as specialized
-  'Shell Scripting', // Added as specialized
+  'Linux Administration',
+  'Shell Scripting',
   
   // Frontend & Mobile
   'React',
@@ -58,6 +59,8 @@ export const commonSkills = [
   'Risk Management',
   'Strategic Planning',
   'Stakeholder Management',
+  'Jenkins',
+  'Terraform',
   
   // Technical Skills
   'Cross-browser Compatibility',
@@ -81,7 +84,7 @@ export const certificationSkills = [
   
   // Development Certifications
   'TensorFlow Developer Certificate',
-  'TensorFlow Developer Certification',
+  'TensorFlow Developer Certification', // Added both variations
   'MongoDB Professional Developer',
   'Google Mobile Web Specialist',
   'Professional Scrum Developer',
@@ -94,26 +97,39 @@ export const certificationSkills = [
 
 // Helper function to generate a skill ID
 export const generateSkillId = (title: string): string => {
-  return `SKILL_${title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`;
+  const normalizedTitle = title
+    .replace(/certification/gi, 'CERT')
+    .replace(/certificate/gi, 'CERT')
+    .replace(/certified/gi, 'CERT')
+    .replace(/[^a-zA-Z0-9]/g, '_')
+    .toUpperCase();
+  return `SKILL_${normalizedTitle}`;
 };
 
 // Helper function to determine skill category
 export const getSkillCategory = (skillTitle: string): 'specialized' | 'common' | 'certification' => {
+  // First check exact matches
   if (specializedSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} found in specialized skills list`);
     return 'specialized';
   }
   if (commonSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} found in common skills list`);
     return 'common';
   }
   if (certificationSkills.includes(skillTitle)) {
+    console.log(`${skillTitle} found in certification skills list`);
     return 'certification';
   }
   
-  // Fallback logic based on naming patterns
+  // Then check for variations and patterns
   const lowerTitle = skillTitle.toLowerCase();
+  
+  // Check certification patterns first since they're most specific
   if (lowerTitle.includes('certification') || 
       lowerTitle.includes('certified') ||
       lowerTitle.includes('certificate')) {
+    console.log(`${skillTitle} categorized as certification based on naming pattern`);
     return 'certification';
   }
   
@@ -125,9 +141,10 @@ export const getSkillCategory = (skillTitle: string): 'specialized' | 'common' |
       lowerTitle.includes('architecture') ||
       lowerTitle.includes('design') ||
       lowerTitle.includes('development')) {
+    console.log(`${skillTitle} categorized as specialized based on keywords`);
     return 'specialized';
   }
   
-  // Default to common if no other match
+  console.log(`${skillTitle} defaulting to common category`);
   return 'common';
 };
