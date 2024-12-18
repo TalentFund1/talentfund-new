@@ -1,46 +1,28 @@
-export type SkillCategory = 'specialized' | 'common' | 'certification';
-
-export const skillCategoryClassifications: { [key: string]: SkillCategory } = {
-  // AI & ML Skills
-  "Machine Learning": "specialized",
-  "Deep Learning": "specialized",
-  "Natural Language Processing": "specialized",
-  "Computer Vision": "specialized",
-  "TensorFlow": "specialized",
+// Map of skills to their categories
+const skillCategoryMap: { [key: string]: string } = {
+  // Technical skills
+  'Machine Learning': 'technical',
+  'Deep Learning': 'technical',
+  'Natural Language Processing': 'technical',
+  'Computer Vision': 'technical',
+  'TensorFlow': 'technical',
+  'Python': 'technical',
+  'GraphQL': 'technical',
+  'Database Design': 'technical',
   
-  // Backend Skills
-  "Node.js": "specialized",
-  "Database Design": "specialized",
-  "API Development": "specialized",
-  "System Architecture": "specialized",
-  "Kubernetes": "specialized",
+  // Critical skills
+  'Team Leadership': 'critical',
+  'Technical Writing': 'critical',
   
-  // Frontend Skills
-  "React": "specialized",
-  "TypeScript": "specialized",
-  "Next.js": "specialized",
-  "CSS/SASS": "specialized",
-  "Performance Optimization": "specialized",
-  
-  // Common Skills
-  "Problem Solving": "common",
-  "Code Review": "common",
-  "Agile Methodologies": "common",
-  "Communication": "common",
-  "Team Leadership": "common",
-  "Git Version Control": "common",
-  "Technical Writing": "common",
-  
-  // Certifications
-  "AWS Certified Solutions Architect": "certification",
-  "Kubernetes Administrator (CKA)": "certification",
-  "AWS Certified Machine Learning - Specialty": "certification",
-  "TensorFlow Developer Certificate": "certification",
-  "Project Management Professional (PMP)": "certification",
-  "Certified Scrum Master (CSM)": "certification"
+  // Necessary skills
+  'Problem Solving': 'necessary',
+  'Code Review': 'necessary',
+  'AWS Certified DevOps Engineer': 'necessary'
 };
 
-export const getSkillCategory = (skillTitle: string): SkillCategory => {
+export const getSkillCategory = (skillTitle: string): string => {
   console.log('Getting category for skill:', skillTitle);
-  return skillCategoryClassifications[skillTitle] || "common";
+  const category = skillCategoryMap[skillTitle] || 'necessary';
+  console.log('Skill category result:', { skill: skillTitle, category });
+  return category;
 };
