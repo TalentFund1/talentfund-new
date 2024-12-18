@@ -9,7 +9,6 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
       "AI & ML",
       "ML Frameworks",
       "AI Applications",
-      "Artificial Intelligence and Machine Learning",
       "Backend Development",
       "Data Management",
       "Software Architecture",
@@ -19,16 +18,9 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
       "State Management",
       "Build Tools",
       "Design",
-      "Architecture",
-      "Cloud Services",
-      "DevOps",
-      "System Design",
-      "Data Engineering",
-      "API Development",
-      "Database Design"
+      "Architecture"
     ],
     common: [
-      "General",
       "Soft Skills",
       "Communication",
       "Development Practices",
@@ -37,12 +29,7 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
       "Web Development",
       "Development Tools",
       "Leadership",
-      "Management",
-      "Problem Solving",
-      "Team Collaboration",
-      "Code Review",
-      "Testing",
-      "Documentation"
+      "Management"
     ],
     certification: [
       "Cloud Certification",
@@ -56,52 +43,23 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
       "Web Accessibility",
       "Management Certification",
       "Agile Certification",
-      "IT Service Management",
-      "Professional Certifications"
+      "IT Service Management"
     ]
   };
 
-  // First try to match by subcategory
-  const matchBySubcategory = skills.filter(skill => {
+  return skills.filter(skill => {
     const subcategory = skill.subcategory;
-    return categoryMappings[category as keyof typeof categoryMappings]?.includes(subcategory);
+    switch (category) {
+      case "specialized":
+        return categoryMappings.specialized.includes(subcategory);
+      case "common":
+        return categoryMappings.common.includes(subcategory);
+      case "certification":
+        return categoryMappings.certification.includes(subcategory);
+      default:
+        return false;
+    }
   });
-
-  // If no matches by subcategory, try to match by title patterns
-  if (matchBySubcategory.length === 0) {
-    return skills.filter(skill => {
-      const title = skill.title.toLowerCase();
-      
-      switch (category) {
-        case "specialized":
-          return title.includes('machine learning') ||
-                 title.includes('deep learning') ||
-                 title.includes('tensorflow') ||
-                 title.includes('pytorch') ||
-                 title.includes('aws') ||
-                 title.includes('cloud') ||
-                 title.includes('docker') ||
-                 title.includes('kubernetes') ||
-                 title.includes('architecture') ||
-                 title.includes('devops');
-        case "common":
-          return title.includes('communication') ||
-                 title.includes('problem solving') ||
-                 title.includes('teamwork') ||
-                 title.includes('leadership') ||
-                 title.includes('management') ||
-                 !title.includes('certification');
-        case "certification":
-          return title.includes('certification') ||
-                 title.includes('certified') ||
-                 title.includes('certificate');
-        default:
-          return false;
-      }
-    });
-  }
-
-  return matchBySubcategory;
 };
 
 export const getCategoryCount = (skills: any[], category: string) => {
@@ -109,30 +67,6 @@ export const getCategoryCount = (skills: any[], category: string) => {
 };
 
 export const categorizeSkill = (skillName: string): string => {
-  const lowerSkill = skillName.toLowerCase();
-  
-  if (lowerSkill.includes('certification') || 
-      lowerSkill.includes('certified') || 
-      lowerSkill.includes('certificate')) {
-    return 'certification';
-  }
-  
-  const specializedPatterns = [
-    'machine learning',
-    'deep learning',
-    'tensorflow',
-    'pytorch',
-    'aws',
-    'cloud',
-    'docker',
-    'kubernetes',
-    'architecture',
-    'devops'
-  ];
-  
-  if (specializedPatterns.some(pattern => lowerSkill.includes(pattern))) {
-    return 'specialized';
-  }
-  
-  return 'common';
+  // This function can be used for individual skill categorization if needed
+  return 'common'; // Default fallback
 };

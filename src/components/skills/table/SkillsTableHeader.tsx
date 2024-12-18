@@ -1,47 +1,25 @@
-import { TableHeader, TableHead, TableRow } from "@/components/ui/table";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export interface SkillsTableHeaderProps {
-  selectedFilter?: string;
-  setSelectedFilter?: (value: string) => void;
-  sortField?: 'growth' | 'salary' | null;
-  sortDirection?: 'asc' | 'desc' | null;
-  onSort?: (field: 'growth' | 'salary') => void;
+interface SkillsTableHeaderProps {
+  selectedFilter: string;
+  setSelectedFilter: (value: string) => void;
 }
 
-export const SkillsTableHeader = ({ 
-  selectedFilter, 
-  setSelectedFilter,
-  sortField,
-  sortDirection,
-  onSort
-}: SkillsTableHeaderProps) => {
-  const renderSortIcon = (field: 'growth' | 'salary') => {
-    if (sortField !== field) return <ChevronDown className="h-4 w-4" />;
-    return sortDirection === 'asc' ? 
-      <ChevronUp className="h-4 w-4" /> : 
-      <ChevronDown className="h-4 w-4" />;
-  };
-
+export const SkillsTableHeader = ({ selectedFilter, setSelectedFilter }: SkillsTableHeaderProps) => {
   return (
-    <TableHeader>
-      <TableRow className="hover:bg-transparent">
-        <TableHead className="w-[25%]">
-          <div className="flex items-center gap-1">
-            Skill Title {renderSortIcon('growth')}
-          </div>
-        </TableHead>
-        <TableHead className="w-[25%]">Subcategory</TableHead>
-        <TableHead className="w-[25%]">Business Category</TableHead>
-        <TableHead className="w-[25%]">
-          <button 
-            onClick={() => onSort?.('salary')}
-            className="flex items-center gap-1 hover:text-primary"
-          >
-            Salary Impact {renderSortIcon('salary')}
-          </button>
-        </TableHead>
-      </TableRow>
-    </TableHeader>
+    <div className="flex justify-between items-center px-6 py-4 border-b border-border">
+      <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+      <Select value={selectedFilter} onValueChange={setSelectedFilter}>
+        <SelectTrigger className="w-[180px] bg-white">
+          <SelectValue placeholder="All Skills" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Categories</SelectItem>
+          <SelectItem value="specialized">Specialized Skills</SelectItem>
+          <SelectItem value="common">Common Skills</SelectItem>
+          <SelectItem value="certification">Certifications</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
   );
 };
