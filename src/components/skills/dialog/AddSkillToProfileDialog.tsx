@@ -8,7 +8,7 @@ import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
-import { getAllSkills } from '../data/skills/allSkills';
+import { universalSkillTitles } from '../data/universalSkillsDatabase';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -18,9 +18,8 @@ export const AddSkillToProfileDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { setSkillState } = useCompetencyStore();
 
-  // Get all available skills from the universal database
-  const allSkills = getAllSkills().map(skill => skill.title);
-  console.log('Available skills for selection:', allSkills);
+  // Use the universal skills database
+  console.log('Available skills for selection:', universalSkillTitles.length);
 
   const currentRole = roleSkills[id as keyof typeof roleSkills];
 
@@ -76,7 +75,7 @@ export const AddSkillToProfileDialog = () => {
           <SearchFilter
             label=""
             placeholder="Search skills..."
-            items={allSkills}
+            items={universalSkillTitles}
             selectedItems={selectedSkills}
             onItemsChange={setSelectedSkills}
             singleSelect={false}
