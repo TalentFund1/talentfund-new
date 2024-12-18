@@ -26,9 +26,11 @@ export const SkillProfileMatrix = () => {
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const { toast } = useToast();
+  const observerTarget = useRef(null);
   const { id } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
+  // Load saved skills on component mount
   useEffect(() => {
     if (id) {
       try {
@@ -97,7 +99,7 @@ export const SkillProfileMatrix = () => {
         }
       }
 
-      return isInCurrentRole || toggledSkills.has(skill.title); // Include toggled skills
+      return isInCurrentRole;
     });
 
     console.log('After filtering:', sortedSkills.length);
@@ -196,6 +198,10 @@ export const SkillProfileMatrix = () => {
             onSort={handleSort}
           />
         </div>
+
+        {hasMore && (
+          <div ref={observerTarget} className="h-10" />
+        )}
       </Card>
     </div>
   );

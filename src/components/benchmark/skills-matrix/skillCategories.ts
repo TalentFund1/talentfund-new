@@ -1,5 +1,3 @@
-import { roleSkills } from '../../skills/data/roleSkills';
-
 export const filterSkillsByCategory = (skills: any[], category: string) => {
   if (category === "all") {
     return skills;
@@ -9,9 +7,8 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
   const categoryMappings = {
     specialized: [
       "AI & ML",
-      "ML Frameworks", 
+      "ML Frameworks",
       "AI Applications",
-      "Artificial Intelligence and Machine Learning",
       "Backend Development",
       "Data Management",
       "Software Architecture",
@@ -32,9 +29,7 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
       "Web Development",
       "Development Tools",
       "Leadership",
-      "Management",
-      "Version Control",
-      "Problem Solving"
+      "Management"
     ],
     certification: [
       "Cloud Certification",
@@ -54,20 +49,6 @@ export const filterSkillsByCategory = (skills: any[], category: string) => {
 
   return skills.filter(skill => {
     const subcategory = skill.subcategory;
-    
-    // First check if the skill exists in roleSkills categories
-    const currentRoleSkills = roleSkills["123"]; // Using AI Engineer as default reference
-    if (category === "specialized" && currentRoleSkills.specialized.some(s => s.title === skill.title)) {
-      return true;
-    }
-    if (category === "common" && currentRoleSkills.common.some(s => s.title === skill.title)) {
-      return true;
-    }
-    if (category === "certification" && currentRoleSkills.certifications.some(s => s.title === skill.title)) {
-      return true;
-    }
-
-    // Fallback to subcategory mapping
     switch (category) {
       case "specialized":
         return categoryMappings.specialized.includes(subcategory);
@@ -86,42 +67,6 @@ export const getCategoryCount = (skills: any[], category: string) => {
 };
 
 export const categorizeSkill = (skillName: string): string => {
-  // First check roleSkills categories
-  const currentRoleSkills = roleSkills["123"]; // Using AI Engineer as default reference
-  
-  if (currentRoleSkills.specialized.some(s => s.title === skillName)) {
-    console.log(`${skillName} categorized as specialized based on roleSkills`);
-    return 'specialized';
-  }
-  if (currentRoleSkills.common.some(s => s.title === skillName)) {
-    console.log(`${skillName} categorized as common based on roleSkills`);
-    return 'common';
-  }
-  if (currentRoleSkills.certifications.some(s => s.title === skillName)) {
-    console.log(`${skillName} categorized as certification based on roleSkills`);
-    return 'certification';
-  }
-  
-  // Fallback to name-based categorization
-  const lowerName = skillName.toLowerCase();
-  
-  if (lowerName.includes('certification') || 
-      lowerName.includes('certified') ||
-      lowerName.includes('certificate')) {
-    console.log(`${skillName} categorized as certification based on name`);
-    return 'certification';
-  }
-  
-  if (lowerName.includes('machine learning') ||
-      lowerName.includes('artificial intelligence') ||
-      lowerName.includes('deep learning') ||
-      lowerName.includes('neural') ||
-      lowerName.includes('nlp') ||
-      lowerName.includes('computer vision')) {
-    console.log(`${skillName} categorized as specialized based on AI/ML keywords`);
-    return 'specialized';
-  }
-  
-  console.log(`${skillName} defaulting to common category`);
-  return 'common';
+  // This function can be used for individual skill categorization if needed
+  return 'common'; // Default fallback
 };
