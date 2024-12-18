@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DetailedSkill, UnifiedSkill } from "./types/SkillTypes";
+import { DetailedSkill, UnifiedSkill, SkillRequirement } from "./types/SkillTypes";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
@@ -72,9 +72,9 @@ export const SkillsSummary = () => {
       .map(skill => ({
         name: skill.title,
         level: currentStates[skill.title]?.level || skill.level,
-        isSkillGoal: currentStates[skill.title]?.requirement === 'required' || 
-                     currentStates[skill.title]?.requirement === 'skill_goal' ||
-                     skill.level === 'advanced'
+        isSkillGoal: (currentStates[skill.title]?.requirement as SkillRequirement === 'required' || 
+                     currentStates[skill.title]?.requirement as SkillRequirement === 'skill_goal' ||
+                     skill.level === 'advanced')
       }))
       .sort((a, b) => {
         const levelA = (a.level || 'unspecified').toLowerCase();
