@@ -11,10 +11,7 @@ import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
 import { roleSkills } from '../data/roleSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
-import { getEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
-
-// Create a Map to store employee skills
-const employeeSkillsMap = new Map();
+import { getEmployeeSkills, updateEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -36,12 +33,6 @@ export const AddSkillToProfileDialog = () => {
     sampleSkills: allSkills.slice(0, 5)
   });
 
-  // Initialize employee skills map if not already done
-  if (!employeeSkillsMap.has(id)) {
-    const initialSkills = getEmployeeSkills(id || "");
-    employeeSkillsMap.set(id, initialSkills);
-  }
-
   const handleAddSkills = () => {
     if (!id) {
       toast({
@@ -55,9 +46,10 @@ export const AddSkillToProfileDialog = () => {
     console.log('Adding skills to employee:', id);
 
     // Get current employee skills
-    const currentSkills = employeeSkillsMap.get(id) || [];
+    const currentSkills = getEmployeeSkills(id);
 
     // Add new skills
+    const updatedSkills = [...currentSkills];
     selectedSkills.forEach(skillTitle => {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
       
@@ -77,7 +69,7 @@ export const AddSkillToProfileDialog = () => {
         setToggledSkills(newToggledSkills);
         
         // Initialize skill state with unspecified level and skill goal requirement
-        setSkillState(skillTitle, 'unspecified', 'skill_goal', id);
+        setSkillState(skillTitle, 'unspecified', 'skill_goal', id, 'employee');
 
         // Add to employee skills
         const newSkill = {
@@ -86,16 +78,16 @@ export const AddSkillToProfileDialog = () => {
           requirement: 'skill_goal'
         };
         
-        currentSkills.push(newSkill);
+        updatedSkills.push(newSkill);
         console.log('Added new skill:', newSkill);
       }
     });
 
-    // Update employee skills map
-    employeeSkillsMap.set(id, currentSkills);
+    // Update employee skills
+    updateEmployeeSkills(id, updatedSkills);
     console.log('Updated employee skills:', {
       employeeId: id,
-      totalSkills: currentSkills.length,
+      totalSkills: updatedSkills.length,
       newSkills: selectedSkills
     });
 

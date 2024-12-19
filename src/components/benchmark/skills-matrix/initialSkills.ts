@@ -1,5 +1,5 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { employeeSkillsData } from "./data/employeeSkillsData";
+import { employeeSkills } from "./data/employeeSkillsData";
 
 // Create a Map to store employee skills
 const employeeSkillsMap = new Map<string, UnifiedSkill[]>();
@@ -10,8 +10,8 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
     return employeeSkillsMap.get(employeeId) || [];
   }
 
-  // Otherwise, get initial skills from employeeSkillsData
-  const initialSkills = employeeSkillsData[employeeId as keyof typeof employeeSkillsData] || [];
+  // Otherwise, get initial skills from employeeSkills
+  const initialSkills = employeeSkills[employeeId as keyof typeof employeeSkills] || [];
   employeeSkillsMap.set(employeeId, initialSkills);
   
   console.log('Loaded initial skills for employee:', {
