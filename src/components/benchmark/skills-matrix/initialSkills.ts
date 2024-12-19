@@ -1,9 +1,10 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { getSkillByTitle } from '../../skills/data/skills/allSkills';
 
-// Employee skills database
+// Employee skills database - now using references to universal skills
 const employeeSkills: { [key: string]: UnifiedSkill[] } = {
   "123": [
-    {
+    getSkillByTitle("Machine Learning") || {
       id: "ml-1",
       title: "Machine Learning",
       category: "specialized",
@@ -16,7 +17,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
     },
-    {
+    getSkillByTitle("Deep Learning") || {
       id: "dl-1",
       title: "Deep Learning",
       category: "specialized",
@@ -31,7 +32,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     }
   ],
   "124": [
-    {
+    getSkillByTitle("Node.js") || {
       id: "node-1",
       title: "Node.js",
       category: "specialized",
@@ -44,7 +45,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
     },
-    {
+    getSkillByTitle("Database Design") || {
       id: "db-1",
       title: "Database Design",
       category: "specialized",
@@ -57,7 +58,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       confidence: "high",
       benchmarks: { B: true, R: true, M: true, O: true }
     },
-    {
+    getSkillByTitle("API Development") || {
       id: "api-1",
       title: "API Development",
       category: "specialized",
@@ -72,7 +73,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     }
   ],
   "125": [
-    {
+    getSkillByTitle("React") || {
       id: "react-1",
       title: "React",
       category: "specialized",
@@ -87,7 +88,7 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     }
   ],
   "126": [
-    {
+    getSkillByTitle("Team Leadership") || {
       id: "leadership-1",
       title: "Team Leadership",
       category: "common",
