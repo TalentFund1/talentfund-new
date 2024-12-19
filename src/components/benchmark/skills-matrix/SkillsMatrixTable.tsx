@@ -1,40 +1,55 @@
 import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
-import { SkillRequirement } from "../../skills/types/SkillTypes";
+import { ToggledSkillsProvider } from "../../skills/context/ToggledSkillsContext";
+import { TrackProvider } from "../../skills/context/TrackContext";
 
 interface SkillsMatrixTableProps {
-  filteredSkills: any[];
-  showCompanySkill: boolean;
-  isRoleBenchmark: boolean;
-  onSkillUpdate?: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
+  filteredSkills: Array<{
+    title: string;
+    subcategory: string;
+    level: string;
+    growth: string;
+    confidence: string;
+    requirement?: string;
+  }>;
+  showCompanySkill?: boolean;
+  isRoleBenchmark?: boolean;
 }
 
-export const SkillsMatrixTable = ({ 
+export const SkillsMatrixTable = ({
   filteredSkills,
-  showCompanySkill,
-  isRoleBenchmark,
-  onSkillUpdate
+  showCompanySkill = true,
+  isRoleBenchmark = false
 }: SkillsMatrixTableProps) => {
+  console.log('Rendering SkillsMatrixTable with:', {
+    skillCount: filteredSkills.length,
+    showCompanySkill,
+    isRoleBenchmark
+  });
+
   return (
-    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
-      <Table>
-        <SkillsMatrixTableHeader 
-          showCompanySkill={showCompanySkill}
-          isRoleBenchmark={isRoleBenchmark}
-        />
-        <TableBody>
-          {filteredSkills.map((skill) => (
-            <SkillsMatrixRow 
-              key={skill.title} 
-              skill={skill}
+    <TrackProvider>
+      <ToggledSkillsProvider>
+        <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
+          <Table>
+            <SkillsMatrixTableHeader 
               showCompanySkill={showCompanySkill}
               isRoleBenchmark={isRoleBenchmark}
-              onSkillUpdate={onSkillUpdate}
             />
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+            <TableBody>
+              {filteredSkills.map((skill) => (
+                <SkillsMatrixRow 
+                  key={skill.title} 
+                  skill={skill}
+                  showCompanySkill={showCompanySkill}
+                  isRoleBenchmark={isRoleBenchmark}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </ToggledSkillsProvider>
+    </TrackProvider>
   );
 };

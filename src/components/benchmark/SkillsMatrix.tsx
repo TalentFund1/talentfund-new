@@ -1,12 +1,10 @@
-import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills, addSkillToEmployee } from "./skills-matrix/initialSkills";
-import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
-import { SkillRequirement, UnifiedSkill } from "../skills/types/SkillTypes";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,10 +26,15 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get employee skills directly without role filtering
+  // Get only the employee's specific skills
   const employeeSkills = getEmployeeSkills(id || "");
+  console.log('Employee skills loaded for matrix:', {
+    employeeId: id,
+    skillCount: employeeSkills.length,
+    skills: employeeSkills.map(s => s.title)
+  });
 
-  // Apply filtering and sorting to employee skills
+  // Apply filtering and sorting to employee skills only
   const filteredSkills = filterAndSortSkills(id || "");
 
   console.log('Skills matrix state:', {
@@ -42,25 +45,6 @@ export const SkillsMatrix = () => {
     selectedLevel,
     selectedInterest
   });
-
-  // Handle skill updates
-  const handleSkillUpdate = (skillTitle: string, level: string, requirement: SkillRequirement) => {
-    if (!id) return;
-    
-    const skillData = getUnifiedSkillData(skillTitle);
-    if (skillData) {
-      const updatedSkill: UnifiedSkill = {
-        ...skillData,
-        level,
-        requirement
-      };
-      console.log('Adding/updating skill for employee:', {
-        employeeId: id,
-        skill: updatedSkill
-      });
-      addSkillToEmployee(id, updatedSkill);
-    }
-  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -96,7 +80,6 @@ export const SkillsMatrix = () => {
         visibleItems={visibleItems}
         observerTarget={observerTarget}
         hasChanges={hasChanges}
-        onSkillUpdate={handleSkillUpdate}
       />
     </div>
   );

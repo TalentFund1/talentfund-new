@@ -3,7 +3,6 @@ import { useCompetencyStore } from "./CompetencyState";
 import { useEffect, useRef } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
-import { SkillRequirement } from "../skills/types/SkillTypes";
 
 interface SkillCellProps {
   skillName: string;
@@ -13,15 +12,13 @@ interface SkillCellProps {
   };
   isLastColumn: boolean;
   levelKey: string;
-  onSkillUpdate?: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
 }
 
 export const SkillCell = ({ 
   skillName, 
   details, 
   isLastColumn, 
-  levelKey,
-  onSkillUpdate
+  levelKey 
 }: SkillCellProps) => {
   const { currentStates, setSkillState } = useCompetencyStore();
   const initRef = useRef(false);
@@ -59,9 +56,6 @@ export const SkillCell = ({
       currentRequired: currentState.required
     });
     setSkillState(skillName, value, levelKey, currentState.required);
-    if (onSkillUpdate && levelKey === 'employee') {
-      onSkillUpdate(skillName, value, currentState.required as SkillRequirement);
-    }
   };
 
   const handleRequirementChange = (value: string) => {
@@ -72,9 +66,6 @@ export const SkillCell = ({
       newRequired: value
     });
     setSkillState(skillName, currentState.level, levelKey, value);
-    if (onSkillUpdate && levelKey === 'employee') {
-      onSkillUpdate(skillName, currentState.level, value as SkillRequirement);
-    }
   };
 
   return (
