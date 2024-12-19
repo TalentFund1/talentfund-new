@@ -64,7 +64,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
 
       console.log('Processing skills generation for:', allSkills.map(s => s.title));
 
-      // Generate progression for each skill
+      // Initialize states for all skills first
       allSkills.forEach(skill => {
         let category = "specialized";
         if (currentRoleSkills.common.some(s => s.title === skill.title)) {
@@ -73,7 +73,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
           category = "certification";
         }
 
-        console.log('Generating progression for skill:', { 
+        console.log('Initializing skill state:', { 
           title: skill.title, 
           category,
           track,
@@ -81,8 +81,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         });
 
         const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
-        console.log('Generated progression:', { skill: skill.title, progression });
-        
         if (progression) {
           setSkillProgression(skill.title, progression, currentRoleId);
         }
