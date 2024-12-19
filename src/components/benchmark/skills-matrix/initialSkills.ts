@@ -1,5 +1,7 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { getSkillCategory } from '../../skills/data/skills/categories/skillCategories';
+import { normalizeSkillTitle } from '../../skills/utils/normalization';
 
 // Define initial skills for each employee using the universal database
 const employeeSkills: { [key: string]: UnifiedSkill[] } = {
@@ -14,7 +16,20 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     "Technical Writing",
     "Git Version Control",
     "Communication"
-  ].map(title => getUnifiedSkillData(title)),
+  ].map(title => {
+    const skillData = getUnifiedSkillData(title);
+    console.log('Loading employee skill from universal database:', {
+      title,
+      category: skillData.category,
+      growth: skillData.growth,
+      salary: skillData.salary
+    });
+    return {
+      ...skillData,
+      category: getSkillCategory(title), // Ensure category is set from universal database
+      title: normalizeSkillTitle(title), // Normalize title for consistency
+    };
+  }),
 
   "124": [
     "Node.js",
@@ -27,7 +42,20 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     "Agile Methodologies",
     "Git Version Control",
     "Communication"
-  ].map(title => getUnifiedSkillData(title)),
+  ].map(title => {
+    const skillData = getUnifiedSkillData(title);
+    console.log('Loading employee skill from universal database:', {
+      title,
+      category: skillData.category,
+      growth: skillData.growth,
+      salary: skillData.salary
+    });
+    return {
+      ...skillData,
+      category: getSkillCategory(title),
+      title: normalizeSkillTitle(title),
+    };
+  }),
 
   "125": [
     "React",
@@ -40,7 +68,20 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     "Agile Methodologies",
     "Git Version Control",
     "Communication"
-  ].map(title => getUnifiedSkillData(title)),
+  ].map(title => {
+    const skillData = getUnifiedSkillData(title);
+    console.log('Loading employee skill from universal database:', {
+      title,
+      category: skillData.category,
+      growth: skillData.growth,
+      salary: skillData.salary
+    });
+    return {
+      ...skillData,
+      category: getSkillCategory(title),
+      title: normalizeSkillTitle(title),
+    };
+  }),
 
   "126": [
     "System Design",
@@ -53,20 +94,45 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     "Agile Methodologies",
     "Git Version Control",
     "Communication"
-  ].map(title => getUnifiedSkillData(title))
+  ].map(title => {
+    const skillData = getUnifiedSkillData(title);
+    console.log('Loading employee skill from universal database:', {
+      title,
+      category: skillData.category,
+      growth: skillData.growth,
+      salary: skillData.salary
+    });
+    return {
+      ...skillData,
+      category: getSkillCategory(title),
+      title: normalizeSkillTitle(title),
+    };
+  })
 };
 
 export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
   const skills = employeeSkills[employeeId] || [];
-  console.log('Retrieved skills:', skills);
+  console.log('Retrieved skills with full metadata:', skills.map(s => ({
+    title: s.title,
+    category: s.category,
+    growth: s.growth,
+    salary: s.salary
+  })));
   return skills;
 };
 
 // Initialize skills for a new employee
 export const initializeEmployeeSkills = (employeeId: string, skills: string[]) => {
   console.log('Initializing skills for employee:', employeeId, skills);
-  employeeSkills[employeeId] = skills.map(title => getUnifiedSkillData(title));
+  employeeSkills[employeeId] = skills.map(title => {
+    const skillData = getUnifiedSkillData(title);
+    return {
+      ...skillData,
+      category: getSkillCategory(title),
+      title: normalizeSkillTitle(title),
+    };
+  });
 };
 
 // Load initial skills for an employee
@@ -76,4 +142,15 @@ export const loadEmployeeSkills = (employeeId: string) => {
 };
 
 // Export the loaded skills for verification
-console.log('Loaded employee skills:', employeeSkills);
+console.log('Loaded employee skills with full metadata:', 
+  Object.entries(employeeSkills).map(([id, skills]) => ({
+    employeeId: id,
+    skillCount: skills.length,
+    skills: skills.map(s => ({
+      title: s.title,
+      category: s.category,
+      growth: s.growth,
+      salary: s.salary
+    }))
+  }))
+);
