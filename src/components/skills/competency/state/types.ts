@@ -3,12 +3,10 @@ export interface CompetencyRequirement {
   required: string;
 }
 
-export interface LevelRequirements {
-  [levelKey: string]: CompetencyRequirement;
-}
-
 export interface RoleCompetencies {
-  [skillName: string]: LevelRequirements;
+  [skillName: string]: {
+    [levelKey: string]: CompetencyRequirement;
+  };
 }
 
 export interface CompetencyState {

@@ -7,28 +7,22 @@ export interface EmployeeSkillState {
   [skillTitle: string]: SkillState;
 }
 
-export type SkillStateValue = string | SkillState;
+export interface SkillsMatrixState {
+  currentStates: Record<string, EmployeeSkillState>;
+  originalStates: Record<string, EmployeeSkillState>;
+  hasChanges: boolean;
+  setSkillState: (employeeId: string, skillTitle: string, level: string, requirement: string) => void;
+  saveChanges: (employeeId: string) => void;
+  cancelChanges: (employeeId: string) => void;
+  resetSkills: (employeeId: string) => void;
+}
 
-export const getSkillLevel = (state: SkillStateValue): string => {
+export const getSkillLevel = (state: SkillState | string): string => {
   if (typeof state === 'string') return state;
   return state.level || 'unspecified';
 };
 
-export const getSkillRequirement = (state: SkillStateValue): string => {
+export const getSkillRequirement = (state: SkillState | string): string => {
   if (typeof state === 'string') return 'preferred';
   return state.requirement || 'preferred';
-};
-
-export const formatSkillLevel = (level: SkillStateValue): string => {
-  const levelStr = getSkillLevel(level);
-  return levelStr.charAt(0).toUpperCase() + levelStr.slice(1);
-};
-
-export const compareSkillLevels = (a: SkillStateValue, b: SkillStateValue): boolean => {
-  return getSkillLevel(a) === getSkillLevel(b);
-};
-
-export const isSkillRequired = (state: SkillStateValue): boolean => {
-  const requirement = getSkillRequirement(state);
-  return requirement === 'required' || requirement === 'skill_goal';
 };
