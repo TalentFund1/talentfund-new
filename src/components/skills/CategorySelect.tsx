@@ -1,3 +1,5 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 interface CategorySelectProps {
   selectedCategory: string;
   onCategoryChange: (value: string) => void;
