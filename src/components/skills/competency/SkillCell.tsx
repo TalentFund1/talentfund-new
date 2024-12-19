@@ -1,8 +1,8 @@
 import { TableCell } from "@/components/ui/table";
 import { useCompetencyStore } from "./CompetencyState";
+import { useParams } from "react-router-dom";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
-import { useParams } from "react-router-dom";
 
 interface SkillCellProps {
   skillName: string;

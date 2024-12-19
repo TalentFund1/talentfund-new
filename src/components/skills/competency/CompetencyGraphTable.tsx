@@ -4,6 +4,7 @@ import { SkillCell } from "./SkillCell";
 import { roleSkills } from "../data/roleSkills";
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
 import { useParams } from "react-router-dom";
+import { UnifiedSkill } from "../types/SkillTypes";
 
 interface CompetencyGraphTableProps {
   currentRoleId: string;
@@ -94,7 +95,7 @@ export const CompetencyGraphTable = ({
 
   const sortedSkills = skills
     .map(skill => ({
-      title: skill.title,
+      ...skill,
       advancedCount: countSkillLevels(skill.title, levels, 'advanced'),
       intermediateCount: countSkillLevels(skill.title, levels, 'intermediate'),
       beginnerCount: countSkillLevels(skill.title, levels, 'beginner'),
@@ -114,16 +115,7 @@ export const CompetencyGraphTable = ({
       if (unspecifiedDiff !== 0) return unspecifiedDiff;
       
       return a.title.localeCompare(b.title);
-    })
-    .map(skill => skill.title);
-
-  console.log('Sorted skills with counts:', skills.map(skill => ({
-    title: skill.title,
-    advanced: countSkillLevels(skill.title, levels, 'advanced'),
-    intermediate: countSkillLevels(skill.title, levels, 'intermediate'),
-    beginner: countSkillLevels(skill.title, levels, 'beginner'),
-    unspecified: countSkillLevels(skill.title, levels, 'unspecified')
-  })));
+    });
 
   return (
     <div className="rounded-lg border border-border bg-white overflow-hidden mb-8">
@@ -144,16 +136,16 @@ export const CompetencyGraphTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {skills.map((skillName) => (
-            <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
+          {sortedSkills.map((skill) => (
+            <TableRow key={skill.title} className="hover:bg-background/30 transition-colors">
               <TableCell className="font-medium border-r border-border">
-                {skillName}
+                {skill.title}
               </TableCell>
               {levels.map((level, index) => (
                 <SkillCell 
                   key={level}
-                  skillName={skillName}
-                  details={getSkillDetails(skillName, level)}
+                  skillName={skill.title}
+                  details={getSkillDetails(skill.title, level)}
                   isLastColumn={index === levels.length - 1}
                   levelKey={level.toLowerCase()}
                   employeeId={employeeId}
