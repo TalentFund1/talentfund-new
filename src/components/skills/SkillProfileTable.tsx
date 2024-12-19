@@ -9,8 +9,6 @@ import { employees } from "../employee/EmployeeData";
 import { getBaseRole } from "../EmployeeTable";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { TrackProvider } from "./context/TrackContext";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
@@ -26,8 +24,7 @@ const SkillProfileTableContent = ({
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
-  
+
   const getExactRoleMatches = (roleName: string) => {
     return employees.filter(emp => getBaseRole(emp.role) === roleName).length;
   };
@@ -187,8 +184,6 @@ const SkillProfileTableContent = ({
 
 export const SkillProfileTable = (props: SkillProfileTableProps) => {
   return (
-    <TrackProvider>
-      <SkillProfileTableContent {...props} />
-    </TrackProvider>
+    <SkillProfileTableContent {...props} />
   );
 };
