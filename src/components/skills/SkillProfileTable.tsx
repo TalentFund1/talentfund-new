@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { SkillProfileRow } from "./types";
 import { roleSkills } from './data/roleSkills';
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { employees } from "../employee/EmployeeData";
+import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getBaseRole } from "../EmployeeTable";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
@@ -27,8 +27,9 @@ const SkillProfileTableContent = ({
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const employees = useEmployeeStore((state) => state.employees);
   
-  const getExactRoleMatches = (roleName: string) => {
+  const getEmployeeCount = (roleName: string) => {
     return employees.filter(emp => getBaseRole(emp.role) === roleName).length;
   };
 
@@ -70,12 +71,26 @@ const SkillProfileTableContent = ({
       toggledSkills.has(skill.title)
     ).length;
 
+    // Get employee count for this role
+    const employeeCount = getEmployeeCount(role.title);
+
+    console.log('Calculating employee count for role:', {
+      roleId: id,
+      roleTitle: role.title,
+      employeeCount,
+      employees: employees.map(e => ({
+        name: e.name,
+        role: e.role,
+        baseRole: getBaseRole(e.role)
+      }))
+    });
+
     return {
       id,
       name: role.title,
       function: "Engineering",
       skillCount: String(toggledSkillsCount),
-      employees: String(getExactRoleMatches(role.title)),
+      employees: String(employeeCount),
       matches: `${calculateAverageBenchmark(id, role.title)}%`,
       lastUpdated: "10/20/24"
     };
