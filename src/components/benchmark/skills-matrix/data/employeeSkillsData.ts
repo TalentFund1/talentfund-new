@@ -3,7 +3,7 @@ import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 import { normalizeSkillTitle } from '../../../skills/utils/normalization';
 import { getSkillCategory } from '../../../skills/data/skills/categories/skillCategories';
 
-// Define skills for each employee independently of their role
+// Define skills for each employee independently
 export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
   "123": [
     "Python",
@@ -23,6 +23,7 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
+      employeeId: "123", // Add employeeId to track ownership
       level: 'intermediate',
       requirement: 'required'
     };
@@ -46,6 +47,7 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
+      employeeId: "124", // Add employeeId to track ownership
       level: 'intermediate',
       requirement: 'required'
     };
@@ -69,6 +71,7 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
+      employeeId: "125", // Add employeeId to track ownership
       level: 'intermediate',
       requirement: 'required'
     };
@@ -92,13 +95,14 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
+      employeeId: "126", // Add employeeId to track ownership
       level: 'intermediate',
       requirement: 'required'
     };
   })
 };
 
-// Export helper functions
+// Export helper function
 export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
   
@@ -110,7 +114,8 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
       skills: employeeSkills[employeeId].map(s => ({
         title: s.title,
         level: s.level,
-        requirement: s.requirement
+        requirement: s.requirement,
+        employeeId: s.employeeId
       }))
     });
     return employeeSkills[employeeId];
@@ -130,7 +135,8 @@ console.log('Loaded employee skills:',
       title: s.title,
       category: s.category,
       level: s.level,
-      requirement: s.requirement
+      requirement: s.requirement,
+      employeeId: s.employeeId
     }))
   }))
 );

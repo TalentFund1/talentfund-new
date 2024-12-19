@@ -11,11 +11,33 @@ export const useCompetencyStore = create<CompetencyState>()(
       roleStates: {},
       currentStates: {},
       originalStates: {},
+      employeeStates: {}, // Add employee-specific states
       hasChanges: false,
 
-      setSkillState: (skillName, level, levelKey, required, roleId) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
+      setSkillState: (skillName, level, levelKey, required, roleId, employeeId) => {
+        console.log('Setting skill state:', { 
+          skillName, 
+          level, 
+          levelKey, 
+          required, 
+          roleId,
+          employeeId 
+        });
+        
         set((state) => {
+          // Update employee-specific state
+          const newEmployeeStates = {
+            ...state.employeeStates,
+            [employeeId]: {
+              ...state.employeeStates[employeeId],
+              [skillName]: {
+                level,
+                required
+              }
+            }
+          };
+
+          // Update role-based state for benchmarking
           const newRoleStates = setSkillStateAction(
             state.roleStates,
             skillName,
@@ -31,6 +53,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...state.currentStates,
               [roleId]: newRoleStates[roleId]
             },
+            employeeStates: newEmployeeStates,
             hasChanges: true
           };
         });
@@ -77,28 +100,34 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       saveChanges: (roleId) => {
         console.log('Saving changes for role:', roleId);
-        set((state) => ({
-          originalStates: {
-            ...state.originalStates,
-            [roleId]: { ...state.roleStates[roleId] }
-          },
-          hasChanges: false
-        }));
+        set((state) => {
+          const currentRoleState = state.roleStates[roleId];
+          return {
+            originalStates: {
+              ...state.originalStates,
+              [roleId]: { ...currentRoleState }
+            },
+            hasChanges: false
+          };
+        });
       },
 
       cancelChanges: (roleId) => {
         console.log('Canceling changes for role:', roleId);
-        set((state) => ({
-          roleStates: {
-            ...state.roleStates,
-            [roleId]: { ...state.originalStates[roleId] }
-          },
-          currentStates: {
-            ...state.currentStates,
-            [roleId]: { ...state.originalStates[roleId] }
-          },
-          hasChanges: false
-        }));
+        set((state) => {
+          const originalRoleState = state.originalStates[roleId];
+          return {
+            roleStates: {
+              ...state.roleStates,
+              [roleId]: { ...originalRoleState }
+            },
+            currentStates: {
+              ...state.currentStates,
+              [roleId]: { ...originalRoleState }
+            },
+            hasChanges: false
+          };
+        });
       },
 
       initializeState: (roleId) => {
@@ -146,25 +175,63 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       getRoleState: (roleId) => {
         return get().roleStates[roleId] || {};
+      },
+
+      getEmployeeSkillState: (employeeId, skillName) => {
+        const state = get().employeeStates[employeeId];
+        if (state && state[skillName]) {
+          console.log('Found employee skill state:', {
+            employeeId,
+            skillName,
+            state: state[skillName]
+          });
+          return state[skillName];
+        }
+        console.log('No state found for employee skill:', {
+          employeeId,
+          skillName
+        });
+        return null;
+      },
+
+      initializeEmployeeState: (employeeId, skills) => {
+        console.log('Initializing employee state:', {
+          employeeId,
+          skillCount: skills.length
+        });
+        
+        set((state) => {
+          const employeeState = state.employeeStates[employeeId] || {};
+          const newState = { ...employeeState };
+
+          skills.forEach(skill => {
+            if (!newState[skill.title]) {
+              newState[skill.title] = {
+                level: skill.level || 'unspecified',
+                required: skill.requirement || 'preferred'
+              };
+            }
+          });
+
+          return {
+            ...state,
+            employeeStates: {
+              ...state.employeeStates,
+              [employeeId]: newState
+            }
+          };
+        });
       }
     }),
     {
       name: 'competency-storage',
-      version: 21,
+      version: 24, // Increment version to ensure clean state
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
-        originalStates: state.originalStates
-      }),
-      merge: (persistedState: any, currentState: CompetencyState) => {
-        console.log('Merging persisted state with current state');
-        return {
-          ...currentState,
-          roleStates: persistedState.roleStates || {},
-          currentStates: persistedState.currentStates || {},
-          originalStates: persistedState.originalStates || {}
-        };
-      }
+        originalStates: state.originalStates,
+        employeeStates: state.employeeStates
+      })
     }
   )
 );
