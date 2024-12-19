@@ -80,23 +80,10 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
           roleId: currentRoleId
         });
 
-        // Initialize with default values for new skills
-        const defaultProgression = {
-          p1: { level: 'unspecified', required: 'preferred' },
-          p2: { level: 'unspecified', required: 'preferred' },
-          p3: { level: 'unspecified', required: 'preferred' },
-          p4: { level: 'unspecified', required: 'preferred' },
-          p5: { level: 'unspecified', required: 'preferred' },
-          p6: { level: 'unspecified', required: 'preferred' },
-          m3: { level: 'unspecified', required: 'preferred' },
-          m4: { level: 'unspecified', required: 'preferred' },
-          m5: { level: 'unspecified', required: 'preferred' },
-          m6: { level: 'unspecified', required: 'preferred' }
-        };
-
-        // Only generate progression if it's not a new skill
         const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
-        setSkillProgression(skill.title, progression || defaultProgression, currentRoleId);
+        if (progression) {
+          setSkillProgression(skill.title, progression, currentRoleId);
+        }
       });
 
       // Save changes to persist the generated progressions

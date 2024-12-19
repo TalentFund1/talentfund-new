@@ -15,18 +15,23 @@ export const generateSkillProgression = (
 ): Record<string, SkillState> => {
   console.log(`Generating progression for ${skillName} (${track} track)`);
   
-  // For newly added skills, return default values
   const progression: Record<string, SkillState> = {};
+  const importance = getSkillImportance(skillName, category, track, roleId);
   const levels = track === "Professional" ? Object.keys(professionalLevels) : Object.keys(managerialLevels);
 
-  // Initialize all levels with unspecified/preferred
-  levels.forEach(level => {
+  console.log(`Skill importance for ${skillName}: ${importance}`);
+
+  levels.forEach((level, index) => {
+    const progressionPoint = index / (levels.length - 1);
+    const { level: skillLevel, required } = generateProgressionForTrack(progressionPoint, importance, track);
+    
+    console.log(`Generated level for ${skillName} at ${level}: ${skillLevel} (${required})`);
+    
     progression[level.toLowerCase()] = {
-      level: 'unspecified',
-      required: 'preferred'
+      level: skillLevel,
+      required
     };
   });
 
-  console.log(`Generated default progression for new skill ${skillName}:`, progression);
   return progression;
 };
