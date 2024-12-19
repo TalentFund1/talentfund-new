@@ -21,6 +21,8 @@ const validateRequirement = (req: string): SkillRequirement => {
       return 'skill_goal';
     case 'unknown':
       return 'unknown';
+    case 'preferred':
+      return 'preferred';
     default:
       return 'unknown';
   }
@@ -98,6 +100,8 @@ export const SkillLevelCell = ({
         return 'Not Interested';
       case 'unknown':
         return 'Unknown';
+      case 'preferred':
+        return 'Preferred';
       default:
         return 'Skill Goal';
     }
@@ -164,7 +168,7 @@ export const SkillLevelCell = ({
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-            ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement || 'required')}
+            ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement)}
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
