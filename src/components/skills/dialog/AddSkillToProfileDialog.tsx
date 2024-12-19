@@ -11,6 +11,7 @@ import { Skills, getAllSkills } from '../data/skills/allSkills';
 import { addSkillToInitialSkills } from '../data/skillDatabaseService';
 import { roleSkills } from '../data/roleSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
+import { generateSkillProgression } from '../competency/autoFillUtils';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
