@@ -13,6 +13,7 @@ import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { getSkillCategory } from './data/skills/categories/skillCategories';
 import { normalizeSkillTitle } from './utils/normalization';
+import { getSkillWeight } from './data/skills/categories/skillWeights';
 
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -68,6 +69,19 @@ export const SkillProfileMatrix = () => {
     ...currentRoleSkills.certifications
   ].length;
 
+  const getWeightPriority = (weight: string) => {
+    switch (weight.toLowerCase()) {
+      case 'critical':
+        return 0;
+      case 'technical':
+        return 1;
+      case 'necessary':
+        return 2;
+      default:
+        return 3;
+    }
+  };
+
   const filteredSkills = (() => {
     const uniqueSkills = new Set();
     let skills = [
@@ -100,7 +114,7 @@ export const SkillProfileMatrix = () => {
       skills = skills.filter(skill => getCategoryForSkill(skill, id || "123") === selectedCategory);
     }
 
-    // Sort skills: toggled skills first, then by other criteria
+    // Sort skills: toggled first, then by weight (critical > technical > necessary)
     skills.sort((a, b) => {
       const aIsToggled = toggledSkills.has(a.title);
       const bIsToggled = toggledSkills.has(b.title);
@@ -110,17 +124,13 @@ export const SkillProfileMatrix = () => {
         return bIsToggled ? 1 : -1;
       }
 
-      // If both are toggled or both are not toggled, sort by other criteria
-      if (sortField && sortDirection) {
-        if (sortField === 'growth') {
-          const aGrowth = parseFloat(a.growth);
-          const bGrowth = parseFloat(b.growth);
-          return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
-        } else if (sortField === 'salary') {
-          const aSalary = parseFloat(a.salary?.replace(/[^0-9.-]+/g, "") || "0");
-          const bSalary = parseFloat(b.salary?.replace(/[^0-9.-]+/g, "") || "0");
-          return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
-        }
+      // Then sort by weight priority
+      const aWeight = getSkillWeight(a.title);
+      const bWeight = getSkillWeight(b.title);
+      const weightDiff = getWeightPriority(aWeight) - getWeightPriority(bWeight);
+      
+      if (weightDiff !== 0) {
+        return weightDiff;
       }
 
       // Finally sort alphabetically
@@ -134,6 +144,7 @@ export const SkillProfileMatrix = () => {
       selectedCategory,
       firstFewSkills: skills.slice(0, 3).map(skill => ({
         title: skill.title,
+        weight: getSkillWeight(skill.title),
         isToggled: toggledSkills.has(skill.title)
       }))
     });
