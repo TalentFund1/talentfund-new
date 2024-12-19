@@ -10,12 +10,61 @@ export const initializeSkillsDatabase = (skills: UnifiedSkill[]) => {
   universalSkillsDatabase = skills;
 };
 
+// Predefined category mappings
+const categoryMappings: Record<string, SkillCategory> = {
+  // AI & ML Skills
+  'Machine Learning': 'specialized',
+  'Deep Learning': 'specialized',
+  'Natural Language Processing': 'specialized',
+  'Computer Vision': 'specialized',
+  'TensorFlow': 'specialized',
+  'PyTorch': 'specialized',
+
+  // Programming Skills
+  'Python': 'specialized',
+  'TypeScript': 'specialized',
+  'JavaScript': 'specialized',
+  'Node.js': 'specialized',
+
+  // DevOps Skills
+  'Docker': 'specialized',
+  'Kubernetes': 'specialized',
+  'AWS': 'specialized',
+  'Jenkins': 'specialized',
+  'Terraform': 'specialized',
+
+  // Common Skills
+  'Problem Solving': 'common',
+  'Communication': 'common',
+  'Technical Writing': 'common',
+  'Git Version Control': 'common',
+  'Code Review': 'common',
+  'Agile Methodologies': 'common',
+
+  // Certifications
+  'AWS Certified Machine Learning - Specialty': 'certification',
+  'AWS Certified Solutions Architect': 'certification',
+  'AWS Certified Developer - Associate': 'certification',
+  'TensorFlow Developer Certificate': 'certification',
+  'Certified Kubernetes Administrator': 'certification',
+  'HashiCorp Certified Terraform Associate': 'certification'
+};
+
 export const getSkillCategory = (skillTitle: string): SkillCategory => {
   console.log('Getting category for skill:', skillTitle);
   
   const normalizedTitle = normalizeSkillTitle(skillTitle);
   
-  // First try to get from universal database
+  // First try to get from predefined mappings
+  if (categoryMappings[skillTitle]) {
+    console.log('Found skill in category mappings:', {
+      skill: skillTitle,
+      category: categoryMappings[skillTitle]
+    });
+    return categoryMappings[skillTitle];
+  }
+  
+  // Then try to get from universal database
   const skill = universalSkillsDatabase.find(
     s => normalizeSkillTitle(s.title) === normalizedTitle
   );
@@ -28,7 +77,7 @@ export const getSkillCategory = (skillTitle: string): SkillCategory => {
     return skill.category;
   }
   
-  // If not found, determine category based on skill characteristics
+  // If not found in mappings or database, determine category based on characteristics
   if (skillTitle.includes('Certified') || skillTitle.includes('Certificate')) {
     return 'certification';
   }

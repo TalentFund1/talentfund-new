@@ -1,5 +1,6 @@
 import { Skill } from '../types/SkillTypes';
 import { Skills, getAllSkills, getSkillByTitle as getSkillFromAllSkills } from './skills/allSkills';
+import { getSkillCategory } from './skills/categories/skillCategories';
 
 export const getUnifiedSkillData = (title: string): Skill => {
   console.log('Looking up skill:', title);
@@ -11,7 +12,7 @@ export const getUnifiedSkillData = (title: string): Skill => {
       id: `generated-${title}`,
       title,
       subcategory: 'Other',
-      category: 'common',
+      category: getSkillCategory(title),
       businessCategory: 'Information Technology',
       weight: 'necessary',
       level: 'beginner',
@@ -22,8 +23,20 @@ export const getUnifiedSkillData = (title: string): Skill => {
     };
   }
 
-  console.log('Found skill:', skill);
-  return skill;
+  // Ensure the category is set correctly
+  const category = getSkillCategory(title);
+  const skillWithCategory = {
+    ...skill,
+    category
+  };
+
+  console.log('Found skill with category:', {
+    title,
+    category,
+    skill: skillWithCategory
+  });
+  
+  return skillWithCategory;
 };
 
 // Helper functions
@@ -32,7 +45,7 @@ export const getSkillsByWeight = (weight: string): Skill[] => {
 };
 
 export const getSkillsByCategory = (category: string): Skill[] => {
-  return getAllSkills().filter(skill => skill.category === category);
+  return getAllSkills().filter(skill => getSkillCategory(skill.title) === category);
 };
 
 // Add the missing function
