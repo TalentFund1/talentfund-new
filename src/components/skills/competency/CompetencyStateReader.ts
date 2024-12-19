@@ -5,6 +5,7 @@ import { useTrack } from "../context/TrackContext";
 import { getLevelPriority, normalizeLevel } from "./utils/levelUtils";
 import { determineRequirement } from "./utils/requirementUtils";
 import { useParams } from "react-router-dom";
+import { EmployeeSkillState } from "./state/types";
 
 interface SkillCompetencyState {
   level: string;

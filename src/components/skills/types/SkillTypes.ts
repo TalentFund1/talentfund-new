@@ -31,6 +31,7 @@ export interface Skill {
 export interface UnifiedSkill extends Skill {
   requirement?: SkillRequirement;
   roleLevel?: string;
+  employeeId?: string;
 }
 
 export interface RoleSkillData {
