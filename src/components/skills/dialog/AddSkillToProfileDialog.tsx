@@ -11,7 +11,7 @@ import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills } from '../data/skills/allSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { getEmployeeSkills, updateEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
-import { UnifiedSkill, SkillRequirement } from '../types/SkillTypes';
+import { UnifiedSkill, SkillRequirement, SkillCategory } from '../types/SkillTypes';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -80,7 +80,7 @@ export const AddSkillToProfileDialog = () => {
           ...skillData,
           level: 'unspecified',
           requirement: 'preferred' as SkillRequirement,
-          category: skillData.category || 'technical',
+          category: (skillData.category || 'specialized') as SkillCategory,
           subcategory: skillData.subcategory || 'Other',
           growth: skillData.growth || '0%',
           confidence: skillData.confidence || 'low'
