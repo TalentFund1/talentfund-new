@@ -12,6 +12,7 @@ import { Skills } from '../data/skills/allSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { getEmployeeSkills, updateEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
 import { UnifiedSkill, SkillRequirement, SkillCategory } from '../types/SkillTypes';
+import { roleSkills } from '../data/roleSkills';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -35,87 +36,107 @@ export const AddSkillToProfileDialog = () => {
 
   const handleAddSkills = () => {
     if (!id) {
+      console.error('No ID found in params');
       toast({
         title: "Error",
-        description: "Could not find the current employee profile.",
+        description: "Could not find the current profile.",
         variant: "destructive",
       });
       return;
     }
 
-    console.log('Adding skills to employee:', id);
+    console.log('Adding skills to profile:', {
+      id,
+      isRoleProfile: !!roleSkills[id as keyof typeof roleSkills],
+      selectedSkills
+    });
 
-    // Get current employee skills
-    const currentSkills = getEmployeeSkills(id);
-    console.log('Current employee skills:', currentSkills.length);
+    // Check if we're in a role profile
+    const isRoleProfile = !!roleSkills[id as keyof typeof roleSkills];
+    
+    if (isRoleProfile) {
+      // Handle adding skills to role profile
+      console.log('Adding skills to role profile');
+      const newToggledSkills = new Set(toggledSkills);
+      const addedSkills: string[] = [];
 
-    // Add new skills
-    const updatedSkills = [...currentSkills];
-    const addedSkills: string[] = [];
-    const newToggledSkills = new Set(toggledSkills);
-
-    selectedSkills.forEach(skillTitle => {
-      const normalizedTitle = normalizeSkillTitle(skillTitle);
-      
-      // Check if skill already exists
-      if (currentSkills.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-        console.log('Skipping duplicate skill:', skillTitle);
-        return;
-      }
-
-      // Get complete skill data from database
-      const skillData = getUnifiedSkillData(skillTitle);
-      if (skillData) {
-        console.log('Processing skill:', skillData);
+      selectedSkills.forEach(skillTitle => {
+        const normalizedTitle = normalizeSkillTitle(skillTitle);
         
         // Add to toggled skills
         newToggledSkills.add(normalizedTitle);
         
-        // Initialize skill state with unspecified level and preferred requirement
-        setSkillState(normalizedTitle, 'unspecified', id, 'preferred' as SkillRequirement, 'employee');
-
-        // Add to employee skills with complete data
-        const newSkill: UnifiedSkill = {
-          ...skillData,
-          title: normalizedTitle,
-          level: 'unspecified',
-          requirement: 'preferred' as SkillRequirement,
-          category: (skillData.category || 'specialized') as SkillCategory,
-          subcategory: skillData.subcategory || 'Other',
-          growth: skillData.growth || '0%',
-          confidence: skillData.confidence || 'low'
-        };
+        // Initialize skill state
+        setSkillState(normalizedTitle, 'unspecified', id, 'preferred' as SkillRequirement, 'role');
         
-        updatedSkills.push(newSkill);
         addedSkills.push(normalizedTitle);
-        console.log('Added new skill with complete data:', newSkill);
+        console.log('Added new skill to role profile:', normalizedTitle);
+      });
+
+      // Update toggled skills
+      setToggledSkills(newToggledSkills);
+      
+      console.log('Updated role profile skills:', {
+        roleId: id,
+        addedSkills,
+        toggledSkillsCount: newToggledSkills.size
+      });
+
+      if (addedSkills.length > 0) {
+        toast({
+          title: "Skills Added",
+          description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to the role profile.`,
+        });
       }
-    });
-
-    // Update employee skills
-    updateEmployeeSkills(id, updatedSkills);
-    
-    // Update toggled skills and persist them
-    setToggledSkills(newToggledSkills);
-    
-    console.log('Updated employee skills:', {
-      employeeId: id,
-      previousCount: currentSkills.length,
-      newCount: updatedSkills.length,
-      addedSkills,
-      toggledSkillsCount: newToggledSkills.size
-    });
-
-    if (addedSkills.length > 0) {
-      toast({
-        title: "Skills Added",
-        description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to your profile.`,
-      });
     } else {
-      toast({
-        title: "No New Skills",
-        description: "No new skills were added to your profile.",
+      // Handle adding skills to employee profile
+      console.log('Adding skills to employee profile');
+      const currentSkills = getEmployeeSkills(id);
+      console.log('Current employee skills:', currentSkills.length);
+
+      const updatedSkills = [...currentSkills];
+      const addedSkills: string[] = [];
+      const newToggledSkills = new Set(toggledSkills);
+
+      selectedSkills.forEach(skillTitle => {
+        const normalizedTitle = normalizeSkillTitle(skillTitle);
+        
+        if (currentSkills.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+          console.log('Skipping duplicate skill:', skillTitle);
+          return;
+        }
+
+        const skillData = getUnifiedSkillData(skillTitle);
+        if (skillData) {
+          newToggledSkills.add(normalizedTitle);
+          setSkillState(normalizedTitle, 'unspecified', id, 'preferred' as SkillRequirement, 'employee');
+
+          const newSkill: UnifiedSkill = {
+            ...skillData,
+            title: normalizedTitle,
+            level: 'unspecified',
+            requirement: 'preferred' as SkillRequirement,
+            category: (skillData.category || 'specialized') as SkillCategory,
+            subcategory: skillData.subcategory || 'Other',
+            growth: skillData.growth || '0%',
+            confidence: skillData.confidence || 'low'
+          };
+          
+          updatedSkills.push(newSkill);
+          addedSkills.push(normalizedTitle);
+          console.log('Added new skill with complete data:', newSkill);
+        }
       });
+
+      updateEmployeeSkills(id, updatedSkills);
+      setToggledSkills(newToggledSkills);
+      
+      if (addedSkills.length > 0) {
+        toast({
+          title: "Skills Added",
+          description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to your profile.`,
+        });
+      }
     }
 
     // Reset state
@@ -125,9 +146,8 @@ export const AddSkillToProfileDialog = () => {
     // Dispatch custom event to notify other components
     window.dispatchEvent(new CustomEvent('skillsUpdated', {
       detail: {
-        employeeId: id,
-        updatedSkills,
-        toggledSkills: Array.from(newToggledSkills)
+        id,
+        toggledSkills: Array.from(toggledSkills)
       }
     }));
   };
