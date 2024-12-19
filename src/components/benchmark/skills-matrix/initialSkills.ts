@@ -1,38 +1,32 @@
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { employeeSkills } from './data/employeeSkillsData';
-import { initializeEmployeeSkills } from './utils/skillInitialization';
+import { UnifiedSkill } from "../../skills/types/SkillTypes";
+import { employeeSkillsData } from "./data/employeeSkillsData";
+
+// Create a Map to store employee skills
+const employeeSkillsMap = new Map<string, UnifiedSkill[]>();
 
 export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
-  console.log('Getting skills for employee:', employeeId);
-  
-  // Return employee's specific skills if they exist
-  if (employeeSkills[employeeId]) {
-    console.log('Found specific skills for employee:', {
-      employeeId,
-      skillCount: employeeSkills[employeeId].length
-    });
-    return employeeSkills[employeeId];
+  // If skills are already in the map, return them
+  if (employeeSkillsMap.has(employeeId)) {
+    return employeeSkillsMap.get(employeeId) || [];
   }
+
+  // Otherwise, get initial skills from employeeSkillsData
+  const initialSkills = employeeSkillsData[employeeId as keyof typeof employeeSkillsData] || [];
+  employeeSkillsMap.set(employeeId, initialSkills);
   
-  // Initialize with empty skills if none exist
-  console.log('No specific skills found for employee, initializing empty skills');
-  return initializeEmployeeSkills(employeeId, []);
+  console.log('Loaded initial skills for employee:', {
+    employeeId,
+    skillCount: initialSkills.length
+  });
+
+  return initialSkills;
 };
 
-// Load initial skills for an employee
-export const loadEmployeeSkills = (employeeId: string) => {
-  console.log('Loading skills for employee:', employeeId);
-  return getEmployeeSkills(employeeId);
+// Add function to update employee skills
+export const updateEmployeeSkills = (employeeId: string, skills: UnifiedSkill[]) => {
+  employeeSkillsMap.set(employeeId, skills);
+  console.log('Updated skills for employee:', {
+    employeeId,
+    newSkillCount: skills.length
+  });
 };
-
-// Export the loaded skills for verification
-console.log('Loaded employee skills:', 
-  Object.entries(employeeSkills).map(([id, skills]) => ({
-    employeeId: id,
-    skillCount: skills.length,
-    skills: skills.map(s => ({
-      title: s.title,
-      category: s.category
-    }))
-  }))
-);

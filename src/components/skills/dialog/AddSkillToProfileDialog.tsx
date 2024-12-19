@@ -9,9 +9,12 @@ import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
-import { addSkillToInitialSkills } from '../data/skillDatabaseService';
 import { roleSkills } from '../data/roleSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
+import { getEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
+
+// Create a Map to store employee skills
+const employeeSkillsMap = new Map();
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -33,81 +36,72 @@ export const AddSkillToProfileDialog = () => {
     sampleSkills: allSkills.slice(0, 5)
   });
 
+  // Initialize employee skills map if not already done
+  if (!employeeSkillsMap.has(id)) {
+    const initialSkills = getEmployeeSkills(id || "");
+    employeeSkillsMap.set(id, initialSkills);
+  }
+
   const handleAddSkills = () => {
     if (!id) {
       toast({
         title: "Error",
-        description: "Could not find the current role profile.",
+        description: "Could not find the current employee profile.",
         variant: "destructive",
       });
       return;
     }
 
-    const currentRole = roleSkills[id as keyof typeof roleSkills];
-    if (!currentRole) {
-      console.error('Role not found:', id);
-      return;
-    }
+    console.log('Adding skills to employee:', id);
 
-    console.log('Adding skills to role:', id);
+    // Get current employee skills
+    const currentSkills = employeeSkillsMap.get(id) || [];
 
-    // Add skills to toggled skills and role skills
-    const newToggledSkills = new Set(toggledSkills);
-    const existingSkillTitles = new Set([
-      ...currentRole.specialized.map(s => normalizeSkillTitle(s.title)),
-      ...currentRole.common.map(s => normalizeSkillTitle(s.title)),
-      ...currentRole.certifications.map(s => normalizeSkillTitle(s.title))
-    ]);
-
+    // Add new skills
     selectedSkills.forEach(skillTitle => {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
-      if (existingSkillTitles.has(normalizedTitle)) {
+      
+      // Check if skill already exists
+      if (currentSkills.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
         console.log('Skipping duplicate skill:', skillTitle);
         return;
       }
 
-      const skillData = getUnifiedSkillData(skillTitle, true); // Set as company skill
+      const skillData = getUnifiedSkillData(skillTitle, true);
       if (skillData) {
         console.log('Processing skill:', skillData);
         
         // Add to toggled skills
+        const newToggledSkills = new Set(toggledSkills);
         newToggledSkills.add(skillTitle);
+        setToggledSkills(newToggledSkills);
         
-        // Initialize skill state in matrix with unspecified level and skill goal requirement
-        setSkillState(skillTitle, 'unspecified', 'p4', 'skill_goal', id);
+        // Initialize skill state with unspecified level and skill goal requirement
+        setSkillState(skillTitle, 'unspecified', 'skill_goal', id);
 
-        // Add to role skills based on category
-        const category = skillData.category?.toLowerCase() || 'common';
+        // Add to employee skills
+        const newSkill = {
+          ...skillData,
+          level: 'unspecified',
+          requirement: 'skill_goal'
+        };
         
-        if (category === 'specialized' && !currentRole.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-          console.log('Adding to specialized skills:', skillData.title);
-          currentRole.specialized.push(skillData);
-        } else if (category === 'common' && !currentRole.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-          console.log('Adding to common skills:', skillData.title);
-          currentRole.common.push(skillData);
-        } else if (category === 'certification' && !currentRole.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-          console.log('Adding to certification skills:', skillData.title);
-          currentRole.certifications.push(skillData);
-        }
-
-        // Add to initial skills for persistence
-        addSkillToInitialSkills(id, skillData);
-        existingSkillTitles.add(normalizedTitle);
+        currentSkills.push(newSkill);
+        console.log('Added new skill:', newSkill);
       }
     });
 
-    setToggledSkills(newToggledSkills);
-
-    console.log('Updated role skills:', {
-      roleId: id,
-      specialized: currentRole.specialized.length,
-      common: currentRole.common.length,
-      certifications: currentRole.certifications.length
+    // Update employee skills map
+    employeeSkillsMap.set(id, currentSkills);
+    console.log('Updated employee skills:', {
+      employeeId: id,
+      totalSkills: currentSkills.length,
+      newSkills: selectedSkills
     });
 
     toast({
       title: "Skills Added",
-      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile.`,
+      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to your profile.`,
     });
 
     setSelectedSkills([]);
