@@ -17,17 +17,19 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     "Git Version Control",
     "Communication"
   ].map(title => {
-    const skillData = getUnifiedSkillData(title);
+    const normalizedTitle = normalizeSkillTitle(title);
+    const skillData = getUnifiedSkillData(normalizedTitle);
     console.log('Loading employee skill from universal database:', {
-      title,
-      category: skillData.category,
+      title: normalizedTitle,
+      originalCategory: skillData.category,
+      universalCategory: getSkillCategory(normalizedTitle),
       growth: skillData.growth,
       salary: skillData.salary
     });
     return {
       ...skillData,
-      category: getSkillCategory(title), // Ensure category is set from universal database
-      title: normalizeSkillTitle(title), // Normalize title for consistency
+      title: normalizedTitle,
+      category: getSkillCategory(normalizedTitle)
     };
   }),
 
@@ -43,17 +45,19 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     "Git Version Control",
     "Communication"
   ].map(title => {
-    const skillData = getUnifiedSkillData(title);
+    const normalizedTitle = normalizeSkillTitle(title);
+    const skillData = getUnifiedSkillData(normalizedTitle);
     console.log('Loading employee skill from universal database:', {
-      title,
-      category: skillData.category,
+      title: normalizedTitle,
+      originalCategory: skillData.category,
+      universalCategory: getSkillCategory(normalizedTitle),
       growth: skillData.growth,
       salary: skillData.salary
     });
     return {
       ...skillData,
-      category: getSkillCategory(title),
-      title: normalizeSkillTitle(title),
+      title: normalizedTitle,
+      category: getSkillCategory(normalizedTitle)
     };
   }),
 
@@ -69,17 +73,19 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     "Git Version Control",
     "Communication"
   ].map(title => {
-    const skillData = getUnifiedSkillData(title);
+    const normalizedTitle = normalizeSkillTitle(title);
+    const skillData = getUnifiedSkillData(normalizedTitle);
     console.log('Loading employee skill from universal database:', {
-      title,
-      category: skillData.category,
+      title: normalizedTitle,
+      originalCategory: skillData.category,
+      universalCategory: getSkillCategory(normalizedTitle),
       growth: skillData.growth,
       salary: skillData.salary
     });
     return {
       ...skillData,
-      category: getSkillCategory(title),
-      title: normalizeSkillTitle(title),
+      title: normalizedTitle,
+      category: getSkillCategory(normalizedTitle)
     };
   }),
 
@@ -95,17 +101,19 @@ const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     "Git Version Control",
     "Communication"
   ].map(title => {
-    const skillData = getUnifiedSkillData(title);
+    const normalizedTitle = normalizeSkillTitle(title);
+    const skillData = getUnifiedSkillData(normalizedTitle);
     console.log('Loading employee skill from universal database:', {
-      title,
-      category: skillData.category,
+      title: normalizedTitle,
+      originalCategory: skillData.category,
+      universalCategory: getSkillCategory(normalizedTitle),
       growth: skillData.growth,
       salary: skillData.salary
     });
     return {
       ...skillData,
-      category: getSkillCategory(title),
-      title: normalizeSkillTitle(title),
+      title: normalizedTitle,
+      category: getSkillCategory(normalizedTitle)
     };
   })
 };
@@ -126,11 +134,12 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
 export const initializeEmployeeSkills = (employeeId: string, skills: string[]) => {
   console.log('Initializing skills for employee:', employeeId, skills);
   employeeSkills[employeeId] = skills.map(title => {
-    const skillData = getUnifiedSkillData(title);
+    const normalizedTitle = normalizeSkillTitle(title);
+    const skillData = getUnifiedSkillData(normalizedTitle);
     return {
       ...skillData,
-      category: getSkillCategory(title),
-      title: normalizeSkillTitle(title),
+      title: normalizedTitle,
+      category: getSkillCategory(normalizedTitle)
     };
   });
 };
