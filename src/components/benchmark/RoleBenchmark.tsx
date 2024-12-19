@@ -24,7 +24,7 @@ interface RoleStore {
 
 export const useRoleStore = create<RoleStore>((set) => ({
   selectedRole: "",
-  selectedLevel: "p4", // Default to P4 for professional track
+  selectedLevel: "p4",
   setSelectedRole: (role) => set({ selectedRole: role }),
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
@@ -41,33 +41,25 @@ export const RoleBenchmark = () => {
   const employee = employees.find(emp => emp.id === id);
   const employeeRoleId = employee ? getSkillProfileId(employee.role) : "";
   const employeeTrack = employee ? getEmployeeTrack(employee.role) : "Professional";
-  
-  // Set initial role based on employee's assigned role
+  const employeeLevel = employee?.role.split(':')[1]?.trim().toLowerCase() || "p4";
+
+  // Set initial role and level based on employee's assigned role
   useEffect(() => {
-    if (employeeRoleId) {
-      console.log('Setting initial role based on employee role:', {
+    if (employeeRoleId && employeeLevel) {
+      console.log('Setting initial role and level in RoleBenchmark:', {
         employeeId: id,
         employeeRole: employee?.role,
         roleId: employeeRoleId,
+        level: employeeLevel,
         employeeTrack
       });
       setSelectedRole(employeeRoleId);
+      setSelectedLevel(employeeLevel);
     }
-  }, [employeeRoleId, setSelectedRole]);
+  }, [employeeRoleId, employeeLevel, setSelectedRole, setSelectedLevel, employee?.role]);
 
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
-
-  // Set the appropriate level based on employee's track when role changes
-  useEffect(() => {
-    const defaultLevel = employeeTrack === "Managerial" ? "m3" : "p4";
-    console.log('Setting default level based on employee track:', {
-      employeeTrack,
-      defaultLevel,
-      currentTrack: track
-    });
-    setSelectedLevel(defaultLevel);
-  }, [track, setSelectedLevel, employeeTrack]);
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -105,6 +97,7 @@ export const RoleBenchmark = () => {
     selectedLevel,
     track,
     employeeTrack,
+    employeeLevel,
     hasSkills: !!currentRoleSkills,
     employeeRole: employee?.role,
     employeeRoleId
