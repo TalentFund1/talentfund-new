@@ -7,6 +7,7 @@ import { useEmployeeStore } from "./store/employeeStore";
 import { validateFormData } from "./form/employeeFormSubmission";
 import { Employee } from "../types/employeeTypes";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { roleMapping } from "./form/RoleLevelFields";
 
 interface EditEmployeeDialogProps {
   employee: Employee;
@@ -58,6 +59,10 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     }
 
     try {
+      // Get the role ID from the mapping
+      const roleId = Object.entries(roleMapping).find(([title]) => title === formData.role)?.[1];
+      console.log('Mapped role ID:', roleId);
+
       // Update employee with all form fields
       const updatedEmployee: Employee = {
         ...employee,
@@ -78,7 +83,12 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
       };
 
       console.log('Updating employee with:', updatedEmployee);
+      
+      // Force a clean update to ensure persistence
       updateEmployee(updatedEmployee);
+      
+      // Force reload the page to ensure all contexts are updated
+      window.location.reload();
 
       toast({
         title: "Success",
