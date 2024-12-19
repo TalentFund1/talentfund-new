@@ -1,152 +1,75 @@
 import { TableCell } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { SkillRequirement } from "../skills/types/SkillTypes";
-import { getLowerBorderColorClass, getBorderColorClass } from "./skill-level/cellStyles";
-import { validateRequirement, getRequirementLabel } from "./skill-level/requirementUtils";
+import { LevelSelector } from "./LevelSelector";
+import { RequirementSelector } from "./RequirementSelector";
+import { useParams } from "react-router-dom";
 
-interface SkillLevelCellProps {
-  initialLevel: string;
-  skillTitle: string;
-  onLevelChange?: (newLevel: string, requirement: SkillRequirement) => void;
-  isRoleBenchmark?: boolean;
+interface SkillCellProps {
+  skillName: string;
+  details: {
+    level: string;
+    required: string;
+  };
+  isLastColumn: boolean;
+  levelKey: string;
 }
 
-export const SkillLevelCell = ({ 
-  initialLevel, 
-  skillTitle, 
-  onLevelChange,
-  isRoleBenchmark = false
-}: SkillLevelCellProps) => {
-  const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
+export const SkillCell = ({ 
+  skillName, 
+  details, 
+  isLastColumn, 
+  levelKey 
+}: SkillCellProps) => {
+  const { currentStates, setSkillState } = useSkillsMatrixStore();
+  const { id: employeeId } = useParams<{ id: string }>();
 
-  // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel, validateRequirement('required'));
-
-  const currentState = currentStates[skillTitle] || {
-    level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: validateRequirement('required')
+  const currentState = currentStates[employeeId || ""]?.[skillName] || {
+    level: details.level || "unspecified",
+    requirement: details.required || "preferred",
   };
 
-  const getLevelIcon = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case 'advanced':
-        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
-      case 'intermediate':
-        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
-      case 'beginner':
-        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
-      default:
-        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
+  const handleLevelChange = (value: string) => {
+    console.log('Changing level:', {
+      skillName,
+      levelKey,
+      newLevel: value,
+      currentRequired: currentState.requirement,
+      employeeId
+    });
+    
+    if (employeeId) {
+      setSkillState(employeeId, skillName, value, currentState.requirement || 'preferred');
     }
   };
 
-  const getRequirementIcon = (requirement: SkillRequirement) => {
-    switch (requirement) {
-      case 'required':
-      case 'skill_goal':
-        return <Check className="w-3.5 h-3.5" />;
-      case 'not_interested':
-        return <X className="w-3.5 h-3.5" />;
-      case 'unknown':
-        return <CircleDashed className="w-3.5 h-3.5" />;
-      default:
-        return <Heart className="w-3.5 h-3.5" />;
+  const handleRequirementChange = (value: string) => {
+    console.log('Changing requirement:', {
+      skillName,
+      levelKey,
+      currentLevel: currentState.level,
+      newRequired: value,
+      employeeId
+    });
+    
+    if (employeeId) {
+      setSkillState(employeeId, skillName, currentState.level || 'unspecified', value);
     }
   };
 
   return (
-    <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col items-center">
-        <Select 
-          value={currentState?.level || 'unspecified'} 
-          onValueChange={(value) => {
-            const validatedRequirement = validateRequirement(currentState?.requirement || 'required');
-            setSkillState(skillTitle, value, validatedRequirement);
-            onLevelChange?.(value, validatedRequirement);
-          }}
-        >
-          <SelectTrigger className={`
-            rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-            border-2 ${getBorderColorClass(currentState?.level)}
-          `}>
-            <SelectValue>
-              <span className="flex items-center gap-2">
-                {getLevelIcon(currentState?.level)}
-                {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
-              </span>
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="unspecified">
-              <span className="flex items-center gap-2">
-                <CircleDashed className="w-3.5 h-3.5 text-gray-400" />
-                Unspecified
-              </span>
-            </SelectItem>
-            <SelectItem value="beginner">
-              <span className="flex items-center gap-2">
-                <Target className="w-3.5 h-3.5 text-[#008000]" />
-                Beginner
-              </span>
-            </SelectItem>
-            <SelectItem value="intermediate">
-              <span className="flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5 text-primary-icon" />
-                Intermediate
-              </span>
-            </SelectItem>
-            <SelectItem value="advanced">
-              <span className="flex items-center gap-2">
-                <Star className="w-3.5 h-3.5 text-primary-accent" />
-                Advanced
-              </span>
-            </SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select 
-          value={currentState?.requirement || 'required'}
-          onValueChange={(value) => {
-            const validatedRequirement = validateRequirement(value);
-            setSkillState(skillTitle, currentState?.level || 'unspecified', validatedRequirement);
-            onLevelChange?.(currentState?.level || 'unspecified', validatedRequirement);
-          }}
-        >
-          <SelectTrigger className={`
-            text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-            border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-            ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement)}
-          `}>
-            <SelectValue>
-              <span className="flex items-center gap-1.5">
-                {getRequirementIcon(validateRequirement(currentState?.requirement || 'required'))}
-                {getRequirementLabel(validateRequirement(currentState?.requirement || 'required'))}
-              </span>
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="required">
-              <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5" />
-                Skill Goal
-              </span>
-            </SelectItem>
-            <SelectItem value="not_interested">
-              <span className="flex items-center gap-1.5">
-                <X className="w-3.5 h-3.5" />
-                Not Interested
-              </span>
-            </SelectItem>
-            <SelectItem value="unknown">
-              <span className="flex items-center gap-1.5">
-                <CircleDashed className="w-3.5 h-3.5" />
-                Unknown
-              </span>
-            </SelectItem>
-          </SelectContent>
-        </Select>
+    <TableCell 
+      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
+    >
+      <div className="flex flex-col items-center gap-0">
+        <LevelSelector
+          currentLevel={currentState.level || 'unspecified'}
+          onLevelChange={handleLevelChange}
+        />
+        <RequirementSelector
+          currentRequired={currentState.requirement || 'preferred'}
+          currentLevel={currentState.level || 'unspecified'}
+          onRequirementChange={handleRequirementChange}
+        />
       </div>
     </TableCell>
   );
