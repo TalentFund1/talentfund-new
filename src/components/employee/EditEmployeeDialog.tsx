@@ -27,7 +27,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     department: employee.department,
     manager: employee.manager || "",
     role: employee.role.split(':')[0].trim(),
-    level: employee.role.split(':')[1].trim(),
+    level: employee.role.split(':')[1]?.trim() || "",
     startDate: employee.startDate || "",
     termDate: employee.termDate === "-" ? "" : employee.termDate,
     sex: employee.sex,
@@ -36,7 +36,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
 
   console.log('EditEmployeeDialog - Initial form data:', {
     employeeRole: employee.role,
-    parsedLevel: employee.role.split(':')[1].trim(),
+    parsedLevel: employee.role.split(':')[1]?.trim(),
     formData
   });
 
@@ -58,7 +58,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     }
 
     try {
-      // Update employee
+      // Update employee with all form fields
       const updatedEmployee: Employee = {
         ...employee,
         name: formData.name,
@@ -69,11 +69,16 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
         startDate: formData.startDate,
         termDate: formData.termDate || "-",
         role: `${formData.role}: ${formData.level}`,
-        location: formData.location
+        location: formData.location,
+        sex: formData.sex as 'male' | 'female',
+        // Preserve existing values that shouldn't change during edit
+        skillCount: employee.skillCount,
+        benchmark: employee.benchmark,
+        lastUpdated: new Date().toLocaleDateString()
       };
 
+      console.log('Updating employee with:', updatedEmployee);
       updateEmployee(updatedEmployee);
-      console.log('Employee updated:', updatedEmployee);
 
       toast({
         title: "Success",
