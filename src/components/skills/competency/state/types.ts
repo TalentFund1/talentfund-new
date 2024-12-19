@@ -15,26 +15,10 @@ export interface CompetencyState {
   currentStates: Record<string, RoleState>;
   originalStates: Record<string, RoleState>;
   hasChanges: boolean;
-  setCompetencyRequirement: (
-    roleId: string,
-    skillName: string,
-    levelKey: string,
-    level: string,
-    required: string
-  ) => void;
+  setCompetencyRequirement: (roleId: string, skillName: string, levelKey: string, level: string, required: string) => void;
   getRoleCompetencies: (roleId: string) => RoleCompetencies;
-  setSkillState: (
-    skillName: string,
-    level: string,
-    levelKey: string,
-    required: string,
-    roleId: string
-  ) => void;
-  setSkillProgression: (
-    skillName: string,
-    progression: Record<string, SkillState>,
-    roleId: string
-  ) => void;
+  setSkillState: (skillName: string, level: string, levelKey: string, required: string, roleId: string) => void;
+  setSkillProgression: (skillName: string, progression: Record<string, SkillState>, roleId: string) => void;
   resetLevels: (roleId: string) => void;
   saveChanges: (roleId: string) => void;
   cancelChanges: (roleId: string) => void;
@@ -53,27 +37,8 @@ export interface CompetencyRequirement {
   required: string;
 }
 
-export interface EmployeeSkillState {
-  [skillTitle: string]: SkillState;
-}
-
 export type SkillRequirement = 'required' | 'preferred' | 'skill_goal' | 'not_interested' | 'unknown';
 
-// Helper function to get level string safely
-export const getSkillLevel = (state: SkillState | string): string => {
-  if (typeof state === 'string') return state;
-  return state.level || 'unspecified';
-};
-
-// Helper function to get requirement string safely
-export const getSkillRequirement = (state: SkillState | SkillRequirement): string => {
-  if (typeof state === 'string') return state;
-  if ('required' in state) return state.required;
-  return 'preferred';
-};
-
-// Helper function to safely convert to string
-export const asString = (value: string | SkillState): string => {
-  if (typeof value === 'string') return value;
-  return value.level || 'unspecified';
-};
+export interface EmployeeState {
+  [skillTitle: string]: SkillState;
+}

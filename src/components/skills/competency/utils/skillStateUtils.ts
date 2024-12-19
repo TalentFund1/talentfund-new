@@ -17,27 +17,16 @@ export const getRequirementValue = (state: string | SkillState | SkillRequiremen
   return 'preferred';
 };
 
-export const normalizeSkillState = (state: string | SkillState): SkillState => {
-  if (typeof state === 'string') {
-    return {
-      level: state,
-      required: 'preferred'
-    };
-  }
-  return state;
+export const asString = (value: string | SkillState): string => {
+  if (typeof value === 'string') return value;
+  return value.level || 'unspecified';
 };
 
-export const getLevelString = (level: string | SkillState): string => {
-  const value = getSkillStateValue(level);
-  return value.toLowerCase();
+export const asLowerCase = (value: string | SkillState): string => {
+  return asString(value).toLowerCase();
 };
 
-export const getRequirementString = (requirement: string | SkillState | SkillRequirement): string => {
-  const value = getRequirementValue(requirement);
-  return value.toLowerCase();
-};
-
-export const formatSkillLevel = (level: string | SkillState): string => {
-  const levelStr = getLevelString(level);
-  return levelStr.charAt(0).toUpperCase() + levelStr.slice(1);
+export const asRequirement = (value: string | SkillState | SkillRequirement): SkillRequirement => {
+  const strValue = getRequirementValue(value);
+  return strValue as SkillRequirement;
 };

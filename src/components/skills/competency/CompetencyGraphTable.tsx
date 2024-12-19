@@ -24,6 +24,12 @@ export const CompetencyGraphTable = ({
   // Use currentRoleId as fallback if urlRoleId is not available
   const effectiveRoleId = urlRoleId || currentRoleId || "123";
 
+  console.log('CompetencyGraphTable - Using role ID:', {
+    urlRoleId,
+    currentRoleId,
+    effectiveRoleId
+  });
+
   const getLevelsForTrack = () => {
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
   };
