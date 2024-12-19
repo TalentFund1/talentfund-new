@@ -26,15 +26,10 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get only the employee's assigned skills for the matrix
-  const employeeSkills = getEmployeeSkills(id || "", true);
-  console.log('Loaded assigned skills for matrix:', {
-    employeeId: id,
-    skillCount: employeeSkills.length,
-    skills: employeeSkills.map(s => s.title)
-  });
+  // Get employee skills directly without role filtering
+  const employeeSkills = getEmployeeSkills(id || "");
 
-  // Apply filtering and sorting to employee skills only
+  // Apply filtering and sorting to employee skills
   const filteredSkills = filterAndSortSkills(id || "");
 
   console.log('Skills matrix state:', {

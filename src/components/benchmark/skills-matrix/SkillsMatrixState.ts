@@ -87,22 +87,13 @@ export const useSkillsMatrixState = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
-  const filterAndSortSkills = (employeeId: string) => {
-    // Get only the employee's assigned skills
-    const employeeSkills = getEmployeeSkills(employeeId, true);
+  const filterAndSortSkills = (employeeId: string, roleId: string = "123") => {
+    const employeeSkills = getEmployeeSkills(employeeId);
     let filteredSkills = [...employeeSkills];
-
-    console.log('Filtering and sorting skills:', {
-      employeeId,
-      totalSkills: employeeSkills.length,
-      category: selectedCategory,
-      level: selectedLevel,
-      interest: selectedInterest
-    });
 
     // Filter by category
     if (selectedCategory !== "all") {
-      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory, roleId);
     }
 
     // Filter by level
@@ -136,7 +127,7 @@ export const useSkillsMatrixState = (
     }
 
     // Sort skills
-    const sortedSkills = filteredSkills.sort((a, b) => {
+    return filteredSkills.sort((a, b) => {
       const stateA = currentStates[a.title];
       const stateB = currentStates[b.title];
 
@@ -147,17 +138,6 @@ export const useSkillsMatrixState = (
       // Finally alphabetically
       return a.title.localeCompare(b.title);
     });
-
-    console.log('Filtered and sorted skills:', {
-      initial: employeeSkills.length,
-      filtered: sortedSkills.length,
-      skills: sortedSkills.map(s => ({
-        title: s.title,
-        level: currentStates[s.title]?.level || 'unspecified'
-      }))
-    });
-
-    return sortedSkills;
   };
 
   return {
