@@ -1,7 +1,5 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { employeeSkills } from './data/employeeSkillsData';
-import { initializeEmployeeSkills } from './utils/skillInitialization';
-import { getAllSkills } from '../../skills/data/skills/allSkills';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { normalizeSkillTitle } from '../../skills/utils/normalization';
 import { getSkillCategory } from '../../skills/data/skills/categories/skillCategories';
@@ -16,7 +14,7 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
       skillCount: employeeSkills[employeeId].length
     });
     
-    // Get all skills that are specifically assigned to this employee
+    // Only return skills that are specifically assigned to this employee
     const employeeSpecificSkills = employeeSkills[employeeId].map(skill => {
       const normalizedTitle = normalizeSkillTitle(skill.title);
       const skillData = getUnifiedSkillData(normalizedTitle);
@@ -33,54 +31,22 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
       };
     });
 
-    // Get all available skills
-    const allSkills = getAllSkills();
-    const existingSkillTitles = new Set(employeeSpecificSkills.map(s => s.title));
-
-    // Add any missing skills with default values
-    const additionalSkills = allSkills
-      .filter(skill => !existingSkillTitles.has(skill.title))
-      .map(skill => ({
-        ...skill,
-        title: normalizeSkillTitle(skill.title),
-        category: getSkillCategory(skill.title),
-        level: 'unspecified',
-        requirement: 'unknown' as const
-      }));
-
-    const combinedSkills = [...employeeSpecificSkills, ...additionalSkills];
-
     console.log('Processed employee skills:', {
       employeeId,
-      totalSkills: combinedSkills.length,
-      specificSkills: employeeSpecificSkills.length,
-      additionalSkills: additionalSkills.length,
-      skills: combinedSkills.map(s => ({
+      totalSkills: employeeSpecificSkills.length,
+      skills: employeeSpecificSkills.map(s => ({
         title: s.title,
         level: s.level,
         requirement: s.requirement
       }))
     });
 
-    return combinedSkills;
+    return employeeSpecificSkills;
   }
   
-  // Initialize with all available skills if none exist
-  console.log('No specific skills found for employee, initializing with all available skills');
-  const allSkills = getAllSkills().map(skill => ({
-    ...skill,
-    title: normalizeSkillTitle(skill.title),
-    category: getSkillCategory(skill.title),
-    level: 'unspecified',
-    requirement: 'unknown' as const
-  }));
-
-  console.log('Initialized employee with all skills:', {
-    employeeId,
-    totalSkills: allSkills.length
-  });
-
-  return allSkills;
+  // Return empty array if no skills exist for this employee
+  console.log('No specific skills found for employee:', employeeId);
+  return [];
 };
 
 // Load initial skills for an employee
