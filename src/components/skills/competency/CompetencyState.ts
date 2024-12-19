@@ -1,151 +1,173 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { setSkillStateAction, setSkillProgressionAction } from './state/stateActions';
-import { loadPersistedState } from './state/persistenceUtils';
-import { initializeRoleState } from './state/initializeState';
-import { CompetencyState } from './state/types';
+import { CompetencyState, SkillState } from './state/types';
+import { getSkillStateValue, getRequirementValue, normalizeSkillState } from './utils/skillStateUtils';
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       roleStates: {},
       currentStates: {},
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, levelKey, required, roleId) => {
-        console.log('Setting role skill state:', { skillName, level, levelKey, required, roleId });
+      setSkillState: (skillName, level, levelKey, required, roleId, employeeId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, required, roleId, employeeId });
+        
         set((state) => {
-          const newRoleStates = setSkillStateAction(
-            state.roleStates,
-            skillName,
-            level,
-            levelKey,
-            required,
-            roleId
-          );
-
-          return {
-            roleStates: newRoleStates,
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: newRoleStates[roleId]
-            },
-            hasChanges: true
-          };
-        });
-      },
-
-      setSkillProgression: (skillName, progression, roleId) => {
-        console.log('Setting skill progression:', { skillName, progression, roleId });
-        set((state) => {
-          const newRoleStates = setSkillProgressionAction(
-            state.roleStates,
-            skillName,
-            progression,
-            roleId
-          );
-
-          return {
-            roleStates: newRoleStates,
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: newRoleStates[roleId]
-            },
-            hasChanges: true
-          };
-        });
-      },
-
-      resetLevels: (roleId) => {
-        console.log('Resetting levels for role:', roleId);
-        set((state) => {
-          const freshState = initializeRoleState(roleId);
-          return {
+          const newState = {
+            ...state,
             roleStates: {
               ...state.roleStates,
-              [roleId]: freshState
+              [roleId]: {
+                ...state.roleStates[roleId],
+                [employeeId]: {
+                  ...state.roleStates[roleId]?.[employeeId],
+                  [skillName]: {
+                    ...state.roleStates[roleId]?.[employeeId]?.[skillName],
+                    [levelKey]: { level, required }
+                  }
+                }
+              }
             },
             currentStates: {
               ...state.currentStates,
-              [roleId]: freshState
+              [roleId]: {
+                ...state.currentStates[roleId],
+                [employeeId]: {
+                  ...state.currentStates[roleId]?.[employeeId],
+                  [skillName]: {
+                    ...state.currentStates[roleId]?.[employeeId]?.[skillName],
+                    [levelKey]: { level, required }
+                  }
+                }
+              }
             },
             hasChanges: true
           };
+          return newState;
         });
       },
 
-      saveChanges: (roleId) => {
-        console.log('Saving changes for role:', roleId);
+      setSkillProgression: (skillName, progression, roleId, employeeId) => {
+        console.log('Setting skill progression:', { skillName, progression, roleId, employeeId });
+        
         set((state) => ({
-          originalStates: {
-            ...state.originalStates,
-            [roleId]: { ...state.roleStates[roleId] }
-          },
-          hasChanges: false
-        }));
-      },
-
-      cancelChanges: (roleId) => {
-        console.log('Canceling changes for role:', roleId);
-        set((state) => ({
+          ...state,
           roleStates: {
             ...state.roleStates,
-            [roleId]: { ...state.originalStates[roleId] }
+            [roleId]: {
+              ...state.roleStates[roleId],
+              [employeeId]: {
+                ...state.roleStates[roleId]?.[employeeId],
+                [skillName]: progression
+              }
+            }
           },
           currentStates: {
             ...state.currentStates,
-            [roleId]: { ...state.originalStates[roleId] }
+            [roleId]: {
+              ...state.currentStates[roleId],
+              [employeeId]: {
+                ...state.currentStates[roleId]?.[employeeId],
+                [skillName]: progression
+              }
+            }
+          },
+          hasChanges: true
+        }));
+      },
+
+      resetLevels: (roleId, employeeId) => {
+        set((state) => ({
+          ...state,
+          roleStates: {
+            ...state.roleStates,
+            [roleId]: {
+              ...state.roleStates[roleId],
+              [employeeId]: {}
+            }
+          },
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: {
+              ...state.currentStates[roleId],
+              [employeeId]: {}
+            }
+          },
+          hasChanges: true
+        }));
+      },
+
+      saveChanges: (roleId, employeeId) => {
+        set((state) => ({
+          ...state,
+          originalStates: {
+            ...state.originalStates,
+            [roleId]: {
+              ...state.originalStates[roleId],
+              [employeeId]: state.roleStates[roleId]?.[employeeId] || {}
+            }
           },
           hasChanges: false
         }));
       },
 
-      initializeState: (roleId) => {
-        const currentState = get().roleStates[roleId];
-        if (!currentState) {
-          console.log('Initializing state for role:', roleId);
-          const savedState = loadPersistedState(roleId);
-          
-          if (savedState) {
-            console.log('Loaded saved state for role:', roleId);
-            set((state) => ({
-              roleStates: {
-                ...state.roleStates,
-                [roleId]: savedState
-              },
-              currentStates: {
-                ...state.currentStates,
-                [roleId]: savedState
-              },
-              originalStates: {
-                ...state.originalStates,
-                [roleId]: savedState
-              }
-            }));
-          } else {
-            console.log('Creating new state for role:', roleId);
-            const initialState = initializeRoleState(roleId);
-            set((state) => ({
-              roleStates: {
-                ...state.roleStates,
-                [roleId]: initialState
-              },
-              currentStates: {
-                ...state.currentStates,
-                [roleId]: initialState
-              },
-              originalStates: {
-                ...state.originalStates,
-                [roleId]: initialState
-              }
-            }));
-          }
-        }
+      cancelChanges: (roleId, employeeId) => {
+        set((state) => ({
+          ...state,
+          roleStates: {
+            ...state.roleStates,
+            [roleId]: {
+              ...state.roleStates[roleId],
+              [employeeId]: state.originalStates[roleId]?.[employeeId] || {}
+            }
+          },
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: {
+              ...state.currentStates[roleId],
+              [employeeId]: state.originalStates[roleId]?.[employeeId] || {}
+            }
+          },
+          hasChanges: false
+        }));
       },
 
-      getRoleState: (roleId) => {
-        return get().roleStates[roleId] || {};
+      initializeState: (roleId, employeeId) => {
+        set((state) => {
+          if (!state.roleStates[roleId]?.[employeeId]) {
+            return {
+              ...state,
+              roleStates: {
+                ...state.roleStates,
+                [roleId]: {
+                  ...state.roleStates[roleId],
+                  [employeeId]: {}
+                }
+              },
+              currentStates: {
+                ...state.currentStates,
+                [roleId]: {
+                  ...state.currentStates[roleId],
+                  [employeeId]: {}
+                }
+              },
+              originalStates: {
+                ...state.originalStates,
+                [roleId]: {
+                  ...state.originalStates[roleId],
+                  [employeeId]: {}
+                }
+              }
+            };
+          }
+          return state;
+        });
+      },
+
+      getRoleState: (roleId, employeeId) => {
+        return {};
       }
     }),
     {
