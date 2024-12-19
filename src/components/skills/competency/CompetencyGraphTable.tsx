@@ -32,11 +32,8 @@ export const CompetencyGraphTable = ({
     if (roleState && roleState[skillName]) {
       levels.forEach(level => {
         const skillState = roleState[skillName][level.toLowerCase()];
-        if (skillState && typeof skillState.level === 'string') {
-          const currentLevel = skillState.level.toLowerCase();
-          if (currentLevel === targetLevel.toLowerCase()) {
-            count++;
-          }
+        if (skillState && skillState.level?.toLowerCase() === targetLevel.toLowerCase()) {
+          count++;
         }
       });
     }
@@ -93,42 +90,52 @@ export const CompetencyGraphTable = ({
   const skills = getSkillsByCategory();
   const levels = getLevelsForTrack();
 
-  // Calculate level counts for all skills first to avoid recalculating during sort
-  const skillLevelCounts = skills.map(skill => ({
-    skill,
-    counts: {
-      advanced: countSkillLevels(skill.title, levels, 'advanced'),
-      intermediate: countSkillLevels(skill.title, levels, 'intermediate'),
-      beginner: countSkillLevels(skill.title, levels, 'beginner')
-    }
-  }));
+  // Calculate level counts for all skills first
+  const skillsWithCounts = skills.map(skill => {
+    const advancedCount = countSkillLevels(skill.title, levels, 'advanced');
+    const intermediateCount = countSkillLevels(skill.title, levels, 'intermediate');
+    const beginnerCount = countSkillLevels(skill.title, levels, 'beginner');
+    
+    return {
+      skill,
+      counts: {
+        advanced: advancedCount,
+        intermediate: intermediateCount,
+        beginner: beginnerCount,
+        total: advancedCount + intermediateCount + beginnerCount
+      }
+    };
+  });
 
-  console.log('Initial skill level counts:', skillLevelCounts);
+  console.log('Skills with counts before sorting:', skillsWithCounts.map(({ skill, counts }) => ({
+    title: skill.title,
+    ...counts
+  })));
 
   // Sort skills based on level counts
-  const sortedSkills = skillLevelCounts
+  const sortedSkills = skillsWithCounts
     .sort((a, b) => {
-      // First sort by advanced count
+      // First compare by number of advanced levels
       if (a.counts.advanced !== b.counts.advanced) {
         return b.counts.advanced - a.counts.advanced;
       }
       
-      // Then by intermediate count
+      // Then by number of intermediate levels
       if (a.counts.intermediate !== b.counts.intermediate) {
         return b.counts.intermediate - a.counts.intermediate;
       }
       
-      // Then by beginner count
+      // Then by number of beginner levels
       if (a.counts.beginner !== b.counts.beginner) {
         return b.counts.beginner - a.counts.beginner;
       }
       
-      // Finally alphabetically
+      // Finally sort alphabetically
       return a.skill.title.localeCompare(b.skill.title);
     })
-    .map(item => item.skill);
+    .map(({ skill }) => skill);
 
-  console.log('Sorted skills with level counts:', sortedSkills.map(skill => ({
+  console.log('Sorted skills with counts:', sortedSkills.map(skill => ({
     title: skill.title,
     advanced: countSkillLevels(skill.title, levels, 'advanced'),
     intermediate: countSkillLevels(skill.title, levels, 'intermediate'),
