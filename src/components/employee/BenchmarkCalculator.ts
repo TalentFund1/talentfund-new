@@ -5,14 +5,12 @@ export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
   employeeLevel: string,
-  currentStates: Record<string, CompetencyState>,
-  toggledSkills: Set<string>
+  currentStates: Record<string, CompetencyState>
 ): number => {
   console.log('Calculating benchmark percentage:', {
     employeeId,
     roleId,
     employeeLevel,
-    toggledSkillsCount: toggledSkills.size
   });
 
   if (!roleId || !employeeId) {
@@ -27,10 +25,10 @@ export const calculateBenchmarkPercentage = (
     ...(roleData?.specialized || []),
     ...(roleData?.common || []),
     ...(roleData?.certifications || [])
-  ].filter(skill => toggledSkills.has(skill.title));
+  ];
 
   if (allRoleSkills.length === 0) {
-    console.log('No role skills found or no skills toggled');
+    console.log('No role skills found');
     return 0;
   }
 

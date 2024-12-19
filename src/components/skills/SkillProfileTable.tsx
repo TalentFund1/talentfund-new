@@ -49,8 +49,7 @@ const SkillProfileTableContent = ({
       "profile",
       roleId,
       level,
-      currentStates,
-      toggledSkills
+      currentStates
     );
   };
 
@@ -80,7 +79,7 @@ const SkillProfileTableContent = ({
             return (
               <TableRow key={id} className="hover:bg-muted/5">
                 <TableCell className="font-medium">{profile.title}</TableCell>
-                <TableCell>{profile.function}</TableCell>
+                <TableCell>{profile.function || 'N/A'}</TableCell>
                 <TableCell>{profile.level || "All Levels"}</TableCell>
                 <TableCell>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">

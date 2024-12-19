@@ -13,4 +13,5 @@ export interface Employee {
   startDate?: string;
   office: string;
   termDate: string;
+  level?: string;  // Added level property
 }
