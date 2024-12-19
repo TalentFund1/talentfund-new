@@ -71,6 +71,7 @@ export const SkillsMatrix = () => {
         visibleItems={visibleItems}
         observerTarget={observerTarget}
         hasChanges={hasChanges}
+        isRoleBenchmark={false}
       />
     </div>
   );

@@ -15,6 +15,7 @@ interface SkillsMatrixViewProps {
   visibleItems: number;
   observerTarget: React.RefObject<HTMLDivElement>;
   hasChanges: boolean;
+  isRoleBenchmark: boolean;
 }
 
 export const SkillsMatrixView = ({
@@ -25,7 +26,8 @@ export const SkillsMatrixView = ({
   filteredSkills,
   visibleItems,
   observerTarget,
-  hasChanges
+  hasChanges,
+  isRoleBenchmark
 }: SkillsMatrixViewProps) => {
   const { toast } = useToast();
   const { saveChanges, cancelChanges } = useSkillsMatrixStore();
@@ -65,8 +67,8 @@ export const SkillsMatrixView = ({
 
       <SkillsMatrixTable 
         filteredSkills={filteredSkills.slice(0, visibleItems)}
-        showCompanySkill={true}
-        isRoleBenchmark={false}
+        showCompanySkill={!isRoleBenchmark}
+        isRoleBenchmark={isRoleBenchmark}
       />
       
       {visibleItems < filteredSkills.length && (

@@ -87,16 +87,17 @@ export const useSkillsMatrixState = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
-  const filterAndSortSkills = (employeeId: string, roleId: string = "123") => {
+  const filterAndSortSkills = (employeeId: string) => {
+    console.log('Filtering skills for employee:', employeeId);
     const employeeSkills = getEmployeeSkills(employeeId);
     let filteredSkills = [...employeeSkills];
 
-    // Filter by category
+    // Filter by category if not "all"
     if (selectedCategory !== "all") {
-      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory, roleId);
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
     }
 
-    // Filter by level
+    // Filter by level if not "all"
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
@@ -104,7 +105,7 @@ export const useSkillsMatrixState = (
       });
     }
 
-    // Filter by interest/requirement
+    // Filter by interest/requirement if not "all"
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
@@ -126,16 +127,14 @@ export const useSkillsMatrixState = (
       });
     }
 
-    // Sort skills
+    // Sort skills by level priority and then alphabetically
     return filteredSkills.sort((a, b) => {
       const stateA = currentStates[a.title];
       const stateB = currentStates[b.title];
 
-      // First by level
       const levelDiff = getLevelPriority(stateA?.level) - getLevelPriority(stateB?.level);
       if (levelDiff !== 0) return levelDiff;
 
-      // Finally alphabetically
       return a.title.localeCompare(b.title);
     });
   };
