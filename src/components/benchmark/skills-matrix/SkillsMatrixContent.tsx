@@ -60,14 +60,14 @@ export const SkillsMatrixContent = ({
       <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
         <Table>
           <SkillsMatrixTableHeader 
-            isRoleBenchmark={true}
+            isRoleBenchmark={false}
           />
           <TableBody>
             {filteredSkills.slice(0, visibleItems).map((skill) => (
               <SkillsMatrixRow 
                 key={skill.title} 
                 skill={skill}
-                isRoleBenchmark={true}
+                isRoleBenchmark={false}
               />
             ))}
           </TableBody>
