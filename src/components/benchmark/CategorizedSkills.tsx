@@ -7,6 +7,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
 import { useState } from "react";
 import { useRoleStore } from "./RoleBenchmark";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 interface CategorizedSkillsProps {
   roleId: string;
