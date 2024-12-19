@@ -29,6 +29,7 @@ export const SkillProfileMatrixTable = ({
   sortDirection,
   onSort
 }: SkillProfileMatrixTableProps) => {
+  // First, deduplicate skills
   const uniqueSkills = paginatedSkills.reduce((acc: UnifiedSkill[], current) => {
     const exists = acc.find(skill => skill.title === current.title);
     if (!exists) {
@@ -36,6 +37,41 @@ export const SkillProfileMatrixTable = ({
     }
     return acc;
   }, []);
+
+  // Sort skills with toggled ones first
+  const sortedSkills = [...uniqueSkills].sort((a, b) => {
+    // First, sort by toggled status
+    const aToggled = toggledSkills.has(a.title);
+    const bToggled = toggledSkills.has(b.title);
+    
+    if (aToggled && !bToggled) return -1;
+    if (!aToggled && bToggled) return 1;
+    
+    // If both have same toggle status, apply the existing sort
+    if (sortField && sortDirection) {
+      if (sortField === 'growth') {
+        const aGrowth = parseFloat(a.growth);
+        const bGrowth = parseFloat(b.growth);
+        return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+      } else if (sortField === 'salary') {
+        const aSalary = parseFloat(a.salary?.replace(/[^0-9.-]+/g, "") || "0");
+        const bSalary = parseFloat(b.salary?.replace(/[^0-9.-]+/g, "") || "0");
+        return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
+      }
+    }
+    
+    // Default to alphabetical order if no other sort criteria
+    return a.title.localeCompare(b.title);
+  });
+
+  console.log('Sorted skills:', {
+    total: sortedSkills.length,
+    toggledCount: Array.from(toggledSkills).length,
+    firstFewSkills: sortedSkills.slice(0, 3).map(s => ({
+      title: s.title,
+      isToggled: toggledSkills.has(s.title)
+    }))
+  });
 
   const renderSortArrow = (field: 'growth' | 'salary') => {
     if (sortField !== field) {
@@ -116,10 +152,12 @@ export const SkillProfileMatrixTable = ({
         </tr>
       </thead>
       <tbody>
-        {uniqueSkills.map((skill) => (
+        {sortedSkills.map((skill) => (
           <tr 
             key={skill.title}
-            className="border-t border-border hover:bg-muted/50 transition-colors"
+            className={`border-t border-border hover:bg-muted/50 transition-colors ${
+              toggledSkills.has(skill.title) ? 'bg-blue-50/50' : ''
+            }`}
           >
             <td className="py-3 px-4">
               <div className="flex items-center gap-2">
