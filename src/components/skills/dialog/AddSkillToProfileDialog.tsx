@@ -48,9 +48,12 @@ export const AddSkillToProfileDialog = () => {
 
     // Get current employee skills
     const currentSkills = getEmployeeSkills(id);
+    console.log('Current employee skills:', currentSkills.length);
 
     // Add new skills
     const updatedSkills = [...currentSkills];
+    const addedSkills: string[] = [];
+
     selectedSkills.forEach(skillTitle => {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
       
@@ -69,17 +72,18 @@ export const AddSkillToProfileDialog = () => {
         newToggledSkills.add(skillTitle);
         setToggledSkills(newToggledSkills);
         
-        // Initialize skill state with unspecified level and skill goal requirement
-        setSkillState(skillTitle, 'unspecified', 'skill_goal', id, 'employee');
+        // Initialize skill state with unspecified level and preferred requirement
+        setSkillState(skillTitle, 'unspecified', 'preferred', id);
 
         // Add to employee skills with properly typed requirement
         const newSkill = {
           ...skillData,
           level: 'unspecified',
-          requirement: 'skill_goal' as SkillRequirement
+          requirement: 'preferred' as SkillRequirement
         };
         
         updatedSkills.push(newSkill);
+        addedSkills.push(skillTitle);
         console.log('Added new skill:', newSkill);
       }
     });
@@ -88,14 +92,22 @@ export const AddSkillToProfileDialog = () => {
     updateEmployeeSkills(id, updatedSkills);
     console.log('Updated employee skills:', {
       employeeId: id,
-      totalSkills: updatedSkills.length,
-      newSkills: selectedSkills
+      previousCount: currentSkills.length,
+      newCount: updatedSkills.length,
+      addedSkills
     });
 
-    toast({
-      title: "Skills Added",
-      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to your profile.`,
-    });
+    if (addedSkills.length > 0) {
+      toast({
+        title: "Skills Added",
+        description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to your profile.`,
+      });
+    } else {
+      toast({
+        title: "No New Skills",
+        description: "No new skills were added to your profile.",
+      });
+    }
 
     setSelectedSkills([]);
     setOpen(false);
