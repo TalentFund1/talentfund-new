@@ -22,12 +22,20 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
   const { id } = useParams();
 
+  // Helper function to validate SkillRequirement
+  const validateRequirement = (req: string): SkillRequirement => {
+    const validRequirements: SkillRequirement[] = ['required', 'preferred', 'skill_goal', 'not-interested', 'unknown'];
+    return validRequirements.includes(req as SkillRequirement) 
+      ? (req as SkillRequirement) 
+      : 'unknown';
+  };
+
   // Initialize the state when the component mounts with proper typing
-  initializeState(skillTitle, initialLevel, 'required' as SkillRequirement);
+  initializeState(skillTitle, initialLevel, validateRequirement('required'));
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'required' as SkillRequirement
+    requirement: validateRequirement('required')
   };
 
   const getLevelIcon = (level: string) => {
@@ -79,7 +87,7 @@ export const SkillLevelCell = ({
   const handleSkillChange = (value: string, type: 'level' | 'requirement') => {
     const newState = {
       level: type === 'level' ? value : currentState.level,
-      requirement: type === 'requirement' ? value as SkillRequirement : currentState.requirement
+      requirement: type === 'requirement' ? validateRequirement(value) : currentState.requirement
     };
 
     setSkillState(skillTitle, newState.level, newState.requirement);
@@ -88,7 +96,7 @@ export const SkillLevelCell = ({
       initializeEmployeeSkills(id, [{
         title: skillTitle,
         level: newState.level,
-        requirement: newState.requirement,
+        requirement: validateRequirement(newState.requirement),
         category: 'specialized',
         id: `skill-${Date.now()}`,
         subcategory: 'Other',
