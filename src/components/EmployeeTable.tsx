@@ -5,7 +5,6 @@ import { Employee } from "./types/employeeTypes";
 import { EmployeeTableHeader } from "./employee/EmployeeTableHeader";
 import { EmployeeTableRow } from "./employee/EmployeeTableRow";
 import { useSkillsMatrixStore } from "./benchmark/skills-matrix/SkillsMatrixState";
-import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./skills/competency/CompetencyStateReader";
 import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
@@ -13,7 +12,6 @@ import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
-import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
 
@@ -81,7 +79,6 @@ const EmployeeTableContent = ({
   selectedRole = []
 }: EmployeeTableProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
   const employees = useEmployeeStore((state) => {
@@ -110,7 +107,6 @@ const EmployeeTableContent = ({
     skillFilteredEmployees,
     selectedRole,
     currentStates,
-    toggledSkills,
     getSkillCompetencyState
   ).filter(employee => {
     // Only include employees with benchmark > 0% when a role is selected
@@ -164,9 +160,7 @@ const EmployeeTableContent = ({
 export const EmployeeTable = (props: EmployeeTableProps) => {
   return (
     <TrackProvider>
-      <ToggledSkillsProvider>
-        <EmployeeTableContent {...props} />
-      </ToggledSkillsProvider>
+      <EmployeeTableContent {...props} />
     </TrackProvider>
   );
 };
