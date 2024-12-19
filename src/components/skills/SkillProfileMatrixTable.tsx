@@ -82,8 +82,7 @@ export const SkillProfileMatrixTable = ({
         <tr className="bg-background text-left">
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Subcategory</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">Type</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[10%]">Weight</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">Weight</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">
             <Button
               variant="ghost"
@@ -162,11 +161,6 @@ export const SkillProfileMatrixTable = ({
             <td className="py-3 px-4">
               <span className="text-sm block truncate" title={skill.subcategory}>
                 {skill.subcategory}
-              </span>
-            </td>
-            <td className="py-3 px-4">
-              <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium`}>
-                {skill.category}
               </span>
             </td>
             <td className="py-3 px-4">
