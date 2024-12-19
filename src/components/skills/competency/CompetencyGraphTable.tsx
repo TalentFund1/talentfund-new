@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 
 interface CompetencyGraphTableProps {
   currentRoleId: string;
+  employeeId: string;
   track: "Professional" | "Managerial";
   selectedCategory: string;
   toggledSkills: Set<string>;
@@ -14,6 +15,7 @@ interface CompetencyGraphTableProps {
 
 export const CompetencyGraphTable = ({
   currentRoleId,
+  employeeId,
   track,
   selectedCategory,
   toggledSkills
@@ -74,16 +76,13 @@ export const CompetencyGraphTable = ({
 
   const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
     let count = 0;
-    const roleState = roleStates[roleId || "123"];
+    const roleState = roleStates[roleId || "123"]?.[employeeId];
     
     if (roleState && roleState[skillName]) {
       levels.forEach(level => {
         const skillState = roleState[skillName][level.toLowerCase()];
-        if (skillState && typeof skillState.level === 'string') {
-          const currentLevel = skillState.level.toLowerCase();
-          if (currentLevel === targetLevel.toLowerCase()) {
-            count++;
-          }
+        if (skillState && skillState.level.toLowerCase() === targetLevel.toLowerCase()) {
+          count++;
         }
       });
     }
@@ -145,7 +144,7 @@ export const CompetencyGraphTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedSkills.map((skillName) => (
+          {skills.map((skillName) => (
             <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
               <TableCell className="font-medium border-r border-border">
                 {skillName}
@@ -157,6 +156,7 @@ export const CompetencyGraphTable = ({
                   details={getSkillDetails(skillName, level)}
                   isLastColumn={index === levels.length - 1}
                   levelKey={level.toLowerCase()}
+                  employeeId={employeeId}
                 />
               ))}
             </TableRow>

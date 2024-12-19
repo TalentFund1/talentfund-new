@@ -12,19 +12,21 @@ interface SkillCellProps {
   };
   isLastColumn: boolean;
   levelKey: string;
+  employeeId: string;
 }
 
 export const SkillCell = ({ 
   skillName, 
   details, 
   isLastColumn, 
-  levelKey 
+  levelKey,
+  employeeId
 }: SkillCellProps) => {
   const { roleStates, setSkillState } = useCompetencyStore();
   const { id: roleId } = useParams<{ id: string }>();
   const currentRoleId = roleId || "123";
 
-  const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
+  const currentState = roleStates[currentRoleId]?.[employeeId]?.[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
     required: details.required || "preferred",
   };
@@ -35,7 +37,8 @@ export const SkillCell = ({
       levelKey,
       newLevel: value,
       currentRequired: currentState.required,
-      roleId: currentRoleId
+      roleId: currentRoleId,
+      employeeId
     });
     
     setSkillState(
@@ -43,7 +46,8 @@ export const SkillCell = ({
       value,
       levelKey,
       currentState.required || 'preferred',
-      currentRoleId
+      currentRoleId,
+      employeeId
     );
   };
 
@@ -53,7 +57,8 @@ export const SkillCell = ({
       levelKey,
       currentLevel: currentState.level,
       newRequired: value,
-      roleId: currentRoleId
+      roleId: currentRoleId,
+      employeeId
     });
     
     setSkillState(
@@ -61,7 +66,8 @@ export const SkillCell = ({
       currentState.level || 'unspecified',
       levelKey,
       value,
-      currentRoleId
+      currentRoleId,
+      employeeId
     );
   };
 
@@ -71,12 +77,12 @@ export const SkillCell = ({
     >
       <div className="flex flex-col items-center gap-0">
         <LevelSelector
-          currentLevel={currentState.level || 'unspecified'}
+          currentLevel={currentState.level}
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={currentState.required || 'preferred'}
-          currentLevel={currentState.level || 'unspecified'}
+          currentRequired={currentState.required}
+          currentLevel={currentState.level}
           onRequirementChange={handleRequirementChange}
         />
       </div>
