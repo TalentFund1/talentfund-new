@@ -23,7 +23,6 @@ export const AddSkillToProfileDialog = () => {
   const { setSkillState, setSkillProgression } = useCompetencyStore();
   const { getTrackForRole } = useTrack();
 
-  // Get all unique skills from our core data structure
   const allSkills = Array.from(new Set([
     ...Skills.specialized.map(s => normalizeSkillTitle(s.title)),
     ...Skills.common.map(s => normalizeSkillTitle(s.title)),
@@ -45,17 +44,25 @@ export const AddSkillToProfileDialog = () => {
       return;
     }
 
-    const currentRole = {...roleSkills[id]};
-    if (!currentRole) {
-      console.error('Role not found:', id);
-      return;
-    }
+    // Get existing role skills or initialize if not exists
+    const existingRoleSkills = roleSkills[id] || {
+      title: "",
+      specialized: [],
+      common: [],
+      certifications: [],
+      skills: []
+    };
+
+    console.log('Current role skills before adding:', {
+      roleId: id,
+      specialized: existingRoleSkills.specialized.length,
+      common: existingRoleSkills.common.length,
+      certifications: existingRoleSkills.certifications.length
+    });
 
     const track = getTrackForRole(id);
-    console.log('Adding skills to role:', { id, track });
-
-    // Add skills to toggled skills and role skills
     const newToggledSkills = new Set(toggledSkills);
+    const updatedRoleSkills = { ...existingRoleSkills };
 
     selectedSkills.forEach(skillTitle => {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
@@ -64,10 +71,8 @@ export const AddSkillToProfileDialog = () => {
       if (skillData) {
         console.log('Processing skill:', skillData);
         
-        // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
-        // Initialize skill state with progression
         const category = skillData.category?.toLowerCase() || 'common';
         const progression = generateSkillProgression(skillTitle, category, track, id);
         
@@ -79,30 +84,27 @@ export const AddSkillToProfileDialog = () => {
           setSkillProgression(skillTitle, progression, id);
         }
 
-        // Add to role skills based on category
-        if (category === 'specialized' && !currentRole.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-          console.log('Adding to specialized skills:', skillData.title);
-          currentRole.specialized.push(skillData);
-        } else if (category === 'common' && !currentRole.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-          console.log('Adding to common skills:', skillData.title);
-          currentRole.common.push(skillData);
-        } else if (category === 'certification' && !currentRole.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-          console.log('Adding to certification skills:', skillData.title);
-          currentRole.certifications.push(skillData);
+        // Add to appropriate category array if not already present
+        if (category === 'specialized' && !updatedRoleSkills.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+          updatedRoleSkills.specialized.push(skillData);
+        } else if (category === 'common' && !updatedRoleSkills.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+          updatedRoleSkills.common.push(skillData);
+        } else if (category === 'certification' && !updatedRoleSkills.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+          updatedRoleSkills.certifications.push(skillData);
         }
       }
     });
 
-    // Save updated role skills
-    saveRoleSkills(id, currentRole);
-    setToggledSkills(newToggledSkills);
-
-    console.log('Updated role skills:', {
+    // Save updated skills to localStorage
+    console.log('Saving updated role skills:', {
       roleId: id,
-      specialized: currentRole.specialized.length,
-      common: currentRole.common.length,
-      certifications: currentRole.certifications.length
+      specialized: updatedRoleSkills.specialized.length,
+      common: updatedRoleSkills.common.length,
+      certifications: updatedRoleSkills.certifications.length
     });
+
+    saveRoleSkills(id, updatedRoleSkills);
+    setToggledSkills(newToggledSkills);
 
     toast({
       title: "Skills Added",
