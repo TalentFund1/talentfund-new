@@ -6,18 +6,38 @@ import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { normalizeSkillTitle } from '../../skills/utils/normalization';
 import { getSkillCategory } from '../../skills/data/skills/categories/skillCategories';
 
+// In-memory storage for employee skills added during runtime
+const runtimeEmployeeSkills: { [key: string]: UnifiedSkill[] } = {};
+
+export const addSkillToEmployee = (employeeId: string, skill: UnifiedSkill) => {
+  console.log('Adding skill to employee:', {
+    employeeId,
+    skill: skill.title,
+    currentSkills: runtimeEmployeeSkills[employeeId]?.length || 0
+  });
+
+  if (!runtimeEmployeeSkills[employeeId]) {
+    runtimeEmployeeSkills[employeeId] = [];
+  }
+
+  // Check if skill already exists
+  const exists = runtimeEmployeeSkills[employeeId].some(
+    s => normalizeSkillTitle(s.title) === normalizeSkillTitle(skill.title)
+  );
+
+  if (!exists) {
+    runtimeEmployeeSkills[employeeId].push(skill);
+  }
+};
+
 export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
   
-  // Get employee's specific skills if they exist
+  // Get initial skills from employeeSkills data
+  let skills: UnifiedSkill[] = [];
+  
   if (employeeSkills[employeeId]) {
-    console.log('Found specific skills for employee:', {
-      employeeId,
-      skillCount: employeeSkills[employeeId].length
-    });
-    
-    // Only use skills that are specifically assigned to this employee
-    const employeeSpecificSkills = employeeSkills[employeeId].map(skill => {
+    skills = employeeSkills[employeeId].map(skill => {
       const normalizedTitle = normalizeSkillTitle(skill.title);
       const skillData = getUnifiedSkillData(normalizedTitle);
       console.log('Processing employee skill:', {
@@ -32,23 +52,35 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
         requirement: skill.requirement || 'unknown'
       };
     });
-
-    console.log('Processed employee skills:', {
-      employeeId,
-      totalSkills: employeeSpecificSkills.length,
-      skills: employeeSpecificSkills.map(s => ({
-        title: s.title,
-        level: s.level,
-        requirement: s.requirement
-      }))
-    });
-
-    return employeeSpecificSkills;
   }
-  
-  // Initialize with empty skills if none exist
-  console.log('No specific skills found for employee, initializing empty skills array');
-  return [];
+
+  // Merge with runtime skills
+  if (runtimeEmployeeSkills[employeeId]) {
+    const existingTitles = new Set(skills.map(s => normalizeSkillTitle(s.title)));
+    
+    runtimeEmployeeSkills[employeeId].forEach(skill => {
+      const normalizedTitle = normalizeSkillTitle(skill.title);
+      if (!existingTitles.has(normalizedTitle)) {
+        skills.push({
+          ...skill,
+          title: normalizedTitle,
+          category: getSkillCategory(normalizedTitle)
+        });
+      }
+    });
+  }
+
+  console.log('Retrieved employee skills:', {
+    employeeId,
+    totalSkills: skills.length,
+    skills: skills.map(s => ({
+      title: s.title,
+      level: s.level,
+      requirement: s.requirement
+    }))
+  });
+
+  return skills;
 };
 
 // Load initial skills for an employee

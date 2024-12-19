@@ -4,7 +4,8 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { getEmployeeSkills, addSkillToEmployee } from "./skills-matrix/initialSkills";
+import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -41,6 +42,21 @@ export const SkillsMatrix = () => {
     selectedInterest
   });
 
+  // Handle skill updates
+  const handleSkillUpdate = (skillTitle: string, level: string, requirement: string) => {
+    if (!id) return;
+    
+    const skillData = getUnifiedSkillData(skillTitle);
+    if (skillData) {
+      const updatedSkill = {
+        ...skillData,
+        level,
+        requirement
+      };
+      addSkillToEmployee(id, updatedSkill);
+    }
+  };
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -75,6 +91,7 @@ export const SkillsMatrix = () => {
         visibleItems={visibleItems}
         observerTarget={observerTarget}
         hasChanges={hasChanges}
+        onSkillUpdate={handleSkillUpdate}
       />
     </div>
   );
