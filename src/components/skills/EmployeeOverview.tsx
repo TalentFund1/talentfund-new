@@ -1,14 +1,15 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { employees, EMPLOYEE_IMAGES } from "../employee/EmployeeData";
-import { getBaseRole } from "../EmployeeTable";
 import { useNavigate, useParams } from "react-router-dom";
-import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { TrackProvider } from "./context/TrackContext";
+import { useEmployeeStore } from "../employee/store/employeeStore";
+import { getSkillProfileId } from "../EmployeeTable";
+import { roleSkills } from "./data/roleSkills";
+import { EMPLOYEE_IMAGES } from "../employee/EmployeeData";
 
 const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();
@@ -16,52 +17,93 @@ const EmployeeOverviewContent = () => {
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const employees = useEmployeeStore((state) => state.employees);
 
-  // Get employees with exact role match and calculate their benchmarks
+  // Get current role data
+  const currentRole = roleSkills[roleId as keyof typeof roleSkills];
+  
+  console.log('EmployeeOverview - Current role:', {
+    roleId,
+    roleName: currentRole?.title,
+    totalEmployees: employees.length
+  });
+
+  // Get exact role matches (same role ID)
   const exactMatchEmployees = employees
-    .filter(emp => getBaseRole(emp.role) === getBaseRole(employees.find(e => e.id === roleId)?.role || ""))
+    .filter(emp => {
+      const empRoleId = getSkillProfileId(emp.role);
+      const matchesRole = empRoleId === roleId;
+      
+      console.log('Checking employee match:', {
+        employee: emp.name,
+        employeeRole: emp.role,
+        employeeRoleId: empRoleId,
+        targetRoleId: roleId,
+        isMatch: matchesRole
+      });
+      
+      return matchesRole;
+    })
     .map(emp => ({
       ...emp,
       benchmark: calculateBenchmarkPercentage(
         emp.id,
-        roleId || "123",
+        roleId || "",
         "",
         currentStates,
         toggledSkills,
         getSkillCompetencyState
       )
     }))
-    .sort((a, b) => b.benchmark - a.benchmark); // Sort by benchmark in descending order
+    .sort((a, b) => b.benchmark - a.benchmark);
 
-  // Get employees with partial matches and sort by benchmark
+  // Get partial matches (different roles but matching skills)
   const partialMatchEmployees = employees
     .filter(emp => {
-      const isExactMatch = getBaseRole(emp.role) === getBaseRole(employees.find(e => e.id === roleId)?.role || "");
-      if (isExactMatch) return false;
+      const empRoleId = getSkillProfileId(emp.role);
+      if (empRoleId === roleId) return false;
 
       const benchmark = calculateBenchmarkPercentage(
         emp.id,
-        roleId || "123",
+        roleId || "",
         "",
         currentStates,
         toggledSkills,
         getSkillCompetencyState
       );
 
-      return benchmark > 0;
+      return benchmark > 70; // Only show high matches
     })
     .map(emp => ({
       ...emp,
       benchmark: calculateBenchmarkPercentage(
         emp.id,
-        roleId || "123",
+        roleId || "",
         "",
         currentStates,
         toggledSkills,
         getSkillCompetencyState
       )
     }))
-    .sort((a, b) => b.benchmark - a.benchmark); // Sort by benchmark in descending order
+    .sort((a, b) => b.benchmark - a.benchmark)
+    .slice(0, 3);
+
+  console.log('EmployeeOverview - Matches found:', {
+    roleId,
+    roleName: currentRole?.title,
+    exactMatches: exactMatchEmployees.map(e => ({
+      name: e.name,
+      role: e.role,
+      roleId: getSkillProfileId(e.role),
+      benchmark: e.benchmark
+    })),
+    partialMatches: partialMatchEmployees.map(e => ({
+      name: e.name,
+      role: e.role,
+      roleId: getSkillProfileId(e.role),
+      benchmark: e.benchmark
+    }))
+  });
 
   const handleEmployeeClick = (employeeId: string) => {
     navigate(`/employee/${employeeId}?tab=benchmark`);
@@ -120,6 +162,9 @@ const EmployeeOverviewContent = () => {
           </div>
           <div className="space-y-3">
             {exactMatchEmployees.map((employee, index) => renderEmployeeList(employee, index))}
+            {exactMatchEmployees.length === 0 && (
+              <p className="text-sm text-muted-foreground">No exact role matches found</p>
+            )}
           </div>
         </Card>
 
@@ -135,6 +180,9 @@ const EmployeeOverviewContent = () => {
           </div>
           <div className="space-y-3">
             {partialMatchEmployees.map((employee, index) => renderEmployeeList(employee, index))}
+            {partialMatchEmployees.length === 0 && (
+              <p className="text-sm text-muted-foreground">No skill matches found</p>
+            )}
           </div>
         </Card>
       </div>
