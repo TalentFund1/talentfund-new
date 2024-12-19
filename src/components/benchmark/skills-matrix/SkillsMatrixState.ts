@@ -1,24 +1,20 @@
 import { create } from "zustand";
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { filterSkillsByCategory } from "./skillCategories";
+import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { getEmployeeSkills } from "./initialSkills";
+import { filterSkillsByCategory } from "./skillCategories";
 
 interface SkillState {
   level: string;
   requirement: string;
 }
 
-interface EmployeeSkillState {
-  [skillTitle: string]: SkillState;
-}
-
 interface SkillsMatrixState {
-  currentStates: { [employeeId: string]: EmployeeSkillState };
-  originalStates: { [employeeId: string]: EmployeeSkillState };
+  currentStates: { [key: string]: SkillState };
+  originalStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (employeeId: string, skillTitle: string, level: string, requirement: string) => void;
-  resetSkills: (employeeId: string) => void;
-  initializeState: (employeeId: string, level: string, requirement: string) => void;
+  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
+  resetSkills: () => void;
+  initializeState: (skillTitle: string, level: string, requirement: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -38,69 +34,34 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>((set) => ({
   originalStates: {},
   hasChanges: false,
 
-  setSkillState: (employeeId, skillTitle, level, requirement) =>
+  setSkillState: (skillTitle, level, requirement) =>
+    set((state) => ({
+      currentStates: {
+        ...state.currentStates,
+        [skillTitle]: { level, requirement },
+      },
+      hasChanges: true,
+    })),
+
+  resetSkills: () =>
+    set(() => ({
+      currentStates: {},
+      originalStates: {},
+      hasChanges: false,
+    })),
+
+  initializeState: (skillTitle, level, requirement) =>
     set((state) => {
-      console.log('Setting skill state:', { employeeId, skillTitle, level, requirement });
-      
-      const newState = {
-        currentStates: {
-          ...state.currentStates,
-          [employeeId]: {
-            ...state.currentStates[employeeId],
-            [skillTitle]: { level, requirement },
-          },
-        },
-        hasChanges: true,
-      };
-
-      console.log('Updated state:', newState);
-      return newState;
-    }),
-
-  resetSkills: (employeeId) =>
-    set((state) => {
-      console.log('Resetting skills for employee:', employeeId);
-      
-      const employeeSkills = getEmployeeSkills(employeeId);
-      const resetState: EmployeeSkillState = {};
-
-      employeeSkills.forEach(skill => {
-        resetState[skill.title] = {
-          level: 'unspecified',
-          requirement: 'preferred'
-        };
-      });
-
-      return {
-        currentStates: {
-          ...state.currentStates,
-          [employeeId]: resetState
-        },
-        hasChanges: true,
-      };
-    }),
-
-  initializeState: (employeeId, level, requirement) =>
-    set((state) => {
-      if (!state.currentStates[employeeId]) {
-        console.log('Initializing state for employee:', employeeId);
-        
-        const employeeSkills = getEmployeeSkills(employeeId);
-        const initialState: EmployeeSkillState = {};
-
-        employeeSkills.forEach(skill => {
-          initialState[skill.title] = { level, requirement };
-        });
-
+      if (!state.currentStates[skillTitle]) {
         return {
           currentStates: {
             ...state.currentStates,
-            [employeeId]: initialState
+            [skillTitle]: { level, requirement },
           },
           originalStates: {
             ...state.originalStates,
-            [employeeId]: initialState
-          }
+            [skillTitle]: { level, requirement },
+          },
         };
       }
       return state;
@@ -126,29 +87,35 @@ export const useSkillsMatrixState = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
-  const filterAndSortSkills = (employeeId: string) => {
+  const filterAndSortSkills = (employeeId: string, roleId: string = "123") => {
     const employeeSkills = getEmployeeSkills(employeeId);
     let filteredSkills = [...employeeSkills];
 
+    // Filter by category
     if (selectedCategory !== "all") {
-      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory, roleId);
     }
 
+    // Filter by level
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const state = currentStates[employeeId]?.[skill.title];
+        const state = currentStates[skill.title];
         return state?.level.toLowerCase() === selectedLevel.toLowerCase();
       });
     }
 
+    // Filter by interest/requirement
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const state = currentStates[employeeId]?.[skill.title];
+        const state = currentStates[skill.title];
         if (!state) return false;
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            return state.requirement === "required" || state.requirement === "skill_goal";
+            return (
+              state.requirement === "required" ||
+              state.requirement === "skill_goal"
+            );
           case "not_interested":
             return state.requirement === "not_interested";
           case "unknown":
@@ -159,13 +126,16 @@ export const useSkillsMatrixState = (
       });
     }
 
+    // Sort skills
     return filteredSkills.sort((a, b) => {
-      const stateA = currentStates[employeeId]?.[a.title];
-      const stateB = currentStates[employeeId]?.[b.title];
+      const stateA = currentStates[a.title];
+      const stateB = currentStates[b.title];
 
+      // First by level
       const levelDiff = getLevelPriority(stateA?.level) - getLevelPriority(stateB?.level);
       if (levelDiff !== 0) return levelDiff;
 
+      // Finally alphabetically
       return a.title.localeCompare(b.title);
     });
   };

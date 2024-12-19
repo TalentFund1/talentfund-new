@@ -1,54 +1,22 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { employeeSkills } from './data/employeeSkillsData';
 import { initializeEmployeeSkills } from './utils/skillInitialization';
-import { getAllSkills } from '../../skills/data/skills/allSkills';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-import { normalizeSkillTitle } from '../../skills/utils/normalization';
-import { getSkillCategory } from '../../skills/data/skills/categories/skillCategories';
 
 export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
   
-  // Get employee's specific skills if they exist
+  // Return employee's specific skills if they exist
   if (employeeSkills[employeeId]) {
     console.log('Found specific skills for employee:', {
       employeeId,
       skillCount: employeeSkills[employeeId].length
     });
-    
-    // Only use skills that are specifically assigned to this employee
-    const employeeSpecificSkills = employeeSkills[employeeId].map(skill => {
-      const normalizedTitle = normalizeSkillTitle(skill.title);
-      const skillData = getUnifiedSkillData(normalizedTitle);
-      console.log('Processing employee skill:', {
-        title: normalizedTitle,
-        category: getSkillCategory(normalizedTitle)
-      });
-      return {
-        ...skillData,
-        title: normalizedTitle,
-        category: getSkillCategory(normalizedTitle),
-        level: skill.level || 'unspecified',
-        requirement: skill.requirement || 'unknown'
-      };
-    });
-
-    console.log('Processed employee skills:', {
-      employeeId,
-      totalSkills: employeeSpecificSkills.length,
-      skills: employeeSpecificSkills.map(s => ({
-        title: s.title,
-        level: s.level,
-        requirement: s.requirement
-      }))
-    });
-
-    return employeeSpecificSkills;
+    return employeeSkills[employeeId];
   }
   
   // Initialize with empty skills if none exist
-  console.log('No specific skills found for employee, initializing empty skills array');
-  return [];
+  console.log('No specific skills found for employee, initializing empty skills');
+  return initializeEmployeeSkills(employeeId, []);
 };
 
 // Load initial skills for an employee
