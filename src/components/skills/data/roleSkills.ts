@@ -6,116 +6,40 @@ import { getSkillCategory } from './skills/categories/skillCategories';
 const getRoleSkills = (roleId: string): RoleSkillData => {
   console.log('Getting skills for role:', roleId);
   
-  const allSkills = getAllSkills();
-
-  // Helper function to filter skills by category
-  const filterSkillsByCategory = (skills: UnifiedSkill[], category: string) => {
-    return skills.filter(skill => getSkillCategory(skill.title) === category) || [];
-  };
-
-  // Return role-specific skills
-  const getRoleData = (id: string): { skills: UnifiedSkill[], title: string, soc: string } => {
-    switch(id) {
-      case "123": 
-        return {
-          title: "AI Engineer",
-          soc: "15-2051",
-          skills: allSkills.filter(skill => 
-            ["Machine Learning", "Deep Learning", "Natural Language Processing", 
-             "Computer Vision", "TensorFlow", "Python", "Problem Solving", 
-             "Technical Writing", "AWS Certified Machine Learning - Specialty", 
-             "TensorFlow Developer Certificate",
-             "Google Cloud Professional Machine Learning Engineer"].includes(skill.title)
-          )
-        };
-      
-      case "124":
-        return {
-          title: "Backend Engineer",
-          soc: "15-1252",
-          skills: allSkills.filter(skill => 
-            ["Node.js", "Database Design", "API Development", 
-             "System Architecture", "Problem Solving", "Code Review", 
-             "Git Version Control", "AWS Certified Solutions Architect", 
-             "Kubernetes Administrator (CKA)"].includes(skill.title)
-          )
-        };
-
-      case "125":
-        return {
-          title: "Frontend Engineer",
-          soc: "15-1252",
-          skills: allSkills.filter(skill => 
-            ["React", "TypeScript", "UI/UX Design", "CSS/SASS", "Next.js",
-             "Cross-browser Compatibility", "Responsive Design", 
-             "Problem Solving", "AWS Certified Developer - Associate",
-             "Google Mobile Web Specialist",
-             "Professional Scrum Developer"].includes(skill.title)
-          )
-        };
-
-      case "126":
-        return {
-          title: "Engineering Manager",
-          soc: "11-9041",
-          skills: allSkills.filter(skill => 
-            ["System Design", "Technical Architecture", "Team Leadership", 
-             "Project Management", "Risk Management", 
-             "Project Management Professional (PMP)",
-             "Certified Scrum Master (CSM)"].includes(skill.title)
-          )
-        };
-
-      case "127":
-        return {
-          title: "DevOps Engineer",
-          soc: "15-1244",
-          skills: allSkills.filter(skill => 
-            ["Kubernetes", "Docker", "CI/CD", "Infrastructure as Code",
-             "Problem Solving", "Shell Scripting", "Monitoring",
-             "AWS Certified DevOps Engineer",
-             "Kubernetes Administrator (CKA)",
-             "AWS Certified Solutions Architect"].includes(skill.title)
-          )
-        };
-
-      default:
-        console.warn('Unknown role ID:', roleId);
-        return {
-          title: "Unknown Role",
-          soc: "",
-          skills: []
-        };
-    }
-  };
-
-  const roleData = getRoleData(roleId);
-  const skills = roleData.skills || [];
-
-  // Initialize arrays with empty arrays as fallback
-  const specialized = filterSkillsByCategory(skills, 'specialized') || [];
-  const common = filterSkillsByCategory(skills, 'common') || [];
-  const certifications = filterSkillsByCategory(skills, 'certification') || [];
-
-  console.log('Role skills categorized:', {
-    roleId,
-    specialized: specialized.length,
-    common: common.length,
-    certifications: certifications.length,
-    total: skills.length
-  });
-
+  // Return empty role data structure
   return {
-    title: roleData.title,
-    soc: roleData.soc,
-    specialized,
-    common,
-    certifications,
-    skills // Keep for backward compatibility
+    title: getRoleTitle(roleId),
+    soc: getRoleSoc(roleId),
+    specialized: [],
+    common: [],
+    certifications: [],
+    skills: []
   };
 };
 
-// Export roleSkills object with proper initialization
+const getRoleTitle = (id: string): string => {
+  const roleTitles: { [key: string]: string } = {
+    "123": "AI Engineer",
+    "124": "Backend Engineer",
+    "125": "Frontend Engineer",
+    "126": "Engineering Manager",
+    "127": "DevOps Engineer"
+  };
+  return roleTitles[id] || "Unknown Role";
+};
+
+const getRoleSoc = (id: string): string => {
+  const socCodes: { [key: string]: string } = {
+    "123": "15-2051",
+    "124": "15-1252",
+    "125": "15-1252",
+    "126": "11-9041",
+    "127": "15-1244"
+  };
+  return socCodes[id] || "";
+};
+
+// Export roleSkills object with empty initialization
 export const roleSkills: { [key: string]: RoleSkillData } = {
   "123": getRoleSkills("123"),
   "124": getRoleSkills("124"), 
@@ -124,7 +48,7 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
   "127": getRoleSkills("127")
 };
 
-console.log('Role skills initialized:', Object.keys(roleSkills).map(id => ({
+console.log('Role skills initialized with empty skills:', Object.keys(roleSkills).map(id => ({
   roleId: id,
   title: roleSkills[id].title,
   skillCount: {
