@@ -1,4 +1,4 @@
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { UnifiedSkill, SkillCategory } from '../../skills/types/SkillTypes';
 import { getSkillByTitle } from '../../skills/data/skills/allSkills';
 
 // Employee skills database - using universal skills database
@@ -47,6 +47,19 @@ const employeeSkills: { [key: string]: string[] } = {
   ]
 };
 
+const determineDefaultCategory = (skillTitle: string): SkillCategory => {
+  const technicalSkills = ['Node.js', 'React', 'TypeScript', 'Python', 'Machine Learning'];
+  const certificationSkills = ['AWS Certified', 'Kubernetes Administrator', 'Professional Certification'];
+  
+  if (certificationSkills.some(cert => skillTitle.includes(cert))) {
+    return 'certification';
+  }
+  if (technicalSkills.includes(skillTitle)) {
+    return 'specialized';
+  }
+  return 'common';
+};
+
 export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', id);
   
@@ -64,11 +77,11 @@ export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
       return universalSkill;
     } else {
       console.warn('Skill not found in universal database:', title);
-      // Return a default skill object if not found
+      // Return a default skill object if not found, with proper SkillCategory type
       return {
         id: `default-${title}`,
         title,
-        category: 'uncategorized',
+        category: determineDefaultCategory(title),
         businessCategory: 'Information Technology',
         subcategory: 'General',
         weight: 'necessary',
@@ -77,7 +90,7 @@ export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
         salary: '$0',
         confidence: 'low',
         benchmarks: { B: false, R: false, M: false, O: false }
-      };
+      } as UnifiedSkill;
     }
   });
 
