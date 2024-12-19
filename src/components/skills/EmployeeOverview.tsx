@@ -7,7 +7,7 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { TrackProvider } from "./context/TrackContext";
 import { useEmployeeStore } from "../employee/store/employeeStore";
-import { getSkillProfileId } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { roleSkills } from "./data/roleSkills";
 import { EMPLOYEE_IMAGES } from "../employee/EmployeeData";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
@@ -33,13 +33,17 @@ const EmployeeOverviewContent = () => {
   const exactMatchEmployees = employees
     .filter(emp => {
       const empRoleId = getSkillProfileId(emp.role);
-      const matchesRole = empRoleId === roleId;
+      const baseRole = getBaseRole(emp.role);
+      const matchesRole = empRoleId === roleId || 
+                         (currentRole && baseRole === currentRole.title);
       
       console.log('Checking employee match:', {
         employee: emp.name,
         employeeRole: emp.role,
+        baseRole,
         employeeRoleId: empRoleId,
         targetRoleId: roleId,
+        targetRoleTitle: currentRole?.title,
         isMatch: matchesRole
       });
       
@@ -62,7 +66,8 @@ const EmployeeOverviewContent = () => {
   const partialMatchEmployees = employees
     .filter(emp => {
       const empRoleId = getSkillProfileId(emp.role);
-      if (empRoleId === roleId) return false;
+      const baseRole = getBaseRole(emp.role);
+      if (empRoleId === roleId || (currentRole && baseRole === currentRole.title)) return false;
 
       const benchmark = calculateBenchmarkPercentage(
         emp.id,
