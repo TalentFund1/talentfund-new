@@ -22,7 +22,7 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
   const { id } = useParams();
 
-  // Initialize the state when the component mounts
+  // Initialize the state when the component mounts with proper typing
   initializeState(skillTitle, initialLevel, 'required' as SkillRequirement);
 
   const currentState = currentStates[skillTitle] || {
@@ -152,7 +152,7 @@ export const SkillLevelCell = ({
 
         <Select 
           value={currentState?.requirement} 
-          onValueChange={(value: string) => handleSkillChange(value as SkillRequirement, 'requirement')}
+          onValueChange={(value) => handleSkillChange(value as SkillRequirement, 'requirement')}
         >
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
