@@ -39,7 +39,7 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
-  skills?: UnifiedSkill[]; // Optional for backward compatibility
+  skills: UnifiedSkill[]; // Keep for backward compatibility
 }
 
 export interface SimpleSkill {
