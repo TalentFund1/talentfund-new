@@ -1,6 +1,7 @@
 import { Skill } from '../types/SkillTypes';
 import { Skills, getAllSkills, getSkillByTitle as getSkillFromAllSkills } from './skills/allSkills';
 import { getSkillCategory } from './skills/categories/skillCategories';
+import { getSkillGrowth, getSkillSalary } from './utils/metrics';
 
 export const getUnifiedSkillData = (title: string): Skill => {
   console.log('Looking up skill:', title);
@@ -8,6 +9,10 @@ export const getUnifiedSkillData = (title: string): Skill => {
   
   if (!skill) {
     console.warn(`Creating default skill for: ${title}`);
+    // Get proper growth and salary even for default skills
+    const growth = getSkillGrowth(title);
+    const salary = getSkillSalary(title);
+    
     return {
       id: `generated-${title}`,
       title,
@@ -16,27 +21,28 @@ export const getUnifiedSkillData = (title: string): Skill => {
       businessCategory: 'Information Technology',
       weight: 'necessary',
       level: 'beginner',
-      growth: '0%',
-      salary: '$0',
+      growth,
+      salary,
       confidence: 'low',
       benchmarks: { B: false, R: false, M: false, O: false }
     };
   }
 
-  // Ensure the category is set correctly
-  const category = getSkillCategory(title);
-  const skillWithCategory = {
+  // Ensure existing skills also have proper growth and salary
+  const skillWithMetrics = {
     ...skill,
-    category
+    category: getSkillCategory(title),
+    growth: skill.growth || getSkillGrowth(title),
+    salary: skill.salary || getSkillSalary(title)
   };
 
-  console.log('Found skill with category:', {
+  console.log('Found skill with metrics:', {
     title,
-    category,
-    skill: skillWithCategory
+    growth: skillWithMetrics.growth,
+    salary: skillWithMetrics.salary
   });
   
-  return skillWithCategory;
+  return skillWithMetrics;
 };
 
 // Helper functions
