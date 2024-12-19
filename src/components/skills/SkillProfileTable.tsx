@@ -76,7 +76,7 @@ const SkillProfileTableContent = ({
       employees: String(getExactRoleMatches(role.title)),
       matches: `${calculateAverageBenchmark(id, role.title)}%`,
       lastUpdated: "10/20/24",
-      toggledSkillsCount // Add this for sorting
+      toggledSkillsCount
     };
   });
 
@@ -99,14 +99,14 @@ const SkillProfileTableContent = ({
 
     return matchesFunction && matchesJobTitle && hasSelectedSkills;
   })
-  // Sort by toggled skills count first, then by other criteria
+  // Sort by toggled skills count first (descending), then by name
   .sort((a, b) => {
     // First sort by toggled skills count (descending)
     if (b.toggledSkillsCount !== a.toggledSkillsCount) {
       return b.toggledSkillsCount - a.toggledSkillsCount;
     }
-    // If toggled skills count is the same, maintain original order
-    return 0;
+    // If toggled skills count is the same, sort alphabetically by name
+    return a.name.localeCompare(b.name);
   });
 
   console.log('Filtered and sorted rows:', {
