@@ -1,6 +1,6 @@
-import { Card } from "@/components/ui/card";
-import { BenchmarkSkillsMatrixContent } from "./BenchmarkSkillsMatrixContent";
-import { useRef } from "react";
+import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
+import { SkillsMatrixTable } from "../SkillsMatrixTable";
+import { ToggledSkillsDisplay } from "../../skills/ToggledSkillsDisplay";
 
 interface BenchmarkSkillsMatrixViewProps {
   roleId: string;
@@ -25,20 +25,47 @@ export const BenchmarkSkillsMatrixView = ({
   employeeId,
   roleLevel,
   filteredSkills,
-  ...props
+  searchTerm,
+  setSearchTerm,
+  selectedLevel,
+  setSelectedLevel,
+  selectedInterest,
+  setSelectedInterest,
+  selectedSkillLevel,
+  setSelectedSkillLevel,
+  selectedSearchSkills,
+  setSelectedSearchSkills,
+  visibleItems
 }: BenchmarkSkillsMatrixViewProps) => {
-  const observerTarget = useRef<HTMLDivElement>(null);
+  console.log('Rendering BenchmarkSkillsMatrixView with:', {
+    roleId,
+    employeeId,
+    filteredSkillsCount: filteredSkills.length,
+    selectedSearchSkills
+  });
 
   return (
-    <Card className="p-6 space-y-6 animate-fade-in bg-white">
-      <BenchmarkSkillsMatrixContent 
-        roleId={roleId}
-        employeeId={employeeId}
-        roleLevel={roleLevel}
-        filteredSkills={filteredSkills}
-        {...props}
-        observerTarget={observerTarget}
+    <div className="space-y-6">
+      <BenchmarkMatrixFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
+        selectedInterest={selectedInterest}
+        setSelectedInterest={setSelectedInterest}
+        selectedSkillLevel={selectedSkillLevel}
+        setSelectedSkillLevel={setSelectedSkillLevel}
+        selectedSearchSkills={selectedSearchSkills}
+        setSelectedSearchSkills={setSelectedSearchSkills}
       />
-    </Card>
+
+      <ToggledSkillsDisplay />
+
+      <SkillsMatrixTable
+        filteredSkills={filteredSkills.slice(0, visibleItems)}
+        showCompanySkill={false}
+        isRoleBenchmark={true}
+      />
+    </div>
   );
 };
