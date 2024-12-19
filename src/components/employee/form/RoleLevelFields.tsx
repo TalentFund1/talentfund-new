@@ -17,46 +17,27 @@ export const roleMapping = {
 };
 
 export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFieldsProps) => {
-  const isManagerialRole = formData.role.toLowerCase().includes('manager') || 
-                          formData.role.toLowerCase().includes('director');
-  
-  console.log('Role and Level Fields State:', {
+  console.log('RoleLevelFields rendering with:', {
     currentRole: formData.role,
-    roleId: roleMapping[formData.role as keyof typeof roleMapping],
-    currentLevel: formData.level,
-    isManagerialRole
+    currentLevel: formData.level
   });
 
-  const getLevelDescription = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'p1': return 'Entry';
-      case 'p2': return 'Developing';
-      case 'p3': return 'Career';
-      case 'p4': return 'Senior';
-      case 'p5': return 'Expert';
-      case 'p6': return 'Principal';
-      case 'm3': return 'Manager';
-      case 'm4': return 'Senior Manager';
-      case 'm5': return 'Director';
-      case 'm6': return 'Senior Director';
-      default: return '';
-    }
-  };
+  const isManagerialRole = formData.role.toLowerCase().includes('manager');
 
   const professionalLevels = {
-    'P1': 'P1',
-    'P2': 'P2',
-    'P3': 'P3',
-    'P4': 'P4',
-    'P5': 'P5',
-    'P6': 'P6'
+    'P1': 'P1 - Entry',
+    'P2': 'P2 - Developing',
+    'P3': 'P3 - Career',
+    'P4': 'P4 - Senior',
+    'P5': 'P5 - Expert',
+    'P6': 'P6 - Principal'
   };
 
   const managerialLevels = {
-    'M3': 'M3',
-    'M4': 'M4',
-    'M5': 'M5',
-    'M6': 'M6'
+    'M3': 'M3 - Manager',
+    'M4': 'M4 - Senior Manager',
+    'M5': 'M5 - Director',
+    'M6': 'M6 - Senior Director'
   };
 
   const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
@@ -100,9 +81,9 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
             <SelectValue placeholder="Select level" />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(levelOptions).map(([key, value]) => (
+            {Object.entries(levelOptions).map(([key, label]) => (
               <SelectItem key={key} value={key}>
-                {value} - {getLevelDescription(key)}
+                {label}
               </SelectItem>
             ))}
           </SelectContent>
