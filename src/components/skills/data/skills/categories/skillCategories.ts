@@ -19,7 +19,6 @@ const categoryMappings: Record<string, SkillCategory> = {
   'computer vision': 'specialized',
   'tensorflow': 'specialized',
   'pytorch': 'specialized',
-  'graphql': 'specialized',
 
   // Programming Skills (specialized)
   'python': 'specialized',
@@ -33,8 +32,6 @@ const categoryMappings: Record<string, SkillCategory> = {
   'api development': 'specialized',
   'database design': 'specialized',
   'system architecture': 'specialized',
-  'react native': 'specialized',
-  'flutter': 'specialized',
 
   // DevOps Skills (specialized)
   'docker': 'specialized',
@@ -44,14 +41,6 @@ const categoryMappings: Record<string, SkillCategory> = {
   'terraform': 'specialized',
   'system design': 'specialized',
   'technical architecture': 'specialized',
-  'linux administration': 'specialized',
-  'shell scripting': 'specialized',
-
-  // Management Skills (specialized)
-  'team leadership': 'specialized',
-  'project management': 'specialized',
-  'risk management': 'specialized',
-  'strategic planning': 'specialized',
 
   // Common Skills
   'problem solving': 'common',
@@ -60,6 +49,10 @@ const categoryMappings: Record<string, SkillCategory> = {
   'git version control': 'common',
   'code review': 'common',
   'agile methodologies': 'common',
+  'team leadership': 'specialized',
+  'project management': 'specialized',
+  'risk management': 'specialized',
+  'strategic planning': 'common',
   'stakeholder management': 'common',
 
   // Certifications
@@ -117,10 +110,7 @@ export const getSkillCategory = (skillTitle: string): SkillCategory => {
   const specializedKeywords = [
     'development', 'engineering', 'architecture', 'design',
     'programming', 'analysis', 'security', 'devops',
-    'cloud', 'data', 'machine learning', 'ai', 'automation',
-    'infrastructure', 'backend', 'frontend', 'full stack',
-    'database', 'system', 'network', 'mobile', 'web',
-    'testing', 'quality', 'deployment', 'ci/cd'
+    'cloud', 'data', 'machine learning', 'ai'
   ];
   
   if (specializedKeywords.some(keyword => normalizedTitle.includes(keyword))) {
