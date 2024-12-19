@@ -1,5 +1,5 @@
 import { UnifiedSkill } from '../types/SkillTypes';
-import { getAllSkills, getSkillByTitle } from './skills/allSkills';
+import { getSkillByTitle } from './skills/allSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { getSkillCategory } from './skills/categories/skillCategories';
 
@@ -21,9 +21,6 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.warn(`Skill not found in universal database: ${normalizedTitle}`);
   throw new Error(`Skill "${normalizedTitle}" not found in universal database`);
 };
-
-// Export the getAllSkills function from the source
-export const getAllSkills = getAllSkillsFromSource;
 
 // Export getSkillCategory for external use
 export { getSkillCategory };
