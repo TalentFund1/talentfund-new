@@ -36,7 +36,7 @@ export const getSkillById = (id: string): UnifiedSkill | undefined => {
   return undefined;
 };
 
-// Helper function to find a skill by title
+// Helper function to find a skill by title (case-insensitive)
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
   console.log(`Finding skill by title: ${title}`);
   const skill = allSkills.find(skill => skill.title.toLowerCase() === title.toLowerCase());
@@ -47,6 +47,7 @@ export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
       weight: getSkillWeight(skill.title)
     };
   }
+  console.log(`Skill not found: ${title}`);
   return undefined;
 };
 
