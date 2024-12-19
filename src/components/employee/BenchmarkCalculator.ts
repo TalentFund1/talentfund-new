@@ -5,12 +5,13 @@ import { RoleState } from "../skills/competency/state/types";
 export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
-  employeeLevel: string,
+  level: string,
   currentStates: Record<string, RoleState>,
   getSkillCompetencyState: (skillName: string, levelKey: string, roleId: string) => { level: string; required: string } | null
 ) => {
   const employeeSkills = getEmployeeSkills(employeeId);
   const roleData = roleSkills[roleId as keyof typeof roleSkills];
+  const employeeLevel = level.toLowerCase();
 
   if (!roleData) {
     console.warn('No role data found for roleId:', roleId);
@@ -43,10 +44,10 @@ export const calculateBenchmarkPercentage = (
     const employeeSkill = employeeSkills.find(skill => skill.title === roleSkill.title);
     if (!employeeSkill) return;
 
-    const employeeLevel = employeeSkill.level?.toLowerCase() || 'unspecified';
+    const employeeSkillLevel = employeeSkill.level?.toLowerCase() || 'unspecified';
     const requiredLevel = competencyState.level.toLowerCase();
 
-    const levelMatch = getLevelMatch(employeeLevel, requiredLevel);
+    const levelMatch = getLevelMatch(employeeSkillLevel, requiredLevel);
     matchedWeight += weight * levelMatch;
   });
 
