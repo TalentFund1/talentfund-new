@@ -42,9 +42,15 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   return newSkill;
 };
 
-// Add skill to initial skills
+// Export the getAllSkills function from the source
+export const getAllSkills = getAllSkillsFromSource;
+
+// Export getSkillCategory for external use
+export { getSkillCategory };
+
+// Add skill to initial skills (now just ensures it exists in universal database)
 export const addSkillToInitialSkills = (roleId: string, skill: UnifiedSkill): void => {
-  console.log('Adding skill to initial skills:', {
+  console.log('Ensuring skill exists in universal database:', {
     roleId,
     skillTitle: skill.title
   });
@@ -58,11 +64,5 @@ export const addSkillToInitialSkills = (roleId: string, skill: UnifiedSkill): vo
     getUnifiedSkillData(skill.title);
   }
 };
-
-// Export the getAllSkills function from the source
-export const getAllSkills = getAllSkillsFromSource;
-
-// Export getSkillCategory for external use
-export { getSkillCategory };
 
 console.log('Skill database service initialized');
