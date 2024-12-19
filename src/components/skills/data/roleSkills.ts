@@ -10,7 +10,7 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
 
   // Helper function to filter skills by category
   const filterSkillsByCategory = (skills: UnifiedSkill[], category: string) => {
-    return skills.filter(skill => getSkillCategory(skill.title) === category);
+    return skills.filter(skill => getSkillCategory(skill.title) === category) || [];
   };
 
   // Return role-specific skills
@@ -90,11 +90,12 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
   };
 
   const roleData = getRoleData(roleId);
-  const skills = roleData.skills;
+  const skills = roleData.skills || [];
 
-  const specialized = filterSkillsByCategory(skills, 'specialized');
-  const common = filterSkillsByCategory(skills, 'common');
-  const certifications = filterSkillsByCategory(skills, 'certification');
+  // Initialize arrays with empty arrays as fallback
+  const specialized = filterSkillsByCategory(skills, 'specialized') || [];
+  const common = filterSkillsByCategory(skills, 'common') || [];
+  const certifications = filterSkillsByCategory(skills, 'certification') || [];
 
   console.log('Role skills categorized:', {
     roleId,
