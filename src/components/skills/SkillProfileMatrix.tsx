@@ -31,6 +31,23 @@ export const SkillProfileMatrix = () => {
 
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
+  // Add event listener for skill updates
+  useEffect(() => {
+    const handleSkillsUpdate = (event: CustomEvent) => {
+      console.log('Received skills update event:', event.detail);
+      const { toggledSkills: newToggledSkills } = event.detail;
+      if (newToggledSkills) {
+        console.log('Updating toggled skills with:', newToggledSkills);
+        setToggledSkills(new Set(newToggledSkills));
+      }
+    };
+
+    window.addEventListener('skillsUpdated', handleSkillsUpdate as EventListener);
+    return () => {
+      window.removeEventListener('skillsUpdated', handleSkillsUpdate as EventListener);
+    };
+  }, [setToggledSkills]);
+
   const calculateToggledSkillCounts = () => {
     const allSkills = [
       ...currentRoleSkills.specialized,
@@ -58,7 +75,7 @@ export const SkillProfileMatrix = () => {
       ).length
     };
 
-    console.log('Calculated toggled skill counts for role:', id, counts);
+    console.log('Calculated toggled skill counts:', counts);
     return counts;
   };
 
