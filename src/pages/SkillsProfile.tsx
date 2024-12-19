@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
-import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 import { roleSkills } from '@/components/skills/data/roleSkills';
 import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
 import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
@@ -34,7 +33,8 @@ const companyFunctions = [
   "Customer Success"
 ];
 
-const SkillsProfile = () => {
+// Separate the content component to use hooks within the provider
+const SkillsProfileContent = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
@@ -42,72 +42,87 @@ const SkillsProfile = () => {
   // Get role titles directly from roleSkills
   const availableJobTitles = Object.values(roleSkills).map(role => role.title);
 
-  return (
-    <ToggledSkillsProvider>
-      <div className="flex min-h-screen bg-background">
-        <Sidebar />
-        <div className="flex-1 p-6 ml-16 transition-all duration-300">
-          <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
-            <div className="flex justify-between items-center">
-              <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
-              <div className="space-x-2">
-                <Button variant="outline">Export Data</Button>
-                <TrackProvider>
-                  <AddSkillProfileForm />
-                </TrackProvider>
-              </div>
-            </div>
+  console.log('Rendering SkillsProfileContent with:', {
+    selectedSkills,
+    selectedFunction,
+    selectedJobTitle,
+    availableJobTitles
+  });
 
-            <SkillProfileFilters
+  return (
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
+      <div className="flex-1 p-6 ml-16 transition-all duration-300">
+        <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
+            <div className="space-x-2">
+              <Button variant="outline">Export Data</Button>
+              <TrackProvider>
+                <AddSkillProfileForm />
+              </TrackProvider>
+            </div>
+          </div>
+
+          <SkillProfileFilters
+            selectedSkills={selectedSkills}
+            setSelectedSkills={setSelectedSkills}
+            selectedFunction={selectedFunction}
+            setSelectedFunction={setSelectedFunction}
+            selectedJobTitle={selectedJobTitle}
+            setSelectedJobTitle={setSelectedJobTitle}
+            availableJobTitles={availableJobTitles}
+            companyFunctions={companyFunctions}
+          />
+
+          <SkillProfileStats />
+
+          <Card className="p-6">
+            <SkillProfileTable 
+              selectedFunction={selectedFunction} 
               selectedSkills={selectedSkills}
-              setSelectedSkills={setSelectedSkills}
-              selectedFunction={selectedFunction}
-              setSelectedFunction={setSelectedFunction}
               selectedJobTitle={selectedJobTitle}
-              setSelectedJobTitle={setSelectedJobTitle}
-              toggledSkillsList={Array.from(useToggledSkills().toggledSkills)}
-              availableJobTitles={availableJobTitles}
-              companyFunctions={companyFunctions}
             />
 
-            <SkillProfileStats />
-
-            <Card className="p-6">
-              <SkillProfileTable 
-                selectedFunction={selectedFunction} 
-                selectedSkills={selectedSkills}
-                selectedJobTitle={selectedJobTitle}
-              />
-
-              <Separator className="my-4" />
-              
-              <div className="flex justify-between items-center">
-                <Select defaultValue="10">
-                  <SelectTrigger className="w-[100px]">
-                    <SelectValue placeholder="10 rows" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10 rows</SelectItem>
-                    <SelectItem value="20">20 rows</SelectItem>
-                    <SelectItem value="50">50 rows</SelectItem>
-                  </SelectContent>
-                </Select>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">1-5 of 5</span>
-                  <div className="flex gap-1">
-                    <Button variant="outline" size="icon" className="w-8 h-8">
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="w-8 h-8">
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
+            <Separator className="my-4" />
+            
+            <div className="flex justify-between items-center">
+              <Select defaultValue="10">
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue placeholder="10 rows" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10 rows</SelectItem>
+                  <SelectItem value="20">20 rows</SelectItem>
+                  <SelectItem value="50">50 rows</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">1-5 of 5</span>
+                <div className="flex gap-1">
+                  <Button variant="outline" size="icon" className="w-8 h-8">
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="icon" className="w-8 h-8">
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
-            </Card>
-          </div>
+            </div>
+          </Card>
         </div>
       </div>
+    </div>
+  );
+};
+
+// Main component that provides context
+const SkillsProfile = () => {
+  console.log('Rendering SkillsProfile wrapper');
+  
+  return (
+    <ToggledSkillsProvider>
+      <SkillsProfileContent />
     </ToggledSkillsProvider>
   );
 };
