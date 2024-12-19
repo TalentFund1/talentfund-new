@@ -13,6 +13,7 @@ import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { getSkillCategory } from './data/skills/categories/skillCategories';
 import { normalizeSkillTitle } from './utils/normalization';
+import { ToggledSkillsDisplay } from './ToggledSkillsDisplay';
 
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -144,6 +145,8 @@ export const SkillProfileMatrix = () => {
         <SkillMappingHeader skillCount={totalRoleSkills} />
         
         <Separator className="my-4" />
+
+        <ToggledSkillsDisplay />
 
         <CategoryCards
           selectedCategory={selectedCategory}
