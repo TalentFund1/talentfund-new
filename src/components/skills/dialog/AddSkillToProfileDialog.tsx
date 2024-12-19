@@ -8,11 +8,9 @@ import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
-import { Skills, getAllSkills } from '../data/skills/allSkills';
-import { roleSkills } from '../data/roleSkills';
+import { Skills } from '../data/skills/allSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { getEmployeeSkills, updateEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
-import { SkillRequirement } from '../types/SkillTypes';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -63,7 +61,8 @@ export const AddSkillToProfileDialog = () => {
         return;
       }
 
-      const skillData = getUnifiedSkillData(skillTitle, true);
+      // Get complete skill data from database
+      const skillData = getUnifiedSkillData(skillTitle);
       if (skillData) {
         console.log('Processing skill:', skillData);
         
@@ -73,19 +72,22 @@ export const AddSkillToProfileDialog = () => {
         setToggledSkills(newToggledSkills);
         
         // Initialize skill state with unspecified level and preferred requirement
-        // Added 'employee' as the fifth argument
-        setSkillState(skillTitle, 'unspecified', 'preferred', id, 'employee');
+        setSkillState(skillTitle, 'unspecified', id, 'preferred', 'employee');
 
-        // Add to employee skills with properly typed requirement
+        // Add to employee skills with complete data
         const newSkill = {
           ...skillData,
           level: 'unspecified',
-          requirement: 'preferred' as SkillRequirement
+          requirement: 'preferred',
+          category: skillData.category || 'technical',
+          subcategory: skillData.subcategory || 'Other',
+          growth: skillData.growth || '0%',
+          confidence: skillData.confidence || 'low'
         };
         
         updatedSkills.push(newSkill);
         addedSkills.push(skillTitle);
-        console.log('Added new skill:', newSkill);
+        console.log('Added new skill with complete data:', newSkill);
       }
     });
 
