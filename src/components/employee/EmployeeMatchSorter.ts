@@ -2,13 +2,13 @@ import { Employee } from "../types/employeeTypes";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { roleSkills } from "../skills/data/roleSkills";
+import { CompetencyState } from "../skills/competency/state/types";
 
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
   selectedJobTitle: string[],
-  currentStates: any,
-  toggledSkills: Set<string>,
-  getSkillCompetencyState: any
+  currentStates: Record<string, CompetencyState>,
+  toggledSkills: Set<string>
 ): Employee[] => {
   if (selectedJobTitle.length === 0) return employees;
 
@@ -55,8 +55,7 @@ export const sortEmployeesByRoleMatch = (
       roleId,
       employeeLevel,
       currentStates,
-      toggledSkills,
-      getSkillCompetencyState
+      toggledSkills
     );
 
     console.log('Processing employee for matching:', {
@@ -77,38 +76,14 @@ export const sortEmployeesByRoleMatch = (
     if (isExactMatch) {
       exactMatches.push(employeeWithBenchmark);
     } else if (benchmark > 0) {
-      // Add to partial matches if they have any matching skills (benchmark > 0)
-      // and they're not an exact match
       partialMatches.push(employeeWithBenchmark);
-      console.log('Added to partial matches:', {
-        employee: employee.name,
-        role: employee.role,
-        benchmark,
-        skills: allRoleSkills.length
-      });
     }
   });
 
-  // Sort partial matches by benchmark percentage in descending order
+  // Sort partial matches by benchmark percentage
   const sortedPartialMatches = partialMatches.sort((a, b) => {
     return (b.benchmark || 0) - (a.benchmark || 0);
   });
 
-  console.log('Final matching results:', {
-    exactMatches: exactMatches.map(e => ({ 
-      name: e.name, 
-      role: e.role,
-      benchmark: e.benchmark 
-    })),
-    partialMatches: sortedPartialMatches.map(e => ({ 
-      name: e.name, 
-      role: e.role,
-      benchmark: e.benchmark 
-    })),
-    totalExactMatches: exactMatches.length,
-    totalPartialMatches: sortedPartialMatches.length
-  });
-
-  // Combine exact matches first, followed by sorted partial matches
   return [...exactMatches, ...sortedPartialMatches];
 };

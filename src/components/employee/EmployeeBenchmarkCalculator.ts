@@ -1,13 +1,13 @@
 import { Employee } from "../types/employeeTypes";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
+import { CompetencyState } from "../skills/competency/state/types";
 
 export const calculateEmployeeBenchmarks = (
   employees: Employee[],
   selectedJobTitle: string[],
-  currentStates: any,
-  toggledSkills: Set<string>,
-  getSkillCompetencyState: any
+  currentStates: Record<string, CompetencyState>,
+  toggledSkills: Set<string>
 ): Employee[] => {
   return employees.map(employee => {
     let benchmark = 0;
@@ -21,8 +21,7 @@ export const calculateEmployeeBenchmarks = (
         roleId,
         level,
         currentStates,
-        toggledSkills,
-        getSkillCompetencyState
+        toggledSkills
       );
     } else {
       // Calculate benchmark against employee's current role
@@ -33,8 +32,7 @@ export const calculateEmployeeBenchmarks = (
         roleId,
         level,
         currentStates,
-        toggledSkills,
-        getSkillCompetencyState
+        toggledSkills
       );
     }
     

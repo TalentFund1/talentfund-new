@@ -1,13 +1,13 @@
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
+import { CompetencyState } from "../skills/competency/state/types";
 
 export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
   level: string,
-  currentStates: any,
-  toggledSkills: Set<string>,
-  getSkillCompetencyState: any
+  currentStates: Record<string, CompetencyState>,
+  toggledSkills: Set<string>
 ): number => {
   console.log('Calculating benchmark for:', {
     employeeId,
@@ -41,11 +41,11 @@ export const calculateBenchmarkPercentage = (
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     if (!employeeSkill) return false;
 
-    const roleSkillState = getSkillCompetencyState(roleSkill.title, level.toLowerCase(), roleId);
-    if (!roleSkillState) return false;
+    const skillState = currentStates[roleSkill.title];
+    if (!skillState) return false;
 
     const employeeSkillLevel = currentStates[roleSkill.title]?.level || employeeSkill.level || 'unspecified';
-    const roleSkillLevel = roleSkillState.level;
+    const roleSkillLevel = skillState.level;
 
     console.log('Comparing skill levels:', {
       skill: roleSkill.title,
