@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
@@ -68,20 +68,6 @@ export const SkillProfileMatrix = () => {
     ...currentRoleSkills.certifications
   ].length;
 
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      if (sortDirection === 'asc') {
-        setSortDirection('desc');
-      } else if (sortDirection === 'desc') {
-        setSortField(null);
-        setSortDirection(null);
-      }
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
   const filteredSkills = (() => {
     const uniqueSkills = new Set();
     let skills = [
@@ -102,7 +88,8 @@ export const SkillProfileMatrix = () => {
       specialized: currentRoleSkills.specialized.length,
       common: currentRoleSkills.common.length,
       certifications: currentRoleSkills.certifications.length,
-      uniqueCount: uniqueSkills.size
+      uniqueCount: uniqueSkills.size,
+      toggledSkillsCount: toggledSkills.size
     });
 
     if (skillType !== "all") {
@@ -113,8 +100,18 @@ export const SkillProfileMatrix = () => {
       skills = skills.filter(skill => getCategoryForSkill(skill, id || "123") === selectedCategory);
     }
 
-    if (sortField && sortDirection) {
-      skills.sort((a, b) => {
+    // Sort skills: toggled skills first, then by other criteria
+    skills.sort((a, b) => {
+      const aIsToggled = toggledSkills.has(a.title);
+      const bIsToggled = toggledSkills.has(b.title);
+
+      // First sort by toggled status
+      if (aIsToggled !== bIsToggled) {
+        return bIsToggled ? 1 : -1;
+      }
+
+      // If both are toggled or both are not toggled, sort by other criteria
+      if (sortField && sortDirection) {
         if (sortField === 'growth') {
           const aGrowth = parseFloat(a.growth);
           const bGrowth = parseFloat(b.growth);
@@ -124,15 +121,21 @@ export const SkillProfileMatrix = () => {
           const bSalary = parseFloat(b.salary?.replace(/[^0-9.-]+/g, "") || "0");
           return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
         }
-        return 0;
-      });
-    }
+      }
 
-    console.log('Filtered skills:', {
+      // Finally sort alphabetically
+      return a.title.localeCompare(b.title);
+    });
+
+    console.log('Filtered and sorted skills:', {
       total: skills.length,
       toggledCount: Array.from(toggledSkills).length,
       skillType,
-      selectedCategory
+      selectedCategory,
+      firstFewSkills: skills.slice(0, 3).map(skill => ({
+        title: skill.title,
+        isToggled: toggledSkills.has(skill.title)
+      }))
     });
 
     return skills;
@@ -179,7 +182,7 @@ export const SkillProfileMatrix = () => {
             }}
             sortField={sortField}
             sortDirection={sortDirection}
-            onSort={handleSort}
+            onSort={setSortField}
           />
         </div>
       </Card>
