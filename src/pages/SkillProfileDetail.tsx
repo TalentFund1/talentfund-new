@@ -9,6 +9,7 @@ import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
 import { EmployeeOverview } from "@/components/skills/EmployeeOverview";
 import { SelectBenchmark } from "@/components/benchmark/SelectBenchmark";
 import { CompetencyGraph } from "@/components/skills/CompetencyGraph";
+import { PayBandsTab } from "@/components/skills/PayBandsTab";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
 import { Sidebar } from "@/components/Sidebar";
@@ -102,6 +103,12 @@ const SkillProfileDetail = () => {
                       >
                         Competency Matrix
                       </TabsTrigger>
+                      <TabsTrigger 
+                        value="paybands"
+                        className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                      >
+                        Pay Bands
+                      </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="skills">
@@ -113,6 +120,10 @@ const SkillProfileDetail = () => {
                       <Card className="p-6 bg-white">
                         <CompetencyGraph track={track} />
                       </Card>
+                    </TabsContent>
+
+                    <TabsContent value="paybands">
+                      <PayBandsTab />
                     </TabsContent>
                   </Tabs>
                 </div>
