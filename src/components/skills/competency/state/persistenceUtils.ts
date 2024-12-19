@@ -2,13 +2,14 @@ import { RoleState } from './types';
 
 const STORAGE_PREFIX = 'competency-state';
 
-export const getStorageKey = (roleId: string) => `${STORAGE_PREFIX}-${roleId}`;
+export const getStorageKey = (roleId: string, employeeId: string) => 
+  `${STORAGE_PREFIX}-${roleId}-${employeeId}`;
 
-export const loadPersistedState = (roleId: string): RoleState | null => {
+export const loadPersistedState = (roleId: string, employeeId: string): RoleState | null => {
   try {
-    const storageKey = getStorageKey(roleId);
+    const storageKey = getStorageKey(roleId, employeeId);
     const savedState = localStorage.getItem(storageKey);
-    console.log('Loading persisted state for role:', roleId);
+    console.log('Loading persisted state for role and employee:', { roleId, employeeId });
     
     if (savedState) {
       const parsed = JSON.parse(savedState);
@@ -21,10 +22,10 @@ export const loadPersistedState = (roleId: string): RoleState | null => {
   return null;
 };
 
-export const persistState = (roleId: string, state: RoleState): void => {
+export const persistState = (roleId: string, employeeId: string, state: RoleState): void => {
   try {
-    const storageKey = getStorageKey(roleId);
-    console.log('Persisting state for role:', roleId, state);
+    const storageKey = getStorageKey(roleId, employeeId);
+    console.log('Persisting state for role and employee:', { roleId, employeeId, state });
     localStorage.setItem(storageKey, JSON.stringify(state));
   } catch (error) {
     console.error('Error persisting state:', error);
