@@ -7,8 +7,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
 
 interface SkillsMatrixViewProps {
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
   selectedLevel: string;
   setSelectedLevel: (level: string) => void;
   selectedInterest: string;
@@ -20,8 +18,6 @@ interface SkillsMatrixViewProps {
 }
 
 export const SkillsMatrixView = ({
-  selectedCategory,
-  setSelectedCategory,
   selectedLevel,
   setSelectedLevel,
   selectedInterest,
@@ -61,8 +57,6 @@ export const SkillsMatrixView = ({
       <Separator className="my-4" />
       
       <SkillsMatrixFilters 
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
         selectedLevel={selectedLevel}
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}

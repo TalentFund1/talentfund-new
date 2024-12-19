@@ -10,7 +10,6 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 const ITEMS_PER_PAGE = 10;
 
 export const SkillsMatrix = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
@@ -22,7 +21,7 @@ export const SkillsMatrix = () => {
   const { matrixSearchSkills } = useSkillsMatrixSearch();
 
   const { filterAndSortSkills } = useSkillsMatrixState(
-    selectedCategory,
+    "all", // Removed selectedCategory, passing "all" as default
     selectedLevel,
     selectedInterest
   );
@@ -51,7 +50,6 @@ export const SkillsMatrix = () => {
     totalSkills: uniqueSkills.length,
     filteredSkills: filteredSkills.length,
     visibleItems,
-    selectedCategory,
     selectedLevel,
     selectedInterest
   });
@@ -80,8 +78,6 @@ export const SkillsMatrix = () => {
   return (
     <div className="space-y-6">
       <SkillsMatrixView
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
         selectedLevel={selectedLevel}
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
