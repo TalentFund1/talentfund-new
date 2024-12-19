@@ -6,7 +6,7 @@ import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills, addSkillToEmployee } from "./skills-matrix/initialSkills";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
-import { SkillRequirement } from "../skills/types/SkillTypes";
+import { SkillRequirement, UnifiedSkill } from "../skills/types/SkillTypes";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -49,11 +49,15 @@ export const SkillsMatrix = () => {
     
     const skillData = getUnifiedSkillData(skillTitle);
     if (skillData) {
-      const updatedSkill = {
+      const updatedSkill: UnifiedSkill = {
         ...skillData,
         level,
         requirement
       };
+      console.log('Adding/updating skill for employee:', {
+        employeeId: id,
+        skill: updatedSkill
+      });
       addSkillToEmployee(id, updatedSkill);
     }
   };
