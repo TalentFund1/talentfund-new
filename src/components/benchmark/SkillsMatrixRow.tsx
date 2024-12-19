@@ -8,7 +8,6 @@ import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from "../skills/data/roleSkills";
-import { useParams } from "react-router-dom";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -32,19 +31,7 @@ export const SkillsMatrixRow = ({
   const { selectedLevel, selectedRole } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { id } = useParams<{ id: string }>();
-  
-  // Use selectedRole for benchmark view, employee ID for regular view
-  const effectiveRoleId = isRoleBenchmark ? selectedRole : (id || "123");
-  const track = getTrackForRole(effectiveRoleId)?.toLowerCase() as 'professional' | 'managerial';
-  
-  console.log('SkillsMatrixRow - Current state:', {
-    isRoleBenchmark,
-    employeeId: id,
-    selectedRole,
-    effectiveRoleId,
-    track
-  });
+  const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
@@ -52,14 +39,7 @@ export const SkillsMatrixRow = ({
   };
 
   const getSkillType = (skillTitle: string): string => {
-    const currentRoleSkills = roleSkills[effectiveRoleId as keyof typeof roleSkills] || roleSkills["123"];
-    
-    console.log('Getting skill type:', {
-      employeeId: id,
-      skillTitle,
-      effectiveRoleId,
-      roleSkills: currentRoleSkills.title
-    });
+    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
     
     if (currentRoleSkills.specialized.some(s => s.title === skillTitle)) {
       return 'Specialized';
