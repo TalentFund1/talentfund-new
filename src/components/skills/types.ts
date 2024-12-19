@@ -21,7 +21,8 @@ export interface SkillProfileRow {
   employees: string;
   matches: string;
   lastUpdated: string;
-  occupation?: string;  // Added occupation as optional property
+  toggledSkillsCount: number;
+  hasToggledSkills: boolean;
 }
 
 export interface EmployeeSkill {
