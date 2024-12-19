@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
-import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
 import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
@@ -16,115 +15,55 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   const { selectedRole } = useRoleStore();
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
-    const roleId = selectedRole || "";
-    const savedSkills = loadToggledSkills(roleId);
-    console.log('Initial load of toggled skills:', {
-      roleId,
-      savedSkills,
-      source: 'useState initializer'
-    });
-
-    // If no saved skills exist, initialize with all skills toggled
-    if (!savedSkills || savedSkills.length === 0) {
-      const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-      if (currentRoleSkills) {
-        const allSkills = [
-          ...currentRoleSkills.specialized.map(s => s.title),
-          ...currentRoleSkills.common.map(s => s.title),
-          ...currentRoleSkills.certifications.map(s => s.title)
-        ];
-        console.log('Initializing with all skills toggled:', allSkills);
-        return new Set(allSkills);
-      }
+    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+    if (currentRoleSkills) {
+      const allSkills = [
+        ...currentRoleSkills.specialized.map(s => s.title),
+        ...currentRoleSkills.common.map(s => s.title),
+        ...currentRoleSkills.certifications.map(s => s.title)
+      ];
+      console.log('Initializing toggled skills for role:', {
+        roleId: selectedRole,
+        skillCount: allSkills.length
+      });
+      return new Set(allSkills);
     }
-    
-    return new Set(savedSkills);
+    return new Set<string>();
   });
 
-  // Effect to reload toggled skills when role changes
+  // Update toggled skills when role changes
   useEffect(() => {
-    const roleId = selectedRole || "";
-    if (!roleId) {
-      console.warn('No role ID available for loading toggled skills');
-      return;
-    }
+    if (!selectedRole) return;
 
-    console.log('Role changed, reloading toggled skills for:', {
-      roleId,
-      selectedRole
-    });
-    
-    const savedSkills = loadToggledSkills(roleId);
-    
-    // Only load saved skills if they exist
-    if (savedSkills && savedSkills.length > 0) {
-      console.log('Reloaded toggled skills:', {
-        roleId,
-        skillCount: savedSkills.length,
-        skills: savedSkills
+    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+    if (currentRoleSkills) {
+      const allSkills = [
+        ...currentRoleSkills.specialized.map(s => s.title),
+        ...currentRoleSkills.common.map(s => s.title),
+        ...currentRoleSkills.certifications.map(s => s.title)
+      ];
+      console.log('Updating toggled skills for new role:', {
+        roleId: selectedRole,
+        skillCount: allSkills.length
       });
-      setToggledSkills(new Set(savedSkills));
-    } else {
-      // If no saved skills, keep current selection
-      console.log('No saved skills found, keeping current selection');
+      setToggledSkills(new Set(allSkills));
     }
   }, [selectedRole]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
-    const roleId = selectedRole || "";
-    if (!roleId) {
-      console.error('No role ID available for saving toggled skills');
-      return;
-    }
-
     console.log('Setting toggled skills:', {
-      roleId,
+      roleId: selectedRole,
       skillCount: newSkills.size,
       skills: Array.from(newSkills)
     });
     
     setToggledSkills(newSkills);
     
-    // Save to localStorage immediately
-    try {
-      const skillsArray = Array.from(newSkills);
-      saveToggledSkills(roleId, skillsArray);
-      
-      // Broadcast the change
-      window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
-        detail: { role: roleId, skills: skillsArray }
-      }));
-
-      console.log('Successfully saved toggled skills:', {
-        roleId,
-        skillCount: skillsArray.length,
-        skills: skillsArray
-      });
-    } catch (error) {
-      console.error('Error saving toggled skills:', error);
-      toast({
-        title: "Error Saving Skills",
-        description: "There was an error saving your skill selection.",
-        variant: "destructive",
-      });
-    }
+    toast({
+      title: "Skills Updated",
+      description: `Updated skills for ${selectedRole}`,
+    });
   };
-
-  // Listen for changes from other components
-  useEffect(() => {
-    const roleId = selectedRole || "";
-    
-    const handleSkillsChanged = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      if (customEvent.detail.role === roleId) {
-        console.log('Received toggled skills update:', customEvent.detail);
-        setToggledSkills(new Set(customEvent.detail.skills));
-      }
-    };
-
-    window.addEventListener('toggledSkillsChanged', handleSkillsChanged);
-    return () => window.removeEventListener('toggledSkillsChanged', handleSkillsChanged);
-  }, [selectedRole]);
 
   return (
     <ToggledSkillsContext.Provider value={{ toggledSkills, setToggledSkills: handleSetToggledSkills }}>
