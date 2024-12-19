@@ -1,7 +1,10 @@
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
+import { useParams } from "react-router-dom";
 
 interface SkillGoalSectionProps {
   skills: any[];
@@ -12,9 +15,10 @@ interface SkillGoalSectionProps {
 export const SkillGoalSection = ({ skills, count, title }: SkillGoalSectionProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedLevel, selectedRole } = useRoleStore();
+  const { id: employeeId } = useParams<{ id: string }>();
 
   const getLevelColor = (skillTitle: string) => {
-    const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase(), selectedRole);
+    const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase(), selectedRole, employeeId || "");
     if (!competencyState?.level) return "bg-gray-300";
 
     const level = String(competencyState.level).toLowerCase();

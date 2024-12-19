@@ -1,4 +1,4 @@
-import { RoleState } from './types';
+import { RoleState } from '../types/competencyTypes';
 
 const STORAGE_PREFIX = 'competency-state';
 

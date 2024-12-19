@@ -13,14 +13,18 @@ import { CompetencyGraphTable } from "@/components/skills/competency/CompetencyG
 import { generateSkillProgression } from "@/components/skills/competency/autoFillUtils";
 import { Brain, RotateCcw } from "lucide-react";
 import { useTrack } from "@/components/skills/context/TrackContext";
-import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
   roleId?: string;
+  employeeId?: string;
 }
 
-export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: CompetencyGraphProps) => {
+export const CompetencyGraph = ({ 
+  track: initialTrack, 
+  roleId: propRoleId,
+  employeeId: propEmployeeId 
+}: CompetencyGraphProps) => {
   const { toggledSkills } = useToggledSkills();
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     const savedCategory = localStorage.getItem('selectedCategory');
@@ -32,9 +36,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { id: urlRoleId } = useParams<{ id: string }>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { getTrackForRole } = useTrack();
-  const { selectedLevel } = useRoleStore();
-
+  
   const currentRoleId = propRoleId || urlRoleId || "123";
+  const currentEmployeeId = propEmployeeId || "124"; // Default to employee 124 if not provided
   const savedTrack = getTrackForRole(currentRoleId);
   const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
 
@@ -43,7 +47,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   }, [savedTrack]);
 
   const handleGenerateWithAI = async () => {
-    console.log("Starting AI generation for skills...", { currentRoleId, track });
+    console.log("Starting AI generation for skills...", { currentRoleId, track, currentEmployeeId });
     setIsGenerating(true);
     
     try {
@@ -53,21 +57,12 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         throw new Error('No skills found for current role');
       }
 
-      console.log('Found role skills:', {
-        specialized: currentRoleSkills.specialized?.length || 0,
-        common: currentRoleSkills.common?.length || 0,
-        certifications: currentRoleSkills.certifications?.length || 0
-      });
-
       const allSkills = [
         ...(currentRoleSkills.specialized || []),
         ...(currentRoleSkills.common || []),
         ...(currentRoleSkills.certifications || [])
       ].filter(skill => toggledSkills.has(skill.title));
 
-      console.log('Processing skills generation for:', allSkills.map(s => s.title));
-
-      // Generate progression for each skill
       allSkills.forEach(skill => {
         let category = "specialized";
         if (currentRoleSkills.common.some(s => s.title === skill.title)) {
@@ -76,23 +71,13 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
           category = "certification";
         }
 
-        console.log('Generating progression for skill:', { 
-          title: skill.title, 
-          category,
-          track,
-          roleId: currentRoleId
-        });
-
         const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
-        console.log('Generated progression:', { skill: skill.title, progression });
-        
         if (progression) {
-          setSkillProgression(skill.title, progression, currentRoleId);
+          setSkillProgression(skill.title, progression, currentRoleId, currentEmployeeId);
         }
       });
 
-      // Save changes to persist the generated progressions
-      saveChanges(currentRoleId);
+      saveChanges(currentRoleId, currentEmployeeId);
 
       toast({
         title: "Skills Generated",
@@ -111,7 +96,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleSave = () => {
-    saveChanges(currentRoleId);
+    saveChanges(currentRoleId, currentEmployeeId);
     toast({
       title: "Changes saved",
       description: "Your changes have been saved successfully.",
@@ -119,7 +104,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleCancel = () => {
-    cancelChanges(currentRoleId);
+    cancelChanges(currentRoleId, currentEmployeeId);
     toast({
       title: "Changes cancelled",
       description: "Your changes have been discarded.",
@@ -128,7 +113,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
 
   const handleResetLevels = () => {
     console.log('Resetting levels for role:', currentRoleId);
-    resetLevels(currentRoleId);
+    resetLevels(currentRoleId, currentEmployeeId);
     toast({
       title: "Levels reset",
       description: "All skill levels have been reset to their default values.",
@@ -180,6 +165,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
 
       <CompetencyGraphTable 
         currentRoleId={currentRoleId}
+        employeeId={currentEmployeeId}
         track={track}
         selectedCategory={selectedCategory}
         toggledSkills={toggledSkills}
