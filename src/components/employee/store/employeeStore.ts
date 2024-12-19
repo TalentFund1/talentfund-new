@@ -68,7 +68,14 @@ export const useEmployeeStore = create<EmployeeStore>()(
             emp.id === employee.id ? { ...employee } : emp
           );
           console.log('Updated employees list:', updatedEmployees);
-          return { employees: updatedEmployees };
+          return { 
+            employees: updatedEmployees,
+            // Ensure we update any related skill states
+            skillStates: {
+              ...state.skillStates,
+              [employee.id]: state.skillStates[employee.id] || {}
+            }
+          };
         });
       },
 

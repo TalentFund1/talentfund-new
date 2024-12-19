@@ -109,7 +109,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
       
       onOpenChange(false);
       
-      // Instead of reloading, navigate to the same route to force a re-render
+      // Navigate to trigger a re-render without reload
       navigate(`/employee/${employee.id}`, { replace: true });
       
     } catch (error) {
