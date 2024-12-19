@@ -1,7 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEmployeeStore } from "../../employee/store/employeeStore";
 import { useToast } from "@/hooks/use-toast";
-import { roleSkills } from "../../skills/data/roleSkills";
+import { roleSkills, ROLE_DEFINITIONS } from "../../skills/data/roleSkills";
 import { professionalLevels, managerialLevels } from "../data/levelData";
 
 interface RoleSelectionSectionProps {
@@ -93,11 +93,9 @@ export const RoleSelectionSection = ({
           <SelectValue placeholder="Select role" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="123">AI Engineer</SelectItem>
-          <SelectItem value="124">Backend Engineer</SelectItem>
-          <SelectItem value="125">Frontend Engineer</SelectItem>
-          <SelectItem value="126">Engineering Manager</SelectItem>
-          <SelectItem value="127">DevOps Engineer</SelectItem>
+          {Object.entries(ROLE_DEFINITIONS).map(([id, { title }]) => (
+            <SelectItem key={id} value={id}>{title}</SelectItem>
+          ))}
         </SelectContent>
       </Select>
 
