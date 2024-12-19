@@ -5,6 +5,7 @@ import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
+import { SkillRequirement } from "../../skills/types/SkillTypes";
 
 interface SkillsMatrixViewProps {
   selectedCategory: string;
@@ -17,6 +18,7 @@ interface SkillsMatrixViewProps {
   visibleItems: number;
   observerTarget: React.RefObject<HTMLDivElement>;
   hasChanges: boolean;
+  onSkillUpdate: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
 }
 
 export const SkillsMatrixView = ({
@@ -29,7 +31,8 @@ export const SkillsMatrixView = ({
   filteredSkills,
   visibleItems,
   observerTarget,
-  hasChanges
+  hasChanges,
+  onSkillUpdate
 }: SkillsMatrixViewProps) => {
   const { toast } = useToast();
   const { saveChanges, cancelChanges } = useSkillsMatrixStore();
@@ -73,6 +76,7 @@ export const SkillsMatrixView = ({
         filteredSkills={filteredSkills.slice(0, visibleItems)}
         showCompanySkill={true}
         isRoleBenchmark={false}
+        onSkillUpdate={onSkillUpdate}
       />
       
       {visibleItems < filteredSkills.length && (

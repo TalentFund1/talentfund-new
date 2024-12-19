@@ -1,11 +1,12 @@
-import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills, addSkillToEmployee } from "./skills-matrix/initialSkills";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
+import { SkillRequirement } from "../skills/types/SkillTypes";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -43,7 +44,7 @@ export const SkillsMatrix = () => {
   });
 
   // Handle skill updates
-  const handleSkillUpdate = (skillTitle: string, level: string, requirement: string) => {
+  const handleSkillUpdate = (skillTitle: string, level: string, requirement: SkillRequirement) => {
     if (!id) return;
     
     const skillData = getUnifiedSkillData(skillTitle);
