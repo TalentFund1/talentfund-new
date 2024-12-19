@@ -10,6 +10,7 @@ import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { roleSkills } from "./data/roleSkills";
 import { EMPLOYEE_IMAGES } from "../employee/EmployeeData";
+import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 
 const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();
