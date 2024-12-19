@@ -1,6 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getSkillByTitle } from "../skills/data/skills/allSkills";
@@ -15,25 +14,15 @@ interface SkillsMatrixRowProps {
     requirement?: string;
     category?: string;
   };
-  isRoleBenchmark: boolean;
 }
 
-export const SkillsMatrixRow = ({ 
-  skill, 
-  isRoleBenchmark
-}: SkillsMatrixRowProps) => {
+export const SkillsMatrixRow = ({ skill }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
   
   console.log('SkillsMatrixRow rendering:', {
     skillTitle: skill.title,
-    category: skill.category,
-    isRoleBenchmark
+    category: skill.category
   });
-
-  const isCompanySkill = (skillTitle: string) => {
-    const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
-    return !nonCompanySkills.includes(skillTitle);
-  };
 
   const getSkillType = (skillTitle: string): string => {
     const universalSkill = getSkillByTitle(skillTitle);
@@ -67,30 +56,33 @@ export const SkillsMatrixRow = ({
     return "secondary";
   };
 
+  const getTypeColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "specialized":
+        return "bg-blue-100 text-blue-800";
+      case "common":
+        return "bg-green-100 text-green-800";
+      case "certification":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
-        <div className="flex justify-center">
-          {isCompanySkill(skill.title) ? (
-            <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-              <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
-            </div>
-          ) : (
-            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-              <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
-            </div>
-          )}
-        </div>
-      </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        {getSkillType(skill.title)}
+        <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
+          getTypeColor(getSkillType(skill.title))
+        }`}>
+          {getSkillType(skill.title)}
+        </span>
       </TableCell>
       <SkillLevelCell 
         initialLevel={skill.level || 'unspecified'}
         skillTitle={skill.title}
-        isRoleBenchmark={isRoleBenchmark}
       />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
@@ -105,14 +97,6 @@ export const SkillsMatrixRow = ({
         <Badge variant={getGrowthBadgeVariant(skill.growth)}>
           ↗ {skill.growth}
         </Badge>
-      </TableCell>
-      <TableCell className="text-center py-2">
-        <div className="flex items-center justify-center space-x-1">
-          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
-          <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
-          <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">M</span>
-          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-medium">S</span>
-        </div>
       </TableCell>
     </TableRow>
   );
