@@ -7,9 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
-import { getUnifiedSkillData } from '../data/skillDatabaseService';
+import { getUnifiedSkillData, addSkillToInitialSkills } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
-import { addSkillToInitialSkills } from '../data/skillDatabaseService';
 import { roleSkills } from '../data/roleSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 

@@ -42,6 +42,23 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   return newSkill;
 };
 
+// Add skill to initial skills
+export const addSkillToInitialSkills = (roleId: string, skill: UnifiedSkill): void => {
+  console.log('Adding skill to initial skills:', {
+    roleId,
+    skillTitle: skill.title
+  });
+  
+  // Since we're using the universal database, we just need to ensure the skill exists
+  const existingSkill = getSkillByTitle(skill.title);
+  if (!existingSkill) {
+    console.log('Skill does not exist in universal database, adding it');
+    // The skill will be automatically added to the universal database
+    // through getUnifiedSkillData
+    getUnifiedSkillData(skill.title);
+  }
+};
+
 // Export the getAllSkills function from the source
 export const getAllSkills = getAllSkillsFromSource;
 
