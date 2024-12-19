@@ -48,7 +48,7 @@ const SkillsProfileContent = () => {
     selectedFunction,
     selectedJobTitle,
     availableJobTitles,
-    toggledSkills
+    toggledSkills: Array.from(toggledSkills)
   });
 
   return (
@@ -75,7 +75,7 @@ const SkillsProfileContent = () => {
             setSelectedJobTitle={setSelectedJobTitle}
             availableJobTitles={availableJobTitles}
             companyFunctions={companyFunctions}
-            toggledSkillsList={toggledSkills}
+            toggledSkillsList={Array.from(toggledSkills)}
           />
 
           <SkillProfileStats />
