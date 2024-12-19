@@ -4,11 +4,12 @@ import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-reac
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { initializeEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
+import { SkillRequirement } from "../skills/types/SkillTypes";
 
 interface SkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
-  onLevelChange?: (newLevel: string, requirement: string) => void;
+  onLevelChange?: (newLevel: string, requirement: SkillRequirement) => void;
   isRoleBenchmark?: boolean;
 }
 
@@ -26,7 +27,7 @@ export const SkillLevelCell = ({
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'required'
+    requirement: 'required' as SkillRequirement
   };
 
   const getLevelIcon = (level: string) => {
@@ -42,7 +43,7 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: string = 'unknown') => {
+  const getRequirementIcon = (requirement: SkillRequirement = 'unknown') => {
     switch (requirement?.toLowerCase()) {
       case 'required':
         return <Check className="w-3.5 h-3.5" />;
@@ -68,7 +69,7 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string, requirement: string) => {
+  const getLowerBorderColorClass = (level: string, requirement: SkillRequirement) => {
     if (requirement?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
@@ -78,7 +79,7 @@ export const SkillLevelCell = ({
   const handleSkillChange = (value: string, type: 'level' | 'requirement') => {
     const newState = {
       level: type === 'level' ? value : currentState.level,
-      requirement: type === 'requirement' ? value : currentState.requirement
+      requirement: type === 'requirement' ? value as SkillRequirement : currentState.requirement
     };
 
     setSkillState(skillTitle, newState.level, newState.requirement);
@@ -151,13 +152,13 @@ export const SkillLevelCell = ({
         </Select>
 
         <Select 
-          value={currentState?.requirement || 'required'}
+          value={currentState?.requirement} 
           onValueChange={(value) => handleSkillChange(value, 'requirement')}
         >
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-            ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement || 'required')}
+            ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement)}
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
