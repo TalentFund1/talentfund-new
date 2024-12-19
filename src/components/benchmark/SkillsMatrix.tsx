@@ -31,11 +31,21 @@ export const SkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
 
   // Apply filtering and sorting to employee skills
-  const filteredSkills = filterAndSortSkills(id || "");
+  let filteredSkills = filterAndSortSkills(id || "");
+
+  // Filter skills based on search criteria
+  if (matrixSearchSkills && matrixSearchSkills.length > 0) {
+    filteredSkills = filteredSkills.filter(skill => 
+      matrixSearchSkills.some(searchSkill => 
+        skill.title.toLowerCase().includes(searchSkill.toLowerCase())
+      )
+    );
+  }
 
   console.log('Skills matrix state:', {
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
+    searchSkills: matrixSearchSkills,
     visibleItems,
     selectedCategory,
     selectedLevel,
