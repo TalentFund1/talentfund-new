@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
+import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 
 const ITEMS_PER_PAGE = 10;
@@ -15,22 +16,29 @@ export const SkillsMatrix = () => {
   const [hasChanges, setHasChanges] = useState(false);
   
   const { id } = useParams<{ id: string }>();
-  const { currentStates, saveChanges, cancelChanges, hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const observerTarget = useRef<HTMLDivElement>(null);
+  const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const { matrixSearchSkills } = useSkillsMatrixSearch();
 
+  const { filterAndSortSkills } = useSkillsMatrixState(
+    selectedCategory,
+    selectedLevel,
+    selectedInterest
+  );
+
+  // Get employee skills directly without role filtering
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Filter and sort skills based on selected filters
-  const filteredSkills = employeeSkills.filter(skill => {
-    if (selectedCategory !== "all" && skill.category !== selectedCategory) return false;
-    if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
-    if (selectedInterest !== "all") {
-      const state = currentStates[skill.title];
-      if (!state) return false;
-      return state.requirement === selectedInterest;
-    }
-    return true;
+  // Apply filtering and sorting to employee skills
+  const filteredSkills = filterAndSortSkills(id || "");
+
+  console.log('Skills matrix state:', {
+    totalSkills: employeeSkills.length,
+    filteredSkills: filteredSkills.length,
+    visibleItems,
+    selectedCategory,
+    selectedLevel,
+    selectedInterest
   });
 
   useEffect(() => {
@@ -63,7 +71,7 @@ export const SkillsMatrix = () => {
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
-        filteredSkills={filteredSkills.slice(0, visibleItems)}
+        filteredSkills={filteredSkills}
         visibleItems={visibleItems}
         observerTarget={observerTarget}
         hasChanges={hasChanges}
