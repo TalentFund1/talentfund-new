@@ -25,12 +25,12 @@ export interface Skill {
     M: boolean;
     O: boolean;
   };
+  isCompanySkill?: boolean;
 }
 
 export interface UnifiedSkill extends Skill {
   requirement?: SkillRequirement;
   roleLevel?: string;
-  isCompanySkill?: boolean;
 }
 
 export interface RoleSkillData {

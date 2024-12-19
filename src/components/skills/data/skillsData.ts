@@ -15,12 +15,14 @@ const skills: UnifiedSkill[] = getAllSkillsFromSource().map(skill => {
     originalData: {
       category: skill.category,
       growth: skill.growth,
-      salary: skill.salary
+      salary: skill.salary,
+      isCompanySkill: skill.isCompanySkill
     },
     universalData: {
       category: skillData.category,
       growth: skillData.growth,
-      salary: skillData.salary
+      salary: skillData.salary,
+      isCompanySkill: skillData.isCompanySkill
     }
   });
 
