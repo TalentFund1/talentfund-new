@@ -6,7 +6,6 @@ import { getAllSkills } from "./skills/data/skillsData";
 import { SimpleSkill } from "./skills/types/SkillTypes";
 
 export const SkillsTable = () => {
-  const [selectedFilter, setSelectedFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
 
   const simpleSkills: SimpleSkill[] = getAllSkills().map(skill => ({
@@ -18,10 +17,7 @@ export const SkillsTable = () => {
 
   return (
     <div className="space-y-6 bg-white rounded-lg shadow-sm">
-      <SkillsTableHeader 
-        selectedFilter={selectedFilter} 
-        setSelectedFilter={setSelectedFilter} 
-      />
+      <SkillsTableHeader />
       <SkillsTableContent 
         skills={simpleSkills} 
         isLoading={isLoading} 
