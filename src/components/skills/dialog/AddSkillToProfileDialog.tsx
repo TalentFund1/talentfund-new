@@ -62,29 +62,25 @@ export const AddSkillToProfileDialog = () => {
 
       const skillData = getUnifiedSkillData(skillTitle, true);
       if (skillData) {
-        console.log('Processing new skill:', {
-          title: skillTitle,
-          level: 'unspecified',
-          requirement: 'preferred'
-        });
+        console.log('Processing skill:', skillData);
         
         // Add to toggled skills
         const newToggledSkills = new Set(toggledSkills);
         newToggledSkills.add(skillTitle);
         setToggledSkills(newToggledSkills);
         
-        // Initialize skill state with unspecified level and preferred requirement
-        setSkillState(skillTitle, 'unspecified', 'preferred', id, 'employee');
+        // Initialize skill state with unspecified level and skill goal requirement
+        setSkillState(skillTitle, 'unspecified', 'skill_goal', id, 'employee');
 
         // Add to employee skills with properly typed requirement
         const newSkill = {
           ...skillData,
           level: 'unspecified',
-          requirement: 'preferred' as SkillRequirement
+          requirement: 'skill_goal' as SkillRequirement
         };
         
         updatedSkills.push(newSkill);
-        console.log('Added new skill with default values:', newSkill);
+        console.log('Added new skill:', newSkill);
       }
     });
 
