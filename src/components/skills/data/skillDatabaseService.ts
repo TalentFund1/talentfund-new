@@ -1,62 +1,72 @@
-import { Skill } from '../types/SkillTypes';
-import { Skills, getAllSkills, getSkillByTitle as getSkillFromAllSkills } from './skills/allSkills';
+import { UnifiedSkill } from '../types/SkillTypes';
+import { Skills, getAllSkills as getAllSkillsFromSource, getSkillByTitle } from './skills/allSkills';
+import { normalizeSkillTitle } from '../utils/normalization';
 import { getSkillCategory } from './skills/categories/skillCategories';
-import { getSkillGrowth, getSkillSalary } from './utils/metrics';
+import { getEmployeeSkills } from '../../benchmark/skills-matrix/initialSkills';
 
-export const getUnifiedSkillData = (title: string): Skill => {
-  console.log('Looking up skill:', title);
-  const skill = getSkillFromAllSkills(title);
+// Get unified skill data
+export const getUnifiedSkillData = (title: string): UnifiedSkill => {
+  console.log('Getting unified skill data for:', title);
   
-  if (!skill) {
-    console.warn(`Creating default skill for: ${title}`);
-    // Get proper growth and salary even for default skills
-    const growth = getSkillGrowth(title);
-    const salary = getSkillSalary(title);
-    
+  const normalizedTitle = normalizeSkillTitle(title);
+  const existingSkill = getSkillByTitle(normalizedTitle);
+  
+  if (existingSkill) {
+    console.log('Found existing skill:', existingSkill.title);
     return {
-      id: `generated-${title}`,
-      title,
-      subcategory: 'Other',
-      category: getSkillCategory(title),
-      businessCategory: 'Information Technology',
-      weight: 'necessary',
-      level: 'beginner',
-      growth,
-      salary,
-      confidence: 'low',
-      benchmarks: { B: false, R: false, M: false, O: false }
+      ...existingSkill,
+      category: getSkillCategory(existingSkill.title)
     };
   }
 
-  // Ensure existing skills also have proper growth and salary
-  const skillWithMetrics = {
-    ...skill,
-    category: getSkillCategory(title),
-    growth: skill.growth || getSkillGrowth(title),
-    salary: skill.salary || getSkillSalary(title)
+  // If skill not found, create a new one with default values
+  const newSkill: UnifiedSkill = {
+    id: `SKILL${Math.random().toString(36).substr(2, 9)}`,
+    title: normalizedTitle,
+    category: getSkillCategory(normalizedTitle),
+    businessCategory: 'Information Technology',
+    subcategory: 'General',
+    weight: 'necessary',
+    level: 'unspecified',
+    growth: '20%',
+    salary: '$150,000',
+    confidence: 'medium',
+    benchmarks: { 
+      B: true, 
+      R: true, 
+      M: true, 
+      O: true 
+    }
   };
 
-  console.log('Found skill with metrics:', {
-    title,
-    growth: skillWithMetrics.growth,
-    salary: skillWithMetrics.salary
+  console.log('Created new skill entry:', newSkill.title);
+  return newSkill;
+};
+
+// Add skill to initial skills
+export const addSkillToInitialSkills = (roleId: string, skill: UnifiedSkill) => {
+  console.log('Adding skill to initial skills:', {
+    roleId,
+    skill: skill.title
   });
-  
-  return skillWithMetrics;
+
+  // Get the role's skills from initialSkills
+  const employeeSkills = getEmployeeSkills(roleId);
+
+  // Check if skill already exists
+  const skillExists = employeeSkills.some(s => s.title === skill.title);
+  if (!skillExists) {
+    employeeSkills.push(skill);
+    console.log('Skill added successfully to initial skills');
+  } else {
+    console.log('Skill already exists in initial skills');
+  }
 };
 
-// Helper functions
-export const getSkillsByWeight = (weight: string): Skill[] => {
-  return getAllSkills().filter(skill => skill.weight === weight);
-};
+// Export the getAllSkills function from the source
+export const getAllSkills = getAllSkillsFromSource;
 
-export const getSkillsByCategory = (category: string): Skill[] => {
-  return getAllSkills().filter(skill => getSkillCategory(skill.title) === category);
-};
+// Export getSkillCategory for external use
+export { getSkillCategory };
 
-// Add the missing function
-export const addSkillToInitialSkills = (employeeId: string, skill: Skill): void => {
-  console.log('Adding skill to employee:', { employeeId, skill });
-  // The actual implementation will be handled by the skills database
-  // This is just a pass-through function that logs the operation
-};
+console.log('Skill database service initialized');

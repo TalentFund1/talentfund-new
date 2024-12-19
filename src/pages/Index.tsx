@@ -79,10 +79,8 @@ const Index = () => {
           </div>
 
           <ToggledSkillsProvider>
-            <div className="space-y-6">
-              <CompanySkillsTable />
-              <EmployeeSkillsTable />
-            </div>
+            <CompanySkillsTable />
+            <EmployeeSkillsTable />
           </ToggledSkillsProvider>
         </div>
       </div>

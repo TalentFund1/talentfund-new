@@ -1,171 +1,121 @@
 import { getUnifiedSkillData } from './skillDatabaseService';
 import { RoleSkillData } from '../types/SkillTypes';
-import { Skills, getAllSkills } from './skills/allSkills';
-import { getSkillCategory } from './skills/categories/skillCategories';
 
-// Get all skills from the universal database
-const allSkills = getAllSkills();
-console.log('Loaded all skills from universal database:', allSkills.length);
-
-// Helper function to get and validate a skill from the universal database
-const getValidatedSkill = (title: string) => {
-  const skill = getUnifiedSkillData(title);
-  if (!skill) {
-    console.error(`Skill not found in universal database: ${title}`);
-    throw new Error(`Skill not found: ${title}`);
-  }
-  console.log(`Found skill ${title} with category:`, skill.category);
-  return skill;
-};
-
-// Helper function to get skills by category from the universal database
-const getSkillsByCategory = (titles: string[], expectedCategory: 'specialized' | 'common' | 'certification') => {
-  console.log(`Getting ${expectedCategory} skills for titles:`, titles);
-  
-  const skills = titles.map(title => {
-    const skill = getValidatedSkill(title);
-    const actualCategory = getSkillCategory(title);
-    if (actualCategory !== expectedCategory) {
-      console.warn(`Warning: Skill ${title} has category ${actualCategory} but was requested as ${expectedCategory}`);
-      // Instead of throwing error, we'll use the actual category from the database
-      skill.category = actualCategory;
-    }
-    return skill;
-  });
-
-  console.log(`Found ${skills.length} ${expectedCategory} skills`);
-  return skills;
-};
-
-// Define role skills using categories from the universal database
 export const roleSkills: { [key: string]: RoleSkillData } = {
   "123": {
     title: "AI Engineer",
     soc: "15-2051",
-    specialized: getSkillsByCategory([
-      "Machine Learning",
-      "Deep Learning",
-      "Natural Language Processing",
-      "Computer Vision",
-      "TensorFlow",
-      "GraphQL"
-    ], 'specialized'),
-    common: getSkillsByCategory([
-      "Python",
-      "Problem Solving",
-      "Technical Writing",
-      "Git Version Control",
-      "Communication"
-    ], 'common'),
-    certifications: getSkillsByCategory([
-      "AWS Certified Machine Learning - Specialty",
-      "TensorFlow Developer Certificate"
-    ], 'certification')
+    specialized: [
+      getUnifiedSkillData("Machine Learning"),
+      getUnifiedSkillData("Deep Learning"),
+      getUnifiedSkillData("Natural Language Processing"),
+      getUnifiedSkillData("Computer Vision"),
+      getUnifiedSkillData("TensorFlow"),
+      getUnifiedSkillData("GraphQL")
+    ],
+    common: [
+      getUnifiedSkillData("Python"),
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Technical Writing"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")
+    ],
+    certifications: [
+      getUnifiedSkillData("AWS Certified Machine Learning - Specialty"),
+      getUnifiedSkillData("TensorFlow Developer Certificate")
+    ]
   },
   "124": {
     title: "Backend Engineer",
     soc: "15-1252",
-    specialized: getSkillsByCategory([
-      "Node.js",
-      "Database Design",
-      "API Development",
-      "System Architecture",
-      "Kubernetes",
-      "GraphQL"
-    ], 'specialized'),
-    common: getSkillsByCategory([
-      "Problem Solving",
-      "Code Review",
-      "Agile Methodologies",
-      "Git Version Control",
-      "Communication"
-    ], 'common'),
-    certifications: getSkillsByCategory([
-      "AWS Certified Solutions Architect",
-      "Kubernetes Administrator (CKA)"
-    ], 'certification')
+    specialized: [
+      getUnifiedSkillData("Node.js"),
+      getUnifiedSkillData("Database Design"),
+      getUnifiedSkillData("API Development"),
+      getUnifiedSkillData("System Architecture"),
+      getUnifiedSkillData("Kubernetes"),
+      getUnifiedSkillData("GraphQL")
+    ],
+    common: [
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Code Review"),
+      getUnifiedSkillData("Agile Methodologies"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")
+    ],
+    certifications: [
+      getUnifiedSkillData("AWS Certified Solutions Architect"),
+      getUnifiedSkillData("Kubernetes Administrator (CKA)")
+    ]
   },
   "125": {
     title: "Frontend Engineer",
     soc: "15-1252",
-    specialized: getSkillsByCategory([
-      "React",
-      "TypeScript",
-      "Next.js",
-      "CSS/SASS",
-      "Performance Optimization",
-      "React Native",
-      "Flutter",
-      "GraphQL"
-    ], 'specialized'),
-    common: getSkillsByCategory([
-      "Problem Solving",
-      "Code Review",
-      "Agile Methodologies",
-      "Git Version Control",
-      "Communication"
-    ], 'common'),
-    certifications: getSkillsByCategory([
-      "AWS Certified Developer - Associate",
-      "Google Mobile Web Specialist"
-    ], 'certification')
+    specialized: [
+      getUnifiedSkillData("React"),
+      getUnifiedSkillData("TypeScript"),
+      getUnifiedSkillData("Next.js"),
+      getUnifiedSkillData("CSS/SASS"),
+      getUnifiedSkillData("Performance Optimization"),
+      getUnifiedSkillData("React Native"),
+      getUnifiedSkillData("Flutter"),
+      getUnifiedSkillData("GraphQL")
+    ],
+    common: [
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Code Review"),
+      getUnifiedSkillData("Agile Methodologies"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")
+    ],
+    certifications: [
+      getUnifiedSkillData("AWS Certified Developer - Associate"),
+      getUnifiedSkillData("Google Mobile Web Specialist")
+    ]
   },
   "126": {
     title: "Engineering Manager",
     soc: "11-9041",
-    specialized: getSkillsByCategory([
-      "System Design",
-      "Technical Architecture",
-      "Risk Management",
-      "Team Leadership",
-      "Project Management"
-    ], 'specialized'),
-    common: getSkillsByCategory([
-      "Strategic Planning",
-      "Stakeholder Management",
-      "Agile Methodologies",
-      "Git Version Control",
-      "Communication"
-    ], 'common'),
-    certifications: getSkillsByCategory([
-      "Project Management Professional (PMP)",
-      "Certified Scrum Master (CSM)"
-    ], 'certification')
+    specialized: [
+      getUnifiedSkillData("System Design"),
+      getUnifiedSkillData("Technical Architecture"),
+      getUnifiedSkillData("Risk Management"),
+      getUnifiedSkillData("Team Leadership"),
+      getUnifiedSkillData("Project Management")
+    ],
+    common: [
+      getUnifiedSkillData("Strategic Planning"),
+      getUnifiedSkillData("Stakeholder Management"),
+      getUnifiedSkillData("Agile Methodologies"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Communication")
+    ],
+    certifications: [
+      getUnifiedSkillData("Project Management Professional (PMP)"),
+      getUnifiedSkillData("Certified Scrum Master (CSM)")
+    ]
   },
   "127": {
     title: "DevOps Engineer",
     soc: "15-1244",
-    specialized: getSkillsByCategory([
-      "Docker",
-      "Kubernetes",
-      "Jenkins",
-      "Terraform",
-      "AWS"
-    ], 'specialized'),
-    common: getSkillsByCategory([
-      "Linux Administration",
-      "Shell Scripting",
-      "Git Version Control",
-      "Problem Solving",
-      "Communication"
-    ], 'common'),
-    certifications: getSkillsByCategory([
-      "AWS Certified DevOps Engineer",
-      "Certified Kubernetes Administrator",
-      "HashiCorp Certified Terraform Associate"
-    ], 'certification')
+    specialized: [
+      getUnifiedSkillData("Docker"),
+      getUnifiedSkillData("Kubernetes"),
+      getUnifiedSkillData("Jenkins"),
+      getUnifiedSkillData("Terraform"),
+      getUnifiedSkillData("AWS")
+    ],
+    common: [
+      getUnifiedSkillData("Linux Administration"),
+      getUnifiedSkillData("Shell Scripting"),
+      getUnifiedSkillData("Git Version Control"),
+      getUnifiedSkillData("Problem Solving"),
+      getUnifiedSkillData("Communication")
+    ],
+    certifications: [
+      getUnifiedSkillData("AWS Certified DevOps Engineer"),
+      getUnifiedSkillData("Certified Kubernetes Administrator"),
+      getUnifiedSkillData("HashiCorp Certified Terraform Associate")
+    ]
   }
 };
-
-// Log role skills configuration for verification
-console.log('Role skills loaded:', Object.keys(roleSkills).map(key => ({
-  role: roleSkills[key].title,
-  specialized: roleSkills[key].specialized.length,
-  common: roleSkills[key].common.length,
-  certifications: roleSkills[key].certifications.length,
-  categories: {
-    specialized: roleSkills[key].specialized.map(s => s.title),
-    common: roleSkills[key].common.map(s => s.title),
-    certifications: roleSkills[key].certifications.map(s => s.title)
-  }
-})));
