@@ -12,6 +12,7 @@ import { Skills, getAllSkills } from '../data/skills/allSkills';
 import { roleSkills } from '../data/roleSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { getEmployeeSkills, updateEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
+import { SkillRequirement } from '../types/SkillTypes';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -71,11 +72,11 @@ export const AddSkillToProfileDialog = () => {
         // Initialize skill state with unspecified level and skill goal requirement
         setSkillState(skillTitle, 'unspecified', 'skill_goal', id, 'employee');
 
-        // Add to employee skills
+        // Add to employee skills with properly typed requirement
         const newSkill = {
           ...skillData,
           level: 'unspecified',
-          requirement: 'skill_goal'
+          requirement: 'skill_goal' as SkillRequirement
         };
         
         updatedSkills.push(newSkill);
