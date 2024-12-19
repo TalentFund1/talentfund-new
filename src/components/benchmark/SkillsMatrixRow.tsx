@@ -40,17 +40,16 @@ export const SkillsMatrixRow = ({ skill, isRoleBenchmark }: SkillsMatrixRowProps
 
   return (
     <TableRow className="group">
-      <SkillCell 
-        title={skill.title}
-        category={category}
-      />
+      <TableCell className="font-medium">
+        {skill.title}
+      </TableCell>
       <TableCell className="w-[200px] text-sm text-muted-foreground">
         {category}
       </TableCell>
       <SkillLevelCell
+        initialLevel={skillState.level}
         skillTitle={skill.title}
-        currentLevel={skillState.level}
-        roleLevel={isRoleBenchmark ? roleSkillState?.level : undefined}
+        roleLevel={roleSkillState?.level}
         isRoleBenchmark={isRoleBenchmark}
       />
     </TableRow>

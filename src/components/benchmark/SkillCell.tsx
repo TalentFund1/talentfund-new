@@ -7,8 +7,8 @@ import { RequirementSelector } from "./RequirementSelector";
 interface SkillCellProps {
   skillName: string;
   details: {
-    level: string;
-    required: string;
+    level?: string;
+    required?: string;
   };
   isLastColumn: boolean;
   levelKey: string;
@@ -16,7 +16,7 @@ interface SkillCellProps {
 
 export const SkillCell = ({ 
   skillName, 
-  details, 
+  details = { level: 'unspecified', required: 'preferred' }, 
   isLastColumn, 
   levelKey 
 }: SkillCellProps) => {
@@ -29,23 +29,23 @@ export const SkillCell = ({
       console.log('Initializing skill state:', {
         skillName,
         levelKey,
-        initialLevel: details.level || "unspecified",
-        initialRequired: details.required || "preferred"
+        initialLevel: details?.level || "unspecified",
+        initialRequired: details?.required || "preferred"
       });
       
       setSkillState(
         skillName,
-        details.level || "unspecified",
+        details?.level || "unspecified",
         levelKey,
-        details.required || "preferred"
+        details?.required || "preferred"
       );
       initRef.current = true;
     }
-  }, [skillName, levelKey, details.level, details.required, setSkillState]);
+  }, [skillName, levelKey, details?.level, details?.required, setSkillState]);
 
   const currentState = currentStates[skillName]?.[levelKey] || {
-    level: details.level || "unspecified",
-    required: details.required || "preferred",
+    level: details?.level || "unspecified",
+    required: details?.required || "preferred",
   };
 
   const handleLevelChange = (value: string) => {

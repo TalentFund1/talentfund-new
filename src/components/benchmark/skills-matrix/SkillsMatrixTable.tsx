@@ -13,18 +13,15 @@ interface SkillsMatrixTableProps {
     confidence: string;
     requirement?: string;
   }>;
-  showCompanySkill?: boolean;
   isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixTable = ({
   filteredSkills,
-  showCompanySkill = true,
   isRoleBenchmark = false
 }: SkillsMatrixTableProps) => {
   console.log('Rendering SkillsMatrixTable with:', {
     skillCount: filteredSkills.length,
-    showCompanySkill,
     isRoleBenchmark
   });
 
@@ -34,7 +31,7 @@ export const SkillsMatrixTable = ({
         <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
           <Table>
             <SkillsMatrixTableHeader 
-              showCompanySkill={showCompanySkill}
+              showCompanySkill={!isRoleBenchmark}
               isRoleBenchmark={isRoleBenchmark}
             />
             <TableBody>
@@ -42,7 +39,6 @@ export const SkillsMatrixTable = ({
                 <SkillsMatrixRow 
                   key={skill.title} 
                   skill={skill}
-                  showCompanySkill={showCompanySkill}
                   isRoleBenchmark={isRoleBenchmark}
                 />
               ))}
