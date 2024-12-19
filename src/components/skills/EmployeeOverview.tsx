@@ -27,8 +27,7 @@ const EmployeeOverviewContent = () => {
         roleId || "123",
         "",
         currentStates,
-        toggledSkills,
-        getSkillCompetencyState
+        toggledSkills
       )
     }))
     .sort((a, b) => b.benchmark - a.benchmark); // Sort by benchmark in descending order
@@ -44,8 +43,7 @@ const EmployeeOverviewContent = () => {
         roleId || "123",
         "",
         currentStates,
-        toggledSkills,
-        getSkillCompetencyState
+        toggledSkills
       );
 
       return benchmark > 0;
@@ -57,8 +55,7 @@ const EmployeeOverviewContent = () => {
         roleId || "123",
         "",
         currentStates,
-        toggledSkills,
-        getSkillCompetencyState
+        toggledSkills
       )
     }))
     .sort((a, b) => b.benchmark - a.benchmark); // Sort by benchmark in descending order

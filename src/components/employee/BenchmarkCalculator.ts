@@ -42,10 +42,10 @@ export const calculateBenchmarkPercentage = (
     if (!employeeSkill) return false;
 
     const skillState = currentStates[roleSkill.title];
-    if (!skillState?.currentState) return false;
+    if (!skillState) return false;
 
-    const employeeSkillLevel = skillState.currentState.level || employeeSkill.level || 'unspecified';
-    const roleSkillLevel = skillState.currentState.level || 'unspecified';
+    const employeeSkillLevel = skillState?.level || employeeSkill.level || 'unspecified';
+    const roleSkillLevel = skillState?.level || 'unspecified';
 
     console.log('Comparing skill levels:', {
       skill: roleSkill.title,
