@@ -58,3 +58,15 @@ export interface EmployeeSkillState {
 }
 
 export type SkillRequirement = 'required' | 'preferred' | 'skill_goal' | 'not_interested' | 'unknown';
+
+// Helper function to get level string safely
+export const getSkillLevel = (state: SkillState | string): string => {
+  if (typeof state === 'string') return state;
+  return state.level || 'unspecified';
+};
+
+// Helper function to get requirement string safely
+export const getSkillRequirement = (state: SkillState | SkillRequirement): string => {
+  if (typeof state === 'string') return state;
+  return state.required || 'preferred';
+};

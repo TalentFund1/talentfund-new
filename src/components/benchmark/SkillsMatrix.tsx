@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
@@ -14,30 +14,23 @@ export const SkillsMatrix = () => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
   
-  const { id } = useParams();
-  const { currentStates, saveChanges, cancelChanges } = useSkillsMatrixStore();
+  const { id } = useParams<{ id: string }>();
+  const { currentStates, saveChanges, cancelChanges, hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { matrixSearchSkills } = useSkillsMatrixSearch();
 
-  const { filterAndSortSkills } = useSkillsMatrixState(
-    selectedCategory,
-    selectedLevel,
-    selectedInterest
-  );
-
-  // Get employee skills directly without role filtering
   const employeeSkills = getEmployeeSkills(id || "");
 
-  // Apply filtering and sorting to employee skills
-  const filteredSkills = filterAndSortSkills(id || "");
-
-  console.log('Skills matrix state:', {
-    totalSkills: employeeSkills.length,
-    filteredSkills: filteredSkills.length,
-    visibleItems,
-    selectedCategory,
-    selectedLevel,
-    selectedInterest
+  // Filter and sort skills based on selected filters
+  const filteredSkills = employeeSkills.filter(skill => {
+    if (selectedCategory !== "all" && skill.category !== selectedCategory) return false;
+    if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
+    if (selectedInterest !== "all") {
+      const state = currentStates[skill.title];
+      if (!state) return false;
+      return state.requirement === selectedInterest;
+    }
+    return true;
   });
 
   useEffect(() => {

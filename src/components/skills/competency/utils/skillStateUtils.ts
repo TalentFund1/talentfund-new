@@ -28,20 +28,13 @@ export const normalizeSkillState = (state: string | SkillState): SkillState => {
 };
 
 export const getLevelString = (level: string | SkillState): string => {
-  if (typeof level === 'string') {
-    return level.toLowerCase();
-  }
-  return level.level.toLowerCase();
+  const value = getSkillStateValue(level);
+  return value.toLowerCase();
 };
 
 export const getRequirementString = (requirement: string | SkillState | SkillRequirement): string => {
-  if (typeof requirement === 'string') {
-    return requirement.toLowerCase();
-  }
-  if ('required' in requirement) {
-    return requirement.required.toLowerCase();
-  }
-  return 'preferred';
+  const value = getRequirementValue(requirement);
+  return value.toLowerCase();
 };
 
 export const formatSkillLevel = (level: string | SkillState): string => {
