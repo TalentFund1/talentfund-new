@@ -24,6 +24,7 @@ export const SkillsMatrixTableHeader = ({
         {showCompanySkill && (
           <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Company Skill</TableHead>
         )}
+        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Type</TableHead>
         {isRoleBenchmark && (
           <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Role Skills</TableHead>
         )}

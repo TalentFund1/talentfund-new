@@ -7,6 +7,7 @@ import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { roleSkills } from "../skills/data/roleSkills";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -35,6 +36,21 @@ export const SkillsMatrixRow = ({
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
+  };
+
+  const getSkillType = (skillTitle: string): string => {
+    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+    
+    if (currentRoleSkills.specialized.some(s => s.title === skillTitle)) {
+      return 'Specialized';
+    }
+    if (currentRoleSkills.common.some(s => s.title === skillTitle)) {
+      return 'Common';
+    }
+    if (currentRoleSkills.certifications.some(s => s.title === skillTitle)) {
+      return 'Certification';
+    }
+    return 'Uncategorized';
   };
 
   const getBorderColorClass = (level: string) => {
@@ -88,6 +104,9 @@ export const SkillsMatrixRow = ({
           </div>
         </TableCell>
       )}
+      <TableCell className="text-center border-r border-blue-200 py-2">
+        {getSkillType(skill.title)}
+      </TableCell>
       {isRoleBenchmark && roleSkillState && (
         <TableCell className="text-center border-r border-blue-200 py-2 p-0">
           <div className="flex flex-col items-center">
