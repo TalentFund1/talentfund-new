@@ -2,9 +2,11 @@ import { Skill } from '../types/SkillTypes';
 import { Skills, getAllSkills, getSkillByTitle as getSkillFromAllSkills } from './skills/allSkills';
 
 export const getUnifiedSkillData = (title: string): Skill => {
+  console.log('Looking up skill:', title);
   const skill = getSkillFromAllSkills(title);
+  
   if (!skill) {
-    console.warn(`Skill not found in database: ${title}`);
+    console.warn(`Creating default skill for: ${title}`);
     return {
       id: `generated-${title}`,
       title,
@@ -19,6 +21,8 @@ export const getUnifiedSkillData = (title: string): Skill => {
       benchmarks: { B: false, R: false, M: false, O: false }
     };
   }
+
+  console.log('Found skill:', skill);
   return skill;
 };
 

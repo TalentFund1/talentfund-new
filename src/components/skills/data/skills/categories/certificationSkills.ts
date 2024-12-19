@@ -3,7 +3,7 @@ import { UnifiedSkill } from '../../../types/SkillTypes';
 export const certificationSkills: UnifiedSkill[] = [
   {
     id: 'CERT001',
-    title: "AWS Certified DevOps Engineer",
+    title: "AWS Certified Machine Learning - Specialty",
     subcategory: "Cloud Certification",
     category: "certification",
     businessCategory: "Information Technology",
