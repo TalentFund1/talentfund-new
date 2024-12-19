@@ -22,9 +22,26 @@ export const SkillProfileEmployees = () => {
   const currentRole = roleSkills[roleId as keyof typeof roleSkills];
   const roleName = currentRole?.title || "";
 
-  // Get exact role matches and calculate their benchmarks
+  console.log('SkillProfileEmployees - Current role:', {
+    roleId,
+    roleName,
+    totalEmployees: employees.length
+  });
+
+  // Get exact role matches (same role title, any level) and calculate their benchmarks
   const exactMatches = employees
-    .filter(emp => getBaseRole(emp.role) === roleName)
+    .filter(emp => {
+      const empBaseRole = getBaseRole(emp.role);
+      const matchesRole = empBaseRole === roleName;
+      console.log('Checking employee match:', {
+        employee: emp.name,
+        employeeRole: emp.role,
+        baseRole: empBaseRole,
+        targetRole: roleName,
+        isMatch: matchesRole
+      });
+      return matchesRole;
+    })
     .map(emp => ({
       ...emp,
       benchmark: calculateBenchmarkPercentage(
@@ -36,8 +53,7 @@ export const SkillProfileEmployees = () => {
         getSkillCompetencyState
       )
     }))
-    .sort((a, b) => b.benchmark - a.benchmark)
-    .slice(0, 2);
+    .sort((a, b) => b.benchmark - a.benchmark);
 
   // Get partial matches (different roles but matching skills)
   const partialMatches = employees
