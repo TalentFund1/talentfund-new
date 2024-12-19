@@ -87,9 +87,9 @@ export const useSkillsMatrixState = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
-  const filterAndSortSkills = (employeeId: string, roleId: string = "123") => {
-    // Get only the employee's specific skills
-    const employeeSkills = getEmployeeSkills(employeeId);
+  const filterAndSortSkills = (employeeId: string) => {
+    // Get only the employee's assigned skills
+    const employeeSkills = getEmployeeSkills(employeeId, true);
     let filteredSkills = [...employeeSkills];
 
     console.log('Filtering and sorting skills:', {
@@ -102,7 +102,7 @@ export const useSkillsMatrixState = (
 
     // Filter by category
     if (selectedCategory !== "all") {
-      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory, roleId);
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
     }
 
     // Filter by level
