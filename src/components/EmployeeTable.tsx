@@ -5,6 +5,7 @@ import { Employee } from "./types/employeeTypes";
 import { EmployeeTableHeader } from "./employee/EmployeeTableHeader";
 import { EmployeeTableRow } from "./employee/EmployeeTableRow";
 import { useSkillsMatrixStore } from "./benchmark/skills-matrix/SkillsMatrixState";
+import { useToggledSkills } from "./skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./skills/competency/CompetencyStateReader";
 import { filterEmployeesBySkills } from "./employee/EmployeeSkillsFilter";
 import { filterEmployees } from "./employee/EmployeeFilters";
@@ -12,6 +13,7 @@ import { sortEmployeesByRoleMatch } from "./employee/EmployeeMatchSorter";
 import { useEmployeeTableState } from "./employee/EmployeeTableState";
 import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
+import { ToggledSkillsProvider } from "./skills/context/ToggledSkillsContext";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
 
@@ -27,12 +29,14 @@ interface EmployeeTableProps {
 }
 
 export const getSkillProfileId = (role?: string) => {
+  // Validate role ID format first
   const validProfileIds = Object.keys(roleSkills);
   if (validProfileIds.includes(role || '')) {
     console.log('Using direct role ID:', role);
     return role;
   }
 
+  // Map role titles to IDs using roleSkills
   const roleMap = Object.entries(roleSkills).reduce((acc, [id, data]) => {
     acc[data.title] = id;
     return acc;
@@ -77,6 +81,7 @@ const EmployeeTableContent = ({
   selectedRole = []
 }: EmployeeTableProps) => {
   const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
   const employees = useEmployeeStore((state) => {
@@ -105,8 +110,10 @@ const EmployeeTableContent = ({
     skillFilteredEmployees,
     selectedRole,
     currentStates,
+    toggledSkills,
     getSkillCompetencyState
   ).filter(employee => {
+    // Only include employees with benchmark > 0% when a role is selected
     if (selectedRole.length > 0) {
       return employee.benchmark > 0;
     }
@@ -157,7 +164,9 @@ const EmployeeTableContent = ({
 export const EmployeeTable = (props: EmployeeTableProps) => {
   return (
     <TrackProvider>
-      <EmployeeTableContent {...props} />
+      <ToggledSkillsProvider>
+        <EmployeeTableContent {...props} />
+      </ToggledSkillsProvider>
     </TrackProvider>
   );
 };

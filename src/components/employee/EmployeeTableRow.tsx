@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { roleSkills } from "../skills/data/roleSkills";
@@ -29,22 +30,27 @@ export const EmployeeTableRow = ({
   selectedJobTitle = []
 }: EmployeeTableRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
+  const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
+  // Determine which role ID to use for benchmark calculation
   const targetRoleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
 
   const employeeLevel = getLevel(employee.role);
   
+  // Calculate benchmark percentage
   const benchmark = calculateBenchmarkPercentage(
     employee.id,
     targetRoleId,
     employeeLevel,
     currentStates,
+    toggledSkills,
     getSkillCompetencyState
   );
 
+  // Calculate skill match ratio
   const getSkillMatch = () => {
     const employeeSkills = getEmployeeSkills(employee.id);
     const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
@@ -55,7 +61,7 @@ export const EmployeeTableRow = ({
       ...roleData.specialized,
       ...roleData.common,
       ...roleData.certifications
-    ];
+    ].filter(skill => toggledSkills.has(skill.title));
 
     const matchingSkills = allRoleSkills.filter(roleSkill => 
       employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
