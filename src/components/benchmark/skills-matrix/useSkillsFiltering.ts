@@ -19,7 +19,19 @@ export const useSkillsFiltering = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  
+  // Get only the employee's assigned skills
   const employeeSkills = getEmployeeSkills(employeeId);
+
+  console.log('Initial employee skills for filtering:', {
+    employeeId,
+    skillCount: employeeSkills.length,
+    skills: employeeSkills.map(s => ({
+      title: s.title,
+      level: s.level,
+      requirement: s.requirement
+    }))
+  });
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -32,10 +44,10 @@ export const useSkillsFiltering = (
   };
 
   const filterSkills = () => {
-    // For employee skills matrix, use employee skills directly without initial filtering
+    // Start with only the employee's assigned skills
     let skills = [...employeeSkills];
 
-    console.log('Initial employee skills:', {
+    console.log('Filtering skills for employee:', {
       employeeId,
       totalSkills: skills.length,
       skills: skills.map(s => ({
@@ -44,28 +56,6 @@ export const useSkillsFiltering = (
         requirement: s.requirement
       }))
     });
-
-    // Remove duplicates while preserving employee skill data
-    const uniqueSkills = new Map();
-    skills.forEach(skill => {
-      if (!uniqueSkills.has(skill.title)) {
-        uniqueSkills.set(skill.title, skill);
-      }
-    });
-    skills = Array.from(uniqueSkills.values());
-
-    // If this is role benchmark view, filter by role skills
-    if (isRoleBenchmark && selectedRole) {
-      const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-      if (currentRoleSkills) {
-        const roleSkillTitles = new Set([
-          ...(currentRoleSkills.specialized || []).map(s => s.title),
-          ...(currentRoleSkills.common || []).map(s => s.title),
-          ...(currentRoleSkills.certifications || []).map(s => s.title)
-        ]);
-        skills = skills.filter(skill => roleSkillTitles.has(skill.title));
-      }
-    }
 
     // Only apply filters if they are actually set
     if (selectedLevel !== 'all' || selectedInterest !== 'all' || 
@@ -119,7 +109,7 @@ export const useSkillsFiltering = (
       });
     }
 
-    console.log('Filtered skills:', {
+    console.log('Filtered skills result:', {
       total: skills.length,
       filters: {
         selectedLevel,
@@ -164,7 +154,7 @@ export const useSkillsFiltering = (
 
   const filteredSkills = filterSkills();
 
-  console.log('Skills filtering result:', {
+  console.log('Final skills filtering result:', {
     employeeId,
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
