@@ -1,5 +1,5 @@
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
-import { SkillsMatrixTable } from "../SkillsMatrixTable";
+import { SkillsMatrixTable } from "./SkillsMatrixTable";
 import { ToggledSkillsDisplay } from "../../skills/ToggledSkillsDisplay";
 
 interface BenchmarkSkillsMatrixViewProps {
@@ -56,7 +56,10 @@ export const BenchmarkSkillsMatrixView = ({
         selectedSkillLevel={selectedSkillLevel}
         setSelectedSkillLevel={setSelectedSkillLevel}
         selectedSearchSkills={selectedSearchSkills}
-        setSelectedSearchSkills={setSelectedSearchSkills}
+        removeSearchSkill={(skill: string) => {
+          setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
+        }}
+        clearSearch={() => setSearchTerm("")}
       />
 
       <ToggledSkillsDisplay />
