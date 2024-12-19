@@ -26,15 +26,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       source: 'useState initializer'
     });
 
-    // If no saved skills exist, initialize with employee's assigned skills
-    if (!savedSkills || savedSkills.length === 0) {
-      const employeeSkills = getEmployeeSkills(id || "");
-      const employeeSkillTitles = employeeSkills.map(skill => skill.title);
-      console.log('Initializing with employee skills:', employeeSkillTitles);
-      return new Set(employeeSkillTitles);
-    }
-    
-    return new Set(savedSkills);
+    // Always initialize with employee's assigned skills
+    const employeeSkills = getEmployeeSkills(id || "");
+    const employeeSkillTitles = employeeSkills.map(skill => skill.title);
+    console.log('Initializing with employee skills:', employeeSkillTitles);
+    return new Set(employeeSkillTitles);
   });
 
   // Effect to reload toggled skills when role or employee ID changes
@@ -50,24 +46,13 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       employeeId: id,
       selectedRole
     });
+
+    // Always use employee's assigned skills
+    const employeeSkills = getEmployeeSkills(id || "");
+    const employeeSkillTitles = employeeSkills.map(skill => skill.title);
+    console.log('Setting employee skills:', employeeSkillTitles);
+    setToggledSkills(new Set(employeeSkillTitles));
     
-    const savedSkills = loadToggledSkills(currentRoleId);
-    
-    // Only load saved skills if they exist, otherwise use employee skills
-    if (savedSkills && savedSkills.length > 0) {
-      console.log('Reloaded toggled skills:', {
-        roleId: currentRoleId,
-        skillCount: savedSkills.length,
-        skills: savedSkills
-      });
-      setToggledSkills(new Set(savedSkills));
-    } else {
-      // If no saved skills, use employee's assigned skills
-      const employeeSkills = getEmployeeSkills(id || "");
-      const employeeSkillTitles = employeeSkills.map(skill => skill.title);
-      console.log('No saved skills found, using employee skills:', employeeSkillTitles);
-      setToggledSkills(new Set(employeeSkillTitles));
-    }
   }, [selectedRole, id]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
@@ -77,18 +62,25 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       return;
     }
 
+    // Ensure we only keep skills that are assigned to the employee
+    const employeeSkills = getEmployeeSkills(id || "");
+    const employeeSkillTitles = new Set(employeeSkills.map(skill => skill.title));
+    const filteredSkills = new Set(
+      Array.from(newSkills).filter(skill => employeeSkillTitles.has(skill))
+    );
+
     console.log('Setting toggled skills:', {
       roleId: currentRoleId,
-      skillCount: newSkills.size,
-      skills: Array.from(newSkills),
+      skillCount: filteredSkills.size,
+      skills: Array.from(filteredSkills),
       employeeId: id
     });
     
-    setToggledSkills(newSkills);
+    setToggledSkills(filteredSkills);
     
     // Save to localStorage immediately
     try {
-      const skillsArray = Array.from(newSkills);
+      const skillsArray = Array.from(filteredSkills);
       saveToggledSkills(currentRoleId, skillsArray);
       
       // Broadcast the change
@@ -119,7 +111,15 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       const customEvent = event as CustomEvent;
       if (customEvent.detail.role === currentRoleId) {
         console.log('Received toggled skills update:', customEvent.detail);
-        setToggledSkills(new Set(customEvent.detail.skills));
+        
+        // Filter incoming skills to only include employee's assigned skills
+        const employeeSkills = getEmployeeSkills(id || "");
+        const employeeSkillTitles = new Set(employeeSkills.map(skill => skill.title));
+        const filteredSkills = new Set(
+          customEvent.detail.skills.filter((skill: string) => employeeSkillTitles.has(skill))
+        );
+        
+        setToggledSkills(filteredSkills);
       }
     };
 
