@@ -45,10 +45,11 @@ export const AddSkillToProfileDialog = () => {
       return;
     }
 
-    console.log('Adding skills to profile:', {
+    console.log('Starting skill addition process:', {
       id,
       isRoleProfile: !!roleSkills[id as keyof typeof roleSkills],
-      selectedSkills
+      selectedSkills,
+      currentToggledSkills: Array.from(toggledSkills)
     });
 
     // Check if we're in a role profile
@@ -56,12 +57,16 @@ export const AddSkillToProfileDialog = () => {
     
     if (isRoleProfile) {
       // Handle adding skills to role profile
-      console.log('Adding skills to role profile');
+      console.log('Adding skills to role profile:', id);
       const newToggledSkills = new Set(toggledSkills);
       const addedSkills: string[] = [];
 
       selectedSkills.forEach(skillTitle => {
         const normalizedTitle = normalizeSkillTitle(skillTitle);
+        console.log('Processing skill:', {
+          original: skillTitle,
+          normalized: normalizedTitle
+        });
         
         // Add to toggled skills
         newToggledSkills.add(normalizedTitle);
@@ -74,14 +79,24 @@ export const AddSkillToProfileDialog = () => {
       });
 
       // Update toggled skills
-      setToggledSkills(newToggledSkills);
-      
-      console.log('Updated role profile skills:', {
+      console.log('Updating toggled skills:', {
         roleId: id,
         addedSkills,
-        toggledSkillsCount: newToggledSkills.size
+        newToggledSkillsCount: newToggledSkills.size
       });
+      
+      setToggledSkills(newToggledSkills);
 
+      // Dispatch custom event to notify other components
+      const event = new CustomEvent('skillsUpdated', {
+        detail: {
+          id,
+          toggledSkills: Array.from(newToggledSkills)
+        }
+      });
+      console.log('Dispatching skillsUpdated event:', event.detail);
+      window.dispatchEvent(event);
+      
       if (addedSkills.length > 0) {
         toast({
           title: "Skills Added",
@@ -142,14 +157,6 @@ export const AddSkillToProfileDialog = () => {
     // Reset state
     setSelectedSkills([]);
     setOpen(false);
-
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('skillsUpdated', {
-      detail: {
-        id,
-        toggledSkills: Array.from(toggledSkills)
-      }
-    }));
   };
 
   return (
