@@ -35,11 +35,11 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel, 'required');
+  initializeState(skillTitle, initialLevel, validateRequirement('required'));
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'required' as SkillRequirement
+    requirement: validateRequirement('required')
   };
 
   const getLevelIcon = (level: string) => {
