@@ -31,14 +31,12 @@ export const EmployeeTableRow = ({
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
-  // Determine which role ID to use for benchmark calculation
   const targetRoleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
 
   const employeeLevel = getLevel(employee.role);
   
-  // Calculate benchmark percentage
   const benchmark = calculateBenchmarkPercentage(
     employee.id,
     targetRoleId,
@@ -47,7 +45,6 @@ export const EmployeeTableRow = ({
     getSkillCompetencyState
   );
 
-  // Calculate skill match ratio
   const getSkillMatch = () => {
     const employeeSkills = getEmployeeSkills(employee.id);
     const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];

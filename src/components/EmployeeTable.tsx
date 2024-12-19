@@ -27,14 +27,12 @@ interface EmployeeTableProps {
 }
 
 export const getSkillProfileId = (role?: string) => {
-  // Validate role ID format first
   const validProfileIds = Object.keys(roleSkills);
   if (validProfileIds.includes(role || '')) {
     console.log('Using direct role ID:', role);
     return role;
   }
 
-  // Map role titles to IDs using roleSkills
   const roleMap = Object.entries(roleSkills).reduce((acc, [id, data]) => {
     acc[data.title] = id;
     return acc;
@@ -109,7 +107,6 @@ const EmployeeTableContent = ({
     currentStates,
     getSkillCompetencyState
   ).filter(employee => {
-    // Only include employees with benchmark > 0% when a role is selected
     if (selectedRole.length > 0) {
       return employee.benchmark > 0;
     }

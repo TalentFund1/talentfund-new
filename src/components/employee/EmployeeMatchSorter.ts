@@ -7,7 +7,6 @@ export const sortEmployeesByRoleMatch = (
   employees: Employee[],
   selectedJobTitle: string[],
   currentStates: any,
-  toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ): Employee[] => {
   if (selectedJobTitle.length === 0) return employees;
@@ -21,11 +20,9 @@ export const sortEmployeesByRoleMatch = (
     totalEmployees: employees.length 
   });
 
-  // First separate exact matches and calculate benchmarks for remaining employees
   const exactMatches: Employee[] = [];
   const partialMatches: Employee[] = [];
 
-  // Get role skills for benchmark comparison
   const roleData = roleSkills[roleId as keyof typeof roleSkills];
   if (!roleData) {
     console.error('No role skills found for role:', roleId);
@@ -36,7 +33,7 @@ export const sortEmployeesByRoleMatch = (
     ...roleData.specialized,
     ...roleData.common,
     ...roleData.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
+  ];
 
   console.log('Role skills for matching:', {
     roleId,
@@ -49,13 +46,11 @@ export const sortEmployeesByRoleMatch = (
     const employeeLevel = getLevel(employee.role);
     const isExactMatch = employeeRoleId === roleId;
 
-    // Calculate benchmark for all employees
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
       roleId,
       employeeLevel,
       currentStates,
-      toggledSkills,
       getSkillCompetencyState
     );
 
@@ -77,8 +72,6 @@ export const sortEmployeesByRoleMatch = (
     if (isExactMatch) {
       exactMatches.push(employeeWithBenchmark);
     } else if (benchmark > 0) {
-      // Add to partial matches if they have any matching skills (benchmark > 0)
-      // and they're not an exact match
       partialMatches.push(employeeWithBenchmark);
       console.log('Added to partial matches:', {
         employee: employee.name,
@@ -89,7 +82,6 @@ export const sortEmployeesByRoleMatch = (
     }
   });
 
-  // Sort partial matches by benchmark percentage in descending order
   const sortedPartialMatches = partialMatches.sort((a, b) => {
     return (b.benchmark || 0) - (a.benchmark || 0);
   });
@@ -109,6 +101,5 @@ export const sortEmployeesByRoleMatch = (
     totalPartialMatches: sortedPartialMatches.length
   });
 
-  // Combine exact matches first, followed by sorted partial matches
   return [...exactMatches, ...sortedPartialMatches];
 };
