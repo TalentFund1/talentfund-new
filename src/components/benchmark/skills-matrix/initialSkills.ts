@@ -1,15 +1,15 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { useEmployeeStore } from '../../employee/store/employeeStore';
 
 export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', id);
-  // Return empty array as the store will handle the actual skills
-  return [];
+  return useEmployeeStore.getState().getEmployeeSkills(id);
 };
 
 export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): string => {
-  return 'unspecified';
+  return useEmployeeStore.getState().getSkillState(employeeId, skillTitle).level;
 };
 
 export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): string => {
-  return 'unknown';
+  return useEmployeeStore.getState().getSkillState(employeeId, skillTitle).requirement;
 };

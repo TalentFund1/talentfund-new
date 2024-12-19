@@ -4,25 +4,6 @@ import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { getSkillByTitle } from "../../skills/data/skills/allSkills";
 
-// Initial employee skills mapping moved here to break circular dependency
-const initialEmployeeSkills: { [key: string]: string[] } = {
-  "123": [
-    "Machine Learning",
-    "Deep Learning"
-  ],
-  "124": [
-    "Node.js",
-    "Database Design",
-    "API Development"
-  ],
-  "125": [
-    "React"
-  ],
-  "126": [
-    "Team Leadership"
-  ]
-};
-
 interface EmployeeSkillState {
   level: string;
   requirement: string;
@@ -47,37 +28,24 @@ export const useEmployeeStore = create<EmployeeStore>((set, get) => ({
   skillStates: {},
 
   initializeEmployeeSkills: (employeeId: string) => {
-    console.log('Initializing skills for employee:', employeeId);
+    console.log('Initializing empty skills array for employee:', employeeId);
     const store = get();
     
     if (!store.employeeSkills[employeeId]) {
-      const skillTitles = initialEmployeeSkills[employeeId] || [];
-      const skills = skillTitles
-        .map(title => getSkillByTitle(title))
-        .filter((skill): skill is UnifiedSkill => skill !== undefined);
+      store.setEmployeeSkills(employeeId, []);
       
-      store.setEmployeeSkills(employeeId, skills);
-      
-      // Initialize skill states
-      skills.forEach(skill => {
-        if (!store.skillStates[employeeId]?.[skill.title]) {
-          store.setSkillState(employeeId, skill.title, 'unspecified', 'preferred');
-        }
-      });
-
-      // Update employee skill count
+      // Update employee skill count to 0
       set((state) => ({
         employees: state.employees.map(emp => 
           emp.id === employeeId 
-            ? { ...emp, skillCount: skills.length }
+            ? { ...emp, skillCount: 0 }
             : emp
         )
       }));
 
-      console.log('Initialized skills for employee:', {
+      console.log('Initialized empty skills for employee:', {
         employeeId,
-        skillCount: skills.length,
-        skills: skills.map(s => s.title)
+        skillCount: 0
       });
     }
   },
