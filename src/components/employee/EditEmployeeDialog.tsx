@@ -34,6 +34,12 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     category: employee.category,
   });
 
+  console.log('EditEmployeeDialog - Initial form data:', {
+    employeeRole: employee.role,
+    parsedLevel: employee.role.split(':')[1].trim(),
+    formData
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
