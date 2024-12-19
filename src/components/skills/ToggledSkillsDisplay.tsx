@@ -1,19 +1,19 @@
-import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { SkillBadge } from "./SkillBadge";
+import { Card } from "@/components/ui/card";
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 
 export const ToggledSkillsDisplay = () => {
   const { toggledSkills } = useToggledSkills();
-  const toggledSkillsList = Array.from(toggledSkills);
+  const skillsArray = Array.from(toggledSkills);
 
-  if (toggledSkillsList.length === 0) {
+  if (skillsArray.length === 0) {
     return null;
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg border border-[#CCDBFF]">
-      <h3 className="text-sm font-medium text-muted-foreground mb-3">Selected Skills</h3>
+    <Card className="p-4 mb-6 bg-white border-border">
       <div className="flex flex-wrap gap-2">
-        {toggledSkillsList.map((skill) => (
+        {skillsArray.map((skill) => (
           <SkillBadge
             key={skill}
             skill={{ name: skill }}
@@ -21,6 +21,6 @@ export const ToggledSkillsDisplay = () => {
           />
         ))}
       </div>
-    </div>
+    </Card>
   );
 };

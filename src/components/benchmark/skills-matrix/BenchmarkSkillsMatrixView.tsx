@@ -56,10 +56,7 @@ export const BenchmarkSkillsMatrixView = ({
         selectedSkillLevel={selectedSkillLevel}
         setSelectedSkillLevel={setSelectedSkillLevel}
         selectedSearchSkills={selectedSearchSkills}
-        removeSearchSkill={(skill: string) => {
-          setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
-        }}
-        clearSearch={() => setSearchTerm("")}
+        setSelectedSearchSkills={setSelectedSearchSkills}
       />
 
       <ToggledSkillsDisplay />
