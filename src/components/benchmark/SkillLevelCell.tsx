@@ -12,10 +12,18 @@ interface SkillLevelCellProps {
 }
 
 const validateRequirement = (req: string): SkillRequirement => {
-  const validRequirements: SkillRequirement[] = ['required', 'not_interested', 'skill_goal', 'unknown'];
-  return validRequirements.includes(req as SkillRequirement) 
-    ? (req as SkillRequirement) 
-    : 'unknown';
+  switch (req) {
+    case 'required':
+      return 'required';
+    case 'not_interested':
+      return 'not_interested';
+    case 'skill_goal':
+      return 'skill_goal';
+    case 'unknown':
+      return 'unknown';
+    default:
+      return 'unknown';
+  }
 };
 
 export const SkillLevelCell = ({ 
@@ -27,7 +35,7 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel, 'required' as SkillRequirement);
+  initializeState(skillTitle, initialLevel, 'required');
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
@@ -101,8 +109,9 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.level || 'unspecified'} 
           onValueChange={(value) => {
-            setSkillState(skillTitle, value, validateRequirement(currentState?.requirement));
-            onLevelChange?.(value, validateRequirement(currentState?.requirement));
+            const validatedRequirement = validateRequirement(currentState?.requirement);
+            setSkillState(skillTitle, value, validatedRequirement);
+            onLevelChange?.(value, validatedRequirement);
           }}
         >
           <SelectTrigger className={`
@@ -147,9 +156,9 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.requirement || 'required'}
           onValueChange={(value: string) => {
-            const requirement = validateRequirement(value);
-            setSkillState(skillTitle, currentState?.level || 'unspecified', requirement);
-            onLevelChange?.(currentState?.level || 'unspecified', requirement);
+            const validatedRequirement = validateRequirement(value);
+            setSkillState(skillTitle, currentState?.level || 'unspecified', validatedRequirement);
+            onLevelChange?.(currentState?.level || 'unspecified', validatedRequirement);
           }}
         >
           <SelectTrigger className={`
