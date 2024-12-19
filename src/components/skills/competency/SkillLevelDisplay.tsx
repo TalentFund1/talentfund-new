@@ -1,13 +1,9 @@
 import { useCompetencyStateReader } from "./CompetencyStateReader";
-import { useParams } from "react-router-dom";
+import { useRoleStore } from "../../benchmark/RoleBenchmark";
 
 export const SkillLevelDisplay = ({ roleId, level = "p3" }: { roleId: string; level?: string }) => {
-  const { id: employeeId } = useParams<{ id: string }>();
   const { getAllSkillStatesForLevel } = useCompetencyStateReader();
-  
-  if (!employeeId) return null;
-  
-  const skillStates = getAllSkillStatesForLevel(level, roleId, employeeId);
+  const skillStates = getAllSkillStatesForLevel(level, roleId);
 
   return (
     <div className="space-y-4">
