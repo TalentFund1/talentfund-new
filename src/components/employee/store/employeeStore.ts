@@ -14,6 +14,7 @@ interface EmployeeStore {
   employeeSkills: Record<string, UnifiedSkill[]>;
   skillStates: Record<string, Record<string, EmployeeSkillState>>;
   addEmployee: (employee: Employee) => void;
+  updateEmployee: (employee: Employee) => void;
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => UnifiedSkill[];
@@ -57,6 +58,15 @@ export const useEmployeeStore = create<EmployeeStore>((set, get) => ({
       console.log('Updated employees list:', newEmployees);
       return { employees: newEmployees };
     });
+  },
+
+  updateEmployee: (employee) => {
+    console.log('Updating employee in store:', employee);
+    set((state) => ({
+      employees: state.employees.map((emp) => 
+        emp.id === employee.id ? employee : emp
+      )
+    }));
   },
 
   getEmployeeById: (id) => {

@@ -1,6 +1,9 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
+import { useState } from "react";
+import { EditEmployeeDialog } from "./EditEmployeeDialog";
+import { useEmployeeStore } from "./store/employeeStore";
 
 interface EmployeeHeaderProps {
   id: string;
@@ -13,6 +16,11 @@ interface EmployeeHeaderProps {
 }
 
 export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const fullEmployee = useEmployeeStore(state => state.getEmployeeById(id));
+
+  if (!fullEmployee) return null;
+
   return (
     <div className="flex items-start justify-between mb-8">
       <div className="flex gap-6">
@@ -39,8 +47,19 @@ export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
       </div>
       <div className="flex gap-3">
         <Button variant="outline" className="bg-white hover:bg-gray-50">Export</Button>
-        <Button className="bg-[#1F2144] hover:bg-[#1F2144]/90">Edit</Button>
+        <Button 
+          className="bg-[#1F2144] hover:bg-[#1F2144]/90"
+          onClick={() => setEditDialogOpen(true)}
+        >
+          Edit
+        </Button>
       </div>
+
+      <EditEmployeeDialog 
+        employee={fullEmployee}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+      />
     </div>
   );
 };
