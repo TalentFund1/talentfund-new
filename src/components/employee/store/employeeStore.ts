@@ -3,25 +3,7 @@ import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { getSkillByTitle } from "../../skills/data/skills/allSkills";
-
-// Initial employee skills mapping
-const initialEmployeeSkills: { [key: string]: string[] } = {
-  "123": [
-    "Machine Learning",
-    "Deep Learning"
-  ],
-  "124": [
-    "Node.js",
-    "Database Design",
-    "API Development"
-  ],
-  "125": [
-    "React"
-  ],
-  "126": [
-    "Team Leadership"
-  ]
-};
+import { getInitialSkills } from "../../benchmark/skills-matrix/initialSkills";
 
 interface EmployeeSkillState {
   level: string;
@@ -51,7 +33,7 @@ export const useEmployeeStore = create<EmployeeStore>((set, get) => ({
     const store = get();
     
     if (!store.employeeSkills[employeeId]) {
-      const skillTitles = initialEmployeeSkills[employeeId] || [];
+      const skillTitles = getInitialSkills(employeeId);
       const skills = skillTitles
         .map(title => getSkillByTitle(title))
         .filter((skill): skill is UnifiedSkill => skill !== undefined);
