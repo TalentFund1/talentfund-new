@@ -2,6 +2,8 @@ import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { initializeEmployeeSkills } from "./skills-matrix/initialSkills";
+import { useParams } from "react-router-dom";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -17,6 +19,7 @@ export const SkillLevelCell = ({
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
+  const { id } = useParams();
 
   // Initialize the state when the component mounts
   initializeState(skillTitle, initialLevel, 'required');
@@ -72,15 +75,41 @@ export const SkillLevelCell = ({
     return getBorderColorClass(level).split(' ')[0];
   };
 
+  const handleSkillChange = (value: string, type: 'level' | 'requirement') => {
+    const newState = {
+      level: type === 'level' ? value : currentState.level,
+      requirement: type === 'requirement' ? value : currentState.requirement
+    };
+
+    setSkillState(skillTitle, newState.level, newState.requirement);
+    
+    if (id) {
+      // Update initialSkills when skill state changes
+      initializeEmployeeSkills(id, [{
+        title: skillTitle,
+        level: newState.level,
+        requirement: newState.requirement,
+        category: 'specialized', // Default category, can be adjusted based on skill type
+        id: `skill-${Date.now()}`,
+        subcategory: 'Other',
+        businessCategory: 'Information Technology',
+        weight: 'necessary',
+        growth: '0%',
+        salary: '$0',
+        confidence: 'low',
+        benchmarks: { B: false, R: false, M: false, O: false }
+      }], true); // true flag for updating existing skills
+    }
+
+    onLevelChange?.(newState.level, newState.requirement);
+  };
+
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select 
           value={currentState?.level || 'unspecified'} 
-          onValueChange={(value) => {
-            setSkillState(skillTitle, value, currentState?.requirement || 'required');
-            onLevelChange?.(value, currentState?.requirement || 'required');
-          }}
+          onValueChange={(value) => handleSkillChange(value, 'level')}
         >
           <SelectTrigger className={`
             rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
@@ -123,10 +152,7 @@ export const SkillLevelCell = ({
 
         <Select 
           value={currentState?.requirement || 'required'}
-          onValueChange={(value) => {
-            setSkillState(skillTitle, currentState?.level || 'unspecified', value);
-            onLevelChange?.(currentState?.level || 'unspecified', value);
-          }}
+          onValueChange={(value) => handleSkillChange(value, 'requirement')}
         >
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 

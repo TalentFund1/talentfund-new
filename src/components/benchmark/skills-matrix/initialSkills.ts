@@ -130,17 +130,45 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   return skills;
 };
 
-// Initialize skills for a new employee
-export const initializeEmployeeSkills = (employeeId: string, skills: string[]) => {
-  console.log('Initializing skills for employee:', employeeId, skills);
-  employeeSkills[employeeId] = skills.map(title => {
-    const normalizedTitle = normalizeSkillTitle(title);
-    const skillData = getUnifiedSkillData(normalizedTitle);
-    return {
-      ...skillData,
-      title: normalizedTitle,
-      category: getSkillCategory(normalizedTitle)
-    };
+// Initialize skills for a new employee or update existing skills
+export const initializeEmployeeSkills = (employeeId: string, skills: UnifiedSkill[], update: boolean = false) => {
+  console.log('Initializing/updating skills for employee:', employeeId, skills);
+  
+  if (update && employeeSkills[employeeId]) {
+    // Update existing skills
+    skills.forEach(newSkill => {
+      const existingSkillIndex = employeeSkills[employeeId].findIndex(
+        skill => normalizeSkillTitle(skill.title) === normalizeSkillTitle(newSkill.title)
+      );
+      
+      if (existingSkillIndex >= 0) {
+        // Update existing skill
+        employeeSkills[employeeId][existingSkillIndex] = {
+          ...employeeSkills[employeeId][existingSkillIndex],
+          ...newSkill
+        };
+      } else {
+        // Add new skill
+        employeeSkills[employeeId].push(newSkill);
+      }
+    });
+  } else {
+    // Initialize new skills array
+    employeeSkills[employeeId] = skills.map(skill => ({
+      ...skill,
+      title: normalizeSkillTitle(skill.title),
+      category: getSkillCategory(skill.title)
+    }));
+  }
+  
+  console.log('Updated employee skills:', {
+    employeeId,
+    skillCount: employeeSkills[employeeId].length,
+    skills: employeeSkills[employeeId].map(s => ({
+      title: s.title,
+      level: s.level,
+      requirement: s.requirement
+    }))
   });
 };
 
