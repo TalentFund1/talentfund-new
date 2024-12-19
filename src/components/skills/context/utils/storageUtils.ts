@@ -11,7 +11,7 @@ export const loadToggledSkills = (roleId: string): string[] => {
     if (savedState) {
       const parsedSkills = JSON.parse(savedState);
       if (Array.isArray(parsedSkills)) {
-        console.log('Loaded saved toggle state:', {
+        console.log('Loaded role-based toggle state:', {
           roleId,
           skillCount: parsedSkills.length,
           skills: parsedSkills
@@ -35,7 +35,7 @@ export const saveToggledSkills = (roleId: string, skills: string[]) => {
     const storageKey = getStorageKey(roleId);
     localStorage.setItem(storageKey, JSON.stringify(skills));
     
-    console.log('Saved toggled skills:', {
+    console.log('Saved role-based toggled skills:', {
       roleId,
       skillCount: skills.length,
       skills,
