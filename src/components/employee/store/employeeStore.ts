@@ -3,7 +3,6 @@ import { persist } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { getSkillByTitle } from "../../skills/data/skills/allSkills";
 
 interface EmployeeSkillState {
   level: string;
@@ -117,6 +116,12 @@ export const useEmployeeStore = create<EmployeeStore>()(
     {
       name: 'employee-store',
       version: 1,
+      storage: localStorage,
+      partialize: (state) => ({
+        employees: state.employees,
+        employeeSkills: state.employeeSkills,
+        skillStates: state.skillStates
+      })
     }
   )
 );
