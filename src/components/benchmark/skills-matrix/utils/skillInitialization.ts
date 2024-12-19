@@ -9,6 +9,10 @@ export const initializeEmployeeSkills = (employeeId: string, skills: UnifiedSkil
   const validatedSkills = skills.map(skill => {
     const normalizedTitle = normalizeSkillTitle(skill.title);
     const skillData = getUnifiedSkillData(normalizedTitle);
+    console.log('Initializing skill:', {
+      title: normalizedTitle,
+      category: getSkillCategory(normalizedTitle)
+    });
     return {
       ...skillData,
       title: normalizedTitle,

@@ -13,6 +13,10 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   const allSkills = getAllSkills().map(skill => {
     const normalizedTitle = normalizeSkillTitle(skill.title);
     const skillData = getUnifiedSkillData(normalizedTitle);
+    console.log('Processing skill:', {
+      title: normalizedTitle,
+      category: getSkillCategory(normalizedTitle)
+    });
     return {
       ...skillData,
       title: normalizedTitle,
@@ -32,11 +36,16 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
     });
     
     // Merge existing skills with all skills, keeping employee's levels where they exist
-    const existingSkills = new Map(employeeSkills[employeeId].map(skill => [skill.title, skill]));
+    const existingSkills = new Map(employeeSkills[employeeId].map(skill => [normalizeSkillTitle(skill.title), skill]));
     
     return allSkills.map(skill => {
       const existingSkill = existingSkills.get(skill.title);
       if (existingSkill) {
+        console.log('Merging existing skill data:', {
+          skill: skill.title,
+          level: existingSkill.level,
+          requirement: existingSkill.requirement
+        });
         return {
           ...skill,
           level: existingSkill.level,
