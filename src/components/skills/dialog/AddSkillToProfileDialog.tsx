@@ -94,7 +94,7 @@ export const AddSkillToProfileDialog = () => {
     // Update employee skills
     updateEmployeeSkills(id, updatedSkills);
     
-    // Update toggled skills
+    // Update toggled skills and persist them
     setToggledSkills(newToggledSkills);
     
     console.log('Updated employee skills:', {
