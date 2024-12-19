@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check, X, Database } from "lucide-react";
+import { Check } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useTrack } from "../skills/context/TrackContext";
@@ -40,8 +40,8 @@ export const SkillsMatrixRow = ({
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
         <div className="flex justify-center">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-            <Database className="w-5 h-5 text-blue-600 stroke-[2.5]" />
+          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+            <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
           </div>
         </div>
       </TableCell>
@@ -70,7 +70,7 @@ export const SkillsMatrixRow = ({
         )}
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
+        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
           skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
         }`}>
           ↗ {skill.growth}
