@@ -3,7 +3,25 @@ import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { getSkillByTitle } from "../../skills/data/skills/allSkills";
-import { getInitialSkills } from "../../benchmark/skills-matrix/initialSkills";
+
+// Initial employee skills mapping moved here to break circular dependency
+const initialEmployeeSkills: { [key: string]: string[] } = {
+  "123": [
+    "Machine Learning",
+    "Deep Learning"
+  ],
+  "124": [
+    "Node.js",
+    "Database Design",
+    "API Development"
+  ],
+  "125": [
+    "React"
+  ],
+  "126": [
+    "Team Leadership"
+  ]
+};
 
 interface EmployeeSkillState {
   level: string;
@@ -33,7 +51,7 @@ export const useEmployeeStore = create<EmployeeStore>((set, get) => ({
     const store = get();
     
     if (!store.employeeSkills[employeeId]) {
-      const skillTitles = getInitialSkills(employeeId);
+      const skillTitles = initialEmployeeSkills[employeeId] || [];
       const skills = skillTitles
         .map(title => getSkillByTitle(title))
         .filter((skill): skill is UnifiedSkill => skill !== undefined);
@@ -46,6 +64,15 @@ export const useEmployeeStore = create<EmployeeStore>((set, get) => ({
           store.setSkillState(employeeId, skill.title, 'unspecified', 'preferred');
         }
       });
+
+      // Update employee skill count
+      set((state) => ({
+        employees: state.employees.map(emp => 
+          emp.id === employeeId 
+            ? { ...emp, skillCount: skills.length }
+            : emp
+        )
+      }));
 
       console.log('Initialized skills for employee:', {
         employeeId,

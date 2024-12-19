@@ -1,6 +1,3 @@
-import { Employee } from "../types/employeeTypes";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-
 export const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
   "photo-1518770660439-4636190af475",
@@ -8,13 +5,13 @@ export const EMPLOYEE_IMAGES = [
   "photo-1486312338219-ce68d2c6f44d"
 ];
 
-export const employees: Employee[] = [
+export const employees = [
   {
     id: "123",
     name: "Victor Smith",
     role: "AI Engineer: P4",
     department: "Engineering",
-    skillCount: getEmployeeSkills("123").length,
+    skillCount: 0, // Initialize to 0, will be updated by store
     benchmark: 0,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
@@ -30,7 +27,7 @@ export const employees: Employee[] = [
     name: "Jennie Richards",
     role: "Backend Engineer: P4",
     department: "Engineering",
-    skillCount: getEmployeeSkills("124").length,
+    skillCount: 0, // Initialize to 0, will be updated by store
     benchmark: 0,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
@@ -46,7 +43,7 @@ export const employees: Employee[] = [
     name: "Anna Vyselva",
     role: "Frontend Engineer: P5",
     department: "Engineering",
-    skillCount: getEmployeeSkills("125").length,
+    skillCount: 0, // Initialize to 0, will be updated by store
     benchmark: 0,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
@@ -62,7 +59,7 @@ export const employees: Employee[] = [
     name: "Sus Manu",
     role: "Engineering Manager: M3",
     department: "Engineering",
-    skillCount: getEmployeeSkills("126").length,
+    skillCount: 0, // Initialize to 0, will be updated by store
     benchmark: 0,
     lastUpdated: "10/20/24",
     location: "Toronto, ON",
