@@ -8,7 +8,7 @@ import { roleSkills } from '@/components/skills/data/roleSkills';
 import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
 import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
+import { ToggledSkillsProvider, useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 import { AddSkillProfileForm } from "@/components/skills/form/AddSkillProfileForm";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import {
@@ -38,6 +38,7 @@ const SkillsProfileContent = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
+  const { toggledSkills } = useToggledSkills();
   
   // Get role titles directly from roleSkills
   const availableJobTitles = Object.values(roleSkills).map(role => role.title);
@@ -46,7 +47,8 @@ const SkillsProfileContent = () => {
     selectedSkills,
     selectedFunction,
     selectedJobTitle,
-    availableJobTitles
+    availableJobTitles,
+    toggledSkills
   });
 
   return (
@@ -73,6 +75,7 @@ const SkillsProfileContent = () => {
             setSelectedJobTitle={setSelectedJobTitle}
             availableJobTitles={availableJobTitles}
             companyFunctions={companyFunctions}
+            toggledSkillsList={toggledSkills}
           />
 
           <SkillProfileStats />
