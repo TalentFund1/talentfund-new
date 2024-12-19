@@ -22,6 +22,7 @@ export interface SkillProfileRow {
   matches: string;
   lastUpdated: string;
   toggledSkillsCount: number;
+  hasToggledSkills: boolean;
 }
 
 export interface EmployeeSkill {
