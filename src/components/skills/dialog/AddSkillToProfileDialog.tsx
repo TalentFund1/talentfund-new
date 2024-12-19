@@ -11,6 +11,8 @@ import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
 import { roleSkills } from '../data/roleSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
+import { generateSkillProgression } from '../competency/autoFillUtils';
+import { useTrack } from "../context/TrackContext";
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -18,7 +20,8 @@ export const AddSkillToProfileDialog = () => {
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
-  const { setSkillState } = useCompetencyStore();
+  const { setSkillState, setSkillProgression } = useCompetencyStore();
+  const { getTrackForRole } = useTrack();
 
   // Get all unique skills from our core data structure
   const allSkills = Array.from(new Set([
@@ -48,7 +51,8 @@ export const AddSkillToProfileDialog = () => {
       return;
     }
 
-    console.log('Adding skills to role:', id);
+    const track = getTrackForRole(id);
+    console.log('Adding skills to role:', { id, track });
 
     // Add skills to toggled skills and role skills
     const newToggledSkills = new Set(toggledSkills);
@@ -63,12 +67,19 @@ export const AddSkillToProfileDialog = () => {
         // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
-        // Initialize skill state in matrix
-        setSkillState(skillTitle, 'unspecified', 'p4', 'preferred', id);
+        // Initialize skill state with progression
+        const category = skillData.category?.toLowerCase() || 'common';
+        const progression = generateSkillProgression(skillTitle, category, track, id);
+        
+        if (progression) {
+          console.log('Generated progression for skill:', {
+            skill: skillTitle,
+            progression
+          });
+          setSkillProgression(skillTitle, progression, id);
+        }
 
         // Add to role skills based on category
-        const category = skillData.category?.toLowerCase() || 'common';
-        
         if (category === 'specialized' && !currentRole.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
           console.log('Adding to specialized skills:', skillData.title);
           currentRole.specialized.push(skillData);
