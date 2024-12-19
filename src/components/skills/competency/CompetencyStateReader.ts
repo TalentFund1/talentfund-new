@@ -46,7 +46,7 @@ export const useCompetencyStateReader = () => {
 
   const getSkillCompetencyState = (
     skillName: string, 
-    levelKey: string = 'p4',
+    levelKey: string,
     roleId: string,
     employeeId: string
   ): SkillCompetencyState => {
@@ -70,7 +70,31 @@ export const useCompetencyStateReader = () => {
     };
   };
 
+  const getAllSkillStatesForLevel = (
+    level: string,
+    roleId: string,
+    employeeId: string
+  ): Record<string, SkillCompetencyState> => {
+    const states: Record<string, SkillCompetencyState> = {};
+    const roleSkillsData = roleSkills[roleId as keyof typeof roleSkills];
+    
+    if (!roleSkillsData) return states;
+
+    const allSkills = [
+      ...roleSkillsData.specialized,
+      ...roleSkillsData.common,
+      ...roleSkillsData.certifications
+    ];
+
+    allSkills.forEach(skill => {
+      states[skill.title] = getSkillCompetencyState(skill.title, level, roleId, employeeId);
+    });
+
+    return states;
+  };
+
   return {
-    getSkillCompetencyState
+    getSkillCompetencyState,
+    getAllSkillStatesForLevel
   };
 };
