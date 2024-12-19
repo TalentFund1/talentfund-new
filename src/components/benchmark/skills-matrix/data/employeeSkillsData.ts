@@ -31,19 +31,41 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
   }),
 
   "124": [
+    // Backend specialized skills
     "Node.js",
     "Database Design",
     "API Development", 
     "System Architecture",
     "Kubernetes",
+    // Common technical skills
+    "Python",
     "Problem Solving",
     "Code Review",
     "Agile Methodologies",
     "Git Version Control",
-    "Communication"
+    // Communication skills
+    "Communication",
+    "Technical Writing",
+    "Team Collaboration",
+    // Additional technical skills
+    "Docker",
+    "GraphQL",
+    "REST APIs",
+    "SQL",
+    "MongoDB",
+    "Redis",
+    "AWS",
+    "CI/CD",
+    "Microservices",
+    "System Design",
+    "Performance Optimization"
   ].map(title => {
     const normalizedTitle = normalizeSkillTitle(title);
     const skillData = getUnifiedSkillData(normalizedTitle);
+    console.log('Loading backend engineer skill:', {
+      title: normalizedTitle,
+      category: getSkillCategory(normalizedTitle)
+    });
     return {
       ...skillData,
       title: normalizedTitle,
