@@ -114,13 +114,14 @@ export const SkillsMatrixRow = ({
                 <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
               </div>
             ) : (
-              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                <X className="w-5 h-5 text-red-600 stroke-[2.5]" />
+              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <X className="w-5 h-5 text-gray-400 stroke-[2]" />
               </div>
             )}
           </div>
         </TableCell>
       )}
+      
       {isRoleBenchmark && roleSkillState && (
         <TableCell className="text-center border-r border-blue-200 py-2 p-0">
           <div className="flex flex-col items-center">
