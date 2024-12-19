@@ -7,7 +7,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
-
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
 import { roleSkills } from '../data/roleSkills';
@@ -27,7 +26,7 @@ export const AddSkillToProfileDialog = () => {
     ...Skills.common.map(s => normalizeSkillTitle(s.title)),
     ...Skills.certification.map(s => normalizeSkillTitle(s.title))
   ]));
-  
+
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
     sampleSkills: allSkills.slice(0, 5)
@@ -53,20 +52,11 @@ export const AddSkillToProfileDialog = () => {
 
     // Add skills to toggled skills and role skills
     const newToggledSkills = new Set(toggledSkills);
-    const existingSkillTitles = new Set([
-      ...currentRole.specialized.map(s => normalizeSkillTitle(s.title)),
-      ...currentRole.common.map(s => normalizeSkillTitle(s.title)),
-      ...currentRole.certifications.map(s => normalizeSkillTitle(s.title))
-    ]);
 
     selectedSkills.forEach(skillTitle => {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
-      if (existingSkillTitles.has(normalizedTitle)) {
-        console.log('Skipping duplicate skill:', skillTitle);
-        return;
-      }
-
       const skillData = getUnifiedSkillData(skillTitle);
+      
       if (skillData) {
         console.log('Processing skill:', skillData);
         
@@ -89,8 +79,6 @@ export const AddSkillToProfileDialog = () => {
           console.log('Adding to certification skills:', skillData.title);
           currentRole.certifications.push(skillData);
         }
-
-        existingSkillTitles.add(normalizedTitle);
       }
     });
 
