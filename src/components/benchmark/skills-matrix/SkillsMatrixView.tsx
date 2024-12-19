@@ -2,9 +2,10 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
-import { SkillsMatrixTable } from "./SkillsMatrixTable";
+import { SkillsMatrixTable } from "../SkillsMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
+import { AddSkillToProfileDialog } from "../../skills/dialog/AddSkillToProfileDialog";
 
 interface SkillsMatrixViewProps {
   selectedCategory: string;
@@ -17,6 +18,7 @@ interface SkillsMatrixViewProps {
   visibleItems: number;
   observerTarget: React.RefObject<HTMLDivElement>;
   hasChanges: boolean;
+  showAddSkill?: boolean;
 }
 
 export const SkillsMatrixView = ({
@@ -29,7 +31,8 @@ export const SkillsMatrixView = ({
   filteredSkills,
   visibleItems,
   observerTarget,
-  hasChanges
+  hasChanges,
+  showAddSkill = false
 }: SkillsMatrixViewProps) => {
   const { toast } = useToast();
   const { saveChanges, cancelChanges } = useSkillsMatrixStore();
@@ -67,6 +70,7 @@ export const SkillsMatrixView = ({
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
+        showAddSkill={showAddSkill}
       />
 
       <SkillsMatrixTable 

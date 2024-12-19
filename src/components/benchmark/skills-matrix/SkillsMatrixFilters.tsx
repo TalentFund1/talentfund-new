@@ -1,6 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { AddSkillToProfileDialog } from "../../skills/dialog/AddSkillToProfileDialog";
 
 interface SkillsMatrixFiltersProps {
   selectedLevel: string;
@@ -9,6 +8,7 @@ interface SkillsMatrixFiltersProps {
   setSelectedInterest: (value: string) => void;
   selectedCategory: string;
   setSelectedCategory: (value: string) => void;
+  showAddSkill?: boolean;
 }
 
 export const SkillsMatrixFilters = ({
@@ -18,11 +18,13 @@ export const SkillsMatrixFilters = ({
   setSelectedInterest,
   selectedCategory,
   setSelectedCategory,
+  showAddSkill = false
 }: SkillsMatrixFiltersProps) => {
   console.log('SkillsMatrixFilters - Current selections:', {
     level: selectedLevel,
     interest: selectedInterest,
-    category: selectedCategory
+    category: selectedCategory,
+    showAddSkill
   });
 
   return (
@@ -66,12 +68,7 @@ export const SkillsMatrixFilters = ({
             </SelectContent>
           </Select>
         </div>
-        <Button className="bg-[#1F2144] hover:bg-[#1F2144]/90">
-          <div className="w-5 h-5 rounded-full border-[1.75px] border-white flex items-center justify-center">
-            <Plus className="h-3 w-3 stroke-[2]" />
-          </div>
-          <span className="ml-2 text-sm font-medium">Add Skill</span>
-        </Button>
+        {showAddSkill && <AddSkillToProfileDialog />}
       </div>
     </div>
   );

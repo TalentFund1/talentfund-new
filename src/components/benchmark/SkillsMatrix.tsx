@@ -5,6 +5,7 @@ import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchConte
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { AddSkillToProfileDialog } from "../skills/dialog/AddSkillToProfileDialog";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -75,6 +76,7 @@ export const SkillsMatrix = () => {
         visibleItems={visibleItems}
         observerTarget={observerTarget}
         hasChanges={hasChanges}
+        showAddSkill={true}
       />
     </div>
   );
