@@ -4,8 +4,6 @@ import { Plus } from "lucide-react";
 import { useBenchmarkSearch } from "@/components/skills/context/BenchmarkSearchContext";
 
 interface SkillsMatrixFiltersProps {
-  selectedCategory: string;
-  setSelectedCategory: (value: string) => void;
   selectedLevel: string;
   setSelectedLevel: (value: string) => void;
   selectedInterest: string;
@@ -13,8 +11,6 @@ interface SkillsMatrixFiltersProps {
 }
 
 export const SkillsMatrixFilters = ({
-  selectedCategory,
-  setSelectedCategory,
   selectedLevel,
   setSelectedLevel,
   selectedInterest,
@@ -24,18 +20,6 @@ export const SkillsMatrixFilters = ({
     <div className="space-y-4">
       <div className="flex justify-between items-start gap-4">
         <div className="flex gap-4">
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="specialized">Specialized Skills</SelectItem>
-              <SelectItem value="common">Common Skills</SelectItem>
-              <SelectItem value="certification">Certifications</SelectItem>
-            </SelectContent>
-          </Select>
-
           <Select value={selectedLevel} onValueChange={setSelectedLevel}>
             <SelectTrigger className="w-[180px] bg-white">
               <SelectValue placeholder="All Levels" />
