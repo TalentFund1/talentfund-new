@@ -4,7 +4,6 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
-import { roleSkills } from '../skills/data/roleSkills';
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 
 const ITEMS_PER_PAGE = 10;
@@ -21,33 +20,19 @@ export const SkillsMatrix = () => {
   const { matrixSearchSkills } = useSkillsMatrixSearch();
 
   const { filterAndSortSkills } = useSkillsMatrixState(
-    "all", // Removed selectedCategory, passing "all" as default
+    "all",
     selectedLevel,
     selectedInterest
   );
 
-  // Get all skills for the current role
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
-  // Get employee skills and combine with role skills
+  // Get employee skills directly without role comparison
   const employeeSkills = getEmployeeSkills(id || "");
-  const combinedSkills = [...allRoleSkills, ...employeeSkills];
-
-  // Remove duplicates while preserving order
-  const uniqueSkills = Array.from(
-    new Map(combinedSkills.map(skill => [skill.title, skill])).values()
-  );
 
   // Apply filtering and sorting
   const filteredSkills = filterAndSortSkills(id || "");
 
   console.log('Skills matrix state:', {
-    totalSkills: uniqueSkills.length,
+    totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
     visibleItems,
     selectedLevel,
