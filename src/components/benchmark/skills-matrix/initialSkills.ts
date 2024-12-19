@@ -16,7 +16,7 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
       skillCount: employeeSkills[employeeId].length
     });
     
-    // Only use skills that are specifically assigned to this employee
+    // Get all skills that are specifically assigned to this employee
     const employeeSpecificSkills = employeeSkills[employeeId].map(skill => {
       const normalizedTitle = normalizeSkillTitle(skill.title);
       const skillData = getUnifiedSkillData(normalizedTitle);
@@ -33,22 +33,54 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
       };
     });
 
+    // Get all available skills
+    const allSkills = getAllSkills();
+    const existingSkillTitles = new Set(employeeSpecificSkills.map(s => s.title));
+
+    // Add any missing skills with default values
+    const additionalSkills = allSkills
+      .filter(skill => !existingSkillTitles.has(skill.title))
+      .map(skill => ({
+        ...skill,
+        title: normalizeSkillTitle(skill.title),
+        category: getSkillCategory(skill.title),
+        level: 'unspecified',
+        requirement: 'unknown'
+      }));
+
+    const combinedSkills = [...employeeSpecificSkills, ...additionalSkills];
+
     console.log('Processed employee skills:', {
       employeeId,
-      totalSkills: employeeSpecificSkills.length,
-      skills: employeeSpecificSkills.map(s => ({
+      totalSkills: combinedSkills.length,
+      specificSkills: employeeSpecificSkills.length,
+      additionalSkills: additionalSkills.length,
+      skills: combinedSkills.map(s => ({
         title: s.title,
         level: s.level,
         requirement: s.requirement
       }))
     });
 
-    return employeeSpecificSkills;
+    return combinedSkills;
   }
   
-  // Initialize with empty skills if none exist
-  console.log('No specific skills found for employee, initializing empty skills array');
-  return [];
+  // Initialize with all available skills if none exist
+  console.log('No specific skills found for employee, initializing with all available skills');
+  const allSkills = getAllSkills().map(skill => ({
+    ...skill,
+    title: normalizeSkillTitle(skill.title),
+    category: getSkillCategory(skill.title),
+    level: 'unspecified',
+    requirement: 'unknown'
+  }));
+
+  console.log('Initialized employee with all skills:', {
+    employeeId,
+    totalSkills: allSkills.length
+  });
+
+  return allSkills;
 };
 
 // Load initial skills for an employee
