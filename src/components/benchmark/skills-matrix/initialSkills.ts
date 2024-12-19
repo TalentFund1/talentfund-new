@@ -29,7 +29,7 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
         title: normalizedTitle,
         category: getSkillCategory(normalizedTitle),
         level: skill.level || 'unspecified',
-        requirement: skill.requirement || 'unknown'
+        requirement: skill.requirement || 'unknown' as const
       };
     });
 
@@ -45,7 +45,7 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
         title: normalizeSkillTitle(skill.title),
         category: getSkillCategory(skill.title),
         level: 'unspecified',
-        requirement: 'unknown'
+        requirement: 'unknown' as const
       }));
 
     const combinedSkills = [...employeeSpecificSkills, ...additionalSkills];
@@ -72,7 +72,7 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
     title: normalizeSkillTitle(skill.title),
     category: getSkillCategory(skill.title),
     level: 'unspecified',
-    requirement: 'unknown'
+    requirement: 'unknown' as const
   }));
 
   console.log('Initialized employee with all skills:', {
