@@ -35,7 +35,7 @@ export const BenchmarkSkillsMatrixContent = ({
   const { selectedLevel } = useRoleStore();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get skill counts without using toggled skills
+  // Get skill counts directly from role skills data
   const getSkillsCount = (category: string) => {
     const allSkills = [
       ...currentRoleSkills.specialized,
