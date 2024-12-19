@@ -57,13 +57,12 @@ export const AddSkillToProfileDialog = () => {
     
     if (isRoleProfile) {
       try {
-        // Handle adding skills to role profile
         console.log('Adding skills to role profile:', id);
         const newToggledSkills = new Set(toggledSkills);
         const addedSkills: string[] = [];
 
         // Process all skills first
-        selectedSkills.forEach(skillTitle => {
+        for (const skillTitle of selectedSkills) {
           const normalizedTitle = normalizeSkillTitle(skillTitle);
           console.log('Processing skill:', {
             original: skillTitle,
@@ -73,28 +72,30 @@ export const AddSkillToProfileDialog = () => {
           newToggledSkills.add(normalizedTitle);
           setSkillState(normalizedTitle, 'unspecified', id, 'preferred' as SkillRequirement, 'role');
           addedSkills.push(normalizedTitle);
-        });
+        }
 
-        // Update state first
-        await new Promise<void>((resolve) => {
-          setToggledSkills(newToggledSkills);
-          resolve();
-        });
+        // Update state synchronously first
+        setToggledSkills(newToggledSkills);
+        
+        // Wait a moment for state to update
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         console.log('Updated toggled skills:', {
           roleId: id,
           addedSkills,
-          newToggledSkillsCount: newToggledSkills.size
+          newToggledSkillsCount: newToggledSkills.size,
+          currentToggledSkills: Array.from(newToggledSkills)
         });
 
         // Then dispatch event
-        window.dispatchEvent(new CustomEvent('skillsUpdated', {
-          detail: {
-            id,
-            type: 'role',
-            toggledSkills: Array.from(newToggledSkills)
-          }
-        }));
+        const eventDetail = {
+          id,
+          type: 'role',
+          toggledSkills: Array.from(newToggledSkills)
+        };
+        
+        console.log('Dispatching skillsUpdated event with detail:', eventDetail);
+        window.dispatchEvent(new CustomEvent('skillsUpdated', { detail: eventDetail }));
 
         if (addedSkills.length > 0) {
           toast({
@@ -102,6 +103,10 @@ export const AddSkillToProfileDialog = () => {
             description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to the role profile.`,
           });
         }
+
+        // Reset state and close dialog
+        setSelectedSkills([]);
+        setOpen(false);
       } catch (error) {
         console.error('Error adding skills to role:', error);
         toast({
@@ -159,11 +164,11 @@ export const AddSkillToProfileDialog = () => {
           description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to your profile.`,
         });
       }
-    }
 
-    // Reset state
-    setSelectedSkills([]);
-    setOpen(false);
+      // Reset state and close dialog
+      setSelectedSkills([]);
+      setOpen(false);
+    }
   };
 
   return (
