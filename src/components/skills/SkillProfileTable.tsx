@@ -9,7 +9,7 @@ import { employees } from "../employee/EmployeeData";
 import { getBaseRole } from "../EmployeeTable";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { TrackProvider } from "./context/TrackContext";
 
 interface SkillProfileTableProps {
