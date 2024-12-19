@@ -2,7 +2,6 @@ import { Table, TableBody } from "@/components/ui/table";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
-import { useRef } from "react";
 
 interface SkillsMatrixContentProps {
   filteredSkills: any[];
@@ -59,9 +58,7 @@ export const SkillsMatrixContent = ({
 
       <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
         <Table>
-          <SkillsMatrixTableHeader 
-            isRoleBenchmark={false}
-          />
+          <SkillsMatrixTableHeader showCompanySkill={true} />
           <TableBody>
             {filteredSkills.slice(0, visibleItems).map((skill) => (
               <SkillsMatrixRow 

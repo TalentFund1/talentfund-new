@@ -2,10 +2,6 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Check } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { useTrack } from "../skills/context/TrackContext";
-import { Star, Shield, Target, CircleDashed } from "lucide-react";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { getSkillByTitle } from "../skills/data/skills/allSkills";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -25,8 +21,6 @@ export const SkillsMatrixRow = ({
   isRoleBenchmark
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const { getTrackForRole } = useTrack();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
   
   console.log('SkillsMatrixRow rendering:', {
     skillTitle: skill.title,
@@ -45,13 +39,6 @@ export const SkillsMatrixRow = ({
           </div>
         </div>
       </TableCell>
-      {isRoleBenchmark && (
-        <SkillLevelCell 
-          initialLevel={skill.level || 'unspecified'}
-          skillTitle={skill.title}
-          isRoleBenchmark={true}
-        />
-      )}
       <SkillLevelCell 
         initialLevel={skill.level || 'unspecified'}
         skillTitle={skill.title}
