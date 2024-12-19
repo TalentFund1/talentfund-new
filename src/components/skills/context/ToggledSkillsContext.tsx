@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
 import { roleSkills } from '../data/roleSkills';
@@ -15,7 +14,6 @@ const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const { selectedRole } = useRoleStore();
-  const { id } = useParams();
   
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     const roleId = selectedRole || "";
