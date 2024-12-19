@@ -18,7 +18,6 @@ interface FormData {
   termDate: string;
   sex: string;
   category: string;
-  skills: string;
 }
 
 export const validateFormData = (formData: FormData, existingEmployees: Employee[]) => {
@@ -95,38 +94,6 @@ export const processEmployeeData = (formData: FormData): Employee => {
   const formattedRole = `${formData.role}: ${formData.level.toUpperCase()}`;
   console.log('Formatted role:', formattedRole);
 
-  // Get role-specific skills
-  const roleId = roleMapping[formData.role as keyof typeof roleMapping];
-  const roleSkills = getEmployeeSkills(roleId);
-  
-  // Process skills list and categorize them
-  const skillsList = formData.skills
-    .split(',')
-    .map(skill => skill.trim())
-    .filter(skill => skill.length > 0);
-
-  // Initialize each skill with default values in the SkillsMatrix store
-  const skillsMatrixStore = useSkillsMatrixStore.getState();
-  
-  skillsList.forEach(skillTitle => {
-    skillsMatrixStore.setSkillState(skillTitle, 'unspecified', 'unknown');
-    console.log('Initialized skill with defaults:', {
-      skill: skillTitle,
-      level: 'unspecified',
-      requirement: 'unknown'
-    });
-  });
-
-  // Categorize skills based on role profile
-  const categorizedSkills = categorizeSkills(skillsList, roleId);
-  
-  console.log('Processed skills:', {
-    roleId,
-    roleSkillsCount: roleSkills.length,
-    userSkillsCount: skillsList.length,
-    categorizedSkills
-  });
-
   const lastUpdated = new Date().toLocaleDateString();
   console.log('Setting last updated date:', lastUpdated);
 
@@ -136,7 +103,7 @@ export const processEmployeeData = (formData: FormData): Employee => {
     name: formData.name,
     role: formattedRole,
     department: formData.department,
-    skillCount: skillsList.length || roleSkills.length,
+    skillCount: 0, // Initialize with 0 since skills are handled separately
     benchmark: 0, // Initial benchmark, will be calculated after creation
     lastUpdated: lastUpdated,
     location: formData.location || formData.office,

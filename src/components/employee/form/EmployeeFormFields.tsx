@@ -1,6 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { RoleLevelFields } from "./RoleLevelFields";
 import { BasicFields } from "./fields/BasicFields";
 import { OrganizationFields } from "./fields/OrganizationFields";
@@ -21,7 +20,6 @@ interface EmployeeFormFieldsProps {
     termDate: string;
     sex: string;
     category: string;
-    skills: string;
   };
   handleInputChange: (field: string, value: string) => void;
 }
@@ -39,16 +37,6 @@ export const EmployeeFormFields = ({
       <RoleLevelFields formData={formData} handleInputChange={handleInputChange} />
       <DateFields formData={formData} handleInputChange={handleInputChange} />
       <PersonalInfoFields formData={formData} handleInputChange={handleInputChange} />
-      
-      <div className="space-y-2 col-span-2">
-        <label className="text-sm font-medium">Skills</label>
-        <Textarea 
-          placeholder="Enter employee skills (separated by commas)"
-          value={formData.skills}
-          onChange={(e) => handleInputChange('skills', e.target.value)}
-          className="min-h-[100px]"
-        />
-      </div>
     </div>
   );
 };
