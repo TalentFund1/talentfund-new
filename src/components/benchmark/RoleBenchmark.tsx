@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { professionalLevels, managerialLevels } from "./data/levelData";
 import { getSkillProfileId } from "../EmployeeTable";
 import { getEmployeeTrack } from "../employee/utils/employeeTrackUtils";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 interface RoleStore {
   selectedRole: string;
@@ -29,7 +30,7 @@ export const useRoleStore = create<RoleStore>((set) => ({
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
 
-export const RoleBenchmark = () => {
+const RoleBenchmarkContent = () => {
   const navigate = useNavigate();
   const { toggledSkills } = useToggledSkills();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
@@ -157,5 +158,13 @@ export const RoleBenchmark = () => {
         />}
       </div>
     </div>
+  );
+};
+
+export const RoleBenchmark = () => {
+  return (
+    <ToggledSkillsProvider>
+      <RoleBenchmarkContent />
+    </ToggledSkillsProvider>
   );
 };
