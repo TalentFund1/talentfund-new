@@ -3,6 +3,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { SkillRequirement } from "../skills/types/SkillTypes";
+import { getLowerBorderColorClass, getBorderColorClass } from "./skill-level/cellStyles";
+import { validateRequirement, getRequirementLabel } from "./skill-level/requirementUtils";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -10,23 +12,6 @@ interface SkillLevelCellProps {
   onLevelChange?: (newLevel: string, requirement: SkillRequirement) => void;
   isRoleBenchmark?: boolean;
 }
-
-const validateRequirement = (req: string): SkillRequirement => {
-  switch (req) {
-    case 'required':
-      return 'required';
-    case 'not_interested':
-      return 'not_interested';
-    case 'skill_goal':
-      return 'skill_goal';
-    case 'unknown':
-      return 'unknown';
-    case 'preferred':
-      return 'preferred';
-    default:
-      return 'unknown';
-  }
-};
 
 export const SkillLevelCell = ({ 
   initialLevel, 
@@ -57,7 +42,7 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: SkillRequirement = 'unknown') => {
+  const getRequirementIcon = (requirement: SkillRequirement) => {
     switch (requirement) {
       case 'required':
       case 'skill_goal':
@@ -71,49 +56,13 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getBorderColorClass = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case 'advanced':
-        return 'border-primary-accent bg-primary-accent/10';
-      case 'intermediate':
-        return 'border-primary-icon bg-primary-icon/10';
-      case 'beginner':
-        return 'border-[#008000] bg-[#008000]/10';
-      default:
-        return 'border-gray-400 bg-gray-100/50';
-    }
-  };
-
-  const getLowerBorderColorClass = (level: string, requirement: SkillRequirement) => {
-    if (requirement !== 'required' && requirement !== 'skill_goal') {
-      return 'border-[#e5e7eb]';
-    }
-    return getBorderColorClass(level).split(' ')[0];
-  };
-
-  const getRequirementLabel = (requirement: SkillRequirement): string => {
-    switch (requirement) {
-      case 'required':
-      case 'skill_goal':
-        return 'Skill Goal';
-      case 'not_interested':
-        return 'Not Interested';
-      case 'unknown':
-        return 'Unknown';
-      case 'preferred':
-        return 'Preferred';
-      default:
-        return 'Skill Goal';
-    }
-  };
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select 
           value={currentState?.level || 'unspecified'} 
           onValueChange={(value) => {
-            const validatedRequirement = validateRequirement(currentState?.requirement);
+            const validatedRequirement = validateRequirement(currentState?.requirement || 'required');
             setSkillState(skillTitle, value, validatedRequirement);
             onLevelChange?.(value, validatedRequirement);
           }}
@@ -159,7 +108,7 @@ export const SkillLevelCell = ({
 
         <Select 
           value={currentState?.requirement || 'required'}
-          onValueChange={(value: string) => {
+          onValueChange={(value) => {
             const validatedRequirement = validateRequirement(value);
             setSkillState(skillTitle, currentState?.level || 'unspecified', validatedRequirement);
             onLevelChange?.(currentState?.level || 'unspecified', validatedRequirement);
@@ -172,8 +121,8 @@ export const SkillLevelCell = ({
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
-                {getRequirementIcon(currentState?.requirement)}
-                {getRequirementLabel(currentState?.requirement)}
+                {getRequirementIcon(validateRequirement(currentState?.requirement || 'required'))}
+                {getRequirementLabel(validateRequirement(currentState?.requirement || 'required'))}
               </span>
             </SelectValue>
           </SelectTrigger>
