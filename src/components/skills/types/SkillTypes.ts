@@ -1,7 +1,6 @@
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillRequirement = 'required' | 'preferred' | 'skill_goal' | 'not_interested' | 'unknown';
-export type SkillLevel = 'unspecified' | 'beginner' | 'intermediate' | 'advanced';
 
 export interface DetailedSkill {
   name: string;
@@ -16,7 +15,7 @@ export interface Skill {
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
-  level: SkillLevel;
+  level: string;
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
@@ -54,25 +53,8 @@ export interface SimpleSkill {
 export interface EmployeeSkill {
   title: string;
   subcategory: string;
-  level: SkillLevel;
+  level: string;
   growth: string;
   confidence: string;
   requirement?: SkillRequirement;
-}
-
-export interface SkillState {
-  level: SkillLevel;
-  required: SkillRequirement;
-}
-
-export interface LevelState {
-  [key: string]: SkillState;
-}
-
-export interface RoleState {
-  [skillName: string]: LevelState;
-}
-
-export interface EmployeeState {
-  [skillName: string]: SkillState;
 }

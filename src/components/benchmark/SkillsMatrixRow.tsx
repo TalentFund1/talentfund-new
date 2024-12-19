@@ -6,8 +6,8 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { isSpecializedSkill, isCommonSkill, isCertificationSkill } from "../skills/competency/skillCategoryUtils";
-import { useParams } from "react-router-dom";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -30,8 +30,8 @@ export const SkillsMatrixRow = ({
   const { currentStates } = useSkillsMatrixStore();
   const { selectedLevel, selectedRole } = useRoleStore();
   const { getTrackForRole } = useTrack();
-  const { id: employeeId } = useParams<{ id: string }>();
-  const track = getTrackForRole(selectedRole)?.toLowerCase() as 'professional' | 'managerial';
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+  const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
@@ -72,24 +72,17 @@ export const SkillsMatrixRow = ({
   };
 
   const getRoleSkillState = () => {
-    const skillState = currentStates[employeeId || ""]?.[skill.title];
-    if (!skillState) return null;
+    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), selectedRole);
+    if (!competencyState) return null;
 
     return {
-      level: skillState.level,
-      required: skillState.requirement
+      level: competencyState.level,
+      required: competencyState.required
     };
   };
 
   const roleSkillState = getRoleSkillState();
   const skillType = getSkillType();
-
-  console.log('SkillsMatrixRow - Current state:', {
-    skillTitle: skill.title,
-    employeeId,
-    roleSkillState,
-    currentStates: currentStates[employeeId || ""]
-  });
 
   return (
     <TableRow className="group border-b border-gray-200">
