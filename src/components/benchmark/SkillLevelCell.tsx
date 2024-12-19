@@ -76,9 +76,9 @@ export const SkillLevelCell = ({
     return getBorderColorClass(level).split(' ')[0];
   };
 
-  const handleSkillChange = (value: string, type: 'level' | 'requirement') => {
+  const handleSkillChange = (value: string | SkillRequirement, type: 'level' | 'requirement') => {
     const newState = {
-      level: type === 'level' ? value : currentState.level,
+      level: type === 'level' ? value as string : currentState.level,
       requirement: type === 'requirement' ? value as SkillRequirement : currentState.requirement
     };
 
