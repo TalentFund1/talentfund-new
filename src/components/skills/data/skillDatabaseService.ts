@@ -1,8 +1,7 @@
 import { UnifiedSkill } from '../types/SkillTypes';
-import { Skills, getAllSkills as getAllSkillsFromSource, getSkillByTitle } from './skills/allSkills';
+import { getAllSkills as getAllSkillsFromSource, getSkillByTitle } from './skills/allSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { getSkillCategory } from './skills/categories/skillCategories';
-import { getEmployeeSkills } from '../../benchmark/skills-matrix/initialSkills';
 
 // Get unified skill data
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
@@ -41,26 +40,6 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
 
   console.log('Created new skill entry:', newSkill.title);
   return newSkill;
-};
-
-// Add skill to initial skills
-export const addSkillToInitialSkills = (roleId: string, skill: UnifiedSkill) => {
-  console.log('Adding skill to initial skills:', {
-    roleId,
-    skill: skill.title
-  });
-
-  // Get the role's skills from initialSkills
-  const employeeSkills = getEmployeeSkills(roleId);
-
-  // Check if skill already exists
-  const skillExists = employeeSkills.some(s => s.title === skill.title);
-  if (!skillExists) {
-    employeeSkills.push(skill);
-    console.log('Skill added successfully to initial skills');
-  } else {
-    console.log('Skill already exists in initial skills');
-  }
 };
 
 // Export the getAllSkills function from the source
