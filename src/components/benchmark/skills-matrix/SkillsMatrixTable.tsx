@@ -13,13 +13,16 @@ interface SkillsMatrixTableProps {
     confidence: string;
     requirement?: string;
   }>;
+  isRoleBenchmark: boolean;
 }
 
 export const SkillsMatrixTable = ({
   filteredSkills,
+  isRoleBenchmark = false
 }: SkillsMatrixTableProps) => {
   console.log('Rendering SkillsMatrixTable with:', {
-    skillCount: filteredSkills.length
+    skillCount: filteredSkills.length,
+    isRoleBenchmark
   });
 
   return (
@@ -27,12 +30,15 @@ export const SkillsMatrixTable = ({
       <ToggledSkillsProvider>
         <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
           <Table>
-            <SkillsMatrixTableHeader />
+            <SkillsMatrixTableHeader 
+              isRoleBenchmark={isRoleBenchmark}
+            />
             <TableBody>
               {filteredSkills.map((skill) => (
                 <SkillsMatrixRow 
                   key={skill.title} 
                   skill={skill}
+                  isRoleBenchmark={isRoleBenchmark}
                 />
               ))}
             </TableBody>
