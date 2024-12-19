@@ -3,8 +3,8 @@ import { Skills, getAllSkills, getSkillByTitle as getSkillFromAllSkills } from '
 import { getSkillCategory } from './skills/categories/skillCategories';
 import { getSkillGrowth, getSkillSalary } from './utils/metrics';
 
-export const getUnifiedSkillData = (title: string, isCompanySkill: boolean = false): Skill => {
-  console.log('Looking up skill:', title, 'Company skill:', isCompanySkill);
+export const getUnifiedSkillData = (title: string): Skill => {
+  console.log('Looking up skill:', title);
   const skill = getSkillFromAllSkills(title);
   
   if (!skill) {
@@ -24,8 +24,7 @@ export const getUnifiedSkillData = (title: string, isCompanySkill: boolean = fal
       growth,
       salary,
       confidence: 'low',
-      benchmarks: { B: false, R: false, M: false, O: false },
-      isCompanySkill
+      benchmarks: { B: false, R: false, M: false, O: false }
     };
   }
 
@@ -34,15 +33,13 @@ export const getUnifiedSkillData = (title: string, isCompanySkill: boolean = fal
     ...skill,
     category: getSkillCategory(title),
     growth: skill.growth || getSkillGrowth(title),
-    salary: skill.salary || getSkillSalary(title),
-    isCompanySkill
+    salary: skill.salary || getSkillSalary(title)
   };
 
   console.log('Found skill with metrics:', {
     title,
     growth: skillWithMetrics.growth,
-    salary: skillWithMetrics.salary,
-    isCompanySkill
+    salary: skillWithMetrics.salary
   });
   
   return skillWithMetrics;

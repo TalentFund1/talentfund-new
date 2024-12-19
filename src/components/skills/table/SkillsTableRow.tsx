@@ -3,7 +3,6 @@ import { SkillLevelIcon } from "../SkillLevelIcon";
 import { SimpleSkill } from "../types/SkillTypes";
 import { roleSkills } from "../data/roleSkills";
 import { useParams } from "react-router-dom";
-import { normalizeSkillTitle } from "../utils/normalization";
 
 interface SkillsTableRowProps {
   skill: SimpleSkill;
@@ -15,21 +14,14 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
   
   const getSkillType = (skillTitle: string): string => {
     const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-    const normalizedTitle = normalizeSkillTitle(skillTitle);
     
-    console.log('Getting skill type:', {
-      original: skillTitle,
-      normalized: normalizedTitle,
-      roleId: id
-    });
-    
-    if (currentRoleSkills.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+    if (currentRoleSkills.specialized.some(s => s.title === skillTitle)) {
       return 'Specialized';
     }
-    if (currentRoleSkills.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+    if (currentRoleSkills.common.some(s => s.title === skillTitle)) {
       return 'Common';
     }
-    if (currentRoleSkills.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+    if (currentRoleSkills.certifications.some(s => s.title === skillTitle)) {
       return 'Certification';
     }
     return 'Uncategorized';

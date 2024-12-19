@@ -3,43 +3,23 @@ import { UnifiedSkill } from '../types/SkillTypes';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { getSkillCategory } from './skills/categories/skillCategories';
 import { getSkillGrowth, getSkillSalary } from './utils/metrics';
-import { getUnifiedSkillData } from './skillDatabaseService';
 
 // Get all skills and normalize their titles
 const skills: UnifiedSkill[] = getAllSkillsFromSource().map(skill => {
   const normalizedTitle = normalizeSkillTitle(skill.title);
-  const skillData = getUnifiedSkillData(normalizedTitle);
-
-  console.log('Processing skill with universal database:', {
-    title: normalizedTitle,
-    originalData: {
-      category: skill.category,
-      growth: skill.growth,
-      salary: skill.salary,
-      isCompanySkill: skill.isCompanySkill
-    },
-    universalData: {
-      category: skillData.category,
-      growth: skillData.growth,
-      salary: skillData.salary,
-      isCompanySkill: skillData.isCompanySkill
-    }
-  });
-
   return {
-    ...skillData,
+    ...skill,
     title: normalizedTitle,
     category: getSkillCategory(normalizedTitle),
-    growth: skillData.growth || getSkillGrowth(normalizedTitle),
-    salary: skillData.salary || getSkillSalary(normalizedTitle)
+    growth: skill.growth || getSkillGrowth(normalizedTitle),
+    salary: skill.salary || getSkillSalary(normalizedTitle)
   };
 });
 
 console.log('Normalized skills with metrics:', skills.map(s => ({
   title: s.title,
   growth: s.growth,
-  salary: s.salary,
-  category: s.category
+  salary: s.salary
 })));
 
 // Helper function to get unique skills by title
@@ -75,17 +55,7 @@ export const certificationSkillObjects = allSkillsList.filter(skill => skill.cat
 export const allSkillObjects = allSkillsList;
 
 // Export the complete skills array
-export const getAllSkills = (): UnifiedSkill[] => {
-  console.log('Getting all skills with universal metadata');
-  return skills.map(skill => {
-    const skillData = getUnifiedSkillData(skill.title);
-    return {
-      ...skill,
-      ...skillData,
-      category: getSkillCategory(skill.title)
-    };
-  });
-};
+export const getAllSkills = (): UnifiedSkill[] => skills;
 
 console.log('Loaded skills:', {
   total: skills.length,

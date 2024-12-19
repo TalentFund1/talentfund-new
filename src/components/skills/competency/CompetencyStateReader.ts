@@ -44,29 +44,12 @@ export const useCompetencyStateReader = () => {
     return null;
   };
 
-  const validateRoleId = (roleId: string): string => {
-    if (!roleId) {
-      console.error('No role ID provided');
-      return "123"; // Default to AI Engineer if no role ID
+  const validateRoleId = (roleId: string): boolean => {
+    if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
+      console.error('Invalid role ID or role skills not found:', roleId);
+      return false;
     }
-
-    if (!roleSkills[roleId as keyof typeof roleSkills]) {
-      console.error('Role skills not found for ID:', roleId);
-      // Try to find a matching role by title
-      const matchingRole = Object.entries(roleSkills).find(([_, data]) => 
-        data.title.toLowerCase() === roleId.toLowerCase()
-      );
-      
-      if (matchingRole) {
-        console.log('Found matching role by title:', matchingRole[0]);
-        return matchingRole[0];
-      }
-      
-      console.warn('Falling back to default role ID: 123');
-      return "123";
-    }
-
-    return roleId;
+    return true;
   };
 
   const getDefaultLevelForTrack = (levelKey: string, track: string): string => {
@@ -88,21 +71,25 @@ export const useCompetencyStateReader = () => {
     levelKey: string = 'p4',
     roleId: string
   ): SkillCompetencyState => {
-    const validatedRoleId = validateRoleId(roleId);
+    if (!validateRoleId(roleId)) {
+      console.log('Using default state due to invalid role:', roleId);
+      return defaultState;
+    }
+
+    const track = getTrackForRole(roleId);
+    const normalizedLevel = normalizeLevel(levelKey, roleId, track);
     
     console.log('Reading competency state:', { 
       skillName, 
       levelKey,
-      originalRoleId: roleId,
-      validatedRoleId,
+      normalizedLevel,
+      roleId,
+      track,
       hasToggledSkill: toggledSkills.has(skillName)
     });
 
-    const track = getTrackForRole(validatedRoleId);
-    const normalizedLevel = normalizeLevel(levelKey, validatedRoleId, track);
-
     // First try to get saved state from CompetencyStore
-    const savedState = findSavedState(skillName, levelKey, validatedRoleId);
+    const savedState = findSavedState(skillName, levelKey, roleId);
     if (savedState) {
       console.log('Using saved state from CompetencyStore:', savedState);
       return savedState;
@@ -131,16 +118,23 @@ export const useCompetencyStateReader = () => {
     levelKey: string = 'p4',
     roleId: string
   ): Record<string, SkillCompetencyState> => {
-    const validatedRoleId = validateRoleId(roleId);
+    if (!validateRoleId(roleId)) {
+      console.log('Returning empty states due to invalid role:', roleId);
+      return {};
+    }
+
+    const track = getTrackForRole(roleId);
+    const normalizedLevel = normalizeLevel(levelKey, roleId, track);
     
     console.log('Getting all skill states for level:', { 
-      levelKey,
-      originalRoleId: roleId,
-      validatedRoleId
+      levelKey, 
+      normalizedLevel,
+      roleId,
+      track
     });
     
     const states: Record<string, SkillCompetencyState> = {};
-    const roleData = roleSkills[validatedRoleId as keyof typeof roleSkills];
+    const roleData = roleSkills[roleId as keyof typeof roleSkills];
     
     if (roleData) {
       const allSkills = [
@@ -151,15 +145,16 @@ export const useCompetencyStateReader = () => {
 
       allSkills.forEach(skill => {
         if (toggledSkills.has(skill.title)) {
-          const competencyState = getSkillCompetencyState(skill.title, levelKey, validatedRoleId);
+          const competencyState = getSkillCompetencyState(skill.title, levelKey, roleId);
           states[skill.title] = competencyState;
         }
       });
     }
 
     console.log('Retrieved all skill states:', { 
-      roleId: validatedRoleId,
+      roleId,
       level: levelKey,
+      track,
       stateCount: Object.keys(states).length,
       states 
     });

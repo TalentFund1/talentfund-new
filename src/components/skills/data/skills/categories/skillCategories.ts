@@ -10,115 +10,80 @@ export const initializeSkillsDatabase = (skills: UnifiedSkill[]) => {
   universalSkillsDatabase = skills;
 };
 
-// Predefined category mappings - these take precedence over database lookups
+// Predefined category mappings
 const categoryMappings: Record<string, SkillCategory> = {
-  // AI & ML Skills (specialized)
-  'machine learning': 'specialized',
-  'deep learning': 'specialized',
-  'natural language processing': 'specialized',
-  'computer vision': 'specialized',
-  'tensorflow': 'specialized',
-  'pytorch': 'specialized',
+  // AI & ML Skills
+  'Machine Learning': 'specialized',
+  'Deep Learning': 'specialized',
+  'Natural Language Processing': 'specialized',
+  'Computer Vision': 'specialized',
+  'TensorFlow': 'specialized',
+  'PyTorch': 'specialized',
 
-  // Programming Skills (specialized)
-  'python': 'specialized',
-  'typescript': 'specialized',
-  'javascript': 'specialized',
-  'node.js': 'specialized',
-  'react': 'specialized',
-  'next.js': 'specialized',
-  'css/sass': 'specialized',
-  'performance optimization': 'specialized',
-  'api development': 'specialized',
-  'database design': 'specialized',
-  'system architecture': 'specialized',
+  // Programming Skills
+  'Python': 'specialized',
+  'TypeScript': 'specialized',
+  'JavaScript': 'specialized',
+  'Node.js': 'specialized',
 
-  // DevOps Skills (specialized)
-  'docker': 'specialized',
-  'kubernetes': 'specialized',
-  'aws': 'specialized',
-  'jenkins': 'specialized',
-  'terraform': 'specialized',
-  'system design': 'specialized',
-  'technical architecture': 'specialized',
+  // DevOps Skills
+  'Docker': 'specialized',
+  'Kubernetes': 'specialized',
+  'AWS': 'specialized',
+  'Jenkins': 'specialized',
+  'Terraform': 'specialized',
 
   // Common Skills
-  'problem solving': 'common',
-  'communication': 'common',
-  'technical writing': 'common',
-  'git version control': 'common',
-  'code review': 'common',
-  'agile methodologies': 'common',
-  'team leadership': 'specialized',
-  'project management': 'specialized',
-  'risk management': 'specialized',
-  'strategic planning': 'common',
-  'stakeholder management': 'common',
+  'Problem Solving': 'common',
+  'Communication': 'common',
+  'Technical Writing': 'common',
+  'Git Version Control': 'common',
+  'Code Review': 'common',
+  'Agile Methodologies': 'common',
 
   // Certifications
-  'aws certified machine learning - specialty': 'certification',
-  'aws certified solutions architect': 'certification',
-  'aws certified developer - associate': 'certification',
-  'aws certified devops engineer': 'certification',
-  'tensorflow developer certificate': 'certification',
-  'certified kubernetes administrator': 'certification',
-  'hashicorp certified terraform associate': 'certification',
-  'project management professional (pmp)': 'certification',
-  'certified scrum master (csm)': 'certification',
-  'google mobile web specialist': 'certification'
+  'AWS Certified Machine Learning - Specialty': 'certification',
+  'AWS Certified Solutions Architect': 'certification',
+  'AWS Certified Developer - Associate': 'certification',
+  'TensorFlow Developer Certificate': 'certification',
+  'Certified Kubernetes Administrator': 'certification',
+  'HashiCorp Certified Terraform Associate': 'certification'
 };
 
 export const getSkillCategory = (skillTitle: string): SkillCategory => {
-  const normalizedTitle = normalizeSkillTitle(skillTitle).toLowerCase();
+  console.log('Getting category for skill:', skillTitle);
   
-  console.log('Getting category for skill:', {
-    original: skillTitle,
-    normalized: normalizedTitle
-  });
+  const normalizedTitle = normalizeSkillTitle(skillTitle);
   
-  // First check predefined mappings
-  if (categoryMappings[normalizedTitle]) {
-    console.log('Found skill in predefined mappings:', {
-      skill: normalizedTitle,
-      category: categoryMappings[normalizedTitle]
+  // First try to get from predefined mappings
+  if (categoryMappings[skillTitle]) {
+    console.log('Found skill in category mappings:', {
+      skill: skillTitle,
+      category: categoryMappings[skillTitle]
     });
-    return categoryMappings[normalizedTitle];
+    return categoryMappings[skillTitle];
   }
   
-  // Then check universal database
+  // Then try to get from universal database
   const skill = universalSkillsDatabase.find(
-    s => normalizeSkillTitle(s.title).toLowerCase() === normalizedTitle
+    s => normalizeSkillTitle(s.title) === normalizedTitle
   );
 
-  if (skill?.category) {
+  if (skill) {
     console.log('Found skill in universal database:', {
-      skill: normalizedTitle,
+      skill: skillTitle,
       category: skill.category
     });
     return skill.category;
   }
   
-  // Determine category based on characteristics
-  if (normalizedTitle.includes('certified') || 
-      normalizedTitle.includes('certification') || 
-      normalizedTitle.includes('certificate')) {
-    console.log('Categorized as certification based on name:', normalizedTitle);
+  // If not found in mappings or database, determine category based on characteristics
+  if (skillTitle.includes('Certified') || skillTitle.includes('Certificate')) {
     return 'certification';
   }
   
-  // Check for specialized skills based on keywords
-  const specializedKeywords = [
-    'development', 'engineering', 'architecture', 'design',
-    'programming', 'analysis', 'security', 'devops',
-    'cloud', 'data', 'machine learning', 'ai'
-  ];
-  
-  if (specializedKeywords.some(keyword => normalizedTitle.includes(keyword))) {
-    console.log('Categorized as specialized based on keywords:', normalizedTitle);
-    return 'specialized';
-  }
-  
-  console.log('Defaulting to common category for:', normalizedTitle);
+  // Default to common if we can't determine the category
+  console.log('Defaulting to common category for:', skillTitle);
   return 'common';
 };
 
