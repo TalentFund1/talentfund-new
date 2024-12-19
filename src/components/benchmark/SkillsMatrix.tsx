@@ -5,7 +5,6 @@ import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchConte
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { AddSkillToProfileDialog } from "../skills/dialog/AddSkillToProfileDialog";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -31,21 +30,11 @@ export const SkillsMatrix = () => {
   const employeeSkills = getEmployeeSkills(id || "");
 
   // Apply filtering and sorting to employee skills
-  let filteredSkills = filterAndSortSkills(id || "");
-
-  // Filter skills based on search criteria - now handling multiple skills
-  if (matrixSearchSkills && matrixSearchSkills.length > 0) {
-    filteredSkills = filteredSkills.filter(skill => 
-      matrixSearchSkills.some(searchSkill => 
-        skill.title.toLowerCase().includes(searchSkill.toLowerCase())
-      )
-    );
-  }
+  const filteredSkills = filterAndSortSkills(id || "");
 
   console.log('Skills matrix state:', {
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
-    searchSkills: matrixSearchSkills,
     visibleItems,
     selectedCategory,
     selectedLevel,
@@ -86,7 +75,6 @@ export const SkillsMatrix = () => {
         visibleItems={visibleItems}
         observerTarget={observerTarget}
         hasChanges={hasChanges}
-        showAddSkill={true}
       />
     </div>
   );

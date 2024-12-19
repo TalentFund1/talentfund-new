@@ -8,7 +8,6 @@ import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
 import { TrackProvider } from './skills/context/TrackContext';
 import { roleSkills } from './skills/data/roleSkills';
-import { useSkillsMatrixSearch } from './skills/context/SkillsMatrixSearchContext';
 
 interface EmployeeFiltersProps {
   onDepartmentChange: (department: string[]) => void;
@@ -49,8 +48,6 @@ export const EmployeeFilters = ({
 }: EmployeeFiltersProps) => {
   // Get all available skills from our skills database
   const allSkills = [...technicalSkillObjects, ...softSkillObjects].map(skill => skill.title);
-  const { setMatrixSearchSkills } = useSkillsMatrixSearch();
-  
   console.log('Available skills for search:', allSkills);
 
   const employees = useEmployeeStore((state) => state.employees);
@@ -73,11 +70,6 @@ export const EmployeeFilters = ({
 
   console.log('Available roles from roleSkills:', roles);
 
-  // Update matrix search skills when selected skills change
-  useEffect(() => {
-    setMatrixSearchSkills(selectedSkills);
-  }, [selectedSkills, setMatrixSearchSkills]);
-
   const handleClearAll = () => {
     onSkillsChange([]);
     onLevelChange([]);
@@ -87,7 +79,6 @@ export const EmployeeFilters = ({
     onEmployeeSearch([]);
     onManagerChange([]);
     onRoleChange([]);
-    setMatrixSearchSkills([]);
   };
 
   return (
@@ -104,11 +95,7 @@ export const EmployeeFilters = ({
             placeholder="Search skills..."
             items={allSkills}
             selectedItems={selectedSkills}
-            onItemsChange={(items) => {
-              const skillsList = items.map(item => String(item));
-              onSkillsChange(skillsList);
-              setMatrixSearchSkills(skillsList);
-            }}
+            onItemsChange={(items) => onSkillsChange(items.map(item => String(item)))}
             singleSelect={false}
           />
         </div>

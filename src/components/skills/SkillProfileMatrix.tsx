@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
@@ -13,7 +13,6 @@ import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { getSkillCategory } from './data/skills/categories/skillCategories';
 import { normalizeSkillTitle } from './utils/normalization';
-import { getSkillWeight } from './data/skills/categories/skillWeights';
 
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -30,23 +29,6 @@ export const SkillProfileMatrix = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
 
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-
-  // Add event listener for skill updates
-  useEffect(() => {
-    const handleSkillsUpdate = (event: CustomEvent) => {
-      console.log('Received skills update event:', event.detail);
-      const { toggledSkills: newToggledSkills } = event.detail;
-      if (newToggledSkills) {
-        console.log('Updating toggled skills with:', newToggledSkills);
-        setToggledSkills(new Set(newToggledSkills));
-      }
-    };
-
-    window.addEventListener('skillsUpdated', handleSkillsUpdate as EventListener);
-    return () => {
-      window.removeEventListener('skillsUpdated', handleSkillsUpdate as EventListener);
-    };
-  }, [setToggledSkills]);
 
   const calculateToggledSkillCounts = () => {
     const allSkills = [
@@ -75,7 +57,7 @@ export const SkillProfileMatrix = () => {
       ).length
     };
 
-    console.log('Calculated toggled skill counts:', counts);
+    console.log('Calculated toggled skill counts for role:', id, counts);
     return counts;
   };
 
@@ -86,16 +68,17 @@ export const SkillProfileMatrix = () => {
     ...currentRoleSkills.certifications
   ].length;
 
-  const getWeightPriority = (weight: string) => {
-    switch (weight.toLowerCase()) {
-      case 'critical':
-        return 0;
-      case 'technical':
-        return 1;
-      case 'necessary':
-        return 2;
-      default:
-        return 3;
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortField(null);
+        setSortDirection(null);
+      }
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
     }
   };
 
@@ -119,8 +102,7 @@ export const SkillProfileMatrix = () => {
       specialized: currentRoleSkills.specialized.length,
       common: currentRoleSkills.common.length,
       certifications: currentRoleSkills.certifications.length,
-      uniqueCount: uniqueSkills.size,
-      toggledSkillsCount: toggledSkills.size
+      uniqueCount: uniqueSkills.size
     });
 
     if (skillType !== "all") {
@@ -131,39 +113,26 @@ export const SkillProfileMatrix = () => {
       skills = skills.filter(skill => getCategoryForSkill(skill, id || "123") === selectedCategory);
     }
 
-    // Sort skills: toggled first, then by weight (critical > technical > necessary)
-    skills.sort((a, b) => {
-      const aIsToggled = toggledSkills.has(a.title);
-      const bIsToggled = toggledSkills.has(b.title);
+    if (sortField && sortDirection) {
+      skills.sort((a, b) => {
+        if (sortField === 'growth') {
+          const aGrowth = parseFloat(a.growth);
+          const bGrowth = parseFloat(b.growth);
+          return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+        } else if (sortField === 'salary') {
+          const aSalary = parseFloat(a.salary?.replace(/[^0-9.-]+/g, "") || "0");
+          const bSalary = parseFloat(b.salary?.replace(/[^0-9.-]+/g, "") || "0");
+          return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
+        }
+        return 0;
+      });
+    }
 
-      // First sort by toggled status
-      if (aIsToggled !== bIsToggled) {
-        return bIsToggled ? 1 : -1;
-      }
-
-      // Then sort by weight priority
-      const aWeight = getSkillWeight(a.title);
-      const bWeight = getSkillWeight(b.title);
-      const weightDiff = getWeightPriority(aWeight) - getWeightPriority(bWeight);
-      
-      if (weightDiff !== 0) {
-        return weightDiff;
-      }
-
-      // Finally sort alphabetically
-      return a.title.localeCompare(b.title);
-    });
-
-    console.log('Filtered and sorted skills:', {
+    console.log('Filtered skills:', {
       total: skills.length,
       toggledCount: Array.from(toggledSkills).length,
       skillType,
-      selectedCategory,
-      firstFewSkills: skills.slice(0, 3).map(skill => ({
-        title: skill.title,
-        weight: getSkillWeight(skill.title),
-        isToggled: toggledSkills.has(skill.title)
-      }))
+      selectedCategory
     });
 
     return skills;
@@ -210,7 +179,7 @@ export const SkillProfileMatrix = () => {
             }}
             sortField={sortField}
             sortDirection={sortDirection}
-            onSort={setSortField}
+            onSort={handleSort}
           />
         </div>
       </Card>
