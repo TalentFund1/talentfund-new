@@ -66,6 +66,7 @@ export const AddSkillToProfileDialog = () => {
 
     selectedSkills.forEach(skillTitle => {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
+      console.log('Finding skill by title:', skillTitle);
       const skillData = getUnifiedSkillData(skillTitle);
       
       if (skillData) {
