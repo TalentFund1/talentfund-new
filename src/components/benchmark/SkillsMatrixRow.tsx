@@ -8,6 +8,7 @@ import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { isSpecializedSkill, isCommonSkill, isCertificationSkill } from "../skills/competency/skillCategoryUtils";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -31,11 +32,16 @@ export const SkillsMatrixRow = ({
   const { selectedLevel, selectedRole } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { toggledSkills } = useToggledSkills();
   const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
     return !nonCompanySkills.includes(skillTitle);
+  };
+
+  const shouldShowCompanyCheck = (skillTitle: string) => {
+    return toggledSkills.has(skillTitle) && isCompanySkill(skillTitle);
   };
 
   const getSkillType = () => {
@@ -84,6 +90,13 @@ export const SkillsMatrixRow = ({
   const roleSkillState = getRoleSkillState();
   const skillType = getSkillType();
 
+  console.log('Rendering skill row:', {
+    skillTitle: skill.title,
+    isToggled: toggledSkills.has(skill.title),
+    isCompanySkill: isCompanySkill(skill.title),
+    shouldShowCheck: shouldShowCompanyCheck(skill.title)
+  });
+
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
@@ -96,7 +109,7 @@ export const SkillsMatrixRow = ({
       {showCompanySkill && (
         <TableCell className="text-center border-r border-blue-200 py-2">
           <div className="flex justify-center">
-            {isCompanySkill(skill.title) ? (
+            {shouldShowCompanyCheck(skill.title) ? (
               <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                 <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
               </div>
