@@ -32,8 +32,11 @@ export const CompetencyGraphTable = ({
     if (roleState && roleState[skillName]) {
       levels.forEach(level => {
         const skillState = roleState[skillName][level.toLowerCase()];
-        if (skillState && skillState.level?.toLowerCase() === targetLevel.toLowerCase()) {
-          count++;
+        if (skillState && typeof skillState.level === 'string') {
+          const currentLevel = skillState.level.toLowerCase();
+          if (currentLevel === targetLevel.toLowerCase()) {
+            count++;
+          }
         }
       });
     }
@@ -90,56 +93,39 @@ export const CompetencyGraphTable = ({
   const skills = getSkillsByCategory();
   const levels = getLevelsForTrack();
 
-  // Calculate level counts for all skills first
-  const skillsWithCounts = skills.map(skill => {
-    const advancedCount = countSkillLevels(skill.title, levels, 'advanced');
-    const intermediateCount = countSkillLevels(skill.title, levels, 'intermediate');
-    const beginnerCount = countSkillLevels(skill.title, levels, 'beginner');
-    
-    return {
-      skill,
-      counts: {
-        advanced: advancedCount,
-        intermediate: intermediateCount,
-        beginner: beginnerCount,
-        total: advancedCount + intermediateCount + beginnerCount
-      }
-    };
-  });
-
-  console.log('Skills with counts before sorting:', skillsWithCounts.map(({ skill, counts }) => ({
-    title: skill.title,
-    ...counts
-  })));
-
-  // Sort skills based on level counts
-  const sortedSkills = skillsWithCounts
+  // New sorting logic based on competency levels
+  const sortedSkills = skills
+    .map(skill => ({
+      title: skill.title,
+      advancedCount: countSkillLevels(skill.title, levels, 'advanced'),
+      intermediateCount: countSkillLevels(skill.title, levels, 'intermediate'),
+      beginnerCount: countSkillLevels(skill.title, levels, 'beginner'),
+      unspecifiedCount: countSkillLevels(skill.title, levels, 'unspecified')
+    }))
     .sort((a, b) => {
-      // First compare by number of advanced levels
-      if (a.counts.advanced !== b.counts.advanced) {
-        return b.counts.advanced - a.counts.advanced;
-      }
+      // First sort by number of advanced levels
+      const advancedDiff = b.advancedCount - a.advancedCount;
+      if (advancedDiff !== 0) return advancedDiff;
       
       // Then by number of intermediate levels
-      if (a.counts.intermediate !== b.counts.intermediate) {
-        return b.counts.intermediate - a.counts.intermediate;
-      }
+      const intermediateDiff = b.intermediateCount - a.intermediateCount;
+      if (intermediateDiff !== 0) return intermediateDiff;
       
       // Then by number of beginner levels
-      if (a.counts.beginner !== b.counts.beginner) {
-        return b.counts.beginner - a.counts.beginner;
-      }
+      const beginnerDiff = b.beginnerCount - a.beginnerCount;
+      if (beginnerDiff !== 0) return beginnerDiff;
       
-      // Finally sort alphabetically
-      return a.skill.title.localeCompare(b.skill.title);
+      // Finally alphabetically
+      return a.title.localeCompare(b.title);
     })
-    .map(({ skill }) => skill);
+    .map(skill => skill.title);
 
-  console.log('Sorted skills with counts:', sortedSkills.map(skill => ({
+  console.log('Sorted skills with level counts:', skills.map(skill => ({
     title: skill.title,
     advanced: countSkillLevels(skill.title, levels, 'advanced'),
     intermediate: countSkillLevels(skill.title, levels, 'intermediate'),
-    beginner: countSkillLevels(skill.title, levels, 'beginner')
+    beginner: countSkillLevels(skill.title, levels, 'beginner'),
+    unspecified: countSkillLevels(skill.title, levels, 'unspecified')
   })));
 
   return (
@@ -161,16 +147,16 @@ export const CompetencyGraphTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedSkills.map((skill) => (
-            <TableRow key={skill.title} className="hover:bg-background/30 transition-colors">
+          {sortedSkills.map((skillName) => (
+            <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
               <TableCell className="font-medium border-r border-border">
-                {skill.title}
+                {skillName}
               </TableCell>
               {levels.map((level, index) => (
                 <SkillCell 
                   key={level}
-                  skillName={skill.title}
-                  details={getSkillDetails(skill.title, level)}
+                  skillName={skillName}
+                  details={getSkillDetails(skillName, level)}
                   isLastColumn={index === levels.length - 1}
                   levelKey={level.toLowerCase()}
                 />
