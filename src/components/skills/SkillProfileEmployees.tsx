@@ -3,16 +3,18 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
-import { getSkillProfileId, getBaseRole, getLevel } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { roleSkills } from "./data/roleSkills";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { EMPLOYEE_IMAGES } from "../employee/EmployeeData";
+import { useNavigate } from "react-router-dom";
 
 export const SkillProfileEmployees = () => {
   const { id: roleId } = useParams();
+  const navigate = useNavigate();
   const employees = useEmployeeStore((state) => state.employees);
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
@@ -25,19 +27,24 @@ export const SkillProfileEmployees = () => {
   console.log('SkillProfileEmployees - Current role:', {
     roleId,
     roleName,
-    totalEmployees: employees.length
+    totalEmployees: employees.length,
+    employees: employees.map(e => ({
+      name: e.name,
+      role: e.role,
+      roleId: getSkillProfileId(e.role)
+    }))
   });
 
-  // Get exact role matches (same role title, any level) and calculate their benchmarks
+  // Get exact role matches (same role ID, any level)
   const exactMatches = employees
     .filter(emp => {
-      const empBaseRole = getBaseRole(emp.role);
-      const matchesRole = empBaseRole === roleName;
+      const empRoleId = getSkillProfileId(emp.role);
+      const matchesRole = empRoleId === roleId;
       console.log('Checking employee match:', {
         employee: emp.name,
         employeeRole: emp.role,
-        baseRole: empBaseRole,
-        targetRole: roleName,
+        employeeRoleId: empRoleId,
+        targetRoleId: roleId,
         isMatch: matchesRole
       });
       return matchesRole;
@@ -47,7 +54,7 @@ export const SkillProfileEmployees = () => {
       benchmark: calculateBenchmarkPercentage(
         emp.id,
         roleId || "",
-        getLevel(emp.role),
+        getBaseRole(emp.role),
         currentStates,
         toggledSkills,
         getSkillCompetencyState
@@ -58,13 +65,13 @@ export const SkillProfileEmployees = () => {
   // Get partial matches (different roles but matching skills)
   const partialMatches = employees
     .filter(emp => {
-      const isExactMatch = getBaseRole(emp.role) === roleName;
-      if (isExactMatch) return false;
+      const empRoleId = getSkillProfileId(emp.role);
+      if (empRoleId === roleId) return false;
 
       const benchmark = calculateBenchmarkPercentage(
         emp.id,
         roleId || "",
-        getLevel(emp.role),
+        getBaseRole(emp.role),
         currentStates,
         toggledSkills,
         getSkillCompetencyState
@@ -77,7 +84,7 @@ export const SkillProfileEmployees = () => {
       benchmark: calculateBenchmarkPercentage(
         emp.id,
         roleId || "",
-        getLevel(emp.role),
+        getBaseRole(emp.role),
         currentStates,
         toggledSkills,
         getSkillCompetencyState
@@ -92,14 +99,49 @@ export const SkillProfileEmployees = () => {
     exactMatches: exactMatches.map(e => ({
       name: e.name,
       role: e.role,
+      roleId: getSkillProfileId(e.role),
       benchmark: e.benchmark
     })),
     partialMatches: partialMatches.map(e => ({
       name: e.name,
       role: e.role,
+      roleId: getSkillProfileId(e.role),
       benchmark: e.benchmark
     }))
   });
+
+  const handleEmployeeClick = (employeeId: string) => {
+    navigate(`/employee/${employeeId}?tab=benchmark`);
+  };
+
+  const renderEmployeeList = (employee: typeof employees[0] & { benchmark: number }, index: number) => {
+    return (
+      <div 
+        key={employee.name} 
+        className="flex items-center gap-3 hover:bg-muted/50 p-2 rounded-lg transition-colors cursor-pointer group"
+      >
+        <Avatar className="h-10 w-10">
+          <img 
+            src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=32&h=32`} 
+            alt={employee.name} 
+            className="object-cover" 
+          />
+        </Avatar>
+        <div>
+          <p 
+            onClick={() => handleEmployeeClick(employee.id)}
+            className="font-medium text-sm text-primary group-hover:text-primary-accent transition-colors cursor-pointer hover:underline"
+          >
+            {employee.name}
+          </p>
+          <p className="text-sm text-muted-foreground">{employee.role}</p>
+        </div>
+        <span className="ml-auto text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
+          {Math.round(employee.benchmark)}%
+        </span>
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -115,24 +157,7 @@ export const SkillProfileEmployees = () => {
             </Button>
           </div>
           <div className="space-y-3">
-            {exactMatches.map((employee, index) => (
-              <div key={employee.name} className="flex items-center gap-3 hover:bg-muted/50 p-2 rounded-lg transition-colors">
-                <Avatar className="h-10 w-10">
-                  <img 
-                    src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=32&h=32`} 
-                    alt={employee.name} 
-                    className="object-cover" 
-                  />
-                </Avatar>
-                <div>
-                  <p className="font-medium text-sm">{employee.name}</p>
-                  <p className="text-sm text-muted-foreground">{employee.role}</p>
-                </div>
-                <span className="ml-auto text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                  {Math.round(employee.benchmark)}%
-                </span>
-              </div>
-            ))}
+            {exactMatches.map((employee, index) => renderEmployeeList(employee, index))}
           </div>
         </Card>
 
@@ -147,24 +172,7 @@ export const SkillProfileEmployees = () => {
             </Button>
           </div>
           <div className="space-y-3">
-            {partialMatches.map((employee, index) => (
-              <div key={employee.name} className="flex items-center gap-3 hover:bg-muted/50 p-2 rounded-lg transition-colors">
-                <Avatar className="h-10 w-10">
-                  <img 
-                    src={`https://images.unsplash.com/${EMPLOYEE_IMAGES[(index + 2) % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=32&h=32`} 
-                    alt={employee.name} 
-                    className="object-cover" 
-                  />
-                </Avatar>
-                <div>
-                  <p className="font-medium text-sm">{employee.name}</p>
-                  <p className="text-sm text-muted-foreground">{employee.role}</p>
-                </div>
-                <span className="ml-auto text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                  {Math.round(employee.benchmark)}%
-                </span>
-              </div>
-            ))}
+            {partialMatches.map((employee, index) => renderEmployeeList(employee, index))}
           </div>
         </Card>
       </div>
