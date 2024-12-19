@@ -69,14 +69,15 @@ export const AddSkillToProfileDialog = () => {
         console.log('Processing skill:', skillData);
         
         // Add to toggled skills
-        newToggledSkills.add(skillTitle);
+        newToggledSkills.add(normalizedTitle);
         
         // Initialize skill state with unspecified level and preferred requirement
-        setSkillState(skillTitle, 'unspecified', id, 'preferred' as SkillRequirement, 'employee');
+        setSkillState(normalizedTitle, 'unspecified', id, 'preferred' as SkillRequirement, 'employee');
 
         // Add to employee skills with complete data
         const newSkill: UnifiedSkill = {
           ...skillData,
+          title: normalizedTitle,
           level: 'unspecified',
           requirement: 'preferred' as SkillRequirement,
           category: (skillData.category || 'specialized') as SkillCategory,
@@ -86,7 +87,7 @@ export const AddSkillToProfileDialog = () => {
         };
         
         updatedSkills.push(newSkill);
-        addedSkills.push(skillTitle);
+        addedSkills.push(normalizedTitle);
         console.log('Added new skill with complete data:', newSkill);
       }
     });
@@ -117,8 +118,18 @@ export const AddSkillToProfileDialog = () => {
       });
     }
 
+    // Reset state
     setSelectedSkills([]);
     setOpen(false);
+
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('skillsUpdated', {
+      detail: {
+        employeeId: id,
+        updatedSkills,
+        toggledSkills: Array.from(newToggledSkills)
+      }
+    }));
   };
 
   return (
