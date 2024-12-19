@@ -34,7 +34,7 @@ export const AddSkillToProfileDialog = () => {
     sampleSkills: allSkills.slice(0, 5)
   });
 
-  const handleAddSkills = () => {
+  const handleAddSkills = async () => {
     if (!id) {
       console.error('No ID found in params');
       toast({
@@ -56,51 +56,58 @@ export const AddSkillToProfileDialog = () => {
     const isRoleProfile = !!roleSkills[id as keyof typeof roleSkills];
     
     if (isRoleProfile) {
-      // Handle adding skills to role profile
-      console.log('Adding skills to role profile:', id);
-      const newToggledSkills = new Set(toggledSkills);
-      const addedSkills: string[] = [];
+      try {
+        // Handle adding skills to role profile
+        console.log('Adding skills to role profile:', id);
+        const newToggledSkills = new Set(toggledSkills);
+        const addedSkills: string[] = [];
 
-      selectedSkills.forEach(skillTitle => {
-        const normalizedTitle = normalizeSkillTitle(skillTitle);
-        console.log('Processing skill:', {
-          original: skillTitle,
-          normalized: normalizedTitle
+        // Process all skills first
+        selectedSkills.forEach(skillTitle => {
+          const normalizedTitle = normalizeSkillTitle(skillTitle);
+          console.log('Processing skill:', {
+            original: skillTitle,
+            normalized: normalizedTitle
+          });
+          
+          newToggledSkills.add(normalizedTitle);
+          setSkillState(normalizedTitle, 'unspecified', id, 'preferred' as SkillRequirement, 'role');
+          addedSkills.push(normalizedTitle);
         });
-        
-        // Add to toggled skills
-        newToggledSkills.add(normalizedTitle);
-        
-        // Initialize skill state
-        setSkillState(normalizedTitle, 'unspecified', id, 'preferred' as SkillRequirement, 'role');
-        
-        addedSkills.push(normalizedTitle);
-        console.log('Added new skill to role profile:', normalizedTitle);
-      });
 
-      // Update toggled skills
-      console.log('Updating toggled skills:', {
-        roleId: id,
-        addedSkills,
-        newToggledSkillsCount: newToggledSkills.size
-      });
-      
-      setToggledSkills(newToggledSkills);
+        // Update state first
+        await new Promise<void>((resolve) => {
+          setToggledSkills(newToggledSkills);
+          resolve();
+        });
 
-      // Dispatch custom event to notify other components
-      const event = new CustomEvent('skillsUpdated', {
-        detail: {
-          id,
-          toggledSkills: Array.from(newToggledSkills)
+        console.log('Updated toggled skills:', {
+          roleId: id,
+          addedSkills,
+          newToggledSkillsCount: newToggledSkills.size
+        });
+
+        // Then dispatch event
+        window.dispatchEvent(new CustomEvent('skillsUpdated', {
+          detail: {
+            id,
+            type: 'role',
+            toggledSkills: Array.from(newToggledSkills)
+          }
+        }));
+
+        if (addedSkills.length > 0) {
+          toast({
+            title: "Skills Added",
+            description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to the role profile.`,
+          });
         }
-      });
-      console.log('Dispatching skillsUpdated event:', event.detail);
-      window.dispatchEvent(event);
-      
-      if (addedSkills.length > 0) {
+      } catch (error) {
+        console.error('Error adding skills to role:', error);
         toast({
-          title: "Skills Added",
-          description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to the role profile.`,
+          title: "Error",
+          description: "Failed to add skills to role profile.",
+          variant: "destructive",
         });
       }
     } else {
