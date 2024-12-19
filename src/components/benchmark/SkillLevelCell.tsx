@@ -3,71 +3,61 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
+import { SkillLevel, SkillRequirement } from "../skills/types/SkillTypes";
 
-interface SkillCellProps {
-  skillName: string;
-  details: {
-    level: string;
-    required: string;
-  };
-  isLastColumn: boolean;
-  levelKey: string;
+interface SkillLevelCellProps {
+  initialLevel: string;
+  skillTitle: string;
 }
 
-export const SkillCell = ({ 
-  skillName, 
-  details, 
-  isLastColumn, 
-  levelKey 
-}: SkillCellProps) => {
+export const SkillLevelCell = ({ 
+  initialLevel,
+  skillTitle 
+}: SkillLevelCellProps) => {
   const { currentStates, setSkillState } = useSkillsMatrixStore();
   const { id: employeeId } = useParams<{ id: string }>();
 
-  const currentState = currentStates[employeeId || ""]?.[skillName] || {
-    level: details.level || "unspecified",
-    requirement: details.required || "preferred",
+  const currentState = employeeId && currentStates[employeeId]?.[skillTitle] || {
+    level: initialLevel as SkillLevel || "unspecified",
+    requirement: "preferred" as SkillRequirement
   };
 
   const handleLevelChange = (value: string) => {
+    if (!employeeId) return;
+    
     console.log('Changing level:', {
-      skillName,
-      levelKey,
+      skillTitle,
       newLevel: value,
       currentRequired: currentState.requirement,
       employeeId
     });
     
-    if (employeeId) {
-      setSkillState(employeeId, skillName, value, currentState.requirement || 'preferred');
-    }
+    setSkillState(employeeId, skillTitle, value as SkillLevel, currentState.requirement);
   };
 
   const handleRequirementChange = (value: string) => {
+    if (!employeeId) return;
+    
     console.log('Changing requirement:', {
-      skillName,
-      levelKey,
+      skillTitle,
       currentLevel: currentState.level,
       newRequired: value,
       employeeId
     });
     
-    if (employeeId) {
-      setSkillState(employeeId, skillName, currentState.level || 'unspecified', value);
-    }
+    setSkillState(employeeId, skillTitle, currentState.level, value as SkillRequirement);
   };
 
   return (
-    <TableCell 
-      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
-    >
-      <div className="flex flex-col items-center gap-0">
+    <TableCell className="text-center border-r border-blue-200 py-2 p-0">
+      <div className="flex flex-col items-center">
         <LevelSelector
-          currentLevel={currentState.level || 'unspecified'}
+          currentLevel={currentState.level}
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={currentState.requirement || 'preferred'}
-          currentLevel={currentState.level || 'unspecified'}
+          currentRequired={currentState.requirement}
+          currentLevel={currentState.level}
           onRequirementChange={handleRequirementChange}
         />
       </div>
