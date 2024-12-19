@@ -9,6 +9,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { roleSkills } from "../skills/data/roleSkills";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -35,7 +36,7 @@ const EmployeeTableRowContent = ({
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
 
-  const employeeLevel = getLevel(employee.role);
+  const employeeLevel = employee.level || 'p4';
   
   // Calculate benchmark percentage
   const benchmark = calculateBenchmarkPercentage(

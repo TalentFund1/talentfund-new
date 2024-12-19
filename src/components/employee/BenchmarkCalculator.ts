@@ -4,19 +4,19 @@ import { CompetencyState } from "../skills/competency/state/types";
 export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
-  level: string,
+  employeeLevel: string,
   currentStates: Record<string, CompetencyState>,
   toggledSkills: Set<string>
 ): number => {
-  console.log('Calculating benchmark for:', {
+  console.log('Calculating benchmark percentage:', {
     employeeId,
     roleId,
-    level,
+    employeeLevel,
     toggledSkillsCount: toggledSkills.size
   });
 
-  if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
-    console.warn('Invalid role ID:', roleId);
+  if (!roleId || !employeeId) {
+    console.warn('Missing required parameters for benchmark calculation');
     return 0;
   }
 
@@ -24,13 +24,13 @@ export const calculateBenchmarkPercentage = (
 
   // Get all skills for the role
   const allRoleSkills = [
-    ...roleData.specialized,
-    ...roleData.common,
-    ...roleData.certifications
+    ...(roleData?.specialized || []),
+    ...(roleData?.common || []),
+    ...(roleData?.certifications || [])
   ].filter(skill => toggledSkills.has(skill.title));
 
   if (allRoleSkills.length === 0) {
-    console.log('No toggled skills found for role');
+    console.log('No role skills found or no skills toggled');
     return 0;
   }
 
@@ -59,7 +59,7 @@ export const calculateBenchmarkPercentage = (
         'beginner': 1,
         'unspecified': 0
       };
-      return priorities[level.toLowerCase()] ?? 0;
+      return priorities[level.toLowerCase()] || 0;
     };
 
     const employeePriority = getLevelPriority(employeeSkillLevel);
@@ -76,5 +76,5 @@ export const calculateBenchmarkPercentage = (
     percentage
   });
 
-  return Math.round(percentage);
+  return percentage;
 };
