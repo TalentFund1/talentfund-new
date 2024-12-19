@@ -8,7 +8,7 @@ import { getBaseRole } from "../EmployeeTable";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { TrackProvider } from "./context/TrackContext";
-import { SkillProfileTableContent } from "./table/SkillProfileTableContent";
+import { SkillProfileTableContent as TableContent } from "./table/SkillProfileTableContent";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
@@ -135,7 +135,7 @@ const SkillProfileTableContent = ({
   };
 
   return (
-    <SkillProfileTableContent
+    <TableContent
       rows={filteredRows}
       selectedRows={selectedRows}
       onSelectAll={handleSelectAll}

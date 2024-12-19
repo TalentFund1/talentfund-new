@@ -3,7 +3,7 @@ import { SkillProfileTableHeader } from "./SkillProfileTableHeader";
 import { SkillProfileTableRow } from "./SkillProfileTableRow";
 import { SkillProfileRow } from "../types";
 
-interface SkillProfileTableContentProps {
+export interface SkillProfileTableContentProps {
   rows: SkillProfileRow[];
   selectedRows: string[];
   onSelectAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
