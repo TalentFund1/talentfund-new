@@ -7,10 +7,8 @@ import { CheckCircle2 } from "lucide-react";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
-import { roleSkills } from "../skills/data/roleSkills";
-import { getLevel } from "../EmployeeTable";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -21,7 +19,7 @@ interface EmployeeTableRowProps {
   selectedJobTitle?: string[];
 }
 
-export const EmployeeTableRow = ({ 
+const EmployeeTableRowContent = ({ 
   employee, 
   isSelected, 
   onSelect, 
@@ -31,7 +29,6 @@ export const EmployeeTableRow = ({
 }: EmployeeTableRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
 
   // Determine which role ID to use for benchmark calculation
   const targetRoleId = selectedJobTitle.length > 0 
@@ -182,5 +179,13 @@ export const EmployeeTableRow = ({
         {employee.lastUpdated}
       </td>
     </tr>
+  );
+};
+
+export const EmployeeTableRow = (props: EmployeeTableRowProps) => {
+  return (
+    <ToggledSkillsProvider>
+      <EmployeeTableRowContent {...props} />
+    </ToggledSkillsProvider>
   );
 };

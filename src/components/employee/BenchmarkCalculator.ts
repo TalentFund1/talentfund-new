@@ -1,4 +1,3 @@
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { roleSkills } from "../skills/data/roleSkills";
 import { CompetencyState } from "../skills/competency/state/types";
 
@@ -21,7 +20,6 @@ export const calculateBenchmarkPercentage = (
     return 0;
   }
 
-  const employeeSkills = getEmployeeSkills(employeeId);
   const roleData = roleSkills[roleId as keyof typeof roleSkills];
 
   // Get all skills for the role
@@ -38,14 +36,14 @@ export const calculateBenchmarkPercentage = (
 
   // Count matching skills with correct competency level
   const matchingSkills = allRoleSkills.filter(roleSkill => {
-    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    if (!employeeSkill) return false;
-
     const skillState = currentStates[roleSkill.title];
     if (!skillState) return false;
 
-    const employeeSkillLevel = skillState.roleStates?.[roleId]?.[roleSkill.title]?.level || employeeSkill.level || 'unspecified';
-    const roleSkillLevel = skillState.roleStates?.[roleId]?.[roleSkill.title]?.level || 'unspecified';
+    const employeeState = skillState.employeeStates?.[employeeId]?.[roleSkill.title];
+    const roleState = skillState.roleStates?.[roleId]?.[roleSkill.title];
+
+    const employeeSkillLevel = employeeState?.level || 'unspecified';
+    const roleSkillLevel = roleState?.level || 'unspecified';
 
     console.log('Comparing skill levels:', {
       skill: roleSkill.title,
@@ -54,7 +52,7 @@ export const calculateBenchmarkPercentage = (
     });
 
     // For all tracks, allow higher levels to match
-    const getLevelPriority = (level: string = 'unspecified') => {
+    const getLevelPriority = (level: string): number => {
       const priorities: { [key: string]: number } = {
         'advanced': 3,
         'intermediate': 2,

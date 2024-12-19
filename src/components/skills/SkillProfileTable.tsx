@@ -9,6 +9,7 @@ import { employees } from "../employee/EmployeeData";
 import { getBaseRole } from "../EmployeeTable";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { ToggledSkillsProvider } from "./context/ToggledSkillsContext";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
@@ -184,6 +185,8 @@ const SkillProfileTableContent = ({
 
 export const SkillProfileTable = (props: SkillProfileTableProps) => {
   return (
-    <SkillProfileTableContent {...props} />
+    <ToggledSkillsProvider>
+      <SkillProfileTableContent {...props} />
+    </ToggledSkillsProvider>
   );
 };
