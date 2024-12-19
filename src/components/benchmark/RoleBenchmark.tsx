@@ -15,6 +15,7 @@ import { professionalLevels, managerialLevels } from "./data/levelData";
 import { getSkillProfileId } from "../EmployeeTable";
 import { getEmployeeTrack } from "../employee/utils/employeeTrackUtils";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { useToast } from "@/components/ui/use-toast";
 
 interface RoleStore {
   selectedRole: string;
@@ -32,11 +33,13 @@ export const useRoleStore = create<RoleStore>((set) => ({
 
 const RoleBenchmarkContent = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { toggledSkills } = useToggledSkills();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
   const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
   const { id } = useParams<{ id: string }>();
   const employees = useEmployeeStore((state) => state.employees);
+  const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
   const { getTrackForRole } = useTrack();
 
   const employee = employees.find(emp => emp.id === id);
@@ -61,6 +64,50 @@ const RoleBenchmarkContent = () => {
 
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const track = getTrackForRole(selectedRole);
+
+  // Handle role changes and persist them
+  const handleRoleChange = (newRole: string) => {
+    console.log('Role changed:', { newRole, currentEmployee: employee });
+    setSelectedRole(newRole);
+    
+    if (employee) {
+      const roleTitle = Object.entries(roleSkills).find(([id]) => id === newRole)?.[1]?.title;
+      if (roleTitle) {
+        const updatedEmployee = {
+          ...employee,
+          role: `${roleTitle}: ${selectedLevel.toUpperCase()}`
+        };
+        updateEmployee(updatedEmployee);
+        console.log('Updated employee role:', updatedEmployee.role);
+        toast({
+          title: "Role Updated",
+          description: `Employee role updated to ${updatedEmployee.role}`,
+        });
+      }
+    }
+  };
+
+  // Handle level changes and persist them
+  const handleLevelChange = (newLevel: string) => {
+    console.log('Level changed:', { newLevel, currentEmployee: employee });
+    setSelectedLevel(newLevel);
+    
+    if (employee) {
+      const roleTitle = Object.entries(roleSkills).find(([id]) => id === selectedRole)?.[1]?.title;
+      if (roleTitle) {
+        const updatedEmployee = {
+          ...employee,
+          role: `${roleTitle}: ${newLevel.toUpperCase()}`
+        };
+        updateEmployee(updatedEmployee);
+        console.log('Updated employee level:', updatedEmployee.role);
+        toast({
+          title: "Level Updated",
+          description: `Employee level updated to ${newLevel.toUpperCase()}`,
+        });
+      }
+    }
+  };
 
   // Handle skill updates when role changes
   useEffect(() => {
@@ -122,7 +169,7 @@ const RoleBenchmarkContent = () => {
         </div>
 
         <div className="flex items-center gap-4 mt-4">
-          <Select value={selectedRole} onValueChange={setSelectedRole}>
+          <Select value={selectedRole} onValueChange={handleRoleChange}>
             <SelectTrigger className="w-[400px]">
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
@@ -135,7 +182,7 @@ const RoleBenchmarkContent = () => {
             </SelectContent>
           </Select>
 
-          <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+          <Select value={selectedLevel} onValueChange={handleLevelChange}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
