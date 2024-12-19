@@ -1,4 +1,5 @@
 import { RoleSkillData, UnifiedSkill } from '../types/SkillTypes';
+import { Skills } from './skills/allSkills';
 
 // Helper function to get skills for a role
 const getRoleSkills = (roleId: string): RoleSkillData => {
@@ -11,15 +12,23 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
     return JSON.parse(savedSkills);
   }
   
-  // Return empty role data structure if no saved skills
+  // If no saved skills, initialize with default data based on role
   const defaultRole: RoleSkillData = {
     title: getRoleTitle(roleId),
     soc: getRoleSoc(roleId),
-    specialized: [],
-    common: [],
-    certifications: [],
+    specialized: roleId === "123" ? Skills.specialized : [],
+    common: roleId === "123" ? Skills.common : [],
+    certifications: roleId === "123" ? Skills.certification : [],
     skills: []
   };
+
+  console.log('Initializing default role data:', {
+    roleId,
+    title: defaultRole.title,
+    specializedCount: defaultRole.specialized.length,
+    commonCount: defaultRole.common.length,
+    certificationsCount: defaultRole.certifications.length
+  });
 
   // Save default role data
   localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(defaultRole));
