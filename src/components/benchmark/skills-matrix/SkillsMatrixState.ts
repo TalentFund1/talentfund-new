@@ -88,7 +88,7 @@ export const useSkillsMatrixState = (
   const { currentStates } = useSkillsMatrixStore();
 
   const filterAndSortSkills = (employeeId: string, roleId: string = "123") => {
-    // Get only the employee's specific skills
+    // Get only the employee's specific skills - exactly like Skills Summary
     const employeeSkills = getEmployeeSkills(employeeId, true);
     let filteredSkills = [...employeeSkills];
 

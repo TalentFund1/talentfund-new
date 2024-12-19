@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
@@ -26,7 +26,7 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get only the employee's assigned skills for the matrix
+  // Get only the employee's assigned skills for the matrix - exactly like Skills Summary
   const employeeSkills = getEmployeeSkills(id || "", true);
   console.log('Loaded assigned skills for matrix:', {
     employeeId: id,
