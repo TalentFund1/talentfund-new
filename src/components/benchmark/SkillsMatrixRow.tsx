@@ -3,6 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useRoleStore } from "./RoleBenchmark";
+import { useTrack } from "../skills/context/TrackContext";
+import { Star, Shield, Target, CircleDashed } from "lucide-react";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getSkillByTitle } from "../skills/data/skills/allSkills";
 
 interface SkillsMatrixRowProps {
@@ -23,6 +27,9 @@ export const SkillsMatrixRow = ({
   isRoleBenchmark
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
+  const { selectedRole } = useRoleStore();
+  const { getTrackForRole } = useTrack();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   
   console.log('SkillsMatrixRow rendering:', {
     skillTitle: skill.title,
@@ -87,6 +94,12 @@ export const SkillsMatrixRow = ({
       <TableCell className="text-center border-r border-blue-200 py-2">
         {getSkillType(skill.title)}
       </TableCell>
+      {isRoleBenchmark && (
+        <StaticSkillLevelCell 
+          initialLevel={skill.level || 'unspecified'}
+          skillTitle={skill.title}
+        />
+      )}
       <SkillLevelCell 
         initialLevel={skill.level || 'unspecified'}
         skillTitle={skill.title}
