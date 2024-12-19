@@ -3,7 +3,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
-import { roleSkills } from '../data/roleSkills';
+import { getEmployeeSkills } from '../../benchmark/skills-matrix/initialSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -26,18 +26,12 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       source: 'useState initializer'
     });
 
-    // If no saved skills exist, initialize with all skills toggled
+    // If no saved skills exist, initialize with employee's assigned skills
     if (!savedSkills || savedSkills.length === 0) {
-      const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
-      if (currentRoleSkills) {
-        const allSkills = [
-          ...currentRoleSkills.specialized.map(s => s.title),
-          ...currentRoleSkills.common.map(s => s.title),
-          ...currentRoleSkills.certifications.map(s => s.title)
-        ];
-        console.log('Initializing with all skills toggled:', allSkills);
-        return new Set(allSkills);
-      }
+      const employeeSkills = getEmployeeSkills(id || "");
+      const employeeSkillTitles = employeeSkills.map(skill => skill.title);
+      console.log('Initializing with employee skills:', employeeSkillTitles);
+      return new Set(employeeSkillTitles);
     }
     
     return new Set(savedSkills);
@@ -59,7 +53,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     
     const savedSkills = loadToggledSkills(currentRoleId);
     
-    // Only load saved skills if they exist
+    // Only load saved skills if they exist, otherwise use employee skills
     if (savedSkills && savedSkills.length > 0) {
       console.log('Reloaded toggled skills:', {
         roleId: currentRoleId,
@@ -68,8 +62,11 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       });
       setToggledSkills(new Set(savedSkills));
     } else {
-      // If no saved skills, keep current selection
-      console.log('No saved skills found, keeping current selection');
+      // If no saved skills, use employee's assigned skills
+      const employeeSkills = getEmployeeSkills(id || "");
+      const employeeSkillTitles = employeeSkills.map(skill => skill.title);
+      console.log('No saved skills found, using employee skills:', employeeSkillTitles);
+      setToggledSkills(new Set(employeeSkillTitles));
     }
   }, [selectedRole, id]);
 
