@@ -6,8 +6,8 @@ import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { normalizeSkillTitle } from '../../skills/utils/normalization';
 import { getSkillCategory } from '../../skills/data/skills/categories/skillCategories';
 
-export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
-  console.log('Getting skills for employee:', employeeId);
+export const getEmployeeSkills = (employeeId: string, onlyAssigned: boolean = false): UnifiedSkill[] => {
+  console.log('Getting skills for employee:', employeeId, 'Only assigned:', onlyAssigned);
   
   // Get employee's specific skills if they exist
   if (employeeSkills[employeeId]) {
@@ -33,6 +33,15 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
       };
     });
 
+    // If we only want assigned skills, return just those
+    if (onlyAssigned) {
+      console.log('Returning only assigned skills:', {
+        employeeId,
+        skillCount: employeeSpecificSkills.length
+      });
+      return employeeSpecificSkills;
+    }
+
     // Get all available skills
     const allSkills = getAllSkills();
     const existingSkillTitles = new Set(employeeSpecificSkills.map(s => s.title));
@@ -54,12 +63,7 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
       employeeId,
       totalSkills: combinedSkills.length,
       specificSkills: employeeSpecificSkills.length,
-      additionalSkills: additionalSkills.length,
-      skills: combinedSkills.map(s => ({
-        title: s.title,
-        level: s.level,
-        requirement: s.requirement
-      }))
+      additionalSkills: additionalSkills.length
     });
 
     return combinedSkills;
@@ -84,9 +88,9 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
 };
 
 // Load initial skills for an employee
-export const loadEmployeeSkills = (employeeId: string) => {
-  console.log('Loading skills for employee:', employeeId);
-  return getEmployeeSkills(employeeId);
+export const loadEmployeeSkills = (employeeId: string, onlyAssigned: boolean = false) => {
+  console.log('Loading skills for employee:', employeeId, 'Only assigned:', onlyAssigned);
+  return getEmployeeSkills(employeeId, onlyAssigned);
 };
 
 // Export the loaded skills for verification

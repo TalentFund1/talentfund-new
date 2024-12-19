@@ -26,9 +26,9 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get only the employee's specific skills
-  const employeeSkills = getEmployeeSkills(id || "");
-  console.log('Employee skills loaded for matrix:', {
+  // Get only the employee's assigned skills for the matrix
+  const employeeSkills = getEmployeeSkills(id || "", true);
+  console.log('Loaded assigned skills for matrix:', {
     employeeId: id,
     skillCount: employeeSkills.length,
     skills: employeeSkills.map(s => s.title)
