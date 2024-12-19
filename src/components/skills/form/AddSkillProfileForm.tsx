@@ -109,7 +109,8 @@ export const AddSkillProfileForm = () => {
       soc: formData.soc,
       specialized: [],
       common: [],
-      certifications: []
+      certifications: [],
+      skills: [] // Initialize empty skills array
     };
 
     console.log('Profile created successfully');

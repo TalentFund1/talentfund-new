@@ -92,17 +92,29 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
   const roleData = getRoleData(roleId);
   const skills = roleData.skills;
 
+  const specialized = filterSkillsByCategory(skills, 'specialized');
+  const common = filterSkillsByCategory(skills, 'common');
+  const certifications = filterSkillsByCategory(skills, 'certification');
+
+  console.log('Role skills categorized:', {
+    roleId,
+    specialized: specialized.length,
+    common: common.length,
+    certifications: certifications.length,
+    total: skills.length
+  });
+
   return {
     title: roleData.title,
     soc: roleData.soc,
-    specialized: filterSkillsByCategory(skills, 'specialized'),
-    common: filterSkillsByCategory(skills, 'common'),
-    certifications: filterSkillsByCategory(skills, 'certification'),
-    skills: skills // Keep for backward compatibility
+    specialized,
+    common,
+    certifications,
+    skills // Keep for backward compatibility
   };
 };
 
-// Export roleSkills object
+// Export roleSkills object with proper initialization
 export const roleSkills: { [key: string]: RoleSkillData } = {
   "123": getRoleSkills("123"),
   "124": getRoleSkills("124"), 
