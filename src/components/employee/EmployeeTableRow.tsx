@@ -43,8 +43,7 @@ const EmployeeTableRowContent = ({
     employee.id,
     targetRoleId,
     employeeLevel,
-    currentStates,
-    toggledSkills
+    currentStates
   );
 
   // Calculate skill match ratio

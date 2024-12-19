@@ -38,8 +38,7 @@ const EmployeeOverviewContent = () => {
       id,
       roleId,
       level,
-      currentStates,
-      toggledSkills
+      currentStates
     );
   };
 

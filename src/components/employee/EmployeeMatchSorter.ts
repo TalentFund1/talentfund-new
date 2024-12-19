@@ -7,8 +7,7 @@ import { CompetencyState } from "../skills/competency/state/types";
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
   selectedJobTitle: string[],
-  currentStates: Record<string, CompetencyState>,
-  toggledSkills: Set<string>
+  currentStates: Record<string, CompetencyState>
 ): Employee[] => {
   if (selectedJobTitle.length === 0) return employees;
 
@@ -36,7 +35,7 @@ export const sortEmployeesByRoleMatch = (
     ...roleData.specialized,
     ...roleData.common,
     ...roleData.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
+  ];
 
   console.log('Role skills for matching:', {
     roleId,
@@ -54,8 +53,7 @@ export const sortEmployeesByRoleMatch = (
       employee.id,
       roleId,
       employeeLevel,
-      currentStates,
-      toggledSkills
+      currentStates
     );
 
     console.log('Processing employee for matching:', {

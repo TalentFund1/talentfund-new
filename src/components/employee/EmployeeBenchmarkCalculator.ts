@@ -6,8 +6,7 @@ import { CompetencyState } from "../skills/competency/state/types";
 export const calculateEmployeeBenchmarks = (
   employees: Employee[],
   selectedJobTitle: string[],
-  currentStates: Record<string, CompetencyState>,
-  toggledSkills: Set<string>
+  currentStates: Record<string, CompetencyState>
 ): Employee[] => {
   return employees.map(employee => {
     let benchmark = 0;
@@ -20,8 +19,7 @@ export const calculateEmployeeBenchmarks = (
         employee.id,
         roleId,
         level,
-        currentStates,
-        toggledSkills
+        currentStates
       );
     } else {
       // Calculate benchmark against employee's current role
@@ -31,8 +29,7 @@ export const calculateEmployeeBenchmarks = (
         employee.id,
         roleId,
         level,
-        currentStates,
-        toggledSkills
+        currentStates
       );
     }
     
