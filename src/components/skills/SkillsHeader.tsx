@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { SearchFilter } from '@/components/market/SearchFilter';
-import { technicalSkills, softSkills } from '@/components/skillsData';
+import { getAllSkills } from './data/skills/allSkills';
 import { Separator } from "@/components/ui/separator";
 
 export const SkillsHeader = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const allSkills = [...technicalSkills, ...softSkills];
+  const allSkills = getAllSkills().map(skill => skill.title);
 
   return (
     <div className="space-y-4 w-full">

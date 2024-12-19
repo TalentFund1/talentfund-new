@@ -6,6 +6,7 @@ import { getAllSkills } from "./skills/data/skills/allSkills";
 
 export const SkillsTable = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("all");
 
   // Get skills directly from universal database
   const skills = getAllSkills();
@@ -17,7 +18,10 @@ export const SkillsTable = () => {
 
   return (
     <div className="space-y-6 bg-white rounded-lg shadow-sm">
-      <SkillsTableHeader />
+      <SkillsTableHeader 
+        selectedFilter={selectedFilter}
+        setSelectedFilter={setSelectedFilter}
+      />
       <SkillsTableContent 
         skills={skills} 
         isLoading={isLoading} 

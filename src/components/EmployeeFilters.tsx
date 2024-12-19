@@ -1,6 +1,6 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
-import { technicalSkills, softSkills, technicalSkillObjects, softSkillObjects } from './skillsData';
+import { getAllSkills } from './skills/data/skills/allSkills';
 import { Button } from '@/components/ui/button';
 import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
@@ -46,8 +46,8 @@ export const EmployeeFilters = ({
   onRoleChange = () => {},
   selectedRole = []
 }: EmployeeFiltersProps) => {
-  // Get all available skills from our skills database
-  const allSkills = [...technicalSkillObjects, ...softSkillObjects].map(skill => skill.title);
+  // Get all available skills from our universal skills database
+  const allSkills = getAllSkills().map(skill => skill.title);
   console.log('Available skills for search:', allSkills);
 
   const employees = useEmployeeStore((state) => state.employees);
