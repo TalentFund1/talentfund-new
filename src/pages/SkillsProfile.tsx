@@ -40,6 +40,13 @@ const SkillsProfileContent = () => {
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
 
+  console.log('SkillsProfileContent rendering with:', {
+    selectedSkills,
+    selectedFunction,
+    selectedJobTitle,
+    toggledSkillsCount: toggledSkills.size
+  });
+
   // Get role titles directly from roleSkills
   const availableJobTitles = Object.values(roleSkills).map(role => role.title);
   const toggledSkillsList = Array.from(toggledSkills);
@@ -114,9 +121,11 @@ const SkillsProfileContent = () => {
 
 const SkillsProfile = () => {
   return (
-    <ToggledSkillsProvider>
-      <SkillsProfileContent />
-    </ToggledSkillsProvider>
+    <TrackProvider>
+      <ToggledSkillsProvider>
+        <SkillsProfileContent />
+      </ToggledSkillsProvider>
+    </TrackProvider>
   );
 };
 
