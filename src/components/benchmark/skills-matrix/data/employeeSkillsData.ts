@@ -3,23 +3,19 @@ import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 import { normalizeSkillTitle } from '../../../skills/utils/normalization';
 import { getSkillCategory } from '../../../skills/data/skills/categories/skillCategories';
 
-// Define initial skills for each employee based on their role
+// Define skills for each employee independently of their role
 export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
   "123": [
-    "Machine Learning",
-    "Deep Learning", 
-    "Natural Language Processing",
-    "Computer Vision",
-    "TensorFlow",
     "Python",
+    "Machine Learning",
+    "Deep Learning",
+    "TensorFlow",
     "Problem Solving",
-    "Technical Writing",
-    "Git Version Control",
     "Communication"
   ].map(title => {
     const normalizedTitle = normalizeSkillTitle(title);
     const skillData = getUnifiedSkillData(normalizedTitle);
-    console.log('Loading AI Engineer skill:', {
+    console.log('Loading employee 123 skill:', {
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle)
     });
@@ -27,26 +23,22 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
-      level: 'intermediate',  // Set default level
-      requirement: 'required' // Set default requirement
+      level: 'intermediate',
+      requirement: 'required'
     };
   }),
 
   "124": [
     "Node.js",
-    "Database Design",
-    "API Development", 
-    "System Architecture",
-    "Kubernetes",
+    "MongoDB",
+    "Express.js",
+    "SQL",
     "Problem Solving",
-    "Code Review",
-    "Agile Methodologies",
-    "Git Version Control",
     "Communication"
   ].map(title => {
     const normalizedTitle = normalizeSkillTitle(title);
     const skillData = getUnifiedSkillData(normalizedTitle);
-    console.log('Loading Backend Engineer skill:', {
+    console.log('Loading employee 124 skill:', {
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle)
     });
@@ -54,26 +46,22 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
-      level: 'intermediate',  // Set default level
-      requirement: 'required' // Set default requirement
+      level: 'intermediate',
+      requirement: 'required'
     };
   }),
 
   "125": [
     "React",
     "TypeScript",
-    "Next.js",
-    "CSS/SASS",
-    "Performance Optimization",
+    "CSS",
+    "HTML",
     "Problem Solving",
-    "Code Review",
-    "Agile Methodologies",
-    "Git Version Control",
     "Communication"
   ].map(title => {
     const normalizedTitle = normalizeSkillTitle(title);
     const skillData = getUnifiedSkillData(normalizedTitle);
-    console.log('Loading Frontend Engineer skill:', {
+    console.log('Loading employee 125 skill:', {
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle)
     });
@@ -81,26 +69,22 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
-      level: 'intermediate',  // Set default level
-      requirement: 'required' // Set default requirement
+      level: 'intermediate',
+      requirement: 'required'
     };
   }),
 
   "126": [
-    "System Design",
-    "Technical Architecture",
-    "Risk Management",
-    "Team Leadership",
     "Project Management",
-    "Strategic Planning",
-    "Stakeholder Management",
+    "Team Leadership",
     "Agile Methodologies",
-    "Git Version Control",
+    "Strategic Planning",
+    "Problem Solving",
     "Communication"
   ].map(title => {
     const normalizedTitle = normalizeSkillTitle(title);
     const skillData = getUnifiedSkillData(normalizedTitle);
-    console.log('Loading Engineering Manager skill:', {
+    console.log('Loading employee 126 skill:', {
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle)
     });
@@ -108,8 +92,8 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
-      level: 'intermediate',  // Set default level
-      requirement: 'required' // Set default requirement
+      level: 'intermediate',
+      requirement: 'required'
     };
   })
 };
@@ -132,8 +116,8 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
     return employeeSkills[employeeId];
   }
   
-  // Initialize with empty skills if none exist
-  console.log('No specific skills found for employee, initializing empty skills array');
+  // Return empty array if no skills found
+  console.log('No specific skills found for employee, returning empty array');
   return [];
 };
 
