@@ -8,6 +8,7 @@ import { validateFormData } from "./form/employeeFormSubmission";
 import { Employee } from "../types/employeeTypes";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { roleMapping } from "./form/RoleLevelFields";
+import { useNavigate } from "react-router-dom";
 
 interface EditEmployeeDialogProps {
   employee: Employee;
@@ -19,6 +20,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
   const { toast } = useToast();
   const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
   const employees = useEmployeeStore((state) => state.employees);
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     id: employee.id,
@@ -84,10 +86,10 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
 
       console.log('Updating employee with:', updatedEmployee);
       
-      // Force a clean update to ensure persistence
+      // Update employee in store
       updateEmployee(updatedEmployee);
-      
-      // Clear any cached data from localStorage
+
+      // Clear cached context data
       const keysToRemove = [
         `toggled-skills-${employee.id}`,
         `track-${employee.id}`,
@@ -107,8 +109,9 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
       
       onOpenChange(false);
       
-      // Force reload the page to ensure all contexts are updated
-      window.location.reload();
+      // Instead of reloading, navigate to the same route to force a re-render
+      navigate(`/employee/${employee.id}`, { replace: true });
+      
     } catch (error) {
       console.error('Error updating employee:', error);
       toast({

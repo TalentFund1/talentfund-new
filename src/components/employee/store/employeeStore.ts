@@ -68,17 +68,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
             emp.id === employee.id ? { ...employee } : emp
           );
           console.log('Updated employees list:', updatedEmployees);
-          
-          // Force an update to localStorage
-          localStorage.setItem('employee-store', JSON.stringify({
-            state: {
-              employees: updatedEmployees,
-              employeeSkills: state.employeeSkills,
-              skillStates: state.skillStates
-            },
-            version: 1
-          }));
-          
           return { employees: updatedEmployees };
         });
       },
