@@ -7,7 +7,7 @@ import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { roleSkills } from "../skills/data/roleSkills";
+import { getSkillByTitle } from "../skills/data/skills/allSkills";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -17,7 +17,7 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
     requirement?: string;
-    category?: string; // Add this to use the skill's own category
+    category?: string;
   };
   showCompanySkill?: boolean;
   isRoleBenchmark?: boolean;
@@ -45,27 +45,16 @@ export const SkillsMatrixRow = ({
   };
 
   const getSkillType = (skillTitle: string): string => {
-    // If we're in benchmark view, use the selected role's skills
-    if (isRoleBenchmark) {
-      const benchmarkRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
-      
-      if (benchmarkRoleSkills.specialized.some(s => s.title === skillTitle)) {
-        return 'Specialized';
-      }
-      if (benchmarkRoleSkills.common.some(s => s.title === skillTitle)) {
-        return 'Common';
-      }
-      if (benchmarkRoleSkills.certifications.some(s => s.title === skillTitle)) {
-        return 'Certification';
-      }
+    const universalSkill = getSkillByTitle(skillTitle);
+    console.log('Getting skill type from universal database:', {
+      skillTitle,
+      foundSkill: universalSkill?.category
+    });
+    
+    if (universalSkill) {
+      return universalSkill.category.charAt(0).toUpperCase() + universalSkill.category.slice(1);
     }
     
-    // For employee skills view, use the skill's own category if available
-    if (skill.category) {
-      return skill.category;
-    }
-    
-    // Default categorization if none found
     return 'Uncategorized';
   };
 
