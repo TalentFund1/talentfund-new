@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileTable } from "@/components/skills/SkillProfileTable";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 import { roleSkills } from '@/components/skills/data/roleSkills';
 import { SkillProfileStats } from "@/components/skills/stats/SkillProfileStats";
 import { SkillProfileFilters } from "@/components/skills/search/SkillProfileFilters";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { ToggledSkillsProvider, useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { AddSkillProfileForm } from "@/components/skills/form/AddSkillProfileForm";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import {
@@ -33,23 +34,15 @@ const companyFunctions = [
   "Customer Success"
 ];
 
-// Separate the content component to use hooks within the provider
 const SkillsProfileContent = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
   const { toggledSkills } = useToggledSkills();
-  
+
   // Get role titles directly from roleSkills
   const availableJobTitles = Object.values(roleSkills).map(role => role.title);
-
-  console.log('Rendering SkillsProfileContent with:', {
-    selectedSkills,
-    selectedFunction,
-    selectedJobTitle,
-    availableJobTitles,
-    toggledSkills: Array.from(toggledSkills)
-  });
+  const toggledSkillsList = Array.from(toggledSkills);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -73,9 +66,9 @@ const SkillsProfileContent = () => {
             setSelectedFunction={setSelectedFunction}
             selectedJobTitle={selectedJobTitle}
             setSelectedJobTitle={setSelectedJobTitle}
+            toggledSkillsList={toggledSkillsList}
             availableJobTitles={availableJobTitles}
             companyFunctions={companyFunctions}
-            toggledSkillsList={Array.from(toggledSkills)}
           />
 
           <SkillProfileStats />
@@ -119,10 +112,7 @@ const SkillsProfileContent = () => {
   );
 };
 
-// Main component that provides context
 const SkillsProfile = () => {
-  console.log('Rendering SkillsProfile wrapper');
-  
   return (
     <ToggledSkillsProvider>
       <SkillsProfileContent />

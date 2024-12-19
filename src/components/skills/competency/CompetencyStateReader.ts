@@ -4,7 +4,6 @@ import { roleSkills } from "../data/roleSkills";
 import { useTrack } from "../context/TrackContext";
 import { getLevelPriority, normalizeLevel } from "./utils/levelUtils";
 import { determineRequirement } from "./utils/requirementUtils";
-import { useParams } from "react-router-dom";
 
 interface SkillCompetencyState {
   level: string;
@@ -18,25 +17,11 @@ const defaultState: SkillCompetencyState = {
 };
 
 export const useCompetencyStateReader = () => {
-  const { currentStates, getEmployeeSkillState } = useCompetencyStore();
+  const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole } = useTrack();
-  const { id: employeeId } = useParams<{ id: string }>();
 
   const findSavedState = (skillName: string, levelKey: string, roleId: string): SkillCompetencyState | null => {
-    // First try to get employee-specific state
-    const employeeState = getEmployeeSkillState(skillName, employeeId || "", roleId);
-    if (employeeState?.[levelKey]) {
-      console.log('Found employee-specific state:', {
-        employeeId,
-        skillName,
-        levelKey,
-        state: employeeState[levelKey]
-      });
-      return employeeState[levelKey];
-    }
-
-    // Fallback to role-level state
     const roleStates = currentStates[roleId];
     const track = getTrackForRole(roleId);
     
@@ -110,7 +95,6 @@ export const useCompetencyStateReader = () => {
       levelKey,
       originalRoleId: roleId,
       validatedRoleId,
-      employeeId,
       hasToggledSkill: toggledSkills.has(skillName)
     });
 
@@ -120,11 +104,7 @@ export const useCompetencyStateReader = () => {
     // First try to get saved state from CompetencyStore
     const savedState = findSavedState(skillName, levelKey, validatedRoleId);
     if (savedState) {
-      console.log('Using saved state:', {
-        employeeId,
-        skillName,
-        state: savedState
-      });
+      console.log('Using saved state from CompetencyStore:', savedState);
       return savedState;
     }
 
@@ -139,7 +119,6 @@ export const useCompetencyStateReader = () => {
     
     console.log('Generated default state based on track and level:', {
       skillName,
-      employeeId,
       track,
       level: normalizedLevel,
       state: newDefaultState
@@ -157,8 +136,7 @@ export const useCompetencyStateReader = () => {
     console.log('Getting all skill states for level:', { 
       levelKey,
       originalRoleId: roleId,
-      validatedRoleId,
-      employeeId
+      validatedRoleId
     });
     
     const states: Record<string, SkillCompetencyState> = {};
@@ -181,7 +159,6 @@ export const useCompetencyStateReader = () => {
 
     console.log('Retrieved all skill states:', { 
       roleId: validatedRoleId,
-      employeeId,
       level: levelKey,
       stateCount: Object.keys(states).length,
       states 
