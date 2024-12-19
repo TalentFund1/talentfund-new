@@ -30,3 +30,12 @@ export const asRequirement = (value: string | SkillState | SkillRequirement): Sk
   const strValue = getRequirementValue(value);
   return strValue as SkillRequirement;
 };
+
+export const formatSkillLevel = (value: string | SkillState): string => {
+  const str = asString(value);
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+export const compareSkillState = (state: string | SkillState, value: string): boolean => {
+  return asString(state) === value;
+};

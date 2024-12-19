@@ -4,6 +4,7 @@ import { SkillCell } from "./SkillCell";
 import { roleSkills } from "../data/roleSkills";
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
 import { useParams } from "react-router-dom";
+import { asString } from "./utils/skillStateUtils";
 
 interface CompetencyGraphTableProps {
   currentRoleId: string;
@@ -74,23 +75,6 @@ export const CompetencyGraphTable = ({
     return [];
   };
 
-  const getSkillDetails = (skillName: string, level: string) => {
-    const currentRoleSkills = roleSkills[effectiveRoleId as keyof typeof roleSkills] || roleSkills["123"];
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-    
-    const skill = allSkills.find(s => s.title === skillName);
-    if (!skill) return { level: "-", required: "-" };
-    
-    return {
-      level: skill.level || "-",
-      required: "required"
-    };
-  };
-
   const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
     let count = 0;
     const roleState = roleStates[effectiveRoleId];
@@ -98,9 +82,9 @@ export const CompetencyGraphTable = ({
     if (roleState && roleState[skillName]) {
       levels.forEach(level => {
         const skillState = roleState[skillName][level.toLowerCase()];
-        if (skillState && typeof skillState.level === 'string') {
-          const currentLevel = skillState.level.toLowerCase();
-          if (currentLevel === targetLevel.toLowerCase()) {
+        if (skillState) {
+          const currentLevel = asString(skillState.level);
+          if (currentLevel.toLowerCase() === targetLevel.toLowerCase()) {
             count++;
           }
         }
@@ -165,7 +149,10 @@ export const CompetencyGraphTable = ({
                 <SkillCell 
                   key={level}
                   skillName={skillName}
-                  details={getSkillDetails(skillName, level)}
+                  details={{
+                    level: roleStates[effectiveRoleId]?.[skillName]?.[level.toLowerCase()]?.level || 'unspecified',
+                    required: roleStates[effectiveRoleId]?.[skillName]?.[level.toLowerCase()]?.required || 'preferred'
+                  }}
                   isLastColumn={index === levels.length - 1}
                   levelKey={level.toLowerCase()}
                 />
