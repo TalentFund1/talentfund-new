@@ -71,20 +71,12 @@ export const AddSkillToProfileDialog = () => {
       if (skillData) {
         console.log('Processing skill:', skillData);
         
+        // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
+        // Determine category and add to appropriate array if not already present
         const category = skillData.category?.toLowerCase() || 'common';
-        const progression = generateSkillProgression(skillTitle, category, track, id);
         
-        if (progression) {
-          console.log('Generated progression for skill:', {
-            skill: skillTitle,
-            progression
-          });
-          setSkillProgression(skillTitle, progression, id);
-        }
-
-        // Add to appropriate category array if not already present
         if (category === 'specialized' && !updatedRoleSkills.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
           updatedRoleSkills.specialized.push(skillData);
         } else if (category === 'common' && !updatedRoleSkills.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
@@ -92,10 +84,22 @@ export const AddSkillToProfileDialog = () => {
         } else if (category === 'certification' && !updatedRoleSkills.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
           updatedRoleSkills.certifications.push(skillData);
         }
+
+        // Generate and set progression
+        const progression = generateSkillProgression(skillTitle, category, track, id);
+        if (progression) {
+          console.log('Generated progression for skill:', {
+            skill: skillTitle,
+            progression
+          });
+          setSkillProgression(skillTitle, progression, id);
+        }
+      } else {
+        console.log('Skill not found:', skillTitle);
       }
     });
 
-    // Save updated skills to localStorage
+    // Save updated skills to localStorage and update state
     console.log('Saving updated role skills:', {
       roleId: id,
       specialized: updatedRoleSkills.specialized.length,
@@ -103,6 +107,7 @@ export const AddSkillToProfileDialog = () => {
       certifications: updatedRoleSkills.certifications.length
     });
 
+    roleSkills[id] = updatedRoleSkills;
     saveRoleSkills(id, updatedRoleSkills);
     setToggledSkills(newToggledSkills);
 
