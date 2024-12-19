@@ -23,7 +23,6 @@ export const setSkillStateAction = (
   });
 
   if (employeeId) {
-    const employeeKey = getEmployeeStateKey(employeeId, roleId);
     const updatedEmployeeStates = {
       ...employeeStates,
       [employeeId]: {
