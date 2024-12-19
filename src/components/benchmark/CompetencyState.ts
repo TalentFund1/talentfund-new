@@ -7,8 +7,8 @@ export interface SkillState {
 }
 
 interface CompetencyState {
-  currentStates: Record<string, Record<string, SkillState>>;
-  setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
+  currentStates: Record<string, Record<string, Record<string, SkillState>>>;
+  setSkillState: (employeeId: string, skillName: string, level: string, levelKey: string, required: string) => void;
 }
 
 const defaultSkillState: SkillState = {
@@ -24,11 +24,16 @@ export const useCompetencyStore = create<CompetencyState>()(
   persist(
     (set) => ({
       currentStates: {},
-      setSkillState: (skillName, level, levelKey, required) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, required });
+      setSkillState: (employeeId, skillName, level, levelKey, required) => {
+        console.log('Setting skill state:', { employeeId, skillName, level, levelKey, required });
         set((state) => {
+          // Initialize the employee state if it doesn't exist
+          if (!state.currentStates[employeeId]) {
+            state.currentStates[employeeId] = {};
+          }
+
           // Initialize the skill state if it doesn't exist
-          if (!state.currentStates[skillName]) {
+          if (!state.currentStates[employeeId][skillName]) {
             console.log('Initializing new skill with default states:', skillName);
             const initialSkillState: Record<string, SkillState> = {};
             
@@ -47,17 +52,20 @@ export const useCompetencyStore = create<CompetencyState>()(
               initialSkillState[level] = { ...defaultSkillState };
             });
             
-            state.currentStates[skillName] = initialSkillState;
+            state.currentStates[employeeId][skillName] = initialSkillState;
           }
 
           return {
             currentStates: {
               ...state.currentStates,
-              [skillName]: {
-                ...state.currentStates[skillName],
-                [levelKey]: {
-                  level,
-                  required,
+              [employeeId]: {
+                ...state.currentStates[employeeId],
+                [skillName]: {
+                  ...state.currentStates[employeeId][skillName],
+                  [levelKey]: {
+                    level,
+                    required,
+                  },
                 },
               },
             },
@@ -67,7 +75,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-matrix-storage',
-      version: 23, // Increment version to ensure clean state
+      version: 24, // Increment version to ensure clean state
       partialize: (state) => ({
         currentStates: state.currentStates,
       }),

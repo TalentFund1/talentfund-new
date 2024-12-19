@@ -9,6 +9,7 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
     "Python",
     "Machine Learning",
     "Deep Learning",
+    "Natural Language Processing",
     "TensorFlow",
     "Problem Solving",
     "Communication"
@@ -23,7 +24,7 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
-      employeeId: "123", // Add employeeId to track ownership
+      employeeId: "123",
       level: 'intermediate',
       requirement: 'required'
     };
@@ -47,7 +48,7 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
-      employeeId: "124", // Add employeeId to track ownership
+      employeeId: "124",
       level: 'intermediate',
       requirement: 'required'
     };
@@ -71,7 +72,7 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
-      employeeId: "125", // Add employeeId to track ownership
+      employeeId: "125",
       level: 'intermediate',
       requirement: 'required'
     };
@@ -95,7 +96,7 @@ export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
       ...skillData,
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle),
-      employeeId: "126", // Add employeeId to track ownership
+      employeeId: "126",
       level: 'intermediate',
       requirement: 'required'
     };
