@@ -8,9 +8,11 @@ import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
-import { Skills } from '../data/skills/allSkills';
+import { Skills, getAllSkills } from '../data/skills/allSkills';
+import { roleSkills } from '../data/roleSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { getEmployeeSkills, updateEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
+import { SkillRequirement } from '../types/SkillTypes';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -46,12 +48,9 @@ export const AddSkillToProfileDialog = () => {
 
     // Get current employee skills
     const currentSkills = getEmployeeSkills(id);
-    console.log('Current employee skills:', currentSkills.length);
 
     // Add new skills
     const updatedSkills = [...currentSkills];
-    const addedSkills: string[] = [];
-
     selectedSkills.forEach(skillTitle => {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
       
@@ -61,8 +60,7 @@ export const AddSkillToProfileDialog = () => {
         return;
       }
 
-      // Get complete skill data from database
-      const skillData = getUnifiedSkillData(skillTitle);
+      const skillData = getUnifiedSkillData(skillTitle, true);
       if (skillData) {
         console.log('Processing skill:', skillData);
         
@@ -71,23 +69,18 @@ export const AddSkillToProfileDialog = () => {
         newToggledSkills.add(skillTitle);
         setToggledSkills(newToggledSkills);
         
-        // Initialize skill state with unspecified level and preferred requirement
-        setSkillState(skillTitle, 'unspecified', id, 'preferred', 'employee');
+        // Initialize skill state with unspecified level and skill goal requirement
+        setSkillState(skillTitle, 'unspecified', 'skill_goal', id, 'employee');
 
-        // Add to employee skills with complete data
+        // Add to employee skills with properly typed requirement
         const newSkill = {
           ...skillData,
           level: 'unspecified',
-          requirement: 'preferred',
-          category: skillData.category || 'technical',
-          subcategory: skillData.subcategory || 'Other',
-          growth: skillData.growth || '0%',
-          confidence: skillData.confidence || 'low'
+          requirement: 'skill_goal' as SkillRequirement
         };
         
         updatedSkills.push(newSkill);
-        addedSkills.push(skillTitle);
-        console.log('Added new skill with complete data:', newSkill);
+        console.log('Added new skill:', newSkill);
       }
     });
 
@@ -95,22 +88,14 @@ export const AddSkillToProfileDialog = () => {
     updateEmployeeSkills(id, updatedSkills);
     console.log('Updated employee skills:', {
       employeeId: id,
-      previousCount: currentSkills.length,
-      newCount: updatedSkills.length,
-      addedSkills
+      totalSkills: updatedSkills.length,
+      newSkills: selectedSkills
     });
 
-    if (addedSkills.length > 0) {
-      toast({
-        title: "Skills Added",
-        description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to your profile.`,
-      });
-    } else {
-      toast({
-        title: "No New Skills",
-        description: "No new skills were added to your profile.",
-      });
-    }
+    toast({
+      title: "Skills Added",
+      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to your profile.`,
+    });
 
     setSelectedSkills([]);
     setOpen(false);
