@@ -2,24 +2,24 @@ import { useState } from "react";
 import { SkillsTableHeader } from "./skills/table/SkillsTableHeader";
 import { SkillsTableContent } from "./skills/table/SkillsTableContent";
 import { SkillsTableFooter } from "./skills/table/SkillsTableFooter";
-import { getAllSkills } from "./skills/data/skillsData";
-import { SimpleSkill } from "./skills/types/SkillTypes";
+import { getAllSkills } from "./skills/data/skills/allSkills";
 
 export const SkillsTable = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const simpleSkills: SimpleSkill[] = getAllSkills().map(skill => ({
-    title: skill.title,
-    subcategory: skill.subcategory,
-    level: skill.level,
-    growth: skill.growth
-  }));
+  // Get skills directly from universal database
+  const skills = getAllSkills();
+
+  console.log('Loading skills from universal database:', {
+    totalSkills: skills.length,
+    sample: skills[0]
+  });
 
   return (
     <div className="space-y-6 bg-white rounded-lg shadow-sm">
       <SkillsTableHeader />
       <SkillsTableContent 
-        skills={simpleSkills} 
+        skills={skills} 
         isLoading={isLoading} 
       />
       <SkillsTableFooter />
