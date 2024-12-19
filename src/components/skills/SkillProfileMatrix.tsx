@@ -13,6 +13,7 @@ import { SkillTypeFilters } from './filters/SkillTypeFilters';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { getSkillCategory } from './data/skills/categories/skillCategories';
 import { normalizeSkillTitle } from './utils/normalization';
+import { ToggledSkillsDisplay } from './ToggledSkillsDisplay';
 
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -102,7 +103,18 @@ export const SkillProfileMatrix = () => {
       specialized: currentRoleSkills.specialized.length,
       common: currentRoleSkills.common.length,
       certifications: currentRoleSkills.certifications.length,
-      uniqueCount: uniqueSkills.size
+      uniqueCount: uniqueSkills.size,
+      toggledSkillsCount: toggledSkills.size
+    });
+
+    // Sort skills to put toggled skills at the top
+    skills.sort((a, b) => {
+      const aIsToggled = toggledSkills.has(a.title);
+      const bIsToggled = toggledSkills.has(b.title);
+      
+      if (aIsToggled && !bIsToggled) return -1;
+      if (!aIsToggled && bIsToggled) return 1;
+      return 0;
     });
 
     if (skillType !== "all") {
@@ -114,7 +126,7 @@ export const SkillProfileMatrix = () => {
     }
 
     if (sortField && sortDirection) {
-      skills.sort((a, b) => {
+      const sortedSkills = [...skills].sort((a, b) => {
         if (sortField === 'growth') {
           const aGrowth = parseFloat(a.growth);
           const bGrowth = parseFloat(b.growth);
@@ -126,14 +138,12 @@ export const SkillProfileMatrix = () => {
         }
         return 0;
       });
-    }
 
-    console.log('Filtered skills:', {
-      total: skills.length,
-      toggledCount: Array.from(toggledSkills).length,
-      skillType,
-      selectedCategory
-    });
+      // Preserve toggled skills at the top even after sorting
+      const toggledSortedSkills = sortedSkills.filter(skill => toggledSkills.has(skill.title));
+      const nonToggledSortedSkills = sortedSkills.filter(skill => !toggledSkills.has(skill.title));
+      skills = [...toggledSortedSkills, ...nonToggledSortedSkills];
+    }
 
     return skills;
   })();
@@ -150,6 +160,8 @@ export const SkillProfileMatrix = () => {
           onCategorySelect={setSelectedCategory}
           skillCount={skillCounts}
         />
+
+        <ToggledSkillsDisplay />
 
         <SkillTypeFilters
           skillType={skillType}
