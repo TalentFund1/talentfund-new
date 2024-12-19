@@ -19,15 +19,27 @@ export const CompetencyGraphTable = ({
   toggledSkills
 }: CompetencyGraphTableProps) => {
   const { roleStates } = useCompetencyStore();
-  const { id: roleId } = useParams<{ id: string }>();
-  const roleIdParam = roleId || currentRoleId || "123"; // Provide a fallback
+  const { id: urlRoleId } = useParams<{ id: string }>();
+  
+  // Use currentRoleId as fallback if urlRoleId is not available
+  const effectiveRoleId = urlRoleId || currentRoleId || "123";
 
   const getLevelsForTrack = () => {
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
   };
 
   const getSkillsByCategory = () => {
-    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
+    const currentRoleSkills = roleSkills[effectiveRoleId as keyof typeof roleSkills] || roleSkills["123"];
+    
+    console.log('Getting skills for role:', {
+      roleId: effectiveRoleId,
+      category: selectedCategory,
+      skillsCount: {
+        specialized: currentRoleSkills.specialized?.length || 0,
+        common: currentRoleSkills.common?.length || 0,
+        certifications: currentRoleSkills.certifications?.length || 0
+      }
+    });
     
     const filterSkillsByCategory = (category: 'specialized' | 'common' | 'certifications') => {
       return currentRoleSkills[category]?.filter(skill => toggledSkills.has(skill.title)) || [];
@@ -57,7 +69,7 @@ export const CompetencyGraphTable = ({
   };
 
   const getSkillDetails = (skillName: string, level: string) => {
-    const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
+    const currentRoleSkills = roleSkills[effectiveRoleId as keyof typeof roleSkills] || roleSkills["123"];
     const allSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
@@ -75,7 +87,7 @@ export const CompetencyGraphTable = ({
 
   const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
     let count = 0;
-    const roleState = roleStates[roleIdParam];
+    const roleState = roleStates[effectiveRoleId];
     
     if (roleState && roleState[skillName]) {
       levels.forEach(level => {
