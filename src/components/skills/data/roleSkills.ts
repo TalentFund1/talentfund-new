@@ -10,7 +10,7 @@ export const ROLE_DEFINITIONS = {
   "127": { title: "DevOps Engineer", soc: "15-1244" }
 } as const;
 
-export const ROLE_SKILL_MAPPINGS = {
+export const ROLE_SKILL_MAPPINGS: Record<string, string[]> = {
   "123": [
     "Machine Learning", "Deep Learning", "Natural Language Processing", 
     "Computer Vision", "TensorFlow", "Python", "Problem Solving", 
@@ -44,7 +44,7 @@ export const ROLE_SKILL_MAPPINGS = {
     "Kubernetes Administrator (CKA)",
     "AWS Certified Solutions Architect"
   ]
-} as const;
+};
 
 // Helper function to get skills for a role
 const getRoleSkills = (roleId: string): RoleSkillData => {
@@ -52,7 +52,7 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
   
   const allSkills = getAllSkills();
   const roleDefinition = ROLE_DEFINITIONS[roleId as keyof typeof ROLE_DEFINITIONS];
-  const roleSkillTitles = ROLE_SKILL_MAPPINGS[roleId as keyof typeof ROLE_SKILL_MAPPINGS] || [];
+  const roleSkillTitles = ROLE_SKILL_MAPPINGS[roleId] || [];
 
   if (!roleDefinition) {
     console.warn('Unknown role ID:', roleId);
@@ -100,7 +100,7 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
 };
 
 // Export roleSkills object with proper initialization
-export const roleSkills: { [key: string]: RoleSkillData } = Object.keys(ROLE_DEFINITIONS).reduce((acc, roleId) => ({
+export const roleSkills: Record<string, RoleSkillData> = Object.keys(ROLE_DEFINITIONS).reduce((acc, roleId) => ({
   ...acc,
   [roleId]: getRoleSkills(roleId)
 }), {});

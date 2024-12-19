@@ -13,7 +13,7 @@ export const generateInitialEmployees = (): Employee[] => {
   const defaultEmployees: Employee[] = [
     {
       id: "123",
-      name: "Victor Smith",
+      name: generateRandomName(),
       role: `${ROLE_DEFINITIONS["123"].title}: P4`,
       department: "Engineering",
       skillCount: 0,
@@ -22,14 +22,14 @@ export const generateInitialEmployees = (): Employee[] => {
       location: "Toronto, ON",
       sex: "male" as const,
       category: "Full-time",
-      manager: "Sus Manu",
+      manager: generateRandomName(),
       startDate: "2023-05-15",
       office: "Toronto",
       termDate: "-"
     },
     {
       id: "124",
-      name: "Jennie Richards",
+      name: generateRandomName(),
       role: `${ROLE_DEFINITIONS["124"].title}: P4`,
       department: "Engineering",
       skillCount: 0,
@@ -38,14 +38,14 @@ export const generateInitialEmployees = (): Employee[] => {
       location: "Toronto, ON",
       sex: "female" as const,
       category: "Contract",
-      manager: "Sus Manu",
+      manager: generateRandomName(),
       startDate: "2024-01-10",
       office: "Toronto",
       termDate: "-"
     },
     {
       id: "125",
-      name: "Anna Vyselva",
+      name: generateRandomName(),
       role: `${ROLE_DEFINITIONS["125"].title}: P5`,
       department: "Engineering",
       skillCount: 0,
@@ -54,14 +54,14 @@ export const generateInitialEmployees = (): Employee[] => {
       location: "Toronto, ON",
       sex: "female" as const,
       category: "Part-time",
-      manager: "Sus Manu",
+      manager: generateRandomName(),
       startDate: "2024-06-01",
       office: "Toronto",
       termDate: "-"
     },
     {
       id: "126",
-      name: "Sus Manu",
+      name: generateRandomName(),
       role: `${ROLE_DEFINITIONS["126"].title}: M3`,
       department: "Engineering",
       skillCount: 0,
@@ -79,5 +79,25 @@ export const generateInitialEmployees = (): Employee[] => {
 
   return defaultEmployees;
 };
+
+// Helper function to generate random names
+function generateRandomName(): string {
+  const firstNames = [
+    "James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", 
+    "Linda", "William", "Elizabeth", "David", "Barbara", "Richard", "Susan", 
+    "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen"
+  ];
+  
+  const lastNames = [
+    "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", 
+    "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", 
+    "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin"
+  ];
+
+  const randomFirst = firstNames[Math.floor(Math.random() * firstNames.length)];
+  const randomLast = lastNames[Math.floor(Math.random() * lastNames.length)];
+
+  return `${randomFirst} ${randomLast}`;
+}
 
 export const employees = generateInitialEmployees();
