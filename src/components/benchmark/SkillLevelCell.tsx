@@ -76,21 +76,20 @@ export const SkillLevelCell = ({
     return getBorderColorClass(level).split(' ')[0];
   };
 
-  const handleSkillChange = (value: string | SkillRequirement, type: 'level' | 'requirement') => {
+  const handleSkillChange = (value: string, type: 'level' | 'requirement') => {
     const newState = {
-      level: type === 'level' ? value as string : currentState.level,
+      level: type === 'level' ? value : currentState.level,
       requirement: type === 'requirement' ? value as SkillRequirement : currentState.requirement
     };
 
     setSkillState(skillTitle, newState.level, newState.requirement);
     
     if (id) {
-      // Update initialSkills when skill state changes
       initializeEmployeeSkills(id, [{
         title: skillTitle,
         level: newState.level,
         requirement: newState.requirement,
-        category: 'specialized', // Default category, can be adjusted based on skill type
+        category: 'specialized',
         id: `skill-${Date.now()}`,
         subcategory: 'Other',
         businessCategory: 'Information Technology',
@@ -99,7 +98,7 @@ export const SkillLevelCell = ({
         salary: '$0',
         confidence: 'low',
         benchmarks: { B: false, R: false, M: false, O: false }
-      }], true); // true flag for updating existing skills
+      }], true);
     }
 
     onLevelChange?.(newState.level, newState.requirement);
@@ -153,7 +152,7 @@ export const SkillLevelCell = ({
 
         <Select 
           value={currentState?.requirement} 
-          onValueChange={(value) => handleSkillChange(value as SkillRequirement, 'requirement')}
+          onValueChange={(value: string) => handleSkillChange(value as SkillRequirement, 'requirement')}
         >
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
