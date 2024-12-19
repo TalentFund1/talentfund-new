@@ -52,6 +52,7 @@ export const AddSkillToProfileDialog = () => {
     // Add new skills
     const updatedSkills = [...currentSkills];
     const addedSkills: string[] = [];
+    const newToggledSkills = new Set(toggledSkills);
 
     selectedSkills.forEach(skillTitle => {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
@@ -68,12 +69,10 @@ export const AddSkillToProfileDialog = () => {
         console.log('Processing skill:', skillData);
         
         // Add to toggled skills
-        const newToggledSkills = new Set(toggledSkills);
         newToggledSkills.add(skillTitle);
-        setToggledSkills(newToggledSkills);
         
         // Initialize skill state with unspecified level and preferred requirement
-        setSkillState(skillTitle, 'unspecified', id, 'preferred', 'employee');
+        setSkillState(skillTitle, 'unspecified', id, 'preferred' as SkillRequirement, 'employee');
 
         // Add to employee skills with complete data
         const newSkill: UnifiedSkill = {
@@ -94,11 +93,16 @@ export const AddSkillToProfileDialog = () => {
 
     // Update employee skills
     updateEmployeeSkills(id, updatedSkills);
+    
+    // Update toggled skills
+    setToggledSkills(newToggledSkills);
+    
     console.log('Updated employee skills:', {
       employeeId: id,
       previousCount: currentSkills.length,
       newCount: updatedSkills.length,
-      addedSkills
+      addedSkills,
+      toggledSkillsCount: newToggledSkills.size
     });
 
     if (addedSkills.length > 0) {
