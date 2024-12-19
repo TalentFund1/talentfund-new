@@ -32,7 +32,6 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     termDate: employee.termDate === "-" ? "" : employee.termDate,
     sex: employee.sex,
     category: employee.category,
-    skills: ""
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,6 +55,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
       // Update employee
       const updatedEmployee: Employee = {
         ...employee,
+        name: formData.name,
         department: formData.department,
         office: formData.office,
         category: formData.category,
