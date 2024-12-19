@@ -1,5 +1,5 @@
-import { RoleSkillData } from '../types/SkillTypes';
-import { getAllSkills, getSkillByTitle } from './skills/allSkills';
+import { RoleSkillData, UnifiedSkill } from '../types/SkillTypes';
+import { getAllSkills } from './skills/allSkills';
 import { getSkillCategory } from './skills/categories/skillCategories';
 
 // Helper function to get skills for a role
@@ -7,25 +7,6 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
   console.log('Getting skills for role:', roleId);
   
   const allSkills = getAllSkills();
-  const specialized = [];
-  const common = [];
-  const certifications = [];
-
-  // Filter skills based on role and categorize them
-  allSkills.forEach(skill => {
-    const category = getSkillCategory(skill.title);
-    switch(category) {
-      case 'specialized':
-        specialized.push(skill);
-        break;
-      case 'common':
-        common.push(skill);
-        break;
-      case 'certification':
-        certifications.push(skill);
-        break;
-    }
-  });
 
   // Return role-specific skills
   switch(roleId) {
@@ -33,15 +14,10 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
       return {
         title: "AI Engineer",
         soc: "15-2051",
-        specialized: specialized.filter(skill => 
+        skills: allSkills.filter(skill => 
           ["Machine Learning", "Deep Learning", "Natural Language Processing", 
-           "Computer Vision", "TensorFlow"].includes(skill.title)
-        ),
-        common: common.filter(skill => 
-          ["Python", "Problem Solving", "Technical Writing"].includes(skill.title)
-        ),
-        certifications: certifications.filter(skill => 
-          ["AWS Certified Machine Learning - Specialty", 
+           "Computer Vision", "TensorFlow", "Python", "Problem Solving", 
+           "Technical Writing", "AWS Certified Machine Learning - Specialty", 
            "TensorFlow Developer Certificate",
            "Google Cloud Professional Machine Learning Engineer"].includes(skill.title)
         )
@@ -51,15 +27,10 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
       return {
         title: "Backend Engineer",
         soc: "15-1252",
-        specialized: specialized.filter(skill => 
+        skills: allSkills.filter(skill => 
           ["Node.js", "Database Design", "API Development", 
-           "System Architecture"].includes(skill.title)
-        ),
-        common: common.filter(skill => 
-          ["Problem Solving", "Code Review", "Git Version Control"].includes(skill.title)
-        ),
-        certifications: certifications.filter(skill => 
-          ["AWS Certified Solutions Architect", 
+           "System Architecture", "Problem Solving", "Code Review", 
+           "Git Version Control", "AWS Certified Solutions Architect", 
            "Kubernetes Administrator (CKA)"].includes(skill.title)
         )
       };
@@ -68,15 +39,10 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
       return {
         title: "Frontend Engineer",
         soc: "15-1252",
-        specialized: specialized.filter(skill => 
-          ["React", "TypeScript", "UI/UX Design", "CSS/SASS", "Next.js"].includes(skill.title)
-        ),
-        common: common.filter(skill => 
-          ["Cross-browser Compatibility", "Responsive Design", 
-           "Problem Solving"].includes(skill.title)
-        ),
-        certifications: certifications.filter(skill => 
-          ["AWS Certified Developer - Associate",
+        skills: allSkills.filter(skill => 
+          ["React", "TypeScript", "UI/UX Design", "CSS/SASS", "Next.js",
+           "Cross-browser Compatibility", "Responsive Design", 
+           "Problem Solving", "AWS Certified Developer - Associate",
            "Google Mobile Web Specialist",
            "Professional Scrum Developer"].includes(skill.title)
         )
@@ -86,14 +52,10 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
       return {
         title: "Engineering Manager",
         soc: "11-9041",
-        specialized: specialized.filter(skill => 
-          ["System Design", "Technical Architecture"].includes(skill.title)
-        ),
-        common: common.filter(skill => 
-          ["Team Leadership", "Project Management", "Risk Management"].includes(skill.title)
-        ),
-        certifications: certifications.filter(skill => 
-          ["Project Management Professional (PMP)",
+        skills: allSkills.filter(skill => 
+          ["System Design", "Technical Architecture", "Team Leadership", 
+           "Project Management", "Risk Management", 
+           "Project Management Professional (PMP)",
            "Certified Scrum Master (CSM)"].includes(skill.title)
         )
       };
@@ -102,14 +64,10 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
       return {
         title: "DevOps Engineer",
         soc: "15-1244",
-        specialized: specialized.filter(skill => 
-          ["Kubernetes", "Docker", "CI/CD", "Infrastructure as Code"].includes(skill.title)
-        ),
-        common: common.filter(skill => 
-          ["Problem Solving", "Shell Scripting", "Monitoring"].includes(skill.title)
-        ),
-        certifications: certifications.filter(skill => 
-          ["AWS Certified DevOps Engineer",
+        skills: allSkills.filter(skill => 
+          ["Kubernetes", "Docker", "CI/CD", "Infrastructure as Code",
+           "Problem Solving", "Shell Scripting", "Monitoring",
+           "AWS Certified DevOps Engineer",
            "Kubernetes Administrator (CKA)",
            "AWS Certified Solutions Architect"].includes(skill.title)
         )
@@ -120,9 +78,7 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
       return {
         title: "Unknown Role",
         soc: "",
-        specialized: [],
-        common: [],
-        certifications: []
+        skills: []
       };
   }
 };
@@ -139,9 +95,10 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
 console.log('Role skills initialized:', Object.keys(roleSkills).map(id => ({
   roleId: id,
   title: roleSkills[id].title,
-  skillCounts: {
-    specialized: roleSkills[id].specialized.length,
-    common: roleSkills[id].common.length,
-    certifications: roleSkills[id].certifications.length
-  }
+  skillCount: roleSkills[id].skills.length,
+  categories: roleSkills[id].skills.reduce((acc: {[key: string]: number}, skill) => {
+    const category = getSkillCategory(skill.title);
+    acc[category] = (acc[category] || 0) + 1;
+    return acc;
+  }, {})
 })));
