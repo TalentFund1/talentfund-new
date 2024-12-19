@@ -137,18 +137,27 @@ export const useSkillsFiltering = (
         roleLevel: isRoleBenchmark ? 
           getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified' :
           skill.level || 'unspecified',
-        requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
+        requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown',
+        isToggled: toggledSkills.has(skill.title)
       }))
       .sort((a, b) => {
+        // First sort by toggled status
+        if (a.isToggled !== b.isToggled) {
+          return a.isToggled ? -1 : 1;
+        }
+
+        // Then by role level
         const aRoleLevel = a.roleLevel;
         const bRoleLevel = b.roleLevel;
         
         const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
         if (roleLevelDiff !== 0) return roleLevelDiff;
 
+        // Then by employee level
         const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
         if (employeeLevelDiff !== 0) return employeeLevelDiff;
 
+        // Finally alphabetically
         return a.title.localeCompare(b.title);
       });
   };
@@ -159,6 +168,7 @@ export const useSkillsFiltering = (
     employeeId,
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
+    toggledSkills: Array.from(toggledSkills),
     filters: {
       selectedLevel,
       selectedInterest,
