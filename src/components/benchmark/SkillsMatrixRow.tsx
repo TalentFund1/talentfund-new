@@ -1,11 +1,10 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check, X } from "lucide-react";
+import { Check, X, Star, Shield, Target, CircleDashed, Heart } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
-import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { isSpecializedSkill, isCommonSkill, isCertificationSkill } from "../skills/competency/skillCategoryUtils";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
@@ -171,7 +170,7 @@ export const SkillsMatrixRow = ({
           <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${
             skill.confidence === 'high' ? 'bg-green-100 text-green-800' :
             skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
-            'bg-red-100 text-red-800'
+            'bg-gray-100 text-gray-600'
           }`}>
             {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
           </span>
@@ -179,7 +178,7 @@ export const SkillsMatrixRow = ({
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
         <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
-          skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
+          skill.growth === "0%" ? 'bg-gray-100 text-gray-600' : 'bg-green-100 text-green-800'
         }`}>
           ↗ {skill.growth}
         </span>
