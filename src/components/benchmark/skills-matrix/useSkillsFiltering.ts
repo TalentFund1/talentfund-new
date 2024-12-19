@@ -27,12 +27,21 @@ export const useSkillsFiltering = (
 
   let filteredSkills = [...employeeSkills];
 
+  // Only include toggled skills that are assigned to the employee
+  filteredSkills = filteredSkills.filter(skill => toggledSkills.has(skill.title));
+
+  console.log('After toggled skills filtering:', {
+    remainingSkills: filteredSkills.length,
+    skills: filteredSkills.map(s => s.title)
+  });
+
   // Apply category filtering if needed
   if (selectedLevel !== "all") {
     filteredSkills = filterSkillsByCategory(filteredSkills, selectedLevel);
     console.log('After category filtering:', {
       level: selectedLevel,
-      remainingSkills: filteredSkills.length
+      remainingSkills: filteredSkills.length,
+      skills: filteredSkills.map(s => s.title)
     });
   }
 
@@ -47,7 +56,8 @@ export const useSkillsFiltering = (
     });
     console.log('After interest filtering:', {
       interest: selectedInterest,
-      remainingSkills: filteredSkills.length
+      remainingSkills: filteredSkills.length,
+      skills: filteredSkills.map(s => s.title)
     });
   }
 
@@ -58,7 +68,8 @@ export const useSkillsFiltering = (
     );
     console.log('After skill level filtering:', {
       skillLevel: selectedSkillLevel,
-      remainingSkills: filteredSkills.length
+      remainingSkills: filteredSkills.length,
+      skills: filteredSkills.map(s => s.title)
     });
   }
 
@@ -69,13 +80,11 @@ export const useSkillsFiltering = (
     );
     console.log('After search term filtering:', {
       searchTerm,
-      remainingSkills: filteredSkills.length
+      remainingSkills: filteredSkills.length,
+      skills: filteredSkills.map(s => s.title)
     });
   }
 
-  // Only include toggled skills
-  filteredSkills = filteredSkills.filter(skill => toggledSkills.has(skill.title));
-  
   console.log('Final filtered skills:', {
     total: filteredSkills.length,
     skills: filteredSkills.map(s => s.title)

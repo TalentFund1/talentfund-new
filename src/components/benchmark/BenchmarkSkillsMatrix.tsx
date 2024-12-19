@@ -47,12 +47,17 @@ const BenchmarkSkillsMatrixContent = () => {
     true
   );
 
-  console.log('BenchmarkSkillsMatrix - Filtered skills:', {
-    total: filteredSkills.length,
-    skills: filteredSkills.map(s => s.title)
+  // Ensure we only show skills that are actually assigned to the employee
+  const assignedFilteredSkills = filteredSkills.filter(skill => 
+    employeeSkills.some(empSkill => empSkill.title === skill.title)
+  );
+
+  console.log('BenchmarkSkillsMatrix - Final filtered skills:', {
+    total: assignedFilteredSkills.length,
+    skills: assignedFilteredSkills.map(s => s.title)
   });
 
-  const paginatedSkills = filteredSkills.slice(0, visibleItems);
+  const paginatedSkills = assignedFilteredSkills.slice(0, visibleItems);
 
   return (
     <div className="space-y-6">
