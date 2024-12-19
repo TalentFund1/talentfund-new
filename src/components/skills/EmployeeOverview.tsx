@@ -163,9 +163,6 @@ const EmployeeOverviewContent = () => {
           </div>
           <div className="space-y-3">
             {exactMatchEmployees.map((employee, index) => renderEmployeeList(employee, index))}
-            {exactMatchEmployees.length === 0 && (
-              <p className="text-sm text-muted-foreground">No exact role matches found</p>
-            )}
           </div>
         </Card>
 
@@ -181,9 +178,6 @@ const EmployeeOverviewContent = () => {
           </div>
           <div className="space-y-3">
             {partialMatchEmployees.map((employee, index) => renderEmployeeList(employee, index))}
-            {partialMatchEmployees.length === 0 && (
-              <p className="text-sm text-muted-foreground">No skill matches found</p>
-            )}
           </div>
         </Card>
       </div>
