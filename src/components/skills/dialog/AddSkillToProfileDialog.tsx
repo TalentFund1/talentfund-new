@@ -19,7 +19,7 @@ export const AddSkillToProfileDialog = () => {
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
-  const { setSkillState, initializeState } = useCompetencyStore();
+  const { setSkillState } = useCompetencyStore();
 
   // Get all unique skills from our core data structure
   const allSkills = Array.from(new Set([
@@ -73,11 +73,8 @@ export const AddSkillToProfileDialog = () => {
         // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
-        // Initialize skill state with default values for all levels
-        ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
-          console.log(`Initializing ${skillTitle} for level ${level} with default values`);
-          setSkillState(skillTitle, 'unspecified', level, 'preferred', id);
-        });
+        // Initialize skill state in matrix
+        setSkillState(skillTitle, 'unspecified', 'p4', 'preferred', id);
 
         // Add to role skills based on category
         const category = skillData.category?.toLowerCase() || 'common';
