@@ -58,14 +58,12 @@ const SkillProfileTableContent = ({
   };
 
   const rows: SkillProfileRow[] = Object.entries(roleSkills).map(([id, role]) => {
-    // Get all skills for the role
     const allRoleSkills = [
       ...role.specialized,
       ...role.common,
       ...role.certifications
     ];
     
-    // Filter to only get toggled skills
     const toggledSkillsCount = allRoleSkills.filter(skill => 
       toggledSkills.has(skill.title)
     ).length;
@@ -77,23 +75,10 @@ const SkillProfileTableContent = ({
       skillCount: String(toggledSkillsCount),
       employees: String(getExactRoleMatches(role.title)),
       matches: `${calculateAverageBenchmark(id, role.title)}%`,
-      lastUpdated: "10/20/24"
+      lastUpdated: "10/20/24",
+      toggledSkillsCount // Add this for sorting
     };
   });
-
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSelection = e.target.checked ? filteredRows.map(row => row.id) : [];
-    setSelectedRows(newSelection);
-  };
-
-  const handleSelectRow = (id: string) => {
-    setSelectedRows(prev => {
-      const newSelection = prev.includes(id) 
-        ? prev.filter(rowId => rowId !== id)
-        : [...prev, id];
-      return newSelection;
-    });
-  };
 
   const filteredRows = rows.filter(row => {
     const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
@@ -113,7 +98,39 @@ const SkillProfileTableContent = ({
     );
 
     return matchesFunction && matchesJobTitle && hasSelectedSkills;
+  })
+  // Sort by toggled skills count first, then by other criteria
+  .sort((a, b) => {
+    // First sort by toggled skills count (descending)
+    if (b.toggledSkillsCount !== a.toggledSkillsCount) {
+      return b.toggledSkillsCount - a.toggledSkillsCount;
+    }
+    // If toggled skills count is the same, maintain original order
+    return 0;
   });
+
+  console.log('Filtered and sorted rows:', {
+    totalRows: rows.length,
+    filteredRows: filteredRows.length,
+    firstFewRows: filteredRows.slice(0, 3).map(row => ({
+      name: row.name,
+      toggledSkillsCount: row.toggledSkillsCount
+    }))
+  });
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSelection = e.target.checked ? filteredRows.map(row => row.id) : [];
+    setSelectedRows(newSelection);
+  };
+
+  const handleSelectRow = (id: string) => {
+    setSelectedRows(prev => {
+      const newSelection = prev.includes(id) 
+        ? prev.filter(rowId => rowId !== id)
+        : [...prev, id];
+      return newSelection;
+    });
+  };
 
   return (
     <div className="space-y-4">
