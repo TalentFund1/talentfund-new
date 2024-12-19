@@ -67,7 +67,6 @@ export const SkillsMatrixView = ({
 
       <SkillsMatrixTable 
         filteredSkills={filteredSkills.slice(0, visibleItems)}
-        showCompanySkill={!isRoleBenchmark}
         isRoleBenchmark={isRoleBenchmark}
       />
       

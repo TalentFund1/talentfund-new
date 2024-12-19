@@ -1,7 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Check, X } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
-import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
@@ -56,17 +56,22 @@ export const SkillsMatrixRow = ({
     return 'Uncategorized';
   };
 
-  const getBorderColorClass = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'advanced':
-        return 'border-primary-accent bg-primary-accent/10';
-      case 'intermediate':
-        return 'border-primary-icon bg-primary-icon/10';
-      case 'beginner':
-        return 'border-[#008000] bg-[#008000]/10';
+  const getConfidenceBadgeVariant = (confidence: string) => {
+    switch (confidence.toLowerCase()) {
+      case 'high':
+        return 'outline';
+      case 'medium':
+        return 'secondary';
+      case 'low':
+        return 'destructive';
       default:
-        return 'border-gray-400 bg-gray-100/50';
+        return 'outline';
     }
+  };
+
+  const getGrowthBadgeVariant = (growth: string) => {
+    if (growth === "0%") return "outline";
+    return "secondary";
   };
 
   return (
@@ -89,36 +94,30 @@ export const SkillsMatrixRow = ({
       <TableCell className="text-center border-r border-blue-200 py-2">
         {getSkillType(skill.title)}
       </TableCell>
-      {isRoleBenchmark ? (
+      {isRoleBenchmark && (
         <StaticSkillLevelCell 
           initialLevel={skill.level || 'unspecified'}
           skillTitle={skill.title}
         />
-      ) : (
-        <SkillLevelCell 
-          initialLevel={skill.level || 'unspecified'}
-          skillTitle={skill.title}
-        />
       )}
+      <SkillLevelCell 
+        initialLevel={skill.level || 'unspecified'}
+        skillTitle={skill.title}
+        isRoleBenchmark={isRoleBenchmark}
+      />
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
         ) : (
-          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${
-            skill.confidence === 'high' ? 'bg-green-100 text-green-800' :
-            skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
-            'bg-red-100 text-red-800'
-          }`}>
-            {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
-          </span>
+          <Badge variant={getConfidenceBadgeVariant(skill.confidence)} className="capitalize">
+            {skill.confidence}
+          </Badge>
         )}
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
-          skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-        }`}>
+        <Badge variant={getGrowthBadgeVariant(skill.growth)}>
           ↗ {skill.growth}
-        </span>
+        </Badge>
       </TableCell>
       <TableCell className="text-center py-2">
         <div className="flex items-center justify-center space-x-1">
