@@ -33,7 +33,18 @@ export const SkillsMatrixRow = ({
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { id } = useParams<{ id: string }>();
-  const track = getTrackForRole(id || "123")?.toLowerCase() as 'professional' | 'managerial';
+  
+  // Use selectedRole for benchmark view, employee ID for regular view
+  const effectiveRoleId = isRoleBenchmark ? selectedRole : (id || "123");
+  const track = getTrackForRole(effectiveRoleId)?.toLowerCase() as 'professional' | 'managerial';
+  
+  console.log('SkillsMatrixRow - Current state:', {
+    isRoleBenchmark,
+    employeeId: id,
+    selectedRole,
+    effectiveRoleId,
+    track
+  });
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
@@ -41,12 +52,12 @@ export const SkillsMatrixRow = ({
   };
 
   const getSkillType = (skillTitle: string): string => {
-    // Use the employee's ID to get their role skills
-    const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+    const currentRoleSkills = roleSkills[effectiveRoleId as keyof typeof roleSkills] || roleSkills["123"];
     
     console.log('Getting skill type:', {
       employeeId: id,
       skillTitle,
+      effectiveRoleId,
       roleSkills: currentRoleSkills.title
     });
     
