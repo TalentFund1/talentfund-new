@@ -2,13 +2,21 @@ import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { SkillRequirement } from "../skills/types/SkillTypes";
 
 interface SkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
-  onLevelChange?: (newLevel: string, requirement: string) => void;
+  onLevelChange?: (newLevel: string, requirement: SkillRequirement) => void;
   isRoleBenchmark?: boolean;
 }
+
+const validateRequirement = (req: string): SkillRequirement => {
+  const validRequirements: SkillRequirement[] = ['required', 'not_interested', 'skill_goal', 'unknown'];
+  return validRequirements.includes(req as SkillRequirement) 
+    ? (req as SkillRequirement) 
+    : 'unknown';
+};
 
 export const SkillLevelCell = ({ 
   initialLevel, 
@@ -19,11 +27,11 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel, 'required');
+  initializeState(skillTitle, initialLevel, 'required' as SkillRequirement);
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'required'
+    requirement: 'required' as SkillRequirement
   };
 
   const getLevelIcon = (level: string) => {
@@ -39,11 +47,12 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: string = 'unknown') => {
-    switch (requirement?.toLowerCase()) {
+  const getRequirementIcon = (requirement: SkillRequirement = 'unknown') => {
+    switch (requirement) {
       case 'required':
+      case 'skill_goal':
         return <Check className="w-3.5 h-3.5" />;
-      case 'not-interested':
+      case 'not_interested':
         return <X className="w-3.5 h-3.5" />;
       case 'unknown':
         return <CircleDashed className="w-3.5 h-3.5" />;
@@ -65,11 +74,25 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string, requirement: string) => {
-    if (requirement?.toLowerCase() !== 'required') {
+  const getLowerBorderColorClass = (level: string, requirement: SkillRequirement) => {
+    if (requirement !== 'required' && requirement !== 'skill_goal') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
+  };
+
+  const getRequirementLabel = (requirement: SkillRequirement): string => {
+    switch (requirement) {
+      case 'required':
+      case 'skill_goal':
+        return 'Skill Goal';
+      case 'not_interested':
+        return 'Not Interested';
+      case 'unknown':
+        return 'Unknown';
+      default:
+        return 'Skill Goal';
+    }
   };
 
   return (
@@ -78,8 +101,8 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.level || 'unspecified'} 
           onValueChange={(value) => {
-            setSkillState(skillTitle, value, currentState?.requirement || 'required');
-            onLevelChange?.(value, currentState?.requirement || 'required');
+            setSkillState(skillTitle, value, validateRequirement(currentState?.requirement));
+            onLevelChange?.(value, validateRequirement(currentState?.requirement));
           }}
         >
           <SelectTrigger className={`
@@ -123,9 +146,10 @@ export const SkillLevelCell = ({
 
         <Select 
           value={currentState?.requirement || 'required'}
-          onValueChange={(value) => {
-            setSkillState(skillTitle, currentState?.level || 'unspecified', value);
-            onLevelChange?.(currentState?.level || 'unspecified', value);
+          onValueChange={(value: string) => {
+            const requirement = validateRequirement(value);
+            setSkillState(skillTitle, currentState?.level || 'unspecified', requirement);
+            onLevelChange?.(currentState?.level || 'unspecified', requirement);
           }}
         >
           <SelectTrigger className={`
@@ -136,9 +160,7 @@ export const SkillLevelCell = ({
             <SelectValue>
               <span className="flex items-center gap-1.5">
                 {getRequirementIcon(currentState?.requirement)}
-                {currentState?.requirement === 'required' ? 'Skill Goal' : 
-                 currentState?.requirement === 'not-interested' ? 'Not Interested' : 
-                 currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+                {getRequirementLabel(currentState?.requirement)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -149,7 +171,7 @@ export const SkillLevelCell = ({
                 Skill Goal
               </span>
             </SelectItem>
-            <SelectItem value="not-interested">
+            <SelectItem value="not_interested">
               <span className="flex items-center gap-1.5">
                 <X className="w-3.5 h-3.5" />
                 Not Interested
