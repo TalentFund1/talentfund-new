@@ -3,7 +3,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
-import { getEmployeeSkills } from '../../benchmark/skills-matrix/initialSkills';
+import { roleSkills } from '../data/roleSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -26,11 +26,21 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       source: 'useState initializer'
     });
 
-    // Always initialize with employee's assigned skills
-    const employeeSkills = getEmployeeSkills(id || "");
-    const employeeSkillTitles = employeeSkills.map(skill => skill.title);
-    console.log('Initializing with employee skills:', employeeSkillTitles);
-    return new Set<string>(employeeSkillTitles);
+    // If no saved skills exist, initialize with all skills toggled
+    if (!savedSkills || savedSkills.length === 0) {
+      const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
+      if (currentRoleSkills) {
+        const allSkills = [
+          ...currentRoleSkills.specialized.map(s => s.title),
+          ...currentRoleSkills.common.map(s => s.title),
+          ...currentRoleSkills.certifications.map(s => s.title)
+        ];
+        console.log('Initializing with all skills toggled:', allSkills);
+        return new Set(allSkills);
+      }
+    }
+    
+    return new Set(savedSkills);
   });
 
   // Effect to reload toggled skills when role or employee ID changes
@@ -46,13 +56,21 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       employeeId: id,
       selectedRole
     });
-
-    // Always use employee's assigned skills
-    const employeeSkills = getEmployeeSkills(id || "");
-    const employeeSkillTitles = employeeSkills.map(skill => skill.title);
-    console.log('Setting employee skills:', employeeSkillTitles);
-    setToggledSkills(new Set<string>(employeeSkillTitles));
     
+    const savedSkills = loadToggledSkills(currentRoleId);
+    
+    // Only load saved skills if they exist
+    if (savedSkills && savedSkills.length > 0) {
+      console.log('Reloaded toggled skills:', {
+        roleId: currentRoleId,
+        skillCount: savedSkills.length,
+        skills: savedSkills
+      });
+      setToggledSkills(new Set(savedSkills));
+    } else {
+      // If no saved skills, keep current selection
+      console.log('No saved skills found, keeping current selection');
+    }
   }, [selectedRole, id]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
@@ -62,25 +80,18 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       return;
     }
 
-    // Ensure we only keep skills that are assigned to the employee
-    const employeeSkills = getEmployeeSkills(id || "");
-    const employeeSkillTitles = new Set(employeeSkills.map(skill => skill.title));
-    const filteredSkills = new Set<string>(
-      Array.from(newSkills).filter(skill => employeeSkillTitles.has(skill))
-    );
-
     console.log('Setting toggled skills:', {
       roleId: currentRoleId,
-      skillCount: filteredSkills.size,
-      skills: Array.from(filteredSkills),
+      skillCount: newSkills.size,
+      skills: Array.from(newSkills),
       employeeId: id
     });
     
-    setToggledSkills(filteredSkills);
+    setToggledSkills(newSkills);
     
     // Save to localStorage immediately
     try {
-      const skillsArray = Array.from(filteredSkills);
+      const skillsArray = Array.from(newSkills);
       saveToggledSkills(currentRoleId, skillsArray);
       
       // Broadcast the change
@@ -111,15 +122,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       const customEvent = event as CustomEvent;
       if (customEvent.detail.role === currentRoleId) {
         console.log('Received toggled skills update:', customEvent.detail);
-        
-        // Filter incoming skills to only include employee's assigned skills
-        const employeeSkills = getEmployeeSkills(id || "");
-        const employeeSkillTitles = new Set(employeeSkills.map(skill => skill.title));
-        const filteredSkills = new Set<string>(
-          customEvent.detail.skills.filter((skill: string) => employeeSkillTitles.has(skill))
-        );
-        
-        setToggledSkills(filteredSkills);
+        setToggledSkills(new Set(customEvent.detail.skills));
       }
     };
 
