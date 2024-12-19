@@ -19,7 +19,6 @@ export interface Skill {
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
-  isCompanySkill?: boolean;
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -31,6 +30,7 @@ export interface Skill {
 export interface UnifiedSkill extends Skill {
   requirement?: SkillRequirement;
   roleLevel?: string;
+  isCompanySkill?: boolean;
 }
 
 export interface RoleSkillData {
