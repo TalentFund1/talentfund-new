@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../context/ToggledSkillsContext";
-import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
 import { addSkillToInitialSkills } from '../data/skillDatabaseService';
@@ -19,7 +18,6 @@ export const AddSkillToProfileDialog = () => {
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
-  const { setSkillState } = useCompetencyStore();
 
   // Get all unique skills from our core data structure
   const allSkills = Array.from(new Set([
@@ -73,9 +71,6 @@ export const AddSkillToProfileDialog = () => {
         // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
-        // Initialize skill state in matrix
-        setSkillState(skillTitle, 'unspecified', 'p4', 'preferred', id);
-
         // Add to role skills based on category
         const category = skillData.category?.toLowerCase() || 'common';
         
