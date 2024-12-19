@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
@@ -116,7 +116,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
     {
       name: 'employee-store',
       version: 1,
-      storage: localStorage,
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         employees: state.employees,
         employeeSkills: state.employeeSkills,
