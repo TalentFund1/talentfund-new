@@ -1,9 +1,8 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
-import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 
 const ITEMS_PER_PAGE = 10;
@@ -15,9 +14,9 @@ export const SkillsMatrix = () => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
   
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
+  const { currentStates, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const observerTarget = useRef<HTMLDivElement>(null);
-  const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const { matrixSearchSkills } = useSkillsMatrixSearch();
 
   const { filterAndSortSkills } = useSkillsMatrixState(
