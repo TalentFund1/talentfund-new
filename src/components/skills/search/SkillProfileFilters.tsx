@@ -1,12 +1,12 @@
-import { SearchFilter } from "@/components/market/SearchFilter";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ToggledSkillsProvider } from "../context/ToggledSkillsContext";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { SearchFilter } from '@/components/market/SearchFilter';
 
 interface SkillProfileFiltersProps {
   selectedSkills: string[];
   setSelectedSkills: (skills: string[]) => void;
   selectedFunction: string;
-  setSelectedFunction: (fn: string) => void;
+  setSelectedFunction: (func: string) => void;
   selectedJobTitle: string;
   setSelectedJobTitle: (title: string) => void;
   toggledSkillsList: string[];
@@ -14,7 +14,7 @@ interface SkillProfileFiltersProps {
   companyFunctions: string[];
 }
 
-const SkillProfileFiltersContent = ({
+export const SkillProfileFilters = ({
   selectedSkills,
   setSelectedSkills,
   selectedFunction,
@@ -25,49 +25,54 @@ const SkillProfileFiltersContent = ({
   availableJobTitles,
   companyFunctions
 }: SkillProfileFiltersProps) => {
+  const handleClearAll = () => {
+    setSelectedSkills([]);
+    setSelectedFunction("");
+    setSelectedJobTitle("");
+  };
+
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <Card className="p-6">
+      <div className="space-y-1">
         <SearchFilter
-          label="Skills"
+          label=""
           placeholder="Search skills..."
           items={toggledSkillsList}
           selectedItems={selectedSkills}
           onItemsChange={setSelectedSkills}
+          singleSelect={false}
         />
-        
-        <Select value={selectedFunction} onValueChange={setSelectedFunction}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select function" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">All Functions</SelectItem>
-            {companyFunctions.map((fn) => (
-              <SelectItem key={fn} value={fn}>{fn}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
 
-        <Select value={selectedJobTitle} onValueChange={setSelectedJobTitle}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select job title" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">All Job Titles</SelectItem>
-            {availableJobTitles.map((title) => (
-              <SelectItem key={title} value={title}>{title}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex flex-wrap items-center gap-3">
+          <SearchFilter
+            label=""
+            placeholder="Role"
+            items={availableJobTitles}
+            selectedItems={selectedJobTitle ? [selectedJobTitle] : []}
+            onItemsChange={(items) => setSelectedJobTitle(items[0] || "")}
+            singleSelect={true}
+            className="w-[180px]"
+          />
+
+          <SearchFilter
+            label=""
+            placeholder="Function"
+            items={companyFunctions}
+            selectedItems={selectedFunction ? [selectedFunction] : []}
+            onItemsChange={(items) => setSelectedFunction(items[0] || "")}
+            singleSelect={true}
+            className="w-[180px]"
+          />
+
+          <Button 
+            variant="outline" 
+            onClick={handleClearAll}
+            className="h-[40px]"
+          >
+            Clear All
+          </Button>
+        </div>
       </div>
-    </div>
-  );
-};
-
-export const SkillProfileFilters = (props: SkillProfileFiltersProps) => {
-  return (
-    <ToggledSkillsProvider>
-      <SkillProfileFiltersContent {...props} />
-    </ToggledSkillsProvider>
+    </Card>
   );
 };

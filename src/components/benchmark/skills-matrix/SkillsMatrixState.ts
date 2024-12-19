@@ -91,20 +91,9 @@ export const useSkillsMatrixState = (
     const employeeSkills = getEmployeeSkills(employeeId);
     let filteredSkills = [...employeeSkills];
 
-    console.log('Filtering skills with:', {
-      selectedCategory,
-      selectedLevel,
-      selectedInterest,
-      totalSkills: filteredSkills.length
-    });
-
     // Filter by category
     if (selectedCategory !== "all") {
       filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory, roleId);
-      console.log('After category filtering:', {
-        category: selectedCategory,
-        remainingSkills: filteredSkills.length
-      });
     }
 
     // Filter by level
