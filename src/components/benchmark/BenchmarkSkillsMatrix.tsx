@@ -34,6 +34,7 @@ const BenchmarkSkillsMatrixContent = () => {
   const track = getTrackForRole(selectedRole);
   const comparisonLevel = track === "Managerial" ? "m3" : roleLevel.toLowerCase();
 
+  // Filter the employee's assigned skills
   const { filteredSkills } = useSkillsFiltering(
     id || "",
     selectedRole,
@@ -43,7 +44,7 @@ const BenchmarkSkillsMatrixContent = () => {
     selectedSkillLevel,
     searchTerm,
     toggledSkills,
-    true // This is the role benchmark view
+    true
   );
 
   // Only show skills that are actually assigned to the employee
