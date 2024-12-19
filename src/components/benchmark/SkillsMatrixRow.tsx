@@ -8,7 +8,6 @@ import { useTrack } from "../skills/context/TrackContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { isSpecializedSkill, isCommonSkill, isCertificationSkill } from "../skills/competency/skillCategoryUtils";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { getSkillWeight } from "../skills/data/skills/categories/skillWeights";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -97,22 +96,6 @@ export const SkillsMatrixRow = ({
     shouldShowCheck: shouldShowCompanyCheck(skill.title)
   });
 
-  const getWeightColor = (weight: string) => {
-    switch (weight.toLowerCase()) {
-      case 'critical':
-        return 'bg-red-100 text-red-800';
-      case 'technical':
-        return 'bg-blue-100 text-blue-800';
-      case 'necessary':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-600';
-    }
-  };
-
-  const weight = getSkillWeight(skill.title);
-  const weightColor = getWeightColor(weight);
-
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
@@ -120,11 +103,6 @@ export const SkillsMatrixRow = ({
       <TableCell className="border-r border-blue-200 py-2">
         <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${skillType.classes}`}>
           {skillType.text}
-        </span>
-      </TableCell>
-      <TableCell className="border-r border-blue-200 py-2 text-center">
-        <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${weightColor}`}>
-          {weight.charAt(0).toUpperCase() + weight.slice(1)}
         </span>
       </TableCell>
       {showCompanySkill && (
