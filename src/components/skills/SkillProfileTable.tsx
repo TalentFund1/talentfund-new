@@ -42,8 +42,7 @@ const SkillProfileTableContent = ({
         roleId,
         "",
         currentStates,
-        toggledSkills,
-        getSkillCompetencyState
+        toggledSkills
       )
     );
 
