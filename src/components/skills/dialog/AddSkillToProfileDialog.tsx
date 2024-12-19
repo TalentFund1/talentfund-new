@@ -66,7 +66,7 @@ export const AddSkillToProfileDialog = () => {
         return;
       }
 
-      const skillData = getUnifiedSkillData(skillTitle);
+      const skillData = getUnifiedSkillData(skillTitle, true);
       if (skillData) {
         console.log('Processing skill:', skillData);
         
@@ -74,7 +74,7 @@ export const AddSkillToProfileDialog = () => {
         newToggledSkills.add(skillTitle);
         
         // Initialize skill state in matrix
-        setSkillState(skillTitle, 'unspecified', 'p4', 'preferred', id);
+        setSkillState(skillTitle, 'unspecified', 'p4', 'skill_goal', id);
 
         // Add to role skills based on category
         const category = skillData.category?.toLowerCase() || 'common';
