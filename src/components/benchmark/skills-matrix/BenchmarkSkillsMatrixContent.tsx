@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { CategorizedSkills } from "../CategorizedSkills";
 import { Separator } from "@/components/ui/separator";
-import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
-import { roleSkills } from "../../skills/data/roleSkills";
+import { roleSkills } from '../../skills/data/roleSkills';
 import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
 
@@ -33,12 +32,11 @@ export const BenchmarkSkillsMatrixContent = ({
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const { toggledSkills } = useToggledSkills();
   const { selectedLevel } = useRoleStore();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all toggled skills as an array and filter by category
-  const getToggledSkillsCount = (category: string) => {
+  // Get skill counts without using toggled skills
+  const getSkillsCount = (category: string) => {
     const allSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
@@ -46,8 +44,6 @@ export const BenchmarkSkillsMatrixContent = ({
     ];
 
     return allSkills.filter(skill => {
-      if (!toggledSkills.has(skill.title)) return false;
-
       switch (category) {
         case 'specialized':
           return currentRoleSkills.specialized.some(s => s.title === skill.title);
@@ -62,10 +58,10 @@ export const BenchmarkSkillsMatrixContent = ({
   };
 
   const skillCounts = {
-    all: getToggledSkillsCount('all'),
-    specialized: getToggledSkillsCount('specialized'),
-    common: getToggledSkillsCount('common'),
-    certification: getToggledSkillsCount('certification')
+    all: getSkillsCount('all'),
+    specialized: getSkillsCount('specialized'),
+    common: getSkillsCount('common'),
+    certification: getSkillsCount('certification')
   };
 
   console.log('BenchmarkSkillsMatrixContent - Skill counts:', skillCounts);
