@@ -5,7 +5,6 @@ import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchConte
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { AddSkillToProfileDialog } from "../skills/dialog/AddSkillToProfileDialog";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -65,19 +64,6 @@ export const SkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-1">Skills Matrix</h2>
-          <div className="flex items-center gap-2">
-            <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-md px-3 py-1 text-sm font-medium flex items-center gap-1.5">
-              {filteredSkills.length}
-              <span className="text-[#1F2144]/80">Skills Added</span>
-            </span>
-          </div>
-        </div>
-        <AddSkillToProfileDialog />
-      </div>
-
       <SkillsMatrixView
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
