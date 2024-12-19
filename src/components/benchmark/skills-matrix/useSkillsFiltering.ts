@@ -14,17 +14,11 @@ export const useSkillsFiltering = (
   selectedSkillLevel: string,
   searchTerm: string,
   toggledSkills: Set<string>,
-  isRoleBenchmark: boolean = false // New parameter to differentiate between contexts
+  isRoleBenchmark: boolean = false
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-
-  if (!currentRoleSkills && isRoleBenchmark) {
-    console.warn('No role skills found for role:', selectedRole);
-    return { filteredSkills: [] };
-  }
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -37,7 +31,7 @@ export const useSkillsFiltering = (
   };
 
   const filterSkills = () => {
-    // Get all employee skills without filtering by role skills first
+    // For employee skills matrix, use employee skills directly
     let skills = [...employeeSkills];
 
     console.log('Filtering skills for employee:', {
@@ -61,13 +55,16 @@ export const useSkillsFiltering = (
     skills = Array.from(uniqueSkills.values());
 
     // If this is role benchmark view, filter by role skills
-    if (isRoleBenchmark) {
-      const roleSkillTitles = new Set([
-        ...(currentRoleSkills.specialized || []).map(s => s.title),
-        ...(currentRoleSkills.common || []).map(s => s.title),
-        ...(currentRoleSkills.certifications || []).map(s => s.title)
-      ]);
-      skills = skills.filter(skill => roleSkillTitles.has(skill.title));
+    if (isRoleBenchmark && selectedRole) {
+      const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+      if (currentRoleSkills) {
+        const roleSkillTitles = new Set([
+          ...(currentRoleSkills.specialized || []).map(s => s.title),
+          ...(currentRoleSkills.common || []).map(s => s.title),
+          ...(currentRoleSkills.certifications || []).map(s => s.title)
+        ]);
+        skills = skills.filter(skill => roleSkillTitles.has(skill.title));
+      }
     }
 
     // Apply filters
@@ -77,7 +74,10 @@ export const useSkillsFiltering = (
       let matchesSearch = true;
       let matchesSkillLevel = true;
 
-      const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+      const competencyState = isRoleBenchmark ? 
+        getSkillCompetencyState(skill.title, comparisonLevel, selectedRole) :
+        { level: skill.level, required: skill.requirement };
+
       const roleSkillLevel = competencyState?.level || 'unspecified';
 
       if (selectedLevel !== 'all') {
@@ -118,7 +118,9 @@ export const useSkillsFiltering = (
     .map(skill => ({
       ...skill,
       employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
-      roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
+      roleLevel: isRoleBenchmark ? 
+        getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified' :
+        skill.level || 'unspecified',
       requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
     }))
     .sort((a, b) => {
