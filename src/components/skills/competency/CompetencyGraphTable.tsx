@@ -25,24 +25,6 @@ export const CompetencyGraphTable = ({
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
   };
 
-  const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
-    let count = 0;
-    const roleState = roleStates[roleId || "123"];
-    
-    if (roleState && roleState[skillName]) {
-      levels.forEach(level => {
-        const skillState = roleState[skillName][level.toLowerCase()];
-        if (skillState && typeof skillState.level === 'string') {
-          const currentLevel = skillState.level.toLowerCase();
-          if (currentLevel === targetLevel.toLowerCase()) {
-            count++;
-          }
-        }
-      });
-    }
-    return count;
-  };
-
   const getSkillsByCategory = () => {
     const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
     
@@ -90,10 +72,27 @@ export const CompetencyGraphTable = ({
     };
   };
 
+  const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
+    let count = 0;
+    const roleState = roleStates[roleId || "123"];
+    
+    if (roleState && roleState[skillName]) {
+      levels.forEach(level => {
+        const skillState = roleState[skillName][level.toLowerCase()];
+        if (skillState && typeof skillState.level === 'string') {
+          const currentLevel = skillState.level.toLowerCase();
+          if (currentLevel === targetLevel.toLowerCase()) {
+            count++;
+          }
+        }
+      });
+    }
+    return count;
+  };
+
   const skills = getSkillsByCategory();
   const levels = getLevelsForTrack();
 
-  // New sorting logic based on competency levels
   const sortedSkills = skills
     .map(skill => ({
       title: skill.title,
@@ -103,24 +102,23 @@ export const CompetencyGraphTable = ({
       unspecifiedCount: countSkillLevels(skill.title, levels, 'unspecified')
     }))
     .sort((a, b) => {
-      // First sort by number of advanced levels
       const advancedDiff = b.advancedCount - a.advancedCount;
       if (advancedDiff !== 0) return advancedDiff;
       
-      // Then by number of intermediate levels
       const intermediateDiff = b.intermediateCount - a.intermediateCount;
       if (intermediateDiff !== 0) return intermediateDiff;
       
-      // Then by number of beginner levels
       const beginnerDiff = b.beginnerCount - a.beginnerCount;
       if (beginnerDiff !== 0) return beginnerDiff;
       
-      // Finally alphabetically
+      const unspecifiedDiff = a.unspecifiedCount - b.unspecifiedCount;
+      if (unspecifiedDiff !== 0) return unspecifiedDiff;
+      
       return a.title.localeCompare(b.title);
     })
     .map(skill => skill.title);
 
-  console.log('Sorted skills with level counts:', skills.map(skill => ({
+  console.log('Sorted skills with counts:', skills.map(skill => ({
     title: skill.title,
     advanced: countSkillLevels(skill.title, levels, 'advanced'),
     intermediate: countSkillLevels(skill.title, levels, 'intermediate'),
