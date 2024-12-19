@@ -1,9 +1,7 @@
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./initialSkills";
-import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
-import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
 import { normalizeSkillTitle } from "../../skills/utils/normalization";
 
 export const useSkillsFiltering = (
@@ -108,6 +106,9 @@ export const useSkillsFiltering = (
         return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
       });
     }
+
+    // Only return skills that are toggled
+    skills = skills.filter(skill => toggledSkills.has(skill.title));
 
     console.log('Filtered skills result:', {
       total: skills.length,
