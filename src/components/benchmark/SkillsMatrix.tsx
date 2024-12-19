@@ -33,7 +33,7 @@ export const SkillsMatrix = () => {
   // Apply filtering and sorting to employee skills
   let filteredSkills = filterAndSortSkills(id || "");
 
-  // Filter skills based on search criteria
+  // Filter skills based on search criteria - now handling multiple skills
   if (matrixSearchSkills && matrixSearchSkills.length > 0) {
     filteredSkills = filteredSkills.filter(skill => 
       matrixSearchSkills.some(searchSkill => 
