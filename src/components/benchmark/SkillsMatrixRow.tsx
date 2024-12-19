@@ -17,6 +17,7 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
     requirement?: string;
+    category?: string; // Add this to use the skill's own category
   };
   showCompanySkill?: boolean;
   isRoleBenchmark?: boolean;
@@ -28,10 +29,15 @@ export const SkillsMatrixRow = ({
   isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const { selectedLevel, selectedRole } = useRoleStore();
+  const { selectedRole } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
+  
+  console.log('SkillsMatrixRow rendering:', {
+    skillTitle: skill.title,
+    category: skill.category,
+    isRoleBenchmark
+  });
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
@@ -39,17 +45,27 @@ export const SkillsMatrixRow = ({
   };
 
   const getSkillType = (skillTitle: string): string => {
-    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+    // If we're in benchmark view, use the selected role's skills
+    if (isRoleBenchmark) {
+      const benchmarkRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+      
+      if (benchmarkRoleSkills.specialized.some(s => s.title === skillTitle)) {
+        return 'Specialized';
+      }
+      if (benchmarkRoleSkills.common.some(s => s.title === skillTitle)) {
+        return 'Common';
+      }
+      if (benchmarkRoleSkills.certifications.some(s => s.title === skillTitle)) {
+        return 'Certification';
+      }
+    }
     
-    if (currentRoleSkills.specialized.some(s => s.title === skillTitle)) {
-      return 'Specialized';
+    // For employee skills view, use the skill's own category if available
+    if (skill.category) {
+      return skill.category;
     }
-    if (currentRoleSkills.common.some(s => s.title === skillTitle)) {
-      return 'Common';
-    }
-    if (currentRoleSkills.certifications.some(s => s.title === skillTitle)) {
-      return 'Certification';
-    }
+    
+    // Default categorization if none found
     return 'Uncategorized';
   };
 
@@ -74,7 +90,7 @@ export const SkillsMatrixRow = ({
   };
 
   const getRoleSkillState = () => {
-    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), selectedRole);
+    const competencyState = getSkillCompetencyState(skill.title, selectedRole.toLowerCase(), selectedRole);
     if (!competencyState) return null;
 
     return {
