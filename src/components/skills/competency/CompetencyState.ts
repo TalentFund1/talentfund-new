@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyState } from './state/types';
 import { setSkillStateAction, setSkillProgressionAction } from './state/stateActions';
 import { loadPersistedState } from './state/persistenceUtils';
 import { initializeRoleState } from './state/initializeState';
+import { CompetencyState } from './state/types';
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -14,7 +14,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       hasChanges: false,
 
       setSkillState: (skillName, level, levelKey, required, roleId) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
+        console.log('Setting role skill state:', { skillName, level, levelKey, required, roleId });
         set((state) => {
           const newRoleStates = setSkillStateAction(
             state.roleStates,
@@ -150,21 +150,12 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 21,
+      version: 24,
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
         originalStates: state.originalStates
-      }),
-      merge: (persistedState: any, currentState: CompetencyState) => {
-        console.log('Merging persisted state with current state');
-        return {
-          ...currentState,
-          roleStates: persistedState.roleStates || {},
-          currentStates: persistedState.currentStates || {},
-          originalStates: persistedState.originalStates || {}
-        };
-      }
+      })
     }
   )
 );

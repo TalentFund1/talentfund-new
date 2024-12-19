@@ -4,6 +4,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { roleSkills } from "../skills/data/roleSkills";
 import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
 import { useTrack } from "../skills/context/TrackContext";
 import { useSkillsFiltering } from "./skills-matrix/useSkillsFiltering";
@@ -22,19 +23,9 @@ const BenchmarkSkillsMatrixContent = () => {
   const { getTrackForRole } = useTrack();
   const { visibleItems } = useBenchmarkSkillsMatrixState();
 
-  // Get only the employee's assigned skills first
-  const employeeSkills = getEmployeeSkills(id || "");
-
-  console.log('BenchmarkSkillsMatrix - Initial employee skills:', {
-    employeeId: id,
-    skillCount: employeeSkills.length,
-    skills: employeeSkills.map(s => s.title)
-  });
-
   const track = getTrackForRole(selectedRole);
   const comparisonLevel = track === "Managerial" ? "m3" : roleLevel.toLowerCase();
 
-  // Filter the employee's assigned skills
   const { filteredSkills } = useSkillsFiltering(
     id || "",
     selectedRole,
@@ -44,20 +35,18 @@ const BenchmarkSkillsMatrixContent = () => {
     selectedSkillLevel,
     searchTerm,
     toggledSkills,
-    true
+    true // This is the role benchmark view
   );
 
-  // Ensure we only show skills that are actually assigned to the employee
-  const assignedFilteredSkills = filteredSkills.filter(skill => 
-    employeeSkills.some(empSkill => empSkill.title === skill.title)
-  );
-
-  console.log('BenchmarkSkillsMatrix - Final filtered skills:', {
-    total: assignedFilteredSkills.length,
-    skills: assignedFilteredSkills.map(s => s.title)
+  const paginatedSkills = filteredSkills.slice(0, visibleItems);
+  
+  console.log('BenchmarkSkillsMatrix - Current state:', {
+    selectedRole,
+    roleLevel: comparisonLevel,
+    track,
+    filteredSkillsCount: filteredSkills.length,
+    toggledSkillsCount: toggledSkills.size
   });
-
-  const paginatedSkills = assignedFilteredSkills.slice(0, visibleItems);
 
   return (
     <div className="space-y-6">

@@ -1,5 +1,7 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { employeeSkills } from './data/employeeSkillsData';
+import { initializeEmployeeSkills } from './utils/skillInitialization';
+import { getAllSkills } from '../../skills/data/skills/allSkills';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { normalizeSkillTitle } from '../../skills/utils/normalization';
 import { getSkillCategory } from '../../skills/data/skills/categories/skillCategories';
@@ -14,7 +16,7 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
       skillCount: employeeSkills[employeeId].length
     });
     
-    // Only return skills that are specifically assigned to this employee
+    // Only use skills that are specifically assigned to this employee
     const employeeSpecificSkills = employeeSkills[employeeId].map(skill => {
       const normalizedTitle = normalizeSkillTitle(skill.title);
       const skillData = getUnifiedSkillData(normalizedTitle);
@@ -27,7 +29,7 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
         title: normalizedTitle,
         category: getSkillCategory(normalizedTitle),
         level: skill.level || 'unspecified',
-        requirement: skill.requirement || 'unknown' as const
+        requirement: skill.requirement || 'unknown'
       };
     });
 
@@ -44,8 +46,8 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
     return employeeSpecificSkills;
   }
   
-  // Return empty array if no skills exist for this employee
-  console.log('No specific skills found for employee:', employeeId);
+  // Initialize with empty skills if none exist
+  console.log('No specific skills found for employee, initializing empty skills array');
   return [];
 };
 
