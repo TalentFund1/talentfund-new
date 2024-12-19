@@ -60,7 +60,6 @@ export const SkillsMatrixContent = ({
       <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
         <Table>
           <SkillsMatrixTableHeader 
-            showCompanySkill={false}
             isRoleBenchmark={true}
           />
           <TableBody>
@@ -68,7 +67,6 @@ export const SkillsMatrixContent = ({
               <SkillsMatrixRow 
                 key={skill.title} 
                 skill={skill}
-                showCompanySkill={false}
                 isRoleBenchmark={true}
               />
             ))}
