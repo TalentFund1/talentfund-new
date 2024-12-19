@@ -5,6 +5,7 @@ import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
 import { normalizeSkillTitle } from "../../skills/utils/normalization";
+import { getSkillWeight } from "../../skills/data/skills/categories/skillWeights";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -21,18 +22,17 @@ export const useSkillsFiltering = (
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
 
-  const getLevelPriority = (level: string = 'unspecified') => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
+  const getWeightPriority = (skillTitle: string) => {
+    const weight = getSkillWeight(skillTitle);
+    switch (weight) {
+      case 'critical': return 0;
+      case 'technical': return 1;
+      case 'necessary': return 2;
+      default: return 3;
+    }
   };
 
   const filterSkills = () => {
-    // For employee skills matrix, use employee skills directly without initial filtering
     let skills = [...employeeSkills];
 
     console.log('Initial employee skills:', {
@@ -119,47 +119,38 @@ export const useSkillsFiltering = (
       });
     }
 
-    console.log('Filtered skills:', {
-      total: skills.length,
-      filters: {
-        selectedLevel,
-        selectedInterest,
-        selectedSkillLevel,
-        searchTerm,
-        isRoleBenchmark
+    // Transform and sort skills
+    const transformedSkills = skills.map(skill => ({
+      ...skill,
+      isToggled: toggledSkills.has(skill.title),
+      weight: getSkillWeight(skill.title)
+    }));
+
+    // Sort skills based on the new priority system
+    const sortedSkills = transformedSkills.sort((a, b) => {
+      // First Priority: Toggled Skills
+      if (a.isToggled !== b.isToggled) {
+        return a.isToggled ? -1 : 1;
       }
+
+      // Second Priority: Weight/Criticality
+      const weightPriorityA = getWeightPriority(a.title);
+      const weightPriorityB = getWeightPriority(b.title);
+      if (weightPriorityA !== weightPriorityB) {
+        return weightPriorityA - weightPriorityB;
+      }
+
+      // Final Priority: Alphabetical
+      return a.title.localeCompare(b.title);
     });
 
-    return skills
-      .map(skill => ({
-        ...skill,
-        employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
-        roleLevel: isRoleBenchmark ? 
-          getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified' :
-          skill.level || 'unspecified',
-        requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown',
-        isToggled: toggledSkills.has(skill.title)
-      }))
-      .sort((a, b) => {
-        // First sort by toggled status
-        if (a.isToggled !== b.isToggled) {
-          return a.isToggled ? -1 : 1;
-        }
+    console.log('Sorted skills (first 5):', sortedSkills.slice(0, 5).map(skill => ({
+      title: skill.title,
+      isToggled: skill.isToggled,
+      weight: skill.weight
+    })));
 
-        // Then by role level
-        const aRoleLevel = a.roleLevel;
-        const bRoleLevel = b.roleLevel;
-        
-        const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
-        if (roleLevelDiff !== 0) return roleLevelDiff;
-
-        // Then by employee level
-        const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
-        if (employeeLevelDiff !== 0) return employeeLevelDiff;
-
-        // Finally alphabetically
-        return a.title.localeCompare(b.title);
-      });
+    return sortedSkills;
   };
 
   const filteredSkills = filterSkills();
