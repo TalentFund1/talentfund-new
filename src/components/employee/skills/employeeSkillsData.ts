@@ -1,16 +1,22 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-import { getEmployeeSkills } from '../../benchmark/skills-matrix/initialSkills';
+import { useEmployeeStore } from '../store/employeeStore';
 
-// Helper functions for employee skills
 export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): string => {
-  const skills = getEmployeeSkills(employeeId);
-  const skill = skills.find(s => s.title === skillTitle);
-  return skill?.level || 'unspecified';
+  return useEmployeeStore.getState().getSkillState(employeeId, skillTitle).level;
 };
 
 export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): string => {
-  const skills = getEmployeeSkills(employeeId);
-  const skill = skills.find(s => s.title === skillTitle);
-  return skill?.requirement || 'unknown';
+  return useEmployeeStore.getState().getSkillState(employeeId, skillTitle).requirement;
+};
+
+export const setEmployeeSkillLevel = (employeeId: string, skillTitle: string, level: string): void => {
+  const store = useEmployeeStore.getState();
+  const currentState = store.getSkillState(employeeId, skillTitle);
+  store.setSkillState(employeeId, skillTitle, level, currentState.requirement);
+};
+
+export const setEmployeeSkillRequirement = (employeeId: string, skillTitle: string, requirement: string): void => {
+  const store = useEmployeeStore.getState();
+  const currentState = store.getSkillState(employeeId, skillTitle);
+  store.setSkillState(employeeId, skillTitle, currentState.level, requirement);
 };
