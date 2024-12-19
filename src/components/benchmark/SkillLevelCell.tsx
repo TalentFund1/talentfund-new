@@ -1,10 +1,16 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { initializeEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useParams } from "react-router-dom";
 import { SkillRequirement } from "../skills/types/SkillTypes";
+import { validateRequirement, formatRequirementDisplay } from "./skill-level/utils/requirementUtils";
+import { 
+  getLevelIcon, 
+  getRequirementIcon, 
+  getBorderColorClass,
+  getLowerBorderColorClass 
+} from "./skill-level/SkillLevelDisplay";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -22,66 +28,12 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
   const { id } = useParams();
 
-  // Helper function to validate SkillRequirement
-  const validateRequirement = (req: string): SkillRequirement => {
-    const validRequirements: SkillRequirement[] = ['required', 'preferred', 'skill_goal', 'not-interested', 'unknown'];
-    return validRequirements.includes(req as SkillRequirement) 
-      ? (req as SkillRequirement) 
-      : 'unknown';
-  };
-
   // Initialize the state when the component mounts with proper typing
   initializeState(skillTitle, initialLevel, validateRequirement('required'));
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
     requirement: validateRequirement('required')
-  };
-
-  const getLevelIcon = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case 'advanced':
-        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
-      case 'intermediate':
-        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
-      case 'beginner':
-        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
-      default:
-        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
-    }
-  };
-
-  const getRequirementIcon = (requirement: SkillRequirement = 'unknown') => {
-    switch (requirement?.toLowerCase()) {
-      case 'required':
-        return <Check className="w-3.5 h-3.5" />;
-      case 'not-interested':
-        return <X className="w-3.5 h-3.5" />;
-      case 'unknown':
-        return <CircleDashed className="w-3.5 h-3.5" />;
-      default:
-        return <Heart className="w-3.5 h-3.5" />;
-    }
-  };
-
-  const getBorderColorClass = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case 'advanced':
-        return 'border-primary-accent bg-primary-accent/10';
-      case 'intermediate':
-        return 'border-primary-icon bg-primary-icon/10';
-      case 'beginner':
-        return 'border-[#008000] bg-[#008000]/10';
-      default:
-        return 'border-gray-400 bg-gray-100/50';
-    }
-  };
-
-  const getLowerBorderColorClass = (level: string, requirement: SkillRequirement) => {
-    if (requirement?.toLowerCase() !== 'required') {
-      return 'border-[#e5e7eb]';
-    }
-    return getBorderColorClass(level).split(' ')[0];
   };
 
   const handleSkillChange = (value: string, type: 'level' | 'requirement') => {
@@ -133,25 +85,25 @@ export const SkillLevelCell = ({
           <SelectContent>
             <SelectItem value="unspecified">
               <span className="flex items-center gap-2">
-                <CircleDashed className="w-3.5 h-3.5 text-gray-400" />
+                {getLevelIcon('unspecified')}
                 Unspecified
               </span>
             </SelectItem>
             <SelectItem value="beginner">
               <span className="flex items-center gap-2">
-                <Target className="w-3.5 h-3.5 text-[#008000]" />
+                {getLevelIcon('beginner')}
                 Beginner
               </span>
             </SelectItem>
             <SelectItem value="intermediate">
               <span className="flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5 text-primary-icon" />
+                {getLevelIcon('intermediate')}
                 Intermediate
               </span>
             </SelectItem>
             <SelectItem value="advanced">
               <span className="flex items-center gap-2">
-                <Star className="w-3.5 h-3.5 text-primary-accent" />
+                {getLevelIcon('advanced')}
                 Advanced
               </span>
             </SelectItem>
@@ -160,7 +112,7 @@ export const SkillLevelCell = ({
 
         <Select 
           value={currentState?.requirement} 
-          onValueChange={(value) => handleSkillChange(value as SkillRequirement, 'requirement')}
+          onValueChange={(value) => handleSkillChange(value, 'requirement')}
         >
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
@@ -170,28 +122,26 @@ export const SkillLevelCell = ({
             <SelectValue>
               <span className="flex items-center gap-1.5">
                 {getRequirementIcon(currentState?.requirement)}
-                {currentState?.requirement === 'required' ? 'Skill Goal' : 
-                 currentState?.requirement === 'not-interested' ? 'Not Interested' : 
-                 currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+                {formatRequirementDisplay(currentState?.requirement)}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="required">
+            <SelectItem value="skill_goal">
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5" />
+                {getRequirementIcon('skill_goal')}
                 Skill Goal
               </span>
             </SelectItem>
-            <SelectItem value="not-interested">
+            <SelectItem value="not_interested">
               <span className="flex items-center gap-1.5">
-                <X className="w-3.5 h-3.5" />
+                {getRequirementIcon('not_interested')}
                 Not Interested
               </span>
             </SelectItem>
             <SelectItem value="unknown">
               <span className="flex items-center gap-1.5">
-                <CircleDashed className="w-3.5 h-3.5" />
+                {getRequirementIcon('unknown')}
                 Unknown
               </span>
             </SelectItem>
