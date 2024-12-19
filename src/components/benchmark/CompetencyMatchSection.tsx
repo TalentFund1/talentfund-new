@@ -7,7 +7,6 @@ import { useRoleStore } from "./RoleBenchmark";
 interface CompetencyMatchSectionProps {
   skills: any[];
   roleLevel: string;
-  employeeId: string;
 }
 
 const getLevelPriority = (level: string = 'unspecified') => {
@@ -20,13 +19,13 @@ const getLevelPriority = (level: string = 'unspecified') => {
   return priorities[level.toLowerCase()] ?? 0;
 };
 
-export const CompetencyMatchSection = ({ skills, roleLevel, employeeId }: CompetencyMatchSectionProps) => {
+export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSectionProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { currentStates } = useSkillsMatrixStore();
   const { selectedRole } = useRoleStore();
 
   const matchingSkills = skills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole, employeeId);
+    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
     if (!roleSkillState) return false;
 
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
