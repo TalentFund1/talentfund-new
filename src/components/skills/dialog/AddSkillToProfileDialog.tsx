@@ -9,7 +9,7 @@ import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
 import { Skills, getAllSkills } from '../data/skills/allSkills';
-import { roleSkills } from '../data/roleSkills';
+import { roleSkills, saveRoleSkills } from '../data/roleSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { generateSkillProgression } from '../competency/autoFillUtils';
 import { useTrack } from "../context/TrackContext";
@@ -45,7 +45,7 @@ export const AddSkillToProfileDialog = () => {
       return;
     }
 
-    const currentRole = roleSkills[id as keyof typeof roleSkills];
+    const currentRole = {...roleSkills[id]};
     if (!currentRole) {
       console.error('Role not found:', id);
       return;
@@ -93,6 +93,8 @@ export const AddSkillToProfileDialog = () => {
       }
     });
 
+    // Save updated role skills
+    saveRoleSkills(id, currentRole);
     setToggledSkills(newToggledSkills);
 
     console.log('Updated role skills:', {

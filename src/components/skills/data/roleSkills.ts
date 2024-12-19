@@ -1,13 +1,18 @@
 import { RoleSkillData, UnifiedSkill } from '../types/SkillTypes';
-import { getAllSkills } from './skills/allSkills';
-import { getSkillCategory } from './skills/categories/skillCategories';
 
 // Helper function to get skills for a role
 const getRoleSkills = (roleId: string): RoleSkillData => {
   console.log('Getting skills for role:', roleId);
   
-  // Return empty role data structure
-  return {
+  // Try to load saved skills from localStorage
+  const savedSkills = localStorage.getItem(`role-skills-${roleId}`);
+  if (savedSkills) {
+    console.log('Found saved skills for role:', roleId);
+    return JSON.parse(savedSkills);
+  }
+  
+  // Return empty role data structure if no saved skills
+  const defaultRole: RoleSkillData = {
     title: getRoleTitle(roleId),
     soc: getRoleSoc(roleId),
     specialized: [],
@@ -15,6 +20,10 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
     certifications: [],
     skills: []
   };
+
+  // Save default role data
+  localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(defaultRole));
+  return defaultRole;
 };
 
 const getRoleTitle = (id: string): string => {
@@ -39,7 +48,7 @@ const getRoleSoc = (id: string): string => {
   return socCodes[id] || "";
 };
 
-// Export roleSkills object with empty initialization
+// Export roleSkills object with initialization
 export const roleSkills: { [key: string]: RoleSkillData } = {
   "123": getRoleSkills("123"),
   "124": getRoleSkills("124"), 
@@ -48,7 +57,14 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
   "127": getRoleSkills("127")
 };
 
-console.log('Role skills initialized with empty skills:', Object.keys(roleSkills).map(id => ({
+// Helper function to save role skills
+export const saveRoleSkills = (roleId: string, skills: RoleSkillData) => {
+  console.log('Saving role skills:', { roleId, skills });
+  localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(skills));
+  roleSkills[roleId] = skills;
+};
+
+console.log('Role skills initialized:', Object.keys(roleSkills).map(id => ({
   roleId: id,
   title: roleSkills[id].title,
   skillCount: {
