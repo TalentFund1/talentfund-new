@@ -17,6 +17,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 
 const employeeImages = {
   "123": "photo-1488590528505-98d2b5aba04b",
@@ -87,81 +88,83 @@ const EmployeeProfile = () => {
   });
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex justify-between items-center mb-4">
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2 bg-white border-border hover:bg-background"
-              onClick={() => navigate('/employees')}
-            >
-              <ChevronLeft className="h-4 w-4" /> Back
-            </Button>
-            <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
-              <ChevronLeft 
-                className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
-                onClick={() => handleNavigation('prev')}
-              />
-              <span className="text-sm text-foreground">{currentIndex}/{totalEmployees}</span>
-              <ChevronRight 
-                className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
-                onClick={() => handleNavigation('next')}
-              />
+    <ToggledSkillsProvider>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <div className="flex-1 p-6 ml-16 transition-all duration-300">
+          <div className="max-w-7xl mx-auto space-y-6">
+            <div className="flex justify-between items-center mb-4">
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2 bg-white border-border hover:bg-background"
+                onClick={() => navigate('/employees')}
+              >
+                <ChevronLeft className="h-4 w-4" /> Back
+              </Button>
+              <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
+                <ChevronLeft 
+                  className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+                  onClick={() => handleNavigation('prev')}
+                />
+                <span className="text-sm text-foreground">{currentIndex}/{totalEmployees}</span>
+                <ChevronRight 
+                  className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
+                  onClick={() => handleNavigation('next')}
+                />
+              </div>
             </div>
-          </div>
 
-          <TrackProvider>
-            <Card className="p-8 bg-white">
-              <EmployeeHeader id={id || ""} employee={employeeData} />
-              <EmployeeDetails employee={employeeData} id={id || ""} />
-            </Card>
-          </TrackProvider>
+            <TrackProvider>
+              <Card className="p-8 bg-white">
+                <EmployeeHeader id={id || ""} employee={employeeData} />
+                <EmployeeDetails employee={employeeData} id={id || ""} />
+              </Card>
+            </TrackProvider>
 
-          <TrackProvider>
-            <Tabs defaultValue="experience" className="w-full space-y-6">
-              <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
-                <TabsTrigger 
-                  value="experience" 
-                  className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-                >
-                  Skills Summary
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="benchmark"
-                  className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
-                >
-                  Role Benchmark
-                </TabsTrigger>
-              </TabsList>
+            <TrackProvider>
+              <Tabs defaultValue="experience" className="w-full space-y-6">
+                <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
+                  <TabsTrigger 
+                    value="experience" 
+                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                  >
+                    Skills Summary
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="benchmark"
+                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                  >
+                    Role Benchmark
+                  </TabsTrigger>
+                </TabsList>
 
-              <TabsContent value="experience" className="space-y-6">
-                <SelectedSkillsProvider>
-                  <SkillsMatrixSearchProvider>
-                    <Card className="p-8 bg-white">
-                      <SkillsSummary />
-                    </Card>
-                    <SkillsMatrix />
-                  </SkillsMatrixSearchProvider>
-                </SelectedSkillsProvider>
-              </TabsContent>
-
-              <TabsContent value="benchmark" className="space-y-6">
-                <BenchmarkSearchProvider>
+                <TabsContent value="experience" className="space-y-6">
                   <SelectedSkillsProvider>
-                    <Card className="p-8 bg-white">
-                      <RoleBenchmark />
-                    </Card>
-                    <BenchmarkSkillsMatrix />
+                    <SkillsMatrixSearchProvider>
+                      <Card className="p-8 bg-white">
+                        <SkillsSummary />
+                      </Card>
+                      <SkillsMatrix />
+                    </SkillsMatrixSearchProvider>
                   </SelectedSkillsProvider>
-                </BenchmarkSearchProvider>
-              </TabsContent>
-            </Tabs>
-          </TrackProvider>
+                </TabsContent>
+
+                <TabsContent value="benchmark" className="space-y-6">
+                  <BenchmarkSearchProvider>
+                    <SelectedSkillsProvider>
+                      <Card className="p-8 bg-white">
+                        <RoleBenchmark />
+                      </Card>
+                      <BenchmarkSkillsMatrix />
+                    </SelectedSkillsProvider>
+                  </BenchmarkSearchProvider>
+                </TabsContent>
+              </Tabs>
+            </TrackProvider>
+          </div>
         </div>
       </div>
-    </div>
+    </ToggledSkillsProvider>
   );
 };
 
