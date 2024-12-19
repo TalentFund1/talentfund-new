@@ -63,39 +63,47 @@ export const AddSkillToProfileDialog = () => {
         return;
       }
 
-      const skillData = getUnifiedSkillData(skillTitle, true);
+      // Get complete skill data from the centralized database
+      const skillData = getUnifiedSkillData(normalizedTitle);
       if (skillData) {
-        console.log('Processing skill:', skillData);
+        console.log('Processing skill from database:', skillData);
         
         // Add to toggled skills
         const newToggledSkills = new Set(toggledSkills);
-        newToggledSkills.add(skillTitle);
+        newToggledSkills.add(normalizedTitle);
         setToggledSkills(newToggledSkills);
         
         // Initialize skill state with unspecified level and preferred requirement
-        // Added 'employee' as the fifth argument
-        setSkillState(skillTitle, 'unspecified', 'preferred', id, 'employee');
+        setSkillState(normalizedTitle, 'unspecified', 'preferred', id, 'employee');
 
-        // Add to employee skills with properly typed requirement
+        // Create new skill with complete data from the database
         const newSkill = {
           ...skillData,
           level: 'unspecified',
-          requirement: 'preferred' as SkillRequirement
+          requirement: 'preferred' as SkillRequirement,
+          category: skillData.category,
+          businessCategory: skillData.businessCategory,
+          weight: skillData.weight,
+          growth: skillData.growth,
+          salary: skillData.salary,
+          confidence: skillData.confidence,
+          benchmarks: skillData.benchmarks
         };
         
         updatedSkills.push(newSkill);
-        addedSkills.push(skillTitle);
-        console.log('Added new skill:', newSkill);
+        addedSkills.push(normalizedTitle);
+        console.log('Added new skill with complete data:', newSkill);
       }
     });
 
-    // Update employee skills
+    // Update employee skills with complete data
     updateEmployeeSkills(id, updatedSkills);
-    console.log('Updated employee skills:', {
+    console.log('Updated employee skills with complete data:', {
       employeeId: id,
       previousCount: currentSkills.length,
       newCount: updatedSkills.length,
-      addedSkills
+      addedSkills,
+      updatedSkills
     });
 
     if (addedSkills.length > 0) {
