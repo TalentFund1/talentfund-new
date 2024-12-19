@@ -8,6 +8,7 @@ import { useTrack } from "../skills/context/TrackContext";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from "../skills/data/roleSkills";
+import { useParams } from "react-router-dom";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -31,7 +32,8 @@ export const SkillsMatrixRow = ({
   const { selectedLevel, selectedRole } = useRoleStore();
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const track = getTrackForRole("123")?.toLowerCase() as 'professional' | 'managerial';
+  const { id } = useParams<{ id: string }>();
+  const track = getTrackForRole(id || "123")?.toLowerCase() as 'professional' | 'managerial';
   
   const isCompanySkill = (skillTitle: string) => {
     const nonCompanySkills = ["MLflow", "Natural Language Understanding", "Kubernetes"];
@@ -39,7 +41,14 @@ export const SkillsMatrixRow = ({
   };
 
   const getSkillType = (skillTitle: string): string => {
-    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills] || roleSkills["123"];
+    // Use the employee's ID to get their role skills
+    const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+    
+    console.log('Getting skill type:', {
+      employeeId: id,
+      skillTitle,
+      roleSkills: currentRoleSkills.title
+    });
     
     if (currentRoleSkills.specialized.some(s => s.title === skillTitle)) {
       return 'Specialized';
