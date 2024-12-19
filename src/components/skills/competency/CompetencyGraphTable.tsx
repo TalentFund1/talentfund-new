@@ -20,6 +20,7 @@ export const CompetencyGraphTable = ({
 }: CompetencyGraphTableProps) => {
   const { roleStates } = useCompetencyStore();
   const { id: roleId } = useParams<{ id: string }>();
+  const roleIdParam = roleId || currentRoleId || "123"; // Provide a fallback
 
   const getLevelsForTrack = () => {
     return track === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels);
@@ -74,7 +75,7 @@ export const CompetencyGraphTable = ({
 
   const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
     let count = 0;
-    const roleState = roleStates[roleId || "123"];
+    const roleState = roleStates[roleIdParam];
     
     if (roleState && roleState[skillName]) {
       levels.forEach(level => {
@@ -117,14 +118,6 @@ export const CompetencyGraphTable = ({
       return a.title.localeCompare(b.title);
     })
     .map(skill => skill.title);
-
-  console.log('Sorted skills with counts:', skills.map(skill => ({
-    title: skill.title,
-    advanced: countSkillLevels(skill.title, levels, 'advanced'),
-    intermediate: countSkillLevels(skill.title, levels, 'intermediate'),
-    beginner: countSkillLevels(skill.title, levels, 'beginner'),
-    unspecified: countSkillLevels(skill.title, levels, 'unspecified')
-  })));
 
   return (
     <div className="rounded-lg border border-border bg-white overflow-hidden mb-8">

@@ -68,5 +68,12 @@ export const getSkillLevel = (state: SkillState | string): string => {
 // Helper function to get requirement string safely
 export const getSkillRequirement = (state: SkillState | SkillRequirement): string => {
   if (typeof state === 'string') return state;
-  return state.required || 'preferred';
+  if ('required' in state) return state.required;
+  return 'preferred';
+};
+
+// Helper function to safely convert to string
+export const asString = (value: string | SkillState): string => {
+  if (typeof value === 'string') return value;
+  return value.level || 'unspecified';
 };

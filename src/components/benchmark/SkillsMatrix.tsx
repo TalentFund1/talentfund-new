@@ -63,7 +63,7 @@ export const SkillsMatrix = () => {
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
-        filteredSkills={filteredSkills}
+        filteredSkills={filteredSkills.slice(0, visibleItems)}
         visibleItems={visibleItems}
         observerTarget={observerTarget}
         hasChanges={hasChanges}
