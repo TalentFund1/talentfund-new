@@ -4,8 +4,6 @@ import { roleSkills } from "../data/roleSkills";
 import { useTrack } from "../context/TrackContext";
 import { getLevelPriority, normalizeLevel } from "./utils/levelUtils";
 import { determineRequirement } from "./utils/requirementUtils";
-import { useParams } from "react-router-dom";
-import { EmployeeSkillState } from "./state/types";
 
 interface SkillCompetencyState {
   level: string;
@@ -19,26 +17,11 @@ const defaultState: SkillCompetencyState = {
 };
 
 export const useCompetencyStateReader = () => {
-  const { currentStates, employeeStates, getEmployeeSkillState } = useCompetencyStore();
+  const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole } = useTrack();
-  const { id: employeeId } = useParams<{ id: string }>();
 
   const findSavedState = (skillName: string, levelKey: string, roleId: string): SkillCompetencyState | null => {
-    // First check for employee-specific state
-    if (employeeId) {
-      const employeeState = getEmployeeSkillState(employeeId, skillName);
-      if (employeeState) {
-        console.log('Found employee-specific state:', {
-          employeeId,
-          skillName,
-          state: employeeState
-        });
-        return employeeState;
-      }
-    }
-
-    // Fall back to role-based state for benchmarking
     const roleStates = currentStates[roleId];
     const track = getTrackForRole(roleId);
     
@@ -46,7 +29,7 @@ export const useCompetencyStateReader = () => {
       const normalizedLevelKey = normalizeLevel(levelKey, roleId, track);
       const levelState = roleStates[skillName][normalizedLevelKey];
       
-      console.log('Finding saved role state:', { 
+      console.log('Finding saved state:', { 
         skillName, 
         levelKey: normalizedLevelKey, 
         state: levelState,
@@ -105,29 +88,20 @@ export const useCompetencyStateReader = () => {
     levelKey: string = 'p4',
     roleId: string
   ): SkillCompetencyState => {
-    const validatedRoleId = roleId || "123";
+    const validatedRoleId = validateRoleId(roleId);
     
     console.log('Reading competency state:', { 
       skillName, 
       levelKey,
-      employeeId,
-      roleId: validatedRoleId,
+      originalRoleId: roleId,
+      validatedRoleId,
       hasToggledSkill: toggledSkills.has(skillName)
     });
 
-    // First try to get employee-specific state
-    if (employeeId) {
-      const employeeState = getEmployeeSkillState(employeeId, skillName);
-      if (employeeState) {
-        return employeeState;
-      }
-    }
-
-    // Fall back to role-based state or generate default
     const track = getTrackForRole(validatedRoleId);
     const normalizedLevel = normalizeLevel(levelKey, validatedRoleId, track);
 
-    // Try to get saved state from CompetencyStore
+    // First try to get saved state from CompetencyStore
     const savedState = findSavedState(skillName, levelKey, validatedRoleId);
     if (savedState) {
       console.log('Using saved state from CompetencyStore:', savedState);

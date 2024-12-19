@@ -3,141 +3,93 @@ import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 import { normalizeSkillTitle } from '../../../skills/utils/normalization';
 import { getSkillCategory } from '../../../skills/data/skills/categories/skillCategories';
 
-// Define skills for each employee independently
+// Define initial skills for each employee
 export const employeeSkills: { [key: string]: UnifiedSkill[] } = {
   "123": [
-    "Python",
     "Machine Learning",
-    "Deep Learning",
+    "Deep Learning", 
     "Natural Language Processing",
+    "Computer Vision",
     "TensorFlow",
+    "Python",
     "Problem Solving",
+    "Technical Writing",
+    "Git Version Control",
     "Communication"
   ].map(title => {
     const normalizedTitle = normalizeSkillTitle(title);
     const skillData = getUnifiedSkillData(normalizedTitle);
-    console.log('Loading employee 123 skill:', {
+    console.log('Loading employee skill:', {
       title: normalizedTitle,
       category: getSkillCategory(normalizedTitle)
     });
     return {
       ...skillData,
       title: normalizedTitle,
-      category: getSkillCategory(normalizedTitle),
-      employeeId: "123",
-      level: 'intermediate',
-      requirement: 'required'
+      category: getSkillCategory(normalizedTitle)
     };
   }),
 
   "124": [
     "Node.js",
-    "MongoDB",
-    "Express.js",
-    "SQL",
+    "Database Design",
+    "API Development", 
+    "System Architecture",
+    "Kubernetes",
     "Problem Solving",
+    "Code Review",
+    "Agile Methodologies",
+    "Git Version Control",
     "Communication"
   ].map(title => {
     const normalizedTitle = normalizeSkillTitle(title);
     const skillData = getUnifiedSkillData(normalizedTitle);
-    console.log('Loading employee 124 skill:', {
-      title: normalizedTitle,
-      category: getSkillCategory(normalizedTitle)
-    });
     return {
       ...skillData,
       title: normalizedTitle,
-      category: getSkillCategory(normalizedTitle),
-      employeeId: "124",
-      level: 'intermediate',
-      requirement: 'required'
+      category: getSkillCategory(normalizedTitle)
     };
   }),
 
   "125": [
     "React",
     "TypeScript",
-    "CSS",
-    "HTML",
+    "Next.js",
+    "CSS/SASS",
+    "Performance Optimization",
     "Problem Solving",
+    "Code Review",
+    "Agile Methodologies",
+    "Git Version Control",
     "Communication"
   ].map(title => {
     const normalizedTitle = normalizeSkillTitle(title);
     const skillData = getUnifiedSkillData(normalizedTitle);
-    console.log('Loading employee 125 skill:', {
-      title: normalizedTitle,
-      category: getSkillCategory(normalizedTitle)
-    });
     return {
       ...skillData,
       title: normalizedTitle,
-      category: getSkillCategory(normalizedTitle),
-      employeeId: "125",
-      level: 'intermediate',
-      requirement: 'required'
+      category: getSkillCategory(normalizedTitle)
     };
   }),
 
   "126": [
-    "Project Management",
+    "System Design",
+    "Technical Architecture",
+    "Risk Management",
     "Team Leadership",
-    "Agile Methodologies",
+    "Project Management",
     "Strategic Planning",
-    "Problem Solving",
+    "Stakeholder Management",
+    "Agile Methodologies",
+    "Git Version Control",
     "Communication"
   ].map(title => {
     const normalizedTitle = normalizeSkillTitle(title);
     const skillData = getUnifiedSkillData(normalizedTitle);
-    console.log('Loading employee 126 skill:', {
-      title: normalizedTitle,
-      category: getSkillCategory(normalizedTitle)
-    });
     return {
       ...skillData,
       title: normalizedTitle,
-      category: getSkillCategory(normalizedTitle),
-      employeeId: "126",
-      level: 'intermediate',
-      requirement: 'required'
+      category: getSkillCategory(normalizedTitle)
     };
   })
 };
-
-// Export helper function
-export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
-  console.log('Getting skills for employee:', employeeId);
-  
-  // Get employee's specific skills if they exist
-  if (employeeSkills[employeeId]) {
-    console.log('Found specific skills for employee:', {
-      employeeId,
-      skillCount: employeeSkills[employeeId].length,
-      skills: employeeSkills[employeeId].map(s => ({
-        title: s.title,
-        level: s.level,
-        requirement: s.requirement,
-        employeeId: s.employeeId
-      }))
-    });
-    return employeeSkills[employeeId];
-  }
-  
-  // Return empty array if no skills found
-  console.log('No specific skills found for employee, returning empty array');
-  return [];
-};
-
-// Export the loaded skills for verification
-console.log('Loaded employee skills:', 
-  Object.entries(employeeSkills).map(([id, skills]) => ({
-    employeeId: id,
-    skillCount: skills.length,
-    skills: skills.map(s => ({
-      title: s.title,
-      category: s.category,
-      level: s.level,
-      requirement: s.requirement,
-      employeeId: s.employeeId
-    }))
-  }))
-);

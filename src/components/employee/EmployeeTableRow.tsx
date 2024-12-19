@@ -7,9 +7,10 @@ import { CheckCircle2 } from "lucide-react";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { roleSkills } from "../skills/data/roleSkills";
+import { getLevel } from "../EmployeeTable";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -20,7 +21,7 @@ interface EmployeeTableRowProps {
   selectedJobTitle?: string[];
 }
 
-const EmployeeTableRowContent = ({ 
+export const EmployeeTableRow = ({ 
   employee, 
   isSelected, 
   onSelect, 
@@ -30,20 +31,23 @@ const EmployeeTableRowContent = ({
 }: EmployeeTableRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
 
   // Determine which role ID to use for benchmark calculation
   const targetRoleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
 
-  const employeeLevel = employee.level || 'p4';
+  const employeeLevel = getLevel(employee.role);
   
   // Calculate benchmark percentage
   const benchmark = calculateBenchmarkPercentage(
     employee.id,
     targetRoleId,
     employeeLevel,
-    currentStates
+    currentStates,
+    toggledSkills,
+    getSkillCompetencyState
   );
 
   // Calculate skill match ratio
@@ -155,7 +159,7 @@ const EmployeeTableRowContent = ({
           {employee.role}
         </Link>
       </td>
-      <td className="px-4 py-4 text-sm">{employee.department}</td>
+      <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
       <td className="px-4 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
           {getSkillMatch()}
@@ -179,13 +183,5 @@ const EmployeeTableRowContent = ({
         {employee.lastUpdated}
       </td>
     </tr>
-  );
-};
-
-export const EmployeeTableRow = (props: EmployeeTableRowProps) => {
-  return (
-    <ToggledSkillsProvider>
-      <EmployeeTableRowContent {...props} />
-    </ToggledSkillsProvider>
   );
 };
