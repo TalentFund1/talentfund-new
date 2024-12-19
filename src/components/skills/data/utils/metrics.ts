@@ -44,18 +44,30 @@ export const getSkillSalary = (skillTitle: string): string => {
     'System Architecture': '$165,000',
     'GraphQL': '$140,000',
     
+    // Frontend Skills
+    'React': '$140,000',
+    'TypeScript': '$145,000',
+    'Next.js': '$150,000',
+    'CSS/SASS': '$130,000',
+    'Performance Optimization': '$155,000',
+    'React Native': '$145,000',
+    'Flutter': '$140,000',
+    
     // DevOps Skills
     'Kubernetes': '$160,000',
     'Docker': '$155,000',
     'Jenkins': '$150,000',
     'Terraform': '$155,000',
+    'AWS': '$165,000',
+    'Linux Administration': '$145,000',
+    'Shell Scripting': '$140,000',
     
     // Common/Soft Skills
     'Problem Solving': '$160,000',
     'Code Review': '$155,000',
     'Agile Methodologies': '$150,000',
     'Communication': '$145,000',
-    'Team Leadership': '$140,000',
+    'Team Leadership': '$170,000',
     'Git Version Control': '$135,000',
     'Technical Writing': '$130,000',
     'Project Management': '$170,000',
@@ -63,6 +75,7 @@ export const getSkillSalary = (skillTitle: string): string => {
     'Strategic Planning': '$175,000',
     'System Design': '$165,000',
     'Technical Architecture': '$175,000',
+    'Stakeholder Management': '$165,000',
     
     // Certifications
     'AWS Certified DevOps Engineer': '$175,000',
@@ -74,16 +87,8 @@ export const getSkillSalary = (skillTitle: string): string => {
     'TensorFlow Developer Certificate': '$170,000',
     'Google Cloud Professional': '$175,000',
     'Azure Solutions Architect': '$170,000',
-    
-    // Additional Technical Skills
-    'Python': '$145,000',
-    'React': '$140,000',
-    'React Native': '$145,000',
-    'UI/UX Design': '$130,000',
-    'DevOps Practices': '$150,000',
-    'Google Analytics': '$125,000',
-    'Data Visualization': '$135,000',
-    'SEO Optimization': '$120,000',
+    'Project Management Professional (PMP)': '$170,000',
+    'Certified Scrum Master (CSM)': '$160,000'
   };
 
   // If no specific salary is found, return a default based on the skill title's characteristics
@@ -102,5 +107,6 @@ export const getSkillSalary = (skillTitle: string): string => {
     }
   }
 
+  console.log(`Found salary for ${skillTitle}: ${salaries[skillTitle]}`);
   return salaries[skillTitle];
 };
