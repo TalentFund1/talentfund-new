@@ -61,6 +61,8 @@ export const SkillsMatrixView = ({
       <Separator className="my-4" />
       
       <SkillsMatrixFilters 
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
         selectedLevel={selectedLevel}
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}

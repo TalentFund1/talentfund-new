@@ -1,13 +1,14 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useBenchmarkSearch } from "@/components/skills/context/BenchmarkSearchContext";
 
 interface SkillsMatrixFiltersProps {
   selectedLevel: string;
   setSelectedLevel: (value: string) => void;
   selectedInterest: string;
   setSelectedInterest: (value: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (value: string) => void;
 }
 
 export const SkillsMatrixFilters = ({
@@ -15,11 +16,31 @@ export const SkillsMatrixFilters = ({
   setSelectedLevel,
   selectedInterest,
   setSelectedInterest,
+  selectedCategory,
+  setSelectedCategory,
 }: SkillsMatrixFiltersProps) => {
+  console.log('SkillsMatrixFilters - Current selections:', {
+    level: selectedLevel,
+    interest: selectedInterest,
+    category: selectedCategory
+  });
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-start gap-4">
         <div className="flex gap-4">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="specialized">Specialized Skills</SelectItem>
+              <SelectItem value="common">Common Skills</SelectItem>
+              <SelectItem value="certification">Certifications</SelectItem>
+            </SelectContent>
+          </Select>
+
           <Select value={selectedLevel} onValueChange={setSelectedLevel}>
             <SelectTrigger className="w-[180px] bg-white">
               <SelectValue placeholder="All Levels" />
