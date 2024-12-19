@@ -29,13 +29,41 @@ export const SkillProfileMatrixTable = ({
   sortDirection,
   onSort
 }: SkillProfileMatrixTableProps) => {
-  const uniqueSkills = paginatedSkills.reduce((acc: UnifiedSkill[], current) => {
-    const exists = acc.find(skill => skill.title === current.title);
-    if (!exists) {
-      acc.push(current);
+  // Sort skills with toggled skills first
+  const sortedSkills = [...paginatedSkills].sort((a, b) => {
+    const aIsToggled = toggledSkills.has(a.title);
+    const bIsToggled = toggledSkills.has(b.title);
+
+    // Sort by toggle status first
+    if (aIsToggled !== bIsToggled) {
+      return bIsToggled ? 1 : -1;
     }
-    return acc;
-  }, []);
+
+    // If toggle status is the same, maintain original sort order
+    if (sortField && sortDirection) {
+      if (sortField === 'growth') {
+        const aGrowth = parseFloat(a.growth);
+        const bGrowth = parseFloat(b.growth);
+        return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+      } else if (sortField === 'salary') {
+        const aSalary = parseFloat(a.salary?.replace(/[^0-9.-]+/g, "") || "0");
+        const bSalary = parseFloat(b.salary?.replace(/[^0-9.-]+/g, "") || "0");
+        return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
+      }
+    }
+
+    // Default to alphabetical order if no other sort criteria
+    return a.title.localeCompare(b.title);
+  });
+
+  console.log('Sorted skills:', {
+    totalSkills: sortedSkills.length,
+    toggledSkillsCount: toggledSkills.size,
+    firstFewSkills: sortedSkills.slice(0, 3).map(skill => ({
+      title: skill.title,
+      isToggled: toggledSkills.has(skill.title)
+    }))
+  });
 
   const renderSortArrow = (field: 'growth' | 'salary') => {
     if (sortField !== field) {
@@ -116,7 +144,7 @@ export const SkillProfileMatrixTable = ({
         </tr>
       </thead>
       <tbody>
-        {uniqueSkills.map((skill) => (
+        {sortedSkills.map((skill) => (
           <tr 
             key={skill.title}
             className="border-t border-border hover:bg-muted/50 transition-colors"
