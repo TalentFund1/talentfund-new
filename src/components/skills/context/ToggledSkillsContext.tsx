@@ -30,7 +30,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     const employeeSkills = getEmployeeSkills(id || "");
     const employeeSkillTitles = employeeSkills.map(skill => skill.title);
     console.log('Initializing with employee skills:', employeeSkillTitles);
-    return new Set(employeeSkillTitles);
+    return new Set<string>(employeeSkillTitles);
   });
 
   // Effect to reload toggled skills when role or employee ID changes
@@ -51,7 +51,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     const employeeSkills = getEmployeeSkills(id || "");
     const employeeSkillTitles = employeeSkills.map(skill => skill.title);
     console.log('Setting employee skills:', employeeSkillTitles);
-    setToggledSkills(new Set(employeeSkillTitles));
+    setToggledSkills(new Set<string>(employeeSkillTitles));
     
   }, [selectedRole, id]);
 
@@ -65,7 +65,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     // Ensure we only keep skills that are assigned to the employee
     const employeeSkills = getEmployeeSkills(id || "");
     const employeeSkillTitles = new Set(employeeSkills.map(skill => skill.title));
-    const filteredSkills = new Set(
+    const filteredSkills = new Set<string>(
       Array.from(newSkills).filter(skill => employeeSkillTitles.has(skill))
     );
 
@@ -115,7 +115,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         // Filter incoming skills to only include employee's assigned skills
         const employeeSkills = getEmployeeSkills(id || "");
         const employeeSkillTitles = new Set(employeeSkills.map(skill => skill.title));
-        const filteredSkills = new Set(
+        const filteredSkills = new Set<string>(
           customEvent.detail.skills.filter((skill: string) => employeeSkillTitles.has(skill))
         );
         
