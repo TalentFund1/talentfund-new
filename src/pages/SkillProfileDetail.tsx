@@ -46,6 +46,13 @@ const SkillProfileDetail = () => {
   const currentIndex = Object.keys(roleSkills).indexOf(id || "123") + 1;
   const totalProfiles = Object.keys(roleSkills).length;
 
+  console.log('SkillProfileDetail - Rendering with:', {
+    roleId: id,
+    currentRole,
+    jobTitle,
+    track
+  });
+
   return (
     <ToastProvider>
       <TooltipProvider>
