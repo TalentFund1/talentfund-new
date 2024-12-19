@@ -87,8 +87,18 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
       // Force a clean update to ensure persistence
       updateEmployee(updatedEmployee);
       
-      // Force reload the page to ensure all contexts are updated
-      window.location.reload();
+      // Clear any cached data from localStorage
+      const keysToRemove = [
+        `toggled-skills-${employee.id}`,
+        `track-${employee.id}`,
+        `matrix-search-${employee.id}`,
+        `benchmark-search-${employee.id}`
+      ];
+      
+      keysToRemove.forEach(key => {
+        console.log('Removing cached data:', key);
+        localStorage.removeItem(key);
+      });
 
       toast({
         title: "Success",
@@ -96,6 +106,9 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
       });
       
       onOpenChange(false);
+      
+      // Force reload the page to ensure all contexts are updated
+      window.location.reload();
     } catch (error) {
       console.error('Error updating employee:', error);
       toast({
