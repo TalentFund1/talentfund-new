@@ -73,7 +73,8 @@ export const AddSkillToProfileDialog = () => {
         setToggledSkills(newToggledSkills);
         
         // Initialize skill state with unspecified level and preferred requirement
-        setSkillState(skillTitle, 'unspecified', 'preferred', id);
+        // Added 'employee' as the fifth argument
+        setSkillState(skillTitle, 'unspecified', 'preferred', id, 'employee');
 
         // Add to employee skills with properly typed requirement
         const newSkill = {
