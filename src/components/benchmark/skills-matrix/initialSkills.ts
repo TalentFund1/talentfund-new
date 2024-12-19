@@ -1,28 +1,38 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { getAllSkills, getSkillByTitle } from '../../skills/data/skills/allSkills';
+import { getSkillByTitle, getAllSkills } from '../../skills/data/skills/allSkills';
 
-// Employee skills database - now using references to universal skills
-const employeeSkills: { [key: string]: UnifiedSkill[] } = {
+// Map of employee IDs to their skill titles
+const employeeSkillMap: { [key: string]: string[] } = {
   "123": [
-    getSkillByTitle("Machine Learning") || getAllSkills()[0],
-    getSkillByTitle("Deep Learning") || getAllSkills()[1]
+    "Machine Learning",
+    "Deep Learning"
   ],
   "124": [
-    getSkillByTitle("Node.js") || getAllSkills()[0],
-    getSkillByTitle("Database Design") || getAllSkills()[1],
-    getSkillByTitle("API Development") || getAllSkills()[2]
+    "Node.js",
+    "Database Design",
+    "API Development"
   ],
   "125": [
-    getSkillByTitle("React") || getAllSkills()[0]
+    "React"
   ],
   "126": [
-    getSkillByTitle("Team Leadership") || getAllSkills()[0]
+    "Team Leadership"
   ]
 };
 
 export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', id);
-  const skills = employeeSkills[id] || [];
-  console.log('Retrieved skills:', skills);
+  
+  const skillTitles = employeeSkillMap[id] || [];
+  const skills = skillTitles
+    .map(title => getSkillByTitle(title))
+    .filter((skill): skill is UnifiedSkill => skill !== undefined);
+
+  console.log('Retrieved skills for employee:', {
+    employeeId: id,
+    skillCount: skills.length,
+    skills: skills.map(s => s.title)
+  });
+
   return skills;
 };
