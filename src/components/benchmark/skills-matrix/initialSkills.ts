@@ -5,18 +5,19 @@ import { initializeEmployeeSkills } from './utils/skillInitialization';
 export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
   
-  // Return employee's specific skills if they exist
+  // Return only employee's specific skills if they exist
   if (employeeSkills[employeeId]) {
     console.log('Found specific skills for employee:', {
       employeeId,
-      skillCount: employeeSkills[employeeId].length
+      skillCount: employeeSkills[employeeId].length,
+      skills: employeeSkills[employeeId].map(skill => skill.title)
     });
     return employeeSkills[employeeId];
   }
   
   // Initialize with empty skills if none exist
   console.log('No specific skills found for employee, initializing empty skills');
-  return initializeEmployeeSkills(employeeId, []);
+  return [];
 };
 
 // Load initial skills for an employee
