@@ -77,9 +77,9 @@ const CreateProject = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1600px] mx-auto">
           <Card className="bg-white border border-border">
-            <div className="max-w-5xl mx-auto p-8">
+            <div className="max-w-[1400px] mx-auto p-8">
               <ProjectHeader />
               
               <div className="mt-8 space-y-8">
