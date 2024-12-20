@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useRoleStore } from '@/components/benchmark/RoleBenchmark';
 import { loadToggledSkills, saveToggledSkills } from './utils/storageUtils';
 import { roleSkills } from '../data/roleSkills';
+import { getAllSkills } from '../data/skills/allSkills';
 
 interface ToggledSkillsContextType {
   toggledSkills: Set<string>;
@@ -26,17 +27,25 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       source: 'useState initializer'
     });
 
-    // If no saved skills exist, initialize with all skills toggled
+    // If no saved skills exist, initialize with all universal skills
     if (!savedSkills || savedSkills.length === 0) {
-      const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
-      if (currentRoleSkills) {
-        const allSkills = [
-          ...currentRoleSkills.specialized.map(s => s.title),
-          ...currentRoleSkills.common.map(s => s.title),
-          ...currentRoleSkills.certifications.map(s => s.title)
-        ];
-        console.log('Initializing with all skills toggled:', allSkills);
-        return new Set(allSkills);
+      if (currentRoleId) {
+        // If we have a role ID, use role-specific skills
+        const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
+        if (currentRoleSkills) {
+          const allSkills = [
+            ...currentRoleSkills.specialized.map(s => s.title),
+            ...currentRoleSkills.common.map(s => s.title),
+            ...currentRoleSkills.certifications.map(s => s.title)
+          ];
+          console.log('Initializing with role-specific skills:', allSkills);
+          return new Set(allSkills);
+        }
+      } else {
+        // If no role ID, initialize with all universal skills
+        const universalSkills = getAllSkills().map(skill => skill.title);
+        console.log('Initializing with universal skills:', universalSkills);
+        return new Set(universalSkills);
       }
     }
     
@@ -46,11 +55,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
   // Effect to reload toggled skills when role or employee ID changes
   useEffect(() => {
     const currentRoleId = selectedRole || id || "";
-    if (!currentRoleId) {
-      console.warn('No role ID available for loading toggled skills');
-      return;
-    }
-
+    
     console.log('Role/ID changed, reloading toggled skills for:', {
       roleId: currentRoleId,
       employeeId: id,
@@ -67,19 +72,27 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
         skills: savedSkills
       });
       setToggledSkills(new Set(savedSkills));
+    } else if (currentRoleId) {
+      // If no saved skills but we have a role, initialize with role skills
+      const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills];
+      if (currentRoleSkills) {
+        const allSkills = [
+          ...currentRoleSkills.specialized.map(s => s.title),
+          ...currentRoleSkills.common.map(s => s.title),
+          ...currentRoleSkills.certifications.map(s => s.title)
+        ];
+        setToggledSkills(new Set(allSkills));
+      }
     } else {
-      // If no saved skills, keep current selection
-      console.log('No saved skills found, keeping current selection');
+      // If no role ID and no saved skills, initialize with universal skills
+      const universalSkills = getAllSkills().map(skill => skill.title);
+      setToggledSkills(new Set(universalSkills));
     }
   }, [selectedRole, id]);
 
   const handleSetToggledSkills = (newSkills: Set<string>) => {
     const currentRoleId = selectedRole || id || "";
-    if (!currentRoleId) {
-      console.error('No role ID available for saving toggled skills');
-      return;
-    }
-
+    
     console.log('Setting toggled skills:', {
       roleId: currentRoleId,
       skillCount: newSkills.size,
@@ -92,7 +105,9 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
     // Save to localStorage immediately
     try {
       const skillsArray = Array.from(newSkills);
-      saveToggledSkills(currentRoleId, skillsArray);
+      if (currentRoleId) {
+        saveToggledSkills(currentRoleId, skillsArray);
+      }
       
       // Broadcast the change
       window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
