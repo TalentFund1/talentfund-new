@@ -56,10 +56,22 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  // Get roles from roleSkills with proper mapping
-  const roles = Object.entries(roleSkills).map(([id, data]) => data.title);
+  // Create a mapping of role titles to IDs
+  const roleMapping = Object.entries(roleSkills).reduce((acc, [id, data]) => {
+    acc[data.title] = id;
+    return acc;
+  }, {} as { [key: string]: string });
 
-  console.log('Available roles from roleSkills:', roles);
+  // Get roles from roleSkills
+  const roles = Object.values(roleSkills).map(data => data.title);
+
+  console.log('Available roles and their IDs:', roleMapping);
+
+  const handleRoleChange = (items: string[]) => {
+    console.log('Role selected:', items[0]);
+    console.log('Corresponding role ID:', roleMapping[items[0]]);
+    onRoleChange(items);
+  };
 
   const handleClearAll = () => {
     onSkillsChange([]);
@@ -107,7 +119,7 @@ export const EmployeeFilters = ({
             placeholder="Role"
             items={roles}
             selectedItems={selectedRole}
-            onItemsChange={(items) => onRoleChange(items.map(item => String(item)))}
+            onItemsChange={handleRoleChange}
             singleSelect={true}
             className="w-[180px]"
           />
