@@ -5,19 +5,18 @@ import { roleSkills } from "../skills/data/roleSkills";
 
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
-  selectedJobTitle: string[],
+  selectedRole: string[],
   currentStates: any,
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ): Employee[] => {
-  if (selectedJobTitle.length === 0) return employees;
+  if (selectedRole.length === 0) return employees;
 
-  const selectedRole = selectedJobTitle[0];
-  const roleId = getSkillProfileId(selectedRole);
-
+  const selectedRoleId = getSkillProfileId(selectedRole[0]);
+  
   console.log('Sorting employees by role match:', { 
     selectedRole, 
-    roleId,
+    selectedRoleId,
     totalEmployees: employees.length 
   });
 
@@ -26,9 +25,9 @@ export const sortEmployeesByRoleMatch = (
   const partialMatches: Employee[] = [];
 
   // Get role skills for benchmark comparison
-  const roleData = roleSkills[roleId as keyof typeof roleSkills];
+  const roleData = roleSkills[selectedRoleId as keyof typeof roleSkills];
   if (!roleData) {
-    console.error('No role skills found for role:', roleId);
+    console.error('No role skills found for role:', selectedRoleId);
     return employees;
   }
 
@@ -39,7 +38,7 @@ export const sortEmployeesByRoleMatch = (
   ].filter(skill => toggledSkills.has(skill.title));
 
   console.log('Role skills for matching:', {
-    roleId,
+    roleId: selectedRoleId,
     totalSkills: allRoleSkills.length,
     skills: allRoleSkills.map(s => s.title)
   });
@@ -50,12 +49,12 @@ export const sortEmployeesByRoleMatch = (
     const employeeLevel = getLevel(employee.role);
     
     // Compare role IDs directly for exact matches
-    const isExactMatch = employeeRoleId === roleId;
+    const isExactMatch = employeeRoleId === selectedRoleId;
 
     // Calculate benchmark for all employees
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
-      roleId,
+      selectedRoleId,
       employeeLevel,
       currentStates,
       toggledSkills,
@@ -66,7 +65,7 @@ export const sortEmployeesByRoleMatch = (
       employee: employee.name,
       employeeRole: employee.role,
       employeeRoleId,
-      targetRoleId: roleId,
+      targetRoleId: selectedRoleId,
       isExactMatch,
       benchmark,
       employeeLevel
@@ -79,8 +78,8 @@ export const sortEmployeesByRoleMatch = (
 
     if (isExactMatch) {
       exactMatches.push(employeeWithBenchmark);
-    } else if (benchmark > 0) {
-      // Only add to partial matches if they have matching skills (benchmark > 0)
+    } else if (benchmark > 70) {
+      // Only add to partial matches if they have matching skills (benchmark > 70%)
       partialMatches.push(employeeWithBenchmark);
       console.log('Added to partial matches:', {
         employee: employee.name,
