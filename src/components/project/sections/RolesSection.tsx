@@ -1,8 +1,8 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { X, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { X, Plus } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 interface RolesSectionProps {
   searchTerm: string;
@@ -40,11 +40,11 @@ export const RolesSection = ({
       </div>
 
       <div className="relative">
-        <Input 
-          className="pl-4 border-border focus:border-primary-accent focus:ring-1 focus:ring-primary-accent bg-[#F7F9FF]"
-          placeholder="Search roles..."
+        <Input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-4 border-border focus:border-primary-accent focus:ring-1 focus:ring-primary-accent bg-[#F7F9FF]"
+          placeholder="Search roles..."
         />
       </div>
 
@@ -53,14 +53,14 @@ export const RolesSection = ({
           <h3 className="text-sm font-medium text-primary">Selected Roles</h3>
           <div className="flex flex-wrap gap-2">
             {selectedRoles.map((role) => (
-              <Badge 
+              <Badge
                 key={role}
                 variant="outline"
                 className="bg-[#F7F9FF] text-primary border-[#E5E7EB] hover:bg-[#F7F9FF]/80 flex items-center gap-1.5 px-3 py-1.5 h-8 text-sm rounded-md"
               >
                 {role}
-                <X 
-                  className="h-3.5 w-3.5 cursor-pointer hover:text-primary-accent" 
+                <X
+                  className="h-3.5 w-3.5 cursor-pointer hover:text-primary-accent"
                   onClick={() => onRoleRemove(role)}
                 />
               </Badge>
@@ -73,7 +73,7 @@ export const RolesSection = ({
         <h3 className="text-sm font-medium text-primary">Matching Roles</h3>
         <div className="flex flex-wrap gap-2">
           {matchingRoles.map((role) => (
-            <Button 
+            <Button
               key={role}
               variant="outline"
               className="bg-[#F7F9FF] hover:bg-[#F7F9FF]/80 text-primary border-[#E5E7EB] flex items-center gap-1.5 px-3 py-1.5 h-8 font-normal text-sm rounded-md"
@@ -85,6 +85,7 @@ export const RolesSection = ({
           ))}
         </div>
       </div>
+      <Separator className="my-6 bg-[#CCDBFF]" />
     </div>
   );
 };
