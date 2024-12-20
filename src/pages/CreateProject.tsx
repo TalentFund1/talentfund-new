@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Sidebar } from "@/components/Sidebar";
 import { ProjectHeader } from "@/components/project/ProjectHeader";
 import { DescriptionSection } from "@/components/project/sections/DescriptionSection";
 import { RolesSection } from "@/components/project/sections/RolesSection";
+import { MatchesSection } from "@/components/project/sections/MatchesSection";
+import { LearningSection } from "@/components/project/sections/LearningSection";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
 
 const CreateProject = () => {
   const [formData, setFormData] = useState({
@@ -128,17 +125,17 @@ const CreateProject = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 p-6 ml-16">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="flex-1 p-8 ml-16">
+        <div className="max-w-5xl mx-auto space-y-8">
           <ProjectHeader />
           
-          <Card className="p-6 space-y-8 border-border shadow-sm hover:shadow-md transition-shadow">
+          <Card className="p-8 space-y-8 border-border bg-white shadow-sm hover:shadow-md transition-shadow">
             <DescriptionSection 
               description={formData.description}
               onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
             />
 
-            <Separator className="my-6" />
+            <Separator className="my-8" />
 
             <RolesSection 
               searchTerm={searchQuery}
@@ -150,163 +147,16 @@ const CreateProject = () => {
 
             {formData.selectedRoles.length > 0 && (
               <>
-                <Separator className="my-6" />
+                <Separator className="my-8" />
                 
-                <div className="space-y-4">
-                  <h2 className="text-lg font-medium text-primary">3. Add Project Skills for each Role</h2>
-                  <p className="text-sm text-primary/60">Define the required skills for each role in your project.</p>
-                  
-                  {formData.selectedRoles.map((role) => (
-                    <div key={role} className="space-y-4 p-4 rounded-lg border border-border bg-background/40">
-                      <h3 className="text-md font-medium text-primary">{role}</h3>
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap gap-2">
-                          {(formData.roleSkills[role] || []).map((skill) => (
-                            <Badge 
-                              key={skill}
-                              variant="secondary"
-                              className="bg-primary-accent/10 text-primary border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1"
-                            >
-                              {skill}
-                              <X 
-                                className="h-3 w-3 cursor-pointer hover:text-primary-accent"
-                                onClick={() => {
-                                  setFormData(prev => ({
-                                    ...prev,
-                                    roleSkills: {
-                                      ...prev.roleSkills,
-                                      [role]: prev.roleSkills[role].filter(s => s !== skill)
-                                    }
-                                  }));
-                                }}
-                              />
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+                <MatchesSection 
+                  selectedEmployees={formData.selectedEmployees}
+                  onEmployeeSelect={handleEmployeeSelect}
+                />
 
-            {Object.keys(formData.roleSkills).length > 0 && (
-              <>
-                <Separator className="my-6" />
+                <Separator className="my-8" />
                 
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h2 className="text-lg font-medium text-primary">4. Review your Matches</h2>
-                      <p className="text-sm text-primary/60">Find the perfect team members for your project.</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        className="border-primary-accent text-primary-accent hover:bg-primary-accent/10"
-                      >
-                        Generate L&D Plan
-                      </Button>
-                      <Button 
-                        variant="outline"
-                        className="border-primary-accent text-primary-accent hover:bg-primary-accent/10"
-                      >
-                        Search Talent Pool
-                      </Button>
-                    </div>
-                  </div>
-
-                  <ScrollArea className="h-[300px] rounded-lg border border-border">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="bg-background/40">
-                          <TableHead className="w-[30px]"></TableHead>
-                          <TableHead>Employee Name</TableHead>
-                          <TableHead>Current Role</TableHead>
-                          <TableHead>Department</TableHead>
-                          <TableHead>Skill Count</TableHead>
-                          <TableHead>Skill Match</TableHead>
-                          <TableHead>Adjacent Skills</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow className="hover:bg-muted/50">
-                          <TableCell>
-                            <input 
-                              type="checkbox" 
-                              checked={formData.selectedEmployees.includes('Victor Smith')}
-                              onChange={() => handleEmployeeSelect('Victor Smith')}
-                              className="rounded border-gray-300"
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">Victor Smith</TableCell>
-                          <TableCell>AI Engineer: P4</TableCell>
-                          <TableCell>Engineering</TableCell>
-                          <TableCell>1/1</TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className="bg-primary-accent/10 text-primary border-primary-accent/20">
-                              Swift
-                            </Badge>
-                          </TableCell>
-                          <TableCell></TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </ScrollArea>
-                </div>
-
-                <Separator className="my-6" />
-
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-lg font-medium text-primary">5. L&D Recommendations</h2>
-                    <p className="text-sm text-primary/60">Learning and development plan for skill transition.</p>
-                  </div>
-
-                  <div className="space-y-6 p-6 rounded-lg border border-border bg-background/40">
-                    <h3 className="font-medium text-primary">Timeline with Learning Resources:</h3>
-                    
-                    {mockLearningPlan.timeline.map((phase, index) => (
-                      <div key={index} className="space-y-4">
-                        <h4 className="font-medium text-primary">
-                          {index + 1}. {phase.level} ({phase.duration}):
-                        </h4>
-                        <div className="ml-4 space-y-2">
-                          <p className="text-sm text-primary/80">
-                            <span className="font-medium">Focus:</span> {phase.focus}
-                          </p>
-                          <div className="space-y-1">
-                            <p className="text-sm font-medium text-primary/80">Recommendations:</p>
-                            <ul className="ml-4 space-y-2">
-                              {phase.recommendations.map((rec, recIndex) => (
-                                <li key={recIndex} className="text-sm text-primary/70">
-                                  • <span className="font-medium">{rec.title}:</span> {rec.description}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                    <div className="space-y-4 mt-8">
-                      <h3 className="font-medium text-primary">Key Recommendations for Transition:</h3>
-                      <ul className="space-y-3">
-                        {mockLearningPlan.keyRecommendations.map((rec, index) => (
-                          <li key={index} className="text-sm text-primary/70">
-                            • <span className="font-medium">{rec.title}:</span> {rec.description}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="mt-6 p-4 rounded-lg bg-primary-accent/5 border border-primary-accent/20">
-                      <p className="text-sm text-primary/80">
-                        <span className="font-medium">Outcome:</span> {mockLearningPlan.outcome}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <LearningSection learningPlan={mockLearningPlan} />
               </>
             )}
           </Card>
