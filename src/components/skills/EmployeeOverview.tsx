@@ -8,6 +8,7 @@ import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { ToggledSkillsProvider } from "./context/ToggledSkillsContext";
 import { TrackProvider } from "./context/TrackContext";
 import { EmployeeList } from "./overview/EmployeeList";
+import { getSkillProfileId } from "../EmployeeTable";
 
 const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();
@@ -18,7 +19,20 @@ const EmployeeOverviewContent = () => {
 
   // Get exact role matches (same role ID)
   const exactMatchEmployees = employees
-    .filter(emp => emp.id === roleId)
+    .filter(emp => {
+      const employeeRoleId = getSkillProfileId(emp.role);
+      const isMatch = employeeRoleId === roleId;
+      
+      console.log('Checking exact role match:', {
+        employee: emp.name,
+        employeeRole: emp.role,
+        employeeRoleId,
+        targetRoleId: roleId,
+        isMatch
+      });
+      
+      return isMatch;
+    })
     .map(emp => ({
       ...emp,
       benchmark: calculateBenchmarkPercentage(
@@ -45,7 +59,8 @@ const EmployeeOverviewContent = () => {
   // Get partial matches (different roles but high skill match)
   const partialMatchEmployees = employees
     .filter(emp => {
-      if (emp.id === roleId) return false;
+      const employeeRoleId = getSkillProfileId(emp.role);
+      if (employeeRoleId === roleId) return false;
 
       const benchmark = calculateBenchmarkPercentage(
         emp.id,
