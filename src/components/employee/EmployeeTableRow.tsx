@@ -95,7 +95,7 @@ export const EmployeeTableRow = ({
     );
 
     return (
-      <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
+      <div className="flex flex-wrap gap-2 min-w-[300px]">
         {skillsToShow.map(skillName => {
           const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skillName);
           if (!employeeSkill) return null;
@@ -122,7 +122,7 @@ export const EmployeeTableRow = ({
     ).slice(0, 3); // Show only first 3 adjacent skills
 
     return (
-      <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
+      <div className="flex flex-wrap gap-2 min-w-[300px]">
         {adjacentSkills.map(skill => (
           <SkillBubble
             key={skill.title}
@@ -134,16 +134,6 @@ export const EmployeeTableRow = ({
       </div>
     );
   };
-
-  console.log('Employee Row Rendering:', {
-    employee: employee.name,
-    targetRoleId,
-    employeeLevel,
-    benchmark,
-    skillMatch: getSkillMatch(),
-    isExactMatch,
-    isSkillsFiltering: selectedSkills.length > 0
-  });
 
   return (
     <tr className={`group border-t border-border hover:bg-muted/50 transition-colors w-full ${
@@ -207,15 +197,11 @@ export const EmployeeTableRow = ({
       )}
       {selectedSkills.length > 0 && (
         <>
-          <td className="px-6 py-4 w-[450px]">
-            <div className="flex flex-wrap gap-2">
-              {renderSkills()}
-            </div>
+          <td className="px-6 py-4 w-[450px] text-left">
+            {renderSkills()}
           </td>
-          <td className="px-6 py-4 w-[450px]">
-            <div className="flex flex-wrap gap-2">
-              {renderAdjacentSkills()}
-            </div>
+          <td className="px-6 py-4 w-[450px] text-left">
+            {renderAdjacentSkills()}
           </td>
         </>
       )}
