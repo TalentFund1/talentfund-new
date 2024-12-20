@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Sidebar } from "@/components/Sidebar";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Search, X } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState } from "react"
+import { Card } from "@/components/ui/card"
+import { Sidebar } from "@/components/Sidebar"
+import { ProjectHeader } from "@/components/project/ProjectHeader"
+import { DescriptionSection } from "@/components/project/sections/DescriptionSection"
+import { RolesSection } from "@/components/project/sections/RolesSection"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 const CreateProject = () => {
   const [formData, setFormData] = useState({
@@ -20,26 +20,6 @@ const CreateProject = () => {
   
   console.log('Current form state:', formData);
 
-  const matchingRoles = [
-    "Project Manager",
-    "UX/UI Designer",
-    "Engineering Manager"
-  ];
-
-  const matchingSkills = [
-    "Swift",
-    "SwiftUI",
-    "Objective-C",
-    "MVC"
-  ];
-
-  const handleRemoveRole = (role: string) => {
-    setFormData(prev => ({
-      ...prev,
-      selectedRoles: prev.selectedRoles.filter(r => r !== role)
-    }));
-  };
-
   const handleAddRole = (role: string) => {
     if (!formData.selectedRoles.includes(role)) {
       setFormData(prev => ({
@@ -49,82 +29,33 @@ const CreateProject = () => {
     }
   };
 
+  const handleRemoveRole = (role: string) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedRoles: prev.selectedRoles.filter(r => r !== role)
+    }));
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 p-6 ml-16">
         <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-semibold text-foreground">Create a Project</h1>
-            <Button variant="outline">Save Project</Button>
-          </div>
+          <ProjectHeader />
+          
+          <Card className="p-6 space-y-6 border-border shadow-sm hover:shadow-md transition-shadow">
+            <DescriptionSection 
+              description={formData.description}
+              onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
+            />
 
-          <Card className="p-6 space-y-8">
-            {/* Project Description Section */}
-            <div className="space-y-4">
-              <h2 className="text-lg font-medium">1. Describe what you're looking for in a sentence or two.</h2>
-              <textarea 
-                className="w-full min-h-[100px] p-3 rounded-md border border-input bg-background"
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Enter project description..."
-              />
-            </div>
-
-            <Separator />
-
-            {/* Project Roles Section */}
-            <div className="space-y-4">
-              <h2 className="text-lg font-medium">2. Add Project Roles</h2>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  className="pl-10"
-                  placeholder="Search roles..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-
-              {formData.selectedRoles.length > 0 && (
-                <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Selected Roles</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {formData.selectedRoles.map((role) => (
-                      <Badge 
-                        key={role}
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        {role}
-                        <X 
-                          className="h-3 w-3 cursor-pointer" 
-                          onClick={() => handleRemoveRole(role)}
-                        />
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium">Matching Roles</h3>
-                <div className="flex flex-wrap gap-2">
-                  {matchingRoles.map((role) => (
-                    <Badge 
-                      key={role}
-                      variant="outline"
-                      className="cursor-pointer hover:bg-accent"
-                      onClick={() => handleAddRole(role)}
-                    >
-                      {role}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <Separator />
+            <RolesSection 
+              selectedRoles={formData.selectedRoles}
+              onRoleAdd={handleAddRole}
+              onRoleRemove={handleRemoveRole}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
 
             {/* Skills Section - Only shown if roles are selected */}
             {formData.selectedRoles.length > 0 && (
@@ -183,8 +114,6 @@ const CreateProject = () => {
               </div>
             )}
 
-            <Separator />
-
             {/* Matches Section - Only shown if skills are selected */}
             {Object.keys(formData.roleSkills).length > 0 && (
               <div className="space-y-4">
@@ -238,8 +167,6 @@ const CreateProject = () => {
                 </ScrollArea>
               </div>
             )}
-
-            <Separator />
 
             {/* L&D Recommendations Section - Only shown if matches are reviewed */}
             {Object.keys(formData.roleSkills).length > 0 && (
