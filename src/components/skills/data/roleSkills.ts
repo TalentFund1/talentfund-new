@@ -53,14 +53,19 @@ const getRoleSoc = (id: string): string => {
   return socCodes[id] || "";
 };
 
-// Export roleSkills object with initialization
-export const roleSkills: { [key: string]: RoleSkillData } = {
-  "123": getRoleSkills("123"),
-  "124": getRoleSkills("124"), 
-  "125": getRoleSkills("125"),
-  "126": getRoleSkills("126"),
-  "127": getRoleSkills("127")
-};
+// Initialize roleSkills object
+export const roleSkills: { [key: string]: RoleSkillData } = {};
+
+// Initialize all roles
+Object.keys({
+  "123": true,
+  "124": true,
+  "125": true,
+  "126": true,
+  "127": true
+}).forEach(id => {
+  roleSkills[id] = getRoleSkills(id);
+});
 
 // Helper function to save role skills
 export const saveRoleSkills = (roleId: string, skills: RoleSkillData) => {
