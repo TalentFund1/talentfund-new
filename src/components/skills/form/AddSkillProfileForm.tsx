@@ -13,7 +13,6 @@ interface FormData {
   mappedTitle: string;
   occupation: string;
   jobDescription: string;
-  skills: string;
   roleTrack: "Professional" | "Managerial";
   soc: string;
 }
@@ -28,7 +27,6 @@ export const AddSkillProfileForm = () => {
     mappedTitle: "",
     occupation: "",
     jobDescription: "",
-    skills: "",
     roleTrack: "Professional",
     soc: ""
   });
@@ -97,7 +95,6 @@ export const AddSkillProfileForm = () => {
       soc: formData.soc,
       roleTrack: formData.roleTrack,
       description: formData.jobDescription,
-      skills: formData.skills.split(',').map(skill => skill.trim()),
       lastUpdated: new Date().toLocaleDateString()
     };
 
