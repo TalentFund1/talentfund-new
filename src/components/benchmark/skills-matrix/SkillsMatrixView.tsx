@@ -1,7 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
-import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
@@ -51,25 +50,34 @@ export const SkillsMatrixView = ({
 
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
-      <SkillsMatrixHeader 
-        hasChanges={hasChanges}
-        onSave={handleSave}
-        onCancel={handleCancel}
-      />
+      <div className="flex justify-end space-x-2">
+        <Button 
+          variant="outline" 
+          onClick={handleCancel}
+          disabled={!hasChanges}
+        >
+          Cancel
+        </Button>
+        <Button 
+          onClick={handleSave}
+          disabled={!hasChanges}
+        >
+          Save Changes
+        </Button>
+      </div>
       
       <Separator className="my-4" />
 
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <SkillsMatrixFilters 
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+        />
         <AddSkillToProfileDialog />
       </div>
       
-      <SkillsMatrixFilters 
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-      />
-
       <SkillsMatrixTable 
         filteredSkills={filteredSkills.slice(0, visibleItems)}
         isRoleBenchmark={isRoleBenchmark}
