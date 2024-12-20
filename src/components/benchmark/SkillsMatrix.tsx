@@ -5,6 +5,7 @@ import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchConte
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { AddSkillToProfileDialog } from "../skills/dialog/AddSkillToProfileDialog";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -62,6 +63,11 @@ export const SkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold text-foreground">Employee Skills Matrix</h2>
+        <AddSkillToProfileDialog />
+      </div>
+      
       <SkillsMatrixView
         selectedLevel={selectedLevel}
         setSelectedLevel={setSelectedLevel}
