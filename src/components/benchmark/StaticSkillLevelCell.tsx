@@ -1,5 +1,5 @@
 import { TableCell } from "@/components/ui/table";
-import { Star, Shield, Target, CircleDashed, Check, Heart } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Check, X } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useEffect } from "react";
 
@@ -50,11 +50,11 @@ export const StaticSkillLevelCell = ({
       case 'required':
         return <Check className="w-3.5 h-3.5" />;
       case 'not-interested':
-        return <CircleDashed className="w-3.5 h-3.5" />;
+        return <X className="w-3.5 h-3.5" />;
       case 'unknown':
-        return <CircleDashed className="w-3.5 h-3.5" />;
+        return <X className="w-3.5 h-3.5" />;
       default:
-        return <Heart className="w-3.5 h-3.5" />;
+        return <Check className="w-3.5 h-3.5" />;
     }
   };
 
