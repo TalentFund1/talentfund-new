@@ -6,7 +6,6 @@ import { DescriptionSection } from "@/components/project/sections/DescriptionSec
 import { RolesSection } from "@/components/project/sections/RolesSection";
 import { MatchesSection } from "@/components/project/sections/MatchesSection";
 import { LearningSection } from "@/components/project/sections/LearningSection";
-import { Separator } from "@/components/ui/separator";
 
 const CreateProject = () => {
   const [formData, setFormData] = useState({
@@ -129,36 +128,32 @@ const CreateProject = () => {
         <div className="max-w-5xl mx-auto space-y-8">
           <ProjectHeader />
           
-          <Card className="p-8 space-y-8 border-border bg-white shadow-sm hover:shadow-md transition-shadow">
-            <DescriptionSection 
-              description={formData.description}
-              onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
-            />
+          <Card className="bg-white shadow-sm hover:shadow-md transition-shadow">
+            <div className="p-8 space-y-8">
+              <DescriptionSection 
+                description={formData.description}
+                onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
+              />
 
-            <Separator className="my-8" />
+              <RolesSection 
+                searchTerm={searchQuery}
+                setSearchTerm={setSearchQuery}
+                selectedRoles={formData.selectedRoles}
+                onRoleAdd={handleAddRole}
+                onRoleRemove={handleRemoveRole}
+              />
 
-            <RolesSection 
-              searchTerm={searchQuery}
-              setSearchTerm={setSearchQuery}
-              selectedRoles={formData.selectedRoles}
-              onRoleAdd={handleAddRole}
-              onRoleRemove={handleRemoveRole}
-            />
-
-            {formData.selectedRoles.length > 0 && (
-              <>
-                <Separator className="my-8" />
-                
-                <MatchesSection 
-                  selectedEmployees={formData.selectedEmployees}
-                  onEmployeeSelect={handleEmployeeSelect}
-                />
-
-                <Separator className="my-8" />
-                
-                <LearningSection learningPlan={mockLearningPlan} />
-              </>
-            )}
+              {formData.selectedRoles.length > 0 && (
+                <>
+                  <MatchesSection 
+                    selectedEmployees={formData.selectedEmployees}
+                    onEmployeeSelect={handleEmployeeSelect}
+                  />
+                  
+                  <LearningSection learningPlan={mockLearningPlan} />
+                </>
+              )}
+            </div>
           </Card>
         </div>
       </div>
