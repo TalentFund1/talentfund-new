@@ -112,8 +112,10 @@ const SkillProfileDetail = () => {
                     </TabsList>
 
                     <TabsContent value="skills">
-                      <SelectBenchmark />
-                      <SkillProfileMatrix />
+                      <ToggledSkillsProvider>
+                        <SelectBenchmark />
+                        <SkillProfileMatrix />
+                      </ToggledSkillsProvider>
                     </TabsContent>
 
                     <TabsContent value="graph">
