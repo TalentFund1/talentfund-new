@@ -11,6 +11,7 @@ import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { TrackProvider } from "./context/TrackContext";
+import { normalizeSkillTitle } from './utils/normalization';
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
@@ -59,17 +60,34 @@ const SkillProfileTableContent = ({
   };
 
   const rows: SkillProfileRow[] = Object.entries(roleSkills).map(([id, role]) => {
-    // Get all skills for the role
+    // Get all skills for the role and normalize their titles
     const allRoleSkills = [
       ...role.specialized,
       ...role.common,
       ...role.certifications
-    ];
+    ].map(skill => ({
+      ...skill,
+      normalizedTitle: normalizeSkillTitle(skill.title)
+    }));
     
-    // Filter to only get toggled skills
+    // Create a Set of normalized titles from toggledSkills
+    const normalizedToggledSkills = new Set(
+      Array.from(toggledSkills).map(skillTitle => normalizeSkillTitle(skillTitle))
+    );
+
+    // Count unique toggled skills by comparing normalized titles
     const toggledSkillsCount = allRoleSkills.filter(skill => 
-      toggledSkills.has(skill.title)
+      normalizedToggledSkills.has(skill.normalizedTitle)
     ).length;
+
+    console.log('Calculating toggled skills for role:', {
+      roleId: id,
+      roleTitle: role.title,
+      totalSkills: allRoleSkills.length,
+      toggledCount: toggledSkillsCount,
+      normalizedToggled: Array.from(normalizedToggledSkills),
+      roleSkills: allRoleSkills.map(s => s.normalizedTitle)
+    });
 
     // Get employee count for this role
     const employeeCount = getEmployeeCount(role.title);
