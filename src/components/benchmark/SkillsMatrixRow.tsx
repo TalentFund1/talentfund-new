@@ -1,6 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Check } from "lucide-react";
-import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
+import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillsMatrixRowProps {
@@ -41,7 +41,7 @@ export const SkillsMatrixRow = ({
           </div>
         </TableCell>
       )}
-      <StaticSkillLevelCell 
+      <SkillLevelCell 
         initialLevel={skill.level || 'unspecified'}
         skillTitle={skill.title}
       />
