@@ -54,7 +54,8 @@ const getRoleTitle = (id: string): string => {
     "124": "Backend Engineer",
     "125": "Frontend Engineer",
     "126": "Engineering Manager",
-    "127": "DevOps Engineer"
+    "127": "DevOps Engineer",
+    "128": "Product Manager"
   };
   return roleTitles[id] || "Unknown Role";
 };
@@ -65,7 +66,8 @@ const getRoleSoc = (id: string): string => {
     "124": "15-1252",
     "125": "15-1252",
     "126": "11-9041",
-    "127": "15-1244"
+    "127": "15-1244",
+    "128": "15-2031"
   };
   return socCodes[id] || "";
 };
@@ -79,7 +81,8 @@ Object.keys({
   "124": true,
   "125": true,
   "126": true,
-  "127": true
+  "127": true,
+  "128": true
 }).forEach(id => {
   roleSkills[id] = getRoleSkills(id);
 });
@@ -113,4 +116,17 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
     console.error('Error saving role skills:', error);
     throw error;
   }
+};
+
+// Helper function to load role skills
+export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
+  try {
+    const savedSkills = localStorage.getItem(`role-skills-${roleId}`);
+    if (savedSkills) {
+      return JSON.parse(savedSkills);
+    }
+  } catch (error) {
+    console.error('Error loading role skills:', error);
+  }
+  return null;
 };

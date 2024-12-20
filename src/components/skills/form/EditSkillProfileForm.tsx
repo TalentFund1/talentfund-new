@@ -51,8 +51,8 @@ export const EditSkillProfileForm = ({
 
   useEffect(() => {
     if (open) {
+      console.log('Loading current role data for editing:', initialData);
       const currentRole = roleSkills[initialData.id];
-      console.log('Loading current role data:', currentRole);
       
       setFormData({
         roleId: initialData.id,
@@ -79,21 +79,9 @@ export const EditSkillProfileForm = ({
     e.preventDefault();
     console.log('Form submission started - Form data:', formData);
 
-    const requiredFields: (keyof FormData)[] = ['roleId', 'function', 'mappedTitle', 'occupation', 'soc'];
-    const missingFields = requiredFields.filter(field => !formData[field]);
-    
-    if (missingFields.length > 0) {
-      console.log('Validation failed - Missing fields:', missingFields);
-      toast({
-        title: "Validation Error",
-        description: `Please fill in all required fields: ${missingFields.join(', ')}`,
-        variant: "destructive"
-      });
-      return;
-    }
-
     try {
       const existingRole = roleSkills[formData.roleId];
+      console.log('Existing role data:', existingRole);
       
       const updatedRole = {
         ...existingRole,
@@ -114,6 +102,9 @@ export const EditSkillProfileForm = ({
 
       // Save to localStorage and update global state
       await saveRoleSkills(formData.roleId, updatedRole);
+
+      // Update roleSkills object directly
+      roleSkills[formData.roleId] = updatedRole;
 
       toast({
         title: "Success",
