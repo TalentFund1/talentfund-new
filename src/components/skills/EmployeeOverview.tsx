@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
+import { getSkillProfileId } from "../EmployeeTable";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
@@ -8,7 +9,6 @@ import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { ToggledSkillsProvider } from "./context/ToggledSkillsContext";
 import { TrackProvider } from "./context/TrackContext";
 import { EmployeeList } from "./overview/EmployeeList";
-import { getSkillProfileId } from "../EmployeeTable";
 
 const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();
@@ -57,12 +57,20 @@ const EmployeeOverviewContent = () => {
   });
 
   // Get partial matches (different roles but high skill match)
-  // Exclude employees that have an exact role match
   const partialMatchEmployees = employees
     .filter(emp => {
       const employeeRoleId = getSkillProfileId(emp.role);
+      
       // Skip if this employee has an exact role match
-      if (employeeRoleId === roleId) return false;
+      if (employeeRoleId === roleId) {
+        console.log('Skipping partial match - exact match found:', {
+          employee: emp.name,
+          employeeRole: emp.role,
+          employeeRoleId,
+          targetRoleId: roleId
+        });
+        return false;
+      }
 
       const benchmark = calculateBenchmarkPercentage(
         emp.id,
