@@ -2,9 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
-import { AddSkillProfileForm } from "./form/AddSkillProfileForm";
 
 interface SkillProfileHeaderProps {
   jobTitle: string;
@@ -12,17 +11,10 @@ interface SkillProfileHeaderProps {
 
 export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const { id } = useParams<{ id: string }>();
   const currentRole = roleSkills[id as keyof typeof roleSkills];
   const occupation = currentRole ? `${currentRole.title} Specialist` : jobTitle;
   const soc = currentRole?.soc || "(11-9041)";
-
-  console.log('SkillProfileHeader - Rendering:', {
-    jobTitle,
-    currentRole: currentRole?.title,
-    isEditing
-  });
 
   const roleDescriptions: { [key: string]: string } = {
     "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
@@ -49,10 +41,7 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button 
-            className="bg-primary hover:bg-primary/90"
-            onClick={() => setIsEditing(true)}
-          >
+          <Button className="bg-primary hover:bg-primary/90">
             Edit
           </Button>
         </div>
@@ -101,14 +90,6 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
           </button>
         </div>
       </div>
-
-      {isEditing && (
-        <AddSkillProfileForm 
-          isEditing={true} 
-          roleId={id}
-          onClose={() => setIsEditing(false)}
-        />
-      )}
     </div>
   );
 };
