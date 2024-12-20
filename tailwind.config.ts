@@ -19,8 +19,8 @@ export default {
     },
     extend: {
       colors: {
-        border: "#CCDBFF",
-        input: "#CCDBFF",
+        border: "#e5e7eb",
+        input: "#e5e7eb",
         ring: "#8073ec",
         background: "#F7F9FF",
         foreground: "#1F2144",
