@@ -180,10 +180,10 @@ export const EmployeeTableRow = ({
           </div>
         </div>
       </td>
-      <td className={`px-6 py-4 ${selectedSkills.length > 0 ? 'w-[600px]' : 'w-[350px]'}`}>
+      <td className={`px-6 py-4 ${selectedSkills.length > 0 ? 'w-[800px]' : 'w-[350px]'}`}>
         <Link 
           to={`/skills/${getSkillProfileId(employee.role)}`} 
-          className="text-sm text-primary hover:text-primary-accent transition-colors"
+          className="text-sm text-primary hover:text-primary-accent transition-colors whitespace-nowrap"
         >
           {employee.role}
         </Link>
