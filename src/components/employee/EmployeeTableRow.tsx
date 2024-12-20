@@ -55,7 +55,7 @@ export const EmployeeTableRow = ({
     const employeeSkills = getEmployeeSkills(employee.id);
     const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
     
-    if (!roleData) return "0 / 0";
+    if (!roleData) return "0/0";
 
     const allRoleSkills = [
       ...roleData.specialized,
@@ -67,7 +67,7 @@ export const EmployeeTableRow = ({
       employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
     );
 
-    return `${matchingSkills.length} / ${allRoleSkills.length}`;
+    return `${matchingSkills.length}/${allRoleSkills.length}`;
   };
 
   const isExactMatch = selectedJobTitle.length > 0 && 
