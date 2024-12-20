@@ -26,13 +26,15 @@ interface BasicProfileFieldsProps {
     roleTrack: "Professional" | "Managerial";
   };
   handleInputChange: (field: string, value: string) => void;
-  roleSkills: any; // Using any here as the roleSkills type is complex
+  roleSkills: any;
+  isEditing?: boolean;
 }
 
 export const BasicProfileFields = ({
   formData,
   handleInputChange,
-  roleSkills
+  roleSkills,
+  isEditing = false
 }: BasicProfileFieldsProps) => {
   const isNewRole = !roleSkills[formData.roleId];
 
@@ -44,10 +46,12 @@ export const BasicProfileFields = ({
           placeholder="e.g., 128"
           value={formData.roleId}
           onChange={(e) => handleInputChange('roleId', e.target.value)}
+          readOnly={isEditing}
+          className={isEditing ? "bg-gray-100" : ""}
         />
       </div>
 
-      {isNewRole && (
+      {(isNewRole || isEditing) && (
         <div className="space-y-2">
           <label className="text-sm font-medium">Role Title</label>
           <Input 
