@@ -9,7 +9,7 @@ export const employees = [
   {
     id: "123",
     name: "Ronald Dahl",
-    role: "AI Engineer: P4",
+    role: "AI Engineer: P4",  // Updated from "AI Engineers: P4" to "AI Engineer: P4"
     department: "Engineering",
     skillCount: 0,
     benchmark: 0,

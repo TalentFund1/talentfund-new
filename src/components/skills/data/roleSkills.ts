@@ -50,7 +50,7 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
 
 const getRoleTitle = (id: string): string => {
   const roleTitles: { [key: string]: string } = {
-    "123": "AI Engineer",
+    "123": "AI Engineer",  // Updated from "AI Engineers" to "AI Engineer"
     "124": "Backend Engineer",
     "125": "Frontend Engineer",
     "126": "Engineering Manager",
