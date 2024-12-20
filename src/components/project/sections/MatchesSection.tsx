@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Heart } from "lucide-react";
@@ -23,16 +22,13 @@ const SkillBadge = ({ name, level }: { name: string; level: string }) => {
   };
 
   return (
-    <Badge 
-      variant="outline" 
-      className="bg-[#F7F9FF] text-primary border-[#E5E7EB] hover:bg-[#F7F9FF]/80 flex items-center gap-1.5 px-3 py-1.5 h-8 text-sm rounded-md"
-    >
-      {name}
+    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#F7F9FF] rounded-lg border border-[#E5E7EB] text-sm text-primary">
+      <span>{name}</span>
       <div className="flex items-center gap-1.5">
         <div className={`h-2 w-2 rounded-full ${getLevelColor(level)}`} />
-        <Heart className="w-3 h-3 text-[#1f2144]" />
+        <Heart className="w-3.5 h-3.5 text-[#1f2144]" />
       </div>
-    </Badge>
+    </div>
   );
 };
 
@@ -62,51 +58,59 @@ export const MatchesSection = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-lg font-medium text-primary">4. Review your Matches</h2>
-          <p className="text-sm text-primary/60">Find the perfect team members for your project.</p>
-        </div>
+      <div>
+        <h2 className="text-lg font-medium text-primary">4. Review your Matches</h2>
+        <p className="text-sm text-primary/60 mt-1">Find the perfect team members for your project.</p>
       </div>
 
-      <ScrollArea className="h-[300px] rounded-lg border border-border bg-white">
+      <ScrollArea className="rounded-lg border border-[#E5E7EB] bg-white">
         <Table>
           <TableHeader>
-            <TableRow className="bg-background/40">
-              <TableHead className="w-[400px]">Employee Name</TableHead>
-              <TableHead className="w-[350px]">Current Role</TableHead>
-              <TableHead className="w-[120px] text-center">Skill Match</TableHead>
-              <TableHead className="w-[350px]">Skills</TableHead>
-              <TableHead className="w-[350px]">Adjacent Skills</TableHead>
+            <TableRow className="hover:bg-transparent border-b border-[#E5E7EB]">
+              <TableHead className="w-[250px] py-4 text-sm font-medium text-muted-foreground">
+                Employee Name
+              </TableHead>
+              <TableHead className="w-[200px] py-4 text-sm font-medium text-muted-foreground">
+                Current Role
+              </TableHead>
+              <TableHead className="w-[100px] text-center py-4 text-sm font-medium text-muted-foreground">
+                Skill Match
+              </TableHead>
+              <TableHead className="w-[400px] py-4 text-sm font-medium text-muted-foreground">
+                Skills
+              </TableHead>
+              <TableHead className="w-[400px] py-4 text-sm font-medium text-muted-foreground">
+                Adjacent Skills
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {matchedEmployees.map((employee) => (
               <TableRow key={employee.id} className="group hover:bg-muted/50">
-                <TableCell>
-                  <div className="flex items-center gap-2">
+                <TableCell className="py-4">
+                  <div className="flex items-center gap-3">
                     <img 
-                      src={`https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=24&h=24`}
+                      src={`https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=32&h=32`}
                       alt={employee.name}
-                      className="w-6 h-6 rounded-full object-cover"
+                      className="w-8 h-8 rounded-full object-cover"
                     />
-                    <span className="text-primary hover:text-primary-accent transition-colors text-sm">
+                    <span className="text-primary hover:text-primary-accent transition-colors text-sm font-medium">
                       {employee.name}
                     </span>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="py-4">
                   <span className="text-sm text-primary hover:text-primary-accent transition-colors">
                     {employee.role}
                   </span>
                 </TableCell>
-                <TableCell className="text-center">
+                <TableCell className="text-center py-4">
                   <span className="text-sm text-muted-foreground font-medium">
                     {employee.skillMatch}
                   </span>
                 </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-2 min-w-[250px]">
+                <TableCell className="py-4">
+                  <div className="flex flex-wrap gap-2">
                     {employee.skills.map((skill) => (
                       <SkillBadge 
                         key={skill.name} 
@@ -116,8 +120,8 @@ export const MatchesSection = ({
                     ))}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-2 min-w-[250px]">
+                <TableCell className="py-4">
+                  <div className="flex flex-wrap gap-2">
                     {employee.adjacentSkills.map((skill) => (
                       <SkillBadge 
                         key={skill.name} 
