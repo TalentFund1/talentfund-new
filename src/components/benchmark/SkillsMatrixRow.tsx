@@ -36,11 +36,11 @@ export const SkillsMatrixRow = ({
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
       {isRoleBenchmark ? (
         <>
-          <StaticSkillLevelCell 
+          <RoleSkillLevelCell 
             initialLevel={skill.level || 'unspecified'}
             skillTitle={skill.title}
           />
-          <RoleSkillLevelCell 
+          <StaticSkillLevelCell 
             initialLevel={skill.level || 'unspecified'}
             skillTitle={skill.title}
           />
