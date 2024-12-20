@@ -11,10 +11,10 @@ interface SkillProfileHeaderProps {
 }
 
 export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
+  const { id } = useParams<{ id: string }>();
   const [isExpanded, setIsExpanded] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [currentRole, setCurrentRole] = useState(roleSkills[id as keyof typeof roleSkills]);
-  const { id } = useParams<{ id: string }>();
   
   // Listen for role updates
   useEffect(() => {
