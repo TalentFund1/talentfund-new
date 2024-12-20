@@ -11,17 +11,22 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
     return JSON.parse(savedSkills);
   }
   
-  // Initialize with empty arrays if no saved skills exist
+  // Initialize with default values if no saved skills exist
   const defaultRole: RoleSkillData = {
     title: getRoleTitle(roleId),
     soc: getRoleSoc(roleId),
+    function: "Engineering",
+    mappedTitle: "",
+    occupation: getRoleTitle(roleId),
+    description: "",
+    roleTrack: "Professional",
     specialized: [],
     common: [],
     certifications: [],
     skills: []
   };
 
-  console.log('Initializing empty role data:', {
+  console.log('Initializing default role data:', {
     roleId,
     title: defaultRole.title
   });
@@ -73,14 +78,3 @@ export const saveRoleSkills = (roleId: string, skills: RoleSkillData) => {
   localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(skills));
   roleSkills[roleId] = skills;
 };
-
-console.log('Role skills initialized:', Object.keys(roleSkills).map(id => ({
-  roleId: id,
-  title: roleSkills[id].title,
-  skillCount: {
-    total: roleSkills[id].skills.length,
-    specialized: roleSkills[id].specialized.length,
-    common: roleSkills[id].common.length,
-    certifications: roleSkills[id].certifications.length
-  }
-})));

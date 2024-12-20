@@ -36,10 +36,15 @@ export interface UnifiedSkill extends Skill {
 export interface RoleSkillData {
   title: string;
   soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+  roleTrack?: "Professional" | "Managerial";
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
-  skills: UnifiedSkill[]; // Keep for backward compatibility
+  skills: UnifiedSkill[];
 }
 
 export interface SimpleSkill {

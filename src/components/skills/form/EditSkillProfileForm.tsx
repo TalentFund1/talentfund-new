@@ -81,25 +81,33 @@ export const EditSkillProfileForm = ({
       // Get existing role data to preserve skills arrays
       const existingRole = roleSkills[formData.roleId as keyof typeof roleSkills];
       
-      // Create updated role data
+      // Create updated role data with all fields
       const updatedRole = {
         title: formData.roleTitle || formData.occupation,
         soc: formData.soc,
+        function: formData.function,
+        mappedTitle: formData.mappedTitle,
+        occupation: formData.occupation,
+        description: formData.jobDescription,
+        roleTrack: formData.roleTrack,
         specialized: existingRole?.specialized || [],
         common: existingRole?.common || [],
         certifications: existingRole?.certifications || [],
-        skills: existingRole?.skills || [] // Preserve existing skills array
+        skills: existingRole?.skills || []
       };
 
       // Save the updated role data
       saveRoleSkills(formData.roleId, updatedRole);
 
-      console.log('Profile updated and persisted successfully');
+      console.log('Profile updated and persisted successfully:', updatedRole);
       toast({
         title: "Success",
         description: "Skill profile updated successfully",
       });
       onOpenChange(false);
+
+      // Force a reload to reflect changes
+      window.location.reload();
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
