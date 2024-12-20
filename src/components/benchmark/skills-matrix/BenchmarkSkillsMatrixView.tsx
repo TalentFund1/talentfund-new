@@ -29,6 +29,13 @@ export const BenchmarkSkillsMatrixView = ({
 }: BenchmarkSkillsMatrixViewProps) => {
   const observerTarget = useRef<HTMLDivElement>(null);
 
+  console.log('BenchmarkSkillsMatrixView rendering with:', {
+    roleId,
+    employeeId,
+    roleLevel,
+    filteredSkillsCount: filteredSkills.length
+  });
+
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
       <BenchmarkSkillsMatrixContent 
@@ -38,6 +45,7 @@ export const BenchmarkSkillsMatrixView = ({
         filteredSkills={filteredSkills}
         {...props}
         observerTarget={observerTarget}
+        isRoleBenchmark={true}
       />
     </Card>
   );
