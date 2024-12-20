@@ -94,19 +94,15 @@ export const EmployeeTableRow = ({
 
     return (
       <div className="flex flex-wrap gap-2 min-w-[250px]">
-        {skillsToShow.map(skillName => {
-          const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skillName);
-          if (!employeeSkill) return null;
-          
-          return (
-            <SkillBubble
-              key={skillName}
-              skillName={skillName}
-              level={employeeSkill.level || 'unspecified'}
-              isRequired={false}
-            />
-          );
-        })}
+        {skillsToShow.map(skillName => (
+          <Badge 
+            key={skillName}
+            variant="outline" 
+            className="bg-primary-accent/10 text-primary border-primary-accent/20 hover:bg-primary-accent/15"
+          >
+            {skillName}
+          </Badge>
+        ))}
       </div>
     );
   };
@@ -122,12 +118,13 @@ export const EmployeeTableRow = ({
     return (
       <div className="flex flex-wrap gap-2 min-w-[250px]">
         {adjacentSkills.map(skill => (
-          <SkillBubble
+          <Badge 
             key={skill.title}
-            skillName={skill.title}
-            level={skill.level || 'unspecified'}
-            isRequired={false}
-          />
+            variant="outline" 
+            className="bg-primary-accent/10 text-primary border-primary-accent/20 hover:bg-primary-accent/15"
+          >
+            {skill.title}
+          </Badge>
         ))}
       </div>
     );
