@@ -93,7 +93,7 @@ export const EmployeeTableRow = ({
     );
 
     return (
-      <div className="flex flex-wrap gap-2 min-w-[300px]">
+      <div className="flex flex-wrap gap-2 min-w-[250px]">
         {skillsToShow.map(skillName => {
           const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skillName);
           if (!employeeSkill) return null;
@@ -120,7 +120,7 @@ export const EmployeeTableRow = ({
     ).slice(0, 3);
 
     return (
-      <div className="flex flex-wrap gap-2 min-w-[300px]">
+      <div className="flex flex-wrap gap-2 min-w-[250px]">
         {adjacentSkills.map(skill => (
           <SkillBubble
             key={skill.title}
@@ -145,7 +145,7 @@ export const EmployeeTableRow = ({
           onChange={() => onSelect(employee.name)}
         />
       </td>
-      <td className={`px-10 py-4 ${selectedSkills.length > 0 ? 'w-[800px]' : 'w-[400px]'}`}>
+      <td className={`px-10 py-4 ${selectedSkills.length > 0 ? 'w-[600px]' : 'w-[400px]'}`}>
         <div className="flex items-center gap-2">
           <img 
             src={imageUrl}
@@ -168,7 +168,7 @@ export const EmployeeTableRow = ({
           </div>
         </div>
       </td>
-      <td className={`px-6 py-4 ${selectedSkills.length > 0 ? 'w-[800px]' : 'w-[350px]'}`}>
+      <td className={`px-6 py-4 ${selectedSkills.length > 0 ? 'w-[600px]' : 'w-[350px]'}`}>
         <Link 
           to={`/skills/${getSkillProfileId(employee.role)}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors whitespace-nowrap"
@@ -195,10 +195,10 @@ export const EmployeeTableRow = ({
       )}
       {selectedSkills.length > 0 && (
         <>
-          <td className="px-6 py-4 w-[450px] text-left">
+          <td className="px-6 py-4 w-[350px] text-left">
             {renderSkills()}
           </td>
-          <td className="px-6 py-4 w-[450px] text-left">
+          <td className="px-6 py-4 w-[350px] text-left">
             {renderAdjacentSkills()}
           </td>
         </>

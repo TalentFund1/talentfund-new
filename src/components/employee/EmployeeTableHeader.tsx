@@ -23,10 +23,10 @@ export const EmployeeTableHeader = ({
         />
       </th>
       <th className={`h-12 px-10 text-left text-sm font-medium text-muted-foreground whitespace-nowrap ${
-        hasSelectedSkills ? 'w-[800px]' : 'w-[400px]'
+        hasSelectedSkills ? 'w-[600px]' : 'w-[400px]'
       }`}>Employee Name</th>
       <th className={`h-12 px-6 text-left text-sm font-medium text-muted-foreground ${
-        hasSelectedSkills ? 'w-[800px]' : 'w-[350px]'
+        hasSelectedSkills ? 'w-[600px]' : 'w-[350px]'
       }`}>Current Role</th>
       {!hasSelectedSkills && (
         <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[150px]">Department</th>
@@ -37,8 +37,8 @@ export const EmployeeTableHeader = ({
       )}
       {hasSelectedSkills && (
         <>
-          <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[450px]">Skills</th>
-          <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[450px]">Adjacent Skills</th>
+          <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[350px]">Skills</th>
+          <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[350px]">Adjacent Skills</th>
         </>
       )}
       {!hasSelectedSkills && (
