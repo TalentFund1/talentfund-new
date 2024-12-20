@@ -4,7 +4,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { getEmployeeSkills } from "./skills-matrix/SkillsMatrixState";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,7 +25,7 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get employee skills directly without role comparison
+  // Get employee skills directly
   const employeeSkills = getEmployeeSkills(id || "");
 
   // Apply filtering and sorting
