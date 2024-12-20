@@ -7,7 +7,7 @@ export const ProjectHeader = () => {
         <h1 className="text-2xl font-semibold text-primary">Create a Project</h1>
         <p className="text-sm text-primary/60">Define your project requirements and find the perfect team match.</p>
       </div>
-      <Button className="bg-primary-accent hover:bg-primary-accent/90 text-white">
+      <Button variant="outline" className="border-primary-accent text-primary-accent hover:bg-primary-accent/10">
         Save Project
       </Button>
     </div>
