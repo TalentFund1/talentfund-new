@@ -29,41 +29,34 @@ interface EmployeeTableProps {
 }
 
 export const getSkillProfileId = (role?: string) => {
+  // Validate role ID format first
+  const validProfileIds = Object.keys(roleSkills);
+  if (validProfileIds.includes(role || '')) {
+    console.log('Using direct role ID:', role);
+    return role;
+  }
+
+  // Map role titles to IDs using roleSkills
+  const roleMap = Object.entries(roleSkills).reduce((acc, [id, data]) => {
+    acc[data.title] = id;
+    return acc;
+  }, {} as { [key: string]: string });
+  
   if (!role) {
     console.warn('No role provided to getSkillProfileId');
     return '';
   }
 
-  // First get the base role without level
-  const baseRole = getBaseRole(role);
-  console.log('Getting skill profile ID for role:', {
+  const baseRole = role.split(":")[0].trim();
+  const mappedId = roleMap[baseRole];
+  
+  console.log('Role mapping:', { 
     originalRole: role,
-    baseRole
+    baseRole,
+    mappedId
   });
-
-  // Check if the base role matches any role titles in roleSkills
-  const roleEntry = Object.entries(roleSkills).find(([_, data]) => 
-    data.title === baseRole
-  );
-
-  if (roleEntry) {
-    const [id] = roleEntry;
-    console.log('Found matching role ID:', {
-      baseRole,
-      id,
-      matchedTitle: roleSkills[id as keyof typeof roleSkills].title
-    });
-    return id;
-  }
-
-  // If no match found by title, check if the role is a valid ID
-  if (Object.keys(roleSkills).includes(role)) {
-    console.log('Using direct role ID:', role);
-    return role;
-  }
-
-  console.warn('No matching role ID found for:', role);
-  return '';
+  
+  return mappedId || '';
 };
 
 export const getBaseRole = (role?: string) => {
