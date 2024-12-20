@@ -78,13 +78,17 @@ export const EditSkillProfileForm = ({
     }
 
     try {
-      // Update existing role profile
+      // Get existing role data to preserve skills arrays
+      const existingRole = roleSkills[formData.roleId as keyof typeof roleSkills];
+      
+      // Update existing role profile while preserving skills arrays
       roleSkills[formData.roleId as keyof typeof roleSkills] = {
         title: formData.roleTitle || formData.occupation,
         soc: formData.soc,
-        specialized: roleSkills[formData.roleId as keyof typeof roleSkills]?.specialized || [],
-        common: roleSkills[formData.roleId as keyof typeof roleSkills]?.common || [],
-        certifications: roleSkills[formData.roleId as keyof typeof roleSkills]?.certifications || []
+        specialized: existingRole?.specialized || [],
+        common: existingRole?.common || [],
+        certifications: existingRole?.certifications || [],
+        skills: existingRole?.skills || [] // Preserve existing skills array
       };
 
       console.log('Profile updated successfully');
