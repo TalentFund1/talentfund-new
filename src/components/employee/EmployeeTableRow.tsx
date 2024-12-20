@@ -166,7 +166,9 @@ export const EmployeeTableRow = ({
           {employee.role}
         </Link>
       </td>
-      <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
+      {selectedSkills.length === 0 && (
+        <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
+      )}
       <td className="px-4 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
           {getSkillMatch()}
