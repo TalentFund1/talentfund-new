@@ -23,15 +23,16 @@ export const AddSkillToProfileDialog = () => {
   const { setSkillState, setSkillProgression } = useCompetencyStore();
   const { getTrackForRole } = useTrack();
 
-  const allSkills = Array.from(new Set([
-    ...Skills.specialized.map(s => normalizeSkillTitle(s.title)),
-    ...Skills.common.map(s => normalizeSkillTitle(s.title)),
-    ...Skills.certification.map(s => normalizeSkillTitle(s.title))
-  ]));
+  // Get all available skills from the universal database
+  const universalSkills = getAllSkills();
+  const allSkills = Array.from(new Set(
+    universalSkills.map(s => normalizeSkillTitle(s.title))
+  ));
 
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
-    sampleSkills: allSkills.slice(0, 5)
+    sampleSkills: allSkills.slice(0, 5),
+    roleId: id
   });
 
   const handleAddSkills = () => {
@@ -96,7 +97,7 @@ export const AddSkillToProfileDialog = () => {
           setSkillProgression(skillTitle, progression, id);
         }
       } else {
-        console.log('Skill not found:', skillTitle);
+        console.warn('Skill not found in universal database:', skillTitle);
       }
     });
 
