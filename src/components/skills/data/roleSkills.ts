@@ -85,11 +85,21 @@ Object.keys({
 });
 
 // Helper function to save role skills
-export const saveRoleSkills = (roleId: string, skills: RoleSkillData) => {
+export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
   console.log('Saving role skills:', { roleId, skills });
-  localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(skills));
-  roleSkills[roleId] = skills;
   
-  // Dispatch a storage event to trigger re-renders
-  window.dispatchEvent(new Event('storage'));
+  try {
+    localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(skills));
+    roleSkills[roleId] = skills;
+    
+    // Dispatch custom event for components to update
+    window.dispatchEvent(new CustomEvent('roleSkillsUpdated', { 
+      detail: { roleId } 
+    }));
+    
+    return true;
+  } catch (error) {
+    console.error('Error saving role skills:', error);
+    throw error;
+  }
 };

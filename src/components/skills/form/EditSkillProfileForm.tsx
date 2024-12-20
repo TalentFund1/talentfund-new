@@ -50,20 +50,22 @@ export const EditSkillProfileForm = ({
   });
 
   useEffect(() => {
-    const currentRole = roleSkills[initialData.id];
-    console.log('Loading current role data:', currentRole);
-    
-    setFormData({
-      roleId: initialData.id,
-      roleTitle: currentRole?.title || initialData.title,
-      function: currentRole?.function || initialData.function || "Engineering",
-      mappedTitle: currentRole?.mappedTitle || initialData.mappedTitle || "",
-      occupation: currentRole?.occupation || initialData.occupation || "",
-      jobDescription: currentRole?.description || initialData.description || "",
-      roleTrack: currentRole?.roleTrack || initialData.roleTrack || "Professional",
-      soc: currentRole?.soc || initialData.soc || ""
-    });
-  }, [initialData]);
+    if (open) {
+      const currentRole = roleSkills[initialData.id];
+      console.log('Loading current role data:', currentRole);
+      
+      setFormData({
+        roleId: initialData.id,
+        roleTitle: currentRole?.title || initialData.title,
+        function: currentRole?.function || initialData.function || "Engineering",
+        mappedTitle: currentRole?.mappedTitle || initialData.mappedTitle || "",
+        occupation: currentRole?.occupation || initialData.occupation || "",
+        jobDescription: currentRole?.description || initialData.description || "",
+        roleTrack: currentRole?.roleTrack || initialData.roleTrack || "Professional",
+        soc: currentRole?.soc || initialData.soc || ""
+      });
+    }
+  }, [initialData, open]);
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     console.log(`Updating ${field} with value:`, value);
@@ -73,7 +75,7 @@ export const EditSkillProfileForm = ({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submission started - Form data:', formData);
 
@@ -110,20 +112,20 @@ export const EditSkillProfileForm = ({
 
       console.log('Saving updated role:', updatedRole);
 
-      saveRoleSkills(formData.roleId, updatedRole);
-      roleSkills[formData.roleId] = updatedRole;
+      // Save to localStorage and update global state
+      await saveRoleSkills(formData.roleId, updatedRole);
 
       toast({
         title: "Success",
         description: "Skill profile updated successfully",
       });
       
-      onOpenChange(false);
+      // Force a re-render of components using roleSkills
+      window.dispatchEvent(new CustomEvent('roleSkillsUpdated', { 
+        detail: { roleId: formData.roleId } 
+      }));
 
-      // Force a re-render by updating localStorage
-      const event = new Event('storage');
-      window.dispatchEvent(event);
-      
+      onOpenChange(false);
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
