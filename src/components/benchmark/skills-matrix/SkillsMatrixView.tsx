@@ -57,16 +57,18 @@ export const SkillsMatrixView = ({
         onCancel={handleCancel}
       />
       
-      <Separator className="my-4" />
-      
-      <div className="flex justify-between items-center">
-        <SkillsMatrixFilters 
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
-        />
-        <AddEmployeeSkillDialog />
+      <div className="space-y-4">
+        <Separator className="my-2" />
+        
+        <div className="flex justify-between items-center">
+          <SkillsMatrixFilters 
+            selectedLevel={selectedLevel}
+            setSelectedLevel={setSelectedLevel}
+            selectedInterest={selectedInterest}
+            setSelectedInterest={setSelectedInterest}
+          />
+          <AddEmployeeSkillDialog />
+        </div>
       </div>
 
       <SkillsMatrixTable 
