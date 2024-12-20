@@ -13,6 +13,7 @@ interface EmployeeStore {
   employees: Employee[];
   employeeSkills: Record<string, UnifiedSkill[]>;
   skillStates: Record<string, Record<string, EmployeeSkillState>>;
+  hasChanges: boolean;
   addEmployee: (employee: Employee) => void;
   updateEmployee: (employee: Employee) => void;
   getEmployeeById: (id: string) => Employee | undefined;
@@ -21,6 +22,8 @@ interface EmployeeStore {
   setSkillState: (employeeId: string, skillName: string, level: string, requirement: string) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
+  saveChanges: () => void;
+  cancelChanges: () => void;
 }
 
 export const useEmployeeStore = create<EmployeeStore>()(
@@ -29,6 +32,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
       employees: defaultEmployees,
       employeeSkills: {},
       skillStates: {},
+      hasChanges: false,
 
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Initializing empty skills array for employee:', employeeId);
@@ -54,29 +58,20 @@ export const useEmployeeStore = create<EmployeeStore>()(
 
       addEmployee: (employee) => {
         console.log('Adding employee to store:', employee);
-        set((state) => {
-          const newEmployees = [...state.employees, employee];
-          console.log('Updated employees list:', newEmployees);
-          return { employees: newEmployees };
-        });
+        set((state) => ({
+          employees: [...state.employees, employee],
+          hasChanges: true
+        }));
       },
 
       updateEmployee: (employee) => {
         console.log('Updating employee in store:', employee);
-        set((state) => {
-          const updatedEmployees = state.employees.map((emp) => 
+        set((state) => ({
+          employees: state.employees.map((emp) => 
             emp.id === employee.id ? { ...employee } : emp
-          );
-          console.log('Updated employees list:', updatedEmployees);
-          return { 
-            employees: updatedEmployees,
-            // Ensure we update any related skill states
-            skillStates: {
-              ...state.skillStates,
-              [employee.id]: state.skillStates[employee.id] || {}
-            }
-          };
-        });
+          ),
+          hasChanges: true
+        }));
       },
 
       getEmployeeById: (id) => {
@@ -90,7 +85,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
           employeeSkills: {
             ...state.employeeSkills,
             [employeeId]: skills
-          }
+          },
+          hasChanges: true
         }));
       },
 
@@ -103,7 +99,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
       },
 
       setSkillState: (employeeId, skillName, level, requirement) => {
-        console.log('Setting skill state:', { employeeId, skillName, level, requirement });
+        console.log('Setting employee skill state:', { employeeId, skillName, level, requirement });
         set((state) => ({
           skillStates: {
             ...state.skillStates,
@@ -111,17 +107,34 @@ export const useEmployeeStore = create<EmployeeStore>()(
               ...state.skillStates[employeeId],
               [skillName]: { level, requirement }
             }
-          }
+          },
+          hasChanges: true
         }));
       },
 
       getSkillState: (employeeId, skillName) => {
         const state = get();
-        return state.skillStates[employeeId]?.[skillName] || { level: 'unspecified', requirement: 'preferred' };
+        return state.skillStates[employeeId]?.[skillName] || { 
+          level: 'unspecified', 
+          requirement: 'preferred' 
+        };
+      },
+
+      saveChanges: () => {
+        console.log('Saving employee skill changes');
+        set({ hasChanges: false });
+      },
+
+      cancelChanges: () => {
+        console.log('Canceling employee skill changes');
+        set((state) => ({
+          skillStates: { ...state.skillStates },
+          hasChanges: false
+        }));
       }
     }),
     {
-      name: 'employee-store',
+      name: 'employee-skills-store',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         employees: state.employees,
