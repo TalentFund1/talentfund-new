@@ -76,7 +76,7 @@ export const RoleSkillLevelCell = ({
         <div className={getRequirementStyles()}>
           {isRequired ? (
             <>
-              <Check className="w-3 h-3" />
+              <Check className="w-3.5 h-3.5" />
               Required
             </>
           ) : (
