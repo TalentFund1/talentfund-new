@@ -1,93 +1,87 @@
 import { TableCell } from "@/components/ui/table";
-import { Star, Shield, Target, CircleDashed, Check, Heart } from "lucide-react";
-import { useCompetencyStore } from "./CompetencyState";
-import { useEffect } from "react";
+import { Star, Target, Shield, Check } from "lucide-react";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useRoleStore } from "./RoleBenchmark";
 
 interface RoleSkillLevelCellProps {
   skillTitle: string;
-  roleId: string;
-  levelKey: string;
+  initialLevel: string;
 }
 
 export const RoleSkillLevelCell = ({ 
   skillTitle,
-  roleId,
-  levelKey
+  initialLevel 
 }: RoleSkillLevelCellProps) => {
-  const { currentStates } = useCompetencyStore();
-
-  const skillState = currentStates[skillTitle]?.[levelKey] || {
-    level: 'unspecified',
-    required: 'preferred'
-  };
-
-  const getLevelIcon = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case 'advanced':
-        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
-      case 'intermediate':
-        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
-      case 'beginner':
-        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
-      default:
-        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
-    }
-  };
-
-  const getBorderColorClass = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case 'advanced':
-        return 'border-primary-accent bg-primary-accent/10';
-      case 'intermediate':
-        return 'border-primary-icon bg-primary-icon/10';
-      case 'beginner':
-        return 'border-[#008000] bg-[#008000]/10';
-      default:
-        return 'border-gray-400 bg-gray-100/50';
-    }
-  };
-
-  const getLowerBorderColorClass = (level: string, requirement: string) => {
-    if (requirement?.toLowerCase() !== 'required') {
-      return 'border-[#e5e7eb]';
-    }
-    return getBorderColorClass(level).split(' ')[0];
-  };
+  const { selectedRole, selectedLevel } = useRoleStore();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+  
+  const competencyState = getSkillCompetencyState(skillTitle, selectedLevel, selectedRole);
+  const level = competencyState?.level || initialLevel;
+  const isRequired = competencyState?.required === 'required';
 
   console.log('RoleSkillLevelCell rendering:', {
     skillTitle,
-    roleId,
-    levelKey,
-    currentState: skillState
+    level,
+    isRequired,
+    competencyState
   });
 
+  const getLevelIcon = () => {
+    switch (level?.toLowerCase()) {
+      case 'advanced':
+        return <Star className="w-4 h-4 text-primary-accent" />;
+      case 'intermediate':
+        return <Shield className="w-4 h-4 text-primary-icon" />;
+      case 'beginner':
+        return <Target className="w-4 h-4 text-[#008000]" />;
+      default:
+        return null;
+    }
+  };
+
+  const getLevelStyles = () => {
+    const baseStyles = 'rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center gap-2 min-h-[26px] text-[#1f2144]';
+    
+    switch (level?.toLowerCase()) {
+      case 'advanced':
+        return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
+      case 'intermediate':
+        return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
+      case 'beginner':
+        return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
+      default:
+        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
+    }
+  };
+
+  const getRequirementStyles = () => {
+    const borderColor = level?.toLowerCase() === 'advanced' 
+      ? 'border-primary-accent'
+      : level?.toLowerCase() === 'intermediate'
+        ? 'border-primary-icon'
+        : level?.toLowerCase() === 'beginner'
+          ? 'border-[#008000]'
+          : 'border-gray-400';
+
+    return `text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 bg-gray-50/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
+  };
+
   return (
-    <TableCell className="border-r border-blue-200 p-0">
+    <TableCell className="border-r border-blue-200 py-2">
       <div className="flex flex-col items-center">
-        <div className={`
-          rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-          border-2 ${getBorderColorClass(skillState.level)}
-        `}>
-          <span className="flex items-center gap-2">
-            {getLevelIcon(skillState.level)}
-            {(skillState.level || 'unspecified').charAt(0).toUpperCase() + (skillState.level || 'unspecified').slice(1)}
-          </span>
+        <div className={getLevelStyles()}>
+          {getLevelIcon()}
+          {level}
         </div>
-        <div className={`
-          text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-          border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-          ${getLowerBorderColorClass(skillState.level, skillState.required)}
-        `}>
-          <span className="flex items-center gap-1.5">
-            {skillState.required === 'required' ? (
-              <Check className="w-3.5 h-3.5" />
-            ) : (
-              <Heart className="w-3.5 h-3.5" />
-            )}
-            {skillState.required === 'required' ? 'Skill Goal' : 
-             skillState.required === 'not-interested' ? 'Not Interested' : 
-             skillState.required === 'unknown' ? 'Unknown' : 'Unknown'}
-          </span>
+        <div className={getRequirementStyles()}>
+          {isRequired ? (
+            <>
+              <Check className="w-3 h-3" />
+              Required
+            </>
+          ) : (
+            'Optional'
+          )}
         </div>
       </div>
     </TableCell>
