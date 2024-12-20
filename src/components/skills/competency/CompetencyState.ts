@@ -25,6 +25,12 @@ export const useCompetencyStore = create<CompetencyState>()(
             roleId
           );
 
+          console.log('Updated role states:', {
+            roleId,
+            skillName,
+            newState: newRoleStates[roleId]?.[skillName]
+          });
+
           return {
             roleStates: newRoleStates,
             currentStates: {
@@ -46,6 +52,12 @@ export const useCompetencyStore = create<CompetencyState>()(
             roleId
           );
 
+          console.log('Updated skill progression:', {
+            roleId,
+            skillName,
+            newStates: newRoleStates[roleId]?.[skillName]
+          });
+
           return {
             roleStates: newRoleStates,
             currentStates: {
@@ -59,20 +71,18 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       resetLevels: (roleId) => {
         console.log('Resetting levels for role:', roleId);
-        set((state) => {
-          const freshState = initializeRoleState(roleId);
-          return {
-            roleStates: {
-              ...state.roleStates,
-              [roleId]: freshState
-            },
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: freshState
-            },
-            hasChanges: true
-          };
-        });
+        const freshState = initializeRoleState(roleId);
+        set((state) => ({
+          roleStates: {
+            ...state.roleStates,
+            [roleId]: freshState
+          },
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: freshState
+          },
+          hasChanges: true
+        }));
       },
 
       saveChanges: (roleId) => {
@@ -150,14 +160,29 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 21,
+      version: 24, // Increment version to ensure clean state
+      storage: {
+        getItem: (name) => {
+          const value = localStorage.getItem(name);
+          console.log('Loading persisted state:', { name, value });
+          return value ? JSON.parse(value) : null;
+        },
+        setItem: (name, value) => {
+          console.log('Persisting state:', { name, value });
+          localStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => localStorage.removeItem(name)
+      },
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
         originalStates: state.originalStates
       }),
       merge: (persistedState: any, currentState: CompetencyState) => {
-        console.log('Merging persisted state with current state');
+        console.log('Merging persisted state with current state:', {
+          persistedState,
+          currentState
+        });
         return {
           ...currentState,
           roleStates: persistedState.roleStates || {},
