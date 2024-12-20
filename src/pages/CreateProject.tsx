@@ -124,12 +124,12 @@ const CreateProject = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 p-8 ml-16">
-        <div className="max-w-5xl mx-auto space-y-8">
-          <ProjectHeader />
-          
-          <Card className="bg-white shadow-sm hover:shadow-md transition-shadow">
-            <div className="p-8 space-y-8">
+      <div className="flex-1">
+        <Card className="min-h-screen bg-white">
+          <div className="max-w-5xl mx-auto p-8">
+            <ProjectHeader />
+            
+            <div className="mt-8 space-y-8">
               <DescriptionSection 
                 description={formData.description}
                 onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
@@ -154,8 +154,8 @@ const CreateProject = () => {
                 </>
               )}
             </div>
-          </Card>
-        </div>
+          </div>
+        </Card>
       </div>
     </div>
   );
