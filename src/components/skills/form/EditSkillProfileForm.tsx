@@ -77,7 +77,6 @@ export const EditSkillProfileForm = ({
     e.preventDefault();
     console.log('Form submission started - Form data:', formData);
 
-    // Validate required fields
     const requiredFields: (keyof FormData)[] = ['roleId', 'function', 'mappedTitle', 'occupation', 'soc'];
     const missingFields = requiredFields.filter(field => !formData[field]);
     
@@ -92,10 +91,8 @@ export const EditSkillProfileForm = ({
     }
 
     try {
-      // Get existing role data to preserve skills arrays
       const existingRole = roleSkills[formData.roleId];
       
-      // Create updated role data with all fields
       const updatedRole = {
         ...existingRole,
         title: formData.roleTitle,
@@ -113,10 +110,7 @@ export const EditSkillProfileForm = ({
 
       console.log('Saving updated role:', updatedRole);
 
-      // Save the updated role data
       saveRoleSkills(formData.roleId, updatedRole);
-      
-      // Update the roleSkills object directly
       roleSkills[formData.roleId] = updatedRole;
 
       toast({
@@ -125,6 +119,11 @@ export const EditSkillProfileForm = ({
       });
       
       onOpenChange(false);
+
+      // Force a re-render by updating localStorage
+      const event = new Event('storage');
+      window.dispatchEvent(event);
+      
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({

@@ -89,4 +89,7 @@ export const saveRoleSkills = (roleId: string, skills: RoleSkillData) => {
   console.log('Saving role skills:', { roleId, skills });
   localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(skills));
   roleSkills[roleId] = skills;
+  
+  // Dispatch a storage event to trigger re-renders
+  window.dispatchEvent(new Event('storage'));
 };
