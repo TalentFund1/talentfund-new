@@ -1,5 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { roleSkills } from '../../skills/data/roleSkills';
+import { professionalLevels, managerialLevels } from '../../benchmark/data/levelData';
+import { useTrack } from "../../skills/context/TrackContext";
 
 interface RoleLevelFieldsProps {
   formData: {
@@ -15,34 +17,22 @@ export const roleMapping = Object.entries(roleSkills).reduce((acc, [id, data]) =
 }, {} as { [key: string]: string });
 
 export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFieldsProps) => {
-  console.log('RoleLevelFields rendering with:', {
-    currentRole: formData.role,
-    currentLevel: formData.level,
-    availableRoles: Object.values(roleSkills).map(role => role.title)
-  });
-
-  const isManagerialRole = formData.role.toLowerCase().includes('manager');
-
-  const professionalLevels = {
-    'P1': 'P1 - Entry',
-    'P2': 'P2 - Developing',
-    'P3': 'P3 - Career',
-    'P4': 'P4 - Senior',
-    'P5': 'P5 - Expert',
-    'P6': 'P6 - Principal'
-  };
-
-  const managerialLevels = {
-    'M3': 'M3 - Manager',
-    'M4': 'M4 - Senior Manager',
-    'M5': 'M5 - Director',
-    'M6': 'M6 - Senior Director'
-  };
-
-  const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
+  const { getTrackForRole } = useTrack();
 
   // Get available roles from roleSkills
   const availableRoles = Object.values(roleSkills).map(role => role.title);
+
+  console.log('RoleLevelFields rendering with:', {
+    currentRole: formData.role,
+    currentLevel: formData.level,
+    availableRoles
+  });
+
+  const isManagerialRole = formData.role.toLowerCase().includes('manager');
+  const track = isManagerialRole ? "Managerial" : "Professional";
+
+  // Get levels based on track
+  const levelOptions = track === "Managerial" ? managerialLevels : professionalLevels;
 
   return (
     <>
@@ -53,7 +43,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
           onValueChange={(value) => {
             console.log('Role selected:', value, 'Role ID:', roleMapping[value]);
             handleInputChange('role', value);
-            // Reset level when role changes
+            // Reset level when role changes to ensure proper track-based level selection
             handleInputChange('level', '');
           }}
         >
