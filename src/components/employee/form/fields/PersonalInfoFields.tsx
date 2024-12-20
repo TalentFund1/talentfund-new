@@ -17,10 +17,10 @@ export const PersonalInfoFields = ({ formData, handleInputChange }: PersonalInfo
   return (
     <>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Sex</label>
+        <label className="text-sm font-medium">Gender</label>
         <Select value={formData.sex} onValueChange={(value) => handleInputChange('sex', value)}>
           <SelectTrigger>
-            <SelectValue placeholder="Select sex" />
+            <SelectValue placeholder="Select gender" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="male">Male</SelectItem>
