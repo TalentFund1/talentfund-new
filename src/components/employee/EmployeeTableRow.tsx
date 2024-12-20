@@ -157,7 +157,7 @@ export const EmployeeTableRow = ({
           onChange={() => onSelect(employee.name)}
         />
       </td>
-      <td className="px-4 py-4 w-[180px]">
+      <td className="px-6 py-4 w-[200px]">
         <div className="flex items-center gap-2">
           <img 
             src={imageUrl}
@@ -180,7 +180,7 @@ export const EmployeeTableRow = ({
           </div>
         </div>
       </td>
-      <td className="px-4 py-4 w-[220px]">
+      <td className="px-6 py-4 w-[250px]">
         <Link 
           to={`/skills/${getSkillProfileId(employee.role)}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
@@ -189,15 +189,15 @@ export const EmployeeTableRow = ({
         </Link>
       </td>
       {selectedSkills.length === 0 && (
-        <td className="px-4 py-4 w-[150px] text-sm">{employee.department}</td>
+        <td className="px-6 py-4 w-[150px] text-sm">{employee.department}</td>
       )}
-      <td className="px-4 py-4 text-center w-[120px]">
+      <td className="px-6 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
           {getSkillMatch()}
         </span>
       </td>
       {selectedSkills.length === 0 && (
-        <td className="px-4 py-4 text-center w-[120px]">
+        <td className="px-6 py-4 text-center w-[120px]">
           <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${
             getBenchmarkColor(benchmark)
           }`}>
@@ -207,15 +207,19 @@ export const EmployeeTableRow = ({
       )}
       {selectedSkills.length > 0 && (
         <>
-          <td className="px-4 py-4 min-w-[300px]">
-            {renderSkills()}
+          <td className="px-6 py-4 w-[400px]">
+            <div className="flex flex-wrap gap-2">
+              {renderSkills()}
+            </div>
           </td>
-          <td className="px-4 py-4 min-w-[300px]">
-            {renderAdjacentSkills()}
+          <td className="px-6 py-4 w-[400px]">
+            <div className="flex flex-wrap gap-2">
+              {renderAdjacentSkills()}
+            </div>
           </td>
         </>
       )}
-      <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
+      <td className="px-6 py-4 w-[140px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}
       </td>
     </tr>
