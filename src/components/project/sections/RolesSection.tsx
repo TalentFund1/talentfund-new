@@ -56,7 +56,7 @@ export const RolesSection = ({
               <Badge 
                 key={role}
                 variant="outline"
-                className="bg-[#F7F9FF] text-primary border-[#E5E7EB] hover:bg-[#F7F9FF]/80 flex items-center gap-1.5 px-3 py-1.5 rounded-md"
+                className="bg-[#F7F9FF] text-primary border-[#E5E7EB] hover:bg-[#F7F9FF]/80 flex items-center gap-1.5 px-3 py-1.5 h-8 text-sm rounded-md"
               >
                 {role}
                 <X 
@@ -76,7 +76,7 @@ export const RolesSection = ({
             <Button 
               key={role}
               variant="outline"
-              className="bg-[#F7F9FF] hover:bg-[#F7F9FF]/80 text-primary border-[#E5E7EB] flex items-center gap-1.5 px-3 py-1.5 h-auto font-normal text-sm rounded-md"
+              className="bg-[#F7F9FF] hover:bg-[#F7F9FF]/80 text-primary border-[#E5E7EB] flex items-center gap-1.5 px-3 py-1.5 h-8 font-normal text-sm rounded-md"
               onClick={() => onRoleAdd(role)}
             >
               <Plus className="h-3.5 w-3.5" />
