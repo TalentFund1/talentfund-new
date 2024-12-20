@@ -37,7 +37,12 @@ export const SkillsSection = ({
         </div>
       )}
 
-      <h3 className="text-base font-medium text-primary mt-6">{roleTitle}</h3>
+      <div className="flex items-center justify-between mt-6">
+        <h3 className="text-base font-medium text-primary">{roleTitle}</h3>
+        <span className="text-sm text-muted-foreground">
+          {selectedSkills.length}/{matchingSkills.length} skills
+        </span>
+      </div>
 
       <div className="relative">
         <Input 
