@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, X, CircleDashed } from "lucide-react";
+import { Check, Heart } from "lucide-react";
 
 interface RequirementSelectorProps {
   currentRequired: string;
@@ -19,14 +19,12 @@ export const RequirementSelector = ({
         ? 'border-primary-icon'
         : level.toLowerCase() === 'beginner'
           ? 'border-[#008000]'
-          : 'border-gray-300';
+          : 'border-gray-400';
 
     const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
     switch (requirement.toLowerCase()) {
       case 'required':
-        return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
-      case 'skill_goal':
         return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
       default:
         return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
@@ -43,39 +41,29 @@ export const RequirementSelector = ({
       >
         <SelectValue>
           <span className="flex items-center gap-2 justify-center">
-            {currentRequired === 'required' || currentRequired === 'skill_goal' ? (
+            {currentRequired === 'required' ? (
               <>
-                <Heart className="w-3.5 h-3.5" />
-                <span>Skill Goal</span>
-              </>
-            ) : currentRequired === 'not-interested' ? (
-              <>
-                <X className="w-3.5 h-3.5" />
-                <span>Not Interested</span>
+                <Check className="w-3.5 h-3.5" />
+                <span>Required</span>
               </>
             ) : (
               <>
-                <CircleDashed className="w-3.5 h-3.5" />
-                <span>Unknown</span>
+                <Heart className="w-3.5 h-3.5" />
+                <span>Preferred</span>
               </>
             )}
           </span>
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="skill_goal">
+        <SelectItem value="required">
           <span className="flex items-center gap-2">
-            <Heart className="w-3.5 h-3.5" /> Skill Goal
+            <Check className="w-3.5 h-3.5" /> Required
           </span>
         </SelectItem>
-        <SelectItem value="not-interested">
+        <SelectItem value="preferred">
           <span className="flex items-center gap-2">
-            <X className="w-3.5 h-3.5" /> Not Interested
-          </span>
-        </SelectItem>
-        <SelectItem value="unknown">
-          <span className="flex items-center gap-2">
-            <CircleDashed className="w-3.5 h-3.5" /> Unknown
+            <Heart className="w-3.5 h-3.5" /> Preferred
           </span>
         </SelectItem>
       </SelectContent>
