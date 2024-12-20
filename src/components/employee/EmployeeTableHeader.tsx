@@ -22,8 +22,8 @@ export const EmployeeTableHeader = ({
           disabled={!hasEmployees}
         />
       </th>
-      <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[280px]">Employee Name</th>
-      <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[300px]">Current Role</th>
+      <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[350px]">Employee Name</th>
+      <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[350px]">Current Role</th>
       {!hasSelectedSkills && (
         <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[150px]">Department</th>
       )}
