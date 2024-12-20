@@ -34,7 +34,7 @@ const companyFunctions = [
   "Customer Success"
 ];
 
-const SkillsProfileInner = () => {
+const SkillsProfileContent = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>("");
@@ -43,13 +43,6 @@ const SkillsProfileInner = () => {
   // Get role titles directly from roleSkills
   const availableJobTitles = Object.values(roleSkills).map(role => role.title);
   const toggledSkillsList = Array.from(toggledSkills);
-
-  console.log('SkillsProfileInner - Rendering with:', {
-    selectedSkills,
-    selectedFunction,
-    selectedJobTitle,
-    toggledSkillsCount: toggledSkillsList.length
-  });
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -122,7 +115,7 @@ const SkillsProfileInner = () => {
 const SkillsProfile = () => {
   return (
     <ToggledSkillsProvider>
-      <SkillsProfileInner />
+      <SkillsProfileContent />
     </ToggledSkillsProvider>
   );
 };

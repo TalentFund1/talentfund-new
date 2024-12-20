@@ -4,8 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
 
 interface SkillProfileHeaderProps {
   jobTitle: string;
@@ -13,19 +11,10 @@ interface SkillProfileHeaderProps {
 
 export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const { id } = useParams<{ id: string }>();
-  const { toast } = useToast();
-  
   const currentRole = roleSkills[id as keyof typeof roleSkills];
   const occupation = currentRole ? `${currentRole.title} Specialist` : jobTitle;
   const soc = currentRole?.soc || "(11-9041)";
-
-  console.log('SkillProfileHeader - Rendering:', {
-    jobTitle,
-    currentRole: currentRole?.title,
-    isEditing
-  });
 
   const roleDescriptions: { [key: string]: string } = {
     "AI Engineer": "ERPRISING is at the forefront of digital reinvention, helping clients reimagine how they serve their connected customers and operate enterprises. We're looking for an experienced artificial intelligence engineer to join the revolution, using deep learning, neuro-linguistic programming (NLP), computer vision, chatbots, and robotics to help us improve various business outcomes and drive innovation.",
@@ -36,18 +25,6 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   };
 
   const fullDescription = roleDescriptions[jobTitle] || roleDescriptions["AI Engineer"];
-
-  const handleEditSubmit = (formData: any) => {
-    // Here you would update the role data
-    console.log('Submitting edit form with data:', formData);
-    
-    toast({
-      title: "Profile Updated",
-      description: "The skill profile has been successfully updated.",
-    });
-    
-    setIsEditing(false);
-  };
 
   return (
     <div className="space-y-6">
@@ -64,10 +41,7 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button 
-            className="bg-primary hover:bg-primary/90"
-            onClick={() => setIsEditing(true)}
-          >
+          <Button className="bg-primary hover:bg-primary/90">
             Edit
           </Button>
         </div>
@@ -116,58 +90,6 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
           </button>
         </div>
       </div>
-
-      <Dialog open={isEditing} onOpenChange={setIsEditing}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Edit Skill Profile</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <form className="space-y-4 w-full" onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.currentTarget);
-                handleEditSubmit(Object.fromEntries(formData));
-              }}>
-                <div className="grid grid-cols-1 gap-4">
-                  <div>
-                    <label className="text-sm font-medium">Job Title</label>
-                    <input
-                      name="jobTitle"
-                      defaultValue={jobTitle}
-                      className="w-full p-2 border rounded-md mt-1"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">SOC Code</label>
-                    <input
-                      name="soc"
-                      defaultValue={soc}
-                      className="w-full p-2 border rounded-md mt-1"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Job Description</label>
-                    <textarea
-                      name="description"
-                      defaultValue={fullDescription}
-                      className="w-full p-2 border rounded-md mt-1 h-32"
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end gap-2">
-                  <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
-                    Cancel
-                  </Button>
-                  <Button type="submit">
-                    Save Changes
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
