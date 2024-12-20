@@ -3,7 +3,6 @@ import { getSkillProfileId } from "../../EmployeeTable";
 import { getEmployeeSkills } from "../../benchmark/skills-matrix/initialSkills";
 import { categorizeSkills } from "../../skills/competency/skillCategories";
 import { roleMapping } from "./RoleLevelFields";
-import { useSkillsMatrixStore } from "../../benchmark/skills-matrix/SkillsMatrixState";
 
 interface FormData {
   id: string;
@@ -91,7 +90,7 @@ export const processEmployeeData = (formData: FormData): Employee => {
   console.log('Processing employee data:', formData);
   
   // Format role with level
-  const formattedRole = `${formData.role}: ${formData.level.toUpperCase()}`;
+  const formattedRole = `${formData.role}: ${formData.level}`;
   console.log('Formatted role:', formattedRole);
 
   const lastUpdated = new Date().toLocaleDateString();
@@ -103,8 +102,8 @@ export const processEmployeeData = (formData: FormData): Employee => {
     name: formData.name,
     role: formattedRole,
     department: formData.department,
-    skillCount: 0, // Initialize with 0 since skills are handled separately
-    benchmark: 0, // Initial benchmark, will be calculated after creation
+    skillCount: 0,
+    benchmark: 0,
     lastUpdated: lastUpdated,
     location: formData.location || formData.office,
     sex: formData.sex as 'male' | 'female',

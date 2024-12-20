@@ -8,17 +8,17 @@ export const EMPLOYEE_IMAGES = [
 export const employees = [
   {
     id: "123",
-    name: "Victor Smith",
+    name: "Ronald Dahl",
     role: "AI Engineer: P4",
     department: "Engineering",
     skillCount: 0,
     benchmark: 0,
-    lastUpdated: "10/20/24",
-    location: "Toronto, ON",
+    lastUpdated: "12/19/2024",
+    location: "Vancouver, BC",
     sex: "male" as const,
-    category: "Full-time",
+    category: "Contract",
     manager: "Sus Manu",
-    startDate: "2023-05-15",
+    startDate: "2023-05-16",
     office: "Toronto",
     termDate: "-"
   },
