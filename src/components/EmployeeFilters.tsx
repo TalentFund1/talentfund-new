@@ -46,7 +46,6 @@ export const EmployeeFilters = ({
   onRoleChange = () => {},
   selectedRole = []
 }: EmployeeFiltersProps) => {
-  // Get all available skills from our universal skills database
   const allSkills = getAllSkills().map(skill => skill.title);
   console.log('Available skills for search:', allSkills);
 
@@ -57,16 +56,8 @@ export const EmployeeFilters = ({
       .map(emp => emp.name)
   ));
 
-  const roles = Object.entries(roleSkills).map(([id, data]) => {
-    switch(id) {
-      case "123": return "AI Engineer";
-      case "124": return "Backend Engineer";
-      case "125": return "Frontend Engineer";
-      case "126": return "Engineering Manager";
-      case "127": return "DevOps Engineer";
-      default: return "";
-    }
-  }).filter(role => role !== "");
+  // Get roles from roleSkills with proper mapping
+  const roles = Object.entries(roleSkills).map(([id, data]) => data.title);
 
   console.log('Available roles from roleSkills:', roles);
 
