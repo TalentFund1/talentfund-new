@@ -49,18 +49,19 @@ export const EditSkillProfileForm = ({
     soc: initialData.soc || ""
   });
 
-  // Update form data when initialData changes
   useEffect(() => {
-    console.log('Updating form data with initial data:', initialData);
+    const currentRole = roleSkills[initialData.id];
+    console.log('Loading current role data:', currentRole);
+    
     setFormData({
-      roleId: initialData.id || "",
-      roleTitle: initialData.title || "",
-      function: initialData.function || "Engineering",
-      mappedTitle: initialData.mappedTitle || "",
-      occupation: initialData.occupation || "",
-      jobDescription: initialData.description || "",
-      roleTrack: initialData.roleTrack || "Professional",
-      soc: initialData.soc || ""
+      roleId: initialData.id,
+      roleTitle: currentRole?.title || initialData.title,
+      function: currentRole?.function || initialData.function || "Engineering",
+      mappedTitle: currentRole?.mappedTitle || initialData.mappedTitle || "",
+      occupation: currentRole?.occupation || initialData.occupation || "",
+      jobDescription: currentRole?.description || initialData.description || "",
+      roleTrack: currentRole?.roleTrack || initialData.roleTrack || "Professional",
+      soc: currentRole?.soc || initialData.soc || ""
     });
   }, [initialData]);
 
@@ -97,7 +98,7 @@ export const EditSkillProfileForm = ({
       // Create updated role data with all fields
       const updatedRole = {
         ...existingRole,
-        title: formData.roleTitle || formData.occupation,
+        title: formData.roleTitle,
         soc: formData.soc,
         function: formData.function,
         mappedTitle: formData.mappedTitle,

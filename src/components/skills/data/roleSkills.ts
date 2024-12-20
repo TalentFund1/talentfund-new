@@ -14,7 +14,12 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
       specialized: parsedSkills.specialized || [],
       common: parsedSkills.common || [],
       certifications: parsedSkills.certifications || [],
-      skills: parsedSkills.skills || []
+      skills: parsedSkills.skills || [],
+      function: parsedSkills.function || "Engineering",
+      mappedTitle: parsedSkills.mappedTitle || "",
+      occupation: parsedSkills.occupation || "",
+      description: parsedSkills.description || "",
+      roleTrack: parsedSkills.roleTrack || "Professional"
     };
   }
   
