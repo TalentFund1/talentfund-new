@@ -104,10 +104,11 @@ export const EditSkillProfileForm = ({
         title: "Success",
         description: "Skill profile updated successfully",
       });
+      
+      // Update the roleSkills object directly
+      roleSkills[formData.roleId] = updatedRole;
+      
       onOpenChange(false);
-
-      // Force a reload to reflect changes
-      window.location.reload();
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
