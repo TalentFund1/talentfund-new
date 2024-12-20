@@ -58,43 +58,43 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getLevelStyles = (level: string = 'unspecified') => {
-    const baseStyles = 'rounded-t-md px-3 py-2.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[42px] text-[#1f2144]';
-    
+  const getBorderColorClass = (level: string = 'unspecified') => {
     switch (level?.toLowerCase()) {
       case 'advanced':
-        return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
+        return 'border-primary-accent bg-primary-accent/10';
       case 'intermediate':
-        return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
+        return 'border-primary-icon bg-primary-icon/10';
       case 'beginner':
-        return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
+        return 'border-[#008000] bg-[#008000]/10';
       default:
-        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
+        return 'border-gray-400 bg-gray-100/50';
     }
   };
 
-  const getRequirementStyles = (level: string = 'unspecified', requirement: string = 'unknown') => {
-    const borderColor = level.toLowerCase() === 'advanced' 
-      ? 'border-primary-accent'
-      : level.toLowerCase() === 'intermediate'
-        ? 'border-primary-icon'
-        : level.toLowerCase() === 'beginner'
-          ? 'border-[#008000]'
-          : 'border-gray-400';
-
-    return `text-xs px-2 py-2 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 bg-[#F9FAFB] border-x-2 border-b-2 min-h-[36px] rounded-b-md ${borderColor}`;
+  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'unknown') => {
+    if (requirement?.toLowerCase() !== 'required') {
+      return 'border-[#e5e7eb]';
+    }
+    return getBorderColorClass(level).split(' ')[0];
   };
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
-      <div className="flex flex-col items-stretch h-full">
-        <div className={getLevelStyles(currentState?.level)}>
+      <div className="flex flex-col items-center">
+        <div className={`
+          rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
+          border-2 ${getBorderColorClass(currentState?.level)}
+        `}>
           <span className="flex items-center gap-2">
             {getLevelIcon(currentState?.level)}
             {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
           </span>
         </div>
-        <div className={getRequirementStyles(currentState?.level, currentState?.requirement)}>
+        <div className={`
+          text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+          border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+          ${getLowerBorderColorClass(currentState?.level, currentState?.requirement)}
+        `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
             {currentState?.requirement === 'required' ? 'Skill Goal' : 
