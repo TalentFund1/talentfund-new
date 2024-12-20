@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 interface DescriptionSectionProps {
@@ -21,6 +22,14 @@ export const DescriptionSection = ({
         onChange={(e) => onDescriptionChange(e.target.value)}
         placeholder="Enter project description..."
       />
+      <div className="flex justify-end pt-4">
+        <Button 
+          variant="default"
+          className="bg-primary hover:bg-primary/90"
+        >
+          Next
+        </Button>
+      </div>
       <Separator className="my-6" />
     </div>
   )
