@@ -88,6 +88,7 @@ export const BenchmarkSkillsMatrixContent = ({
       <SkillsMatrixContent 
         filteredSkills={filteredSkills}
         {...props}
+        isRoleBenchmark={true}
       />
     </>
   );
