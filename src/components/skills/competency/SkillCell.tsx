@@ -24,10 +24,18 @@ export const SkillCell = ({
   const { id: roleId } = useParams<{ id: string }>();
   const currentRoleId = roleId || "123";
 
+  // Get current state from store or use defaults
   const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
     required: details.required || "preferred",
   };
+
+  console.log('SkillCell rendering:', {
+    skillName,
+    levelKey,
+    currentState,
+    roleId: currentRoleId
+  });
 
   const handleLevelChange = (value: string) => {
     console.log('Changing level:', {
