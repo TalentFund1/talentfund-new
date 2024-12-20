@@ -65,6 +65,10 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
       const roleId = Object.entries(roleMapping).find(([title]) => title === formData.role)?.[1];
       console.log('Mapped role ID:', roleId);
 
+      // Format the role string correctly
+      const formattedRole = formData.level ? `${formData.role}: ${formData.level}` : formData.role;
+      console.log('Formatted role:', formattedRole);
+
       // Update employee with all form fields
       const updatedEmployee: Employee = {
         ...employee,
@@ -75,7 +79,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
         manager: formData.manager,
         startDate: formData.startDate,
         termDate: formData.termDate || "-",
-        role: `${formData.role}${formData.level ? ': ' + formData.level : ''}`,
+        role: formattedRole,
         location: formData.location,
         sex: formData.sex as 'male' | 'female',
         // Preserve existing values that shouldn't change during edit
