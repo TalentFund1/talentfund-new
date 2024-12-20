@@ -113,6 +113,28 @@ export const EmployeeTableRow = ({
     );
   };
 
+  const renderAdjacentSkills = () => {
+    if (selectedSkills.length === 0) return null;
+
+    const employeeSkills = getEmployeeSkills(employee.id);
+    const adjacentSkills = employeeSkills.filter(empSkill => 
+      !selectedSkills.includes(empSkill.title)
+    ).slice(0, 3); // Show only first 3 adjacent skills
+
+    return (
+      <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
+        {adjacentSkills.map(skill => (
+          <SkillBubble
+            key={skill.title}
+            skillName={skill.title}
+            level={skill.level || 'unspecified'}
+            isRequired={false}
+          />
+        ))}
+      </div>
+    );
+  };
+
   console.log('Employee Row Rendering:', {
     employee: employee.name,
     targetRoleId,
@@ -184,9 +206,14 @@ export const EmployeeTableRow = ({
         </td>
       )}
       {selectedSkills.length > 0 && (
-        <td className="px-4 py-4 min-w-[300px]">
-          {renderSkills()}
-        </td>
+        <>
+          <td className="px-4 py-4 min-w-[300px]">
+            {renderSkills()}
+          </td>
+          <td className="px-4 py-4 min-w-[300px]">
+            {renderAdjacentSkills()}
+          </td>
+        </>
       )}
       <td className="px-4 py-4 w-[120px] text-right text-sm text-muted-foreground">
         {employee.lastUpdated}

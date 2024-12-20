@@ -32,7 +32,10 @@ export const EmployeeTableHeader = ({
         <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground w-[120px]">Benchmark</th>
       )}
       {hasSelectedSkills && (
-        <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground min-w-[300px]">Skills</th>
+        <>
+          <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground min-w-[300px]">Skills</th>
+          <th className="h-12 px-4 text-center text-sm font-medium text-muted-foreground min-w-[300px]">Adjacent Skills</th>
+        </>
       )}
       <th className="h-12 px-4 text-right text-sm font-medium text-muted-foreground w-[120px]">Last Updated</th>
     </tr>
