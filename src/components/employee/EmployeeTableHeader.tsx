@@ -37,7 +37,9 @@ export const EmployeeTableHeader = ({
           <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[400px]">Adjacent Skills</th>
         </>
       )}
-      <th className="h-12 px-6 text-right text-sm font-medium text-muted-foreground w-[140px]">Last Updated</th>
+      {!hasSelectedSkills && (
+        <th className="h-12 px-6 text-right text-sm font-medium text-muted-foreground w-[140px]">Last Updated</th>
+      )}
     </tr>
   );
 };

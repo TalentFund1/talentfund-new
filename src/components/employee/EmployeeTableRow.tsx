@@ -219,9 +219,11 @@ export const EmployeeTableRow = ({
           </td>
         </>
       )}
-      <td className="px-6 py-4 w-[140px] text-right text-sm text-muted-foreground">
-        {employee.lastUpdated}
-      </td>
+      {selectedSkills.length === 0 && (
+        <td className="px-6 py-4 w-[140px] text-right text-sm text-muted-foreground">
+          {employee.lastUpdated}
+        </td>
+      )}
     </tr>
   );
 };
