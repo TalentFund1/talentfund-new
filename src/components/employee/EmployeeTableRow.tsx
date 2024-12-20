@@ -157,7 +157,7 @@ export const EmployeeTableRow = ({
           onChange={() => onSelect(employee.name)}
         />
       </td>
-      <td className="px-6 py-4 w-[200px]">
+      <td className="px-6 py-4 w-[280px]">
         <div className="flex items-center gap-2">
           <img 
             src={imageUrl}
@@ -180,7 +180,7 @@ export const EmployeeTableRow = ({
           </div>
         </div>
       </td>
-      <td className="px-6 py-4 w-[250px]">
+      <td className="px-6 py-4 w-[300px]">
         <Link 
           to={`/skills/${getSkillProfileId(employee.role)}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
@@ -207,12 +207,12 @@ export const EmployeeTableRow = ({
       )}
       {selectedSkills.length > 0 && (
         <>
-          <td className="px-6 py-4 w-[400px]">
+          <td className="px-6 py-4 w-[450px]">
             <div className="flex flex-wrap gap-2">
               {renderSkills()}
             </div>
           </td>
-          <td className="px-6 py-4 w-[400px]">
+          <td className="px-6 py-4 w-[450px]">
             <div className="flex flex-wrap gap-2">
               {renderAdjacentSkills()}
             </div>
