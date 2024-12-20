@@ -52,14 +52,12 @@ export const EmployeeTableRow = ({
     const employeeSkills = getEmployeeSkills(employee.id);
     
     if (selectedSkills.length > 0) {
-      // For skills filtering view, show simplified match ratio
       const matchingSkills = selectedSkills.filter(skillName => 
         employeeSkills.some(empSkill => empSkill.title === skillName)
       );
       return `${matchingSkills.length}/${selectedSkills.length}`;
     }
 
-    // For baseline/other views, show full role skills match ratio
     const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
     if (!roleData) return "0/0";
 
@@ -119,7 +117,7 @@ export const EmployeeTableRow = ({
     const employeeSkills = getEmployeeSkills(employee.id);
     const adjacentSkills = employeeSkills.filter(empSkill => 
       !selectedSkills.includes(empSkill.title)
-    ).slice(0, 3); // Show only first 3 adjacent skills
+    ).slice(0, 3);
 
     return (
       <div className="flex flex-wrap gap-2 min-w-[300px]">
@@ -181,7 +179,7 @@ export const EmployeeTableRow = ({
       {selectedSkills.length === 0 && (
         <td className="px-6 py-4 w-[150px] text-sm">{employee.department}</td>
       )}
-      <td className="px-6 py-4 text-center w-[120px]">
+      <td className="px-10 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
           {getSkillMatch()}
         </span>
