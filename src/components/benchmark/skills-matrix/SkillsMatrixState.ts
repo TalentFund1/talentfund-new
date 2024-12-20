@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { filterSkillsByCategory } from './skillCategories';
+import { useEmployeeStore } from '../../employee/store/employeeStore';
 
 interface SkillState {
   level: string;
