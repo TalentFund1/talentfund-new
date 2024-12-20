@@ -99,7 +99,7 @@ export const useSkillsMatrixState = (
   const { currentStates } = useSkillsMatrixStore();
 
   const filterAndSortSkills = (employeeId: string) => {
-    console.log('Filtering skills for employee:', employeeId);
+    console.log('Filtering employee skills:', { employeeId, selectedCategory, selectedLevel, selectedInterest });
     const employeeSkills = getEmployeeSkills(employeeId);
     let filteredSkills = [...employeeSkills];
 
@@ -131,6 +131,12 @@ export const useSkillsMatrixState = (
         }
       });
     }
+
+    console.log('Filtered employee skills:', {
+      total: employeeSkills.length,
+      filtered: filteredSkills.length,
+      filters: { selectedCategory, selectedLevel, selectedInterest }
+    });
 
     return filteredSkills.sort((a, b) => {
       const stateA = currentStates[a.title];

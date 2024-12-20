@@ -17,7 +17,6 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
-  const { matrixSearchSkills } = useSkillsMatrixSearch();
 
   const { filterAndSortSkills } = useSkillsMatrixState(
     "all",
@@ -25,13 +24,11 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get employee skills directly without role comparison
   const employeeSkills = getEmployeeSkills(id || "");
-
-  // Apply filtering and sorting
   const filteredSkills = filterAndSortSkills(id || "");
 
   console.log('Skills matrix state:', {
+    employeeId: id,
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
     visibleItems,
