@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
@@ -16,6 +17,7 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
+  const { matrixSearchSkills } = useSkillsMatrixSearch();
 
   const { filterAndSortSkills } = useSkillsMatrixState(
     "all",
@@ -23,11 +25,13 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
+  // Get employee skills directly without role comparison
   const employeeSkills = getEmployeeSkills(id || "");
+
+  // Apply filtering and sorting
   const filteredSkills = filterAndSortSkills(id || "");
 
   console.log('Skills matrix state:', {
-    employeeId: id,
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
     visibleItems,
