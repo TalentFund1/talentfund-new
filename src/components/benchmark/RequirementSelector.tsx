@@ -53,7 +53,7 @@ export const RequirementSelector = ({
               </>
             ) : (
               <>
-                <CircleDashed className="w-3.5 h-3.5" />
+                <X className="w-3.5 h-3.5" />
                 <span>Unknown</span>
               </>
             )}
@@ -73,7 +73,7 @@ export const RequirementSelector = ({
         </SelectItem>
         <SelectItem value="unknown">
           <span className="flex items-center gap-2">
-            <CircleDashed className="w-3.5 h-3.5" /> Unknown
+            <X className="w-3.5 h-3.5" /> Unknown
           </span>
         </SelectItem>
       </SelectContent>
