@@ -147,7 +147,7 @@ export const EmployeeTableRow = ({
           onChange={() => onSelect(employee.name)}
         />
       </td>
-      <td className={`px-8 py-4 ${selectedSkills.length > 0 ? 'w-[800px]' : 'w-[400px]'}`}>
+      <td className={`px-10 py-4 ${selectedSkills.length > 0 ? 'w-[800px]' : 'w-[400px]'}`}>
         <div className="flex items-center gap-2">
           <img 
             src={imageUrl}
