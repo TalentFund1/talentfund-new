@@ -5,8 +5,7 @@ import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { AddEmployeeSkillDialog } from "./dialog/AddEmployeeSkillDialog";
 
 interface SkillsMatrixViewProps {
   selectedLevel: string;
@@ -67,14 +66,7 @@ export const SkillsMatrixView = ({
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
         />
-        <Button 
-          className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white rounded-lg px-4 py-2 flex items-center gap-2"
-        >
-          <div className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
-            <Plus className="h-3 w-3 stroke-[2]" />
-          </div>
-          <span className="text-sm font-medium">Add Skill</span>
-        </Button>
+        <AddEmployeeSkillDialog />
       </div>
 
       <SkillsMatrixTable 
