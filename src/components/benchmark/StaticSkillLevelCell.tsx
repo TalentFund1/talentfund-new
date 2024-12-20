@@ -14,6 +14,7 @@ export const StaticSkillLevelCell = ({
 }: StaticSkillLevelCellProps) => {
   const { currentStates, initializeState } = useSkillsMatrixStore();
 
+  // Initialize the skill state with initial level and requirement
   useEffect(() => {
     console.log('Initializing static skill cell:', {
       skillTitle,
@@ -51,7 +52,7 @@ export const StaticSkillLevelCell = ({
       case 'not-interested':
         return <CircleDashed className="w-3.5 h-3.5" />;
       case 'unknown':
-        return <Heart className="w-3.5 h-3.5" />;
+        return <CircleDashed className="w-3.5 h-3.5" />;
       default:
         return <Heart className="w-3.5 h-3.5" />;
     }
@@ -77,19 +78,6 @@ export const StaticSkillLevelCell = ({
     return getBorderColorClass(level).split(' ')[0];
   };
 
-  const getRequirementText = (requirement: string = 'unknown') => {
-    switch (requirement?.toLowerCase()) {
-      case 'required':
-        return 'Skill Goal';
-      case 'not-interested':
-        return 'Not Interested';
-      case 'unknown':
-        return 'Unknown';
-      default:
-        return 'Unknown';
-    }
-  };
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
@@ -109,7 +97,9 @@ export const StaticSkillLevelCell = ({
         `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
-            {getRequirementText(currentState?.requirement)}
+            {currentState?.requirement === 'required' ? 'Skill Goal' : 
+             currentState?.requirement === 'not-interested' ? 'Not Interested' : 
+             currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
           </span>
         </div>
       </div>

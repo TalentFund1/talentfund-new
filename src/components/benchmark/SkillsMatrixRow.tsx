@@ -3,6 +3,8 @@ import { Check } from "lucide-react";
 import { SkillLevelCell } from "./SkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useRoleStore } from "./RoleBenchmark";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -22,21 +24,54 @@ export const SkillsMatrixRow = ({
   isRoleBenchmark
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
+  const { selectedRole, selectedLevel } = useRoleStore();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   
   console.log('SkillsMatrixRow rendering:', {
     skillTitle: skill.title,
-    category: skill.category,
-    isRoleBenchmark
+    isRoleBenchmark,
+    selectedRole,
+    selectedLevel
   });
+
+  const competencyState = isRoleBenchmark 
+    ? getSkillCompetencyState(skill.title, selectedLevel, selectedRole)
+    : null;
 
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
-      <StaticSkillLevelCell 
-        initialLevel={skill.level || 'unspecified'}
-        skillTitle={skill.title}
-      />
+      
+      {isRoleBenchmark ? (
+        <>
+          <TableCell className="border-r border-blue-200 py-2">
+            <StaticSkillLevelCell
+              initialLevel={competencyState?.level || 'unspecified'}
+              skillTitle={skill.title}
+            />
+          </TableCell>
+          <SkillLevelCell 
+            initialLevel={skill.level || 'unspecified'}
+            skillTitle={skill.title}
+          />
+        </>
+      ) : (
+        <>
+          <TableCell className="text-center border-r border-blue-200 py-2">
+            <div className="flex justify-center">
+              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
+              </div>
+            </div>
+          </TableCell>
+          <SkillLevelCell 
+            initialLevel={skill.level || 'unspecified'}
+            skillTitle={skill.title}
+          />
+        </>
+      )}
+      
       <TableCell className="text-center border-r border-blue-200 py-2">
         {skill.confidence === 'n/a' ? (
           <span className="text-gray-500 text-sm">n/a</span>
