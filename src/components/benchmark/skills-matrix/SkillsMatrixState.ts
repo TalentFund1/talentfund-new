@@ -98,12 +98,10 @@ export const useSkillsMatrixState = (
     const employeeSkills = getEmployeeSkills(employeeId);
     let filteredSkills = [...employeeSkills];
 
-    // Filter by category if not "all"
     if (selectedCategory !== "all") {
       filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
     }
 
-    // Filter by level if not "all"
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
@@ -111,7 +109,6 @@ export const useSkillsMatrixState = (
       });
     }
 
-    // Filter by interest/requirement if not "all"
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
@@ -138,7 +135,7 @@ export const useSkillsMatrixState = (
   };
 };
 
-export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
-  console.log('Getting skills for employee:', employeeId);
-  return useEmployeeStore.getState().getEmployeeSkills(employeeId);
+export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
+  console.log('Getting skills for employee:', id);
+  return useEmployeeStore.getState().getEmployeeSkills(id);
 };
