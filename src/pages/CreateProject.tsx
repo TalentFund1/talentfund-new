@@ -124,38 +124,40 @@ const CreateProject = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 p-6">
-        <Card className="min-h-screen bg-white border border-border">
-          <div className="max-w-5xl mx-auto p-8">
-            <ProjectHeader />
-            
-            <div className="mt-8 space-y-8">
-              <DescriptionSection 
-                description={formData.description}
-                onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
-              />
+      <div className="flex-1 p-6 ml-16 transition-all duration-300">
+        <div className="max-w-7xl mx-auto">
+          <Card className="bg-white border border-border">
+            <div className="max-w-5xl mx-auto p-8">
+              <ProjectHeader />
+              
+              <div className="mt-8 space-y-8">
+                <DescriptionSection 
+                  description={formData.description}
+                  onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
+                />
 
-              <RolesSection 
-                searchTerm={searchQuery}
-                setSearchTerm={setSearchQuery}
-                selectedRoles={formData.selectedRoles}
-                onRoleAdd={handleAddRole}
-                onRoleRemove={handleRemoveRole}
-              />
+                <RolesSection 
+                  searchTerm={searchQuery}
+                  setSearchTerm={setSearchQuery}
+                  selectedRoles={formData.selectedRoles}
+                  onRoleAdd={handleAddRole}
+                  onRoleRemove={handleRemoveRole}
+                />
 
-              {formData.selectedRoles.length > 0 && (
-                <>
-                  <MatchesSection 
-                    selectedEmployees={formData.selectedEmployees}
-                    onEmployeeSelect={handleEmployeeSelect}
-                  />
-                  
-                  <LearningSection learningPlan={mockLearningPlan} />
-                </>
-              )}
+                {formData.selectedRoles.length > 0 && (
+                  <>
+                    <MatchesSection 
+                      selectedEmployees={formData.selectedEmployees}
+                      onEmployeeSelect={handleEmployeeSelect}
+                    />
+                    
+                    <LearningSection learningPlan={mockLearningPlan} />
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </div>
     </div>
   );
