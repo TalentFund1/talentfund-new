@@ -8,6 +8,8 @@ import { RolesSection } from "@/components/project/sections/RolesSection";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 
 const CreateProject = () => {
   const [formData, setFormData] = useState({
