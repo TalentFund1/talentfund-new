@@ -9,7 +9,7 @@ export const ProjectHeader = () => {
       </div>
       <Button 
         variant="outline" 
-        className="bg-white hover:bg-background border-border text-foreground"
+        className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white font-medium"
       >
         Save Project
       </Button>
