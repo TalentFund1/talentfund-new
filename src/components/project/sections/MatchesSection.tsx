@@ -27,7 +27,6 @@ export const MatchesSection = ({
               <TableHead className="w-[30px]"></TableHead>
               <TableHead>Employee Name</TableHead>
               <TableHead>Current Role</TableHead>
-              <TableHead>Department</TableHead>
               <TableHead>Skill Count</TableHead>
               <TableHead>Skill Match</TableHead>
               <TableHead>Adjacent Skills</TableHead>
@@ -45,7 +44,6 @@ export const MatchesSection = ({
               </TableCell>
               <TableCell className="font-medium">Victor Smith</TableCell>
               <TableCell>AI Engineer: P4</TableCell>
-              <TableCell>Engineering</TableCell>
               <TableCell>1/1</TableCell>
               <TableCell>
                 <Badge variant="outline" className="bg-primary-accent/10 text-primary border-primary-accent/20">
