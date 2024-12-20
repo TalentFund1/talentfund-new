@@ -1,23 +1,25 @@
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Search, X } from "lucide-react"
-import { Separator } from "@/components/ui/separator"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { X } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface RolesSectionProps {
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
   selectedRoles: string[];
   onRoleAdd: (role: string) => void;
   onRoleRemove: (role: string) => void;
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
 }
 
 export const RolesSection = ({
+  searchTerm,
+  setSearchTerm,
   selectedRoles,
   onRoleAdd,
   onRoleRemove,
-  searchQuery,
-  onSearchChange
 }: RolesSectionProps) => {
+  // These would typically come from an API or database
   const matchingRoles = [
     "Project Manager",
     "UX/UI Designer",
@@ -32,12 +34,11 @@ export const RolesSection = ({
       </div>
 
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40" />
         <Input 
           className="pl-10 border-border focus:border-primary-accent focus:ring-1 focus:ring-primary-accent"
           placeholder="Search roles..."
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
@@ -77,7 +78,6 @@ export const RolesSection = ({
           ))}
         </div>
       </div>
-      <Separator className="my-6" />
     </div>
-  )
-}
+  );
+};

@@ -1,13 +1,13 @@
-import { useState } from "react"
-import { Card } from "@/components/ui/card"
-import { Sidebar } from "@/components/Sidebar"
-import { ProjectHeader } from "@/components/project/ProjectHeader"
-import { DescriptionSection } from "@/components/project/sections/DescriptionSection"
-import { RolesSection } from "@/components/project/sections/RolesSection"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Sidebar } from "@/components/Sidebar";
+import { ProjectHeader } from "@/components/project/ProjectHeader";
+import { DescriptionSection } from "@/components/project/sections/DescriptionSection";
+import { RolesSection } from "@/components/project/sections/RolesSection";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const CreateProject = () => {
   const [formData, setFormData] = useState({
@@ -50,11 +50,11 @@ const CreateProject = () => {
             />
 
             <RolesSection 
+              searchTerm={searchQuery}
+              setSearchTerm={setSearchQuery}
               selectedRoles={formData.selectedRoles}
               onRoleAdd={handleAddRole}
               onRoleRemove={handleRemoveRole}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
             />
 
             {/* Skills Section - Only shown if roles are selected */}
@@ -85,26 +85,6 @@ const CreateProject = () => {
                                 }));
                               }}
                             />
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {matchingSkills.map((skill) => (
-                          <Badge 
-                            key={skill}
-                            variant="outline"
-                            className="cursor-pointer hover:bg-accent"
-                            onClick={() => {
-                              setFormData(prev => ({
-                                ...prev,
-                                roleSkills: {
-                                  ...prev.roleSkills,
-                                  [role]: [...(prev.roleSkills[role] || []), skill]
-                                }
-                              }));
-                            }}
-                          >
-                            {skill}
                           </Badge>
                         ))}
                       </div>
@@ -149,50 +129,9 @@ const CreateProject = () => {
                         </TableCell>
                         <TableCell></TableCell>
                       </TableRow>
-                      <TableRow>
-                        <TableCell>
-                          <input type="checkbox" className="rounded border-gray-300" />
-                        </TableCell>
-                        <TableCell>Jennie Richards</TableCell>
-                        <TableCell>Backend Engineer: P4</TableCell>
-                        <TableCell>Engineering</TableCell>
-                        <TableCell>0/1</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell>
-                          <Badge variant="outline">Objective-C</Badge>
-                        </TableCell>
-                      </TableRow>
                     </TableBody>
                   </Table>
                 </ScrollArea>
-              </div>
-            )}
-
-            {/* L&D Recommendations Section - Only shown if matches are reviewed */}
-            {Object.keys(formData.roleSkills).length > 0 && (
-              <div className="space-y-4">
-                <h2 className="text-lg font-medium">5. L&D Recommendations</h2>
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="font-medium mb-2">Timeline with Learning Resources:</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="font-medium">1. Basic Proficiency (1-2 weeks):</h4>
-                        <ul className="list-disc pl-6 space-y-2">
-                          <li>Focus: Learn Swift syntax (e.g., optionals, type inference) and basic features like structs, enums, and error handling</li>
-                          <li>
-                            Recommendations:
-                            <ul className="list-disc pl-6">
-                              <li>Apple's Swift Playground: Hands-on, interactive learning for Swift syntax.</li>
-                              <li>Swift.org Documentation: Comprehensive guide to Swift basics.</li>
-                              <li>Book: Swift Programming: The Big Nerd Ranch Guide (ideal for quick immersion).</li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             )}
           </Card>
