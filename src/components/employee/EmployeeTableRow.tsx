@@ -157,7 +157,7 @@ export const EmployeeTableRow = ({
           onChange={() => onSelect(employee.name)}
         />
       </td>
-      <td className={`px-6 py-4 ${selectedSkills.length > 0 ? 'w-[600px]' : 'w-[350px]'}`}>
+      <td className={`px-6 py-4 ${selectedSkills.length > 0 ? 'w-[800px]' : 'w-[350px]'}`}>
         <div className="flex items-center gap-2">
           <img 
             src={imageUrl}
@@ -165,7 +165,7 @@ export const EmployeeTableRow = ({
             className="w-6 h-6 rounded-full object-cover"
           />
           <div className="flex items-center gap-2">
-            <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm">
+            <Link to={`/employee/${employee.id}`} className="text-primary hover:text-primary-accent transition-colors text-sm whitespace-nowrap">
               {employee.name}
             </Link>
             {isExactMatch && selectedJobTitle.length > 0 && (
