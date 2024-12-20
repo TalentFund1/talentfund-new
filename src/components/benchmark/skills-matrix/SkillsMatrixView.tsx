@@ -5,6 +5,7 @@ import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
+import { AddSkillToProfileDialog } from "../../skills/dialog/AddSkillToProfileDialog";
 
 interface SkillsMatrixViewProps {
   selectedLevel: string;
@@ -57,6 +58,10 @@ export const SkillsMatrixView = ({
       />
       
       <Separator className="my-4" />
+
+      <div className="flex justify-end">
+        <AddSkillToProfileDialog />
+      </div>
       
       <SkillsMatrixFilters 
         selectedLevel={selectedLevel}
