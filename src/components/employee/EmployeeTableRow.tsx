@@ -157,7 +157,7 @@ export const EmployeeTableRow = ({
           onChange={() => onSelect(employee.name)}
         />
       </td>
-      <td className="px-6 py-4 w-[350px]">
+      <td className={`px-6 py-4 ${selectedSkills.length > 0 ? 'w-[450px]' : 'w-[350px]'}`}>
         <div className="flex items-center gap-2">
           <img 
             src={imageUrl}
@@ -180,7 +180,7 @@ export const EmployeeTableRow = ({
           </div>
         </div>
       </td>
-      <td className="px-6 py-4 w-[350px]">
+      <td className={`px-6 py-4 ${selectedSkills.length > 0 ? 'w-[450px]' : 'w-[350px]'}`}>
         <Link 
           to={`/skills/${getSkillProfileId(employee.role)}`} 
           className="text-sm text-primary hover:text-primary-accent transition-colors"
