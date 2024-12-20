@@ -1,5 +1,5 @@
 import { TableCell } from "@/components/ui/table";
-import { Star, Target, Shield, Check } from "lucide-react";
+import { Star, Target, Shield, Check, Heart } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useRoleStore } from "./RoleBenchmark";
 
@@ -80,7 +80,10 @@ export const RoleSkillLevelCell = ({
               Required
             </>
           ) : (
-            'Optional'
+            <>
+              <Heart className="w-3 h-3" />
+              Preferred
+            </>
           )}
         </div>
       </div>
