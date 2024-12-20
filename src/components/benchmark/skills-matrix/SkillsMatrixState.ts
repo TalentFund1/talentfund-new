@@ -1,8 +1,7 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { useEmployeeStore } from '../../employee/store/employeeStore';
-import { filterSkillsByCategory } from './skillCategories';
+import { create } from "zustand";
+import { UnifiedSkill } from "../../skills/types/SkillTypes";
+import { getEmployeeSkills } from "./initialSkills";
+import { filterSkillsByCategory } from "./skillCategories";
 
 interface SkillState {
   level: string;
@@ -30,74 +29,56 @@ const getLevelPriority = (level: string = 'unspecified') => {
   return priorities[level.toLowerCase()] ?? 3;
 };
 
-export const useSkillsMatrixStore = create<SkillsMatrixState>()(
-  persist(
-    (set) => ({
+export const useSkillsMatrixStore = create<SkillsMatrixState>((set) => ({
+  currentStates: {},
+  originalStates: {},
+  hasChanges: false,
+
+  setSkillState: (skillTitle, level, requirement) =>
+    set((state) => ({
+      currentStates: {
+        ...state.currentStates,
+        [skillTitle]: { level, requirement },
+      },
+      hasChanges: true,
+    })),
+
+  resetSkills: () =>
+    set(() => ({
       currentStates: {},
       originalStates: {},
       hasChanges: false,
+    })),
 
-      setSkillState: (skillTitle, level, requirement) => {
-        console.log('Setting skill state:', { skillTitle, level, requirement });
-        set((state) => ({
+  initializeState: (skillTitle, level, requirement) =>
+    set((state) => {
+      if (!state.currentStates[skillTitle]) {
+        return {
           currentStates: {
             ...state.currentStates,
             [skillTitle]: { level, requirement },
           },
-          hasChanges: true,
-        }));
-      },
-
-      resetSkills: () => {
-        console.log('Resetting skills state');
-        set(() => ({
-          currentStates: {},
-          originalStates: {},
-          hasChanges: false,
-        }));
-      },
-
-      initializeState: (skillTitle, level, requirement) => {
-        console.log('Initializing skill state:', { skillTitle, level, requirement });
-        set((state) => {
-          if (!state.currentStates[skillTitle]) {
-            return {
-              currentStates: {
-                ...state.currentStates,
-                [skillTitle]: { level, requirement },
-              },
-              originalStates: {
-                ...state.originalStates,
-                [skillTitle]: { level, requirement },
-              },
-            };
-          }
-          return state;
-        });
-      },
-
-      saveChanges: () => {
-        console.log('Saving skill changes');
-        set((state) => ({
-          originalStates: { ...state.currentStates },
-          hasChanges: false,
-        }));
-      },
-
-      cancelChanges: () => {
-        console.log('Canceling skill changes');
-        set((state) => ({
-          currentStates: { ...state.originalStates },
-          hasChanges: false,
-        }));
-      },
+          originalStates: {
+            ...state.originalStates,
+            [skillTitle]: { level, requirement },
+          },
+        };
+      }
+      return state;
     }),
-    {
-      name: 'skills-matrix-storage',
-      version: 1,
-    }
-  )
-);
+
+  saveChanges: () =>
+    set((state) => ({
+      originalStates: { ...state.currentStates },
+      hasChanges: false,
+    })),
+
+  cancelChanges: () =>
+    set((state) => ({
+      currentStates: { ...state.originalStates },
+      hasChanges: false,
+    })),
+}));
 
 export const useSkillsMatrixState = (
   selectedCategory: string,
@@ -111,10 +92,12 @@ export const useSkillsMatrixState = (
     const employeeSkills = getEmployeeSkills(employeeId);
     let filteredSkills = [...employeeSkills];
 
+    // Filter by category if not "all"
     if (selectedCategory !== "all") {
       filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
     }
 
+    // Filter by level if not "all"
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
@@ -122,6 +105,7 @@ export const useSkillsMatrixState = (
       });
     }
 
+    // Filter by interest/requirement if not "all"
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
@@ -129,7 +113,10 @@ export const useSkillsMatrixState = (
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            return state.requirement === "required" || state.requirement === "skill_goal";
+            return (
+              state.requirement === "required" ||
+              state.requirement === "skill_goal"
+            );
           case "not_interested":
             return state.requirement === "not_interested";
           case "unknown":
@@ -140,6 +127,7 @@ export const useSkillsMatrixState = (
       });
     }
 
+    // Sort skills by level priority and then alphabetically
     return filteredSkills.sort((a, b) => {
       const stateA = currentStates[a.title];
       const stateB = currentStates[b.title];
@@ -154,9 +142,4 @@ export const useSkillsMatrixState = (
   return {
     filterAndSortSkills,
   };
-};
-
-export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
-  console.log('Getting skills for employee:', id);
-  return useEmployeeStore.getState().getEmployeeSkills(id);
 };
