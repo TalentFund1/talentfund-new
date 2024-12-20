@@ -3,7 +3,7 @@ import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
 
-interface SkillsMatrixContentProps {
+interface BenchmarkSkillsMatrixContentProps {
   filteredSkills: any[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -19,7 +19,7 @@ interface SkillsMatrixContentProps {
   observerTarget: React.RefObject<HTMLDivElement>;
 }
 
-export const SkillsMatrixContent = ({
+export const BenchmarkSkillsMatrixContent = ({
   filteredSkills,
   searchTerm,
   setSearchTerm,
@@ -33,8 +33,8 @@ export const SkillsMatrixContent = ({
   setSelectedSearchSkills,
   visibleItems,
   observerTarget
-}: SkillsMatrixContentProps) => {
-  console.log('Rendering SkillsMatrixContent with skills:', filteredSkills);
+}: BenchmarkSkillsMatrixContentProps) => {
+  console.log('Rendering BenchmarkSkillsMatrixContent with skills:', filteredSkills);
 
   const removeSearchSkill = (skill: string) => {
     setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
