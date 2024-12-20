@@ -52,6 +52,7 @@ const EmployeeOverviewContent = () => {
     matches: exactMatchEmployees.map(e => ({
       name: e.name,
       role: e.role,
+      roleId: getSkillProfileId(e.role),
       benchmark: e.benchmark
     }))
   });
@@ -111,6 +112,7 @@ const EmployeeOverviewContent = () => {
     matches: partialMatchEmployees.map(e => ({
       name: e.name,
       role: e.role,
+      roleId: getSkillProfileId(e.role),
       benchmark: e.benchmark
     }))
   });
