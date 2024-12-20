@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { BasicProfileFields } from "./fields/BasicProfileFields";
 import { DescriptionFields } from "./fields/DescriptionFields";
-import { roleSkills } from '../data/roleSkills';
+import { roleSkills, saveRoleSkills } from '../data/roleSkills';
 
 interface FormData {
   roleId: string;
@@ -81,8 +81,8 @@ export const EditSkillProfileForm = ({
       // Get existing role data to preserve skills arrays
       const existingRole = roleSkills[formData.roleId as keyof typeof roleSkills];
       
-      // Update existing role profile while preserving skills arrays
-      roleSkills[formData.roleId as keyof typeof roleSkills] = {
+      // Create updated role data
+      const updatedRole = {
         title: formData.roleTitle || formData.occupation,
         soc: formData.soc,
         specialized: existingRole?.specialized || [],
@@ -91,7 +91,10 @@ export const EditSkillProfileForm = ({
         skills: existingRole?.skills || [] // Preserve existing skills array
       };
 
-      console.log('Profile updated successfully');
+      // Save the updated role data
+      saveRoleSkills(formData.roleId, updatedRole);
+
+      console.log('Profile updated and persisted successfully');
       toast({
         title: "Success",
         description: "Skill profile updated successfully",
