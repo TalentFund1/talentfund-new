@@ -37,8 +37,8 @@ export const EmployeeTableHeader = ({
       )}
       {hasSelectedSkills && (
         <>
-          <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[450px]">Skills</th>
-          <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[450px]">Adjacent Skills</th>
+          <th className="h-12 pl-4 text-left text-sm font-medium text-muted-foreground w-[450px]">Skills</th>
+          <th className="h-12 pl-4 text-left text-sm font-medium text-muted-foreground w-[450px]">Adjacent Skills</th>
         </>
       )}
       {!hasSelectedSkills && (

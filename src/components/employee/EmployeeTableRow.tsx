@@ -95,7 +95,7 @@ export const EmployeeTableRow = ({
     );
 
     return (
-      <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
+      <div className="flex flex-wrap gap-2">
         {skillsToShow.map(skillName => {
           const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skillName);
           if (!employeeSkill) return null;
@@ -122,7 +122,7 @@ export const EmployeeTableRow = ({
     ).slice(0, 3); // Show only first 3 adjacent skills
 
     return (
-      <div className="flex flex-wrap gap-2 min-w-[300px] px-4">
+      <div className="flex flex-wrap gap-2">
         {adjacentSkills.map(skill => (
           <SkillBubble
             key={skill.title}
@@ -207,15 +207,11 @@ export const EmployeeTableRow = ({
       )}
       {selectedSkills.length > 0 && (
         <>
-          <td className="px-6 py-4 w-[450px]">
-            <div className="flex flex-wrap gap-2">
-              {renderSkills()}
-            </div>
+          <td className="pl-4 py-4 w-[450px]">
+            {renderSkills()}
           </td>
-          <td className="px-6 py-4 w-[450px]">
-            <div className="flex flex-wrap gap-2">
-              {renderAdjacentSkills()}
-            </div>
+          <td className="pl-4 py-4 w-[450px]">
+            {renderAdjacentSkills()}
           </td>
         </>
       )}
