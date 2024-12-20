@@ -31,7 +31,7 @@ export const EmployeeTableHeader = ({
       {!hasSelectedSkills && (
         <th className="h-12 px-6 text-left text-sm font-medium text-muted-foreground w-[150px]">Department</th>
       )}
-      <th className="h-12 px-10 text-center text-sm font-medium text-muted-foreground w-[150px] whitespace-nowrap">Skill Match</th>
+      <th className="h-12 px-12 text-center text-sm font-medium text-muted-foreground w-[150px] whitespace-nowrap">Skill Match</th>
       {!hasSelectedSkills && (
         <th className="h-12 px-6 text-center text-sm font-medium text-muted-foreground w-[120px]">Benchmark</th>
       )}
