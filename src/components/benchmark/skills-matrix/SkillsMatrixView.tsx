@@ -5,6 +5,7 @@ import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
+import { AddSkillToProfileDialog } from "@/components/skills/dialog/AddSkillToProfileDialog";
 
 interface SkillsMatrixViewProps {
   selectedLevel: string;
@@ -58,12 +59,15 @@ export const SkillsMatrixView = ({
       
       <Separator className="my-4" />
       
-      <SkillsMatrixFilters 
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-      />
+      <div className="flex justify-between items-center">
+        <SkillsMatrixFilters 
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+        />
+        <AddSkillToProfileDialog />
+      </div>
 
       <SkillsMatrixTable 
         filteredSkills={filteredSkills.slice(0, visibleItems)}
