@@ -54,7 +54,7 @@ export const StaticSkillLevelCell = ({
       case 'unknown':
         return <CircleHelp className="w-3.5 h-3.5" />;
       default:
-        return <CircleHelp className="w-3.5 h-3.5" />;
+        return <Heart className="w-3.5 h-3.5" />;
     }
   };
 
