@@ -30,7 +30,7 @@ export const DescriptionSection = ({
           Next
         </Button>
       </div>
-      <Separator className="my-6" />
+      <Separator className="my-6 bg-[#CCDBFF]" />
     </div>
   )
 }
