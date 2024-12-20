@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { BasicProfileFields } from "./fields/BasicProfileFields";
 import { DescriptionFields } from "./fields/DescriptionFields";
@@ -49,7 +49,20 @@ export const EditSkillProfileForm = ({
     soc: initialData.soc || ""
   });
 
-  console.log('EditSkillProfileForm - Initial form data:', formData);
+  // Update form data when initialData changes
+  useEffect(() => {
+    console.log('Updating form data with initial data:', initialData);
+    setFormData({
+      roleId: initialData.id || "",
+      roleTitle: initialData.title || "",
+      function: initialData.function || "Engineering",
+      mappedTitle: initialData.mappedTitle || "",
+      occupation: initialData.occupation || "",
+      jobDescription: initialData.description || "",
+      roleTrack: initialData.roleTrack || "Professional",
+      soc: initialData.soc || ""
+    });
+  }, [initialData]);
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     console.log(`Updating ${field} with value:`, value);
@@ -79,10 +92,11 @@ export const EditSkillProfileForm = ({
 
     try {
       // Get existing role data to preserve skills arrays
-      const existingRole = roleSkills[formData.roleId as keyof typeof roleSkills];
+      const existingRole = roleSkills[formData.roleId];
       
       // Create updated role data with all fields
       const updatedRole = {
+        ...existingRole,
         title: formData.roleTitle || formData.occupation,
         soc: formData.soc,
         function: formData.function,
@@ -96,17 +110,18 @@ export const EditSkillProfileForm = ({
         skills: existingRole?.skills || []
       };
 
+      console.log('Saving updated role:', updatedRole);
+
       // Save the updated role data
       saveRoleSkills(formData.roleId, updatedRole);
+      
+      // Update the roleSkills object directly
+      roleSkills[formData.roleId] = updatedRole;
 
-      console.log('Profile updated and persisted successfully:', updatedRole);
       toast({
         title: "Success",
         description: "Skill profile updated successfully",
       });
-      
-      // Update the roleSkills object directly
-      roleSkills[formData.roleId] = updatedRole;
       
       onOpenChange(false);
     } catch (error) {

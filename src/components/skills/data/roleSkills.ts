@@ -8,7 +8,14 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
   const savedSkills = localStorage.getItem(`role-skills-${roleId}`);
   if (savedSkills) {
     console.log('Found saved skills for role:', roleId);
-    return JSON.parse(savedSkills);
+    const parsedSkills = JSON.parse(savedSkills);
+    return {
+      ...parsedSkills,
+      specialized: parsedSkills.specialized || [],
+      common: parsedSkills.common || [],
+      certifications: parsedSkills.certifications || [],
+      skills: parsedSkills.skills || []
+    };
   }
   
   // Initialize with default values if no saved skills exist
