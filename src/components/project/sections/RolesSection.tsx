@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
+import { X, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -21,9 +21,15 @@ export const RolesSection = ({
 }: RolesSectionProps) => {
   // These would typically come from an API or database
   const matchingRoles = [
-    "Project Manager",
-    "UX/UI Designer",
-    "Engineering Manager"
+    "Credit Analysis",
+    "Due diligence",
+    "Leadership",
+    "Market Research",
+    "Contract Negotiation",
+    "Supply Chain Management",
+    "Risk Management",
+    "Database Management",
+    "iOS Developer"
   ];
 
   return (
@@ -35,7 +41,7 @@ export const RolesSection = ({
 
       <div className="relative">
         <Input 
-          className="pl-10 border-border focus:border-primary-accent focus:ring-1 focus:ring-primary-accent"
+          className="pl-4 border-border focus:border-primary-accent focus:ring-1 focus:ring-primary-accent bg-[#F7F9FF]"
           placeholder="Search roles..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -49,12 +55,12 @@ export const RolesSection = ({
             {selectedRoles.map((role) => (
               <Badge 
                 key={role}
-                variant="secondary"
-                className="bg-primary-accent/10 text-primary border-primary-accent/20 flex items-center gap-1"
+                variant="outline"
+                className="bg-[#F7F9FF] text-primary border-[#E5E7EB] hover:bg-[#F7F9FF]/80 flex items-center gap-1.5 px-3 py-1.5 rounded-md"
               >
                 {role}
                 <X 
-                  className="h-3 w-3 cursor-pointer hover:text-primary-accent" 
+                  className="h-3.5 w-3.5 cursor-pointer hover:text-primary-accent" 
                   onClick={() => onRoleRemove(role)}
                 />
               </Badge>
@@ -67,14 +73,15 @@ export const RolesSection = ({
         <h3 className="text-sm font-medium text-primary">Matching Roles</h3>
         <div className="flex flex-wrap gap-2">
           {matchingRoles.map((role) => (
-            <Badge 
+            <Button 
               key={role}
               variant="outline"
-              className="border-border hover:bg-primary-accent/10 hover:border-primary-accent cursor-pointer transition-colors"
+              className="bg-[#F7F9FF] hover:bg-[#F7F9FF]/80 text-primary border-[#E5E7EB] flex items-center gap-1.5 px-3 py-1.5 h-auto font-normal text-sm rounded-md"
               onClick={() => onRoleAdd(role)}
             >
+              <Plus className="h-3.5 w-3.5" />
               {role}
-            </Badge>
+            </Button>
           ))}
         </div>
       </div>
