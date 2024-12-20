@@ -73,7 +73,6 @@ export const MatchesSection = ({
         <Table>
           <TableHeader>
             <TableRow className="bg-background/40">
-              <TableHead className="w-[48px]"></TableHead>
               <TableHead className="w-[400px]">Employee Name</TableHead>
               <TableHead className="w-[350px]">Current Role</TableHead>
               <TableHead className="w-[120px] text-center">Skill Match</TableHead>
@@ -84,14 +83,6 @@ export const MatchesSection = ({
           <TableBody>
             {matchedEmployees.map((employee) => (
               <TableRow key={employee.id} className="group hover:bg-muted/50">
-                <TableCell>
-                  <input 
-                    type="checkbox" 
-                    checked={selectedEmployees.includes(employee.name)}
-                    onChange={() => onEmployeeSelect(employee.name)}
-                    className="rounded border-gray-300"
-                  />
-                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <img 
