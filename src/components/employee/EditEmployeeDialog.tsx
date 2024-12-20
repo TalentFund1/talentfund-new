@@ -75,7 +75,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
         manager: formData.manager,
         startDate: formData.startDate,
         termDate: formData.termDate || "-",
-        role: `${formData.role}: ${formData.level}`,
+        role: `${formData.role}${formData.level ? ': ' + formData.level : ''}`,
         location: formData.location,
         sex: formData.sex as 'male' | 'female',
         // Preserve existing values that shouldn't change during edit
