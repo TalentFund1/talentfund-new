@@ -19,7 +19,7 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
       mappedTitle: parsedSkills.mappedTitle || "",
       occupation: parsedSkills.occupation || "",
       description: parsedSkills.description || "",
-      roleTrack: parsedSkills.roleTrack || "Professional"
+      roleTrack: parsedSkills.roleTrack || getRoleDefaultTrack(roleId)
     };
   }
   
@@ -31,7 +31,7 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
     mappedTitle: "",
     occupation: getRoleTitle(roleId),
     description: "",
-    roleTrack: "Professional",
+    roleTrack: getRoleDefaultTrack(roleId),
     specialized: [],
     common: [],
     certifications: [],
@@ -40,7 +40,8 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
 
   console.log('Initializing default role data:', {
     roleId,
-    title: defaultRole.title
+    title: defaultRole.title,
+    track: defaultRole.roleTrack
   });
 
   // Save default role data
@@ -70,6 +71,12 @@ const getRoleSoc = (id: string): string => {
     "128": "15-2031"
   };
   return socCodes[id] || "";
+};
+
+// Helper function to determine default track based on role
+const getRoleDefaultTrack = (id: string): "Professional" | "Managerial" => {
+  const managerialRoles = ["126", "128"]; // Engineering Manager and Product Manager
+  return managerialRoles.includes(id) ? "Managerial" : "Professional";
 };
 
 // Initialize roleSkills object
