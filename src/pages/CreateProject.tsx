@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { ProjectHeader } from "@/components/project/ProjectHeader";
 import { DescriptionSection } from "@/components/project/sections/DescriptionSection";
 import { RolesSection } from "@/components/project/sections/RolesSection";
+import { SkillsSection } from "@/components/project/sections/SkillsSection";
 import { MatchesSection } from "@/components/project/sections/MatchesSection";
 import { LearningSection } from "@/components/project/sections/LearningSection";
 
@@ -43,6 +44,26 @@ const CreateProject = () => {
     });
   };
 
+  const handleAddSkill = (role: string, skill: string) => {
+    setFormData(prev => ({
+      ...prev,
+      roleSkills: {
+        ...prev.roleSkills,
+        [role]: [...(prev.roleSkills[role] || []), skill]
+      }
+    }));
+  };
+
+  const handleRemoveSkill = (role: string, skill: string) => {
+    setFormData(prev => ({
+      ...prev,
+      roleSkills: {
+        ...prev.roleSkills,
+        [role]: prev.roleSkills[role].filter(s => s !== skill)
+      }
+    }));
+  };
+
   const handleEmployeeSelect = (employeeName: string) => {
     setFormData(prev => ({
       ...prev,
@@ -51,6 +72,58 @@ const CreateProject = () => {
         : [...prev.selectedEmployees, employeeName]
     }));
   };
+
+  return (
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
+      <div className="flex-1 p-6 ml-16 transition-all duration-300">
+        <div className="max-w-7xl mx-auto">
+          <Card className="bg-white border border-border">
+            <div className="max-w-5xl mx-auto p-8">
+              <ProjectHeader />
+              
+              <div className="mt-8 space-y-8">
+                <DescriptionSection 
+                  description={formData.description}
+                  onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
+                />
+
+                <RolesSection 
+                  searchTerm={searchQuery}
+                  setSearchTerm={setSearchQuery}
+                  selectedRoles={formData.selectedRoles}
+                  onRoleAdd={handleAddRole}
+                  onRoleRemove={handleRemoveRole}
+                />
+
+                {formData.selectedRoles.map(role => (
+                  <SkillsSection
+                    key={role}
+                    roleTitle={role}
+                    selectedSkills={formData.roleSkills[role] || []}
+                    onSkillAdd={(skill) => handleAddSkill(role, skill)}
+                    onSkillRemove={(skill) => handleRemoveSkill(role, skill)}
+                  />
+                ))}
+
+                {formData.selectedRoles.length > 0 && (
+                  <>
+                    <MatchesSection 
+                      selectedEmployees={formData.selectedEmployees}
+                      onEmployeeSelect={handleEmployeeSelect}
+                    />
+                    
+                    <LearningSection learningPlan={mockLearningPlan} />
+                  </>
+                )}
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
 
   const mockLearningPlan = {
     timeline: [
@@ -120,47 +193,5 @@ const CreateProject = () => {
     ],
     outcome: "With these resources and a structured learning approach, your employee can become proficient in Swift for daily tasks within 1 month and master it for advanced projects within 3 months."
   };
-
-  return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      <div className="flex-1 p-6 ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto">
-          <Card className="bg-white border border-border">
-            <div className="max-w-5xl mx-auto p-8">
-              <ProjectHeader />
-              
-              <div className="mt-8 space-y-8">
-                <DescriptionSection 
-                  description={formData.description}
-                  onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
-                />
-
-                <RolesSection 
-                  searchTerm={searchQuery}
-                  setSearchTerm={setSearchQuery}
-                  selectedRoles={formData.selectedRoles}
-                  onRoleAdd={handleAddRole}
-                  onRoleRemove={handleRemoveRole}
-                />
-
-                {formData.selectedRoles.length > 0 && (
-                  <>
-                    <MatchesSection 
-                      selectedEmployees={formData.selectedEmployees}
-                      onEmployeeSelect={handleEmployeeSelect}
-                    />
-                    
-                    <LearningSection learningPlan={mockLearningPlan} />
-                  </>
-                )}
-              </div>
-            </div>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default CreateProject;
