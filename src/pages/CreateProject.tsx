@@ -83,10 +83,28 @@ const CreateProject = () => {
               <ProjectHeader />
               
               <div className="mt-8 space-y-8">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div className="w-full border-t border-[#CCDBFF]"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="px-2 text-sm text-secondary-foreground bg-white">Step 1</span>
+                  </div>
+                </div>
+
                 <DescriptionSection 
                   description={formData.description}
                   onDescriptionChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
                 />
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div className="w-full border-t border-[#CCDBFF]"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="px-2 text-sm text-secondary-foreground bg-white">Step 2</span>
+                  </div>
+                </div>
 
                 <RolesSection 
                   searchTerm={searchQuery}
@@ -97,13 +115,23 @@ const CreateProject = () => {
                 />
 
                 {formData.selectedRoles.map(role => (
-                  <SkillsSection
-                    key={role}
-                    roleTitle={role}
-                    selectedSkills={formData.roleSkills[role] || []}
-                    onSkillAdd={(skill) => handleAddSkill(role, skill)}
-                    onSkillRemove={(skill) => handleRemoveSkill(role, skill)}
-                  />
+                  <div key={role}>
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                        <div className="w-full border-t border-[#CCDBFF]"></div>
+                      </div>
+                      <div className="relative flex justify-center">
+                        <span className="px-2 text-sm text-secondary-foreground bg-white">Step 3</span>
+                      </div>
+                    </div>
+
+                    <SkillsSection
+                      roleTitle={role}
+                      selectedSkills={formData.roleSkills[role] || []}
+                      onSkillAdd={(skill) => handleAddSkill(role, skill)}
+                      onSkillRemove={(skill) => handleRemoveSkill(role, skill)}
+                    />
+                  </div>
                 ))}
 
                 {formData.selectedRoles.length > 0 && (
