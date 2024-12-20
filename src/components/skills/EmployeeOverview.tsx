@@ -11,6 +11,7 @@ import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { roleSkills } from "./data/roleSkills";
 import { EMPLOYEE_IMAGES } from "../employee/EmployeeData";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
+import { ToggledSkillsProvider } from "./context/ToggledSkillsContext";
 
 const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();
@@ -192,8 +193,10 @@ const EmployeeOverviewContent = () => {
 
 export const EmployeeOverview = () => {
   return (
-    <TrackProvider>
-      <EmployeeOverviewContent />
-    </TrackProvider>
+    <ToggledSkillsProvider>
+      <TrackProvider>
+        <EmployeeOverviewContent />
+      </TrackProvider>
+    </ToggledSkillsProvider>
   );
 };
