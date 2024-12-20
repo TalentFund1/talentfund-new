@@ -39,7 +39,8 @@ export const RoleSelectionSection = ({
     
     // Reset level when role changes to ensure track compatibility
     const roleData = roleSkills[newRole as keyof typeof roleSkills];
-    const defaultLevel = roleData?.roleTrack === "Managerial" ? "m3" : "p1";
+    const isManagerialRole = roleData?.roleTrack === "Managerial";
+    const defaultLevel = isManagerialRole ? "m3" : "p1";
     onLevelChange(defaultLevel);
     
     if (employee) {
