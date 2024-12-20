@@ -24,16 +24,30 @@ export const RoleSelectionSection = ({
   const employees = useEmployeeStore((state) => state.employees);
   const employee = employeeId ? employees.find(emp => emp.id === employeeId) : undefined;
 
+  // Get all available roles from roleSkills
+  const availableRoles = Object.entries(roleSkills).map(([id, data]) => ({
+    id,
+    title: data.title,
+    roleTrack: data.roleTrack || "Professional"
+  }));
+
+  console.log('Available roles:', availableRoles);
+
   const handleRoleChange = (newRole: string) => {
     console.log('Role changed:', { newRole, currentEmployee: employee });
     onRoleChange(newRole);
     
+    // Reset level when role changes to ensure track compatibility
+    const roleData = roleSkills[newRole as keyof typeof roleSkills];
+    const defaultLevel = roleData?.roleTrack === "Managerial" ? "m3" : "p1";
+    onLevelChange(defaultLevel);
+    
     if (employee) {
-      const roleTitle = Object.entries(roleSkills).find(([id]) => id === newRole)?.[1]?.title;
+      const roleTitle = roleData?.title;
       if (roleTitle) {
         const updatedEmployee = {
           ...employee,
-          role: `${roleTitle}: ${selectedLevel.toUpperCase()}`
+          role: `${roleTitle}: ${defaultLevel.toUpperCase()}`
         };
         updateEmployee(updatedEmployee);
         console.log('Updated employee role:', updatedEmployee.role);
@@ -50,7 +64,7 @@ export const RoleSelectionSection = ({
     onLevelChange(newLevel);
     
     if (employee) {
-      const roleTitle = Object.entries(roleSkills).find(([id]) => id === selectedRole)?.[1]?.title;
+      const roleTitle = roleSkills[selectedRole as keyof typeof roleSkills]?.title;
       if (roleTitle) {
         const updatedEmployee = {
           ...employee,
@@ -82,9 +96,17 @@ export const RoleSelectionSection = ({
     }
   };
 
-  // Determine which levels to show based on role type
-  const isManagerialRole = selectedRole === "126"; // Engineering Manager ID
+  // Determine which levels to show based on role track
+  const selectedRoleData = roleSkills[selectedRole as keyof typeof roleSkills];
+  const isManagerialRole = selectedRoleData?.roleTrack === "Managerial";
   const availableLevels = isManagerialRole ? managerialLevels : professionalLevels;
+
+  console.log('Role selection state:', {
+    selectedRole,
+    roleTrack: selectedRoleData?.roleTrack,
+    isManagerialRole,
+    availableLevels
+  });
 
   return (
     <div className="flex items-center gap-4 mt-4">
@@ -93,11 +115,11 @@ export const RoleSelectionSection = ({
           <SelectValue placeholder="Select role" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="123">AI Engineer</SelectItem>
-          <SelectItem value="124">Backend Engineer</SelectItem>
-          <SelectItem value="125">Frontend Engineer</SelectItem>
-          <SelectItem value="126">Engineering Manager</SelectItem>
-          <SelectItem value="127">DevOps Engineer</SelectItem>
+          {availableRoles.map(({ id, title }) => (
+            <SelectItem key={id} value={id}>
+              {title}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 
