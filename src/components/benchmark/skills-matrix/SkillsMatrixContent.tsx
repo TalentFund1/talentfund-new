@@ -1,5 +1,6 @@
-import { BenchmarkSkillsMatrixTable } from "./BenchmarkSkillsMatrixTable";
-import { SkillsMatrixTable } from "./SkillsMatrixTable";
+import { Table, TableBody } from "@/components/ui/table";
+import { SkillsMatrixRow } from "../SkillsMatrixRow";
+import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
 
 interface SkillsMatrixContentProps {
@@ -16,7 +17,6 @@ interface SkillsMatrixContentProps {
   setSelectedSearchSkills: (skills: string[]) => void;
   visibleItems: number;
   observerTarget: React.RefObject<HTMLDivElement>;
-  isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixContent = ({
@@ -32,13 +32,9 @@ export const SkillsMatrixContent = ({
   selectedSearchSkills,
   setSelectedSearchSkills,
   visibleItems,
-  observerTarget,
-  isRoleBenchmark = false
+  observerTarget
 }: SkillsMatrixContentProps) => {
-  console.log('Rendering SkillsMatrixContent with:', {
-    skillsCount: filteredSkills.length,
-    isRoleBenchmark
-  });
+  console.log('Rendering SkillsMatrixContent with skills:', filteredSkills);
 
   const removeSearchSkill = (skill: string) => {
     setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
@@ -60,16 +56,20 @@ export const SkillsMatrixContent = ({
         clearSearch={() => setSearchTerm("")}
       />
 
-      {isRoleBenchmark ? (
-        <BenchmarkSkillsMatrixTable 
-          filteredSkills={filteredSkills.slice(0, visibleItems)}
-        />
-      ) : (
-        <SkillsMatrixTable 
-          filteredSkills={filteredSkills.slice(0, visibleItems)}
-          isRoleBenchmark={false}
-        />
-      )}
+      <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
+        <Table>
+          <SkillsMatrixTableHeader showCompanySkill={true} />
+          <TableBody>
+            {filteredSkills.slice(0, visibleItems).map((skill) => (
+              <SkillsMatrixRow 
+                key={skill.title} 
+                skill={skill}
+                isRoleBenchmark={false}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       {visibleItems < filteredSkills.length && (
         <div 

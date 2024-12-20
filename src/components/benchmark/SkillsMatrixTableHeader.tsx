@@ -16,11 +16,6 @@ export const SkillsMatrixTableHeader = ({
   showCompanySkill = true,
   isRoleBenchmark = false
 }: SkillsMatrixTableHeaderProps) => {
-  console.log('SkillsMatrixTableHeader rendering with:', {
-    showCompanySkill,
-    isRoleBenchmark
-  });
-
   return (
     <TableHeader>
       <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
