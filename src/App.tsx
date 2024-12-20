@@ -11,6 +11,7 @@ import EmployeeProfile from "./pages/EmployeeProfile";
 import SkillProfileDetail from "./pages/SkillProfileDetail";
 import MarketData from "./pages/MarketData";
 import TalentMarketplace from "./pages/TalentMarketplace";
+import CreateProject from "./pages/CreateProject";
 
 const App = () => {
   const queryClient = new QueryClient({
@@ -39,6 +40,7 @@ const App = () => {
               <Route path="/employee/:id" element={<EmployeeProfile />} />
               <Route path="/market" element={<MarketData />} />
               <Route path="/marketplace" element={<TalentMarketplace />} />
+              <Route path="/create-project" element={<CreateProject />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
