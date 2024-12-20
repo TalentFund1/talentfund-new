@@ -19,7 +19,7 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'required');
+  initializeState(skillTitle, initialLevel, 'required');
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
