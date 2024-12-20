@@ -45,10 +45,11 @@ export const sortEmployeesByRoleMatch = (
   });
 
   employees.forEach(employee => {
+    // Get the role ID from the employee's assigned role
     const employeeRoleId = getSkillProfileId(employee.role);
     const employeeLevel = getLevel(employee.role);
     
-    // Only consider exact matches if the role IDs match exactly
+    // Compare role IDs directly for exact matches
     const isExactMatch = employeeRoleId === roleId;
 
     // Calculate benchmark for all employees
@@ -78,9 +79,8 @@ export const sortEmployeesByRoleMatch = (
 
     if (isExactMatch) {
       exactMatches.push(employeeWithBenchmark);
-    } else if (benchmark > 0 && !isExactMatch) {
+    } else if (benchmark > 0) {
       // Only add to partial matches if they have matching skills (benchmark > 0)
-      // AND they don't have an exact role match
       partialMatches.push(employeeWithBenchmark);
       console.log('Added to partial matches:', {
         employee: employee.name,
