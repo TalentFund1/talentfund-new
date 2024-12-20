@@ -187,7 +187,15 @@ export const useCompetencyStore = create<CompetencyState>()(
           ...currentState,
           roleStates: persistedState.roleStates || {},
           currentStates: persistedState.currentStates || {},
-          originalStates: persistedState.originalStates || {}
+          originalStates: persistedState.originalStates || {},
+          hasChanges: false,
+          setSkillState: currentState.setSkillState,
+          setSkillProgression: currentState.setSkillProgression,
+          resetLevels: currentState.resetLevels,
+          saveChanges: currentState.saveChanges,
+          cancelChanges: currentState.cancelChanges,
+          initializeState: currentState.initializeState,
+          getRoleState: currentState.getRoleState
         };
       }
     }
