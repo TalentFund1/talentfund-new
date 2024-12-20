@@ -85,9 +85,7 @@ export const RolesSection = ({
           ))}
         </div>
       </div>
-      <div className="py-8">
-        <Separator className="bg-[#CCDBFF]" />
-      </div>
+      <Separator className="my-8 bg-[#CCDBFF]" />
     </div>
   );
 };
