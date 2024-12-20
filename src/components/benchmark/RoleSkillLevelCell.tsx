@@ -29,18 +29,18 @@ export const RoleSkillLevelCell = ({
   const getLevelIcon = () => {
     switch (level?.toLowerCase()) {
       case 'advanced':
-        return <Star className="w-4 h-4 text-primary-accent" />;
+        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
       case 'intermediate':
-        return <Shield className="w-4 h-4 text-primary-icon" />;
+        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
       case 'beginner':
-        return <Target className="w-4 h-4 text-[#008000]" />;
+        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
       default:
         return null;
     }
   };
 
   const getLevelStyles = () => {
-    const baseStyles = 'rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center gap-2 min-h-[26px] text-[#1f2144]';
+    const baseStyles = 'rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center gap-2 min-h-[36px] text-[#1f2144]';
     
     switch (level?.toLowerCase()) {
       case 'advanced':
@@ -63,11 +63,11 @@ export const RoleSkillLevelCell = ({
           ? 'border-[#008000]'
           : 'border-gray-400';
 
-    return `text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 bg-gray-50/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
+    return `text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 bg-[#F9FAFB] border-x-2 border-b-2 min-h-[32px] rounded-b-md ${borderColor}`;
   };
 
   return (
-    <TableCell className="border-r border-blue-200 py-2">
+    <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <div className={getLevelStyles()}>
           {getLevelIcon()}
@@ -76,12 +76,12 @@ export const RoleSkillLevelCell = ({
         <div className={getRequirementStyles()}>
           {isRequired ? (
             <>
-              <Check className="w-3 h-3" />
+              <Check className="w-3.5 h-3.5" />
               Required
             </>
           ) : (
             <>
-              <Heart className="w-3 h-3" />
+              <Heart className="w-3.5 h-3.5" />
               Preferred
             </>
           )}
