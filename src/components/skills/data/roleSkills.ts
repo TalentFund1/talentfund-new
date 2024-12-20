@@ -89,8 +89,19 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
   console.log('Saving role skills:', { roleId, skills });
   
   try {
+    // Update localStorage
     localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(skills));
-    roleSkills[roleId] = skills;
+    
+    // Update in-memory state
+    roleSkills[roleId] = {
+      ...skills,
+      specialized: skills.specialized || [],
+      common: skills.common || [],
+      certifications: skills.certifications || [],
+      skills: skills.skills || []
+    };
+    
+    console.log('Updated role skills:', roleSkills[roleId]);
     
     // Dispatch custom event for components to update
     window.dispatchEvent(new CustomEvent('roleSkillsUpdated', { 

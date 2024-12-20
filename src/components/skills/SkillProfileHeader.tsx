@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
 import { EditSkillProfileForm } from "./form/EditSkillProfileForm";
@@ -13,8 +13,24 @@ interface SkillProfileHeaderProps {
 export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [currentRole, setCurrentRole] = useState(roleSkills[id as keyof typeof roleSkills]);
   const { id } = useParams<{ id: string }>();
-  const currentRole = roleSkills[id as keyof typeof roleSkills];
+  
+  // Listen for role updates
+  useEffect(() => {
+    const handleRoleUpdate = (event: CustomEvent) => {
+      if (event.detail.roleId === id) {
+        console.log('Role updated, refreshing header data for role:', id);
+        setCurrentRole(roleSkills[id as keyof typeof roleSkills]);
+      }
+    };
+
+    window.addEventListener('roleSkillsUpdated', handleRoleUpdate as EventListener);
+    return () => {
+      window.removeEventListener('roleSkillsUpdated', handleRoleUpdate as EventListener);
+    };
+  }, [id]);
+
   const occupation = currentRole ? `${currentRole.title} Specialist` : jobTitle;
   const soc = currentRole?.soc || "(11-9041)";
 
@@ -28,12 +44,20 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
 
   const fullDescription = roleDescriptions[jobTitle] || roleDescriptions["AI Engineer"];
 
+  console.log('SkillProfileHeader rendering with data:', {
+    id,
+    currentRole,
+    occupation,
+    soc,
+    jobTitle
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold text-foreground">{jobTitle}</h1>
+            <h1 className="text-2xl font-semibold text-foreground">{currentRole?.title || jobTitle}</h1>
             <span className="text-sm text-muted-foreground bg-background px-2 py-1 rounded-md border border-border">ID: {id}</span>
           </div>
         </div>
@@ -56,7 +80,7 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Function</span>
-            <p className="font-medium">Engineering</p>
+            <p className="font-medium">{currentRole?.function || "Engineering"}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
@@ -68,13 +92,13 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Mapped Title</span>
-            <p className="font-medium">{occupation}</p>
+            <p className="font-medium">{currentRole?.mappedTitle || occupation}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-white hover:border-white transition-colors">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Occupation</span>
-            <p className="font-medium">{currentRole?.title || jobTitle}</p>
+            <p className="font-medium">{currentRole?.occupation || currentRole?.title || jobTitle}</p>
           </div>
         </div>
       </div>
@@ -85,7 +109,7 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         <span className="text-sm text-muted-foreground font-medium">Job Description</span>
         <div className="space-y-2">
           <p className={`text-sm text-foreground/80 transition-all duration-300 ${isExpanded ? '' : 'line-clamp-2'}`}>
-            {fullDescription}
+            {currentRole?.description || fullDescription}
           </p>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -101,11 +125,11 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
         onOpenChange={setEditDialogOpen}
         initialData={{
           id: id || "",
-          title: jobTitle,
-          function: "Engineering",
-          mappedTitle: occupation,
-          occupation: currentRole?.title || jobTitle,
-          description: fullDescription,
+          title: currentRole?.title || jobTitle,
+          function: currentRole?.function || "Engineering",
+          mappedTitle: currentRole?.mappedTitle || occupation,
+          occupation: currentRole?.occupation || currentRole?.title || jobTitle,
+          description: currentRole?.description || fullDescription,
           soc: currentRole?.soc || "(11-9041)",
         }}
       />
