@@ -96,13 +96,14 @@ const CreateProject = () => {
                   onRoleRemove={handleRemoveRole}
                 />
 
-                {formData.selectedRoles.map(role => (
+                {formData.selectedRoles.map((role, index) => (
                   <SkillsSection
                     key={role}
                     roleTitle={role}
                     selectedSkills={formData.roleSkills[role] || []}
                     onSkillAdd={(skill) => handleAddSkill(role, skill)}
                     onSkillRemove={(skill) => handleRemoveSkill(role, skill)}
+                    isFirstRole={index === 0}
                   />
                 ))}
 

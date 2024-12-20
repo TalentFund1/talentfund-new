@@ -9,13 +9,15 @@ interface SkillsSectionProps {
   onSkillAdd: (skill: string) => void;
   onSkillRemove: (skill: string) => void;
   roleTitle: string;
+  isFirstRole?: boolean;
 }
 
 export const SkillsSection = ({ 
   selectedSkills,
   onSkillAdd,
   onSkillRemove,
-  roleTitle
+  roleTitle,
+  isFirstRole = false
 }: SkillsSectionProps) => {
   const matchingSkills = [
     "SwiftUI",
@@ -28,10 +30,12 @@ export const SkillsSection = ({
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <h2 className="text-lg font-medium text-primary">3. Add Project Skills for each Role</h2>
-        <p className="text-sm text-primary/60">Add the skills needed for each role in this project.</p>
-      </div>
+      {isFirstRole && (
+        <div className="space-y-2">
+          <h2 className="text-lg font-medium text-primary">3. Add Project Skills for each Role</h2>
+          <p className="text-sm text-primary/60">Add the skills needed for each role in this project.</p>
+        </div>
+      )}
 
       <h3 className="text-base font-medium text-primary mt-6">{roleTitle}</h3>
 
