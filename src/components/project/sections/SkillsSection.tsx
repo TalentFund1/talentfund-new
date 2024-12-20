@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { X, Plus } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 interface SkillsSectionProps {
   selectedSkills: string[];
