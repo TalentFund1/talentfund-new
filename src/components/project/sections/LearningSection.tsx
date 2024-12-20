@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 interface TimelinePhase {
   level: string;
@@ -28,6 +29,7 @@ interface LearningSectionProps {
 export const LearningSection = ({ learningPlan }: LearningSectionProps) => {
   return (
     <div className="space-y-6">
+      <Separator className="my-12 bg-[#CCDBFF]" />
       <div>
         <h2 className="text-lg font-medium text-primary">5. L&D Recommendations</h2>
         <p className="text-sm text-primary/60">Learning and development plan for skill transition.</p>
