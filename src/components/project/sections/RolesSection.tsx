@@ -85,7 +85,9 @@ export const RolesSection = ({
           ))}
         </div>
       </div>
-      <Separator className="my-12 bg-[#CCDBFF]" />
+      <div className="mt-10">
+        <Separator className="my-12 bg-[#CCDBFF]" />
+      </div>
     </div>
   );
 };

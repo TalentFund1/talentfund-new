@@ -16,7 +16,6 @@ export const SkillsSection = ({
   onSkillRemove,
   roleTitle
 }: SkillsSectionProps) => {
-  // These would typically come from an API or database
   const matchingSkills = [
     "SwiftUI",
     "Objective-C",
@@ -78,6 +77,9 @@ export const SkillsSection = ({
             </Button>
           ))}
         </div>
+      </div>
+      <div className="mt-10">
+        <Separator className="my-12 bg-[#CCDBFF]" />
       </div>
     </div>
   );
