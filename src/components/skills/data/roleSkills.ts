@@ -74,8 +74,19 @@ const getRoleSoc = (id: string): string => {
 
 // Helper function to determine default track based on role
 const getRoleDefaultTrack = (roleId: string): "Professional" | "Managerial" => {
-  // Only Engineering Manager is managerial by default
-  return roleId === "126" ? "Managerial" : "Professional";
+  console.log('Determining default track for role:', roleId);
+  
+  // Only Engineering Manager (126) should be managerial by default
+  const isManagerial = roleId === "126";
+  const track = isManagerial ? "Managerial" : "Professional";
+  
+  console.log('Default track determined:', {
+    roleId,
+    track,
+    isManagerial
+  });
+  
+  return track;
 };
 
 // Initialize roleSkills object
