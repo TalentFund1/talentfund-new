@@ -33,14 +33,12 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
-  // Determine which role ID to use for benchmark calculation
   const targetRoleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
     : getSkillProfileId(employee.role);
 
   const employeeLevel = getLevel(employee.role);
   
-  // Calculate benchmark percentage
   const benchmark = calculateBenchmarkPercentage(
     employee.id,
     targetRoleId,
@@ -50,11 +48,19 @@ export const EmployeeTableRow = ({
     getSkillCompetencyState
   );
 
-  // Calculate skill match ratio
   const getSkillMatch = () => {
     const employeeSkills = getEmployeeSkills(employee.id);
-    const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
     
+    if (selectedSkills.length > 0) {
+      // For skills filtering view, show simplified match ratio
+      const matchingSkills = selectedSkills.filter(skillName => 
+        employeeSkills.some(empSkill => empSkill.title === skillName)
+      );
+      return `${matchingSkills.length}/${selectedSkills.length}`;
+    }
+
+    // For baseline/other views, show full role skills match ratio
+    const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
     if (!roleData) return "0/0";
 
     const allRoleSkills = [
@@ -113,7 +119,8 @@ export const EmployeeTableRow = ({
     employeeLevel,
     benchmark,
     skillMatch: getSkillMatch(),
-    isExactMatch
+    isExactMatch,
+    isSkillsFiltering: selectedSkills.length > 0
   });
 
   return (
