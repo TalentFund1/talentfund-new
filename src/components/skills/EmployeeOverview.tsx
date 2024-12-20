@@ -57,9 +57,11 @@ const EmployeeOverviewContent = () => {
   });
 
   // Get partial matches (different roles but high skill match)
+  // Exclude employees that have an exact role match
   const partialMatchEmployees = employees
     .filter(emp => {
       const employeeRoleId = getSkillProfileId(emp.role);
+      // Skip if this employee has an exact role match
       if (employeeRoleId === roleId) return false;
 
       const benchmark = calculateBenchmarkPercentage(
@@ -70,6 +72,14 @@ const EmployeeOverviewContent = () => {
         toggledSkills,
         getSkillCompetencyState
       );
+
+      console.log('Checking partial match:', {
+        employee: emp.name,
+        employeeRole: emp.role,
+        employeeRoleId,
+        targetRoleId: roleId,
+        benchmark
+      });
 
       return benchmark > 70;
     })
