@@ -28,8 +28,51 @@ export const SkillsMatrix = () => {
   // Get employee skills directly
   const employeeSkills = getEmployeeSkills(id || "");
 
+  // Custom sorting function
+  const sortSkills = (skills: any[]) => {
+    return skills.sort((a, b) => {
+      const { currentStates } = useSkillsMatrixStore.getState();
+      const stateA = currentStates[a.title] || { level: a.level || 'unspecified', requirement: a.requirement || 'unknown' };
+      const stateB = currentStates[b.title] || { level: b.level || 'unspecified', requirement: b.requirement || 'unknown' };
+
+      // Helper function to get priority for levels
+      const getLevelPriority = (level: string) => {
+        switch (level.toLowerCase()) {
+          case 'advanced': return 0;
+          case 'intermediate': return 2;
+          case 'beginner': return 3;
+          default: return 4;
+        }
+      };
+
+      // Helper function to get priority for requirements
+      const getRequirementPriority = (requirement: string) => {
+        return requirement === 'required' || requirement === 'skill_goal' ? 0 : 1;
+      };
+
+      // First, compare levels
+      const levelPriorityA = getLevelPriority(stateA.level);
+      const levelPriorityB = getLevelPriority(stateB.level);
+      
+      if (levelPriorityA !== levelPriorityB) {
+        return levelPriorityA - levelPriorityB;
+      }
+
+      // If levels are the same, compare requirements
+      const reqPriorityA = getRequirementPriority(stateA.requirement);
+      const reqPriorityB = getRequirementPriority(stateB.requirement);
+      
+      if (reqPriorityA !== reqPriorityB) {
+        return reqPriorityA - reqPriorityB;
+      }
+
+      // If everything else is equal, sort alphabetically
+      return a.title.localeCompare(b.title);
+    });
+  };
+
   // Apply filtering and sorting
-  const filteredSkills = filterAndSortSkills(id || "");
+  const filteredSkills = sortSkills(filterAndSortSkills(id || ""));
 
   console.log('Skills matrix state:', {
     totalSkills: employeeSkills.length,
