@@ -63,4 +63,11 @@ export const isCertificationSkill = (skillTitle: string): boolean => {
   return getSkillCategory(skillTitle) === 'certification';
 };
 
+// Function to get all skills of a specific category
+export const getSkillsByCategory = (category: SkillCategory): string[] => {
+  return skillDefinitions
+    .filter(skill => skill.category === category)
+    .map(skill => skill.title);
+};
+
 console.log('Skill categories system initialized');
