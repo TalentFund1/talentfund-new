@@ -150,9 +150,9 @@ export const SkillLevelCell = ({
               </span>
             </SelectItem>
             <SelectItem value="not-interested">
-              <span className="flex items-center gap-1.5 whitespace-nowrap">
+              <span className="flex items-center gap-1.5">
                 <X className="w-3.5 h-3.5" />
-                Not Interested
+                <span className="whitespace-nowrap">Not Interested</span>
               </span>
             </SelectItem>
             <SelectItem value="unknown">
