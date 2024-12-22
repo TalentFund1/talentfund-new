@@ -1,22 +1,22 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { UnifiedSkill, SkillRequirement } from '../../skills/types/SkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { getAllSkills } from '../../skills/data/skills/allSkills';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 
 interface SkillState {
   level: string;
-  requirement: string;
+  requirement: SkillRequirement;
 }
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
   originalStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
+  setSkillState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
   resetSkills: () => void;
-  initializeState: (skillTitle: string, level: string, requirement: string) => void;
+  initializeState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -101,7 +101,7 @@ export const useSkillsMatrixState = (
     let filteredSkills = allSkills.map(skill => ({
       ...getUnifiedSkillData(skill.title),
       level: currentStates[skill.title]?.level || skill.level,
-      requirement: currentStates[skill.title]?.requirement || 'preferred'
+      requirement: (currentStates[skill.title]?.requirement || 'preferred') as SkillRequirement
     }));
 
     // Filter by category if not "all"
@@ -153,6 +153,6 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   return allSkills.map(skill => ({
     ...getUnifiedSkillData(skill.title),
     level: employeeSkillStates[skill.title]?.level || skill.level,
-    requirement: employeeSkillStates[skill.title]?.requirement || 'preferred'
+    requirement: (employeeSkillStates[skill.title]?.requirement || 'preferred') as SkillRequirement
   }));
 };
