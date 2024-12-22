@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { BenchmarkSkillsMatrixContent } from "./BenchmarkSkillsMatrixContent";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 interface BenchmarkSkillsMatrixViewProps {
   roleId: string;
@@ -19,6 +19,8 @@ interface BenchmarkSkillsMatrixViewProps {
   setSelectedSearchSkills: (skills: string[]) => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedRoleRequirement: string;
+  setSelectedRoleRequirement: (requirement: string) => void;
   visibleItems: number;
 }
 
