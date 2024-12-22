@@ -34,7 +34,13 @@ export const useSkillsFiltering = (
       employeeId,
       totalSkills: skills.length,
       selectedInterest,
-      selectedRoleRequirement
+      selectedRoleRequirement,
+      currentFilters: {
+        level: selectedLevel,
+        interest: selectedInterest,
+        skillLevel: selectedSkillLevel,
+        searchTerm
+      }
     });
 
     // Remove duplicates based on normalized titles
@@ -78,8 +84,16 @@ export const useSkillsFiltering = (
       }
 
       if (selectedInterest !== 'all') {
-        const normalizedSelectedRequirement = selectedInterest as EmployeeSkillRequirement;
+        // Convert 'required' to 'skill_goal' for filtering
+        const normalizedSelectedRequirement = selectedInterest === 'required' ? 'skill_goal' : selectedInterest as EmployeeSkillRequirement;
         matchesRequirement = employeeSkillState.requirement === normalizedSelectedRequirement;
+        
+        console.log('Requirement matching:', {
+          skill: skill.title,
+          employeeRequirement: employeeSkillState.requirement,
+          selectedRequirement: normalizedSelectedRequirement,
+          matches: matchesRequirement
+        });
       }
 
       if (searchTerm) {
