@@ -84,8 +84,14 @@ export const useSkillsFiltering = (
       }
 
       if (selectedInterest !== 'all') {
-        // Convert 'required' to 'skill_goal' for filtering
-        const normalizedSelectedRequirement = selectedInterest === 'required' ? 'skill_goal' : selectedInterest as EmployeeSkillRequirement;
+        // Map UI filter values to internal requirement types
+        const requirementMap: Record<string, EmployeeSkillRequirement> = {
+          'required': 'skill_goal',
+          'not_interested': 'not_interested',
+          'unknown': 'unknown'
+        };
+
+        const normalizedSelectedRequirement = requirementMap[selectedInterest] || selectedInterest as EmployeeSkillRequirement;
         matchesRequirement = employeeSkillState.requirement === normalizedSelectedRequirement;
         
         console.log('Requirement matching:', {
