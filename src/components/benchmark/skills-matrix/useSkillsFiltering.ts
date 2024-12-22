@@ -4,6 +4,7 @@ import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
+import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -93,19 +94,19 @@ export const useSkillsFiltering = (
       }
 
       // Get the requirement value and normalize it for comparison
-      const requirement = normalizeRequirement(currentSkillState?.requirement || skill.requirement || 'unknown');
+      const currentRequirement = currentSkillState?.requirement as EmployeeSkillRequirement || 'unknown';
       const selectedInterestNormalized = normalizeRequirement(selectedInterest);
 
       console.log('Checking interest filter for skill:', {
         skillName: skill.title,
-        requirement,
+        currentRequirement,
         selectedInterest: selectedInterestNormalized,
         currentState: currentSkillState,
-        matches: requirement === selectedInterestNormalized
+        matches: normalizeRequirement(currentRequirement) === selectedInterestNormalized
       });
 
       if (selectedInterest !== 'all') {
-        matchesInterest = requirement === selectedInterestNormalized;
+        matchesInterest = normalizeRequirement(currentRequirement) === selectedInterestNormalized;
       }
 
       if (searchTerm) {
@@ -117,7 +118,7 @@ export const useSkillsFiltering = (
       if (!matches && selectedInterest !== 'all') {
         console.log('Skill filtered out:', {
           skillName: skill.title,
-          requirement,
+          currentRequirement,
           selectedInterest: selectedInterestNormalized,
           matchesInterest
         });
@@ -129,7 +130,7 @@ export const useSkillsFiltering = (
       ...skill,
       employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
       roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
-      requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
+      requirement: currentStates[skill.title]?.requirement || 'unknown'
     }))
     .sort((a, b) => {
       const aRoleLevel = a.roleLevel;
