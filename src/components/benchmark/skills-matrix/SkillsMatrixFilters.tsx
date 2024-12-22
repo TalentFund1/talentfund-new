@@ -3,20 +3,15 @@ import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 interface SkillsMatrixFiltersProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  selectedLevel: string;
-  setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
   selectedSearchSkills: string[];
   removeSearchSkill: (skill: string) => void;
   clearSearch: () => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
 }
 
 export const SkillsMatrixFilters = ({
@@ -27,40 +22,14 @@ export const SkillsMatrixFilters = ({
   selectedSearchSkills,
   removeSearchSkill,
   clearSearch,
-  selectedCategory,
-  setSelectedCategory,
 }: SkillsMatrixFiltersProps) => {
   console.log('Rendering SkillsMatrixFilters with:', {
-    selectedInterest,
-    selectedCategory
+    selectedInterest
   });
 
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
-        <Select 
-          value={selectedCategory} 
-          onValueChange={(value) => {
-            console.log('Category selected:', value);
-            setSelectedCategory(value);
-          }}
-        >
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories">
-              {selectedCategory === 'all' && 'All Categories'}
-              {selectedCategory === 'specialized' && 'Specialized Skills'}
-              {selectedCategory === 'common' && 'Common Skills'}
-              {selectedCategory === 'certification' && 'Certification'}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="specialized">Specialized Skills</SelectItem>
-            <SelectItem value="common">Common Skills</SelectItem>
-            <SelectItem value="certification">Certification</SelectItem>
-          </SelectContent>
-        </Select>
-
         <Select 
           value={selectedInterest} 
           onValueChange={setSelectedInterest}

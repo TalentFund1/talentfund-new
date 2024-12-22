@@ -7,15 +7,11 @@ import { Button } from "@/components/ui/button";
 interface BenchmarkMatrixFiltersProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  selectedLevel: string;
-  setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
   selectedSearchSkills: string[];
   removeSearchSkill: (skill: string) => void;
   clearSearch: () => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
   selectedRoleRequirement: string;
   setSelectedRoleRequirement: (requirement: string) => void;
 }
@@ -28,34 +24,12 @@ export const BenchmarkMatrixFilters = ({
   selectedSearchSkills,
   removeSearchSkill,
   clearSearch,
-  selectedCategory,
-  setSelectedCategory,
   selectedRoleRequirement,
   setSelectedRoleRequirement,
 }: BenchmarkMatrixFiltersProps) => {
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
-        <Select 
-          value={selectedCategory} 
-          onValueChange={setSelectedCategory}
-        >
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories">
-              {selectedCategory === 'all' && 'All Categories'}
-              {selectedCategory === 'specialized' && 'Specialized Skills'}
-              {selectedCategory === 'common' && 'Common Skills'}
-              {selectedCategory === 'certification' && 'Certification'}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="specialized">Specialized Skills</SelectItem>
-            <SelectItem value="common">Common Skills</SelectItem>
-            <SelectItem value="certification">Certification</SelectItem>
-          </SelectContent>
-        </Select>
-
         <Select value={selectedRoleRequirement} onValueChange={setSelectedRoleRequirement}>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Requirements">
