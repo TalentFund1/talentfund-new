@@ -94,6 +94,13 @@ export const useSkillsMatrixState = (
     const employeeSkills = getEmployeeSkills(employeeId);
     let filteredSkills = [...employeeSkills];
 
+    console.log('Initial filtering state:', {
+      totalSkills: filteredSkills.length,
+      selectedCategory,
+      selectedLevel,
+      selectedInterest
+    });
+
     if (selectedCategory !== "all") {
       filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
     }
@@ -101,27 +108,46 @@ export const useSkillsMatrixState = (
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
-        return state?.level.toLowerCase() === selectedLevel.toLowerCase();
+        const matches = state?.level.toLowerCase() === selectedLevel.toLowerCase();
+        console.log('Level filtering:', {
+          skill: skill.title,
+          currentLevel: state?.level,
+          selectedLevel,
+          matches
+        });
+        return matches;
       });
     }
 
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
-        if (!state) return false;
-
-        switch (selectedInterest.toLowerCase()) {
-          case "skill_goal":
-            return state.requirement === "required" || state.requirement === "skill_goal";
-          case "not_interested":
-            return state.requirement === "not_interested";
-          case "unknown":
-            return !state.requirement || state.requirement === "unknown";
-          default:
-            return state.requirement === selectedInterest.toLowerCase();
+        if (!state) {
+          console.log('No state found for skill:', skill.title);
+          return false;
         }
+
+        const normalizedRequirement = state.requirement?.toLowerCase();
+        const normalizedSelectedInterest = selectedInterest.toLowerCase();
+
+        console.log('Interest filtering:', {
+          skill: skill.title,
+          requirement: normalizedRequirement,
+          selectedInterest: normalizedSelectedInterest,
+          matches: normalizedRequirement === normalizedSelectedInterest
+        });
+
+        return normalizedRequirement === normalizedSelectedInterest;
       });
     }
+
+    console.log('Final filtered skills:', {
+      totalFiltered: filteredSkills.length,
+      skills: filteredSkills.map(s => ({
+        title: s.title,
+        requirement: currentStates[s.title]?.requirement
+      }))
+    });
 
     return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
   };
