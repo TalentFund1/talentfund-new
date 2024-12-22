@@ -1,6 +1,25 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillState, EmployeeSkillRequirement, SkillsMatrixState } from '../../../types/skillTypes';
+import { EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+
+interface SkillsMatrixState {
+  skillStates: {
+    [employeeId: string]: {
+      [skillId: string]: EmployeeSkillState;
+    };
+  };
+  currentStates: {
+    [employeeId: string]: {
+      [skillId: string]: EmployeeSkillState;
+    };
+  };
+  hasChanges: boolean;
+  setSkillState: (employeeId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  initializeState: (employeeId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
+  getSkillState: (employeeId: string, skillId: string) => EmployeeSkillState | undefined;
+  saveChanges: () => void;
+  cancelChanges: () => void;
+}
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
@@ -32,7 +51,13 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             currentStates: {
               ...state.currentStates,
               [employeeId]: {
-                ...updatedSkillStates[employeeId]
+                ...state.currentStates[employeeId],
+                [skillId]: {
+                  employeeId,
+                  skillId,
+                  level,
+                  requirement
+                }
               }
             },
             hasChanges: true
@@ -103,7 +128,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 5, // Increment version to ensure clean state
+      version: 6, // Increment version to ensure clean state
       partialize: (state) => ({
         skillStates: state.skillStates,
         currentStates: state.currentStates
