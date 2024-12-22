@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { EmployeeSkillRequirement } from "./types/SkillTypes";
+import { EmployeeSkillRequirement } from "../../types/skillTypes";
 
 interface SkillBadgeProps {
   skill: BaseSkill;
@@ -22,6 +22,13 @@ export const SkillBadge = ({
   const { currentStates } = useSkillsMatrixStore();
   const skillState = currentStates[skill.name];
 
+  console.log('SkillBadge rendering:', {
+    skillName: skill.name,
+    currentState: skillState,
+    isSkillGoal,
+    isRoleBenchmark
+  });
+
   const getLevelColor = (level: string) => {
     switch (level?.toLowerCase()) {
       case "advanced":
@@ -37,16 +44,22 @@ export const SkillBadge = ({
 
   const shouldShowGoal = () => {
     // Don't show heart in role benchmark view
-    if (isRoleBenchmark) return false;
-    
-    // If explicitly passed as a prop
-    if (isSkillGoal) return true;
-    
-    // If it's in the current states
-    if (skillState) {
-      return skillState.requirement === 'skill_goal';
+    if (isRoleBenchmark) {
+      console.log('Not showing heart - role benchmark view');
+      return false;
     }
     
+    // If it's in the current states and requirement is skill_goal
+    if (skillState) {
+      const showHeart = skillState.requirement === 'skill_goal';
+      console.log('Checking skill state requirement:', {
+        requirement: skillState.requirement,
+        showHeart
+      });
+      return showHeart;
+    }
+    
+    console.log('Not showing heart - no matching conditions');
     return false;
   };
 

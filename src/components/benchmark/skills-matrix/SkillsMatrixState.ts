@@ -1,107 +1,102 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillState, EmployeeSkillRequirement } from '@/types/skillTypes';
-
-interface SkillsMatrixState {
-  currentStates: { [key: string]: EmployeeSkillState };
-  originalStates: { [key: string]: EmployeeSkillState };
-  hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
-  resetSkills: () => void;
-  initializeState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
-  saveChanges: () => void;
-  cancelChanges: () => void;
-}
+import { EmployeeSkillState, EmployeeSkillRequirement, SkillsMatrixState } from '../../../types/skillTypes';
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
+      skillStates: {},
       currentStates: {},
-      originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, requirement) => {
-        console.log('Setting skill state:', { skillName, level, requirement });
+      setSkillState: (employeeId, skillId, level, requirement) => {
+        console.log('Setting skill state:', { employeeId, skillId, level, requirement });
         
-        let finalRequirement: EmployeeSkillRequirement;
-        if (requirement === 'skill_goal' || requirement === 'required') {
-          finalRequirement = 'skill_goal';
-        } else if (requirement === 'not_interested' || requirement === 'not-interested') {
-          finalRequirement = 'not_interested';
-        } else {
-          finalRequirement = 'unknown';
-        }
-        
-        set((state) => ({
-          currentStates: {
-            ...state.currentStates,
-            [skillName]: { 
-              level, 
-              requirement: finalRequirement 
+        set((state) => {
+          const updatedSkillStates = {
+            ...state.skillStates,
+            [employeeId]: {
+              ...state.skillStates[employeeId],
+              [skillId]: {
+                employeeId,
+                skillId,
+                level,
+                requirement
+              }
+            }
+          };
+
+          return {
+            skillStates: updatedSkillStates,
+            currentStates: updatedSkillStates,
+            hasChanges: true
+          };
+        });
+      },
+
+      initializeState: (employeeId, skillId, initialLevel, initialRequirement) => {
+        const state = get();
+        if (!state.skillStates[employeeId]?.[skillId]) {
+          console.log('Initializing skill state:', { employeeId, skillId, initialLevel, initialRequirement });
+          
+          set((state) => ({
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                ...state.skillStates[employeeId],
+                [skillId]: {
+                  employeeId,
+                  skillId,
+                  level: initialLevel,
+                  requirement: initialRequirement
+                }
+              }
             },
-          },
-          hasChanges: true,
+            currentStates: {
+              ...state.currentStates,
+              [employeeId]: {
+                ...state.currentStates[employeeId],
+                [skillId]: {
+                  employeeId,
+                  skillId,
+                  level: initialLevel,
+                  requirement: initialRequirement
+                }
+              }
+            }
+          }));
+        }
+      },
+
+      getSkillState: (employeeId, skillId) => {
+        const state = get().skillStates[employeeId]?.[skillId];
+        console.log('Getting skill state:', { employeeId, skillId, state });
+        return state;
+      },
+
+      saveChanges: () => {
+        console.log('Saving skill matrix changes');
+        set((state) => ({
+          currentStates: state.skillStates,
+          hasChanges: false
         }));
       },
 
-      resetSkills: () =>
-        set(() => ({
-          currentStates: {},
-          originalStates: {},
-          hasChanges: false,
-        })),
-
-      initializeState: (skillName, level, requirement) =>
-        set((state) => {
-          if (!state.currentStates[skillName]) {
-            let finalRequirement: EmployeeSkillRequirement;
-            if (requirement === 'skill_goal' || requirement === 'required') {
-              finalRequirement = 'skill_goal';
-            } else if (requirement === 'not_interested' || requirement === 'not-interested') {
-              finalRequirement = 'not_interested';
-            } else {
-              finalRequirement = 'unknown';
-            }
-
-            return {
-              currentStates: {
-                ...state.currentStates,
-                [skillName]: { 
-                  level, 
-                  requirement: finalRequirement 
-                },
-              },
-              originalStates: {
-                ...state.originalStates,
-                [skillName]: { 
-                  level, 
-                  requirement: finalRequirement 
-                },
-              },
-            };
-          }
-          return state;
-        }),
-
-      saveChanges: () =>
+      cancelChanges: () => {
+        console.log('Canceling skill matrix changes');
         set((state) => ({
-          originalStates: { ...state.currentStates },
-          hasChanges: false,
-        })),
-
-      cancelChanges: () =>
-        set((state) => ({
-          currentStates: { ...state.originalStates },
-          hasChanges: false,
-        })),
+          skillStates: state.currentStates,
+          hasChanges: false
+        }));
+      }
     }),
     {
       name: 'skills-matrix-storage',
-      version: 1,
+      version: 4,
       partialize: (state) => ({
-        currentStates: state.currentStates,
-        originalStates: state.originalStates,
-      }),
+        skillStates: state.skillStates,
+        currentStates: state.currentStates
+      })
     }
   )
 );

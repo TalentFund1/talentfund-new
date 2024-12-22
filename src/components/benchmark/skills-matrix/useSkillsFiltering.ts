@@ -1,9 +1,8 @@
 import { useEmployeeStore } from "../../employee/store/employeeStore";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
-import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { EmployeeSkillRequirement, UnifiedSkill } from "../../../types/skillTypes";
-import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 
 const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
   switch (requirement?.toLowerCase()) {
@@ -31,7 +30,6 @@ export const useSkillsFiltering = (
   selectedRoleRequirement: string = 'all'
 ) => {
   const { getSkillState } = useEmployeeStore();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
@@ -66,98 +64,50 @@ export const useSkillsFiltering = (
     });
     skills = Array.from(uniqueSkills.values());
 
-    // If this is role benchmark view, filter by role skills
-    if (isRoleBenchmark) {
-      const roleSkillTitles = new Set([
-        ...(currentRoleSkills.specialized || []).map(s => s.title),
-        ...(currentRoleSkills.common || []).map(s => s.title),
-        ...(currentRoleSkills.certifications || []).map(s => s.title)
-      ]);
-      skills = skills.filter(skill => roleSkillTitles.has(skill.title));
+    // Filter by category if selected
+    if (selectedLevel !== 'all') {
+      skills = skills.filter(skill => {
+        const skillData = getUnifiedSkillData(skill.title);
+        console.log('Filtering skill by category:', {
+          skill: skill.title,
+          category: skillData.category,
+          selectedLevel,
+          matches: skillData.category === selectedLevel
+        });
+        return skillData.category === selectedLevel;
+      });
     }
 
-    // Apply filters
-    return skills.filter(skill => {
-      let matchesSearch = true;
-      let matchesSkillLevel = true;
-      let matchesRequirement = true;
-
-      const employeeSkillState = getSkillState(employeeId, skill.title);
-      
-      console.log('Processing skill for filtering:', {
-        skill: skill.title,
-        employeeSkillState,
-        selectedSkillLevel,
-        currentLevel: employeeSkillState?.level
+    // Filter by interest/requirement if selected
+    if (selectedInterest !== 'all') {
+      skills = skills.filter(skill => {
+        const employeeSkillState = getSkillState(employeeId, skill.title);
+        if (!employeeSkillState) return false;
+        return normalizeRequirement(employeeSkillState.requirement) === selectedInterest;
       });
+    }
 
-      // Filter by employee skill level if selected
-      if (selectedSkillLevel !== 'all') {
-        const skillLevel = employeeSkillState?.level?.toLowerCase() || 'unspecified';
-        matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
-        
-        console.log('Skill level matching:', {
-          skill: skill.title,
-          actualLevel: skillLevel,
-          selectedLevel: selectedSkillLevel,
-          matches: matchesSkillLevel
-        });
-      }
+    // Filter by search term if provided
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      skills = skills.filter(skill => 
+        skill.title.toLowerCase().includes(searchLower)
+      );
+    }
 
-      // Filter by requirement/interest if selected
-      if (selectedInterest !== 'all') {
-        const normalizedRequirement = normalizeRequirement(employeeSkillState?.requirement || 'unknown');
-        matchesRequirement = normalizedRequirement === selectedInterest;
-        
-        console.log('Requirement matching:', {
-          skill: skill.title,
-          originalRequirement: employeeSkillState?.requirement,
-          normalizedRequirement,
-          selectedRequirement: selectedInterest,
-          matches: matchesRequirement
-        });
-      }
+    console.log('Final filtered skills:', {
+      totalFiltered: skills.length,
+      skills: skills.map(s => ({
+        title: s.title,
+        category: getUnifiedSkillData(s.title).category,
+        requirement: getSkillState(employeeId, s.title)?.requirement
+      }))
+    });
 
-      // Search term filtering
-      if (searchTerm) {
-        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
-      }
-
-      const matches = matchesSearch && matchesSkillLevel && matchesRequirement;
-      
-      if (!matches) {
-        console.log('Skill filtered out:', {
-          skillName: skill.title,
-          matchesSearch,
-          matchesSkillLevel,
-          matchesRequirement
-        });
-      }
-
-      return matches;
-    })
-    .map(skill => ({
-      ...skill,
-      employeeLevel: getSkillState(employeeId, skill.title)?.level || 'unspecified',
-      requirement: normalizeRequirement(getSkillState(employeeId, skill.title)?.requirement || 'unknown')
-    }))
-    .sort((a, b) => a.title.localeCompare(b.title));
+    return skills;
   };
 
   const filteredSkills = filterSkills();
-
-  console.log('Final filtered skills:', {
-    employeeId,
-    totalSkills: employeeSkills.length,
-    filteredSkills: filteredSkills.length,
-    filters: {
-      selectedLevel,
-      selectedSkillLevel,
-      searchTerm,
-      isRoleBenchmark,
-      selectedInterest
-    }
-  });
 
   return { filteredSkills };
 };
