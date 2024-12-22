@@ -1,3 +1,8 @@
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+export type SkillWeight = 'critical' | 'technical' | 'necessary';
+export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
+export type RoleSkillRequirement = 'required' | 'preferred';
+
 export interface UnifiedSkill {
   id: string;
   title: string;
@@ -12,11 +17,6 @@ export interface UnifiedSkill {
   benchmarks: { [key: string]: boolean };
   requirement?: EmployeeSkillRequirement;
 }
-
-export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface EmployeeSkillState {
   level: string;
@@ -45,4 +45,51 @@ export interface RoleSkillData {
   mappedTitle?: string;
   occupation?: string;
   description?: string;
+}
+
+export interface DetailedSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface BaseSkill {
+  name: string;
+}
+
+export interface Certification extends BaseSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface SkillProfileRow {
+  id: string;
+  name: string;
+  function: string;
+  skillCount: string;
+  employees: string;
+  matches: string;
+  lastUpdated: string;
+  occupation?: string;
+}
+
+export interface EmployeeSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: EmployeeSkillRequirement;
+}
+
+export interface RoleSkill {
+  title: string;
+  subcategory: string;
+  level?: string;
+  growth: string;
+  confidence?: string;
+  requirement?: RoleSkillRequirement;
+  salary?: string;
+  benchmarks?: { [key: string]: boolean };
 }

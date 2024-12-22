@@ -1,16 +1,4 @@
-export type RoleSkillRequirement = 'required' | 'preferred';
-export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-
-export interface RoleSkillState {
-  level: string;
-  requirement: RoleSkillRequirement;
-}
-
-export interface RoleState {
-  [skillName: string]: {
-    [levelKey: string]: RoleSkillState;
-  };
-}
+import { RoleState, RoleSkillState, RoleSkillRequirement } from '../../types/SkillTypes';
 
 export interface CompetencyState {
   roleStates: Record<string, RoleState>;

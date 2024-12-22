@@ -1,4 +1,4 @@
-import { RoleState, RoleSkillState, RoleSkillRequirement } from './types';
+import { RoleState, RoleSkillState, RoleSkillRequirement } from '../../types/SkillTypes';
 import { persistState } from './persistenceUtils';
 
 export const setSkillStateAction = (
