@@ -5,16 +5,16 @@ const skillDefinitionMap = new Map(
   skillDefinitions.map(skill => [skill.title, skill])
 );
 
-export const getSkillWeight = (skillTitle: string): SkillWeight => {
-  console.log('Determining weight for skill:', skillTitle);
-  const skill = skillDefinitionMap.get(skillTitle);
-  return skill?.weight || 'necessary';
+export const getSkillWeight = (skill: { title: string }): SkillWeight => {
+  console.log('Getting weight for skill:', skill.title);
+  const skillDef = skillDefinitionMap.get(skill.title);
+  return skillDef?.weight || 'necessary';
 };
 
-export const getSkillType = (skillTitle: string): SkillCategory => {
-  console.log('Determining type for skill:', skillTitle);
-  const skill = skillDefinitionMap.get(skillTitle);
-  return skill?.category || 'common';
+export const getSkillType = (skill: { title: string }): SkillCategory => {
+  console.log('Getting type for skill:', skill.title);
+  const skillDef = skillDefinitionMap.get(skill.title);
+  return skillDef?.category || 'common';
 };
 
 export const getWeightColor = (weight: SkillWeight): string => {
