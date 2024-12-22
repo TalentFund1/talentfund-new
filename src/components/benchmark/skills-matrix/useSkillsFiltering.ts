@@ -5,6 +5,7 @@ import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
 import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
+import { useEmployeeStore } from "../../employee/store/employeeStore";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -22,6 +23,7 @@ export const useSkillsFiltering = (
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  const { getSkillState } = useEmployeeStore();
 
   if (!currentRoleSkills && isRoleBenchmark) {
     console.warn('No role skills found for role:', selectedRole);
@@ -84,6 +86,7 @@ export const useSkillsFiltering = (
 
       const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
       const roleSkillLevel = competencyState?.level || 'unspecified';
+      const employeeSkillState = getSkillState(employeeId, skill.title);
 
       if (selectedLevel !== 'all') {
         matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
@@ -96,16 +99,15 @@ export const useSkillsFiltering = (
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      // Get the requirement value and normalize it for comparison
-      const currentRequirement = currentSkillState?.requirement || 'unknown';
+      // Get the employee skill requirement and normalize it for comparison
+      const employeeRequirement = employeeSkillState.requirement;
       const normalizedSelectedRequirement = normalizeRequirement(selectedInterest);
-      const normalizedCurrentRequirement = normalizeRequirement(currentRequirement);
 
       if (selectedInterest !== 'all') {
-        matchesRequirement = normalizedCurrentRequirement === normalizedSelectedRequirement;
+        matchesRequirement = employeeRequirement === normalizedSelectedRequirement;
         console.log('Filtering by requirement:', {
           skillTitle: skill.title,
-          currentRequirement: normalizedCurrentRequirement,
+          employeeRequirement,
           selectedRequirement: normalizedSelectedRequirement,
           matches: matchesRequirement
         });
@@ -120,7 +122,7 @@ export const useSkillsFiltering = (
       if (!matches) {
         console.log('Skill filtered out:', {
           skillName: skill.title,
-          currentRequirement: normalizedCurrentRequirement,
+          employeeRequirement,
           selectedRequirement: normalizedSelectedRequirement,
           matchesRequirement
         });
@@ -132,7 +134,7 @@ export const useSkillsFiltering = (
       ...skill,
       employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
       roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
-      requirement: currentStates[skill.title]?.requirement || 'unknown'
+      requirement: getSkillState(employeeId, skill.title).requirement
     }))
     .sort((a, b) => {
       const aRoleLevel = a.roleLevel;
