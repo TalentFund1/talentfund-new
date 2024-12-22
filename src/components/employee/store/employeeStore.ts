@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
-import { UnifiedSkill, EmployeeSkillState } from "../../skills/types/SkillTypes";
+import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
 
 interface EmployeeStore {
   employees: Employee[];
@@ -13,7 +13,7 @@ interface EmployeeStore {
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => UnifiedSkill[];
-  setSkillState: (employeeId: string, skillName: string, level: string, requirement: EmployeeSkillState['requirement']) => void;
+  setSkillState: (employeeId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }

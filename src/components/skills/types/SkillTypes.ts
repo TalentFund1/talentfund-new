@@ -11,7 +11,6 @@ export interface UnifiedSkill {
   salary: string;
   confidence: string;
   benchmarks: { [key: string]: boolean };
-  requirement?: EmployeeSkillRequirement;
 }
 
 // Skill categories and weights from universal database
