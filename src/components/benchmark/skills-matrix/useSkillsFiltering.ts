@@ -1,11 +1,8 @@
-import { useSkillsMatrixStore } from "./SkillsMatrixState";
-import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
+import { useEmployeeStore } from "../../employee/store/employeeStore";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
-import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
 import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
-import { useEmployeeStore } from "../../employee/store/employeeStore";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -19,11 +16,9 @@ export const useSkillsFiltering = (
   isRoleBenchmark: boolean = false,
   selectedRoleRequirement: string = 'all'
 ) => {
-  const { currentStates } = useSkillsMatrixStore();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { getSkillState, getCompetencyState } = useEmployeeStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-  const { getSkillState } = useEmployeeStore();
 
   if (!currentRoleSkills && isRoleBenchmark) {
     console.warn('No role skills found for role:', selectedRole);
@@ -87,7 +82,7 @@ export const useSkillsFiltering = (
       let matchesSkillLevel = true;
       let matchesRequirement = true;
 
-      const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+      const competencyState = getCompetencyState(selectedRole, skill.title, comparisonLevel);
       const roleSkillLevel = competencyState?.level || 'unspecified';
       const employeeSkillState = getSkillState(employeeId, skill.title);
 
@@ -142,8 +137,8 @@ export const useSkillsFiltering = (
     .map(skill => ({
       ...skill,
       employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
-      roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
-      requirement: getSkillState(employeeId, skill.title).requirement
+      roleLevel: getCompetencyState(selectedRole, skill.title, comparisonLevel)?.level || 'unspecified',
+      requirement: employeeSkillState.requirement
     }))
     .sort((a, b) => {
       const aRoleLevel = a.roleLevel;
