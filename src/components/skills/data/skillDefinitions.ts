@@ -1,131 +1,142 @@
 import { UnifiedSkill } from '../../../types/skillTypes';
 
+// Universal skill database - single source of truth
 export const skillDefinitions: UnifiedSkill[] = [
   {
-    id: "ai_1",
+    id: "SKILL001",
     title: "Machine Learning",
-    subcategory: "Artificial Intelligence",
+    subcategory: "AI & ML",
     category: "specialized",
-    businessCategory: "AI & Machine Learning",
-    weight: "critical",
-    level: "advanced",
-    growth: "25%",
-    salary: "$150,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: "ai_2",
-    title: "Natural Language Processing",
-    subcategory: "Artificial Intelligence",
-    category: "specialized",
-    businessCategory: "AI & Machine Learning",
-    weight: "critical",
-    level: "advanced",
-    growth: "30%",
-    salary: "$140,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: "dev_1",
-    title: "JavaScript",
-    subcategory: "Web Development",
-    category: "specialized",
-    businessCategory: "Software Development",
-    weight: "critical",
-    level: "advanced",
-    growth: "20%",
-    salary: "$120,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: "dev_2",
-    title: "React",
-    subcategory: "Web Development",
-    category: "specialized",
-    businessCategory: "Software Development",
-    weight: "critical",
-    level: "advanced",
-    growth: "25%",
-    salary: "$130,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: "dev_3",
-    title: "Node.js",
-    subcategory: "Web Development",
-    category: "specialized",
-    businessCategory: "Software Development",
-    weight: "critical",
-    level: "advanced",
-    growth: "22%",
-    salary: "$125,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: "soft_1",
-    title: "Communication Skills",
-    subcategory: "Soft Skills",
-    category: "common",
-    businessCategory: "Professional Skills",
-    weight: "necessary",
-    level: "intermediate",
-    growth: "15%",
-    salary: "$80,000",
-    confidence: "medium",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: "soft_2",
-    title: "Teamwork",
-    subcategory: "Soft Skills",
-    category: "common",
-    businessCategory: "Professional Skills",
-    weight: "necessary",
-    level: "intermediate",
-    growth: "10%",
-    salary: "$75,000",
-    confidence: "medium",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: "cert_1",
-    title: "AWS Certified Solutions Architect",
-    subcategory: "Certifications",
-    category: "certification",
-    businessCategory: "Cloud Computing",
+    businessCategory: "Information Technology",
     weight: "critical",
     level: "advanced",
     growth: "35%",
-    salary: "$150,000",
+    salary: "$185,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: "SKILL002",
+    title: "Deep Learning",
+    subcategory: "AI & ML",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "32%",
+    salary: "$180,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: "SKILL003",
+    title: "Natural Language Processing",
+    subcategory: "AI & ML",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "30%",
+    salary: "$175,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: "SKILL006",
+    title: "Node.js",
+    subcategory: "Backend Development",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "advanced",
+    growth: "30%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: "SKILL007",
+    title: "Database Design",
+    subcategory: "Backend Development",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "advanced",
+    growth: "28%",
+    salary: "$155,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: "SKILL011",
+    title: "React",
+    subcategory: "Frontend Development",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "25%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: "SKILL016",
+    title: "Problem Solving",
+    subcategory: "Soft Skills",
+    category: "common",
+    businessCategory: "Physical and Inherent Abilities",
+    weight: "necessary",
+    level: "advanced",
+    growth: "15%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: "SKILL017",
+    title: "Code Review",
+    subcategory: "Soft Skills",
+    category: "common",
+    businessCategory: "Physical and Inherent Abilities",
+    weight: "necessary",
+    level: "advanced",
+    growth: "14%",
+    salary: "$155,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: "SKILL023",
+    title: "AWS Certified Solutions Architect",
+    subcategory: "Cloud Certification",
+    category: "certification",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "28%",
+    salary: "$180,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];
 
-// Helper functions to access the universal database
+// Helper functions
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
+  console.log('Looking up skill in universal database:', title);
   return skillDefinitions.find(
     skill => skill.title.toLowerCase() === title.toLowerCase()
   );
 };
 
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
+  console.log(`Getting skills for category: ${category}`);
   return skillDefinitions.filter(skill => skill.category === category);
 };
 
-export const getSkillWeight = (title: string): UnifiedSkill['weight'] => {
-  const skill = getSkillByTitle(title);
-  return skill?.weight || 'necessary';
-};
-
-export const getSkillCategory = (title: string): UnifiedSkill['category'] => {
-  const skill = getSkillByTitle(title);
-  return skill?.category || 'common';
+export const getAllSkills = (): UnifiedSkill[] => {
+  console.log('Getting all skills:', skillDefinitions.length, 'skills found');
+  return skillDefinitions;
 };
 
 console.log('Initialized universal skills database:', {
