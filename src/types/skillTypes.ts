@@ -51,6 +51,12 @@ export interface UnifiedSkill {
   benchmarks?: { [key: string]: boolean };
 }
 
+export interface DetailedSkill {
+  name: string;
+  level: SkillLevel;
+  isSkillGoal: boolean;
+}
+
 export interface RoleSkillData {
   title: string;
   soc?: string;
@@ -119,4 +125,17 @@ export const getLevelPriority = (level: SkillLevel = 'unspecified'): number => {
 
 export const compareSkillLevels = (a: SkillLevel, b: SkillLevel): number => {
   return getLevelPriority(a) - getLevelPriority(b);
+};
+
+// Type guards
+export const isSkillLevel = (value: any): value is SkillLevel => {
+  return ['advanced', 'intermediate', 'beginner', 'unspecified'].includes(value);
+};
+
+export const isEmployeeSkillRequirement = (value: any): value is EmployeeSkillRequirement => {
+  return ['skill_goal', 'not_interested', 'unknown'].includes(value);
+};
+
+export const isRoleSkillRequirement = (value: any): value is RoleSkillRequirement => {
+  return ['required', 'preferred'].includes(value);
 };
