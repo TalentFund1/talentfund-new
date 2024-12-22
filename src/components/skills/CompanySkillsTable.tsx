@@ -7,20 +7,11 @@ import { roleSkills } from './data/roleSkills';
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
   
-  // Count occurrences of each skill and get their data
-  const skillCounts = Array.from(toggledSkills).reduce((acc, skillTitle) => {
-    acc[skillTitle] = (acc[skillTitle] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  // Get unique skills with their counts
-  const uniqueSkills = Array.from(new Set(Array.from(toggledSkills))).map(skillTitle => {
-    console.log('Getting data for unique toggled skill:', skillTitle);
+  // Get unique skills with their counts, but only for toggled skills
+  const uniqueSkills = Array.from(toggledSkills).map(skillTitle => {
+    console.log('Getting data for toggled skill:', skillTitle);
     const skillData = getUnifiedSkillData(skillTitle);
-    return {
-      ...skillData,
-      count: skillCounts[skillTitle] || 1
-    };
+    return skillData;
   });
 
   // Helper function to get the type
@@ -39,7 +30,7 @@ export const CompanySkillsTable = () => {
     return 'Uncategorized';
   };
 
-  console.log('Displaying unique toggled skills with counts:', uniqueSkills);
+  console.log('Displaying toggled skills:', uniqueSkills);
 
   return (
     <Card className="p-6 bg-white">
@@ -79,10 +70,8 @@ export const CompanySkillsTable = () => {
                   </TableCell>
                   <TableCell className="text-right">{skill.salary}</TableCell>
                   <TableCell className="text-center">
-                    <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm ${
-                      skill.count > 1 ? 'bg-primary-accent/10 text-primary-accent' : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {skill.count}
+                    <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm bg-gray-100 text-gray-800">
+                      1
                     </span>
                   </TableCell>
                 </TableRow>
