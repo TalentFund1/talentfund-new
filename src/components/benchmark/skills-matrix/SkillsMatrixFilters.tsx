@@ -18,6 +18,7 @@ interface SkillsMatrixFiltersProps {
   clearSearch: () => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixFilters = ({
@@ -34,6 +35,7 @@ export const SkillsMatrixFilters = ({
   clearSearch,
   selectedCategory,
   setSelectedCategory,
+  isRoleBenchmark = false
 }: SkillsMatrixFiltersProps) => {
   return (
     <div className="space-y-6">

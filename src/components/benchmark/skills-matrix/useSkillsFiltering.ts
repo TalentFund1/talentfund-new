@@ -14,7 +14,7 @@ export const useSkillsFiltering = (
   selectedLevel: string,
   selectedInterest: string,
   selectedSkillLevel: string,
-  searchTerm: string,
+  searchTerm: string | undefined,
   toggledSkills: Set<string>,
   isRoleBenchmark: boolean = false,
   selectedRoleRequirement: string = 'all'
@@ -68,7 +68,7 @@ export const useSkillsFiltering = (
     skills = Array.from(uniqueSkills.values());
 
     // If this is role benchmark view, filter by role skills
-    if (isRoleBenchmark) {
+    if (isRoleBenchmark && currentRoleSkills) {
       const roleSkillTitles = new Set([
         ...(currentRoleSkills.specialized || []).map(s => s.title),
         ...(currentRoleSkills.common || []).map(s => s.title),
@@ -114,7 +114,9 @@ export const useSkillsFiltering = (
       }
 
       if (searchTerm) {
-        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const normalizedSearch = searchTerm.toLowerCase();
+        const normalizedTitle = skill.title.toLowerCase();
+        matchesSearch = normalizedTitle.includes(normalizedSearch);
       }
 
       const matches = matchesLevel && matchesSearch && matchesSkillLevel && matchesRequirement;

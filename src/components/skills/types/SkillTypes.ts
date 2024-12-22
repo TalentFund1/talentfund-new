@@ -1,60 +1,71 @@
-export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
+// Basic skill types
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 
-// Employee-specific types
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
+export type RoleSkillRequirement = 'required' | 'preferred' | 'optional';
 
-export interface EmployeeSkillState {
+export interface SkillState {
   level: string;
-  requirement: EmployeeSkillRequirement;
+  requirement?: RoleSkillRequirement;
 }
-
-export interface EmployeeState {
-  [skillName: string]: EmployeeSkillState;
-}
-
-// Role-specific types
-export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface RoleSkillState {
   level: string;
   requirement: RoleSkillRequirement;
 }
 
-export interface RoleState {
-  [skillName: string]: {
-    [levelKey: string]: RoleSkillState;
-  };
+export interface EmployeeSkillState {
+  level: string;
+  requirement: EmployeeSkillRequirement;
 }
 
-// Shared skill types
 export interface UnifiedSkill {
-  id: string;
   title: string;
   subcategory: string;
-  category: SkillCategory;
-  businessCategory: string;
-  weight: SkillWeight;
-  level: string;
+  level?: string;
   growth: string;
-  salary: string;
-  confidence: string;
-  requirement?: RoleSkillRequirement;
-  benchmarks: { [key: string]: boolean };
+  confidence?: string;
+  salary?: string;
+  category?: string;
+  weight?: string;
+  type?: string;
 }
 
 export interface RoleSkillData {
   title: string;
-  roleTrack: "Professional" | "Managerial";
+  roleTrack: 'Professional' | 'Managerial';
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
   skills: UnifiedSkill[];
-  soc?: string;
-  function?: string;
-  mappedTitle?: string;
-  occupation?: string;
   description?: string;
+}
+
+// Component-specific types
+export interface DetailedSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface EmployeeSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: EmployeeSkillRequirement;
+}
+
+export interface RoleSkill {
+  title: string;
+  subcategory: string;
+  level?: string;
+  growth: string;
+  confidence?: string;
+  requirement?: RoleSkillRequirement;
+  salary?: string;
+  benchmarks?: { [key: string]: boolean };
 }
 
 // Helper functions to convert between requirement types
@@ -63,7 +74,7 @@ export const convertToEmployeeRequirement = (roleReq: RoleSkillRequirement): Emp
     case 'required':
       return 'skill_goal';
     case 'preferred':
-      return 'unknown';
+      return 'skill_goal';
     default:
       return 'unknown';
   }
@@ -74,20 +85,8 @@ export const convertToRoleRequirement = (empReq: EmployeeSkillRequirement): Role
     case 'skill_goal':
       return 'required';
     case 'not_interested':
-    case 'unknown':
+      return 'optional';
     default:
       return 'preferred';
   }
 };
-
-export interface SkillsMatrixFiltersProps {
-  selectedLevel: string;
-  setSelectedLevel: (level: string) => void;
-  selectedInterest: string;
-  setSelectedInterest: (interest: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-  isRoleBenchmark?: boolean;
-  selectedRoleRequirement?: string;
-  setSelectedRoleRequirement?: (requirement: string) => void;
-}
