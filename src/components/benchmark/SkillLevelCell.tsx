@@ -19,11 +19,11 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'required');
+  initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'skill_goal');
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'required'
+    requirement: 'skill_goal'
   };
 
   const getLevelIcon = (level: string) => {
@@ -41,9 +41,9 @@ export const SkillLevelCell = ({
 
   const getRequirementIcon = (requirement: string = 'unknown') => {
     switch (requirement?.toLowerCase()) {
-      case 'required':
+      case 'skill_goal':
         return <Check className="w-3.5 h-3.5" />;
-      case 'not-interested':
+      case 'not_interested':
         return <X className="w-3.5 h-3.5" />;
       case 'unknown':
         return <CircleDashed className="w-3.5 h-3.5" />;
@@ -66,7 +66,7 @@ export const SkillLevelCell = ({
   };
 
   const getLowerBorderColorClass = (level: string, requirement: string) => {
-    if (requirement?.toLowerCase() !== 'required') {
+    if (requirement?.toLowerCase() !== 'skill_goal') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
@@ -78,8 +78,8 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.level || 'unspecified'} 
           onValueChange={(value) => {
-            setSkillState(skillTitle, value, currentState?.requirement || 'required');
-            onLevelChange?.(value, currentState?.requirement || 'required');
+            setSkillState(skillTitle, value, currentState?.requirement || 'skill_goal');
+            onLevelChange?.(value, currentState?.requirement || 'skill_goal');
           }}
         >
           <SelectTrigger className={`
@@ -122,7 +122,7 @@ export const SkillLevelCell = ({
         </Select>
 
         <Select 
-          value={currentState?.requirement || 'required'}
+          value={currentState?.requirement || 'unknown'}
           onValueChange={(value) => {
             setSkillState(skillTitle, currentState?.level || 'unspecified', value);
             onLevelChange?.(currentState?.level || 'unspecified', value);
@@ -131,25 +131,25 @@ export const SkillLevelCell = ({
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-            ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement || 'required')}
+            ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement || 'unknown')}
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
                 {getRequirementIcon(currentState?.requirement)}
-                {currentState?.requirement === 'required' ? 'Skill Goal' : 
-                 currentState?.requirement === 'not-interested' ? 'Not Interested' : 
-                 currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+                {currentState?.requirement === 'skill_goal' ? 'Skill Goal' : 
+                 currentState?.requirement === 'not_interested' ? 'Not Interested' : 
+                 currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="required">
+            <SelectItem value="skill_goal">
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5" />
                 Skill Goal
               </span>
             </SelectItem>
-            <SelectItem value="not-interested">
+            <SelectItem value="not_interested">
               <span className="flex items-center gap-1.5">
                 <X className="w-3.5 h-3.5" />
                 Not Interested
