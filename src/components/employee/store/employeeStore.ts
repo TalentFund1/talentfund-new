@@ -116,6 +116,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               ...state.skillStates[employeeId],
               [skillName]: {
+                employeeId,
+                skillId,
                 level,
                 requirement
               }
@@ -133,11 +135,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
     {
       name: 'employee-store',
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        employees: state.employees,
-        employeeSkills: state.employeeSkills,
-        skillStates: state.skillStates
-      })
+      version: 2
     }
   )
 );
