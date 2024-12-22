@@ -1,6 +1,6 @@
 export interface RoleSkillState {
   level: string;
-  requirement: 'required' | 'preferred';
+  requirement: 'required' | 'preferred' | 'not_interested' | 'skill_goal' | 'unknown';
 }
 
 export interface RoleState {

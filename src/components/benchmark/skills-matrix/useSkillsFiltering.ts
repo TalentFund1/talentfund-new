@@ -39,7 +39,9 @@ export const useSkillsFiltering = (
 
   const normalizeRequirement = (requirement: string): string => {
     // Remove special characters and spaces, convert to lowercase
-    return requirement.toLowerCase().replace(/[-_\s]/g, '');
+    const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
+    console.log('Normalizing requirement:', { original: requirement, normalized });
+    return normalized;
   };
 
   const filterSkills = () => {

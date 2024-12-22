@@ -11,6 +11,7 @@ export interface UnifiedSkill {
   salary: string;
   confidence: string;
   benchmarks: { [key: string]: boolean };
+  requirement?: EmployeeSkillRequirement;
 }
 
 // Skill categories and weights from universal database
@@ -23,7 +24,6 @@ export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknow
 export interface EmployeeSkillState {
   level: string;
   requirement: EmployeeSkillRequirement;
-  required?: string; // For backward compatibility
 }
 
 export interface EmployeeSkillRecord {
@@ -36,7 +36,6 @@ export type RoleSkillRequirement = 'required' | 'preferred' | 'not_interested' |
 export interface RoleSkillState {
   level: string;
   requirement: RoleSkillRequirement;
-  required?: string; // For backward compatibility
 }
 
 export interface RoleState {
