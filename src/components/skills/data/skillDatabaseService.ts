@@ -1,11 +1,13 @@
 import { UnifiedSkill } from '@/types/skillTypes';
 import { skillDefinitions } from './skills/skillDefinitions';
 import { getSkillCategory } from './skills/categories/skillCategories';
-import { generateId } from '@/lib/utils';
 
 // Helper function to generate consistent skill IDs
 export const generateSkillId = (title: string): string => {
-  console.log('Generated new skill ID:', { title, id: `skill_${title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}` });
+  console.log('Generated new skill ID:', { 
+    title, 
+    id: `skill_${title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}` 
+  });
   return `skill_${title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
 };
 
