@@ -27,22 +27,13 @@ export const useSkillsFiltering = (
     return { filteredSkills: [] };
   }
 
-  const getLevelPriority = (level: string = 'unspecified') => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
-
   const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
     const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
     
     if (normalized === 'required') return 'skill_goal';
     if (normalized === 'skillgoal') return 'skill_goal';
     if (normalized === 'notinterested') return 'not_interested';
+    if (normalized === 'preferred') return 'not_interested';
     return 'unknown';
   };
 
@@ -129,18 +120,7 @@ export const useSkillsFiltering = (
       roleLevel: getCompetencyState(selectedRole, skill.title, comparisonLevel)?.level || 'unspecified',
       requirement: getSkillState(employeeId, skill.title).requirement
     }))
-    .sort((a, b) => {
-      const aRoleLevel = a.roleLevel;
-      const bRoleLevel = b.roleLevel;
-      
-      const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
-      if (roleLevelDiff !== 0) return roleLevelDiff;
-
-      const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
-      if (employeeLevelDiff !== 0) return employeeLevelDiff;
-
-      return a.title.localeCompare(b.title);
-    });
+    .sort((a, b) => a.title.localeCompare(b.title));
   };
 
   const filteredSkills = filterSkills();

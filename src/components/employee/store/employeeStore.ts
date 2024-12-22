@@ -17,7 +17,6 @@ interface EmployeeStore {
   setSkillState: (employeeId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
-  // New competency management methods
   setCompetencyState: (roleId: string, skillName: string, level: string, levelKey: string) => void;
   getCompetencyState: (roleId: string, skillName: string, levelKey: string) => RoleSkillState;
   initializeCompetencyState: (roleId: string) => void;
@@ -84,6 +83,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
       },
 
       setSkillState: (employeeId, skillName, level, requirement) => {
+        console.log('Setting skill state:', { employeeId, skillName, level, requirement });
         set((state) => ({
           skillStates: {
             ...state.skillStates,
@@ -103,7 +103,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
         };
       },
 
-      // New competency management methods
       setCompetencyState: (roleId, skillName, level, levelKey) => {
         console.log('Setting competency state:', { roleId, skillName, level, levelKey });
         set((state) => ({
@@ -113,7 +112,10 @@ export const useEmployeeStore = create<EmployeeStore>()(
               ...state.competencyStates[roleId],
               [skillName]: {
                 ...state.competencyStates[roleId]?.[skillName],
-                [levelKey]: { level }
+                [levelKey]: { 
+                  level,
+                  requirement: 'unknown'
+                }
               }
             }
           }
@@ -123,7 +125,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
       getCompetencyState: (roleId, skillName, levelKey) => {
         const state = get();
         return state.competencyStates[roleId]?.[skillName]?.[levelKey] || { 
-          level: 'unspecified'
+          level: 'unspecified',
+          requirement: 'unknown'
         };
       },
 
