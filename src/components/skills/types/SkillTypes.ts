@@ -1,6 +1,13 @@
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
+export type SkillType = SkillCategory;
 export type SkillRequirement = 'required' | 'preferred' | 'skill_goal' | 'not_interested' | 'unknown';
+
+export interface SkillState {
+  level: string;
+  required: string;
+  requirement: string;
+}
 
 export interface DetailedSkill {
   name: string;
@@ -8,7 +15,7 @@ export interface DetailedSkill {
   isSkillGoal: boolean;
 }
 
-export interface Skill {
+export interface UnifiedSkill {
   id: string;
   title: string;
   subcategory: string;
@@ -25,9 +32,6 @@ export interface Skill {
     M: boolean;
     O: boolean;
   };
-}
-
-export interface UnifiedSkill extends Skill {
   requirement?: SkillRequirement;
   roleLevel?: string;
   isCompanySkill?: boolean;
@@ -45,22 +49,4 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
   skills: UnifiedSkill[];
-}
-
-export interface SimpleSkill {
-  title: string;
-  subcategory: string;
-  category?: string;
-  businessCategory?: string;
-  level: string;
-  growth: string;
-}
-
-export interface EmployeeSkill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: SkillRequirement;
 }

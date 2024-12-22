@@ -4,8 +4,10 @@ export interface SkillState {
   requirement: string;
 }
 
-export interface SkillTrackLevels {
-  [key: string]: SkillState;
+export interface RoleState {
+  [skillName: string]: {
+    [levelKey: string]: SkillState;
+  };
 }
 
 export interface CompetencyState {
@@ -20,10 +22,4 @@ export interface CompetencyState {
   cancelChanges: (roleId: string) => void;
   initializeState: (roleId: string) => void;
   getRoleState: (roleId: string) => RoleState;
-}
-
-export interface RoleState {
-  [skillName: string]: {
-    [levelKey: string]: SkillState;
-  };
 }
