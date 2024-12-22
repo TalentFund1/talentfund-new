@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { useToast } from '@/components/ui/use-toast';
 import { getAllSkills } from '../data/skills/allSkills';
 
 interface ToggledSkillsContextType {
@@ -10,8 +9,6 @@ interface ToggledSkillsContextType {
 const ToggledSkillsContext = createContext<ToggledSkillsContextType | undefined>(undefined);
 
 export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => {
-  const { toast } = useToast();
-  
   const [toggledSkills, setToggledSkills] = useState<Set<string>>(() => {
     // Initialize with all universal skills
     const universalSkills = getAllSkills().map(skill => skill.title);
@@ -24,13 +21,7 @@ export const ToggledSkillsProvider = ({ children }: { children: ReactNode }) => 
       skillCount: newSkills.size,
       skills: Array.from(newSkills)
     });
-    
     setToggledSkills(newSkills);
-    
-    // Broadcast the change without role ID
-    window.dispatchEvent(new CustomEvent('toggledSkillsChanged', {
-      detail: { skills: Array.from(newSkills) }
-    }));
   };
 
   return (
