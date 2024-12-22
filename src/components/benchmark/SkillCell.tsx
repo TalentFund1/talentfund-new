@@ -3,6 +3,7 @@ import { useCompetencyStore } from "./CompetencyState";
 import { useEffect, useRef } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
+import { useParams } from "react-router-dom";
 
 interface SkillCellProps {
   skillName: string;
@@ -20,13 +21,15 @@ export const SkillCell = ({
   isLastColumn, 
   levelKey 
 }: SkillCellProps) => {
-  const { currentStates, setSkillState } = useCompetencyStore();
+  const { setSkillState } = useCompetencyStore();
   const initRef = useRef(false);
+  const { id: employeeId } = useParams<{ id: string }>();
 
   // Initialize state only once when component mounts
   useEffect(() => {
-    if (!initRef.current) {
+    if (!initRef.current && employeeId) {
       console.log('Initializing skill state:', {
+        employeeId,
         skillName,
         levelKey,
         initialLevel: details.level || "unspecified",
@@ -34,6 +37,7 @@ export const SkillCell = ({
       });
       
       setSkillState(
+        employeeId,
         skillName,
         details.level || "unspecified",
         levelKey,
@@ -41,31 +45,32 @@ export const SkillCell = ({
       );
       initRef.current = true;
     }
-  }, [skillName, levelKey, details.level, details.required, setSkillState]);
-
-  const currentState = currentStates[skillName]?.[levelKey] || {
-    level: details.level || "unspecified",
-    required: details.required || "preferred",
-  };
+  }, [skillName, levelKey, details.level, details.required, setSkillState, employeeId]);
 
   const handleLevelChange = (value: string) => {
+    if (!employeeId) return;
+    
     console.log('Changing level:', {
+      employeeId,
       skillName,
       levelKey,
       newLevel: value,
-      currentRequired: currentState.required
+      currentRequired: details.required
     });
-    setSkillState(skillName, value, levelKey, currentState.required);
+    setSkillState(employeeId, skillName, value, levelKey, details.required);
   };
 
   const handleRequirementChange = (value: string) => {
+    if (!employeeId) return;
+
     console.log('Changing requirement:', {
+      employeeId,
       skillName,
       levelKey,
-      currentLevel: currentState.level,
+      currentLevel: details.level,
       newRequired: value
     });
-    setSkillState(skillName, currentState.level, levelKey, value);
+    setSkillState(employeeId, skillName, details.level, levelKey, value);
   };
 
   return (
@@ -74,12 +79,12 @@ export const SkillCell = ({
     >
       <div className="flex flex-col items-center gap-0">
         <LevelSelector
-          currentLevel={currentState.level}
+          currentLevel={details.level}
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={currentState.required}
-          currentLevel={currentState.level}
+          currentRequired={details.required}
+          currentLevel={details.level}
           onRequirementChange={handleRequirementChange}
         />
       </div>
