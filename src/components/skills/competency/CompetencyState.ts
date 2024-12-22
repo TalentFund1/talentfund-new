@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { RoleState, RoleSkillState } from '../types/SkillTypes';
+import { roleSkills } from '../data/roleSkills';
 
 interface CompetencyState {
   roleStates: Record<string, RoleState>;
@@ -15,6 +16,37 @@ interface CompetencyState {
   initializeState: (roleId: string) => void;
   getRoleState: (roleId: string) => RoleState;
 }
+
+const initializeRoleState = (roleId: string): RoleState => {
+  console.log('Initializing new state for role:', roleId);
+  
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  if (!currentRoleSkills) {
+    console.warn('No skills found for role:', roleId);
+    return {};
+  }
+
+  const allSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  const initialStates: RoleState = {};
+  
+  allSkills.forEach(skill => {
+    initialStates[skill.title] = {};
+    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
+      initialStates[skill.title][level] = {
+        level: 'unspecified',
+        requirement: 'preferred'
+      };
+    });
+  });
+
+  console.log('Initialized states with defaults:', initialStates);
+  return initialStates;
+};
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -34,7 +66,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...(currentRoleState[skillName] || {}),
               [levelKey]: { 
                 level,
-                requirement: 'required' as const
+                requirement: 'required' as RoleSkillRequirement
               }
             }
           };
@@ -81,20 +113,18 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       resetLevels: (roleId) => {
         console.log('Resetting levels for role:', roleId);
-        set((state) => {
-          const freshState = initializeRoleState(roleId);
-          return {
-            roleStates: {
-              ...state.roleStates,
-              [roleId]: freshState
-            },
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: freshState
-            },
-            hasChanges: true
-          };
-        });
+        const freshState = initializeRoleState(roleId);
+        set((state) => ({
+          roleStates: {
+            ...state.roleStates,
+            [roleId]: freshState
+          },
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: freshState
+          },
+          hasChanges: true
+        }));
       },
 
       saveChanges: (roleId, track) => {
