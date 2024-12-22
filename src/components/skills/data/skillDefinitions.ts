@@ -1,9 +1,9 @@
-import { UnifiedSkill } from '@/types/skillTypes';
+import { UnifiedSkill } from '../types/SkillTypes';
 
 // Universal skill database - single source of truth
 export const skillDefinitions: UnifiedSkill[] = [
   {
-    id: "skill_machine_learning",
+    id: "ai_1",
     title: "Machine Learning",
     subcategory: "Artificial Intelligence",
     category: "specialized",
@@ -16,7 +16,7 @@ export const skillDefinitions: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: "skill_natural_language_processing",
+    id: "ai_2",
     title: "Natural Language Processing",
     subcategory: "Artificial Intelligence",
     category: "specialized",
@@ -145,7 +145,17 @@ export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   return skillDefinitions.filter(skill => skill.category === category);
 };
 
-console.log('Initialized universal skills database with consistent IDs:', {
+export const getSkillWeight = (title: string): UnifiedSkill['weight'] => {
+  const skill = getSkillByTitle(title);
+  return skill?.weight || 'necessary';
+};
+
+export const getSkillCategory = (title: string): UnifiedSkill['category'] => {
+  const skill = getSkillByTitle(title);
+  return skill?.category || 'common';
+};
+
+console.log('Initialized universal skills database:', {
   totalSkills: skillDefinitions.length,
   categories: {
     specialized: skillDefinitions.filter(s => s.category === 'specialized').length,
