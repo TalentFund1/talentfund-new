@@ -1,4 +1,4 @@
-import { UnifiedSkill } from '@/types/skillTypes';
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 
 export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
