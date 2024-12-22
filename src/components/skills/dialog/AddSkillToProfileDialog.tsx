@@ -51,7 +51,13 @@ export const AddSkillToProfileDialog = () => {
       specialized: [],
       common: [],
       certifications: [],
-      skills: []
+      skills: [],
+      soc: "",
+      function: "",
+      mappedTitle: "",
+      occupation: "",
+      description: "",
+      roleTrack: "Professional" as const
     };
 
     console.log('Current role skills before adding:', {
@@ -90,11 +96,7 @@ export const AddSkillToProfileDialog = () => {
         // Generate and set progression
         const progression = generateSkillProgression(skillTitle, category, track, id);
         if (progression) {
-          console.log('Generated progression for skill:', {
-            skill: skillTitle,
-            progression
-          });
-          setSkillProgression(skillTitle, progression, id);
+          setSkillProgression(skillTitle, progression, id, 'default');
         }
       } else {
         console.warn('Skill not found in universal database:', skillTitle);
