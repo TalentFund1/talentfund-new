@@ -1,4 +1,4 @@
-import { SkillRequirement } from '../../../skills/types/SkillTypes';
+import { SkillRequirement, MappedSkill } from '../../../skills/types/SkillTypes';
 
 export interface SkillState {
   level: string;
@@ -15,3 +15,5 @@ export interface SkillsMatrixState {
   saveChanges: () => void;
   cancelChanges: () => void;
 }
+
+export { MappedSkill };
