@@ -5,6 +5,7 @@ export type SkillRequirement = 'required' | 'preferred' | 'skill_goal' | 'not_in
 export interface SkillState {
   level: string;
   required: string;
+  requirement?: string;
 }
 
 export interface LevelState {
@@ -110,3 +111,5 @@ export interface SimpleSkill extends BaseSkill {
 export interface Certification extends DetailedSkill {
   // Additional certification-specific properties if needed
 }
+
+export type MappedSkill = UnifiedSkill;
