@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { UnifiedSkill, SkillRequirement } from '../../skills/types/SkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-import { getAllSkills } from '../../skills/data/skills/allSkills';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 
@@ -107,13 +106,17 @@ export const useSkillsMatrixState = (
     const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
     console.log('Employee skills:', employeeSkills);
 
-    // Map employee skills to include universal skill data
+    // Map employee skills to include universal skill data and ensure required properties
     let filteredSkills = employeeSkills.map(skill => {
       const universalSkillData = getUnifiedSkillData(skill.title);
+      const currentState = currentStates[skill.title];
+      
       return {
         ...universalSkillData,
-        level: currentStates[skill.title]?.level || skill.level || 'unspecified',
-        requirement: (currentStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement
+        level: currentState?.level || skill.level || 'unspecified',
+        requirement: (currentState?.requirement || skill.requirement || 'preferred') as SkillRequirement,
+        roleLevel: undefined,
+        isCompanySkill: false
       };
     });
 
@@ -171,9 +174,16 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
   const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
   
-  return employeeSkills.map(skill => ({
-    ...getUnifiedSkillData(skill.title),
-    level: employeeSkillStates[skill.title]?.level || skill.level || 'unspecified',
-    requirement: (employeeSkillStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement
-  }));
+  return employeeSkills.map(skill => {
+    const universalSkillData = getUnifiedSkillData(skill.title);
+    const currentState = employeeSkillStates[skill.title];
+    
+    return {
+      ...universalSkillData,
+      level: currentState?.level || skill.level || 'unspecified',
+      requirement: (currentState?.requirement || skill.requirement || 'preferred') as SkillRequirement,
+      roleLevel: undefined,
+      isCompanySkill: false
+    };
+  });
 };
