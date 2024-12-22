@@ -8,5 +8,16 @@ const skillDefinitionMap = new Map(
 export const getSkillCategory = (skillTitle: string): SkillCategory => {
   console.log('Getting category for skill:', skillTitle);
   const skill = skillDefinitionMap.get(skillTitle.toLowerCase());
-  return skill?.category || 'common';
+  
+  if (!skill) {
+    console.warn(`Skill not found in definition map: ${skillTitle}`);
+    return 'common'; // Default fallback
+  }
+  
+  console.log('Found category for skill:', {
+    skill: skillTitle,
+    category: skill.category
+  });
+  
+  return skill.category || 'common';
 };
