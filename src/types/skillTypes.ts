@@ -1,4 +1,3 @@
-// Base skill types
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
@@ -10,6 +9,7 @@ export type RoleSkillRequirement = 'required' | 'preferred';
 
 // Base skill state interface
 interface BaseSkillState {
+  id: string;
   level: string;
 }
 

@@ -13,7 +13,7 @@ interface EmployeeStore {
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => UnifiedSkill[];
-  setSkillState: (employeeId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  setSkillState: (employeeId: string, skillId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState | undefined;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
@@ -73,7 +73,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
           }
         }));
 
-        // Initialize skill states for new skills
         const store = get();
         if (!store.skillStates[employeeId]) {
           store.skillStates[employeeId] = {};
@@ -83,6 +82,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
           if (!store.skillStates[employeeId][skill.title]) {
             store.setSkillState(
               employeeId, 
+              skill.id,
               skill.title, 
               'unspecified', 
               'unknown'
@@ -100,9 +100,10 @@ export const useEmployeeStore = create<EmployeeStore>()(
         return state.employeeSkills[employeeId] || [];
       },
 
-      setSkillState: (employeeId, skillName, level, requirement) => {
+      setSkillState: (employeeId, skillId, skillName, level, requirement) => {
         console.log('Setting skill state:', { 
           employeeId, 
+          skillId,
           skillName, 
           level, 
           requirement 
@@ -113,7 +114,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             ...state.skillStates,
             [employeeId]: {
               ...state.skillStates[employeeId],
-              [skillName]: { level, requirement }
+              [skillName]: { id: skillId, level, requirement }
             }
           }
         }));
