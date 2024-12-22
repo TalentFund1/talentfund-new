@@ -25,6 +25,11 @@ export const useSkillsFiltering = (
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const { getSkillState } = useEmployeeStore();
 
+  if (!currentRoleSkills && isRoleBenchmark) {
+    console.warn('No role skills found for role:', selectedRole);
+    return { filteredSkills: [] };
+  }
+
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
       'advanced': 0,
@@ -33,6 +38,13 @@ export const useSkillsFiltering = (
       'unspecified': 3
     };
     return priorities[level.toLowerCase()] ?? 3;
+  };
+
+  const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
+    const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
+    if (normalized === 'skillgoal') return 'skill_goal';
+    if (normalized === 'notinterested') return 'not_interested';
+    return 'unknown';
   };
 
   const filterSkills = () => {
@@ -87,31 +99,16 @@ export const useSkillsFiltering = (
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      if (selectedInterest !== 'all') {
-        // Get the employee skill requirement
-        const employeeRequirement = employeeSkillState.requirement;
-        
-        // Normalize the selected interest to match EmployeeSkillRequirement type
-        let normalizedSelectedInterest: EmployeeSkillRequirement;
-        switch (selectedInterest.toLowerCase()) {
-          case 'skill goal':
-          case 'skill_goal':
-            normalizedSelectedInterest = 'skill_goal';
-            break;
-          case 'not interested':
-          case 'not_interested':
-            normalizedSelectedInterest = 'not_interested';
-            break;
-          default:
-            normalizedSelectedInterest = 'unknown';
-        }
+      // Get the employee skill requirement and normalize it for comparison
+      const employeeRequirement = employeeSkillState.requirement;
+      const normalizedSelectedRequirement = normalizeRequirement(selectedInterest);
 
-        matchesRequirement = employeeRequirement === normalizedSelectedInterest;
-        
+      if (selectedInterest !== 'all') {
+        matchesRequirement = employeeRequirement === normalizedSelectedRequirement;
         console.log('Filtering by requirement:', {
           skillTitle: skill.title,
           employeeRequirement,
-          normalizedSelectedInterest,
+          selectedRequirement: normalizedSelectedRequirement,
           matches: matchesRequirement
         });
       }
@@ -125,8 +122,8 @@ export const useSkillsFiltering = (
       if (!matches) {
         console.log('Skill filtered out:', {
           skillName: skill.title,
-          employeeRequirement: employeeSkillState.requirement,
-          selectedInterest,
+          employeeRequirement,
+          selectedRequirement: normalizedSelectedRequirement,
           matchesRequirement
         });
       }

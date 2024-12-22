@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../skills/types/SkillTypes';
+import { UnifiedSkill, EmployeeSkillState } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 
@@ -8,9 +8,9 @@ interface SkillsMatrixState {
   currentStates: { [key: string]: EmployeeSkillState };
   originalStates: { [key: string]: EmployeeSkillState };
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  setSkillState: (skillName: string, level: string, requirement: string) => void;
   resetSkills: () => void;
-  initializeState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  initializeState: (skillName: string, level: string, requirement: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -139,7 +139,7 @@ export const useSkillsMatrixState = (
   };
 };
 
-export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
-  console.log('Getting skills for employee:', id);
-  return useEmployeeStore.getState().getEmployeeSkills(id);
+export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
+  console.log('Getting skills for employee:', employeeId);
+  return useEmployeeStore.getState().getEmployeeSkills(employeeId);
 };
