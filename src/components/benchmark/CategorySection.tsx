@@ -14,8 +14,14 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const getToggledSkillsCount = (category: string) => {
-    return currentRoleSkills.skills
-      .filter(skill => skill.title && toggledSkills.has(skill.title))
+    const allSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    return allSkills
+      .filter(skill => toggledSkills.has(skill.title))
       .filter(skill => category === 'all' || getSkillCategory(skill.title) === category)
       .length;
   };

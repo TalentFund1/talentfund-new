@@ -11,6 +11,7 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+  skills?: UnifiedSkill[]; // For backward compatibility
 }
 
 export const roleSkills: Record<string, RoleSkillData> = {
