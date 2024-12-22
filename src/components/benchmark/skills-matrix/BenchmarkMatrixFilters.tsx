@@ -18,6 +18,8 @@ interface BenchmarkMatrixFiltersProps {
   clearSearch: () => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedRoleRequirement: string;
+  setSelectedRoleRequirement: (requirement: string) => void;
 }
 
 export const BenchmarkMatrixFilters = ({
@@ -34,6 +36,8 @@ export const BenchmarkMatrixFilters = ({
   clearSearch,
   selectedCategory,
   setSelectedCategory,
+  selectedRoleRequirement,
+  setSelectedRoleRequirement,
 }: BenchmarkMatrixFiltersProps) => {
   return (
     <div className="space-y-6">
@@ -47,6 +51,17 @@ export const BenchmarkMatrixFilters = ({
             <SelectItem value="specialized">Specialized Skills</SelectItem>
             <SelectItem value="common">Common Skills</SelectItem>
             <SelectItem value="certification">Certification</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedRoleRequirement} onValueChange={setSelectedRoleRequirement}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Role Requirements" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Role Requirements</SelectItem>
+            <SelectItem value="required">Required</SelectItem>
+            <SelectItem value="preferred">Preferred</SelectItem>
           </SelectContent>
         </Select>
 
