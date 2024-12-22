@@ -90,10 +90,6 @@ export const AddSkillToProfileDialog = () => {
         // Generate and set progression
         const progression = generateSkillProgression(skillTitle, category, track, id);
         if (progression) {
-          console.log('Generated progression for skill:', {
-            skill: skillTitle,
-            progression
-          });
           setSkillProgression(skillTitle, progression, id, track);
         }
       } else {
