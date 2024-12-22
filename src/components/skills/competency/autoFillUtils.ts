@@ -1,37 +1,84 @@
-import { getSkillImportance } from './utils/skillImportance';
-import { generateProgressionForTrack } from './utils/progressionGenerator';
-import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
-
-interface SkillState {
-  level: string;
-  required: string;
-}
+import { RoleSkillState } from "../../../types/skillTypes";
+import { getSkillByTitle } from "../data/skills/skillDefinitions";
 
 export const generateSkillProgression = (
-  skillName: string,
+  skillTitle: string,
   category: string,
-  track: "Professional" | "Managerial",
+  track: string,
   roleId: string
-): Record<string, SkillState> => {
-  console.log(`Generating progression for ${skillName} (${track} track)`);
+): Record<string, RoleSkillState> => {
+  console.log('Generating progression for:', { skillTitle, category, track, roleId });
   
-  const progression: Record<string, SkillState> = {};
-  const importance = getSkillImportance(skillName, category, track, roleId);
-  const levels = track === "Professional" ? Object.keys(professionalLevels) : Object.keys(managerialLevels);
+  const skillData = getSkillByTitle(skillTitle);
+  const weight = skillData?.weight || 'necessary';
+  const progression: Record<string, RoleSkillState> = {};
 
-  console.log(`Skill importance for ${skillName}: ${importance}`);
+  // Get level keys based on track
+  const levelKeys = track === "Managerial" 
+    ? ['m3', 'm4', 'm5', 'm6'] 
+    : ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
 
-  levels.forEach((level, index) => {
-    const progressionPoint = index / (levels.length - 1);
-    const { level: skillLevel, required } = generateProgressionForTrack(progressionPoint, importance, track);
-    
-    console.log(`Generated level for ${skillName} at ${level}: ${skillLevel} (${required})`);
-    
-    progression[level.toLowerCase()] = {
+  levelKeys.forEach((level, index) => {
+    const progressionPoint = index / (levelKeys.length - 1); // 0 to 1
+
+    let skillLevel: string;
+    let requirement: 'required' | 'preferred';
+
+    // Determine level and requirement based on weight and progression point
+    if (weight === 'critical') {
+      if (progressionPoint < 0.3) {
+        skillLevel = 'beginner';
+        requirement = 'required';
+      } else if (progressionPoint < 0.6) {
+        skillLevel = 'intermediate';
+        requirement = 'required';
+      } else {
+        skillLevel = 'advanced';
+        requirement = 'required';
+      }
+    } else if (weight === 'technical') {
+      if (progressionPoint < 0.2) {
+        skillLevel = 'unspecified';
+        requirement = 'preferred';
+      } else if (progressionPoint < 0.5) {
+        skillLevel = 'beginner';
+        requirement = 'preferred';
+      } else if (progressionPoint < 0.8) {
+        skillLevel = 'intermediate';
+        requirement = 'required';
+      } else {
+        skillLevel = 'advanced';
+        requirement = 'required';
+      }
+    } else { // necessary
+      if (progressionPoint < 0.3) {
+        skillLevel = 'unspecified';
+        requirement = 'preferred';
+      } else if (progressionPoint < 0.6) {
+        skillLevel = 'beginner';
+        requirement = 'preferred';
+      } else if (progressionPoint < 0.8) {
+        skillLevel = 'intermediate';
+        requirement = 'preferred';
+      } else {
+        skillLevel = 'advanced';
+        requirement = 'preferred';
+      }
+    }
+
+    // For managerial track, adjust early levels to be higher
+    if (track === "Managerial" && progressionPoint < 0.3) {
+      if (skillLevel === 'unspecified') skillLevel = 'beginner';
+      if (skillLevel === 'beginner') skillLevel = 'intermediate';
+    }
+
+    progression[level] = {
+      id: skillTitle,
       level: skillLevel,
-      required
+      requirement
     };
   });
 
+  console.log('Generated progression:', progression);
   return progression;
 };
