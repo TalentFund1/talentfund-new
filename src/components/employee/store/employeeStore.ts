@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
-import { employees as defaultEmployees, initialEmployeeSkills } from "../EmployeeData";
+import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
 
 interface EmployeeStore {
@@ -22,22 +22,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
   persist(
     (set, get) => ({
       employees: defaultEmployees,
-      employeeSkills: Object.entries(initialEmployeeSkills).reduce((acc, [id, skills]) => {
-        acc[id] = skills;
-        return acc;
-      }, {} as Record<string, UnifiedSkill[]>),
-      skillStates: Object.entries(initialEmployeeSkills).reduce((acc, [id, skills]) => {
-        acc[id] = skills.reduce((skillAcc, skill) => {
-          skillAcc[skill.title] = {
-            profileId: id,
-            skillId: skill.title,
-            level: skill.level,
-            requirement: skill.requirement as EmployeeSkillRequirement
-          };
-          return skillAcc;
-        }, {} as Record<string, EmployeeSkillState>);
-        return acc;
-      }, {} as Record<string, Record<string, EmployeeSkillState>>),
+      employeeSkills: {},
+      skillStates: {},
 
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Initializing skills for employee:', employeeId);
