@@ -7,24 +7,18 @@ interface SkillsMatrixState {
   setSkillState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
   initializeState: (profileId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
   getSkillState: (profileId: string, skillId: string) => EmployeeSkillState | undefined;
-  currentStates: Record<string, Record<string, EmployeeSkillState>>;
-  hasChanges: boolean;
-  saveChanges: () => void;
-  cancelChanges: () => void;
 }
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set, get) => ({
       skillStates: {},
-      currentStates: {},
-      hasChanges: false,
 
       setSkillState: (profileId, skillId, level, requirement) => {
         console.log('Setting skill state:', { profileId, skillId, level, requirement });
         
-        set((state) => {
-          const updatedSkillStates = {
+        set((state) => ({
+          skillStates: {
             ...state.skillStates,
             [profileId]: {
               ...state.skillStates[profileId],
@@ -35,14 +29,8 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
                 requirement
               }
             }
-          };
-
-          return {
-            skillStates: updatedSkillStates,
-            currentStates: updatedSkillStates,
-            hasChanges: true
-          };
-        });
+          }
+        }));
       },
 
       initializeState: (profileId, skillId, initialLevel, initialRequirement) => {
@@ -62,18 +50,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
                   requirement: initialRequirement
                 }
               }
-            },
-            currentStates: {
-              ...state.currentStates,
-              [profileId]: {
-                ...state.currentStates[profileId],
-                [skillId]: {
-                  profileId,
-                  skillId,
-                  level: initialLevel,
-                  requirement: initialRequirement
-                }
-              }
             }
           }));
         }
@@ -81,27 +57,13 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
 
       getSkillState: (profileId, skillId) => {
         return get().skillStates[profileId]?.[skillId];
-      },
-
-      saveChanges: () => {
-        set((state) => ({
-          hasChanges: false
-        }));
-      },
-
-      cancelChanges: () => {
-        set((state) => ({
-          skillStates: state.currentStates,
-          hasChanges: false
-        }));
       }
     }),
     {
       name: 'skills-matrix-storage',
-      version: 2,
+      version: 3,
       partialize: (state) => ({
-        skillStates: state.skillStates,
-        currentStates: state.currentStates
+        skillStates: state.skillStates
       })
     }
   )
