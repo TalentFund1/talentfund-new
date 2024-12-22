@@ -2,7 +2,6 @@ import { UnifiedSkill, SkillCategory, SkillWeight, SkillLevel } from '@/types/sk
 import { skillDefinitions } from './skillDefinitions';
 import { getSkillCategory } from './skills/categories/skillCategories';
 
-// Get skill data from the universal database
 export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', skillTitle);
   

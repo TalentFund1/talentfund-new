@@ -77,3 +77,9 @@ export const isRoleSkillState = (state: any): state is RoleSkillState => {
   return state && 'requirement' in state && 
     ['required', 'preferred'].includes(state.requirement);
 };
+
+// For detailed skill display
+export interface DetailedSkill extends BaseSkillState {
+  name: string;
+  isSkillGoal: boolean;
+}
