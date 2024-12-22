@@ -1,17 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
-
-interface SkillsMatrixState {
-  skillStates: Record<string, Record<string, EmployeeSkillState>>;
-  currentStates: Record<string, Record<string, EmployeeSkillState>>;
-  hasChanges: boolean;
-  setSkillState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
-  initializeState: (profileId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
-  getSkillState: (profileId: string, skillId: string) => EmployeeSkillState | undefined;
-  saveChanges: () => void;
-  cancelChanges: () => void;
-}
+import { EmployeeSkillState, EmployeeSkillRequirement, SkillsMatrixState } from '../../../types/skillTypes';
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
@@ -80,10 +69,13 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       },
 
       getSkillState: (profileId, skillId) => {
-        return get().skillStates[profileId]?.[skillId];
+        const state = get().skillStates[profileId]?.[skillId];
+        console.log('Getting skill state:', { profileId, skillId, state });
+        return state;
       },
 
       saveChanges: () => {
+        console.log('Saving skill matrix changes');
         set((state) => ({
           currentStates: state.skillStates,
           hasChanges: false
@@ -91,6 +83,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       },
 
       cancelChanges: () => {
+        console.log('Canceling skill matrix changes');
         set((state) => ({
           skillStates: state.currentStates,
           hasChanges: false
