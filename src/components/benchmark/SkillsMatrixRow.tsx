@@ -26,16 +26,16 @@ export const SkillsMatrixRow = ({
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
   
-  console.log('SkillsMatrixRow rendering:', {
-    skillTitle: skill.title,
-    category: skill.category,
-    isRoleBenchmark
-  });
-
   // Get skill data from universal database
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   const weight = unifiedSkillData?.weight || 'necessary';
   const type = unifiedSkillData?.category || 'common';
+
+  console.log('SkillsMatrixRow rendering:', {
+    skillTitle: skill.title,
+    category: type,
+    isRoleBenchmark
+  });
 
   const getWeightColor = (weight: string) => {
     switch (weight.toLowerCase()) {

@@ -7,8 +7,10 @@ import { EmployeeSkillRequirement, UnifiedSkill } from "../../../types/skillType
 const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
   switch (requirement?.toLowerCase()) {
     case 'required':
+    case 'skill_goal':
       return 'skill_goal';
     case 'not-interested':
+    case 'not_interested':
       return 'not_interested';
     case 'unknown':
       return 'unknown';
@@ -73,11 +75,11 @@ export const useSkillsFiltering = (
         const skillData = getUnifiedSkillData(skill.title);
         console.log('Filtering skill by category:', {
           skill: skill.title,
-          category: skillData.category,
+          category: skillData?.category,
           selectedCategory,
-          matches: skillData.category === selectedCategory
+          matches: skillData?.category === selectedCategory
         });
-        return skillData.category === selectedCategory;
+        return skillData?.category === selectedCategory;
       });
     }
 
@@ -102,7 +104,7 @@ export const useSkillsFiltering = (
       totalFiltered: skills.length,
       skills: skills.map(s => ({
         title: s.title,
-        category: getUnifiedSkillData(s.title).category,
+        category: getUnifiedSkillData(s.title)?.category,
         requirement: getSkillState(employeeId, s.title)?.requirement
       }))
     });
