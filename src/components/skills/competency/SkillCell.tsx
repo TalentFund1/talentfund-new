@@ -21,10 +21,11 @@ export const SkillCell = ({
   levelKey 
 }: SkillCellProps) => {
   const { roleStates, setSkillState } = useCompetencyStore();
-  const { id: roleId } = useParams<{ id: string }>();
+  const { id: roleId, employeeId } = useParams<{ id: string; employeeId: string }>();
   const currentRoleId = roleId || "123";
+  const currentEmployeeId = employeeId || "default";
 
-  const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
+  const currentState = roleStates[currentRoleId]?.[currentEmployeeId]?.[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
     required: details.required || "preferred",
   };
@@ -35,7 +36,8 @@ export const SkillCell = ({
       levelKey,
       newLevel: value,
       currentRequired: currentState.required,
-      roleId: currentRoleId
+      roleId: currentRoleId,
+      employeeId: currentEmployeeId
     });
     
     setSkillState(
@@ -43,7 +45,8 @@ export const SkillCell = ({
       value,
       levelKey,
       currentState.required || 'preferred',
-      currentRoleId
+      currentRoleId,
+      currentEmployeeId
     );
   };
 
@@ -53,7 +56,8 @@ export const SkillCell = ({
       levelKey,
       currentLevel: currentState.level,
       newRequired: value,
-      roleId: currentRoleId
+      roleId: currentRoleId,
+      employeeId: currentEmployeeId
     });
     
     setSkillState(
@@ -61,7 +65,8 @@ export const SkillCell = ({
       currentState.level || 'unspecified',
       levelKey,
       value,
-      currentRoleId
+      currentRoleId,
+      currentEmployeeId
     );
   };
 
