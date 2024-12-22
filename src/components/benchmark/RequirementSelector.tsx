@@ -17,7 +17,7 @@ export const RequirementSelector = ({
     <Select value={currentRequired} onValueChange={onRequirementChange}>
       <SelectTrigger className={getRequirementStyles(currentRequired, currentLevel)}>
         <SelectValue>
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-center gap-1.5 whitespace-nowrap">
             {currentRequired === 'required' ? (
               <>
                 <Check className="w-3.5 h-3.5" />
