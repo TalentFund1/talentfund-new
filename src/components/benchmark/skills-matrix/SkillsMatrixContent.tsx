@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
-import { useRoleStore } from "./RoleBenchmark";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 import { useSkillsFiltering } from "./useSkillsFiltering";
 import { BenchmarkSkillsMatrixTable } from "./BenchmarkSkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
@@ -48,7 +47,7 @@ const SkillsMatrixContent = ({
   selectedRoleRequirement,
   setSelectedRoleRequirement
 }: SkillsMatrixContentProps) => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
 
@@ -94,7 +93,7 @@ const SkillsMatrixContent = ({
           ref={observerTarget} 
           className="h-10 flex items-center justify-center"
         >
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
         </div>
       )}
     </>

@@ -3,6 +3,11 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
+export interface SkillState {
+  level: string;
+  requirement: RoleSkillRequirement | EmployeeSkillRequirement;
+}
+
 export interface UnifiedSkill {
   id: string;
   title: string;

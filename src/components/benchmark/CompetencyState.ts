@@ -10,12 +10,15 @@ interface CompetencyState {
   setSkillState: (skillName: string, level: string, levelKey: string, requirement: RoleSkillState['requirement'], roleId: string) => void;
   saveChanges: (roleId: string) => void;
   cancelChanges: (roleId: string) => void;
-  hasChanges: boolean;
   setSkillProgression: (skillName: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
   resetLevels: (roleId: string) => void;
   initializeState: (roleId: string) => void;
   getRoleState: (roleId: string) => RoleState;
 }
+
+const initializeRoleState = (roleId: string): RoleState => {
+  return {};
+};
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
