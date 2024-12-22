@@ -7,8 +7,6 @@ import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
 import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
 import { useEmployeeStore } from "../../employee/store/employeeStore";
 
-// ... keep existing code (imports and type definitions)
-
 export const useSkillsFiltering = (
   employeeId: string,
   selectedRole: string,
@@ -35,13 +33,6 @@ export const useSkillsFiltering = (
       'unspecified': 3
     };
     return priorities[level.toLowerCase()] ?? 3;
-  };
-
-  const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
-    const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
-    if (normalized === 'skillgoal') return 'skill_goal';
-    if (normalized === 'notinterested') return 'not_interested';
-    return 'unknown';
   };
 
   const filterSkills = () => {
@@ -96,17 +87,31 @@ export const useSkillsFiltering = (
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      // Get the employee skill requirement and normalize it for comparison
-      const employeeRequirement = employeeSkillState.requirement;
-
       if (selectedInterest !== 'all') {
-        const normalizedSelectedInterest = selectedInterest.toLowerCase().replace(/[-_\s]/g, '') as EmployeeSkillRequirement;
+        // Get the employee skill requirement
+        const employeeRequirement = employeeSkillState.requirement;
+        
+        // Normalize the selected interest to match EmployeeSkillRequirement type
+        let normalizedSelectedInterest: EmployeeSkillRequirement;
+        switch (selectedInterest.toLowerCase()) {
+          case 'skill goal':
+          case 'skill_goal':
+            normalizedSelectedInterest = 'skill_goal';
+            break;
+          case 'not interested':
+          case 'not_interested':
+            normalizedSelectedInterest = 'not_interested';
+            break;
+          default:
+            normalizedSelectedInterest = 'unknown';
+        }
+
         matchesRequirement = employeeRequirement === normalizedSelectedInterest;
         
         console.log('Filtering by requirement:', {
           skillTitle: skill.title,
           employeeRequirement,
-          selectedRequirement: normalizedSelectedInterest,
+          normalizedSelectedInterest,
           matches: matchesRequirement
         });
       }
@@ -120,8 +125,8 @@ export const useSkillsFiltering = (
       if (!matches) {
         console.log('Skill filtered out:', {
           skillName: skill.title,
-          employeeRequirement,
-          selectedRequirement: selectedInterest,
+          employeeRequirement: employeeSkillState.requirement,
+          selectedInterest,
           matchesRequirement
         });
       }
