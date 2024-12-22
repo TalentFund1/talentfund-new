@@ -27,7 +27,8 @@ export const useSkillsFiltering = (
   searchTerm: string,
   toggledSkills: Set<string>,
   isRoleBenchmark: boolean = false,
-  selectedRoleRequirement: string = 'all'
+  selectedRoleRequirement: string = 'all',
+  selectedCategory: string = 'all'
 ) => {
   const { getSkillState } = useEmployeeStore();
   const employeeSkills = getEmployeeSkills(employeeId);
@@ -47,10 +48,12 @@ export const useSkillsFiltering = (
       selectedLevel,
       selectedInterest,
       selectedSkillLevel,
+      selectedCategory,
       currentFilters: {
         level: selectedLevel,
         interest: selectedInterest,
         skillLevel: selectedSkillLevel,
+        category: selectedCategory,
         searchTerm
       }
     });
@@ -65,16 +68,16 @@ export const useSkillsFiltering = (
     skills = Array.from(uniqueSkills.values());
 
     // Filter by category if selected
-    if (selectedLevel !== 'all') {
+    if (selectedCategory !== 'all') {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
         console.log('Filtering skill by category:', {
           skill: skill.title,
           category: skillData.category,
-          selectedLevel,
-          matches: skillData.category === selectedLevel
+          selectedCategory,
+          matches: skillData.category === selectedCategory
         });
-        return skillData.category === selectedLevel;
+        return skillData.category === selectedCategory;
       });
     }
 

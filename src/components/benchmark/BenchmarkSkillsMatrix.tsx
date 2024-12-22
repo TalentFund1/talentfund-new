@@ -36,7 +36,8 @@ const BenchmarkSkillsMatrixContent = () => {
     searchTerm,
     toggledSkills,
     true,
-    selectedRoleRequirement
+    selectedRoleRequirement,
+    selectedCategory
   );
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
