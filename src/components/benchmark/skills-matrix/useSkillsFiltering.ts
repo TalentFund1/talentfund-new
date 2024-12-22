@@ -3,7 +3,6 @@ import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
-import { useSkillsMatrixStore } from "./SkillsMatrixState";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -18,7 +17,6 @@ export const useSkillsFiltering = (
   selectedRoleRequirement: string = 'all'
 ) => {
   const { getSkillState, getCompetencyState } = useEmployeeStore();
-  const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
@@ -44,8 +42,7 @@ export const useSkillsFiltering = (
       employeeId,
       totalSkills: skills.length,
       selectedInterest,
-      selectedRoleRequirement,
-      currentStates: Object.keys(currentStates).length
+      selectedRoleRequirement
     });
 
     // Remove duplicates based on normalized titles
@@ -82,8 +79,7 @@ export const useSkillsFiltering = (
         matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
       }
 
-      const currentSkillState = currentStates[skill.title];
-      const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
+      const skillLevel = employeeSkillState.level.toLowerCase();
       
       if (selectedSkillLevel !== 'all') {
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
@@ -116,7 +112,7 @@ export const useSkillsFiltering = (
     })
     .map(skill => ({
       ...skill,
-      employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
+      employeeLevel: getSkillState(employeeId, skill.title).level,
       roleLevel: getCompetencyState(selectedRole, skill.title, comparisonLevel)?.level || 'unspecified',
       requirement: getSkillState(employeeId, skill.title).requirement
     }))
