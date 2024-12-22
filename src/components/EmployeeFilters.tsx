@@ -1,6 +1,6 @@
 import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
-import { getAllSkills } from './skills/data/skills/allSkills';
+import { getAllSkills } from './skills/data/skillDatabaseService';
 import { Button } from '@/components/ui/button';
 import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
