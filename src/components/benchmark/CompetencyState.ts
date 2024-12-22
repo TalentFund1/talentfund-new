@@ -1,16 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export interface SkillState {
-  level: string;
-  required: string;
-  requirement: string;
-}
-
-interface CompetencyState {
-  currentStates: Record<string, Record<string, SkillState>>;
-  setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
-}
+import { SkillState } from '../skills/competency/state/types';
 
 const defaultSkillState: SkillState = {
   level: 'unspecified',

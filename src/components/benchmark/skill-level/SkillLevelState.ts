@@ -1,10 +1,5 @@
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
-
-export interface SkillState {
-  level: string;
-  required: string;
-  requirement: string;  // Added this required property
-}
+import { SkillState } from '../../skills/competency/state/types';
 
 export const useSkillLevelState = (skillTitle: string) => {
   const { currentStates, originalStates } = useSkillsMatrixStore();

@@ -3,12 +3,7 @@ import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
-
-interface SkillState {
-  level: string;
-  required: string;
-  requirement: string;  // Added this required property
-}
+import { SkillState } from '../../skills/competency/state/types';
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
