@@ -14,7 +14,7 @@ export const useSkillsFiltering = (
   selectedSkillLevel: string,
   searchTerm: string,
   toggledSkills: Set<string>,
-  isRoleBenchmark: boolean = false // New parameter to differentiate between contexts
+  isRoleBenchmark: boolean = false
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -37,17 +37,17 @@ export const useSkillsFiltering = (
   };
 
   const filterSkills = () => {
-    // Get all employee skills without filtering by role skills first
     let skills = [...employeeSkills];
 
     console.log('Filtering skills for employee:', {
       employeeId,
       totalSkills: skills.length,
       isRoleBenchmark,
+      selectedInterest,
       skills: skills.map(s => ({
         title: s.title,
         level: s.level,
-        requirement: s.requirement
+        requirement: currentStates[s.title]?.requirement
       }))
     });
 
@@ -91,15 +91,25 @@ export const useSkillsFiltering = (
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
+      // Normalize the requirement value for comparison
       const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      console.log('Checking interest filter for skill:', {
+        skillName: skill.title,
+        requirement,
+        selectedInterest,
+        currentState: currentSkillState
+      });
 
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {
           case 'skill_goal':
+          case 'required':
             matchesInterest = requirement === 'required' || requirement === 'skill_goal';
             break;
           case 'not_interested':
-            matchesInterest = requirement === 'not_interested';
+          case 'not-interested':
+          case 'not interested':
+            matchesInterest = requirement === 'not_interested' || requirement === 'not-interested' || requirement === 'not interested';
             break;
           case 'unknown':
             matchesInterest = !requirement || requirement === 'unknown';
@@ -113,7 +123,18 @@ export const useSkillsFiltering = (
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
+      const matches = matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
+      console.log('Filter result for skill:', {
+        skillName: skill.title,
+        matches,
+        matchesLevel,
+        matchesInterest,
+        matchesSearch,
+        matchesSkillLevel,
+        requirement
+      });
+
+      return matches;
     })
     .map(skill => ({
       ...skill,
