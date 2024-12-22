@@ -25,7 +25,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             [skillName]: {
               ...(currentRoleState[skillName] || {}),
               [levelKey]: { 
-                level, 
+                level,
                 requirement
               }
             }

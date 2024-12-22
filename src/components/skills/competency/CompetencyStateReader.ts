@@ -1,11 +1,6 @@
 import { useCompetencyStore } from "./CompetencyState";
 import { RoleSkillState } from "../types/SkillTypes";
 
-export interface SkillCompetencyState {
-  level: string;
-  requirement: string;
-}
-
 export const useCompetencyStateReader = () => {
   const { roleStates } = useCompetencyStore();
 
