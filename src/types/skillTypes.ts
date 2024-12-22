@@ -50,17 +50,16 @@ export interface ProfileSkillStates {
   };
 }
 
-// Helper function to check if a requirement is an employee requirement
+// Type guard utilities
 export const isEmployeeRequirement = (req: any): req is EmployeeSkillRequirement => {
   return ['skill_goal', 'not_interested', 'unknown'].includes(req);
 };
 
-// Helper function to check if a requirement is a role requirement
 export const isRoleRequirement = (req: any): req is RoleSkillRequirement => {
   return ['required', 'preferred'].includes(req);
 };
 
-// Helper function to get level priority
+// Level priority helper
 export const getLevelPriority = (level: string = 'unspecified'): number => {
   const priorities: { [key: string]: number } = {
     'advanced': 0,
@@ -70,3 +69,39 @@ export const getLevelPriority = (level: string = 'unspecified'): number => {
   };
   return priorities[level.toLowerCase()] ?? 3;
 };
+
+// Skill state type checking utilities
+export const isEmployeeSkillState = (state: any): state is EmployeeSkillState => {
+  return state && 
+    typeof state.skillId === 'string' && 
+    typeof state.level === 'string' && 
+    isEmployeeRequirement(state.requirement);
+};
+
+export const isRoleSkillState = (state: any): state is RoleSkillState => {
+  return state && 
+    typeof state.id === 'string' && 
+    typeof state.level === 'string' && 
+    isRoleRequirement(state.requirement);
+};
+
+// Skill type conversion utilities
+export const convertToEmployeeSkillState = (
+  skillId: string,
+  level: string = 'unspecified',
+  requirement: EmployeeSkillRequirement = 'unknown'
+): EmployeeSkillState => ({
+  skillId,
+  level,
+  requirement
+});
+
+export const convertToRoleSkillState = (
+  id: string,
+  level: string = 'unspecified',
+  requirement: RoleSkillRequirement = 'preferred'
+): RoleSkillState => ({
+  id,
+  level,
+  requirement
+});
