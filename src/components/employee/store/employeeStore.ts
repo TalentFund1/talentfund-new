@@ -32,7 +32,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
         if (!store.employeeSkills[employeeId]) {
           store.setEmployeeSkills(employeeId, []);
           
-          // Initialize empty skill states for the employee
           if (!store.skillStates[employeeId]) {
             set((state) => ({
               skillStates: {
@@ -48,7 +47,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
         set((state) => ({
           employees: [...state.employees, employee]
         }));
-        // Initialize skills and states for new employee
         get().initializeEmployeeSkills(employee.id);
       },
 
@@ -73,7 +71,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
           }
         }));
 
-        // Initialize skill states for new skills if they don't exist
         const store = get();
         skills.forEach(skill => {
           if (!store.skillStates[employeeId]?.[skill.title]) {
@@ -111,7 +108,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
 
       getSkillState: (employeeId, skillName) => {
         const state = get();
-        // Ensure employee skill states exist
         if (!state.skillStates[employeeId]) {
           console.log('Initializing skill states for employee:', employeeId);
           state.initializeEmployeeSkills(employeeId);
