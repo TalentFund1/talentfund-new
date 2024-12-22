@@ -1,10 +1,25 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyState, RoleState, RoleSkillState } from '../skills/competency/state/types';
-import { initializeRoleState } from '../skills/competency/state/initializeState';
+import { RoleState, RoleSkillState, RoleSkillRequirement } from '../skills/types/SkillTypes';
+import { roleSkills } from '../skills/data/roleSkills';
+
+interface CompetencyState {
+  roleStates: Record<string, RoleState>;
+  currentStates: Record<string, RoleState>;
+  originalStates: Record<string, RoleState>;
+  hasChanges: boolean;
+  setSkillState: (skillName: string, level: string, levelKey: string, requirement: RoleSkillRequirement, roleId: string) => void;
+  setSkillProgression: (skillName: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
+  resetLevels: (roleId: string) => void;
+  saveChanges: (roleId: string, track: string) => void;
+  cancelChanges: (roleId: string) => void;
+  initializeState: (roleId: string) => void;
+  getRoleState: (roleId: string) => RoleState;
+}
 
 const defaultSkillState: RoleSkillState = {
-  level: 'unspecified'
+  level: 'unspecified',
+  requirement: 'preferred'
 };
 
 export const useCompetencyStore = create<CompetencyState>()(
@@ -15,8 +30,8 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, levelKey, roleId) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, roleId });
+      setSkillState: (skillName, level, levelKey, requirement, roleId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId });
         set((state) => {
           const currentRoleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
@@ -24,7 +39,8 @@ export const useCompetencyStore = create<CompetencyState>()(
             [skillName]: {
               ...(currentRoleState[skillName] || {}),
               [levelKey]: { 
-                level
+                level,
+                requirement 
               }
             }
           };
@@ -71,20 +87,18 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       resetLevels: (roleId) => {
         console.log('Resetting levels for role:', roleId);
-        set((state) => {
-          const freshState = initializeRoleState(roleId);
-          return {
-            roleStates: {
-              ...state.roleStates,
-              [roleId]: freshState
-            },
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: freshState
-            },
-            hasChanges: true
-          };
-        });
+        const freshState = initializeRoleState(roleId);
+        set((state) => ({
+          roleStates: {
+            ...state.roleStates,
+            [roleId]: freshState
+          },
+          currentStates: {
+            ...state.currentStates,
+            [roleId]: freshState
+          },
+          hasChanges: true
+        }));
       },
 
       saveChanges: (roleId, track) => {
@@ -150,3 +164,33 @@ export const useCompetencyStore = create<CompetencyState>()(
     }
   )
 );
+
+const initializeRoleState = (roleId: string): RoleState => {
+  console.log('Initializing new state for role:', roleId);
+  
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  if (!currentRoleSkills) {
+    console.warn('No skills found for role:', roleId);
+    return {};
+  }
+
+  const allSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  const initialStates: RoleState = {};
+  
+  allSkills.forEach(skill => {
+    initialStates[skill.title] = {};
+    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
+      initialStates[skill.title][level] = {
+        level: 'unspecified',
+        requirement: 'preferred'
+      };
+    });
+  });
+
+  return initialStates;
+};
