@@ -44,6 +44,7 @@ export const SkillLevelCell = ({
       case 'required':
         return <Check className="w-3.5 h-3.5" />;
       case 'not-interested':
+      case 'not_interested':
         return <X className="w-3.5 h-3.5" />;
       case 'unknown':
         return <CircleDashed className="w-3.5 h-3.5" />;
@@ -52,7 +53,11 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getBorderColorClass = (level: string) => {
+  const getBorderColorClass = (level: string, requirement: string) => {
+    if (requirement?.toLowerCase() === 'not-interested' || requirement?.toLowerCase() === 'not_interested') {
+      return 'border-gray-200 bg-gray-50';
+    }
+
     switch (level?.toLowerCase()) {
       case 'advanced':
         return 'border-primary-accent bg-primary-accent/10';
@@ -66,10 +71,13 @@ export const SkillLevelCell = ({
   };
 
   const getLowerBorderColorClass = (level: string, requirement: string) => {
+    if (requirement?.toLowerCase() === 'not-interested' || requirement?.toLowerCase() === 'not_interested') {
+      return 'border-gray-200';
+    }
     if (requirement?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
-    return getBorderColorClass(level).split(' ')[0];
+    return getBorderColorClass(level, requirement).split(' ')[0];
   };
 
   return (
@@ -84,7 +92,7 @@ export const SkillLevelCell = ({
         >
           <SelectTrigger className={`
             rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-            border-2 ${getBorderColorClass(currentState?.level)}
+            border-2 ${getBorderColorClass(currentState?.level, currentState?.requirement)}
           `}>
             <SelectValue>
               <span className="flex items-center gap-2">
@@ -137,7 +145,7 @@ export const SkillLevelCell = ({
               <span className="flex items-center gap-1.5">
                 {getRequirementIcon(currentState?.requirement)}
                 {currentState?.requirement === 'required' ? 'Skill Goal' : 
-                 currentState?.requirement === 'not-interested' ? 'Not Interested' : 
+                 currentState?.requirement === 'not-interested' || currentState?.requirement === 'not_interested' ? 'Not Interested' : 
                  currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
               </span>
             </SelectValue>
