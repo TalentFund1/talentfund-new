@@ -104,21 +104,15 @@ export const useSkillsFiltering = (
       const normalizedSelectedRequirement = normalizeRequirement(selectedInterest);
 
       if (selectedInterest !== 'all') {
-        // Explicitly check for not_interested case
-        if (normalizedSelectedRequirement === 'not_interested') {
-          matchesRequirement = employeeRequirement === 'not_interested';
-        } else if (normalizedSelectedRequirement === 'skill_goal') {
-          matchesRequirement = employeeRequirement === 'skill_goal';
-        } else if (normalizedSelectedRequirement === 'unknown') {
-          matchesRequirement = employeeRequirement === 'unknown';
-        }
-
-        console.log('Filtering by requirement:', {
+        console.log('Checking requirement match:', {
           skillTitle: skill.title,
           employeeRequirement,
-          selectedRequirement: normalizedSelectedRequirement,
-          matches: matchesRequirement
+          selectedInterest,
+          normalizedSelectedRequirement
         });
+
+        // Direct comparison with employee requirement
+        matchesRequirement = employeeRequirement === normalizedSelectedRequirement;
       }
 
       if (searchTerm) {
@@ -132,7 +126,10 @@ export const useSkillsFiltering = (
           skillName: skill.title,
           employeeRequirement,
           selectedRequirement: normalizedSelectedRequirement,
-          matchesRequirement
+          matchesRequirement,
+          matchesLevel,
+          matchesSearch,
+          matchesSkillLevel
         });
       }
 
@@ -169,7 +166,8 @@ export const useSkillsFiltering = (
       selectedRoleRequirement,
       selectedSkillLevel,
       searchTerm,
-      isRoleBenchmark
+      isRoleBenchmark,
+      selectedInterest
     }
   });
 
