@@ -14,7 +14,7 @@ export const useSkillsFiltering = (
   selectedSkillLevel: string,
   searchTerm: string,
   toggledSkills: Set<string>,
-  isRoleBenchmark: boolean = false // New parameter to differentiate between contexts
+  isRoleBenchmark: boolean = false
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -37,13 +37,13 @@ export const useSkillsFiltering = (
   };
 
   const filterSkills = () => {
-    // Get all employee skills without filtering by role skills first
     let skills = [...employeeSkills];
 
     console.log('Filtering skills for employee:', {
       employeeId,
       totalSkills: skills.length,
       isRoleBenchmark,
+      selectedInterest,
       skills: skills.map(s => ({
         title: s.title,
         level: s.level,
@@ -95,11 +95,11 @@ export const useSkillsFiltering = (
 
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {
-          case 'skill_goal':
+          case 'required':
             matchesInterest = requirement === 'required' || requirement === 'skill_goal';
             break;
-          case 'not_interested':
-            matchesInterest = requirement === 'not_interested';
+          case 'not-interested':
+            matchesInterest = requirement === 'not-interested' || requirement === 'not_interested';
             break;
           case 'unknown':
             matchesInterest = !requirement || requirement === 'unknown';
