@@ -43,6 +43,7 @@ export interface SimpleSkill {
   requirement?: string;
   category?: string;
   weight?: string;
+  businessCategory?: string;
 }
 
 export interface RoleSkillData {
