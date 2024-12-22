@@ -31,23 +31,22 @@ export const initializeSkillStates = (roleId: string) => {
 
   console.log('Initializing with default states for role:', roleId);
   
-  // Initialize states for all skills with default values
   allSkills.forEach(skill => {
     states[skill.title] = {};
     
-    // Initialize P1-P6 levels for professional track
     ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(level => {
       states[skill.title][level] = {
         level: 'unspecified',
-        required: 'preferred'
+        required: 'preferred',
+        requirement: 'preferred'
       };
     });
     
-    // Initialize M3-M6 levels for managerial track
     ['m3', 'm4', 'm5', 'm6'].forEach(level => {
       states[skill.title][level] = {
         level: 'unspecified',
-        required: 'preferred'
+        required: 'preferred',
+        requirement: 'preferred'
       };
     });
   });
