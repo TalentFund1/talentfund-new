@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { CategorizedSkills } from "../CategorizedSkills";
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { CategorizedSkills } from "../../CategorizedSkills";
 import { Separator } from "@/components/ui/separator";
-import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
-import { roleSkills } from "../../skills/data/roleSkills";
-import { SkillsMatrixContent } from "./SkillsMatrixContent";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
+import { roleSkills } from "@/components/skills/data/roleSkills";
+import SkillsMatrixContent from "./SkillsMatrixContent";
 import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
 
 interface BenchmarkSkillsMatrixContentProps {
