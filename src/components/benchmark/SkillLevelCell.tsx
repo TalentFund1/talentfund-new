@@ -130,7 +130,7 @@ export const SkillLevelCell = ({
         >
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
-            border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+            border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB] whitespace-nowrap
             ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement || 'required')}
           `}>
             <SelectValue>
@@ -150,7 +150,7 @@ export const SkillLevelCell = ({
               </span>
             </SelectItem>
             <SelectItem value="not-interested">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 whitespace-nowrap">
                 <X className="w-3.5 h-3.5" />
                 Not Interested
               </span>
