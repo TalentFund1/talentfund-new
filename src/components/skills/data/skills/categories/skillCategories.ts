@@ -1,5 +1,6 @@
 import { SkillCategory } from '../../../../../types/skillTypes';
 import { skillDefinitions } from '../skillDefinitions';
+import { getUnifiedSkillData } from '../../skillDatabaseService';
 
 const skillDefinitionMap = new Map(
   skillDefinitions.map(skill => [skill.title.toLowerCase(), skill])
@@ -7,17 +8,17 @@ const skillDefinitionMap = new Map(
 
 export const getSkillCategory = (skillTitle: string): SkillCategory => {
   console.log('Getting category for skill:', skillTitle);
-  const skill = skillDefinitionMap.get(skillTitle.toLowerCase());
+  const skillData = getUnifiedSkillData(skillTitle);
   
-  if (!skill) {
-    console.warn(`Skill not found in definition map: ${skillTitle}`);
+  if (!skillData) {
+    console.warn(`No unified data found for skill: ${skillTitle}`);
     return 'common'; // Default fallback
   }
   
   console.log('Found category for skill:', {
     skill: skillTitle,
-    category: skill.category
+    category: skillData.category
   });
   
-  return skill.category || 'common';
+  return skillData.category || 'common';
 };

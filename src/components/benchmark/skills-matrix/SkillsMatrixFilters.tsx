@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 interface SkillsMatrixFiltersProps {
   searchTerm: string;
