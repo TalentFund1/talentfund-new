@@ -40,6 +40,7 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+  skills: UnifiedSkill[]; // Adding this to fix the missing property error
   soc?: string;
   function?: string;
   mappedTitle?: string;
@@ -47,5 +48,48 @@ export interface RoleSkillData {
   description?: string;
 }
 
-// Re-export types that were previously imported from other files
-export type { DetailedSkill, BaseSkill, Certification, SkillProfileRow, EmployeeSkill, RoleSkill } from './types';
+export interface BaseSkill {
+  name: string;
+}
+
+export interface DetailedSkill extends BaseSkill {
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface Certification extends BaseSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface SkillProfileRow {
+  id: string;
+  name: string;
+  function: string;
+  skillCount: string;
+  employees: string;
+  matches: string;
+  lastUpdated: string;
+  occupation?: string;
+}
+
+export interface EmployeeSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: 'required' | 'preferred' | 'skill_goal';
+}
+
+export interface RoleSkill {
+  title: string;
+  subcategory: string;
+  level?: string;
+  growth: string;
+  confidence?: string;
+  requirement?: string;
+  salary?: string;
+  benchmarks?: { [key: string]: boolean };
+}
