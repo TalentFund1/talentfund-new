@@ -24,7 +24,7 @@ export const useCompetencyStateReader = () => {
 
     return {
       level: skillState.level,
-      requirement: skillState.requirement
+      requirement: skillState.requirement || 'preferred'
     };
   };
 

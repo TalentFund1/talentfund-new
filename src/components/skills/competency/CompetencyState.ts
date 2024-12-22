@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleState, RoleSkillState } from '../types/SkillTypes';
+import { RoleState, RoleSkillState, RoleSkillRequirement } from '../types/SkillTypes';
 import { roleSkills } from '../data/roleSkills';
 
 interface CompetencyState {
@@ -8,7 +8,7 @@ interface CompetencyState {
   currentStates: Record<string, RoleState>;
   originalStates: Record<string, RoleState>;
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, levelKey: string, roleId: string) => void;
+  setSkillState: (skillName: string, level: string, levelKey: string, requirement: RoleSkillRequirement, roleId: string) => void;
   setSkillProgression: (skillName: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
   resetLevels: (roleId: string) => void;
   saveChanges: (roleId: string, track: string) => void;
@@ -44,7 +44,6 @@ const initializeRoleState = (roleId: string): RoleState => {
     });
   });
 
-  console.log('Initialized states with defaults:', initialStates);
   return initialStates;
 };
 
@@ -56,8 +55,8 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, levelKey, roleId) => {
-        console.log('Setting role skill state:', { skillName, level, levelKey, roleId });
+      setSkillState: (skillName, level, levelKey, requirement, roleId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId });
         set((state) => {
           const currentRoleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
@@ -66,7 +65,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...(currentRoleState[skillName] || {}),
               [levelKey]: { 
                 level,
-                requirement: 'required' as RoleSkillRequirement
+                requirement
               }
             }
           };

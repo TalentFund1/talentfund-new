@@ -15,15 +15,14 @@ export interface UnifiedSkill {
   salary: string;
   confidence: string;
   benchmarks: { [key: string]: boolean };
+  requirement?: RoleSkillRequirement;
 }
 
-// Employee skill state - managed in employee store
 export interface EmployeeSkillState {
   level: string;
   requirement: EmployeeSkillRequirement;
 }
 
-// Role skill state - managed in competency store
 export interface RoleSkillState {
   level: string;
   requirement: RoleSkillRequirement;
