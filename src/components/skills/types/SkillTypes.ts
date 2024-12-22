@@ -18,18 +18,15 @@ export interface UnifiedSkill {
   requirement?: RoleSkillRequirement | EmployeeSkillRequirement;
 }
 
-export interface SkillState {
+export interface BaseSkillState {
   level: string;
-  requirement: RoleSkillRequirement | EmployeeSkillRequirement;
 }
 
-export interface RoleSkillState {
-  level: string;
+export interface RoleSkillState extends BaseSkillState {
   requirement: RoleSkillRequirement;
 }
 
-export interface EmployeeSkillState {
-  level: string;
+export interface EmployeeSkillState extends BaseSkillState {
   requirement: EmployeeSkillRequirement;
 }
 

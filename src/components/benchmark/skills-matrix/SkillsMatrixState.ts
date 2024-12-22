@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill, EmployeeSkillState } from '../../skills/types/SkillTypes';
+import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from './skillCategories';
 
@@ -29,7 +29,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             ...state.currentStates,
             [skillName]: { 
               level, 
-              requirement: requirement as EmployeeSkillState['requirement']
+              requirement: requirement as EmployeeSkillRequirement
             },
           },
           hasChanges: true,
@@ -49,7 +49,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             console.log('Initializing skill state:', { skillName, level, requirement });
             const newState = {
               level,
-              requirement: requirement as EmployeeSkillState['requirement']
+              requirement: requirement as EmployeeSkillRequirement
             };
             return {
               currentStates: {
