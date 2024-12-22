@@ -32,7 +32,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         console.log('Setting skill state:', { employeeId, skillId, level, requirement });
         
         set((state) => {
-          // Create deep copy of current states to avoid reference issues
+          // Create deep copies to avoid reference issues
           const updatedSkillStates = {
             ...state.skillStates,
             [employeeId]: {
@@ -128,7 +128,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 6, // Increment version to ensure clean state
+      version: 7, // Increment version to ensure clean state
       partialize: (state) => ({
         skillStates: state.skillStates,
         currentStates: state.currentStates
