@@ -84,7 +84,7 @@ export const useSkillsFiltering = (
 
       const employeeSkillState = getSkillState(employeeId, skill.title);
       
-      console.log('Filtering skill:', {
+      console.log('Processing skill for filtering:', {
         skill: skill.title,
         employeeSkillState,
         selectedSkillLevel,
@@ -146,7 +146,7 @@ export const useSkillsFiltering = (
 
   const filteredSkills = filterSkills();
 
-  console.log('Skills filtering result:', {
+  console.log('Final filtered skills:', {
     employeeId,
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
