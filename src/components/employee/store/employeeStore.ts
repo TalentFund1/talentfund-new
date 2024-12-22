@@ -41,14 +41,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
               }
             }));
           }
-          
-          set((state) => ({
-            employees: state.employees.map(emp => 
-              emp.id === employeeId 
-                ? { ...emp, skillCount: 0 }
-                : emp
-            )
-          }));
         }
       },
 
