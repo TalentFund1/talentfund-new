@@ -9,6 +9,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
+import { useToggledSkills } from "./context/ToggledSkillsContext";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -37,6 +38,7 @@ export const SkillsSummary = () => {
   const { currentStates } = useSkillsMatrixStore();
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
   const { setMatrixSearchSkills } = useSkillsMatrixSearch();
+  const { toggledSkills } = useToggledSkills();
 
   console.log('Loading skills for employee:', id);
   const employeeSkills = getEmployeeSkills(id || "");
@@ -70,7 +72,9 @@ export const SkillsSummary = () => {
   };
 
   const transformAndSortSkills = (skills: UnifiedSkill[]): DetailedSkill[] => {
+    // Only include skills that are in toggledSkills
     return skills
+      .filter(skill => toggledSkills.has(skill.title))
       .map(skill => ({
         name: skill.title,
         level: currentStates[skill.title]?.level || skill.level,
@@ -114,6 +118,13 @@ export const SkillsSummary = () => {
       requirement: skill.requirement as SkillRequirement
     })), "certification") as UnifiedSkill[]
   );
+
+  console.log('Skills Summary - Processed skills:', {
+    specialized: specializedSkills.length,
+    common: commonSkills.length,
+    certifications: certifications.length,
+    toggledSkillsCount: toggledSkills.size
+  });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
