@@ -1,9 +1,8 @@
 import { useEmployeeStore } from "../../employee/store/employeeStore";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
-import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { EmployeeSkillRequirement, UnifiedSkill } from "../../../types/skillTypes";
-import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 
 const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
   switch (requirement?.toLowerCase()) {
@@ -31,7 +30,6 @@ export const useSkillsFiltering = (
   selectedRoleRequirement: string = 'all'
 ) => {
   const { getSkillState } = useEmployeeStore();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
@@ -69,8 +67,14 @@ export const useSkillsFiltering = (
     // Filter by category if selected
     if (selectedLevel !== 'all') {
       skills = skills.filter(skill => {
-        const category = getSkillCategory(skill.title);
-        return category === selectedLevel;
+        const skillData = getUnifiedSkillData(skill.title);
+        console.log('Filtering skill by category:', {
+          skill: skill.title,
+          category: skillData.category,
+          selectedLevel,
+          matches: skillData.category === selectedLevel
+        });
+        return skillData.category === selectedLevel;
       });
     }
 
@@ -91,28 +95,11 @@ export const useSkillsFiltering = (
       );
     }
 
-    // If this is role benchmark view, filter by role skills
-    if (isRoleBenchmark) {
-      const roleSkillTitles = new Set([
-        ...(currentRoleSkills.specialized || []).map(s => s.title),
-        ...(currentRoleSkills.common || []).map(s => s.title),
-        ...(currentRoleSkills.certifications || []).map(s => s.title)
-      ]);
-      skills = skills.filter(skill => roleSkillTitles.has(skill.title));
-
-      // Additional role requirement filtering for benchmark view
-      if (selectedRoleRequirement !== 'all') {
-        skills = skills.filter(skill => {
-          const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
-          return competencyState?.requirement === selectedRoleRequirement;
-        });
-      }
-    }
-
     console.log('Final filtered skills:', {
       totalFiltered: skills.length,
       skills: skills.map(s => ({
         title: s.title,
+        category: getUnifiedSkillData(s.title).category,
         requirement: getSkillState(employeeId, s.title)?.requirement
       }))
     });

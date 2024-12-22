@@ -40,7 +40,10 @@ export const SkillsMatrixFilters = ({
       <div className="flex gap-4 mb-4">
         <Select 
           value={selectedCategory} 
-          onValueChange={setSelectedCategory}
+          onValueChange={(value) => {
+            console.log('Category selected:', value);
+            setSelectedCategory(value);
+          }}
         >
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Categories">
@@ -58,7 +61,10 @@ export const SkillsMatrixFilters = ({
           </SelectContent>
         </Select>
 
-        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
+        <Select 
+          value={selectedInterest} 
+          onValueChange={setSelectedInterest}
+        >
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Requirements">
               {selectedInterest === 'all' && 'All Requirements'}
