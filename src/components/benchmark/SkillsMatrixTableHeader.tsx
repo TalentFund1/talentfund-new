@@ -27,6 +27,7 @@ export const SkillsMatrixTableHeader = ({
         <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
         <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
         <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Weight</TableHead>
+        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Type</TableHead>
         {showCompanySkill && (
           <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Company Skill</TableHead>
         )}
