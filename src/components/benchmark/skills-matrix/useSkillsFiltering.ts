@@ -108,7 +108,8 @@ export const useSkillsFiltering = (
           skillTitle: skill.title,
           employeeRequirement,
           selectedInterest,
-          normalizedSelectedRequirement
+          normalizedSelectedRequirement,
+          matches: employeeRequirement === normalizedSelectedRequirement
         });
 
         // Direct comparison with employee requirement
