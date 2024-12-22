@@ -1,5 +1,5 @@
-import { RoleState, RoleSkillState } from "../../types/SkillTypes";
-import { roleSkills } from "../../data/roleSkills";
+import { RoleState } from '../../../../types/skillTypes';
+import { roleSkills } from '../../data/roleSkills';
 
 export const initializeRoleState = (roleId: string): RoleState => {
   console.log('Initializing new state for role:', roleId);
@@ -22,12 +22,12 @@ export const initializeRoleState = (roleId: string): RoleState => {
     initialStates[skill.title] = {};
     ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
       initialStates[skill.title][level] = {
+        id: skill.title,
         level: 'unspecified',
         requirement: 'preferred'
       };
     });
   });
 
-  console.log('Initialized states with defaults:', initialStates);
   return initialStates;
 };

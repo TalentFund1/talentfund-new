@@ -8,7 +8,7 @@ export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknow
 export type RoleSkillRequirement = 'required' | 'preferred';
 
 // Base skill state interface
-interface BaseSkillState {
+export interface BaseSkillState {
   id: string;
   level: string;
 }
@@ -58,4 +58,11 @@ export interface RoleSkillData {
   mappedTitle?: string;
   occupation?: string;
   description?: string;
+}
+
+// Skill state type
+export interface SkillState {
+  id: string;
+  level: string;
+  requirement: RoleSkillRequirement;
 }

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { RoleState, RoleSkillState, RoleSkillRequirement } from '../../../types/skillTypes';
-import { roleSkills } from '../data/roleSkills';
+import { initializeRoleState } from './state/initializeState';
 
 interface CompetencyState {
   roleStates: Record<string, RoleState>;
@@ -43,7 +43,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               [levelKey]: { 
                 id: skillId,
                 level,
-                requirement 
+                requirement
               }
             }
           };
