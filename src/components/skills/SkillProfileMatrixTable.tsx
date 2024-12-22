@@ -1,3 +1,4 @@
+import { Table, TableBody } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { ChevronUp, HelpCircle } from "lucide-react";
 import {
@@ -7,9 +8,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { UnifiedSkill } from "./types/SkillTypes";
-import { roleSkills } from "./data/roleSkills";
-import { useParams } from "react-router-dom";
+import { UnifiedSkill } from '@/types/skillTypes';
+import { getSkillCategory } from './data/skills/categories/skillCategories';
+import { getUnifiedSkillData } from './data/skillDatabaseService';
 
 interface SkillProfileMatrixTableProps {
   paginatedSkills: UnifiedSkill[];
@@ -28,23 +29,7 @@ export const SkillProfileMatrixTable = ({
   sortDirection,
   onSort
 }: SkillProfileMatrixTableProps) => {
-  const { id } = useParams();
   
-  const getSkillType = (skillTitle: string): string => {
-    const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-    
-    if (currentRoleSkills.specialized.some(s => s.title === skillTitle)) {
-      return 'Specialized';
-    }
-    if (currentRoleSkills.common.some(s => s.title === skillTitle)) {
-      return 'Common';
-    }
-    if (currentRoleSkills.certifications.some(s => s.title === skillTitle)) {
-      return 'Certification';
-    }
-    return 'Uncategorized';
-  };
-
   const getTypeColor = (type: string) => {
     switch (type.toLowerCase()) {
       case 'specialized':
@@ -65,6 +50,14 @@ export const SkillProfileMatrixTable = ({
     }
     return acc;
   }, []);
+
+  console.log('Rendering skills from universal database:', {
+    totalSkills: uniqueSkills.length,
+    sample: uniqueSkills.slice(0, 3).map(skill => ({
+      title: skill.title,
+      category: getSkillCategory(skill.title)
+    }))
+  });
 
   const renderSortArrow = (field: 'growth' | 'salary') => {
     if (sortField !== field) {
@@ -144,47 +137,52 @@ export const SkillProfileMatrixTable = ({
         </tr>
       </thead>
       <tbody>
-        {uniqueSkills.map((skill) => (
-          <tr 
-            key={skill.title}
-            className="border-t border-border hover:bg-muted/50 transition-colors"
-          >
-            <td className="py-3 px-4">
-              <div className="flex items-center gap-2">
-                <Switch 
-                  checked={toggledSkills.has(skill.title)}
-                  onCheckedChange={() => onToggleSkill(skill.title)}
-                  className="data-[state=checked]:bg-primary"
-                />
-                <span className="text-sm">{skill.title}</span>
-              </div>
-            </td>
-            <td className="py-3 px-4">
-              <span className="text-sm block truncate" title={skill.subcategory}>
-                {skill.subcategory}
-              </span>
-            </td>
-            <td className="py-3 px-4">
-              <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(getSkillType(skill.title))}`}>
-                {getSkillType(skill.title)}
-              </span>
-            </td>
-            <td className="py-3 px-4">
-              <span className={`bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm`}>
-                ↗ {skill.growth}
-              </span>
-            </td>
-            <td className="py-3 px-2 text-sm">{skill.salary}</td>
-            <td className="py-3 px-8">
-              <div className="flex justify-center gap-1">
-                <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
-                <span className="w-6 h-6 rounded-full bg-red-100 text-red-800 flex items-center justify-center text-sm font-medium">R</span>
-                <span className="w-6 h-6 rounded-full bg-[#E5DEFF] text-[#6E59A5] flex items-center justify-center text-sm font-medium">M</span>
-                <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">O</span>
-              </div>
-            </td>
-          </tr>
-        ))}
+        {uniqueSkills.map((skill) => {
+          const skillData = getUnifiedSkillData(skill.title);
+          const category = getSkillCategory(skill.title);
+          
+          return (
+            <tr 
+              key={skill.title}
+              className="border-t border-border hover:bg-muted/50 transition-colors"
+            >
+              <td className="py-3 px-4">
+                <div className="flex items-center gap-2">
+                  <Switch 
+                    checked={toggledSkills.has(skill.title)}
+                    onCheckedChange={() => onToggleSkill(skill.title)}
+                    className="data-[state=checked]:bg-primary"
+                  />
+                  <span className="text-sm">{skill.title}</span>
+                </div>
+              </td>
+              <td className="py-3 px-4">
+                <span className="text-sm block truncate" title={skillData.subcategory}>
+                  {skillData.subcategory}
+                </span>
+              </td>
+              <td className="py-3 px-4">
+                <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(category)}`}>
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </span>
+              </td>
+              <td className="py-3 px-4">
+                <span className={`bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm`}>
+                  ↗ {skillData.growth}
+                </span>
+              </td>
+              <td className="py-3 px-2 text-sm">{skillData.salary}</td>
+              <td className="py-3 px-8">
+                <div className="flex justify-center gap-1">
+                  <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
+                  <span className="w-6 h-6 rounded-full bg-red-100 text-red-800 flex items-center justify-center text-sm font-medium">R</span>
+                  <span className="w-6 h-6 rounded-full bg-[#E5DEFF] text-[#6E59A5] flex items-center justify-center text-sm font-medium">M</span>
+                  <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">O</span>
+                </div>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
