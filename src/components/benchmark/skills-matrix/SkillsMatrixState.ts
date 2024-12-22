@@ -32,6 +32,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         console.log('Setting skill state:', { skillName, level, requirement });
         const convertedRequirement = convertRequirement(requirement);
         
+        console.log('Converted requirement:', {
+          original: requirement,
+          converted: convertedRequirement
+        });
+        
         set((state) => ({
           currentStates: {
             ...state.currentStates,
@@ -52,7 +57,12 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => {
           if (!state.currentStates[skillName]) {
             const convertedRequirement = convertRequirement(requirement);
-            console.log('Initializing skill state:', { skillName, level, requirement: convertedRequirement });
+            console.log('Initializing skill state:', { 
+              skillName, 
+              level, 
+              originalRequirement: requirement,
+              convertedRequirement 
+            });
             return {
               currentStates: {
                 ...state.currentStates,
