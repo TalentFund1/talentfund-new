@@ -84,12 +84,12 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         console.log('Generated progression:', { skill: skill.title, progression });
         
         if (progression) {
-          setSkillProgression(skill.title, progression, currentRoleId);
+          setSkillProgression(skill.title, progression, currentRoleId, track);
         }
       });
 
       // Save changes to persist the generated progressions
-      saveChanges(currentRoleId);
+      saveChanges(currentRoleId, track);
 
       toast({
         title: "Skills Generated",
@@ -108,7 +108,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   };
 
   const handleSave = () => {
-    saveChanges(currentRoleId);
+    saveChanges(currentRoleId, track);
     toast({
       title: "Changes saved",
       description: "Your changes have been saved successfully.",
