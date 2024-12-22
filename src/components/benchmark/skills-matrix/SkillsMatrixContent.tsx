@@ -1,6 +1,7 @@
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
 import { BenchmarkSkillsMatrixTable } from "./BenchmarkSkillsMatrixTable";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
+import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 
 interface SkillsMatrixContentProps {
   filteredSkills: any[];
@@ -19,8 +20,8 @@ interface SkillsMatrixContentProps {
   isRoleBenchmark?: boolean;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-  selectedRoleRequirement: string;
-  setSelectedRoleRequirement: (requirement: string) => void;
+  selectedRoleRequirement?: string;
+  setSelectedRoleRequirement?: (requirement: string) => void;
 }
 
 export const SkillsMatrixContent = ({
@@ -55,21 +56,41 @@ export const SkillsMatrixContent = ({
 
   return (
     <>
-      <BenchmarkMatrixFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-        selectedSkillLevel={selectedSkillLevel}
-        setSelectedSkillLevel={setSelectedSkillLevel}
-        selectedSearchSkills={selectedSearchSkills}
-        removeSearchSkill={removeSearchSkill}
-        clearSearch={() => setSearchTerm("")}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-      />
+      {isRoleBenchmark ? (
+        <BenchmarkMatrixFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedSkillLevel={selectedSkillLevel}
+          setSelectedSkillLevel={setSelectedSkillLevel}
+          selectedSearchSkills={selectedSearchSkills}
+          removeSearchSkill={removeSearchSkill}
+          clearSearch={() => setSearchTerm("")}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedRoleRequirement={selectedRoleRequirement || "all"}
+          setSelectedRoleRequirement={setSelectedRoleRequirement || (() => {})}
+        />
+      ) : (
+        <SkillsMatrixFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedSkillLevel={selectedSkillLevel}
+          setSelectedSkillLevel={setSelectedSkillLevel}
+          selectedSearchSkills={selectedSearchSkills}
+          removeSearchSkill={removeSearchSkill}
+          clearSearch={() => setSearchTerm("")}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
+      )}
 
       {isRoleBenchmark ? (
         <BenchmarkSkillsMatrixTable 
