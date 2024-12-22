@@ -30,11 +30,9 @@ export interface EmployeeSkillRecord {
 }
 
 // Role-specific types
-export type RoleSkillRequirement = 'preferred';
-
 export interface RoleSkillState {
   level: string;
-  requirement: RoleSkillRequirement;
+  requirement: 'preferred';
 }
 
 export interface RoleState {
