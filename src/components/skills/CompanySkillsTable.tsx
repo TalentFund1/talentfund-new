@@ -4,6 +4,7 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
 import { roleSkills } from './data/roleSkills';
 import { getAllSkills } from './data/skills/allSkills';
+import { getSkillCategory } from './data/skills/categories/skillCategories';
 
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
@@ -34,23 +35,8 @@ export const CompanySkillsTable = () => {
     sample: uniqueSkills.slice(0, 3)
   });
 
-  // Helper function to get the type
-  const getSkillType = (skillTitle: string): string => {
-    for (const role of Object.values(roleSkills)) {
-      if (role.specialized.some(s => s.title === skillTitle)) {
-        return 'Specialized';
-      }
-      if (role.common.some(s => s.title === skillTitle)) {
-        return 'Common';
-      }
-      if (role.certifications.some(s => s.title === skillTitle)) {
-        return 'Certification';
-      }
-    }
-    return 'Uncategorized';
-  };
-
-  const getTypeColor = (type: string) => {
+  const getTypeColor = (skillTitle: string) => {
+    const type = getSkillCategory(skillTitle);
     switch (type.toLowerCase()) {
       case 'specialized':
         return 'bg-blue-100 text-blue-800';
@@ -87,33 +73,30 @@ export const CompanySkillsTable = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {uniqueSkills.map((skill) => {
-                const skillType = getSkillType(skill.title);
-                return (
-                  <TableRow key={skill.id} className="hover:bg-muted/5">
-                    <TableCell className="font-medium">{skill.title}</TableCell>
-                    <TableCell>
-                      <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(skillType)}`}>
-                        {skillType}
-                      </span>
-                    </TableCell>
-                    <TableCell>{skill.businessCategory}</TableCell>
-                    <TableCell>{skill.subcategory}</TableCell>
-                    <TableCell>{skill.weight}</TableCell>
-                    <TableCell className="text-right">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm bg-green-100 text-green-800">
-                        ↗ {skill.growth}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">{skill.salary}</TableCell>
-                    <TableCell className="text-center">
-                      <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm bg-gray-100 text-gray-800">
-                        1
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {uniqueSkills.map((skill) => (
+                <TableRow key={skill.id} className="hover:bg-muted/5">
+                  <TableCell className="font-medium">{skill.title}</TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(skill.title)}`}>
+                      {getSkillCategory(skill.title)}
+                    </span>
+                  </TableCell>
+                  <TableCell>{skill.businessCategory}</TableCell>
+                  <TableCell>{skill.subcategory}</TableCell>
+                  <TableCell>{skill.weight}</TableCell>
+                  <TableCell className="text-right">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm bg-green-100 text-green-800">
+                      ↗ {skill.growth}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">{skill.salary}</TableCell>
+                  <TableCell className="text-center">
+                    <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm bg-gray-100 text-gray-800">
+                      1
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>

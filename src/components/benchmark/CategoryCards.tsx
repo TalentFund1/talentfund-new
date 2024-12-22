@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { roleSkills } from '../skills/data/roleSkills';
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { getSkillCategory } from "../skills/data/skills/categories/skillCategories";
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -19,33 +20,33 @@ export const CategoryCards = ({
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
   // Get counts for each category based on toggled skills
-  const specializedCount = currentRoleSkills.specialized?.filter(skill => 
-    toggledSkills.has(skill.title)
-  ).length || 0;
-  
-  const commonCount = currentRoleSkills.common?.filter(skill => 
-    toggledSkills.has(skill.title)
-  ).length || 0;
-  
-  const certificationCount = currentRoleSkills.certifications?.filter(skill => 
-    toggledSkills.has(skill.title)
-  ).length || 0;
+  const getSkillCount = (category: string) => {
+    return currentRoleSkills.skills
+      .filter(skill => toggledSkills.has(skill.title))
+      .filter(skill => category === 'all' || getSkillCategory(skill.title) === category)
+      .length;
+  };
 
-  const totalCount = specializedCount + commonCount + certificationCount;
+  const skillCounts = {
+    all: getSkillCount('all'),
+    specialized: getSkillCount('specialized'),
+    common: getSkillCount('common'),
+    certification: getSkillCount('certification')
+  };
 
   console.log('Category counts calculated:', {
-    total: totalCount,
-    specialized: specializedCount,
-    common: commonCount,
-    certification: certificationCount,
+    total: skillCounts.all,
+    specialized: skillCounts.specialized,
+    common: skillCounts.common,
+    certification: skillCounts.certification,
     toggledSkills: Array.from(toggledSkills)
   });
 
   const categories = [
-    { id: "all", name: "All Categories", count: totalCount },
-    { id: "specialized", name: "Specialized Skills", count: specializedCount },
-    { id: "common", name: "Common Skills", count: commonCount },
-    { id: "certification", name: "Certification", count: certificationCount }
+    { id: "all", name: "All Categories", count: skillCounts.all },
+    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
+    { id: "common", name: "Common Skills", count: skillCounts.common },
+    { id: "certification", name: "Certification", count: skillCounts.certification }
   ];
 
   return (
