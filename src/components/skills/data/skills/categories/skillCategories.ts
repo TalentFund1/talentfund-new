@@ -17,6 +17,7 @@ const skillCategoryMap: { [key: string]: SkillCategory } = {
   'Technical Writing': 'common',
   'Problem Solving': 'common',
   'Code Review': 'common',
+  'Git Version Control': 'common',
   
   // Certification skills
   'AWS Certified DevOps Engineer': 'certification',
@@ -31,8 +32,15 @@ const skillCategoryMap: { [key: string]: SkillCategory } = {
 export const getSkillCategory = (skillTitle: string): SkillCategory => {
   console.log('Getting category for skill:', skillTitle);
   
-  // Check for AWS certifications first
-  if (skillTitle.toLowerCase().includes('aws certified')) {
+  // First check if it's explicitly mapped
+  if (skillCategoryMap[skillTitle]) {
+    console.log(`Found explicit category mapping for ${skillTitle}:`, skillCategoryMap[skillTitle]);
+    return skillCategoryMap[skillTitle];
+  }
+  
+  // Check for AWS certifications
+  if (skillTitle.toLowerCase().includes('aws') && 
+      skillTitle.toLowerCase().includes('certified')) {
     console.log('Detected AWS certification:', skillTitle);
     return 'certification';
   }
@@ -44,7 +52,7 @@ export const getSkillCategory = (skillTitle: string): SkillCategory => {
     return 'certification';
   }
   
-  const category = skillCategoryMap[skillTitle] || 'common';
-  console.log('Skill category result:', { skill: skillTitle, category });
-  return category;
+  // Default to common if no other matches
+  console.log(`No specific category found for ${skillTitle}, defaulting to common`);
+  return 'common';
 };
