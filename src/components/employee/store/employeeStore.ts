@@ -116,6 +116,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               ...state.skillStates[employeeId],
               [skillName]: {
+                skillId,
                 level,
                 requirement
               }

@@ -25,6 +25,7 @@ export interface UnifiedSkill {
 }
 
 export interface EmployeeSkillState {
+  skillId: string;
   level: string;
   requirement: EmployeeSkillRequirement;
 }
