@@ -1,4 +1,5 @@
 export type RoleSkillRequirement = 'required' | 'preferred';
+export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 
 export interface RoleSkillState {
   level: string;

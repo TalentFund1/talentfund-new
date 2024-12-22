@@ -19,6 +19,8 @@ interface SkillsMatrixContentProps {
   isRoleBenchmark?: boolean;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedRoleRequirement: string;
+  setSelectedRoleRequirement: (requirement: string) => void;
 }
 
 export const SkillsMatrixContent = ({
@@ -37,7 +39,9 @@ export const SkillsMatrixContent = ({
   observerTarget,
   isRoleBenchmark = false,
   selectedCategory,
-  setSelectedCategory
+  setSelectedCategory,
+  selectedRoleRequirement,
+  setSelectedRoleRequirement
 }: SkillsMatrixContentProps) => {
   console.log('SkillsMatrixContent rendering:', {
     skillsCount: filteredSkills.length,

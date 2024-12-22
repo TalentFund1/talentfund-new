@@ -1,4 +1,3 @@
-// Base skill types from universal database
 export interface UnifiedSkill {
   id: string;
   title: string;
@@ -14,34 +13,19 @@ export interface UnifiedSkill {
   requirement?: EmployeeSkillRequirement;
 }
 
-// Skill categories and weights from universal database
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
-
-// Employee-specific types
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
+export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface EmployeeSkillState {
   level: string;
   requirement: EmployeeSkillRequirement;
 }
 
-export interface EmployeeSkillRecord {
-  [skillTitle: string]: EmployeeSkillState;
-}
-
-// Role-specific types
-export type RoleSkillRequirement = 'required' | 'preferred';
-
 export interface RoleSkillState {
   level: string;
   requirement: RoleSkillRequirement;
-}
-
-export interface RoleState {
-  [skillName: string]: {
-    [levelKey: string]: RoleSkillState;
-  };
 }
 
 export interface RoleSkillData {
@@ -50,7 +34,6 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
-  skills?: UnifiedSkill[]; // Made optional since some implementations don't use it
   soc?: string;
   function?: string;
   mappedTitle?: string;
