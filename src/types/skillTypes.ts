@@ -2,7 +2,7 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
-// Employee skill requirements - no more "required", only "skill_goal"
+// Employee skill requirements
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'preferred';
 
