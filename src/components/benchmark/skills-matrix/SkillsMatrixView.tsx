@@ -71,6 +71,16 @@ export const SkillsMatrixView = ({
         setSelectedInterest={setSelectedInterest}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedSkillLevel={selectedSkillLevel}
+        setSelectedSkillLevel={setSelectedSkillLevel}
+        selectedSearchSkills={selectedSearchSkills}
+        removeSearchSkill={(skill) => {
+          setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
+        }}
+        clearSearch={() => setSelectedSearchSkills([])}
+        isRoleBenchmark={isRoleBenchmark}
       />
 
       <SkillsMatrixTable 
