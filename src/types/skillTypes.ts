@@ -137,3 +137,7 @@ export const isSkillGoal = (state: EmployeeSkillState): boolean => {
 export const isRequiredSkill = (state: RoleSkillState): boolean => {
   return state.requirement === 'required';
 };
+
+// Create an index.ts file to re-export all types
+<lov-write file_path="src/types/index.ts">
+export * from './skillTypes';
