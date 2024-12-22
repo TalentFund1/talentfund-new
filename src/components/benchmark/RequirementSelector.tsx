@@ -1,10 +1,11 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Heart, X, CircleDashed } from "lucide-react";
+import { EmployeeSkillRequirement } from "../skills/types/SkillTypes";
 
 interface RequirementSelectorProps {
   currentRequired: string;
   currentLevel: string;
-  onRequirementChange: (value: string) => void;
+  onRequirementChange: (value: EmployeeSkillRequirement) => void;
 }
 
 export const RequirementSelector = ({ 
