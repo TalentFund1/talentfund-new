@@ -1,19 +1,12 @@
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from '../context/ToggledSkillsContext';
-import { UnifiedSkill } from '../types/SkillTypes';
 import { getSkillCategory } from '../data/skills/categories/skillCategories';
+import { getUnifiedSkillData } from '../data/skillDatabaseService';
 
 interface CategorySectionProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-}
-
-interface SkillCounts {
-  specialized: number;
-  common: number;
-  certification: number;
-  all: number;
 }
 
 export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
@@ -22,17 +15,28 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
   const getToggledSkillsCount = (category: string) => {
-    return currentRoleSkills.skills
-      .filter(skill => skill.title && toggledSkills.has(skill.title))
-      .filter(skill => category === 'all' || getSkillCategory(skill.title) === category)
-      .length;
+    const toggledSkillsArray = Array.from(toggledSkills);
+    
+    if (category === 'all') {
+      return toggledSkillsArray.length;
+    }
+
+    return toggledSkillsArray.filter(skillTitle => {
+      const skillData = getUnifiedSkillData(skillTitle);
+      console.log('Checking skill category:', {
+        skill: skillTitle,
+        category: skillData.category,
+        matchesFilter: category === 'all' || skillData.category === category
+      });
+      return category === 'all' || skillData.category === category;
+    }).length;
   };
 
-  const skillCounts: SkillCounts = {
+  const skillCounts = {
+    all: getToggledSkillsCount('all'),
     specialized: getToggledSkillsCount('specialized'),
     common: getToggledSkillsCount('common'),
-    certification: getToggledSkillsCount('certification'),
-    all: getToggledSkillsCount('all')
+    certification: getToggledSkillsCount('certification')
   };
 
   console.log('CategorySection - Skill counts:', {
