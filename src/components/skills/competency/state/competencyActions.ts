@@ -1,15 +1,15 @@
-import { RoleState, SkillState } from './types';
-import { saveRoleState } from './storageUtils';
+import { RoleState, RoleSkillState, RoleSkillRequirement } from '../../types/SkillTypes';
+import { persistState } from './persistenceUtils';
 
 export const setSkillStateAction = (
   roleStates: Record<string, RoleState>,
   skillName: string,
   level: string,
   levelKey: string,
-  required: string,
+  requirement: RoleSkillRequirement,
   roleId: string
 ): Record<string, RoleState> => {
-  console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
+  console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId });
   
   const updatedRoleState = {
     ...roleStates,
@@ -19,21 +19,20 @@ export const setSkillStateAction = (
         ...roleStates[roleId]?.[skillName],
         [levelKey]: { 
           level, 
-          required,
-          requirement: required 
+          requirement 
         }
       }
     }
   };
 
-  saveRoleState(roleId, updatedRoleState[roleId]);
+  persistState(roleId, updatedRoleState[roleId]);
   return updatedRoleState;
 };
 
 export const setSkillProgressionAction = (
   roleStates: Record<string, RoleState>,
   skillName: string,
-  progression: Record<string, SkillState>,
+  progression: Record<string, RoleSkillState>,
   roleId: string
 ): Record<string, RoleState> => {
   console.log('Setting skill progression:', { skillName, progression, roleId });
@@ -49,7 +48,7 @@ export const setSkillProgressionAction = (
     }
   };
 
-  saveRoleState(roleId, updatedRoleState[roleId]);
+  persistState(roleId, updatedRoleState[roleId]);
   return updatedRoleState;
 };
 
@@ -67,14 +66,13 @@ export const resetLevelsAction = (
     ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
       resetState[skillName][level] = {
         level: 'unspecified',
-        required: 'preferred',
         requirement: 'preferred'
       };
     });
   });
 
   console.log('Reset state:', resetState);
-  saveRoleState(roleId, resetState);
+  persistState(roleId, resetState);
 
   return {
     ...roleStates,
