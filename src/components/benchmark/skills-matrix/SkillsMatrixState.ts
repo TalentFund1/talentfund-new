@@ -3,12 +3,12 @@ import { persist } from 'zustand/middleware';
 import { EmployeeSkillState, EmployeeSkillRequirement } from '@/types/skillTypes';
 
 interface SkillsMatrixState {
-  currentStates: { [key: string]: EmployeeSkillState };
-  originalStates: { [key: string]: EmployeeSkillState };
+  currentStates: Record<string, Record<string, EmployeeSkillState>>;
+  originalStates: Record<string, Record<string, EmployeeSkillState>>;
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  setSkillState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
   resetSkills: () => void;
-  initializeState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  initializeState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -20,8 +20,8 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, requirement) => {
-        console.log('Setting skill state:', { skillName, level, requirement });
+      setSkillState: (profileId, skillId, level, requirement) => {
+        console.log('Setting skill state:', { profileId, skillId, level, requirement });
         
         let finalRequirement: EmployeeSkillRequirement;
         if (requirement === 'skill_goal' || requirement === 'required') {
@@ -35,9 +35,14 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillName]: { 
-              level, 
-              requirement: finalRequirement 
+            [profileId]: {
+              ...state.currentStates[profileId],
+              [skillId]: { 
+                profileId,
+                skillId,
+                level, 
+                requirement: finalRequirement 
+              },
             },
           },
           hasChanges: true,
@@ -51,9 +56,9 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           hasChanges: false,
         })),
 
-      initializeState: (skillName, level, requirement) =>
+      initializeState: (profileId, skillId, level, requirement) =>
         set((state) => {
-          if (!state.currentStates[skillName]) {
+          if (!state.currentStates[profileId]?.[skillId]) {
             let finalRequirement: EmployeeSkillRequirement;
             if (requirement === 'skill_goal' || requirement === 'required') {
               finalRequirement = 'skill_goal';
@@ -66,16 +71,26 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillName]: { 
-                  level, 
-                  requirement: finalRequirement 
+                [profileId]: {
+                  ...state.currentStates[profileId],
+                  [skillId]: { 
+                    profileId,
+                    skillId,
+                    level, 
+                    requirement: finalRequirement 
+                  },
                 },
               },
               originalStates: {
                 ...state.originalStates,
-                [skillName]: { 
-                  level, 
-                  requirement: finalRequirement 
+                [profileId]: {
+                  ...state.originalStates[profileId],
+                  [skillId]: { 
+                    profileId,
+                    skillId,
+                    level, 
+                    requirement: finalRequirement 
+                  },
                 },
               },
             };

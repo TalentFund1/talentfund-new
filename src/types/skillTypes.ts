@@ -22,6 +22,8 @@ export interface UnifiedSkill extends BaseSkill {
 }
 
 export interface EmployeeSkillState {
+  profileId: string;
+  skillId: string;
   level: string;
   requirement: EmployeeSkillRequirement;
 }
@@ -36,11 +38,4 @@ export interface RoleState {
   [skillName: string]: {
     [level: string]: RoleSkillState;
   };
-}
-
-export interface RoleSkillData {
-  title: string;
-  specialized: UnifiedSkill[];
-  common: UnifiedSkill[];
-  certifications: UnifiedSkill[];
 }

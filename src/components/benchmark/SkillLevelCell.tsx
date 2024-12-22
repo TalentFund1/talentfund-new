@@ -3,6 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { EmployeeSkillState } from "@/types/skillTypes";
+import { useParams } from "react-router-dom";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -17,15 +18,21 @@ export const SkillLevelCell = ({
   onLevelChange,
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
+  const { id: profileId } = useParams<{ id: string }>();
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'skill_goal');
+  if (profileId) {
+    initializeState(profileId, skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'skill_goal');
+  }
 
-  const currentState = currentStates[skillTitle] as EmployeeSkillState || {
-    level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'skill_goal'
-  };
+  const currentState = profileId ? 
+    (currentStates[profileId]?.[skillTitle] as EmployeeSkillState) || {
+      profileId,
+      skillId: skillTitle,
+      level: initialLevel?.toLowerCase() || 'unspecified',
+      requirement: 'skill_goal'
+    } : null;
 
   const getLevelIcon = (level: string) => {
     switch (level?.toLowerCase()) {
@@ -73,13 +80,15 @@ export const SkillLevelCell = ({
     return getBorderColorClass(level).split(' ')[0];
   };
 
+  if (!profileId || !currentState) return null;
+
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select 
           value={currentState.level} 
           onValueChange={(value) => {
-            setSkillState(skillTitle, value, currentState.requirement);
+            setSkillState(profileId, skillTitle, value, currentState.requirement);
             onLevelChange?.(value, currentState.requirement);
           }}
         >
@@ -125,7 +134,7 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState.requirement}
           onValueChange={(value) => {
-            setSkillState(skillTitle, currentState.level, value);
+            setSkillState(profileId, skillTitle, currentState.level, value as EmployeeSkillRequirement);
             onLevelChange?.(currentState.level, value);
           }}
         >
