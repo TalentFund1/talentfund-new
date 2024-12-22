@@ -4,6 +4,7 @@ import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
+import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -37,10 +38,11 @@ export const useSkillsFiltering = (
     return priorities[level.toLowerCase()] ?? 3;
   };
 
-  const normalizeRequirement = (requirement: string): string => {
+  const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
     const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
-    console.log('Normalizing requirement:', { original: requirement, normalized });
-    return normalized;
+    if (normalized === 'skillgoal') return 'skill_goal';
+    if (normalized === 'notinterested') return 'not_interested';
+    return 'unknown';
   };
 
   const filterSkills = () => {
@@ -78,7 +80,7 @@ export const useSkillsFiltering = (
       let matchesLevel = true;
       let matchesSearch = true;
       let matchesSkillLevel = true;
-      let matchesRoleRequirement = true;
+      let matchesRequirement = true;
 
       const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
       const roleSkillLevel = competencyState?.level || 'unspecified';
@@ -96,16 +98,16 @@ export const useSkillsFiltering = (
 
       // Get the requirement value and normalize it for comparison
       const currentRequirement = currentSkillState?.requirement || 'unknown';
-      const normalizedSelectedRequirement = normalizeRequirement(selectedRoleRequirement);
+      const normalizedSelectedRequirement = normalizeRequirement(selectedInterest);
       const normalizedCurrentRequirement = normalizeRequirement(currentRequirement);
 
-      if (selectedRoleRequirement !== 'all') {
-        matchesRoleRequirement = normalizedCurrentRequirement === normalizedSelectedRequirement;
+      if (selectedInterest !== 'all') {
+        matchesRequirement = normalizedCurrentRequirement === normalizedSelectedRequirement;
         console.log('Filtering by requirement:', {
           skillTitle: skill.title,
           currentRequirement: normalizedCurrentRequirement,
           selectedRequirement: normalizedSelectedRequirement,
-          matches: matchesRoleRequirement
+          matches: matchesRequirement
         });
       }
 
@@ -113,14 +115,14 @@ export const useSkillsFiltering = (
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      const matches = matchesLevel && matchesSearch && matchesSkillLevel && matchesRoleRequirement;
+      const matches = matchesLevel && matchesSearch && matchesSkillLevel && matchesRequirement;
       
       if (!matches) {
         console.log('Skill filtered out:', {
           skillName: skill.title,
           currentRequirement: normalizedCurrentRequirement,
           selectedRequirement: normalizedSelectedRequirement,
-          matchesRoleRequirement
+          matchesRequirement
         });
       }
 
