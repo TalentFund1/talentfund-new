@@ -14,6 +14,12 @@ export interface BaseSkill {
   growth: string;
   salary: string;
   confidence: string;
+  benchmarks?: {
+    B?: boolean;
+    R?: boolean;
+    M?: boolean;
+    O?: boolean;
+  };
 }
 
 export interface UnifiedSkill extends BaseSkill {
