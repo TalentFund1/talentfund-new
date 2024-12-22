@@ -9,7 +9,6 @@ export type RoleSkillRequirement = 'required' | 'preferred';
 export interface BaseSkill {
   id: string;
   title: string;
-  name?: string; // Added for backward compatibility
 }
 
 // Core skill interface
@@ -56,16 +55,19 @@ export interface ProfileSkillStates {
   };
 }
 
+// For detailed skill display
+export interface DetailedSkill extends BaseSkill {
+  level: SkillLevel;
+  isSkillGoal: boolean;
+}
+
 // Helper functions
-export const getSkillStateLevel = (state: BaseSkillState): SkillLevel => {
+export const getSkillStateLevel = (state: EmployeeSkillState | RoleSkillState): SkillLevel => {
   return state.level;
 };
 
-export const getSkillRequirement = (state: BaseSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
-  if ('requirement' in state) {
-    return (state as EmployeeSkillState | RoleSkillState).requirement;
-  }
-  return 'unknown';
+export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
+  return state.requirement;
 };
 
 export const isSkillGoal = (state: EmployeeSkillState): boolean => {
@@ -99,8 +101,8 @@ export const ensureValidSkillLevel = (level: string): SkillLevel => {
   return validLevels.includes(level as SkillLevel) ? level as SkillLevel : 'unspecified';
 };
 
-// Helper to convert skill state to string representation
-export const skillStateToString = (state: BaseSkillState): string => {
+// Helper to convert any skill state to string
+export const skillStateToString = (state: EmployeeSkillState | RoleSkillState): string => {
   return state.level;
 };
 
