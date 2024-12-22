@@ -1,6 +1,6 @@
-import { UnifiedSkill, RoleSkillRequirement } from '@/types/skillTypes';
+import { UnifiedSkill } from '@/types/skillTypes';
 
-interface RoleSkillData {
+export interface RoleSkillData {
   title: string;
   roleTrack?: "Professional" | "Managerial";
   function?: string;
@@ -74,7 +74,6 @@ export const roleSkills: Record<string, RoleSkillData> = {
 
 export const saveRoleSkills = (roleId: string, roleData: RoleSkillData): void => {
   roleSkills[roleId] = roleData;
-  // Persist to localStorage if needed
   try {
     localStorage.setItem(`role_skills_${roleId}`, JSON.stringify(roleData));
   } catch (error) {

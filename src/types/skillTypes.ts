@@ -9,6 +9,7 @@ export type RoleSkillRequirement = 'required' | 'preferred';
 export interface BaseSkill {
   id: string;
   title: string;
+  name?: string; // For backward compatibility
 }
 
 // Core skill interface
@@ -34,6 +35,7 @@ export interface BaseSkillState {
 // Employee skill state
 export interface EmployeeSkillState extends BaseSkillState {
   requirement: EmployeeSkillRequirement;
+  toString(): string; // Add this to fix type errors with string operations
 }
 
 // Role skill state
@@ -103,11 +105,15 @@ export const ensureValidSkillLevel = (level: string): SkillLevel => {
 
 // Helper to convert any skill state to employee skill state
 export const toEmployeeSkillState = (state: any): EmployeeSkillState => {
-  return {
+  const skillState: EmployeeSkillState = {
     id: state.id || state.skillId || '',
     level: ensureValidSkillLevel(state.level),
-    requirement: state.requirement || 'unknown'
+    requirement: state.requirement || 'unknown',
+    toString: function() {
+      return this.level;
+    }
   };
+  return skillState;
 };
 
 // Helper to convert any skill state to role skill state
@@ -134,3 +140,16 @@ export const parseSkillRequirement = (requirement: string): EmployeeSkillRequire
   }
   return 'unknown';
 };
+
+// Create a class implementation of EmployeeSkillState for proper string conversion
+export class EmployeeSkillStateImpl implements EmployeeSkillState {
+  constructor(
+    public id: string,
+    public level: SkillLevel,
+    public requirement: EmployeeSkillRequirement
+  ) {}
+
+  toString(): string {
+    return this.level;
+  }
+}
