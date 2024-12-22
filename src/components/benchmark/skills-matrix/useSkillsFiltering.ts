@@ -91,27 +91,22 @@ export const useSkillsFiltering = (
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      // Handle interest/requirement filtering
-      if (selectedInterest !== 'all') {
-        const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
-        const normalizedSelectedInterest = selectedInterest.toLowerCase();
-        
-        // Check if the requirement matches any of the "not interested" variants
-        const isNotInterested = requirement === 'not-interested' || 
-                               requirement === 'not_interested' ||
-                               requirement === 'not interested';
-        
-        console.log('Checking interest match:', {
-          skill: skill.title,
-          requirement,
-          selectedInterest: normalizedSelectedInterest,
-          isNotInterested,
-          matches: normalizedSelectedInterest === 'not-interested' ? isNotInterested : requirement === normalizedSelectedInterest
-        });
+      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
 
-        matchesInterest = normalizedSelectedInterest === 'not-interested' ? 
-          isNotInterested : 
-          requirement === normalizedSelectedInterest;
+      if (selectedInterest !== 'all') {
+        switch (selectedInterest.toLowerCase()) {
+          case 'required':
+            matchesInterest = requirement === 'required' || requirement === 'skill_goal';
+            break;
+          case 'not-interested':
+            matchesInterest = requirement === 'not-interested' || requirement === 'not_interested';
+            break;
+          case 'unknown':
+            matchesInterest = !requirement || requirement === 'unknown';
+            break;
+          default:
+            matchesInterest = requirement === selectedInterest.toLowerCase();
+        }
       }
 
       if (searchTerm) {
