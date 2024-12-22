@@ -4,7 +4,7 @@ import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
-import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
+import { EmployeeSkillRequirement, RoleSkillRequirement } from "../../skills/types/SkillTypes";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -38,9 +38,8 @@ export const useSkillsFiltering = (
   };
 
   const normalizeRequirement = (requirement: string): string => {
-    const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
-    console.log('Normalized requirement:', { original: requirement, normalized });
-    return normalized;
+    // Remove special characters and spaces, convert to lowercase
+    return requirement.toLowerCase().replace(/[-_\s]/g, '');
   };
 
   const filterSkills = () => {
