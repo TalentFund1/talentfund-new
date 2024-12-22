@@ -49,3 +49,24 @@ export interface ProfileSkillStates {
     [skillId: string]: EmployeeSkillState;
   };
 }
+
+// Helper function to check if a requirement is an employee requirement
+export const isEmployeeRequirement = (req: any): req is EmployeeSkillRequirement => {
+  return ['skill_goal', 'not_interested', 'unknown'].includes(req);
+};
+
+// Helper function to check if a requirement is a role requirement
+export const isRoleRequirement = (req: any): req is RoleSkillRequirement => {
+  return ['required', 'preferred'].includes(req);
+};
+
+// Helper function to get level priority
+export const getLevelPriority = (level: string = 'unspecified'): number => {
+  const priorities: { [key: string]: number } = {
+    'advanced': 0,
+    'intermediate': 1,
+    'beginner': 2,
+    'unspecified': 3
+  };
+  return priorities[level.toLowerCase()] ?? 3;
+};
