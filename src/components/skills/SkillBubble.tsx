@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { EmployeeSkillRequirement } from "./types/SkillTypes";
 
 interface SkillBubbleProps {
   skillName: string;
@@ -27,7 +28,7 @@ export const SkillBubble = ({ skillName, level = 'unspecified', isRequired = fal
 
   // Use the current state level if available, otherwise fall back to the prop
   const currentLevel = skillState?.level || level;
-  const isSkillGoal = skillState?.requirement === 'required' || skillState?.requirement === 'skill_goal';
+  const isSkillGoal = skillState?.requirement === 'skill_goal';
 
   return (
     <Badge 

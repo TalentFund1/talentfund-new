@@ -13,3 +13,5 @@ export interface CompetencyState {
   initializeState: (roleId: string) => void;
   getRoleState: (roleId: string) => RoleState;
 }
+
+export { RoleState, RoleSkillState, RoleSkillRequirement };
