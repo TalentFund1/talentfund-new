@@ -59,14 +59,13 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase(), roleId);
       const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase(), roleId);
       
-      // First sort by level (advanced to unspecified)
-      const levelDiff = getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
-      if (levelDiff !== 0) return levelDiff;
-      
-      // Then sort by requirement (required before preferred)
+      // First sort by requirement (required before preferred)
       const aRequired = aState?.requirement === 'required' ? 0 : 1;
       const bRequired = bState?.requirement === 'required' ? 0 : 1;
-      return aRequired - bRequired;
+      if (aRequired !== bRequired) return aRequired - bRequired;
+      
+      // Then sort by level (advanced to unspecified)
+      return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
     });
   };
 
@@ -78,12 +77,12 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
 
   const requiredSkills = sortSkills(filteredSkills.filter(skill => {
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return competencyState?.level === 'advanced';
+    return competencyState?.requirement === 'required';
   }));
 
   const preferredSkills = sortSkills(filteredSkills.filter(skill => {
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return competencyState?.level === 'intermediate' || competencyState?.level === 'beginner';
+    return competencyState?.requirement === 'preferred';
   }));
 
   const missingSkills = sortSkills(filteredSkills.filter(skill => {
@@ -131,16 +130,21 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
-          <Badge 
-            key={skill.title}
-            variant="outline" 
-            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-          >
-            {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
-          </Badge>
-        ))}
+        {skills.map((skill) => {
+          const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
+          return (
+            <Badge 
+              key={skill.title}
+              variant="outline" 
+              className={`rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2 ${
+                competencyState?.requirement === 'required' ? 'border-primary-accent' : ''
+              }`}
+            >
+              {skill.title}
+              <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
+            </Badge>
+          );
+        })}
       </div>
     </Card>
   );
