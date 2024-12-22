@@ -1,59 +1,29 @@
-import { UnifiedSkill } from '../../../types/SkillTypes';
+import { SkillWeight, SkillType } from '../../../types/SkillTypes';
+import { getAllSkills } from '../allSkills';
 
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillType = 'specialized' | 'common' | 'certification';
-
-const weightPatterns: Record<SkillWeight, RegExp[]> = {
-  critical: [
-    /aws/i,
-    /machine learning/i,
-    /deep learning/i,
-    /ai/i,
-    /cloud/i
-  ],
-  technical: [
-    /development/i,
-    /programming/i,
-    /engineering/i,
-    /architecture/i
-  ],
-  necessary: []  // Default category
-};
-
-export const getSkillWeight = (skill: UnifiedSkill): SkillWeight => {
-  console.log('Determining weight for skill:', skill.title);
-
-  // Check explicit critical skills
-  if (skill.category === 'certification' || 
-      skill.subcategory?.toLowerCase().includes('cloud') ||
-      skill.subcategory?.toLowerCase().includes('ai & ml')) {
-    return 'critical';
+export const getSkillWeight = (skillTitle: string): SkillWeight => {
+  console.log('Determining weight for skill:', skillTitle);
+  
+  const skill = getAllSkills().find(s => s.title === skillTitle);
+  if (skill) {
+    console.log(`Found skill ${skillTitle} in universal database with weight:`, skill.weight);
+    return skill.weight;
   }
-
-  // Check patterns
-  for (const [weight, patterns] of Object.entries(weightPatterns)) {
-    if (patterns.some(pattern => pattern.test(skill.title))) {
-      return weight as SkillWeight;
-    }
-  }
-
-  // Default to necessary
+  
+  console.log(`Skill ${skillTitle} not found in universal database, defaulting to necessary`);
   return 'necessary';
 };
 
-export const getSkillType = (skill: UnifiedSkill): SkillType => {
-  console.log('Determining type for skill:', skill.title);
+export const getSkillType = (skillTitle: string): SkillType => {
+  console.log('Determining type for skill:', skillTitle);
   
-  if (skill.subcategory?.toLowerCase().includes('certification')) {
-    return 'certification';
+  const skill = getAllSkills().find(s => s.title === skillTitle);
+  if (skill) {
+    console.log(`Found skill ${skillTitle} in universal database with category:`, skill.category);
+    return skill.category;
   }
   
-  if (skill.subcategory?.toLowerCase().includes('ai & ml') ||
-      skill.subcategory?.toLowerCase().includes('backend') ||
-      skill.subcategory?.toLowerCase().includes('frontend')) {
-    return 'specialized';
-  }
-  
+  console.log(`Skill ${skillTitle} not found in universal database, defaulting to common`);
   return 'common';
 };
 
