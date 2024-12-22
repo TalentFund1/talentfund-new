@@ -104,3 +104,9 @@ export const convertToRoleSkillState = (state: any): RoleSkillState => {
     requirement: state.requirement || 'preferred'
   };
 };
+
+// Helper to safely get skill level as string
+export const getSkillStateLevel = (state: EmployeeSkillState | string): string => {
+  if (typeof state === 'string') return state;
+  return state.level;
+};
