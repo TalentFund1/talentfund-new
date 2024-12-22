@@ -17,7 +17,7 @@ export interface UnifiedSkill {
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
-// Employee-specific types
+// Employee-specific types - note: no more "required" option
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 
 export interface EmployeeSkillState {
@@ -30,7 +30,7 @@ export interface EmployeeSkillRecord {
 }
 
 // Role-specific types
-export type RoleSkillRequirement = 'preferred';
+export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface RoleSkillState {
   level: string;
