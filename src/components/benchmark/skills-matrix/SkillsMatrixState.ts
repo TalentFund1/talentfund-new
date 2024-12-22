@@ -25,11 +25,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       setSkillState: (skillName, level, requirement) => {
         console.log('Setting skill state:', { skillName, level, requirement });
         
-        // Direct mapping - "required" becomes "skill_goal"
+        // Map the requirement to the correct EmployeeSkillRequirement type
         let finalRequirement: EmployeeSkillRequirement;
-        if (requirement === 'required') {
+        if (requirement === 'skill_goal' || requirement === 'required') {
           finalRequirement = 'skill_goal';
-        } else if (requirement === 'not-interested') {
+        } else if (requirement === 'not_interested' || requirement === 'not-interested') {
           finalRequirement = 'not_interested';
         } else {
           finalRequirement = 'unknown';
@@ -59,11 +59,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       initializeState: (skillName, level, requirement) =>
         set((state) => {
           if (!state.currentStates[skillName]) {
-            // Direct mapping - "required" becomes "skill_goal"
+            // Map the requirement to the correct EmployeeSkillRequirement type
             let finalRequirement: EmployeeSkillRequirement;
-            if (requirement === 'required') {
+            if (requirement === 'skill_goal' || requirement === 'required') {
               finalRequirement = 'skill_goal';
-            } else if (requirement === 'not-interested') {
+            } else if (requirement === 'not_interested' || requirement === 'not-interested') {
               finalRequirement = 'not_interested';
             } else {
               finalRequirement = 'unknown';
