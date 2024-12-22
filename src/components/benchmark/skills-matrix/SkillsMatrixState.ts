@@ -3,11 +3,11 @@ import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
-import { SkillState } from '../../skills/competency/state/types';
+import { RoleSkillState } from '../../skills/competency/state/types';
 
 interface SkillsMatrixState {
-  currentStates: { [key: string]: SkillState };
-  originalStates: { [key: string]: SkillState };
+  currentStates: { [key: string]: RoleSkillState };
+  originalStates: { [key: string]: RoleSkillState };
   hasChanges: boolean;
   setSkillState: (skillName: string, level: string, requirement: string) => void;
   resetSkills: () => void;
@@ -28,7 +28,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillName]: { level, required: requirement, requirement },
+            [skillName]: { level, requirement },
           },
           hasChanges: true,
         }));
@@ -48,11 +48,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillName]: { level, required: requirement, requirement },
+                [skillName]: { level, requirement },
               },
               originalStates: {
                 ...state.originalStates,
-                [skillName]: { level, required: requirement, requirement },
+                [skillName]: { level, requirement },
               },
             };
           }
@@ -112,7 +112,8 @@ export const useSkillsMatrixState = (
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            return state.requirement === "required" || state.requirement === "skill_goal";
+            // Updated to only check for skill_goal
+            return state.requirement === "skill_goal";
           case "not_interested":
             return state.requirement === "not_interested";
           case "unknown":
