@@ -10,26 +10,27 @@ export interface BaseSkill {
   weight?: SkillWeight;
 }
 
-export interface UnifiedSkill extends BaseSkill {
+export interface UnifiedSkill {
+  id?: string;
   title: string;
   subcategory: string;
   level?: string;
   growth: string;
   confidence: string;
   requirement?: RoleSkillRequirement;
-  category?: string;
-  weight?: string;
+  category?: SkillCategory;
+  weight?: SkillWeight;
 }
 
-export interface SkillState {
+export interface EmployeeSkillState {
   level: string;
   requirement: EmployeeSkillRequirement;
 }
 
 export interface RoleSkillState {
+  id: string;
   level: string;
   requirement: RoleSkillRequirement;
-  id: string;
 }
 
 export interface RoleState {
@@ -38,9 +39,9 @@ export interface RoleState {
   };
 }
 
-export interface EmployeeSkillState {
-  [skillName: string]: {
-    level: string;
-    requirement: EmployeeSkillRequirement;
-  };
+export interface RoleSkillData {
+  title: string;
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
 }

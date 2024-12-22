@@ -2,6 +2,7 @@ import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { EmployeeSkillState } from "@/types/skillTypes";
 
 interface SkillLevelCellProps {
   initialLevel: string;
@@ -21,7 +22,7 @@ export const SkillLevelCell = ({
   // Initialize the state when the component mounts
   initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'skill_goal');
 
-  const currentState = currentStates[skillTitle] || {
+  const currentState = currentStates[skillTitle] as EmployeeSkillState || {
     level: initialLevel?.toLowerCase() || 'unspecified',
     requirement: 'skill_goal'
   };
@@ -76,20 +77,20 @@ export const SkillLevelCell = ({
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select 
-          value={currentState?.level || 'unspecified'} 
+          value={currentState.level} 
           onValueChange={(value) => {
-            setSkillState(skillTitle, value, currentState?.requirement || 'skill_goal');
-            onLevelChange?.(value, currentState?.requirement || 'skill_goal');
+            setSkillState(skillTitle, value, currentState.requirement);
+            onLevelChange?.(value, currentState.requirement);
           }}
         >
           <SelectTrigger className={`
             rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-            border-2 ${getBorderColorClass(currentState?.level)}
+            border-2 ${getBorderColorClass(currentState.level)}
           `}>
             <SelectValue>
               <span className="flex items-center gap-2">
-                {getLevelIcon(currentState?.level)}
-                {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
+                {getLevelIcon(currentState.level)}
+                {currentState.level.charAt(0).toUpperCase() + currentState.level.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -122,23 +123,23 @@ export const SkillLevelCell = ({
         </Select>
 
         <Select 
-          value={currentState?.requirement || 'unknown'}
+          value={currentState.requirement}
           onValueChange={(value) => {
-            setSkillState(skillTitle, currentState?.level || 'unspecified', value);
-            onLevelChange?.(currentState?.level || 'unspecified', value);
+            setSkillState(skillTitle, currentState.level, value);
+            onLevelChange?.(currentState.level, value);
           }}
         >
           <SelectTrigger className={`
             text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
             border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-            ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement || 'unknown')}
+            ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
           `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
-                {getRequirementIcon(currentState?.requirement)}
-                {currentState?.requirement === 'skill_goal' ? 'Skill Goal' : 
-                 currentState?.requirement === 'not_interested' ? 'Not Interested' : 
-                 currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
+                {getRequirementIcon(currentState.requirement)}
+                {currentState.requirement === 'skill_goal' ? 'Skill Goal' : 
+                 currentState.requirement === 'not_interested' ? 'Not Interested' : 
+                 currentState.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
               </span>
             </SelectValue>
           </SelectTrigger>
