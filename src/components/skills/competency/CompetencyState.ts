@@ -48,7 +48,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               [levelKey]: { 
                 id: skillId,
                 level,
-                requirement 
+                requirement
               }
             }
           };

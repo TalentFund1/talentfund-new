@@ -56,15 +56,20 @@ export interface ProfileSkillStates {
 }
 
 // Helper functions
-export const getSkillStateLevel = (state: BaseSkillState): SkillLevel => {
+export const getSkillStateLevel = (state: EmployeeSkillState | RoleSkillState): SkillLevel => {
   return state.level;
 };
 
-export const getSkillRequirement = (state: BaseSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
-  if ('requirement' in state) {
-    return (state as EmployeeSkillState | RoleSkillState).requirement;
-  }
-  return 'unknown';
+export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
+  return state.requirement;
+};
+
+export const isSkillGoal = (state: EmployeeSkillState): boolean => {
+  return state.requirement === 'skill_goal';
+};
+
+export const isRequiredSkill = (state: RoleSkillState): boolean => {
+  return state.requirement === 'required';
 };
 
 // Type guards
@@ -91,7 +96,7 @@ export const ensureValidSkillLevel = (level: string): SkillLevel => {
 };
 
 // Helper to convert skill state to string representation
-export const skillStateToString = (state: BaseSkillState): string => {
+export const skillStateToString = (state: EmployeeSkillState | RoleSkillState): string => {
   return state.level;
 };
 

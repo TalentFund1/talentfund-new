@@ -1,11 +1,11 @@
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
-import { RoleSkillState } from '@/types/skillTypes';
+import { EmployeeSkillState } from '@/types/skillTypes';
 
-export const useSkillLevelState = (skillId: string, roleId: string) => {
+export const useSkillLevelState = (skillId: string, employeeId: string) => {
   const { currentStates, originalStates } = useSkillsMatrixStore();
   
-  const getCurrentState = (): RoleSkillState => {
-    const state = currentStates[roleId]?.[skillId];
+  const getCurrentState = (): EmployeeSkillState => {
+    const state = currentStates[employeeId]?.[skillId];
     if (state) {
       console.log(`Getting matrix skill state for ${skillId}:`, {
         level: state.level,
@@ -13,10 +13,10 @@ export const useSkillLevelState = (skillId: string, roleId: string) => {
       });
       return state;
     }
-    return originalStates[roleId]?.[skillId] || { 
-      id: skillId,
+    return originalStates[employeeId]?.[skillId] || { 
+      skillId,
       level: 'unspecified', 
-      requirement: 'preferred' 
+      requirement: 'unknown' 
     };
   };
 
