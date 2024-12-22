@@ -1,20 +1,28 @@
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
+import { BaseSkill, EmployeeSkillState, EmployeeSkillRequirement } from '@/types/skillTypes';
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { EmployeeSkillRequirement } from "./types/SkillTypes";
 
 interface SkillBubbleProps {
-  skillName: string;
+  skill: BaseSkill;
+  showLevel?: boolean;
   level?: string;
-  isRequired?: boolean;
+  isSkillGoal?: boolean;
+  isRoleBenchmark?: boolean;
 }
 
-export const SkillBubble = ({ skillName, level = 'unspecified', isRequired = false }: SkillBubbleProps) => {
+export const SkillBubble = ({ 
+  skill, 
+  showLevel = false, 
+  level, 
+  isSkillGoal,
+  isRoleBenchmark = false 
+}: SkillBubbleProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const skillState = currentStates[skillName];
+  const skillState = currentStates[skill.name];
 
   const getLevelColor = (level: string) => {
-    switch (level.toLowerCase()) {
+    switch (level?.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
@@ -26,22 +34,38 @@ export const SkillBubble = ({ skillName, level = 'unspecified', isRequired = fal
     }
   };
 
-  // Use the current state level if available, otherwise fall back to the prop
-  const currentLevel = skillState?.level || level;
-  const isSkillGoal = skillState?.requirement === 'skill_goal';
+  const shouldShowGoal = () => {
+    // Don't show heart in role benchmark view
+    if (isRoleBenchmark) return false;
+    
+    // If explicitly passed as a prop
+    if (isSkillGoal) return true;
+    
+    // If it's in the current states
+    if (skillState) {
+      return skillState.requirement === 'skill_goal';
+    }
+    
+    return false;
+  };
 
   return (
     <Badge 
+      key={skill.name} 
       variant="outline" 
       className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
     >
-      {skillName}
-      <div className="flex items-center gap-1.5">
-        <div className={`h-2 w-2 rounded-full ${getLevelColor(currentLevel)}`} />
-        {isSkillGoal && (
-          <Heart className="w-3 h-3 text-[#1f2144]" />
-        )}
-      </div>
+      {skill.name}
+      {(showLevel || skillState) && (
+        <div className="flex items-center gap-1.5">
+          <div className={`h-2 w-2 rounded-full ${
+            getLevelColor(skillState?.level || level || "unspecified")
+          }`} />
+          {shouldShowGoal() && (
+            <Heart className="w-3 h-3 text-[#1f2144]" />
+          )}
+        </div>
+      )}
     </Badge>
   );
 };

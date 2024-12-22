@@ -1,34 +1,24 @@
-import { useCompetencyStore } from "./CompetencyState";
-import { RoleSkillState } from "../types/SkillTypes";
+import { RoleState, RoleSkillState, RoleSkillRequirement } from '@/types/skillTypes';
+import { useCompetencyStore } from './CompetencyState';
 
 export const useCompetencyStateReader = () => {
-  const { roleStates } = useCompetencyStore();
+  const { roleStates, currentStates } = useCompetencyStore();
 
-  const getSkillCompetencyState = (
-    skillName: string,
-    levelKey: string,
-    roleId: string
-  ): RoleSkillState | undefined => {
-    const roleState = roleStates[roleId];
-    if (!roleState) return undefined;
+  const getRoleState = (roleId: string): RoleState => {
+    return roleStates[roleId] || {};
+  };
 
-    const skillState = roleState[skillName]?.[levelKey];
-    if (!skillState) {
-      console.log('No competency state found for:', {
-        skillName,
-        levelKey,
-        roleId
-      });
-      return undefined;
-    }
+  const getSkillCompetencyState = (skillName: string, levelKey: string, roleId: string): RoleSkillState | undefined => {
+    return roleStates[roleId]?.[skillName]?.[levelKey];
+  };
 
-    return {
-      level: skillState.level,
-      requirement: skillState.requirement || 'preferred'
-    };
+  const getCurrentSkillState = (skillName: string, roleId: string): RoleSkillState | undefined => {
+    return currentStates[roleId]?.[skillName];
   };
 
   return {
-    getSkillCompetencyState
+    getRoleState,
+    getSkillCompetencyState,
+    getCurrentSkillState,
   };
 };

@@ -1,25 +1,86 @@
-import { useCompetencyStateReader } from "./CompetencyStateReader";
-import { useRoleStore } from "../../benchmark/RoleBenchmark";
-import { RoleSkillState } from "../types/SkillTypes";
+import { TableCell } from "@/components/ui/table";
+import { LevelSelector } from "./LevelSelector";
+import { RequirementSelector } from "./RequirementSelector";
+import { useParams } from "react-router-dom";
+import { RoleSkillRequirement } from "../../../types/skillTypes";
+import { useCompetencyStore } from "./CompetencyState";
 
-export const SkillLevelDisplay = ({ roleId, level = "p3" }: { roleId: string; level?: string }) => {
-  const { getSkillCompetencyState } = useCompetencyStateReader();
-  const skillStates: Record<string, RoleSkillState> = {};
+interface SkillLevelDisplayProps {
+  skillName: string;
+  details: {
+    level: string;
+    requirement: RoleSkillRequirement;
+  };
+  isLastColumn: boolean;
+  levelKey: string;
+}
+
+export const SkillLevelDisplay = ({ 
+  skillName, 
+  details, 
+  isLastColumn, 
+  levelKey 
+}: SkillLevelDisplayProps) => {
+  const { roleStates, setSkillState } = useCompetencyStore();
+  const { id: roleId } = useParams<{ id: string }>();
+  const currentRoleId = roleId || "123";
+
+  const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
+    level: details.level || "unspecified",
+    requirement: details.requirement || "preferred",
+  };
+
+  const handleLevelChange = (value: string) => {
+    console.log('Changing level:', {
+      skillName,
+      levelKey,
+      newLevel: value,
+      currentRequirement: currentState.requirement,
+      roleId: currentRoleId
+    });
+    
+    setSkillState(
+      skillName,
+      value,
+      levelKey,
+      currentState.requirement || 'preferred',
+      currentRoleId
+    );
+  };
+
+  const handleRequirementChange = (value: RoleSkillRequirement) => {
+    console.log('Changing requirement:', {
+      skillName,
+      levelKey,
+      currentLevel: currentState.level,
+      newRequirement: value,
+      roleId: currentRoleId
+    });
+    
+    setSkillState(
+      skillName,
+      currentState.level || 'unspecified',
+      levelKey,
+      value,
+      currentRoleId
+    );
+  };
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Skills for Level {level.toUpperCase()}</h3>
-      <div className="space-y-2">
-        {Object.entries(skillStates).map(([skillName, state]) => (
-          <div key={skillName} className="flex justify-between items-center p-2 bg-background rounded-lg">
-            <span className="font-medium">{skillName}</span>
-            <div className="flex gap-4">
-              <span className="text-sm text-muted-foreground">Level: {state.level}</span>
-              <span className="text-sm text-muted-foreground">Required: {state.requirement}</span>
-            </div>
-          </div>
-        ))}
+    <TableCell 
+      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
+    >
+      <div className="flex flex-col items-center gap-0">
+        <LevelSelector
+          currentLevel={currentState.level || 'unspecified'}
+          onLevelChange={handleLevelChange}
+        />
+        <RequirementSelector
+          currentRequired={currentState.requirement || 'preferred'}
+          currentLevel={currentState.level || 'unspecified'}
+          onRequirementChange={handleRequirementChange}
+        />
       </div>
-    </div>
+    </TableCell>
   );
 };

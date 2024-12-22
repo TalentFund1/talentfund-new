@@ -1,30 +1,60 @@
-import { RoleSkillData } from '../types/SkillTypes';
-import { loadRoleSkills, saveRoleSkills, initializeRoleSkills } from './roles/roleStorage';
-import { getSkillCategory } from './skills/categories/skillCategories';
+import { UnifiedSkill, RoleSkillRequirement } from '@/types/skillTypes';
 
-// Initialize roleSkills object
-export const roleSkills: { [key: string]: RoleSkillData } = {};
-
-// Initialize all roles
-const roleIds = ["123", "124", "125", "126", "127", "128"];
-
-roleIds.forEach(id => {
-  const savedSkills = loadRoleSkills(id);
-  roleSkills[id] = savedSkills || initializeRoleSkills(id);
-  
-  console.log(`Initialized role ${id}:`, {
-    title: roleSkills[id].title,
-    specialized: roleSkills[id].specialized.length,
-    common: roleSkills[id].common.length,
-    certifications: roleSkills[id].certifications.length
-  });
-});
-
-// Export helper functions
-export { saveRoleSkills, loadRoleSkills };
-
-// Helper function to get category for a skill in a role
-export const getRoleSkillCategory = (skillTitle: string, roleId: string): string => {
-  console.log(`Getting category for skill "${skillTitle}" in role ${roleId}`);
-  return getSkillCategory(skillTitle);
+export const roleSkills = {
+  "123": {
+    title: "AI Engineer",
+    specialized: [
+      { title: "Machine Learning", subcategory: "AI", level: "advanced", growth: "10%", confidence: "high", requirement: "required" },
+      { title: "Deep Learning", subcategory: "AI", level: "intermediate", growth: "15%", confidence: "medium", requirement: "preferred" },
+    ],
+    common: [
+      { title: "Team Collaboration", subcategory: "Soft Skills", level: "advanced", growth: "5%", confidence: "high", requirement: "required" },
+      { title: "Problem Solving", subcategory: "Soft Skills", level: "intermediate", growth: "8%", confidence: "medium", requirement: "preferred" },
+    ],
+    certifications: [
+      { title: "Certified AI Professional", subcategory: "Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "required" },
+    ]
+  },
+  "124": {
+    title: "Backend Engineer",
+    specialized: [
+      { title: "Node.js", subcategory: "Backend", level: "advanced", growth: "12%", confidence: "high", requirement: "required" },
+      { title: "Database Management", subcategory: "Backend", level: "intermediate", growth: "10%", confidence: "medium", requirement: "preferred" },
+    ],
+    common: [
+      { title: "API Development", subcategory: "Backend", level: "advanced", growth: "15%", confidence: "high", requirement: "required" },
+      { title: "Version Control", subcategory: "Soft Skills", level: "intermediate", growth: "8%", confidence: "medium", requirement: "preferred" },
+    ],
+    certifications: [
+      { title: "AWS Certified Developer", subcategory: "Certification", level: "advanced", growth: "18%", confidence: "high", requirement: "required" },
+    ]
+  },
+  "125": {
+    title: "Frontend Engineer",
+    specialized: [
+      { title: "React.js", subcategory: "Frontend", level: "advanced", growth: "10%", confidence: "high", requirement: "required" },
+      { title: "CSS Frameworks", subcategory: "Frontend", level: "intermediate", growth: "12%", confidence: "medium", requirement: "preferred" },
+    ],
+    common: [
+      { title: "Responsive Design", subcategory: "Frontend", level: "advanced", growth: "15%", confidence: "high", requirement: "required" },
+      { title: "Cross-Browser Compatibility", subcategory: "Frontend", level: "intermediate", growth: "10%", confidence: "medium", requirement: "preferred" },
+    ],
+    certifications: [
+      { title: "Certified Frontend Developer", subcategory: "Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "required" },
+    ]
+  },
+  "126": {
+    title: "Engineering Manager",
+    specialized: [
+      { title: "Project Management", subcategory: "Management", level: "advanced", growth: "10%", confidence: "high", requirement: "required" },
+      { title: "Team Leadership", subcategory: "Management", level: "intermediate", growth: "12%", confidence: "medium", requirement: "preferred" },
+    ],
+    common: [
+      { title: "Strategic Planning", subcategory: "Management", level: "advanced", growth: "15%", confidence: "high", requirement: "required" },
+      { title: "Conflict Resolution", subcategory: "Soft Skills", level: "intermediate", growth: "10%", confidence: "medium", requirement: "preferred" },
+    ],
+    certifications: [
+      { title: "Certified Scrum Master", subcategory: "Certification", level: "advanced", growth: "18%", confidence: "high", requirement: "required" },
+    ]
+  }
 };
