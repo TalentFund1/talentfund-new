@@ -2,7 +2,7 @@ import { useEmployeeStore } from "../../employee/store/employeeStore";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
-import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
+import { EmployeeSkillRequirement } from "../../../types/skillTypes";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 
 export const useSkillsFiltering = (
@@ -84,14 +84,7 @@ export const useSkillsFiltering = (
       }
 
       if (selectedInterest !== 'all') {
-        // Map UI filter values to internal requirement types
-        const requirementMap: Record<string, EmployeeSkillRequirement> = {
-          'required': 'skill_goal',
-          'not_interested': 'not_interested',
-          'unknown': 'unknown'
-        };
-
-        const normalizedSelectedRequirement = requirementMap[selectedInterest] || selectedInterest as EmployeeSkillRequirement;
+        const normalizedSelectedRequirement = selectedInterest as EmployeeSkillRequirement;
         matchesRequirement = employeeSkillState.requirement === normalizedSelectedRequirement;
         
         console.log('Requirement matching:', {
