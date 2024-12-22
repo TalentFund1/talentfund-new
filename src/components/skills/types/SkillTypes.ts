@@ -3,21 +3,6 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
-export interface UnifiedSkill {
-  id: string;
-  title: string;
-  subcategory: string;
-  category: SkillCategory;
-  businessCategory: string;
-  weight: SkillWeight;
-  level: string;
-  growth: string;
-  salary: string;
-  confidence: string;
-  benchmarks: { [key: string]: boolean };
-  requirement?: RoleSkillRequirement | EmployeeSkillRequirement;
-}
-
 export interface BaseSkillState {
   level: string;
 }
@@ -34,6 +19,24 @@ export interface RoleState {
   [skillName: string]: {
     [levelKey: string]: RoleSkillState;
   };
+}
+
+export interface EmployeeState {
+  [skillName: string]: EmployeeSkillState;
+}
+
+export interface UnifiedSkill {
+  id: string;
+  title: string;
+  subcategory: string;
+  category: SkillCategory;
+  businessCategory: string;
+  weight: SkillWeight;
+  level: string;
+  growth: string;
+  salary: string;
+  confidence: string;
+  benchmarks: { [key: string]: boolean };
 }
 
 export interface RoleSkillData {
@@ -82,7 +85,7 @@ export interface EmployeeSkill {
   level: string;
   growth: string;
   confidence: string;
-  requirement?: RoleSkillRequirement | EmployeeSkillRequirement;
+  requirement?: EmployeeSkillRequirement;
 }
 
 export interface RoleSkill {
