@@ -11,6 +11,7 @@ export interface UnifiedSkill {
   salary: string;
   confidence: string;
   benchmarks: { [key: string]: boolean };
+  requirement?: EmployeeSkillRequirement;
 }
 
 // Skill categories and weights from universal database
@@ -49,6 +50,7 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+  skills?: UnifiedSkill[]; // Made optional since some implementations don't use it
   soc?: string;
   function?: string;
   mappedTitle?: string;

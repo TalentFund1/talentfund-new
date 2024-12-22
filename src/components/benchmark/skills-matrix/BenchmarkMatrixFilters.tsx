@@ -20,6 +20,7 @@ interface BenchmarkMatrixFiltersProps {
   setSelectedCategory: (category: string) => void;
   selectedRoleRequirement: string;
   setSelectedRoleRequirement: (requirement: string) => void;
+  isRoleBenchmark?: boolean;
 }
 
 export const BenchmarkMatrixFilters = ({
@@ -38,6 +39,7 @@ export const BenchmarkMatrixFilters = ({
   setSelectedCategory,
   selectedRoleRequirement,
   setSelectedRoleRequirement,
+  isRoleBenchmark = false
 }: BenchmarkMatrixFiltersProps) => {
   return (
     <div className="space-y-6">

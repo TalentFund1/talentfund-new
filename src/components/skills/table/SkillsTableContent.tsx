@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SkillsTableRow } from "./SkillsTableRow";
+import { SkillTableRow } from "./SkillTableRow";
 import { UnifiedSkill } from "../types/SkillTypes";
 
 interface SkillsTableContentProps {
@@ -107,7 +107,7 @@ export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProp
             </TableRow>
           ) : (
             skills.map((skill, index) => (
-              <SkillsTableRow key={skill.title} skill={skill} isEven={index % 2 === 0} />
+              <SkillTableRow key={skill.title} skill={skill} onGrowthClick={() => {}} />
             ))
           )}
         </TableBody>
