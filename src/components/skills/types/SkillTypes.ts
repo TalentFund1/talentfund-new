@@ -8,7 +8,7 @@ export interface SkillState {
 }
 
 export interface LevelState {
-  [levelKey: string]: SkillState;
+  [key: string]: SkillState;
 }
 
 export interface EmployeeSkillState {
@@ -45,10 +45,10 @@ export interface CompetencyState {
   getRoleState: (roleId: string, employeeId: string) => EmployeeSkillState;
 }
 
-// Base skill interface with common properties
 export interface BaseSkill {
   id: string;
   title: string;
+  name?: string; // Added for backward compatibility
   subcategory: string;
   category: SkillCategory;
   businessCategory: string;
@@ -65,19 +65,16 @@ export interface BaseSkill {
   };
 }
 
-// Unified skill interface extending base skill with optional properties
 export interface UnifiedSkill extends BaseSkill {
   requirement?: SkillRequirement;
   roleLevel?: string | null;
   isCompanySkill?: boolean;
 }
 
-// Employee skill interface for employee-specific skill data
 export interface EmployeeSkill extends UnifiedSkill {
   requirement: SkillRequirement;
 }
 
-// Role skill interface for role-specific skill information
 export interface RoleSkill {
   title: string;
   subcategory: string;
@@ -89,7 +86,6 @@ export interface RoleSkill {
   benchmarks?: { [key: string]: boolean };
 }
 
-// Mapped skill interface for skill matrix display
 export interface MappedSkill extends UnifiedSkill {
   requirement: SkillRequirement;
   roleLevel: string | null;
@@ -99,18 +95,29 @@ export interface MappedSkill extends UnifiedSkill {
 export interface DetailedSkill extends BaseSkill {
   level: string;
   isSkillGoal: boolean;
+  name: string; // Added for backward compatibility
 }
 
 export interface SimpleSkill {
   title: string;
   level: string;
+  subcategory?: string;
+  businessCategory?: string;
+  growth?: string;
 }
 
 export interface RoleSkillData {
   title: string;
-  specialized?: RoleSkill[];
-  common?: RoleSkill[];
-  certifications?: RoleSkill[];
+  specialized: RoleSkill[];
+  common: RoleSkill[];
+  certifications: RoleSkill[];
+  skills?: RoleSkill[];
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+  roleTrack?: "Professional" | "Managerial";
 }
 
 export interface Skill extends BaseSkill {
