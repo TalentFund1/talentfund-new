@@ -1,37 +1,7 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-export type RoleSkillRequirement = 'required' | 'preferred' | 'skill_goal';
-
-export interface SkillState {
-  level: string;
-  requirement: RoleSkillRequirement;
-}
-
-export interface RoleSkillState {
-  level: string;
-  requirement: RoleSkillRequirement;
-}
-
-export interface RoleState {
-  [skillName: string]: {
-    [levelKey: string]: RoleSkillState;
-  };
-}
-
-export interface RoleSkillData {
-  title: string;
-  roleTrack: "Professional" | "Managerial";
-  specialized: UnifiedSkill[];
-  common: UnifiedSkill[];
-  certifications: UnifiedSkill[];
-  skills: UnifiedSkill[];
-  soc?: string;
-  function?: string;
-  mappedTitle?: string;
-  occupation?: string;
-  description?: string;
-}
+export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface UnifiedSkill {
   id: string;
@@ -51,6 +21,46 @@ export interface UnifiedSkill {
 export interface EmployeeSkillState {
   level: string;
   requirement: EmployeeSkillRequirement;
+}
+
+export interface RoleSkillState {
+  level: string;
+  requirement: RoleSkillRequirement;
+}
+
+export interface RoleState {
+  [skillName: string]: {
+    [levelKey: string]: RoleSkillState;
+  };
+}
+
+export interface RoleSkillData {
+  title: string;
+  roleTrack: "Professional" | "Managerial";
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
+  skills: UnifiedSkill[]; // Adding this to fix the missing property error
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+}
+
+export interface BaseSkill {
+  name: string;
+}
+
+export interface DetailedSkill extends BaseSkill {
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface Certification extends BaseSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
 }
 
 export interface SkillProfileRow {
