@@ -1,30 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill, SkillRequirement } from '../../skills/types/SkillTypes';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
+import { SkillRequirement } from '../../skills/types/SkillTypes';
+import { filterSkillsByCategory } from './skillCategories';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
-
-interface SkillState {
-  level: string;
-  requirement: SkillRequirement;
-}
-
-interface SkillsMatrixState {
-  currentStates: { [key: string]: SkillState };
-  originalStates: { [key: string]: SkillState };
-  hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
-  resetSkills: () => void;
-  initializeState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
-  saveChanges: () => void;
-  cancelChanges: () => void;
-}
-
-const defaultSkillState: SkillState = {
-  level: 'unspecified',
-  requirement: 'preferred'
-};
+import { mapSkillWithState } from './utils/skillMapping';
+import { SkillsMatrixState, MappedSkill } from './types/skillMatrixTypes';
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
@@ -99,7 +79,7 @@ export const useSkillsMatrixState = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
-  const filterAndSortSkills = (employeeId: string) => {
+  const filterAndSortSkills = (employeeId: string): MappedSkill[] => {
     console.log('Filtering skills for employee:', employeeId);
     
     // Get employee's skills from the employee store
@@ -107,30 +87,9 @@ export const useSkillsMatrixState = (
     console.log('Employee skills:', employeeSkills);
 
     // Map employee skills to include universal skill data and ensure required properties
-    let filteredSkills = employeeSkills.map(skill => {
-      const universalSkillData = getUnifiedSkillData(skill.title);
-      const currentState = currentStates[skill.title];
-      
-      const mappedSkill = {
-        ...universalSkillData,
-        level: currentState?.level || skill.level || 'unspecified',
-        requirement: (currentState?.requirement || skill.requirement || 'preferred') as SkillRequirement,
-        roleLevel: null as any, // explicitly typed as any to match expected type
-        isCompanySkill: false,
-        id: universalSkillData.id,
-        title: universalSkillData.title,
-        subcategory: universalSkillData.subcategory,
-        category: universalSkillData.category,
-        businessCategory: universalSkillData.businessCategory,
-        weight: universalSkillData.weight,
-        growth: universalSkillData.growth,
-        salary: universalSkillData.salary,
-        confidence: universalSkillData.confidence,
-        benchmarks: universalSkillData.benchmarks
-      };
-
-      return mappedSkill;
-    });
+    let filteredSkills = employeeSkills.map(skill => 
+      mapSkillWithState(skill, currentStates[skill.title])
+    );
 
     // Filter by category if not "all"
     if (selectedCategory !== "all") {
@@ -181,21 +140,12 @@ export const useSkillsMatrixState = (
   };
 };
 
-export const getEmployeeSkills = (employeeId: string) => {
+export const getEmployeeSkills = (employeeId: string): MappedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
   const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
   const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
   
-  return employeeSkills.map(skill => {
-    const universalSkillData = getUnifiedSkillData(skill.title);
-    const currentState = employeeSkillStates[skill.title];
-    
-    return {
-      ...universalSkillData,
-      level: currentState?.level || skill.level || 'unspecified',
-      requirement: (currentState?.requirement || skill.requirement || 'preferred') as SkillRequirement,
-      roleLevel: null as any,
-      isCompanySkill: false
-    };
-  });
+  return employeeSkills.map(skill => 
+    mapSkillWithState(skill, employeeSkillStates[skill.title])
+  );
 };
