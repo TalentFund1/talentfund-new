@@ -1,6 +1,8 @@
+export type RoleSkillRequirement = 'required' | 'preferred';
+
 export interface RoleSkillState {
   level: string;
-  requirement: 'required' | 'preferred';
+  requirement: RoleSkillRequirement;
 }
 
 export interface RoleState {
@@ -14,7 +16,7 @@ export interface CompetencyState {
   currentStates: Record<string, RoleState>;
   originalStates: Record<string, RoleState>;
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, levelKey: string, requirement: 'required' | 'preferred', roleId: string) => void;
+  setSkillState: (skillName: string, level: string, levelKey: string, requirement: RoleSkillRequirement, roleId: string) => void;
   setSkillProgression: (skillName: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
   resetLevels: (roleId: string) => void;
   saveChanges: (roleId: string, track: string) => void;
