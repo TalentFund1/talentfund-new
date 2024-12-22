@@ -1,4 +1,3 @@
-// Base skill types from universal database
 export interface UnifiedSkill {
   id: string;
   title: string;
@@ -13,11 +12,9 @@ export interface UnifiedSkill {
   benchmarks: { [key: string]: boolean };
 }
 
-// Skill categories and weights from universal database
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
-// Employee-specific types
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 
 export interface EmployeeSkillState {
@@ -29,7 +26,6 @@ export interface EmployeeSkillRecord {
   [skillTitle: string]: EmployeeSkillState;
 }
 
-// Role-specific types
 export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface RoleSkillState {
@@ -43,7 +39,6 @@ export interface RoleState {
   };
 }
 
-// Role data structure
 export interface RoleSkillData {
   title: string;
   roleTrack: "Professional" | "Managerial";
