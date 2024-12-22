@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { SkillRequirement } from '../../../skills/types/SkillTypes';
+import { SkillRequirement } from '../../skills/types/SkillTypes';
 import { filterSkillsByCategory } from './skillCategories';
-import { useEmployeeStore } from '../../../employee/store/employeeStore';
+import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { mapSkillWithState } from './utils/skillMapping';
 import { SkillsMatrixState, MappedSkill } from './types/skillMatrixTypes';
 
@@ -67,7 +67,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 3, // Increment version to ensure clean state
+      version: 3,
       partialize: (state) => ({
         currentStates: state.currentStates,
         originalStates: state.originalStates,
