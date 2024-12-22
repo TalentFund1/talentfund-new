@@ -7,12 +7,8 @@ export interface LevelState {
   [levelKey: string]: SkillState;
 }
 
-export interface EmployeeSkillState {
-  [skillName: string]: LevelState;
-}
-
 export interface RoleState {
-  [employeeId: string]: EmployeeSkillState;
+  [skillName: string]: LevelState;
 }
 
 export interface CompetencyState {
@@ -20,11 +16,11 @@ export interface CompetencyState {
   currentStates: Record<string, RoleState>;
   originalStates: Record<string, RoleState>;
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, levelKey: string, required: string, roleId: string, employeeId: string) => void;
-  setSkillProgression: (skillName: string, progression: Record<string, SkillState>, roleId: string, employeeId: string) => void;
-  resetLevels: (roleId: string, employeeId: string) => void;
+  setSkillState: (skillName: string, level: string, levelKey: string, required: string, roleId: string) => void;
+  setSkillProgression: (skillName: string, progression: Record<string, SkillState>, roleId: string) => void;
+  resetLevels: (roleId: string) => void;
   saveChanges: (roleId: string) => void;
   cancelChanges: (roleId: string) => void;
-  initializeState: (roleId: string, employeeId: string) => void;
-  getRoleState: (roleId: string, employeeId: string) => EmployeeSkillState;
+  initializeState: (roleId: string) => void;
+  getRoleState: (roleId: string) => RoleState;
 }
