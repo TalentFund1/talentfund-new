@@ -87,9 +87,13 @@ export const useSkillsMatrixState = (
     console.log('Employee skills:', employeeSkills);
 
     // Map employee skills to include universal skill data and ensure required properties
-    let filteredSkills = employeeSkills.map(skill => 
-      mapSkillWithState(skill, currentStates[skill.title])
-    );
+    let filteredSkills = employeeSkills.map(skill => ({
+      ...skill,
+      requirement: (currentStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement,
+      roleLevel: null as any,
+      isCompanySkill: false,
+      level: currentStates[skill.title]?.level || skill.level || 'unspecified'
+    })) as MappedSkill[];
 
     // Filter by category if not "all"
     if (selectedCategory !== "all") {
@@ -145,7 +149,11 @@ export const getEmployeeSkills = (employeeId: string): MappedSkill[] => {
   const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
   const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
   
-  return employeeSkills.map(skill => 
-    mapSkillWithState(skill, employeeSkillStates[skill.title])
-  );
+  return employeeSkills.map(skill => ({
+    ...skill,
+    requirement: (employeeSkillStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement,
+    roleLevel: null as any,
+    isCompanySkill: false,
+    level: employeeSkillStates[skill.title]?.level || skill.level || 'unspecified'
+  })) as MappedSkill[];
 };
