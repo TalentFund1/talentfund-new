@@ -136,13 +136,41 @@ export const skillDefinitions: UnifiedSkill[] = [
 
 // Helper functions to access the universal database
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
-  return skillDefinitions.find(
+  console.log('Getting unified skill data for:', title);
+  const skill = skillDefinitions.find(
     skill => skill.title.toLowerCase() === title.toLowerCase()
   );
+  
+  if (skill) {
+    console.log('Found existing skill:', title);
+    return skill;
+  }
+
+  console.warn('Skill not found in universal database:', title);
+  return undefined;
 };
 
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   return skillDefinitions.filter(skill => skill.category === category);
+};
+
+export const getSkillWeight = (title: string): string => {
+  const skill = getSkillByTitle(title);
+  return skill?.weight || 'necessary';
+};
+
+export const getSkillCategory = (title: string): string => {
+  const skill = getSkillByTitle(title);
+  return skill?.category || 'common';
+};
+
+export const getSkillType = (title: string): string => {
+  const skill = getSkillByTitle(title);
+  return skill?.businessCategory || 'General';
+};
+
+export const generateSkillId = (title: string): string => {
+  return `skill_${title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
 };
 
 console.log('Initialized universal skills database with consistent IDs:', {
