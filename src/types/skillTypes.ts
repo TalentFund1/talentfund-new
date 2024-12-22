@@ -27,7 +27,7 @@ export interface UnifiedSkill extends BaseSkill {
 }
 
 export interface EmployeeSkillState {
-  employeeId: string;
+  profileId: string;
   skillId: string;
   level: string;
   requirement: EmployeeSkillRequirement;
@@ -53,20 +53,12 @@ export interface RoleSkillData {
 }
 
 export interface SkillsMatrixState {
-  skillStates: {
-    [employeeId: string]: {
-      [skillId: string]: EmployeeSkillState;
-    };
-  };
-  currentStates: {
-    [employeeId: string]: {
-      [skillId: string]: EmployeeSkillState;
-    };
-  };
+  skillStates: Record<string, Record<string, EmployeeSkillState>>;
+  currentStates: Record<string, Record<string, EmployeeSkillState>>;
   hasChanges: boolean;
-  setSkillState: (employeeId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
-  initializeState: (employeeId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
-  getSkillState: (employeeId: string, skillId: string) => EmployeeSkillState | undefined;
+  setSkillState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  initializeState: (profileId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
+  getSkillState: (profileId: string, skillId: string) => EmployeeSkillState | undefined;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
