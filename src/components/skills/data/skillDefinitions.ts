@@ -1,4 +1,4 @@
-import { UnifiedSkill } from '@/types/skillTypes';
+import { UnifiedSkill, SkillCategory, SkillWeight } from '@/types/skillTypes';
 
 // Universal skill database - single source of truth
 export const skillDefinitions: UnifiedSkill[] = [
@@ -154,12 +154,12 @@ export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   return skillDefinitions.filter(skill => skill.category === category);
 };
 
-export const getSkillWeight = (title: string): string => {
+export const getSkillWeight = (title: string): SkillWeight => {
   const skill = getSkillByTitle(title);
   return skill?.weight || 'necessary';
 };
 
-export const getSkillCategory = (title: string): string => {
+export const getSkillCategory = (title: string): SkillCategory => {
   const skill = getSkillByTitle(title);
   return skill?.category || 'common';
 };

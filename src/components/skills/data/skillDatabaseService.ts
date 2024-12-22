@@ -1,4 +1,4 @@
-import { UnifiedSkill } from '@/types/skillTypes';
+import { UnifiedSkill, SkillCategory, SkillWeight } from '@/types/skillTypes';
 import { skillDefinitions, getSkillByTitle, generateSkillId } from './skillDefinitions';
 import { getSkillCategory } from './skills/categories/skillCategories';
 
@@ -16,14 +16,17 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
     };
   }
 
-  // If skill not found, create a default entry
+  // If skill not found, create a standardized default entry
   console.warn('Skill not found in universal database:', skillTitle, 'creating default entry');
+  const category = getSkillCategory(skillTitle);
+  
   return {
     id: generateSkillId(skillTitle),
     title: skillTitle,
     subcategory: 'General',
-    category: getSkillCategory(skillTitle),
-    weight: 'necessary',
+    category: category as SkillCategory,
+    weight: 'necessary' as SkillWeight,
+    level: 'unspecified',
     growth: '0%',
     confidence: 'medium',
     requirement: 'preferred',
@@ -39,3 +42,13 @@ export {
   generateSkillId,
   skillDefinitions
 };
+
+// Initialize logging
+console.log('Skill database service initialized with:', {
+  totalSkills: skillDefinitions.length,
+  categories: {
+    specialized: skillDefinitions.filter(s => s.category === 'specialized').length,
+    common: skillDefinitions.filter(s => s.category === 'common').length,
+    certification: skillDefinitions.filter(s => s.category === 'certification').length
+  }
+});
