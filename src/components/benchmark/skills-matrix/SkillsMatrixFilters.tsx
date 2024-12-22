@@ -35,6 +35,12 @@ export const SkillsMatrixFilters = ({
   selectedCategory,
   setSelectedCategory,
 }: SkillsMatrixFiltersProps) => {
+  console.log('Rendering SkillsMatrixFilters with:', {
+    selectedInterest,
+    selectedSkillLevel,
+    selectedCategory
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
@@ -60,6 +66,18 @@ export const SkillsMatrixFilters = ({
             <SelectItem value="intermediate">Intermediate</SelectItem>
             <SelectItem value="beginner">Beginner</SelectItem>
             <SelectItem value="unspecified">Unspecified</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Requirements" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Requirements</SelectItem>
+            <SelectItem value="skill_goal">Skill Goal</SelectItem>
+            <SelectItem value="not_interested">Not Interested</SelectItem>
+            <SelectItem value="unknown">Unknown</SelectItem>
           </SelectContent>
         </Select>
       </div>
