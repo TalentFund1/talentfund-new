@@ -5,6 +5,19 @@ import { getSkillCategory } from "../../skills/data/skills/categories/skillCateg
 import { EmployeeSkillRequirement, UnifiedSkill } from "../../../types/skillTypes";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 
+const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
+  switch (requirement?.toLowerCase()) {
+    case 'required':
+      return 'skill_goal';
+    case 'not-interested':
+      return 'not_interested';
+    case 'unknown':
+      return 'unknown';
+    default:
+      return 'unknown';
+  }
+};
+
 export const useSkillsFiltering = (
   employeeId: string,
   selectedRole: string,
@@ -84,13 +97,14 @@ export const useSkillsFiltering = (
       }
 
       if (selectedInterest !== 'all') {
-        // Direct comparison with employee requirement
-        const employeeRequirement = employeeSkillState?.requirement;
-        matchesRequirement = employeeRequirement === selectedInterest;
+        // Normalize the requirement before comparison
+        const normalizedRequirement = normalizeRequirement(employeeSkillState?.requirement || 'unknown');
+        matchesRequirement = normalizedRequirement === selectedInterest;
         
         console.log('Requirement matching:', {
           skill: skill.title,
-          employeeRequirement,
+          originalRequirement: employeeSkillState?.requirement,
+          normalizedRequirement,
           selectedRequirement: selectedInterest,
           matches: matchesRequirement
         });
@@ -101,7 +115,8 @@ export const useSkillsFiltering = (
       if (!matches) {
         console.log('Skill filtered out:', {
           skillName: skill.title,
-          employeeRequirement: employeeSkillState?.requirement,
+          originalRequirement: employeeSkillState?.requirement,
+          normalizedRequirement: normalizeRequirement(employeeSkillState?.requirement || 'unknown'),
           selectedRequirement: selectedInterest,
           matchesRequirement,
           matchesLevel,
@@ -116,7 +131,7 @@ export const useSkillsFiltering = (
       ...skill,
       employeeLevel: getSkillState(employeeId, skill.title)?.level || 'unspecified',
       roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
-      requirement: getSkillState(employeeId, skill.title)?.requirement || 'unknown'
+      requirement: normalizeRequirement(getSkillState(employeeId, skill.title)?.requirement || 'unknown')
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
   };
