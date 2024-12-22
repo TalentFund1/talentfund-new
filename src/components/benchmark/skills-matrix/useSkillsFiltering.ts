@@ -7,10 +7,8 @@ import { EmployeeSkillRequirement, UnifiedSkill } from "../../../types/skillType
 const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
   switch (requirement?.toLowerCase()) {
     case 'required':
-    case 'skill_goal':
       return 'skill_goal';
     case 'not-interested':
-    case 'not_interested':
       return 'not_interested';
     case 'unknown':
       return 'unknown';
@@ -29,8 +27,7 @@ export const useSkillsFiltering = (
   searchTerm: string,
   toggledSkills: Set<string>,
   isRoleBenchmark: boolean = false,
-  selectedRoleRequirement: string = 'all',
-  selectedCategory: string = 'all'
+  selectedRoleRequirement: string = 'all'
 ) => {
   const { getSkillState } = useEmployeeStore();
   const employeeSkills = getEmployeeSkills(employeeId);
@@ -50,12 +47,10 @@ export const useSkillsFiltering = (
       selectedLevel,
       selectedInterest,
       selectedSkillLevel,
-      selectedCategory,
       currentFilters: {
         level: selectedLevel,
         interest: selectedInterest,
         skillLevel: selectedSkillLevel,
-        category: selectedCategory,
         searchTerm
       }
     });
@@ -70,16 +65,16 @@ export const useSkillsFiltering = (
     skills = Array.from(uniqueSkills.values());
 
     // Filter by category if selected
-    if (selectedCategory !== 'all') {
+    if (selectedLevel !== 'all') {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
         console.log('Filtering skill by category:', {
           skill: skill.title,
-          category: skillData?.category,
-          selectedCategory,
-          matches: skillData?.category === selectedCategory
+          category: skillData.category,
+          selectedLevel,
+          matches: skillData.category === selectedLevel
         });
-        return skillData?.category === selectedCategory;
+        return skillData.category === selectedLevel;
       });
     }
 
@@ -104,7 +99,7 @@ export const useSkillsFiltering = (
       totalFiltered: skills.length,
       skills: skills.map(s => ({
         title: s.title,
-        category: getUnifiedSkillData(s.title)?.category,
+        category: getUnifiedSkillData(s.title).category,
         requirement: getSkillState(employeeId, s.title)?.requirement
       }))
     });

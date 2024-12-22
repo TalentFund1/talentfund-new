@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { EmployeeSkillState, EmployeeSkillRequirement } from '@/types/skillTypes';
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: EmployeeSkillState };
@@ -23,7 +23,14 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       setSkillState: (skillName, level, requirement) => {
         console.log('Setting skill state:', { skillName, level, requirement });
         
-        let finalRequirement: EmployeeSkillRequirement = requirement;
+        let finalRequirement: EmployeeSkillRequirement;
+        if (requirement === 'skill_goal' || requirement === 'required') {
+          finalRequirement = 'skill_goal';
+        } else if (requirement === 'not_interested' || requirement === 'not-interested') {
+          finalRequirement = 'not_interested';
+        } else {
+          finalRequirement = 'unknown';
+        }
         
         set((state) => ({
           currentStates: {
@@ -47,7 +54,14 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       initializeState: (skillName, level, requirement) =>
         set((state) => {
           if (!state.currentStates[skillName]) {
-            let finalRequirement: EmployeeSkillRequirement = requirement;
+            let finalRequirement: EmployeeSkillRequirement;
+            if (requirement === 'skill_goal' || requirement === 'required') {
+              finalRequirement = 'skill_goal';
+            } else if (requirement === 'not_interested' || requirement === 'not-interested') {
+              finalRequirement = 'not_interested';
+            } else {
+              finalRequirement = 'unknown';
+            }
 
             return {
               currentStates: {
