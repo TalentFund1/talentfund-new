@@ -57,33 +57,6 @@ export interface RoleSkillData {
   description?: string;
 }
 
-// Component-specific types
-export interface DetailedSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
-}
-
-export interface EmployeeSkill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: EmployeeSkillRequirement;
-}
-
-export interface RoleSkill {
-  title: string;
-  subcategory: string;
-  level?: string;
-  growth: string;
-  confidence?: string;
-  requirement?: RoleSkillRequirement;
-  salary?: string;
-  benchmarks?: { [key: string]: boolean };
-}
-
 // Helper functions to convert between requirement types
 export const convertToEmployeeRequirement = (roleReq: RoleSkillRequirement): EmployeeSkillRequirement => {
   switch (roleReq) {

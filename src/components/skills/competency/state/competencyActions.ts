@@ -19,7 +19,7 @@ export const setSkillStateAction = (
         ...roleStates[roleId]?.[skillName],
         [levelKey]: { 
           level, 
-          requirement 
+          requirement
         }
       }
     }
