@@ -14,11 +14,23 @@ export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: stri
 export const setEmployeeSkillLevel = (employeeId: string, skillTitle: string, level: string): void => {
   const store = useEmployeeStore.getState();
   const currentState = store.getSkillState(employeeId, skillTitle);
-  store.setSkillState(employeeId, skillTitle, skillTitle, level, currentState?.requirement || 'unknown');
+  store.setSkillState(
+    employeeId,
+    skillTitle,
+    skillTitle,
+    level,
+    currentState?.requirement || 'unknown'
+  );
 };
 
 export const setEmployeeSkillRequirement = (employeeId: string, skillTitle: string, requirement: EmployeeSkillRequirement): void => {
   const store = useEmployeeStore.getState();
   const currentState = store.getSkillState(employeeId, skillTitle);
-  store.setSkillState(employeeId, skillTitle, skillTitle, currentState?.level || 'unspecified', requirement);
+  store.setSkillState(
+    employeeId,
+    skillTitle,
+    skillTitle,
+    currentState?.level || 'unspecified',
+    requirement
+  );
 };

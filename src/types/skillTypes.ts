@@ -18,8 +18,10 @@ export interface UnifiedSkill {
   growth: string;
   confidence: string;
   requirement?: RoleSkillRequirement;
-  category?: SkillCategory;
-  weight?: SkillWeight;
+  category?: string;
+  weight?: string;
+  businessCategory?: string;
+  salary?: string;
 }
 
 export interface EmployeeSkillState {
