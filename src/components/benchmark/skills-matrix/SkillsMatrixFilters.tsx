@@ -7,11 +7,15 @@ import { Button } from "@/components/ui/button";
 interface SkillsMatrixFiltersProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  selectedLevel: string;
+  setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
   selectedSearchSkills: string[];
   removeSearchSkill: (skill: string) => void;
   clearSearch: () => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
 }
 
 export const SkillsMatrixFilters = ({
@@ -22,25 +26,32 @@ export const SkillsMatrixFilters = ({
   selectedSearchSkills,
   removeSearchSkill,
   clearSearch,
+  selectedCategory,
+  setSelectedCategory,
 }: SkillsMatrixFiltersProps) => {
   console.log('Rendering SkillsMatrixFilters with:', {
-    selectedInterest
+    selectedInterest,
+    selectedCategory
   });
 
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
-        <Select 
-          value={selectedInterest} 
-          onValueChange={setSelectedInterest}
-        >
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Requirements">
-              {selectedInterest === 'all' && 'All Requirements'}
-              {selectedInterest === 'skill_goal' && 'Skill Goal'}
-              {selectedInterest === 'not_interested' && 'Not Interested'}
-              {selectedInterest === 'unknown' && 'Unknown'}
-            </SelectValue>
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="specialized">Specialized Skills</SelectItem>
+            <SelectItem value="common">Common Skills</SelectItem>
+            <SelectItem value="certification">Certification</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Requirements" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Requirements</SelectItem>

@@ -1,4 +1,4 @@
-import { SkillWeight } from '../../../../../types/skillTypes';
+import { SkillWeight } from '../../../types/SkillTypes';
 import { getSkillCategory } from './skillCategories';
 
 export const getSkillWeight = (skillTitle: string): SkillWeight => {
