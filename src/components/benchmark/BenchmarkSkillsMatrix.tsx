@@ -16,6 +16,7 @@ const BenchmarkSkillsMatrixContent = () => {
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedRoleRequirement, setSelectedRoleRequirement] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
@@ -34,7 +35,8 @@ const BenchmarkSkillsMatrixContent = () => {
     selectedSkillLevel,
     searchTerm,
     toggledSkills,
-    true
+    true,
+    selectedRoleRequirement
   );
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
@@ -45,7 +47,8 @@ const BenchmarkSkillsMatrixContent = () => {
     track,
     filteredSkillsCount: filteredSkills.length,
     toggledSkillsCount: toggledSkills.size,
-    selectedCategory
+    selectedCategory,
+    selectedRoleRequirement
   });
 
   return (
@@ -67,6 +70,8 @@ const BenchmarkSkillsMatrixContent = () => {
         setSelectedSearchSkills={setSelectedSearchSkills}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        selectedRoleRequirement={selectedRoleRequirement}
+        setSelectedRoleRequirement={setSelectedRoleRequirement}
         visibleItems={visibleItems}
       />
     </div>

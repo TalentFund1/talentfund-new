@@ -31,7 +31,7 @@ export interface EmployeeSkillRecord {
 }
 
 // Role-specific types
-export type RoleSkillRequirement = 'required' | 'not_interested' | 'unknown';
+export type RoleSkillRequirement = 'required' | 'preferred' | 'not_interested' | 'skill_goal' | 'unknown';
 
 export interface RoleSkillState {
   level: string;

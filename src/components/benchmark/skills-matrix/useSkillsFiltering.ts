@@ -4,7 +4,6 @@ import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
-import { EmployeeSkillRequirement, RoleSkillRequirement } from "../../skills/types/SkillTypes";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -15,7 +14,8 @@ export const useSkillsFiltering = (
   selectedSkillLevel: string,
   searchTerm: string,
   toggledSkills: Set<string>,
-  isRoleBenchmark: boolean = false
+  isRoleBenchmark: boolean = false,
+  selectedRoleRequirement: string = 'all'
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -38,7 +38,6 @@ export const useSkillsFiltering = (
   };
 
   const normalizeRequirement = (requirement: string): string => {
-    // Remove special characters and spaces, convert to lowercase
     const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
     console.log('Normalizing requirement:', { original: requirement, normalized });
     return normalized;
@@ -51,6 +50,7 @@ export const useSkillsFiltering = (
       employeeId,
       totalSkills: skills.length,
       selectedInterest,
+      selectedRoleRequirement,
       currentStates: Object.keys(currentStates).length
     });
 
@@ -79,9 +79,11 @@ export const useSkillsFiltering = (
       let matchesInterest = true;
       let matchesSearch = true;
       let matchesSkillLevel = true;
+      let matchesRoleRequirement = true;
 
       const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
       const roleSkillLevel = competencyState?.level || 'unspecified';
+      const roleRequirement = competencyState?.required || 'unknown';
 
       if (selectedLevel !== 'all') {
         matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
@@ -99,16 +101,7 @@ export const useSkillsFiltering = (
       const normalizedSelectedInterest = normalizeRequirement(selectedInterest);
       const normalizedCurrentRequirement = normalizeRequirement(currentRequirement);
 
-      console.log('Checking interest filter for skill:', {
-        skillName: skill.title,
-        currentRequirement: normalizedCurrentRequirement,
-        selectedInterest: normalizedSelectedInterest,
-        currentState: currentSkillState,
-        matches: normalizedCurrentRequirement === normalizedSelectedInterest
-      });
-
       if (selectedInterest !== 'all') {
-        // Handle the special case for 'not_interested'
         if (normalizedSelectedInterest === 'notinterested') {
           matchesInterest = normalizedCurrentRequirement === 'notinterested';
         } else {
@@ -116,18 +109,26 @@ export const useSkillsFiltering = (
         }
       }
 
+      // Apply role requirement filter
+      if (selectedRoleRequirement !== 'all') {
+        matchesRoleRequirement = roleRequirement.toLowerCase() === selectedRoleRequirement.toLowerCase();
+      }
+
       if (searchTerm) {
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      const matches = matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
+      const matches = matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel && matchesRoleRequirement;
       
-      if (!matches && selectedInterest !== 'all') {
+      if (!matches) {
         console.log('Skill filtered out:', {
           skillName: skill.title,
           currentRequirement: normalizedCurrentRequirement,
           selectedInterest: normalizedSelectedInterest,
-          matchesInterest
+          selectedRoleRequirement,
+          roleRequirement,
+          matchesInterest,
+          matchesRoleRequirement
         });
       }
 
@@ -163,6 +164,7 @@ export const useSkillsFiltering = (
       selectedLevel,
       selectedInterest,
       selectedSkillLevel,
+      selectedRoleRequirement,
       searchTerm,
       isRoleBenchmark
     }

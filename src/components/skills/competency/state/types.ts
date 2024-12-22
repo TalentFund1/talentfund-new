@@ -3,6 +3,12 @@ export interface RoleSkillState {
   requirement: 'required' | 'preferred' | 'not_interested' | 'skill_goal' | 'unknown';
 }
 
+export interface SkillState {
+  level: string;
+  required: string;
+  requirement: 'required' | 'preferred' | 'not_interested' | 'skill_goal' | 'unknown';
+}
+
 export interface RoleState {
   [skillName: string]: {
     [levelKey: string]: RoleSkillState;
