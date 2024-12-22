@@ -56,17 +56,6 @@ export const BenchmarkMatrixFilters = ({
 
         <Select value={selectedRoleRequirement} onValueChange={setSelectedRoleRequirement}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Role Requirements" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Role Requirements</SelectItem>
-            <SelectItem value="required">Required</SelectItem>
-            <SelectItem value="preferred">Preferred</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
-          <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Requirements" />
           </SelectTrigger>
           <SelectContent>
