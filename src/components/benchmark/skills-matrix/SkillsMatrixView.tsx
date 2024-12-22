@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
-import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
-import { SkillsMatrixTable } from "./SkillsMatrixTable";
-import { useToast } from "@/components/ui/use-toast";
-import { useSkillsMatrixStore } from "./SkillsMatrixState";
-import { AddEmployeeSkillDialog } from "./dialog/AddEmployeeSkillDialog";
+import { SkillsMatrixContent } from "./SkillsMatrixContent";
+import { useRef } from "react";
 
 interface SkillsMatrixViewProps {
   selectedLevel: string;
@@ -31,59 +26,27 @@ export const SkillsMatrixView = ({
   hasChanges,
   isRoleBenchmark
 }: SkillsMatrixViewProps) => {
-  const { toast } = useToast();
-  const { saveChanges, cancelChanges } = useSkillsMatrixStore();
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const handleSave = () => {
-    saveChanges();
-    toast({
-      title: "Changes saved",
-      description: "Your changes have been saved successfully.",
-    });
-  };
-
-  const handleCancel = () => {
-    cancelChanges();
-    toast({
-      title: "Changes cancelled",
-      description: "Your changes have been discarded.",
-    });
-  };
+  console.log('SkillsMatrixView - Rendering with:', {
+    selectedCategory,
+    filteredSkillsCount: filteredSkills.length
+  });
 
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
-      <SkillsMatrixHeader 
-        hasChanges={hasChanges}
-        onSave={handleSave}
-        onCancel={handleCancel}
-      />
-      
-      <Separator className="my-4" />
-      
-      <SkillsMatrixFilters 
+      <SkillsMatrixContent 
         selectedLevel={selectedLevel}
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        addSkillButton={<AddEmployeeSkillDialog />}
-      />
-
-      <SkillsMatrixTable 
-        filteredSkills={filteredSkills.slice(0, visibleItems)}
+        filteredSkills={filteredSkills}
+        visibleItems={visibleItems}
+        observerTarget={observerTarget}
         isRoleBenchmark={isRoleBenchmark}
       />
-      
-      {visibleItems < filteredSkills.length && (
-        <div 
-          ref={observerTarget} 
-          className="h-10 flex items-center justify-center"
-        >
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-        </div>
-      )}
     </Card>
   );
 };
