@@ -1,6 +1,6 @@
+import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
 import { BenchmarkSkillsMatrixTable } from "./BenchmarkSkillsMatrixTable";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
-import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
 
 interface SkillsMatrixContentProps {
   filteredSkills: any[];
@@ -17,6 +17,8 @@ interface SkillsMatrixContentProps {
   visibleItems: number;
   observerTarget: React.RefObject<HTMLDivElement>;
   isRoleBenchmark?: boolean;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
 }
 
 export const SkillsMatrixContent = ({
@@ -33,11 +35,14 @@ export const SkillsMatrixContent = ({
   setSelectedSearchSkills,
   visibleItems,
   observerTarget,
-  isRoleBenchmark = false
+  isRoleBenchmark = false,
+  selectedCategory,
+  setSelectedCategory
 }: SkillsMatrixContentProps) => {
-  console.log('Rendering SkillsMatrixContent with:', {
+  console.log('SkillsMatrixContent rendering:', {
     skillsCount: filteredSkills.length,
-    isRoleBenchmark
+    isRoleBenchmark,
+    selectedCategory
   });
 
   const removeSearchSkill = (skill: string) => {
@@ -58,6 +63,8 @@ export const SkillsMatrixContent = ({
         selectedSearchSkills={selectedSearchSkills}
         removeSearchSkill={removeSearchSkill}
         clearSearch={() => setSearchTerm("")}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
       />
 
       {isRoleBenchmark ? (

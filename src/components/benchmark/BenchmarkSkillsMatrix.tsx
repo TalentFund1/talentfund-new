@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { roleSkills } from "../skills/data/roleSkills";
-import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
 import { useTrack } from "../skills/context/TrackContext";
 import { useSkillsFiltering } from "./skills-matrix/useSkillsFiltering";
 import { useBenchmarkSkillsMatrixState } from "./skills-matrix/BenchmarkSkillsMatrixState";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
 
 const BenchmarkSkillsMatrixContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,6 +15,7 @@ const BenchmarkSkillsMatrixContent = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
@@ -35,7 +34,7 @@ const BenchmarkSkillsMatrixContent = () => {
     selectedSkillLevel,
     searchTerm,
     toggledSkills,
-    true // This is the role benchmark view
+    true
   );
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
@@ -45,7 +44,8 @@ const BenchmarkSkillsMatrixContent = () => {
     roleLevel: comparisonLevel,
     track,
     filteredSkillsCount: filteredSkills.length,
-    toggledSkillsCount: toggledSkills.size
+    toggledSkillsCount: toggledSkills.size,
+    selectedCategory
   });
 
   return (
@@ -65,6 +65,8 @@ const BenchmarkSkillsMatrixContent = () => {
         setSelectedSkillLevel={setSelectedSkillLevel}
         selectedSearchSkills={selectedSearchSkills}
         setSelectedSearchSkills={setSelectedSearchSkills}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
         visibleItems={visibleItems}
       />
     </div>
