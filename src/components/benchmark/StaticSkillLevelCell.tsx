@@ -24,13 +24,13 @@ export const StaticSkillLevelCell = ({
     });
     
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, 'unspecified', 'preferred');
+      initializeState(skillTitle, 'unspecified', 'unknown');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
     level: 'unspecified',
-    requirement: 'preferred'
+    requirement: 'unknown' as EmployeeSkillRequirement
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {
@@ -46,11 +46,11 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: string = 'unknown') => {
-    switch (requirement?.toLowerCase()) {
-      case 'required':
+  const getRequirementIcon = (requirement: EmployeeSkillRequirement = 'unknown') => {
+    switch (requirement) {
+      case 'skill_goal':
         return <Check className="w-3.5 h-3.5" />;
-      case 'not-interested':
+      case 'not_interested':
         return <X className="w-3.5 h-3.5" />;
       case 'unknown':
         return <CircleDashed className="w-3.5 h-3.5" />;
@@ -72,8 +72,8 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'unknown') => {
-    if (requirement?.toLowerCase() !== 'required') {
+  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: EmployeeSkillRequirement = 'unknown') => {
+    if (requirement !== 'skill_goal') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
@@ -98,8 +98,8 @@ export const StaticSkillLevelCell = ({
         `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
-            {currentState?.requirement === 'required' ? 'Skill Goal' : 
-             currentState?.requirement === 'not-interested' ? 'Not Interested' : 
+            {currentState?.requirement === 'skill_goal' ? 'Skill Goal' : 
+             currentState?.requirement === 'not_interested' ? 'Not Interested' : 
              currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
           </span>
         </div>
