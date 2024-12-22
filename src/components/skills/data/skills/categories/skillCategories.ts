@@ -1,4 +1,4 @@
-import { SkillCategory } from '../../../types/SkillTypes';
+import { SkillCategory } from '../../../../../types/skillTypes';
 import { skillDefinitions } from '../skillDefinitions';
 
 const skillDefinitionMap = new Map(

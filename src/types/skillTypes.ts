@@ -48,6 +48,3 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
 }
-
-// Delete the duplicate types file
-<lov-delete file_path="src/components/skills/types/SkillTypes.ts" />
