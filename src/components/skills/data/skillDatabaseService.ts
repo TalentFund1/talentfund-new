@@ -19,7 +19,7 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   }
 
   // If skill not found, create a standardized default entry
-  console.warn('Skill not found in universal database:', skillTitle, 'creating default entry');
+  console.warn('Skill not found in universal database:', skillTitle);
   const category = getSkillCategory(skillTitle);
   
   const defaultSkill: UnifiedSkill = {

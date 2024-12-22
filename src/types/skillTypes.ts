@@ -13,7 +13,7 @@ export interface UnifiedSkill {
   category: SkillCategory;
   businessCategory?: string;
   weight: SkillWeight;
-  level?: SkillLevel;
+  level: SkillLevel;
   growth: string;
   confidence: string;
   requirement?: RoleSkillRequirement;
@@ -53,7 +53,10 @@ export const getSkillLevel = (state: BaseSkillState): SkillLevel => {
 };
 
 export const getSkillRequirement = (state: BaseSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
-  return 'requirement' in state ? state.requirement : 'unknown';
+  if ('requirement' in state) {
+    return (state as EmployeeSkillState | RoleSkillState).requirement;
+  }
+  return 'unknown';
 };
 
 export const isSkillGoal = (state: EmployeeSkillState): boolean => {
