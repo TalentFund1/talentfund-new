@@ -98,3 +98,13 @@ export interface RoleSkill {
   salary?: string;
   benchmarks?: { [key: string]: boolean };
 }
+
+export interface SkillsMatrixFiltersProps {
+  selectedLevel: string;
+  setSelectedLevel: (level: string) => void;
+  selectedInterest: string;
+  setSelectedInterest: (interest: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
+  isRoleBenchmark?: boolean;
+}
