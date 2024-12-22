@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill, EmployeeSkillState } from '../../skills/types/SkillTypes';
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
+import { SkillState } from '../../skills/competency/state/types';
 
 interface SkillsMatrixState {
-  currentStates: { [key: string]: EmployeeSkillState };
-  originalStates: { [key: string]: EmployeeSkillState };
+  currentStates: { [key: string]: SkillState };
+  originalStates: { [key: string]: SkillState };
   hasChanges: boolean;
   setSkillState: (skillName: string, level: string, requirement: string) => void;
   resetSkills: () => void;
@@ -27,7 +28,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillName]: { level, requirement },
+            [skillName]: { level, required: requirement, requirement },
           },
           hasChanges: true,
         }));
@@ -47,11 +48,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillName]: { level, requirement },
+                [skillName]: { level, required: requirement, requirement },
               },
               originalStates: {
                 ...state.originalStates,
-                [skillName]: { level, requirement },
+                [skillName]: { level, required: requirement, requirement },
               },
             };
           }
@@ -111,8 +112,7 @@ export const useSkillsMatrixState = (
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            // Only check for skill_goal now
-            return state.requirement === "skill_goal";
+            return state.requirement === "required" || state.requirement === "skill_goal";
           case "not_interested":
             return state.requirement === "not_interested";
           case "unknown":
@@ -122,14 +122,6 @@ export const useSkillsMatrixState = (
         }
       });
     }
-
-    console.log('Filtered skills:', {
-      total: employeeSkills.length,
-      filtered: filteredSkills.length,
-      selectedInterest,
-      selectedLevel,
-      selectedCategory
-    });
 
     return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
   };
