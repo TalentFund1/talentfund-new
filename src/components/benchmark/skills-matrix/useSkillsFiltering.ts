@@ -85,18 +85,15 @@ export const useSkillsFiltering = (
 
       if (selectedInterest !== 'all') {
         // Direct comparison with employee requirement
-        matchesRequirement = employeeSkillState.requirement === selectedInterest;
+        const employeeRequirement = employeeSkillState.requirement as EmployeeSkillRequirement;
+        matchesRequirement = employeeRequirement === selectedInterest;
         
         console.log('Requirement matching:', {
           skill: skill.title,
-          employeeRequirement: employeeSkillState.requirement,
+          employeeRequirement,
           selectedRequirement: selectedInterest,
           matches: matchesRequirement
         });
-      }
-
-      if (searchTerm) {
-        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
       const matches = matchesLevel && matchesSearch && matchesSkillLevel && matchesRequirement;
@@ -119,7 +116,7 @@ export const useSkillsFiltering = (
       ...skill,
       employeeLevel: getSkillState(employeeId, skill.title).level,
       roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
-      requirement: getSkillState(employeeId, skill.title).requirement
+      requirement: getSkillState(employeeId, skill.title).requirement as EmployeeSkillRequirement
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
   };
