@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyState, RoleState, EmployeeSkillState } from '../types/SkillTypes';
+import { CompetencyState } from './state/types';
 import { setSkillStateAction, setSkillProgressionAction } from './state/stateActions';
 import { loadPersistedState } from './state/persistenceUtils';
 import { initializeRoleState } from './state/initializeState';
@@ -176,7 +176,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 27, // Increment version to ensure clean state
+      version: 25, // Increment version to ensure clean state
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,

@@ -16,17 +16,12 @@ export const SkillsMatrixTableHeader = ({
   showCompanySkill = true,
   isRoleBenchmark = false
 }: SkillsMatrixTableHeaderProps) => {
-  console.log('Rendering SkillsMatrixTableHeader with:', {
-    showCompanySkill,
-    isRoleBenchmark
-  });
-
   return (
     <TableHeader>
       <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
         <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
         <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
-        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
+        <TableHead className="w-[120px] border-r border-[#CCDBFF] py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
             Weight
             <TooltipProvider>
@@ -39,26 +34,6 @@ export const SkillsMatrixTableHeader = ({
                     <h4 className="font-medium text-left">Skill Weight:</h4>
                     <p className="text-sm text-left font-normal">
                       Indicates the importance level of the skill: critical, technical, or necessary
-                    </p>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </TableHead>
-        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
-          <div className="flex items-center justify-center gap-1">
-            Type
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                </TooltipTrigger>
-                <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
-                  <div className="space-y-2">
-                    <h4 className="font-medium text-left">Skill Type:</h4>
-                    <p className="text-sm text-left font-normal">
-                      Categorizes the skill as Specialized, Common, or Certification
                     </p>
                   </div>
                 </TooltipContent>

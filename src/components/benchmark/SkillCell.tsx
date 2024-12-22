@@ -21,7 +21,7 @@ export const SkillCell = ({
   isLastColumn, 
   levelKey 
 }: SkillCellProps) => {
-  const { setSkillState } = useCompetencyStore();
+  const { employeeStates, setSkillState } = useCompetencyStore();
   const initRef = useRef(false);
   const { id: employeeId } = useParams<{ id: string }>();
 
@@ -47,6 +47,11 @@ export const SkillCell = ({
     }
   }, [skillName, levelKey, details.level, details.required, setSkillState, employeeId]);
 
+  const currentState = employeeStates[employeeId || '']?.[skillName]?.[levelKey] || {
+    level: details.level || "unspecified",
+    required: details.required || "preferred",
+  };
+
   const handleLevelChange = (value: string) => {
     if (!employeeId) return;
     
@@ -55,9 +60,9 @@ export const SkillCell = ({
       skillName,
       levelKey,
       newLevel: value,
-      currentRequired: details.required
+      currentRequired: currentState.required
     });
-    setSkillState(employeeId, skillName, value, levelKey, details.required);
+    setSkillState(employeeId, skillName, value, levelKey, currentState.required);
   };
 
   const handleRequirementChange = (value: string) => {
@@ -67,10 +72,10 @@ export const SkillCell = ({
       employeeId,
       skillName,
       levelKey,
-      currentLevel: details.level,
+      currentLevel: currentState.level,
       newRequired: value
     });
-    setSkillState(employeeId, skillName, details.level, levelKey, value);
+    setSkillState(employeeId, skillName, currentState.level, levelKey, value);
   };
 
   return (
@@ -79,12 +84,12 @@ export const SkillCell = ({
     >
       <div className="flex flex-col items-center gap-0">
         <LevelSelector
-          currentLevel={details.level}
+          currentLevel={currentState.level}
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={details.required}
-          currentLevel={details.level}
+          currentRequired={currentState.required}
+          currentLevel={currentState.level}
           onRequirementChange={handleRequirementChange}
         />
       </div>
