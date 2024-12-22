@@ -15,9 +15,9 @@ export interface BaseSkill {
 // Core skill interface
 export interface UnifiedSkill extends BaseSkill {
   subcategory: string;
-  category: SkillCategory;
+  category?: SkillCategory;
   businessCategory?: string;
-  weight: SkillWeight;
+  weight?: SkillWeight;
   level: SkillLevel;
   growth: string;
   confidence: string;
@@ -35,7 +35,7 @@ export interface BaseSkillState {
 // Employee skill state
 export interface EmployeeSkillState extends BaseSkillState {
   requirement: EmployeeSkillRequirement;
-  toString(): string; // Add this to fix type errors with string operations
+  toString(): string;
 }
 
 // Role skill state

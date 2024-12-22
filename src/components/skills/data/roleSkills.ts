@@ -17,15 +17,65 @@ export const roleSkills: Record<string, RoleSkillData> = {
   "123": {
     title: "AI Engineer",
     specialized: [
-      { title: "Machine Learning", subcategory: "AI", level: "advanced", growth: "10%", confidence: "high", requirement: "required" },
-      { title: "Deep Learning", subcategory: "AI", level: "intermediate", growth: "15%", confidence: "medium", requirement: "preferred" },
+      { 
+        id: "ml",
+        title: "Machine Learning",
+        subcategory: "AI",
+        category: "specialized",
+        weight: "critical",
+        level: "advanced",
+        growth: "10%",
+        confidence: "high",
+        requirement: "required"
+      },
+      {
+        id: "dl",
+        title: "Deep Learning",
+        subcategory: "AI",
+        category: "specialized",
+        weight: "technical",
+        level: "intermediate",
+        growth: "15%",
+        confidence: "medium",
+        requirement: "preferred"
+      },
     ],
     common: [
-      { title: "Team Collaboration", subcategory: "Soft Skills", level: "advanced", growth: "5%", confidence: "high", requirement: "required" },
-      { title: "Problem Solving", subcategory: "Soft Skills", level: "intermediate", growth: "8%", confidence: "medium", requirement: "preferred" },
+      {
+        id: "tc",
+        title: "Team Collaboration",
+        subcategory: "Soft Skills",
+        category: "common",
+        weight: "necessary",
+        level: "advanced",
+        growth: "5%",
+        confidence: "high",
+        requirement: "required"
+      },
+      {
+        id: "ps",
+        title: "Problem Solving",
+        subcategory: "Soft Skills",
+        category: "common",
+        weight: "necessary",
+        level: "intermediate",
+        growth: "8%",
+        confidence: "medium",
+        requirement: "preferred"
+      },
     ],
     certifications: [
-      { title: "Certified AI Professional", subcategory: "Certification", level: "advanced", growth: "20%", confidence: "high", requirement: "required" },
+      {
+        id: "cap",
+        title: "Certified AI Professional",
+        subcategory: "Certification",
+        category: "certification",
+        weight: "technical",
+        level: "advanced",
+        growth: "20%",
+        confidence: "high",
+        requirement: "required"
+      },
     ]
   },
   "124": {
