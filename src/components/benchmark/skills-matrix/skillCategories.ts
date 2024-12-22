@@ -1,5 +1,5 @@
-import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { roleSkills } from "../../skills/data/roleSkills";
+import { UnifiedSkill } from '@/types/skillTypes';
+import { roleSkills } from '../../skills/data/roleSkills';
 
 export const filterSkillsByCategory = (
   skills: UnifiedSkill[],
