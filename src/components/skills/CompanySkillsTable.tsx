@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
 import { roleSkills } from './data/roleSkills';
+import { getAllSkills } from './data/skills/allSkills';
 
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
@@ -11,14 +12,27 @@ export const CompanySkillsTable = () => {
     toggledSkillsCount: toggledSkills.size,
     toggledSkills: Array.from(toggledSkills)
   });
+
+  // Get all skills from the universal database
+  const allSkills = getAllSkills();
+  console.log('CompanySkillsTable - All skills from database:', {
+    totalSkills: allSkills.length,
+    sample: allSkills.slice(0, 3)
+  });
   
-  // Get unique skills with their counts, but only for toggled skills
-  const uniqueSkills = Array.from(toggledSkills)
-    .map(skillTitle => {
-      console.log('Getting data for toggled skill:', skillTitle);
-      return getUnifiedSkillData(skillTitle);
+  // Filter skills based on toggledSkills Set
+  const uniqueSkills = allSkills
+    .filter(skill => toggledSkills.has(skill.title))
+    .map(skill => {
+      console.log('Getting data for toggled skill:', skill.title);
+      return getUnifiedSkillData(skill.title);
     })
-    .filter(skill => skill !== undefined); // Filter out any undefined skills
+    .filter(skill => skill !== undefined);
+
+  console.log('CompanySkillsTable - Filtered toggled skills:', {
+    totalFiltered: uniqueSkills.length,
+    sample: uniqueSkills.slice(0, 3)
+  });
 
   // Helper function to get the type
   const getSkillType = (skillTitle: string): string => {
@@ -48,8 +62,6 @@ export const CompanySkillsTable = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
-
-  console.log('CompanySkillsTable - Displaying filtered skills:', uniqueSkills);
 
   return (
     <Card className="p-6 bg-white">
