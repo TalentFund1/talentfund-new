@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { SkillRequirement } from '../../skills/types/SkillTypes';
+import { SkillRequirement, UnifiedSkill } from '../../skills/types/SkillTypes';
 import { filterSkillsByCategory } from './skillCategories';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { mapSkillWithState } from './utils/skillMapping';
@@ -94,18 +94,18 @@ export const useSkillsMatrixState = (
     const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
     console.log('Employee skills:', employeeSkills);
 
-    let filteredSkills = employeeSkills.map(skill => {
+    let filteredSkills = employeeSkills.map((skill: UnifiedSkill): MappedSkill => {
       const skillState = getSkillState(skill.title, employeeId);
       return {
         ...skill,
-        requirement: (skillState?.requirement || skill.requirement || 'preferred') as SkillRequirement,
+        requirement: skillState?.requirement || skill.requirement || 'preferred',
         roleLevel: null,
         isCompanySkill: false,
         level: skillState?.level || skill.level || 'unspecified',
         id: skill.id,
         title: skill.title,
         subcategory: skill.subcategory,
-        category: skill.category,
+        category: skill.category || 'common',
         businessCategory: skill.businessCategory,
         weight: skill.weight,
         growth: skill.growth,
@@ -166,20 +166,20 @@ export const getEmployeeSkills = (employeeId: string): MappedSkill[] => {
   const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
   const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
   
-  return employeeSkills.map(skill => {
+  return employeeSkills.map((skill: UnifiedSkill): MappedSkill => {
     const stateKey = `${employeeId}_${skill.title}`;
     const skillState = employeeSkillStates[stateKey];
     
     return {
       ...skill,
-      requirement: (skillState?.requirement || skill.requirement || 'preferred') as SkillRequirement,
+      requirement: skillState?.requirement || skill.requirement || 'preferred',
       roleLevel: null,
       isCompanySkill: false,
       level: skillState?.level || skill.level || 'unspecified',
       id: skill.id,
       title: skill.title,
       subcategory: skill.subcategory,
-      category: skill.category,
+      category: skill.category || 'common',
       businessCategory: skill.businessCategory,
       weight: skill.weight,
       growth: skill.growth,
