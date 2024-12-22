@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { useEmployeeStore } from '../../employee/store/employeeStore';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { getAllSkills } from '../../skills/data/skills/allSkills';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 
 interface SkillState {
@@ -95,8 +96,13 @@ export const useSkillsMatrixState = (
 
   const filterAndSortSkills = (employeeId: string) => {
     console.log('Filtering skills for employee:', employeeId);
-    const employeeSkills = getEmployeeSkills(employeeId);
-    let filteredSkills = [...employeeSkills];
+    // Get all skills from universal database
+    const allSkills = getAllSkills();
+    let filteredSkills = allSkills.map(skill => ({
+      ...getUnifiedSkillData(skill.title),
+      level: currentStates[skill.title]?.level || skill.level,
+      requirement: currentStates[skill.title]?.requirement || 'preferred'
+    }));
 
     // Filter by category if not "all"
     if (selectedCategory !== "all") {
@@ -140,5 +146,13 @@ export const useSkillsMatrixState = (
 
 export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
-  return useEmployeeStore.getState().getEmployeeSkills(employeeId);
+  // Get skills from universal database
+  const allSkills = getAllSkills();
+  const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
+  
+  return allSkills.map(skill => ({
+    ...getUnifiedSkillData(skill.title),
+    level: employeeSkillStates[skill.title]?.level || skill.level,
+    requirement: employeeSkillStates[skill.title]?.requirement || 'preferred'
+  }));
 };
