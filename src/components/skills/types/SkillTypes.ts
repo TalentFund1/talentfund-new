@@ -56,6 +56,13 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+  skills: UnifiedSkill[];  // Added for CategorySection
+  soc?: string;            // Added for SkillProfileHeader
+  function?: string;       // Added for forms and header
+  mappedTitle?: string;    // Added for forms and header
+  occupation?: string;     // Added for forms and header
+  description?: string;    // Added for forms and header
+  roleTrack?: "Professional" | "Managerial"; // Added for role selection
 }
 
 // Mapped skill interface for skill matrix display
