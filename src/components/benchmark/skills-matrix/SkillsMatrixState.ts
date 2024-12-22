@@ -9,16 +9,16 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       currentStates: {},
       hasChanges: false,
 
-      setSkillState: (profileId, skillId, level, requirement) => {
-        console.log('Setting skill state:', { profileId, skillId, level, requirement });
+      setSkillState: (employeeId, skillId, level, requirement) => {
+        console.log('Setting skill state:', { employeeId, skillId, level, requirement });
         
         set((state) => {
           const updatedSkillStates = {
             ...state.skillStates,
-            [profileId]: {
-              ...state.skillStates[profileId],
+            [employeeId]: {
+              ...state.skillStates[employeeId],
               [skillId]: {
-                profileId,
+                employeeId,
                 skillId,
                 level,
                 requirement
@@ -34,18 +34,18 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         });
       },
 
-      initializeState: (profileId, skillId, initialLevel, initialRequirement) => {
+      initializeState: (employeeId, skillId, initialLevel, initialRequirement) => {
         const state = get();
-        if (!state.skillStates[profileId]?.[skillId]) {
-          console.log('Initializing skill state:', { profileId, skillId, initialLevel, initialRequirement });
+        if (!state.skillStates[employeeId]?.[skillId]) {
+          console.log('Initializing skill state:', { employeeId, skillId, initialLevel, initialRequirement });
           
           set((state) => ({
             skillStates: {
               ...state.skillStates,
-              [profileId]: {
-                ...state.skillStates[profileId],
+              [employeeId]: {
+                ...state.skillStates[employeeId],
                 [skillId]: {
-                  profileId,
+                  employeeId,
                   skillId,
                   level: initialLevel,
                   requirement: initialRequirement
@@ -54,10 +54,10 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             },
             currentStates: {
               ...state.currentStates,
-              [profileId]: {
-                ...state.currentStates[profileId],
+              [employeeId]: {
+                ...state.currentStates[employeeId],
                 [skillId]: {
-                  profileId,
+                  employeeId,
                   skillId,
                   level: initialLevel,
                   requirement: initialRequirement
@@ -68,9 +68,9 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         }
       },
 
-      getSkillState: (profileId, skillId) => {
-        const state = get().skillStates[profileId]?.[skillId];
-        console.log('Getting skill state:', { profileId, skillId, state });
+      getSkillState: (employeeId, skillId) => {
+        const state = get().skillStates[employeeId]?.[skillId];
+        console.log('Getting skill state:', { employeeId, skillId, state });
         return state;
       },
 
@@ -92,7 +92,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 3,
+      version: 4,
       partialize: (state) => ({
         skillStates: state.skillStates,
         currentStates: state.currentStates
