@@ -3,10 +3,12 @@ export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
+export type SkillLevel = 'advanced' | 'intermediate' | 'beginner' | 'unspecified';
 
 // Core state interfaces
 export interface BaseSkillState {
-  level: string;
+  level: SkillLevel | string;
+  requirement?: EmployeeSkillRequirement | RoleSkillRequirement;
 }
 
 export interface EmployeeSkillState extends BaseSkillState {
@@ -19,7 +21,18 @@ export interface RoleSkillState extends BaseSkillState {
   requirement: RoleSkillRequirement;
 }
 
+export interface SkillState extends BaseSkillState {
+  id: string;
+  requirement: RoleSkillRequirement;
+}
+
 // Skill data interfaces
+export interface DetailedSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
+}
+
 export interface UnifiedSkill {
   id: string;
   title: string;
@@ -55,10 +68,19 @@ export interface ProfileSkillStates {
   };
 }
 
+// Type guard utilities
+export const isEmployeeRequirement = (req: any): req is EmployeeSkillRequirement => {
+  return ['skill_goal', 'not_interested', 'unknown'].includes(req);
+};
+
+export const isRoleRequirement = (req: any): req is RoleSkillRequirement => {
+  return ['required', 'preferred'].includes(req);
+};
+
 // Helper functions
 export const getSkillLevel = (state: EmployeeSkillState | RoleSkillState | string): string => {
   if (typeof state === 'string') return state;
-  return state.level || 'unspecified';
+  return state.level?.toString() || 'unspecified';
 };
 
 export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): string => {
@@ -93,3 +115,18 @@ export const convertToRoleSkillState = (
   level,
   requirement
 });
+
+// Level comparison utilities
+export const getLevelPriority = (level: string = 'unspecified'): number => {
+  const priorities: { [key: string]: number } = {
+    'advanced': 0,
+    'intermediate': 1,
+    'beginner': 2,
+    'unspecified': 3
+  };
+  return priorities[level.toLowerCase()] ?? 3;
+};
+
+export const compareSkillLevels = (level1: string, level2: string): boolean => {
+  return getLevelPriority(level1) === getLevelPriority(level2);
+};

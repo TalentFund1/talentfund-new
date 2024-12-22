@@ -9,7 +9,7 @@ const skillDefinitionMap = new Map(
 export const getSkillCategory = (skillTitle: string): SkillCategory => {
   console.log('Getting category for skill:', skillTitle);
   const skill = skillDefinitionMap.get(skillTitle.toLowerCase());
-  return skill?.category || 'common';
+  return (skill?.category as SkillCategory) || 'common';
 };
 
 // Helper function to check if a skill belongs to a specific category

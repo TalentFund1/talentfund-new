@@ -1,62 +1,41 @@
 import { UnifiedSkill } from '@/types/skillTypes';
-import { getSkillByTitle } from './skills/allSkills';
-import { normalizeSkillTitle } from '../utils/normalization';
-import { getSkillCategory } from './skills/categories/skillCategories';
-import { skillDefinitions } from './skillDefinitions';
+import { skillDefinitions } from './skills/skillDefinitions';
+import { generateId } from '@/lib/utils';
 
 // Helper function to generate consistent skill IDs
 export const generateSkillId = (title: string): string => {
-  const normalizedTitle = normalizeSkillTitle(title);
-  // First try to find existing skill in universal database
-  const existingSkill = skillDefinitions.find(
-    skill => normalizeSkillTitle(skill.title) === normalizedTitle
-  );
-  
-  if (existingSkill?.id) {
-    console.log('Found existing skill ID:', { title, id: existingSkill.id });
-    return existingSkill.id;
-  }
-
-  // If not found, generate a consistent ID based on the normalized title
-  const id = `skill_${normalizedTitle.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
-  console.log('Generated new skill ID:', { title, id });
-  return id;
+  console.log('Generated new skill ID:', { title, id: `skill_${title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}` });
+  return `skill_${title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
 };
 
-// Get unified skill data
-export const getUnifiedSkillData = (title: string): UnifiedSkill => {
-  console.log('Getting unified skill data for:', title);
+// Get skill data from the universal database
+export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
+  console.log('Getting unified skill data for:', skillTitle);
   
-  const normalizedTitle = normalizeSkillTitle(title);
-  const existingSkill = getSkillByTitle(normalizedTitle);
-  
+  const existingSkill = skillDefinitions.find(
+    skill => skill.title.toLowerCase() === skillTitle.toLowerCase()
+  );
+
   if (existingSkill) {
-    console.log('Found existing skill:', existingSkill.title);
+    console.log('Found existing skill:', skillTitle);
     return {
       ...existingSkill,
-      id: generateSkillId(existingSkill.title),
-      category: getSkillCategory(existingSkill.title)
+      id: existingSkill.id || generateSkillId(skillTitle)
     };
   }
 
-  // If skill not found, create a default skill entry with consistent ID
-  console.warn(`Skill not found in universal database: ${normalizedTitle}, creating default entry`);
+  // If skill not found, create a default entry
+  console.warn('Skill not found in universal database:', skillTitle, 'creating default entry');
   return {
-    id: generateSkillId(normalizedTitle),
-    title: normalizedTitle,
-    subcategory: "Other",
-    category: getSkillCategory(normalizedTitle),
-    businessCategory: "Information Technology",
-    weight: "necessary",
-    level: "beginner",
-    growth: "10%",
-    salary: "$0",
-    confidence: "low",
-    benchmarks: { B: false, R: false, M: false, O: false }
+    id: generateSkillId(skillTitle),
+    title: skillTitle,
+    subcategory: 'General',
+    category: 'common',
+    weight: 'necessary',
+    growth: '0%',
+    confidence: 'medium',
+    requirement: 'preferred',
+    salary: 'N/A',
+    benchmarks: { B: true, R: true, M: true, O: true }
   };
 };
-
-// Export helper functions
-export { getSkillCategory };
-
-console.log('Skill database service initialized - using universal database for ID generation');
