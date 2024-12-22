@@ -3,6 +3,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { skillDefinitions } from '../../skills/data/skills/skillDefinitions';
+import { getSkillCategory } from '../../skills/data/skills/categories/skillCategories';
 
 interface EmployeeStore {
   employees: Employee[];
@@ -29,15 +31,43 @@ export const useEmployeeStore = create<EmployeeStore>()(
         console.log('Initializing skills for employee:', employeeId);
         const store = get();
         
+        // Initialize with all skills from universal database with default states
         if (!store.employeeSkills[employeeId]) {
-          store.setEmployeeSkills(employeeId, []);
+          const defaultSkills = skillDefinitions.map(skill => ({
+            ...skill,
+            level: 'unspecified',
+            requirement: 'unknown' as EmployeeSkillRequirement
+          }));
+
+          console.log('Setting default skills for employee:', {
+            employeeId,
+            skillCount: defaultSkills.length
+          });
+
+          set((state) => ({
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: defaultSkills
+            }
+          }));
         }
 
+        // Initialize skill states if not present
         if (!store.skillStates[employeeId]) {
+          const initialStates: Record<string, EmployeeSkillState> = {};
+          skillDefinitions.forEach(skill => {
+            initialStates[skill.title] = {
+              employeeId,
+              skillId: skill.title,
+              level: 'unspecified',
+              requirement: 'unknown'
+            };
+          });
+
           set((state) => ({
             skillStates: {
               ...state.skillStates,
-              [employeeId]: {}
+              [employeeId]: initialStates
             }
           }));
         }
@@ -116,6 +146,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               ...state.skillStates[employeeId],
               [skillName]: {
+                employeeId,
+                skillId,
                 level,
                 requirement
               }
@@ -133,6 +165,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
     {
       name: 'employee-store',
       storage: createJSONStorage(() => localStorage),
+      version: 5,
       partialize: (state) => ({
         employees: state.employees,
         employeeSkills: state.employeeSkills,
