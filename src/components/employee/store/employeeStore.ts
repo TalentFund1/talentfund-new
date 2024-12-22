@@ -109,13 +109,10 @@ export const useEmployeeStore = create<EmployeeStore>()(
       getSkillState: (employeeId, skillName) => {
         const state = get();
         if (!state.skillStates[employeeId]) {
-          console.log('Initializing skill states for employee:', employeeId);
+          console.log('No skill states found for employee:', employeeId);
           state.initializeEmployeeSkills(employeeId);
         }
-        return state.skillStates[employeeId]?.[skillName] || { 
-          level: 'unspecified', 
-          requirement: 'unknown' 
-        };
+        return state.skillStates[employeeId]?.[skillName];
       }
     }),
     {
