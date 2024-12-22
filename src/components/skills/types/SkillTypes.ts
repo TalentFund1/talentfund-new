@@ -39,6 +39,7 @@ export interface UnifiedSkill {
   growth: string;
   salary: string;
   confidence: string;
+  requirement?: RoleSkillRequirement;
   benchmarks: { [key: string]: boolean };
 }
 
@@ -57,18 +58,6 @@ export interface RoleSkillData {
 }
 
 // Component-specific types
-export interface SkillsMatrixFiltersProps {
-  selectedLevel: string;
-  setSelectedLevel: (level: string) => void;
-  selectedInterest: string;
-  setSelectedInterest: (interest: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-  isRoleBenchmark?: boolean;
-  selectedRoleRequirement?: string;
-  setSelectedRoleRequirement?: (requirement: string) => void;
-}
-
 export interface DetailedSkill {
   name: string;
   level: string;
@@ -95,7 +84,7 @@ export interface RoleSkill {
   benchmarks?: { [key: string]: boolean };
 }
 
-// Helper function to convert between requirement types
+// Helper functions to convert between requirement types
 export const convertToEmployeeRequirement = (roleReq: RoleSkillRequirement): EmployeeSkillRequirement => {
   switch (roleReq) {
     case 'required':
@@ -112,8 +101,20 @@ export const convertToRoleRequirement = (empReq: EmployeeSkillRequirement): Role
     case 'skill_goal':
       return 'required';
     case 'not_interested':
-      return 'preferred';
+    case 'unknown':
     default:
       return 'preferred';
   }
 };
+
+export interface SkillsMatrixFiltersProps {
+  selectedLevel: string;
+  setSelectedLevel: (level: string) => void;
+  selectedInterest: string;
+  setSelectedInterest: (interest: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
+  isRoleBenchmark?: boolean;
+  selectedRoleRequirement?: string;
+  setSelectedRoleRequirement?: (requirement: string) => void;
+}
