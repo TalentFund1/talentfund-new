@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
-import { useSkillsMatrixSearch } from "../../skills/context/SkillsMatrixSearchContext";
+import { useToast } from "@/components/ui/use-toast";
+import { useSkillsMatrixStore } from "./SkillsMatrixState";
+import { AddEmployeeSkillDialog } from "./dialog/AddEmployeeSkillDialog";
 
 interface SkillsMatrixViewProps {
   selectedLevel: string;
   setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
   filteredSkills: any[];
   visibleItems: number;
   observerTarget: React.RefObject<HTMLDivElement>;
@@ -22,43 +25,69 @@ export const SkillsMatrixView = ({
   setSelectedLevel,
   selectedInterest,
   setSelectedInterest,
-  selectedCategory,
-  setSelectedCategory,
   filteredSkills,
   visibleItems,
   observerTarget,
   hasChanges,
   isRoleBenchmark
 }: SkillsMatrixViewProps) => {
-  const { matrixSearchSkills, setMatrixSearchSkills } = useSkillsMatrixSearch();
+  const { toast } = useToast();
+  const { saveChanges, cancelChanges } = useSkillsMatrixStore();
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
+  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
 
-  const removeSearchSkill = (skill: string) => {
-    setMatrixSearchSkills(matrixSearchSkills.filter(s => s !== skill));
+  const handleSave = () => {
+    saveChanges();
+    toast({
+      title: "Changes saved",
+      description: "Your changes have been saved successfully.",
+    });
+  };
+
+  const handleCancel = () => {
+    cancelChanges();
+    toast({
+      title: "Changes cancelled",
+      description: "Your changes have been discarded.",
+    });
   };
 
   return (
-    <>
-      <SkillsMatrixFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
+    <Card className="p-6 space-y-6 animate-fade-in bg-white">
+      <SkillsMatrixHeader 
+        hasChanges={hasChanges}
+        onSave={handleSave}
+        onCancel={handleCancel}
+      />
+      
+      <Separator className="my-4" />
+      
+      <SkillsMatrixFilters 
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        selectedSearchSkills={matrixSearchSkills}
-        removeSearchSkill={removeSearchSkill}
-        clearSearch={() => {
-          setSearchTerm("");
-          setMatrixSearchSkills([]);
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedSkillLevel={selectedSkillLevel}
+        setSelectedSkillLevel={setSelectedSkillLevel}
+        selectedSearchSkills={selectedSearchSkills}
+        removeSearchSkill={(skill) => {
+          setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
         }}
+        clearSearch={() => setSelectedSearchSkills([])}
+        isRoleBenchmark={isRoleBenchmark}
       />
 
       <SkillsMatrixTable 
         filteredSkills={filteredSkills.slice(0, visibleItems)}
         isRoleBenchmark={isRoleBenchmark}
       />
-
+      
       {visibleItems < filteredSkills.length && (
         <div 
           ref={observerTarget} 
@@ -67,6 +96,6 @@ export const SkillsMatrixView = ({
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
         </div>
       )}
-    </>
+    </Card>
   );
 };

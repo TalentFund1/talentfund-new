@@ -1,5 +1,5 @@
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
-import { EmployeeSkillState } from '@/types/skillTypes';
+import { EmployeeSkillState } from '../../skills/types/SkillTypes';
 
 export const useSkillLevelState = (skillTitle: string) => {
   const { currentStates, originalStates } = useSkillsMatrixStore();
