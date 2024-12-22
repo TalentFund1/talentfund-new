@@ -5,7 +5,7 @@ import { getSkillCategory } from './skills/categories/skillCategories';
 import { skillDefinitions } from './skillDefinitions';
 
 // Helper function to generate consistent skill IDs
-const generateSkillId = (title: string): string => {
+export const generateSkillId = (title: string): string => {
   const normalizedTitle = normalizeSkillTitle(title);
   // First try to find existing skill in universal database
   const existingSkill = skillDefinitions.find(
@@ -57,6 +57,6 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
 };
 
 // Export helper functions
-export { generateSkillId, getSkillCategory };
+export { getSkillCategory };
 
 console.log('Skill database service initialized - using universal database for ID generation');
