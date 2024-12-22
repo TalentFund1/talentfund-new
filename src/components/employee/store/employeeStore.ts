@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { generateSkillId } from '../../skills/data/skillDatabaseService';
 
 interface EmployeeSkillsState {
   [employeeId: string]: {
@@ -90,10 +91,11 @@ export const useEmployeeStore = create<EmployeeStore>()(
 
         // Initialize skill states for new skills
         skills.forEach(skill => {
-          if (!get().getSkillState(employeeId, skill.id)) {
+          const skillId = generateSkillId(skill.title);
+          if (!get().getSkillState(employeeId, skillId)) {
             get().setSkillState(
               employeeId,
-              skill.id,
+              skillId,
               'unspecified',
               'unknown'
             );

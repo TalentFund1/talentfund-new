@@ -43,3 +43,9 @@ export interface RoleState {
     [level: string]: RoleSkillState;
   };
 }
+
+export interface ProfileSkillStates {
+  [profileId: string]: {
+    [skillId: string]: EmployeeSkillState;
+  };
+}

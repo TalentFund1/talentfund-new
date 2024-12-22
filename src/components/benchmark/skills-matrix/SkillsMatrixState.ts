@@ -1,14 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillState, EmployeeSkillRequirement } from '@/types/skillTypes';
+import { EmployeeSkillState, EmployeeSkillRequirement, ProfileSkillStates } from '@/types/skillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { generateSkillId } from '@/components/skills/data/skillDatabaseService';
-
-interface ProfileSkillStates {
-  [profileId: string]: {
-    [skillId: string]: EmployeeSkillState;
-  };
-}
 
 interface SkillsMatrixState {
   currentStates: ProfileSkillStates;
@@ -150,3 +144,13 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }
   )
 );
+
+export const getEmployeeSkills = (id: string) => {
+  console.log('Getting skills for employee:', id);
+  const skills = useEmployeeStore.getState().getEmployeeSkills(id);
+  // Ensure all skills have consistent IDs
+  return skills.map(skill => ({
+    ...skill,
+    id: generateSkillId(skill.title)
+  }));
+};
