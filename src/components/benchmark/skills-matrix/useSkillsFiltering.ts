@@ -4,7 +4,6 @@ import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
-import { EmployeeSkillRequirement, RoleSkillRequirement } from "../../skills/types/SkillTypes";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -84,6 +83,7 @@ export const useSkillsFiltering = (
 
       const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
       const roleSkillLevel = competencyState?.level || 'unspecified';
+      const roleRequirement = competencyState?.required || 'unknown';
 
       if (selectedLevel !== 'all') {
         matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
@@ -111,8 +111,7 @@ export const useSkillsFiltering = (
 
       // Apply role requirement filter
       if (selectedRoleRequirement !== 'all') {
-        const roleRequirement = competencyState?.required || 'unknown';
-        matchesRoleRequirement = roleRequirement === selectedRoleRequirement;
+        matchesRoleRequirement = roleRequirement.toLowerCase() === selectedRoleRequirement.toLowerCase();
       }
 
       if (searchTerm) {
@@ -127,7 +126,7 @@ export const useSkillsFiltering = (
           currentRequirement: normalizedCurrentRequirement,
           selectedInterest: normalizedSelectedInterest,
           selectedRoleRequirement,
-          roleRequirement: competencyState?.required,
+          roleRequirement,
           matchesInterest,
           matchesRoleRequirement
         });
