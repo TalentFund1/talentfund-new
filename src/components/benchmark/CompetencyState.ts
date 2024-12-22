@@ -5,8 +5,8 @@ import { initializeRoleState } from '../skills/competency/state/initializeState'
 
 const defaultSkillState = {
   level: 'unspecified',
-  required: 'preferred',
-  requirement: 'preferred'
+  required: 'unknown',
+  requirement: 'unknown'
 };
 
 export const useCompetencyStore = create<CompetencyState>()(
