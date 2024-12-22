@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
 import { useSkillsMatrixSearch } from "../../skills/context/SkillsMatrixSearchContext";
@@ -41,8 +42,6 @@ export const SkillsMatrixView = ({
       <SkillsMatrixFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
         selectedCategory={selectedCategory}

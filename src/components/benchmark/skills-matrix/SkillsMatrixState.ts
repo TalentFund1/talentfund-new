@@ -23,14 +23,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       setSkillState: (skillName, level, requirement) => {
         console.log('Setting skill state:', { skillName, level, requirement });
         
-        let finalRequirement: EmployeeSkillRequirement;
-        if (requirement === 'skill_goal' || requirement === 'required') {
-          finalRequirement = 'skill_goal';
-        } else if (requirement === 'not_interested' || requirement === 'not-interested') {
-          finalRequirement = 'not_interested';
-        } else {
-          finalRequirement = 'unknown';
-        }
+        let finalRequirement: EmployeeSkillRequirement = requirement;
         
         set((state) => ({
           currentStates: {
@@ -54,14 +47,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       initializeState: (skillName, level, requirement) =>
         set((state) => {
           if (!state.currentStates[skillName]) {
-            let finalRequirement: EmployeeSkillRequirement;
-            if (requirement === 'skill_goal' || requirement === 'required') {
-              finalRequirement = 'skill_goal';
-            } else if (requirement === 'not_interested' || requirement === 'not-interested') {
-              finalRequirement = 'not_interested';
-            } else {
-              finalRequirement = 'unknown';
-            }
+            let finalRequirement: EmployeeSkillRequirement = requirement;
 
             return {
               currentStates: {

@@ -3,7 +3,7 @@ import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { RoleSkillRequirement } from '../../types/skillTypes';
+import { RoleSkillRequirement } from "@/types/skillTypes";
 
 interface SkillCellProps {
   skillName: string;
@@ -44,8 +44,7 @@ export const SkillCell = ({
       value,
       levelKey,
       currentState.requirement || 'preferred',
-      currentRoleId,
-      skillName // Using skillName as skillId for now
+      currentRoleId
     );
   };
 
@@ -63,8 +62,7 @@ export const SkillCell = ({
       currentState.level || 'unspecified',
       levelKey,
       value,
-      currentRoleId,
-      skillName // Using skillName as skillId for now
+      currentRoleId
     );
   };
 
