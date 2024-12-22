@@ -1,10 +1,7 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
-// Employee skill types
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-
-// Role skill types
 export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface BaseSkill {
@@ -20,12 +17,11 @@ export interface UnifiedSkill {
   level?: string;
   growth: string;
   confidence: string;
-  requirement?: RoleSkillRequirement | EmployeeSkillRequirement;
+  requirement?: RoleSkillRequirement;
   category?: string;
   weight?: string;
   businessCategory?: string;
   salary?: string;
-  benchmarks?: { [key: string]: boolean };
 }
 
 export interface EmployeeSkillState {
@@ -51,19 +47,3 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
 }
-
-// Skill state conversion utilities
-export const convertToRoleSkillState = (state: EmployeeSkillState): RoleSkillState => {
-  return {
-    id: Date.now().toString(),
-    level: state.level,
-    requirement: state.requirement === 'skill_goal' ? 'required' : 'preferred'
-  };
-};
-
-export const convertToEmployeeSkillState = (state: RoleSkillState): EmployeeSkillState => {
-  return {
-    level: state.level,
-    requirement: state.requirement === 'required' ? 'skill_goal' : 'unknown'
-  };
-};
