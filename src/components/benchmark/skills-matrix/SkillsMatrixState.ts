@@ -1,13 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { UnifiedSkill, EmployeeSkillState } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
-import { RoleSkillState } from '../../skills/competency/state/types';
 
 interface SkillsMatrixState {
-  currentStates: { [key: string]: RoleSkillState };
-  originalStates: { [key: string]: RoleSkillState };
+  currentStates: { [key: string]: EmployeeSkillState };
+  originalStates: { [key: string]: EmployeeSkillState };
   hasChanges: boolean;
   setSkillState: (skillName: string, level: string, requirement: string) => void;
   resetSkills: () => void;
@@ -112,7 +111,7 @@ export const useSkillsMatrixState = (
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            // Updated to only check for skill_goal
+            // Only check for skill_goal now
             return state.requirement === "skill_goal";
           case "not_interested":
             return state.requirement === "not_interested";
@@ -123,6 +122,14 @@ export const useSkillsMatrixState = (
         }
       });
     }
+
+    console.log('Filtered skills:', {
+      total: employeeSkills.length,
+      filtered: filteredSkills.length,
+      selectedInterest,
+      selectedLevel,
+      selectedCategory
+    });
 
     return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
   };
