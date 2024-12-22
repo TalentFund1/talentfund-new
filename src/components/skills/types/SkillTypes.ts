@@ -3,6 +3,21 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
+export interface UnifiedSkill {
+  id: string;
+  title: string;
+  subcategory: string;
+  category: SkillCategory;
+  businessCategory: string;
+  weight: SkillWeight;
+  level: string;
+  growth: string;
+  salary: string;
+  confidence: string;
+  benchmarks: { [key: string]: boolean };
+  requirement?: RoleSkillRequirement | EmployeeSkillRequirement;
+}
+
 export interface SkillState {
   level: string;
   requirement: RoleSkillRequirement | EmployeeSkillRequirement;
@@ -70,7 +85,7 @@ export interface EmployeeSkill {
   level: string;
   growth: string;
   confidence: string;
-  requirement?: 'required' | 'preferred' | 'skill_goal';
+  requirement?: RoleSkillRequirement | EmployeeSkillRequirement;
 }
 
 export interface RoleSkill {
@@ -79,7 +94,7 @@ export interface RoleSkill {
   level?: string;
   growth: string;
   confidence?: string;
-  requirement?: string;
+  requirement?: RoleSkillRequirement;
   salary?: string;
   benchmarks?: { [key: string]: boolean };
 }
