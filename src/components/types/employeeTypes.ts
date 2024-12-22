@@ -7,7 +7,7 @@ export interface Employee {
   benchmark: number;
   lastUpdated: string;
   location: string;
-  sex: 'male' | 'female';
+  sex: 'male' | 'female'; // Field name kept as 'sex' for database compatibility, displayed as 'Gender' in UI
   category: string;
   manager?: string;
   startDate?: string;

@@ -1,17 +1,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillState, EmployeeSkillRequirement, ProfileSkillStates } from '@/types/skillTypes';
-import { useEmployeeStore } from '../../employee/store/employeeStore';
-import { generateSkillId } from '@/components/skills/data/skillDatabaseService';
+import { EmployeeSkillState, EmployeeSkillRequirement } from '@/types/skillTypes';
 
 interface SkillsMatrixState {
-  currentStates: ProfileSkillStates;
-  originalStates: ProfileSkillStates;
+  currentStates: { [key: string]: EmployeeSkillState };
+  originalStates: { [key: string]: EmployeeSkillState };
   hasChanges: boolean;
-  setSkillState: (skillId: string, level: string, requirement: EmployeeSkillRequirement, employeeId: string) => void;
+  setSkillState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
   resetSkills: () => void;
-  initializeState: (skillId: string, level: string, requirement: EmployeeSkillRequirement, employeeId: string) => void;
-  saveChanges: (employeeId: string) => void;
+  initializeState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  saveChanges: () => void;
   cancelChanges: () => void;
 }
 
@@ -22,23 +20,24 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillId, level, requirement, employeeId) => {
-        console.log('Setting skill state:', { skillId, level, requirement, employeeId });
+      setSkillState: (skillName, level, requirement) => {
+        console.log('Setting skill state:', { skillName, level, requirement });
         
-        // Update the employee store
-        const employeeStore = useEmployeeStore.getState();
-        employeeStore.setSkillState(employeeId, skillId, level, requirement);
+        let finalRequirement: EmployeeSkillRequirement;
+        if (requirement === 'skill_goal' || requirement === 'required') {
+          finalRequirement = 'skill_goal';
+        } else if (requirement === 'not_interested' || requirement === 'not-interested') {
+          finalRequirement = 'not_interested';
+        } else {
+          finalRequirement = 'unknown';
+        }
         
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [employeeId]: {
-              ...state.currentStates[employeeId],
-              [skillId]: { 
-                skillId,
-                level, 
-                requirement 
-              },
+            [skillName]: { 
+              level, 
+              requirement: finalRequirement 
             },
           },
           hasChanges: true,
@@ -52,53 +51,31 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           hasChanges: false,
         })),
 
-      initializeState: (skillId, level, requirement, employeeId) =>
+      initializeState: (skillName, level, requirement) =>
         set((state) => {
-          if (!state.currentStates[employeeId]?.[skillId]) {
-            // Get existing state from employee store
-            const employeeStore = useEmployeeStore.getState();
-            const existingState = employeeStore.getSkillState(employeeId, skillId);
-
-            if (existingState) {
-              return {
-                currentStates: {
-                  ...state.currentStates,
-                  [employeeId]: {
-                    ...state.currentStates[employeeId],
-                    [skillId]: existingState,
-                  },
-                },
-                originalStates: {
-                  ...state.originalStates,
-                  [employeeId]: {
-                    ...state.originalStates[employeeId],
-                    [skillId]: existingState,
-                  },
-                },
-              };
+          if (!state.currentStates[skillName]) {
+            let finalRequirement: EmployeeSkillRequirement;
+            if (requirement === 'skill_goal' || requirement === 'required') {
+              finalRequirement = 'skill_goal';
+            } else if (requirement === 'not_interested' || requirement === 'not-interested') {
+              finalRequirement = 'not_interested';
+            } else {
+              finalRequirement = 'unknown';
             }
 
             return {
               currentStates: {
                 ...state.currentStates,
-                [employeeId]: {
-                  ...state.currentStates[employeeId],
-                  [skillId]: { 
-                    skillId,
-                    level, 
-                    requirement 
-                  },
+                [skillName]: { 
+                  level, 
+                  requirement: finalRequirement 
                 },
               },
               originalStates: {
                 ...state.originalStates,
-                [employeeId]: {
-                  ...state.originalStates[employeeId],
-                  [skillId]: { 
-                    skillId,
-                    level, 
-                    requirement 
-                  },
+                [skillName]: { 
+                  level, 
+                  requirement: finalRequirement 
                 },
               },
             };
@@ -106,27 +83,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           return state;
         }),
 
-      saveChanges: (employeeId) =>
-        set((state) => {
-          // Update employee store with all current states
-          const employeeStore = useEmployeeStore.getState();
-          Object.entries(state.currentStates[employeeId] || {}).forEach(([skillId, skillState]) => {
-            employeeStore.setSkillState(
-              employeeId,
-              skillId,
-              skillState.level,
-              skillState.requirement
-            );
-          });
-
-          return {
-            originalStates: {
-              ...state.originalStates,
-              [employeeId]: { ...state.currentStates[employeeId] },
-            },
-            hasChanges: false,
-          };
-        }),
+      saveChanges: () =>
+        set((state) => ({
+          originalStates: { ...state.currentStates },
+          hasChanges: false,
+        })),
 
       cancelChanges: () =>
         set((state) => ({
@@ -144,13 +105,3 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }
   )
 );
-
-export const getEmployeeSkills = (id: string) => {
-  console.log('Getting skills for employee:', id);
-  const skills = useEmployeeStore.getState().getEmployeeSkills(id);
-  // Ensure all skills have consistent IDs
-  return skills.map(skill => ({
-    ...skill,
-    id: generateSkillId(skill.title)
-  }));
-};

@@ -1,9 +1,9 @@
-import { UnifiedSkill, SkillCategory, SkillWeight } from '@/types/skillTypes';
+import { UnifiedSkill } from '../types/SkillTypes';
 
 // Universal skill database - single source of truth
 export const skillDefinitions: UnifiedSkill[] = [
   {
-    id: "skill_machine_learning",
+    id: "ai_1",
     title: "Machine Learning",
     subcategory: "Artificial Intelligence",
     category: "specialized",
@@ -16,7 +16,7 @@ export const skillDefinitions: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: "skill_natural_language_processing",
+    id: "ai_2",
     title: "Natural Language Processing",
     subcategory: "Artificial Intelligence",
     category: "specialized",
@@ -136,44 +136,26 @@ export const skillDefinitions: UnifiedSkill[] = [
 
 // Helper functions to access the universal database
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
-  console.log('Getting unified skill data for:', title);
-  const skill = skillDefinitions.find(
+  return skillDefinitions.find(
     skill => skill.title.toLowerCase() === title.toLowerCase()
   );
-  
-  if (skill) {
-    console.log('Found existing skill:', title);
-    return skill;
-  }
-
-  console.warn('Skill not found in universal database:', title);
-  return undefined;
 };
 
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   return skillDefinitions.filter(skill => skill.category === category);
 };
 
-export const getSkillWeight = (title: string): SkillWeight => {
+export const getSkillWeight = (title: string): UnifiedSkill['weight'] => {
   const skill = getSkillByTitle(title);
   return skill?.weight || 'necessary';
 };
 
-export const getSkillCategory = (title: string): SkillCategory => {
+export const getSkillCategory = (title: string): UnifiedSkill['category'] => {
   const skill = getSkillByTitle(title);
   return skill?.category || 'common';
 };
 
-export const getSkillType = (title: string): string => {
-  const skill = getSkillByTitle(title);
-  return skill?.businessCategory || 'General';
-};
-
-export const generateSkillId = (title: string): string => {
-  return `skill_${title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
-};
-
-console.log('Initialized universal skills database with consistent IDs:', {
+console.log('Initialized universal skills database:', {
   totalSkills: skillDefinitions.length,
   categories: {
     specialized: skillDefinitions.filter(s => s.category === 'specialized').length,

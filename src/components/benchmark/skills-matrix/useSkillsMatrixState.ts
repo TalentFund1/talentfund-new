@@ -1,5 +1,5 @@
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
-import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
+import { filterSkillsByCategory } from "./skillCategories";
 import { useEmployeeStore } from "../../employee/store/employeeStore";
 
 export const useSkillsMatrixState = (
@@ -22,10 +22,7 @@ export const useSkillsMatrixState = (
     });
 
     if (selectedCategory !== "all") {
-      filteredSkills = filteredSkills.filter(skill => {
-        const category = getSkillCategory(skill.title);
-        return category === selectedCategory;
-      });
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
     }
 
     if (selectedLevel !== "all") {
@@ -43,7 +40,7 @@ export const useSkillsMatrixState = (
     }
 
     if (selectedInterest !== "all") {
-      filteredSkills = filteredSkills.filter(skill => {
+      filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
         if (!state) {
           console.log('No state found for skill:', skill.title);
@@ -64,13 +61,11 @@ export const useSkillsMatrixState = (
     }
 
     console.log('Final filtered skills:', {
-      employeeId,
-      totalSkills: employeeSkills.length,
-      filteredSkills: filteredSkills.length,
-      filters: {
-        selectedLevel,
-        selectedInterest
-      }
+      totalFiltered: filteredSkills.length,
+      skills: filteredSkills.map(s => ({
+        title: s.title,
+        requirement: currentStates[s.title]?.requirement
+      }))
     });
 
     return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));

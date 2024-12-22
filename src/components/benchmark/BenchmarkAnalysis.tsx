@@ -14,7 +14,7 @@ import { useEffect } from "react";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
-  const { toggledSkills, setToggledSkills } = useToggledSkills();
+  const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "");
   const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
@@ -57,15 +57,6 @@ export const BenchmarkAnalysis = () => {
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
-
-  // Initialize toggled skills if empty
-  useEffect(() => {
-    if (toggledSkills.size === 0) {
-      console.log('Initializing toggled skills with all role skills');
-      const initialToggledSkills = new Set(allRoleSkills.map(skill => skill.title));
-      setToggledSkills(initialToggledSkills);
-    }
-  }, [allRoleSkills, toggledSkills.size, setToggledSkills]);
 
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
 
@@ -120,7 +111,7 @@ export const BenchmarkAnalysis = () => {
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
-    return skillState.requirement === 'skill_goal';
+    return skillState.requirement === 'skill_goal';  // Changed from 'required' to 'skill_goal'
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
@@ -173,40 +164,6 @@ export const BenchmarkAnalysis = () => {
                 <div 
                   className="h-full bg-[#1F2144] rounded-full" 
                   style={{ width: `${skillMatchPercentage}%` }} 
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">Competency Match</span>
-                <span className="text-sm text-foreground">
-                  {competencyMatchCount} out of {totalToggledSkills}
-                </span>
-              </div>
-              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${competencyMatchPercentage}%` }} 
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">Skill Goal Match</span>
-                <span className="text-sm text-foreground">
-                  {skillGoalMatchCount} out of {totalToggledSkills}
-                </span>
-              </div>
-              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${skillGoalMatchPercentage}%` }} 
                 />
               </div>
             </div>
