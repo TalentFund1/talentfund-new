@@ -21,6 +21,11 @@ interface SkillsMatrixState {
   cancelChanges: () => void;
 }
 
+const defaultSkillState: SkillState = {
+  level: 'unspecified',
+  requirement: 'preferred'
+};
+
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set) => ({
