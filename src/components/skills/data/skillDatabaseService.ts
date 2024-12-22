@@ -1,14 +1,6 @@
 import { UnifiedSkill } from '../../../types/skillTypes';
-import { skillDefinitions, getSkillByTitle, getAllSkills, getSkillsByCategory } from './universalSkillDatabase';
+import { skillDefinitions, getSkillByTitle } from './skills/skillDefinitions';
 import { normalizeSkillTitle } from '../utils/normalization';
-
-// Re-export everything from the universal database
-export { 
-  skillDefinitions,
-  getSkillByTitle,
-  getAllSkills,
-  getSkillsByCategory 
-};
 
 // Get unified skill data
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
@@ -37,6 +29,15 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     confidence: "low",
     benchmarks: { B: false, R: false, M: false, O: false }
   };
+};
+
+// Export helper functions
+export const getAllSkills = (): UnifiedSkill[] => {
+  return skillDefinitions;
+};
+
+export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
+  return skillDefinitions.filter(skill => skill.category === category);
 };
 
 console.log('Skill database service initialized - using universal database');
