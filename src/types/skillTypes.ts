@@ -2,6 +2,7 @@ export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
+export type SkillLevel = 'unspecified' | 'beginner' | 'intermediate' | 'advanced';
 
 export interface BaseSkill {
   id: string;
