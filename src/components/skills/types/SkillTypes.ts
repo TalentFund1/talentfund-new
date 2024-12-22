@@ -1,6 +1,4 @@
 // Basic type definitions
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillRequirement = 'skill_goal' | 'not_interested' | 'unknown' | 'required' | 'preferred';
 
 // Consolidated skill state interface
@@ -19,8 +17,8 @@ export interface UnifiedSkill {
   level: string;
   growth: string;
   confidence: string;
-  category?: SkillCategory;
-  weight?: SkillWeight;
+  category: 'specialized' | 'common' | 'certification';
+  weight: 'critical' | 'technical' | 'necessary';
   businessCategory?: string;
   salary?: string;
   benchmarks?: { [key: string]: boolean };
@@ -44,12 +42,18 @@ export interface SkillProfileRow {
 export interface RoleSkillData {
   title: string;
   roleTrack?: "Professional" | "Managerial";
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+  skills?: UnifiedSkill[];
 }
 
 console.log('Consolidated skill types loaded:', {
-  totalTypes: 5, // Reduced from 13
-  types: ['SkillWeight', 'SkillCategory', 'SkillRequirement', 'SkillState', 'UnifiedSkill']
+  totalTypes: 4,
+  types: ['SkillRequirement', 'SkillState', 'UnifiedSkill', 'RoleSkillData']
 });
