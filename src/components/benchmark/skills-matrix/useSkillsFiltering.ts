@@ -7,6 +7,8 @@ import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
 import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
 import { useEmployeeStore } from "../../employee/store/employeeStore";
 
+// ... keep existing code (imports and type definitions)
+
 export const useSkillsFiltering = (
   employeeId: string,
   selectedRole: string,
@@ -24,11 +26,6 @@ export const useSkillsFiltering = (
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   const { getSkillState } = useEmployeeStore();
-
-  if (!currentRoleSkills && isRoleBenchmark) {
-    console.warn('No role skills found for role:', selectedRole);
-    return { filteredSkills: [] };
-  }
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -101,14 +98,15 @@ export const useSkillsFiltering = (
 
       // Get the employee skill requirement and normalize it for comparison
       const employeeRequirement = employeeSkillState.requirement;
-      const normalizedSelectedRequirement = normalizeRequirement(selectedInterest);
 
       if (selectedInterest !== 'all') {
-        matchesRequirement = employeeRequirement === normalizedSelectedRequirement;
+        const normalizedSelectedInterest = selectedInterest.toLowerCase().replace(/[-_\s]/g, '') as EmployeeSkillRequirement;
+        matchesRequirement = employeeRequirement === normalizedSelectedInterest;
+        
         console.log('Filtering by requirement:', {
           skillTitle: skill.title,
           employeeRequirement,
-          selectedRequirement: normalizedSelectedRequirement,
+          selectedRequirement: normalizedSelectedInterest,
           matches: matchesRequirement
         });
       }
@@ -123,7 +121,7 @@ export const useSkillsFiltering = (
         console.log('Skill filtered out:', {
           skillName: skill.title,
           employeeRequirement,
-          selectedRequirement: normalizedSelectedRequirement,
+          selectedRequirement: selectedInterest,
           matchesRequirement
         });
       }
