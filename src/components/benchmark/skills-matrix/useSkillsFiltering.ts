@@ -46,8 +46,9 @@ export const useSkillsFiltering = (
     console.log('Starting skill filtering:', {
       employeeId,
       totalSkills: skills.length,
+      selectedLevel,
       selectedInterest,
-      selectedRoleRequirement,
+      selectedSkillLevel,
       currentFilters: {
         level: selectedLevel,
         interest: selectedInterest,
@@ -86,18 +87,31 @@ export const useSkillsFiltering = (
       const roleSkillLevel = competencyState?.level || 'unspecified';
       const employeeSkillState = getSkillState(employeeId, skill.title);
 
+      // Filter by role level if selected
       if (selectedLevel !== 'all') {
         matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
+        console.log('Level matching:', {
+          skill: skill.title,
+          roleLevel: roleSkillLevel,
+          selectedLevel,
+          matches: matchesLevel
+        });
       }
 
-      const skillLevel = employeeSkillState?.level?.toLowerCase() || 'unspecified';
-      
+      // Filter by employee skill level if selected
       if (selectedSkillLevel !== 'all') {
+        const skillLevel = employeeSkillState?.level?.toLowerCase() || 'unspecified';
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
+        console.log('Skill level matching:', {
+          skill: skill.title,
+          skillLevel,
+          selectedSkillLevel,
+          matches: matchesSkillLevel
+        });
       }
 
+      // Filter by requirement/interest if selected
       if (selectedInterest !== 'all') {
-        // Normalize the requirement before comparison
         const normalizedRequirement = normalizeRequirement(employeeSkillState?.requirement || 'unknown');
         matchesRequirement = normalizedRequirement === selectedInterest;
         
@@ -110,18 +124,20 @@ export const useSkillsFiltering = (
         });
       }
 
+      // Search term filtering
+      if (searchTerm) {
+        matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+
       const matches = matchesLevel && matchesSearch && matchesSkillLevel && matchesRequirement;
       
       if (!matches) {
         console.log('Skill filtered out:', {
           skillName: skill.title,
-          originalRequirement: employeeSkillState?.requirement,
-          normalizedRequirement: normalizeRequirement(employeeSkillState?.requirement || 'unknown'),
-          selectedRequirement: selectedInterest,
-          matchesRequirement,
           matchesLevel,
           matchesSearch,
-          matchesSkillLevel
+          matchesSkillLevel,
+          matchesRequirement
         });
       }
 
@@ -144,7 +160,6 @@ export const useSkillsFiltering = (
     filteredSkills: filteredSkills.length,
     filters: {
       selectedLevel,
-      selectedRoleRequirement,
       selectedSkillLevel,
       searchTerm,
       isRoleBenchmark,
