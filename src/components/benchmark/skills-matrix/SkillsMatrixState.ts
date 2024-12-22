@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { type SkillRequirement } from '../../../skills/types/SkillTypes';
+import { filterSkillsByCategory } from './skillCategories';
+import { type SkillRequirement, type EmployeeSkill } from '../../../skills/types/SkillTypes';
 import { SkillsMatrixState } from './types/skillMatrixTypes';
+import { useEmployeeStore } from '../../../components/employee/store/employeeStore';
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
@@ -69,3 +71,91 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }
   )
 );
+
+export const useSkillsMatrixState = (
+  selectedCategory: string,
+  selectedLevel: string,
+  selectedInterest: string
+) => {
+  const { currentStates } = useSkillsMatrixStore();
+
+  const getSkillState = (skillTitle: string) => {
+    return currentStates[skillTitle];
+  };
+
+  const filterAndSortSkills = (employeeId: string): EmployeeSkill[] => {
+    console.log('Filtering skills for employee:', employeeId);
+    
+    const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
+    console.log('Employee skills:', employeeSkills);
+
+    let filteredSkills = employeeSkills.map((skill): EmployeeSkill => {
+      const skillState = getSkillState(skill.title);
+      return {
+        ...skill,
+        requirement: skillState?.requirement || 'preferred',
+        level: skillState?.level || skill.level || 'unspecified',
+      };
+    });
+
+    if (selectedCategory !== "all") {
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
+    }
+
+    if (selectedLevel !== "all") {
+      filteredSkills = filteredSkills.filter((skill) => {
+        const skillState = getSkillState(skill.title);
+        return skillState?.level.toLowerCase() === selectedLevel.toLowerCase();
+      });
+    }
+
+    if (selectedInterest !== "all") {
+      filteredSkills = filteredSkills.filter((skill) => {
+        const skillState = getSkillState(skill.title);
+        if (!skillState) return false;
+
+        switch (selectedInterest.toLowerCase()) {
+          case "skill_goal":
+            return skillState.requirement === "required" || skillState.requirement === "skill_goal";
+          case "not_interested":
+            return skillState.requirement === "not_interested";
+          case "unknown":
+            return !skillState.requirement || skillState.requirement === "unknown";
+          default:
+            return skillState.requirement === selectedInterest.toLowerCase();
+        }
+      });
+    }
+
+    console.log('Filtered skills:', {
+      total: filteredSkills.length,
+      skills: filteredSkills.map(s => ({
+        title: s.title,
+        level: s.level,
+        requirement: s.requirement
+      }))
+    });
+
+    return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
+  };
+
+  return {
+    filterAndSortSkills,
+  };
+};
+
+export const getEmployeeSkills = (employeeId: string): EmployeeSkill[] => {
+  console.log('Getting skills for employee:', employeeId);
+  const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
+  const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
+  
+  return employeeSkills.map((skill): EmployeeSkill => {
+    const skillState = employeeSkillStates[skill.title];
+    
+    return {
+      ...skill,
+      requirement: skillState?.requirement || 'preferred',
+      level: skillState?.level || skill.level || 'unspecified',
+    };
+  });
+};
