@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
+import { getSkillCategory } from '../data/skills/categories/skillCategories';
+import { getUnifiedSkillData } from '../data/skillDatabaseService';
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -14,6 +16,14 @@ export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCa
 
   console.log('CategoryCards - Toggled skills:', skillsArray);
 
+  // Use the universal database to get skill categories
+  const getCategoryCount = (category: string) => {
+    return skillsArray.filter(skillTitle => {
+      const skillData = getUnifiedSkillData(skillTitle);
+      return category === 'all' || skillData.category === category;
+    }).length;
+  };
+
   const categories = [
     { 
       id: "all", 
@@ -23,23 +33,17 @@ export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCa
     { 
       id: "specialized", 
       name: "Specialized Skills", 
-      count: skillsArray.filter(skill => 
-        getSkillCategory(skill) === 'specialized'
-      ).length 
+      count: getCategoryCount('specialized')
     },
     { 
       id: "common", 
       name: "Common Skills", 
-      count: skillsArray.filter(skill => 
-        getSkillCategory(skill) === 'common'
-      ).length 
+      count: getCategoryCount('common')
     },
     { 
       id: "certification", 
       name: "Certifications", 
-      count: skillsArray.filter(skill => 
-        getSkillCategory(skill) === 'certification'
-      ).length 
+      count: getCategoryCount('certification')
     }
   ];
 
@@ -76,15 +80,4 @@ export const CategoryCards = ({ selectedCategory, onCategoryChange }: CategoryCa
       ))}
     </div>
   );
-};
-
-const getSkillCategory = (skill: string): string => {
-  const specializedSkills = ['Amazon Web Services', 'Machine Learning', 'Artificial Intelligence'];
-  const commonSkills = ['Python', 'JavaScript', 'Communication'];
-  const certifications = ['AWS Certified', 'Google Cloud', 'Azure'];
-
-  if (specializedSkills.some(s => skill.includes(s))) return 'specialized';
-  if (commonSkills.some(s => skill.includes(s))) return 'common';
-  if (certifications.some(s => skill.includes(s))) return 'certification';
-  return 'all';
 };
