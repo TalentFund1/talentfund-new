@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleState, RoleSkillState, RoleSkillRequirement } from '../types/SkillTypes';
+import { RoleState, RoleSkillState, RoleSkillRequirement } from '../../../types/skillTypes';
 import { roleSkills } from '../data/roleSkills';
 
 interface CompetencyState {
