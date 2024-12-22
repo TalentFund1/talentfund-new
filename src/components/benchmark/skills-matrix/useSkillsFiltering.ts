@@ -78,26 +78,28 @@ export const useSkillsFiltering = (
 
     // Apply filters
     return skills.filter(skill => {
-      let matchesLevel = true;
       let matchesSearch = true;
       let matchesSkillLevel = true;
       let matchesRequirement = true;
 
       const employeeSkillState = getSkillState(employeeId, skill.title);
-      console.log('Checking skill state:', {
+      
+      console.log('Filtering skill:', {
         skill: skill.title,
-        employeeState: employeeSkillState,
-        selectedSkillLevel
+        employeeSkillState,
+        selectedSkillLevel,
+        currentLevel: employeeSkillState?.level
       });
 
       // Filter by employee skill level if selected
       if (selectedSkillLevel !== 'all') {
         const skillLevel = employeeSkillState?.level?.toLowerCase() || 'unspecified';
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
+        
         console.log('Skill level matching:', {
           skill: skill.title,
-          skillLevel,
-          selectedSkillLevel,
+          actualLevel: skillLevel,
+          selectedLevel: selectedSkillLevel,
           matches: matchesSkillLevel
         });
       }
@@ -121,12 +123,11 @@ export const useSkillsFiltering = (
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      const matches = matchesLevel && matchesSearch && matchesSkillLevel && matchesRequirement;
+      const matches = matchesSearch && matchesSkillLevel && matchesRequirement;
       
       if (!matches) {
         console.log('Skill filtered out:', {
           skillName: skill.title,
-          matchesLevel,
           matchesSearch,
           matchesSkillLevel,
           matchesRequirement
