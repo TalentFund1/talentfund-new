@@ -94,20 +94,24 @@ export const useSkillsFiltering = (
       // Handle interest/requirement filtering
       if (selectedInterest !== 'all') {
         const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
-        const normalizedSelectedInterest = selectedInterest.toLowerCase().replace('-', '_');
+        const normalizedSelectedInterest = selectedInterest.toLowerCase();
+        
+        // Check if the requirement matches any of the "not interested" variants
+        const isNotInterested = requirement === 'not-interested' || 
+                               requirement === 'not_interested' ||
+                               requirement === 'not interested';
         
         console.log('Checking interest match:', {
           skill: skill.title,
           requirement,
           selectedInterest: normalizedSelectedInterest,
-          matches: requirement === normalizedSelectedInterest || 
-                  (normalizedSelectedInterest === 'not_interested' && requirement === 'not-interested') ||
-                  (normalizedSelectedInterest === 'not-interested' && requirement === 'not_interested')
+          isNotInterested,
+          matches: normalizedSelectedInterest === 'not-interested' ? isNotInterested : requirement === normalizedSelectedInterest
         });
 
-        matchesInterest = requirement === normalizedSelectedInterest || 
-                         (normalizedSelectedInterest === 'not_interested' && requirement === 'not-interested') ||
-                         (normalizedSelectedInterest === 'not-interested' && requirement === 'not_interested');
+        matchesInterest = normalizedSelectedInterest === 'not-interested' ? 
+          isNotInterested : 
+          requirement === normalizedSelectedInterest;
       }
 
       if (searchTerm) {
