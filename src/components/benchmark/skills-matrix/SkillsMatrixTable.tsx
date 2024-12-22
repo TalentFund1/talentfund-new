@@ -5,20 +5,17 @@ import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 interface SkillsMatrixTableProps {
   filteredSkills: Array<{
     title: string;
-    subcategory: string;
-    level: string;
-    growth: string;
-    confidence: string;
+    level?: string;
     requirement?: string;
   }>;
-  isRoleBenchmark: boolean;
+  isRoleBenchmark?: boolean;
 }
 
-export const SkillsMatrixTable = ({
+export const SkillsMatrixTable = ({ 
   filteredSkills,
   isRoleBenchmark = false
 }: SkillsMatrixTableProps) => {
-  console.log('Rendering SkillsMatrixTable with:', {
+  console.log('Rendering SkillsMatrixTable:', {
     skillCount: filteredSkills.length,
     isRoleBenchmark
   });

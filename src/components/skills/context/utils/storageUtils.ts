@@ -1,2 +1,2 @@
-// This file now only contains the role ID storage key function
+// This file only contains utility functions for role-based storage
 export const getStorageKey = (roleId: string) => `role-skills-${roleId}`;
