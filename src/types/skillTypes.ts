@@ -22,6 +22,7 @@ export interface UnifiedSkill {
   weight?: string;
   businessCategory?: string;
   salary?: string;
+  benchmarks?: { B: boolean; R: boolean; M: boolean; O: boolean };
 }
 
 export interface EmployeeSkillState {
@@ -47,3 +48,6 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
 }
+
+// Delete the duplicate types file
+<lov-delete file_path="src/components/skills/types/SkillTypes.ts" />
