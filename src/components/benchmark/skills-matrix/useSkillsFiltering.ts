@@ -84,7 +84,6 @@ export const useSkillsFiltering = (
       }
 
       if (selectedInterest !== 'all') {
-        // Direct comparison with the requirement type
         matchesRequirement = employeeSkillState.requirement === selectedInterest;
         
         console.log('Requirement matching:', {
