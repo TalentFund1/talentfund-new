@@ -42,6 +42,7 @@ export interface SimpleSkill {
   confidence: string;
   requirement?: string;
   category?: string;
+  businessCategory?: string;
   weight?: string;
 }
 
