@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkillsTableRow } from "./SkillsTableRow";
-import { SimpleSkill } from "../types/SkillTypes";
+import { UnifiedSkill } from "../types/SkillTypes";
 
 interface SkillsTableContentProps {
-  skills: SimpleSkill[];
+  skills: UnifiedSkill[];
   isLoading: boolean;
 }
 

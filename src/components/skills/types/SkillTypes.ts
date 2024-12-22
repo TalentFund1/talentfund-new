@@ -51,6 +51,7 @@ export interface UnifiedSkill {
   weight?: string;
   businessCategory?: string;
   salary?: string;
+  benchmarks?: { [key: string]: boolean };
 }
 
 export interface RoleSkill {
@@ -70,16 +71,4 @@ export interface RoleSkillData {
   specialized: RoleSkill[];
   common: RoleSkill[];
   certifications: RoleSkill[];
-}
-
-export interface SimpleSkill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: EmployeeSkillRequirement;
-  category?: string;
-  weight?: string;
-  businessCategory?: string;
 }
