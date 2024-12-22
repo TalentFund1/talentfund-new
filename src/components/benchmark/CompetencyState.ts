@@ -2,6 +2,11 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SkillState } from '../skills/competency/state/types';
 
+interface CompetencyState {
+  currentStates: Record<string, Record<string, SkillState>>;
+  setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
+}
+
 const defaultSkillState: SkillState = {
   level: 'unspecified',
   required: 'preferred',
@@ -50,7 +55,7 @@ export const useCompetencyStore = create<CompetencyState>()(
                 [levelKey]: {
                   level,
                   required,
-                  requirement: required,
+                  requirement: required
                 },
               },
             },
