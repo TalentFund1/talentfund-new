@@ -9,9 +9,9 @@ interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
   originalStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
+  setSkillState: (skillName: string, level: string, requirement: string) => void;
   resetSkills: () => void;
-  initializeState: (skillTitle: string, level: string, requirement: string) => void;
+  initializeState: (skillName: string, level: string, requirement: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -23,12 +23,12 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillTitle, level, requirement) => {
-        console.log('Setting skill state:', { skillTitle, level, requirement });
+      setSkillState: (skillName, level, requirement) => {
+        console.log('Setting skill state:', { skillName, level, requirement });
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillTitle]: { level, required: requirement, requirement },
+            [skillName]: { level, required: requirement, requirement },
           },
           hasChanges: true,
         }));
@@ -41,18 +41,18 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           hasChanges: false,
         })),
 
-      initializeState: (skillTitle, level, requirement) =>
+      initializeState: (skillName, level, requirement) =>
         set((state) => {
-          if (!state.currentStates[skillTitle]) {
-            console.log('Initializing skill state:', { skillTitle, level, requirement });
+          if (!state.currentStates[skillName]) {
+            console.log('Initializing skill state:', { skillName, level, requirement });
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillTitle]: { level, required: requirement, requirement },
+                [skillName]: { level, required: requirement, requirement },
               },
               originalStates: {
                 ...state.originalStates,
-                [skillTitle]: { level, required: requirement, requirement },
+                [skillName]: { level, required: requirement, requirement },
               },
             };
           }
