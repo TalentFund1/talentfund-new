@@ -100,10 +100,14 @@ export const useSkillsFiltering = (
           skill: skill.title,
           requirement,
           selectedInterest: normalizedSelectedInterest,
-          matches: requirement === normalizedSelectedInterest
+          matches: requirement === normalizedSelectedInterest || 
+                  (normalizedSelectedInterest === 'not_interested' && requirement === 'not-interested') ||
+                  (normalizedSelectedInterest === 'not-interested' && requirement === 'not_interested')
         });
 
-        matchesInterest = requirement === normalizedSelectedInterest;
+        matchesInterest = requirement === normalizedSelectedInterest || 
+                         (normalizedSelectedInterest === 'not_interested' && requirement === 'not-interested') ||
+                         (normalizedSelectedInterest === 'not-interested' && requirement === 'not_interested');
       }
 
       if (searchTerm) {
