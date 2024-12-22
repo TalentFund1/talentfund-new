@@ -5,6 +5,8 @@ interface SkillsMatrixFiltersProps {
   setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
   addSkillButton: React.ReactNode;
 }
 
@@ -13,11 +15,25 @@ export const SkillsMatrixFilters = ({
   setSelectedLevel,
   selectedInterest,
   setSelectedInterest,
+  selectedCategory,
+  setSelectedCategory,
   addSkillButton,
 }: SkillsMatrixFiltersProps) => {
   return (
     <div className="flex items-center justify-between mb-6">
       <div className="flex gap-4">
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="specialized">Specialized Skills</SelectItem>
+            <SelectItem value="common">Common Skills</SelectItem>
+            <SelectItem value="certification">Certification</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Select value={selectedLevel} onValueChange={setSelectedLevel}>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="Select Level" />
