@@ -52,12 +52,12 @@ export const BenchmarkMatrixFilters = ({
 
         <Select value={selectedInterest} onValueChange={setSelectedInterest}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Interests" />
+            <SelectValue placeholder="All Requirements" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Interests</SelectItem>
-            <SelectItem value="required">Skill Goal</SelectItem>
-            <SelectItem value="not-interested">Not Interested</SelectItem>
+            <SelectItem value="all">All Requirements</SelectItem>
+            <SelectItem value="skill_goal">Skill Goal</SelectItem>
+            <SelectItem value="not_interested">Not Interested</SelectItem>
             <SelectItem value="unknown">Unknown</SelectItem>
           </SelectContent>
         </Select>
