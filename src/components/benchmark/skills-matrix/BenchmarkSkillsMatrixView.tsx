@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { BenchmarkSkillsMatrixContent } from "./BenchmarkSkillsMatrixContent";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 interface BenchmarkSkillsMatrixViewProps {
   roleId: string;
@@ -28,6 +28,14 @@ export const BenchmarkSkillsMatrixView = ({
   ...props
 }: BenchmarkSkillsMatrixViewProps) => {
   const observerTarget = useRef<HTMLDivElement>(null);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  console.log('BenchmarkSkillsMatrixView - Rendering with:', {
+    roleId,
+    employeeId,
+    selectedCategory,
+    filteredSkillsCount: filteredSkills.length
+  });
 
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
@@ -36,6 +44,8 @@ export const BenchmarkSkillsMatrixView = ({
         employeeId={employeeId}
         roleLevel={roleLevel}
         filteredSkills={filteredSkills}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
         {...props}
         observerTarget={observerTarget}
       />

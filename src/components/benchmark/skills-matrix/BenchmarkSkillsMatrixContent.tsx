@@ -21,6 +21,8 @@ interface BenchmarkSkillsMatrixContentProps {
   setSelectedSkillLevel: (level: string) => void;
   selectedSearchSkills: string[];
   setSelectedSearchSkills: (skills: string[]) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
   visibleItems: number;
   observerTarget: React.RefObject<HTMLDivElement>;
 }
@@ -30,9 +32,10 @@ export const BenchmarkSkillsMatrixContent = ({
   employeeId,
   roleLevel,
   filteredSkills,
+  selectedCategory,
+  setSelectedCategory,
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
   const { selectedLevel } = useRoleStore();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
@@ -87,6 +90,8 @@ export const BenchmarkSkillsMatrixContent = ({
 
       <SkillsMatrixContent 
         filteredSkills={filteredSkills}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
         {...props}
         isRoleBenchmark={true}
       />
