@@ -2,8 +2,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card } from "@/components/ui/card";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
+import { roleSkills } from './data/roleSkills';
 import { getAllSkills } from './data/skills/allSkills';
-import { getSkillCategory } from './data/skills/categories/skillCategories';
 
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
@@ -34,19 +34,20 @@ export const CompanySkillsTable = () => {
     sample: uniqueSkills.slice(0, 3)
   });
 
-  // Helper function to get the type using the universal skill database
+  // Helper function to get the type
   const getSkillType = (skillTitle: string): string => {
-    const category = getSkillCategory(skillTitle);
-    switch (category) {
-      case 'specialized':
+    for (const role of Object.values(roleSkills)) {
+      if (role.specialized.some(s => s.title === skillTitle)) {
         return 'Specialized';
-      case 'common':
+      }
+      if (role.common.some(s => s.title === skillTitle)) {
         return 'Common';
-      case 'certification':
+      }
+      if (role.certifications.some(s => s.title === skillTitle)) {
         return 'Certification';
-      default:
-        return 'Uncategorized';
+      }
     }
+    return 'Uncategorized';
   };
 
   const getTypeColor = (type: string) => {

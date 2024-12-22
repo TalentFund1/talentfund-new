@@ -2,8 +2,13 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillRequirement = 'required' | 'preferred' | 'skill_goal' | 'not_interested' | 'unknown';
 
-// Base skill interface with common properties
-export interface BaseSkill {
+export interface DetailedSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface Skill {
   id: string;
   title: string;
   subcategory: string;
@@ -22,35 +27,40 @@ export interface BaseSkill {
   };
 }
 
-// Unified skill interface extending base skill with optional properties
-export interface UnifiedSkill extends BaseSkill {
+export interface UnifiedSkill extends Skill {
   requirement?: SkillRequirement;
-  roleLevel?: string | null;
+  roleLevel?: string;
   isCompanySkill?: boolean;
 }
 
-// Employee skill interface for employee-specific skill data
-export interface EmployeeSkill extends UnifiedSkill {
-  requirement: SkillRequirement;
+export interface RoleSkillData {
+  title: string;
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+  roleTrack?: "Professional" | "Managerial";
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
+  skills: UnifiedSkill[];
 }
 
-// Role skill interface for role-specific skill information
-export interface RoleSkill {
+export interface SimpleSkill {
   title: string;
   subcategory: string;
-  level?: string;
+  category?: string;
+  businessCategory?: string;
+  level: string;
   growth: string;
-  confidence?: string;
-  requirement?: string;
-  salary?: string;
-  benchmarks?: { [key: string]: boolean };
 }
 
-// Mapped skill interface for skill matrix display
-export interface MappedSkill extends UnifiedSkill {
-  requirement: SkillRequirement;
-  roleLevel: string | null;
-  isCompanySkill: boolean;
+export interface EmployeeSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: SkillRequirement;
 }
-
-console.log('SkillTypes loaded with all required interfaces and types');

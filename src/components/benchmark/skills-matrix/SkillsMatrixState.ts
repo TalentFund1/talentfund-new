@@ -1,9 +1,24 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { filterSkillsByCategory } from './skillCategories';
-import { type SkillRequirement, type EmployeeSkill } from '../../../skills/types/SkillTypes';
-import { SkillsMatrixState } from './types/skillMatrixTypes';
-import { useEmployeeStore } from '../../../components/employee/store/employeeStore';
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { useEmployeeStore } from '../../employee/store/employeeStore';
+import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
+
+interface SkillState {
+  level: string;
+  requirement: string;
+}
+
+interface SkillsMatrixState {
+  currentStates: { [key: string]: SkillState };
+  originalStates: { [key: string]: SkillState };
+  hasChanges: boolean;
+  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
+  resetSkills: () => void;
+  initializeState: (skillTitle: string, level: string, requirement: string) => void;
+  saveChanges: () => void;
+  cancelChanges: () => void;
+}
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
@@ -12,9 +27,8 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillTitle: string, level: string, requirement: SkillRequirement) => {
+      setSkillState: (skillTitle, level, requirement) => {
         console.log('Setting skill state:', { skillTitle, level, requirement });
-        
         set((state) => ({
           currentStates: {
             ...state.currentStates,
@@ -31,7 +45,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           hasChanges: false,
         })),
 
-      initializeState: (skillTitle: string, level: string, requirement: SkillRequirement) =>
+      initializeState: (skillTitle, level, requirement) =>
         set((state) => {
           if (!state.currentStates[skillTitle]) {
             console.log('Initializing skill state:', { skillTitle, level, requirement });
@@ -63,7 +77,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 4,
+      version: 1,
       partialize: (state) => ({
         currentStates: state.currentStates,
         originalStates: state.originalStates,
@@ -79,62 +93,42 @@ export const useSkillsMatrixState = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
-  const getSkillState = (skillTitle: string) => {
-    return currentStates[skillTitle];
-  };
-
-  const filterAndSortSkills = (employeeId: string): EmployeeSkill[] => {
+  const filterAndSortSkills = (employeeId: string) => {
     console.log('Filtering skills for employee:', employeeId);
-    
-    const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
-    console.log('Employee skills:', employeeSkills);
+    const employeeSkills = getEmployeeSkills(employeeId);
+    let filteredSkills = [...employeeSkills];
 
-    let filteredSkills = employeeSkills.map((skill): EmployeeSkill => {
-      const skillState = getSkillState(skill.title);
-      return {
-        ...skill,
-        requirement: skillState?.requirement || 'preferred',
-        level: skillState?.level || skill.level || 'unspecified',
-      };
-    });
-
+    // Filter by category if not "all"
     if (selectedCategory !== "all") {
       filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
     }
 
+    // Filter by level if not "all"
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = getSkillState(skill.title);
-        return skillState?.level.toLowerCase() === selectedLevel.toLowerCase();
+        const state = currentStates[skill.title];
+        return state?.level.toLowerCase() === selectedLevel.toLowerCase();
       });
     }
 
+    // Filter by interest/requirement if not "all"
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = getSkillState(skill.title);
-        if (!skillState) return false;
+        const state = currentStates[skill.title];
+        if (!state) return false;
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            return skillState.requirement === "required" || skillState.requirement === "skill_goal";
+            return state.requirement === "required" || state.requirement === "skill_goal";
           case "not_interested":
-            return skillState.requirement === "not_interested";
+            return state.requirement === "not_interested";
           case "unknown":
-            return !skillState.requirement || skillState.requirement === "unknown";
+            return !state.requirement || state.requirement === "unknown";
           default:
-            return skillState.requirement === selectedInterest.toLowerCase();
+            return state.requirement === selectedInterest.toLowerCase();
         }
       });
     }
-
-    console.log('Filtered skills:', {
-      total: filteredSkills.length,
-      skills: filteredSkills.map(s => ({
-        title: s.title,
-        level: s.level,
-        requirement: s.requirement
-      }))
-    });
 
     return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
   };
@@ -144,18 +138,7 @@ export const useSkillsMatrixState = (
   };
 };
 
-export const getEmployeeSkills = (employeeId: string): EmployeeSkill[] => {
+export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
-  const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
-  const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
-  
-  return employeeSkills.map((skill): EmployeeSkill => {
-    const skillState = employeeSkillStates[skill.title];
-    
-    return {
-      ...skill,
-      requirement: skillState?.requirement || 'preferred',
-      level: skillState?.level || skill.level || 'unspecified',
-    };
-  });
+  return useEmployeeStore.getState().getEmployeeSkills(employeeId);
 };

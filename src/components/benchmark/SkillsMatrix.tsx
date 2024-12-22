@@ -4,8 +4,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
-import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
-import { getAllSkills } from "../skills/data/skills/allSkills";
+import { getEmployeeSkills } from "./skills-matrix/SkillsMatrixState";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -15,7 +14,7 @@ export const SkillsMatrix = () => {
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
   
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const { matrixSearchSkills } = useSkillsMatrixSearch();
@@ -26,21 +25,7 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get employee skills from universal database
-  const getEmployeeSkills = (employeeId: string) => {
-    console.log('Getting skills for employee:', employeeId);
-    const allSkills = getAllSkills();
-    const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
-    
-    // Map skills to include employee-specific states
-    return allSkills.map(skill => ({
-      ...getUnifiedSkillData(skill.title),
-      level: employeeSkillStates[skill.title]?.level || skill.level,
-      requirement: employeeSkillStates[skill.title]?.requirement || 'preferred'
-    }));
-  };
-
-  // Get employee skills
+  // Get employee skills directly
   const employeeSkills = getEmployeeSkills(id || "");
 
   // Custom sorting function

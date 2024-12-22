@@ -3,7 +3,6 @@ import { useCompetencyStore } from "./CompetencyState";
 import { useEffect, useRef } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
-import { useParams } from "react-router-dom";
 
 interface SkillCellProps {
   skillName: string;
@@ -21,15 +20,13 @@ export const SkillCell = ({
   isLastColumn, 
   levelKey 
 }: SkillCellProps) => {
-  const { employeeStates, setSkillState } = useCompetencyStore();
+  const { currentStates, setSkillState } = useCompetencyStore();
   const initRef = useRef(false);
-  const { id: employeeId } = useParams<{ id: string }>();
 
   // Initialize state only once when component mounts
   useEffect(() => {
-    if (!initRef.current && employeeId) {
+    if (!initRef.current) {
       console.log('Initializing skill state:', {
-        employeeId,
         skillName,
         levelKey,
         initialLevel: details.level || "unspecified",
@@ -37,7 +34,6 @@ export const SkillCell = ({
       });
       
       setSkillState(
-        employeeId,
         skillName,
         details.level || "unspecified",
         levelKey,
@@ -45,37 +41,31 @@ export const SkillCell = ({
       );
       initRef.current = true;
     }
-  }, [skillName, levelKey, details.level, details.required, setSkillState, employeeId]);
+  }, [skillName, levelKey, details.level, details.required, setSkillState]);
 
-  const currentState = employeeStates[employeeId || '']?.[skillName]?.[levelKey] || {
+  const currentState = currentStates[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
     required: details.required || "preferred",
   };
 
   const handleLevelChange = (value: string) => {
-    if (!employeeId) return;
-    
     console.log('Changing level:', {
-      employeeId,
       skillName,
       levelKey,
       newLevel: value,
       currentRequired: currentState.required
     });
-    setSkillState(employeeId, skillName, value, levelKey, currentState.required);
+    setSkillState(skillName, value, levelKey, currentState.required);
   };
 
   const handleRequirementChange = (value: string) => {
-    if (!employeeId) return;
-
     console.log('Changing requirement:', {
-      employeeId,
       skillName,
       levelKey,
       currentLevel: currentState.level,
       newRequired: value
     });
-    setSkillState(employeeId, skillName, currentState.level, levelKey, value);
+    setSkillState(skillName, currentState.level, levelKey, value);
   };
 
   return (

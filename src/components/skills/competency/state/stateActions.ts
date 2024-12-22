@@ -7,26 +7,22 @@ export const setSkillStateAction = (
   level: string,
   levelKey: string,
   required: string,
-  roleId: string,
-  employeeId: string
+  roleId: string
 ): Record<string, RoleState> => {
-  console.log('Setting skill state:', { skillName, level, levelKey, required, roleId, employeeId });
+  console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
   
   const updatedRoleState = {
     ...roleStates,
     [roleId]: {
       ...roleStates[roleId],
-      [employeeId]: {
-        ...roleStates[roleId]?.[employeeId],
-        [skillName]: {
-          ...roleStates[roleId]?.[employeeId]?.[skillName],
-          [levelKey]: { level, required }
-        }
+      [skillName]: {
+        ...roleStates[roleId]?.[skillName],
+        [levelKey]: { level, required }
       }
     }
   };
 
-  persistState(roleId, employeeId, updatedRoleState[roleId][employeeId]);
+  persistState(roleId, updatedRoleState[roleId]);
   return updatedRoleState;
 };
 
@@ -34,25 +30,21 @@ export const setSkillProgressionAction = (
   roleStates: Record<string, RoleState>,
   skillName: string,
   progression: Record<string, SkillState>,
-  roleId: string,
-  employeeId: string
+  roleId: string
 ): Record<string, RoleState> => {
-  console.log('Setting skill progression:', { skillName, progression, roleId, employeeId });
+  console.log('Setting skill progression:', { skillName, progression, roleId });
   
   const updatedRoleState = {
     ...roleStates,
     [roleId]: {
       ...roleStates[roleId],
-      [employeeId]: {
-        ...roleStates[roleId]?.[employeeId],
-        [skillName]: {
-          ...roleStates[roleId]?.[employeeId]?.[skillName],
-          ...progression
-        }
+      [skillName]: {
+        ...roleStates[roleId]?.[skillName],
+        ...progression
       }
     }
   };
 
-  persistState(roleId, employeeId, updatedRoleState[roleId][employeeId]);
+  persistState(roleId, updatedRoleState[roleId]);
   return updatedRoleState;
 };
