@@ -28,6 +28,36 @@ export const SkillProfileMatrixTable = ({
   sortDirection,
   onSort
 }: SkillProfileMatrixTableProps) => {
+  const { id } = useParams();
+  
+  const getSkillType = (skillTitle: string): string => {
+    const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+    
+    if (currentRoleSkills.specialized.some(s => s.title === skillTitle)) {
+      return 'Specialized';
+    }
+    if (currentRoleSkills.common.some(s => s.title === skillTitle)) {
+      return 'Common';
+    }
+    if (currentRoleSkills.certifications.some(s => s.title === skillTitle)) {
+      return 'Certification';
+    }
+    return 'Uncategorized';
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'specialized':
+        return 'bg-blue-100 text-blue-800';
+      case 'certification':
+        return 'bg-purple-100 text-purple-800';
+      case 'common':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   const uniqueSkills = paginatedSkills.reduce((acc: UnifiedSkill[], current) => {
     const exists = acc.find(skill => skill.title === current.title);
     if (!exists) {
@@ -51,8 +81,9 @@ export const SkillProfileMatrixTable = ({
     <table className="w-full">
       <thead>
         <tr className="bg-background text-left">
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[35%]">Skill Title</th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Subcategory</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[25%]">Skill Title</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">Subcategory</th>
+          <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[15%]">Type</th>
           <th className="py-4 px-4 text-sm font-medium text-muted-foreground w-[20%]">
             <Button
               variant="ghost"
@@ -131,6 +162,11 @@ export const SkillProfileMatrixTable = ({
             <td className="py-3 px-4">
               <span className="text-sm block truncate" title={skill.subcategory}>
                 {skill.subcategory}
+              </span>
+            </td>
+            <td className="py-3 px-4">
+              <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(getSkillType(skill.title))}`}>
+                {getSkillType(skill.title)}
               </span>
             </td>
             <td className="py-3 px-4">
