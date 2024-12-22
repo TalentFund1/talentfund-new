@@ -1,6 +1,7 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
+export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface UnifiedSkill {
   id: string;
@@ -25,6 +26,7 @@ export interface EmployeeSkillState {
 // Role skill state - managed in competency store
 export interface RoleSkillState {
   level: string;
+  requirement: RoleSkillRequirement;
 }
 
 export interface RoleState {
