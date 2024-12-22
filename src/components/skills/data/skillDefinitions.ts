@@ -1,4 +1,4 @@
-import { UnifiedSkill } from '../../types/skillTypes';
+import { UnifiedSkill } from '../../../types/skillTypes';
 
 export const skillDefinitions: UnifiedSkill[] = [
   // AI & ML Skills
@@ -28,19 +28,6 @@ export const skillDefinitions: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
-  {
-    id: 'SKILL003',
-    title: "Natural Language Processing",
-    subcategory: "AI & ML",
-    category: 'specialized',
-    businessCategory: "Information Technology",
-    weight: 'critical',
-    level: "advanced",
-    growth: "30%",
-    salary: "$175,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
   // Development Skills
   {
     id: 'SKILL006',
@@ -55,19 +42,6 @@ export const skillDefinitions: UnifiedSkill[] = [
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
-  {
-    id: 'SKILL007',
-    title: "Database Design",
-    subcategory: "Backend Development",
-    category: 'common',
-    businessCategory: "Information Technology",
-    weight: 'technical',
-    level: "advanced",
-    growth: "28%",
-    salary: "$155,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
   // Frontend Skills
   {
     id: 'SKILL011',
@@ -79,19 +53,6 @@ export const skillDefinitions: UnifiedSkill[] = [
     level: "advanced",
     growth: "25%",
     salary: "$165,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'SKILL012',
-    title: "TypeScript",
-    subcategory: "Frontend Development",
-    category: 'specialized',
-    businessCategory: "Information Technology",
-    weight: 'critical',
-    level: "advanced",
-    growth: "24%",
-    salary: "$160,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -125,15 +86,6 @@ export const skillDefinitions: UnifiedSkill[] = [
   }
 ];
 
-console.log('Initialized universal skills database:', {
-  totalSkills: skillDefinitions.length,
-  categories: {
-    specialized: skillDefinitions.filter(s => s.category === 'specialized').length,
-    common: skillDefinitions.filter(s => s.category === 'common').length,
-    certification: skillDefinitions.filter(s => s.category === 'certification').length
-  }
-});
-
 // Helper functions
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
   return skillDefinitions.find(
@@ -149,3 +101,12 @@ export const getSkillCategory = (title: string): UnifiedSkill['category'] => {
   const skill = getSkillByTitle(title);
   return skill?.category || 'common';
 };
+
+console.log('Initialized universal skills database:', {
+  totalSkills: skillDefinitions.length,
+  categories: {
+    specialized: skillDefinitions.filter(s => s.category === 'specialized').length,
+    common: skillDefinitions.filter(s => s.category === 'common').length,
+    certification: skillDefinitions.filter(s => s.category === 'certification').length
+  }
+});
