@@ -46,6 +46,7 @@ export const SkillCell = ({
   const currentState = currentStates[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
     required: details.required || "preferred",
+    requirement: details.required || "preferred"
   };
 
   const handleLevelChange = (value: string) => {

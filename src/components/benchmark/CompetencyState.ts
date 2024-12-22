@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 export interface SkillState {
   level: string;
   required: string;
+  requirement: string;
 }
 
 interface CompetencyState {
@@ -13,7 +14,8 @@ interface CompetencyState {
 
 const defaultSkillState: SkillState = {
   level: 'unspecified',
-  required: 'preferred'
+  required: 'preferred',
+  requirement: 'preferred'
 };
 
 // Separate level arrays for different tracks
@@ -58,6 +60,7 @@ export const useCompetencyStore = create<CompetencyState>()(
                 [levelKey]: {
                   level,
                   required,
+                  requirement: required,
                 },
               },
             },
@@ -67,7 +70,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-matrix-storage',
-      version: 23, // Increment version to ensure clean state
+      version: 24,
       partialize: (state) => ({
         currentStates: state.currentStates,
       }),
