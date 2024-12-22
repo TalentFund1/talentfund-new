@@ -18,7 +18,6 @@ interface BenchmarkMatrixFiltersProps {
   setSelectedCategory: (category: string) => void;
   selectedRoleRequirement: string;
   setSelectedRoleRequirement: (requirement: string) => void;
-  isRoleBenchmark?: boolean;
 }
 
 export const BenchmarkMatrixFilters = ({
@@ -37,9 +36,17 @@ export const BenchmarkMatrixFilters = ({
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+        <Select 
+          value={selectedCategory} 
+          onValueChange={setSelectedCategory}
+        >
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories" />
+            <SelectValue placeholder="All Categories">
+              {selectedCategory === 'all' && 'All Categories'}
+              {selectedCategory === 'specialized' && 'Specialized Skills'}
+              {selectedCategory === 'common' && 'Common Skills'}
+              {selectedCategory === 'certification' && 'Certification'}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
@@ -51,7 +58,12 @@ export const BenchmarkMatrixFilters = ({
 
         <Select value={selectedRoleRequirement} onValueChange={setSelectedRoleRequirement}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Requirements" />
+            <SelectValue placeholder="All Requirements">
+              {selectedRoleRequirement === 'all' && 'All Requirements'}
+              {selectedRoleRequirement === 'skill_goal' && 'Skill Goal'}
+              {selectedRoleRequirement === 'not_interested' && 'Not Interested'}
+              {selectedRoleRequirement === 'unknown' && 'Unknown'}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Requirements</SelectItem>

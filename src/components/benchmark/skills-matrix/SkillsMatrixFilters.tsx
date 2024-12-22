@@ -37,9 +37,17 @@ export const SkillsMatrixFilters = ({
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+        <Select 
+          value={selectedCategory} 
+          onValueChange={setSelectedCategory}
+        >
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories" />
+            <SelectValue placeholder="All Categories">
+              {selectedCategory === 'all' && 'All Categories'}
+              {selectedCategory === 'specialized' && 'Specialized Skills'}
+              {selectedCategory === 'common' && 'Common Skills'}
+              {selectedCategory === 'certification' && 'Certification'}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
@@ -51,7 +59,12 @@ export const SkillsMatrixFilters = ({
 
         <Select value={selectedInterest} onValueChange={setSelectedInterest}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Requirements" />
+            <SelectValue placeholder="All Requirements">
+              {selectedInterest === 'all' && 'All Requirements'}
+              {selectedInterest === 'skill_goal' && 'Skill Goal'}
+              {selectedInterest === 'not_interested' && 'Not Interested'}
+              {selectedInterest === 'unknown' && 'Unknown'}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Requirements</SelectItem>
