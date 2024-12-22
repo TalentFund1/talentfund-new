@@ -40,7 +40,7 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
-  skills: UnifiedSkill[]; // Adding this to fix the missing property error
+  skills: UnifiedSkill[];
   soc?: string;
   function?: string;
   mappedTitle?: string;

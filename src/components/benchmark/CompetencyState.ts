@@ -1,13 +1,21 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyState, RoleState, SkillState } from '../skills/competency/state/types';
-import { initializeRoleState } from '../skills/competency/state/initializeState';
+import { RoleState, RoleSkillState } from '../skills/types/SkillTypes';
 
-const defaultSkillState: SkillState = {
-  level: 'unspecified',
-  required: 'unknown',
-  requirement: 'unknown'
-};
+interface CompetencyState {
+  roleStates: Record<string, RoleState>;
+  currentStates: Record<string, RoleState>;
+  originalStates: Record<string, RoleState>;
+  hasChanges: boolean;
+  setSkillState: (skillName: string, level: string, levelKey: string, requirement: RoleSkillState['requirement'], roleId: string) => void;
+  saveChanges: (roleId: string) => void;
+  cancelChanges: (roleId: string) => void;
+  hasChanges: boolean;
+  setSkillProgression: (skillName: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
+  resetLevels: (roleId: string) => void;
+  initializeState: (roleId: string) => void;
+  getRoleState: (roleId: string) => RoleState;
+}
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -17,8 +25,8 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, levelKey, required, roleId) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
+      setSkillState: (skillName, level, levelKey, requirement, roleId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId });
         set((state) => {
           const currentRoleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
@@ -27,8 +35,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...(currentRoleState[skillName] || {}),
               [levelKey]: { 
                 level, 
-                required,
-                requirement: required as SkillState['requirement']
+                requirement
               }
             }
           };
@@ -91,7 +98,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
 
-      saveChanges: (roleId, track) => {
+      saveChanges: (roleId) => {
         console.log('Saving changes for role:', roleId);
         set((state) => ({
           originalStates: {
