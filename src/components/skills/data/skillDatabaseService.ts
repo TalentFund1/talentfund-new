@@ -1,5 +1,5 @@
 import { UnifiedSkill } from '../../../types/skillTypes';
-import { skillDefinitions, getSkillByTitle } from './skills/skillDefinitions';
+import { skillDefinitions, getSkillByTitle } from './skillDefinitions';
 import { normalizeSkillTitle } from '../utils/normalization';
 
 // Get unified skill data

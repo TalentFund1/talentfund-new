@@ -1,7 +1,6 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-export type RoleSkillRequirement = 'required' | 'preferred';
+export type SkillRequirement = 'required' | 'preferred' | 'skill_goal' | 'not_interested' | 'unknown';
 
 export interface BaseSkill {
   id: string;
@@ -18,28 +17,29 @@ export interface BaseSkill {
 }
 
 export interface UnifiedSkill extends BaseSkill {
-  requirement?: RoleSkillRequirement;
+  requirement?: SkillRequirement;
 }
 
-export interface EmployeeSkillState {
-  level: string;
-  requirement: EmployeeSkillRequirement;
-}
-
-export interface RoleSkillState {
+export interface SkillState {
   id: string;
   level: string;
-  requirement: RoleSkillRequirement;
+  requirement: SkillRequirement;
 }
 
 export interface RoleState {
   [skillName: string]: {
-    [level: string]: RoleSkillState;
+    [level: string]: SkillState;
   };
 }
 
 export interface RoleSkillData {
   title: string;
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+  roleTrack?: string;
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];

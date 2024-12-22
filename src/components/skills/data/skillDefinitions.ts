@@ -1,6 +1,5 @@
-import { UnifiedSkill } from '../types/SkillTypes';
+import { UnifiedSkill } from '../../../types/skillTypes';
 
-// Universal skill database - single source of truth
 export const skillDefinitions: UnifiedSkill[] = [
   {
     id: "ai_1",
@@ -103,32 +102,6 @@ export const skillDefinitions: UnifiedSkill[] = [
     level: "advanced",
     growth: "35%",
     salary: "$150,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: "cert_2",
-    title: "Certified Scrum Master",
-    subcategory: "Certifications",
-    category: "certification",
-    businessCategory: "Project Management",
-    weight: "critical",
-    level: "intermediate",
-    growth: "20%",
-    salary: "$100,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: "cert_3",
-    title: "PMP Certification",
-    subcategory: "Certifications",
-    category: "certification",
-    businessCategory: "Project Management",
-    weight: "critical",
-    level: "intermediate",
-    growth: "18%",
-    salary: "$95,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }
