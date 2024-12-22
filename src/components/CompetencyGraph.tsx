@@ -50,21 +50,12 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         throw new Error('No skills found for current role');
       }
 
-      console.log('Found role skills:', {
-        specialized: currentRoleSkills.specialized?.length || 0,
-        common: currentRoleSkills.common?.length || 0,
-        certifications: currentRoleSkills.certifications?.length || 0
-      });
-
       const allSkills = [
         ...(currentRoleSkills.specialized || []),
         ...(currentRoleSkills.common || []),
         ...(currentRoleSkills.certifications || [])
       ].filter(skill => toggledSkills.has(skill.title));
 
-      console.log('Processing skills generation for:', allSkills.map(s => s.title));
-
-      // Generate progression for each skill
       allSkills.forEach(skill => {
         let category = "specialized";
         if (currentRoleSkills.common.some(s => s.title === skill.title)) {
@@ -73,22 +64,12 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
           category = "certification";
         }
 
-        console.log('Generating progression for skill:', { 
-          title: skill.title, 
-          category,
-          track,
-          roleId: currentRoleId
-        });
-
         const progression = generateSkillProgression(skill.title, category, track, currentRoleId);
-        console.log('Generated progression:', { skill: skill.title, progression });
-        
         if (progression) {
           setSkillProgression(skill.title, progression, currentRoleId, track);
         }
       });
 
-      // Save changes to persist the generated progressions
       saveChanges(currentRoleId, track);
 
       toast({

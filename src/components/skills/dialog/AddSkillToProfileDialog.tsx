@@ -94,7 +94,7 @@ export const AddSkillToProfileDialog = () => {
             skill: skillTitle,
             progression
           });
-          setSkillProgression(skillTitle, progression, id);
+          setSkillProgression(skillTitle, progression, id, track);
         }
       } else {
         console.warn('Skill not found in universal database:', skillTitle);
