@@ -2,19 +2,24 @@ import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { EmployeeSkillState, EmployeeSkillRequirement } from "@/types/skillTypes";
+import { 
+  EmployeeSkillState, 
+  EmployeeSkillRequirement,
+  getSkillStateLevel,
+  isSkillGoal
+} from "@/types/skillTypes";
 import { useParams } from "react-router-dom";
 
 interface SkillLevelCellProps {
-  initialLevel: string;
   skillId: string;
+  initialLevel: string;
   onLevelChange?: (newLevel: string, requirement: EmployeeSkillRequirement) => void;
   isRoleBenchmark?: boolean;
 }
 
 export const SkillLevelCell = ({ 
-  initialLevel, 
   skillId,
+  initialLevel, 
   onLevelChange,
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
@@ -24,10 +29,10 @@ export const SkillLevelCell = ({
   // Initialize the state when the component mounts
   initializeState(skillId, initialLevel?.toLowerCase() || 'unspecified', 'unknown', employeeId || '');
 
-  const currentState = currentStates[skillId] as EmployeeSkillState || {
+  const currentState = currentStates[skillId] || {
     skillId,
     level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'unknown'
+    requirement: 'unknown' as EmployeeSkillRequirement
   };
 
   const getLevelIcon = (level: string) => {

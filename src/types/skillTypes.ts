@@ -70,38 +70,45 @@ export const getLevelPriority = (level: string = 'unspecified'): number => {
   return priorities[level.toLowerCase()] ?? 3;
 };
 
-// Skill state type checking utilities
-export const isEmployeeSkillState = (state: any): state is EmployeeSkillState => {
-  return state && 
-    typeof state.skillId === 'string' && 
-    typeof state.level === 'string' && 
-    isEmployeeRequirement(state.requirement);
-};
-
-export const isRoleSkillState = (state: any): state is RoleSkillState => {
-  return state && 
-    typeof state.id === 'string' && 
-    typeof state.level === 'string' && 
-    isRoleRequirement(state.requirement);
-};
-
-// Skill type conversion utilities
-export const convertToEmployeeSkillState = (
-  skillId: string,
-  level: string = 'unspecified',
-  requirement: EmployeeSkillRequirement = 'unknown'
-): EmployeeSkillState => ({
-  skillId,
-  level,
-  requirement
+// Type conversion utilities
+export const convertEmployeeToRoleState = (employeeState: EmployeeSkillState): RoleSkillState => ({
+  id: employeeState.skillId,
+  level: employeeState.level,
+  requirement: employeeState.requirement === 'skill_goal' ? 'required' : 'preferred'
 });
 
-export const convertToRoleSkillState = (
-  id: string,
-  level: string = 'unspecified',
-  requirement: RoleSkillRequirement = 'preferred'
-): RoleSkillState => ({
-  id,
-  level,
-  requirement
+export const convertRoleToEmployeeState = (roleState: RoleSkillState): EmployeeSkillState => ({
+  skillId: roleState.id,
+  level: roleState.level,
+  requirement: roleState.requirement === 'required' ? 'skill_goal' : 'unknown'
 });
+
+// Type checking utilities
+export const getSkillStateLevel = (state: EmployeeSkillState | RoleSkillState | string): string => {
+  if (typeof state === 'string') return state;
+  return state.level || 'unspecified';
+};
+
+export const getSkillStateRequirement = (
+  state: EmployeeSkillState | RoleSkillState
+): EmployeeSkillRequirement | RoleSkillRequirement => {
+  return state.requirement;
+};
+
+// Helper functions for type-safe comparisons
+export const compareSkillLevels = (
+  level1: string | EmployeeSkillState | RoleSkillState,
+  level2: string | EmployeeSkillState | RoleSkillState
+): boolean => {
+  const l1 = getSkillStateLevel(level1);
+  const l2 = getSkillStateLevel(level2);
+  return l1.toLowerCase() === l2.toLowerCase();
+};
+
+export const isSkillGoal = (state: EmployeeSkillState): boolean => {
+  return state.requirement === 'skill_goal';
+};
+
+export const isRequiredSkill = (state: RoleSkillState): boolean => {
+  return state.requirement === 'required';
+};
