@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { DetailedSkill, UnifiedSkill, SkillRequirement } from "./types/SkillTypes";
+import { DetailedSkill, UnifiedSkill, SkillRequirement } from "@/types/skillTypes";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
-import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
+import { getSkillCategory } from "./data/skills/categories/skillCategories";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
@@ -95,24 +95,15 @@ export const SkillsSummary = () => {
   };
 
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
-      ...skill,
-      requirement: skill.requirement as SkillRequirement
-    })), "specialized") as UnifiedSkill[]
+    employeeSkills.filter(skill => getSkillCategory(skill.title) === "specialized")
   );
 
   const commonSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
-      ...skill,
-      requirement: skill.requirement as SkillRequirement
-    })), "common") as UnifiedSkill[]
+    employeeSkills.filter(skill => getSkillCategory(skill.title) === "common")
   );
 
   const certifications: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
-      ...skill,
-      requirement: skill.requirement as SkillRequirement
-    })), "certification") as UnifiedSkill[]
+    employeeSkills.filter(skill => getSkillCategory(skill.title) === "certification")
   );
 
   const toggleSection = (section: keyof typeof expandedSections) => {

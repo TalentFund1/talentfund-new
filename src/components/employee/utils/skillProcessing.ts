@@ -1,40 +1,25 @@
-import { categorizeSkills } from "../../skills/competency/skillCategories";
-import { getSkillProfileId } from "../../EmployeeTable";
+import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
+import { UnifiedSkill, EmployeeSkillState } from "@/types/skillTypes";
 import { useSkillsMatrixStore } from "../../benchmark/skills-matrix/SkillsMatrixState";
 
-export const processEmployeeSkills = (skills: string, role: string) => {
-  // Convert comma-separated string to array and clean up
-  const skillsList = skills
-    .split(',')
-    .map(skill => skill.trim())
-    .filter(skill => skill.length > 0);
+export const processEmployeeSkills = (employeeSkills: UnifiedSkill[]): EmployeeSkillState[] => {
+  const { currentStates } = useSkillsMatrixStore.getState();
 
-  // Get role ID for categorization
-  const roleId = getSkillProfileId(role);
-  
-  // Initialize skills with default values
-  const skillsMatrixStore = useSkillsMatrixStore.getState();
-  
-  skillsList.forEach(skillTitle => {
-    skillsMatrixStore.setSkillState(skillTitle, 'unspecified', 'unknown');
-    console.log('Initialized skill:', {
-      skill: skillTitle,
-      level: 'unspecified',
-      requirement: 'unknown'
-    });
+  return employeeSkills.map(skill => {
+    const category = getSkillCategory(skill.title);
+    const level = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const requirement = currentStates[skill.title]?.requirement || 'unknown';
+
+    return {
+      skillId: skill.id,
+      level,
+      requirement,
+      category
+    };
   });
-  
-  // Categorize skills
-  const categorizedSkills = categorizeSkills(skillsList, roleId);
+};
 
-  console.log('Processed and categorized skills:', {
-    roleId,
-    totalSkills: skillsList.length,
-    categories: categorizedSkills
-  });
-
-  return {
-    skillsList,
-    categorizedSkills
-  };
+export const calculateBenchmarkPercentage = (employeeId: string, roleId: string, baseRole: string, currentStates: any, toggledSkills: Set<string>, getSkillCompetencyState: any) => {
+  // Implementation for calculating benchmark percentage
+  // ...
 };

@@ -1,6 +1,7 @@
-import { SkillCategory } from '../../../types/SkillTypes';
+import { SkillCategory } from '@/types/skillTypes';
 import { skillDefinitions } from '../skillDefinitions';
 
+// Create a Map for faster lookups
 const skillDefinitionMap = new Map(
   skillDefinitions.map(skill => [skill.title.toLowerCase(), skill])
 );
