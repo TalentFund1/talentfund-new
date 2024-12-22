@@ -1,4 +1,4 @@
-import { useCompetencyStore } from "./state/stateStore";
+import { useCompetencyStore } from "./CompetencyState";
 import { RoleSkillState } from "../types/SkillTypes";
 
 export const useCompetencyStateReader = () => {
