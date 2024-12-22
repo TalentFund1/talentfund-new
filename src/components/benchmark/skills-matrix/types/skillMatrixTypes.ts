@@ -1,4 +1,4 @@
-import { SkillRequirement, type MappedSkill } from '../../../skills/types/SkillTypes';
+import { SkillRequirement, UnifiedSkill } from '../../../skills/types/SkillTypes';
 
 export interface SkillState {
   level: string;
@@ -16,4 +16,9 @@ export interface SkillsMatrixState {
   cancelChanges: () => void;
 }
 
-export type { MappedSkill };
+export interface MappedSkill extends UnifiedSkill {
+  level: string;
+  requirement: SkillRequirement;
+  roleLevel: any;
+  isCompanySkill: boolean;
+}

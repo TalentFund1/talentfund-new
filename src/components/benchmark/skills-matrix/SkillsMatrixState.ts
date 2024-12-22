@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { SkillRequirement } from '../../skills/types/SkillTypes';
 import { filterSkillsByCategory } from './skillCategories';
-import { type SkillRequirement, type EmployeeSkill } from '../../../skills/types/SkillTypes';
-import { SkillsMatrixState } from './types/skillMatrixTypes';
-import { useEmployeeStore } from '../../../components/employee/store/employeeStore';
+import { useEmployeeStore } from '../../employee/store/employeeStore';
+import { mapSkillWithState } from './utils/skillMapping';
+import { SkillsMatrixState, MappedSkill } from './types/skillMatrixTypes';
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
@@ -12,9 +13,8 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillTitle: string, level: string, requirement: SkillRequirement) => {
+      setSkillState: (skillTitle, level, requirement) => {
         console.log('Setting skill state:', { skillTitle, level, requirement });
-        
         set((state) => ({
           currentStates: {
             ...state.currentStates,
@@ -31,7 +31,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           hasChanges: false,
         })),
 
-      initializeState: (skillTitle: string, level: string, requirement: SkillRequirement) =>
+      initializeState: (skillTitle, level, requirement) =>
         set((state) => {
           if (!state.currentStates[skillTitle]) {
             console.log('Initializing skill state:', { skillTitle, level, requirement });
@@ -63,7 +63,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 4,
+      version: 1,
       partialize: (state) => ({
         currentStates: state.currentStates,
         originalStates: state.originalStates,
@@ -79,50 +79,60 @@ export const useSkillsMatrixState = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
-  const getSkillState = (skillTitle: string) => {
-    return currentStates[skillTitle];
-  };
-
-  const filterAndSortSkills = (employeeId: string): EmployeeSkill[] => {
+  const filterAndSortSkills = (employeeId: string): MappedSkill[] => {
     console.log('Filtering skills for employee:', employeeId);
     
+    // Get employee's skills from the employee store
     const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
     console.log('Employee skills:', employeeSkills);
 
-    let filteredSkills = employeeSkills.map((skill): EmployeeSkill => {
-      const skillState = getSkillState(skill.title);
-      return {
-        ...skill,
-        requirement: skillState?.requirement || 'preferred',
-        level: skillState?.level || skill.level || 'unspecified',
-      };
-    });
+    // Map employee skills to include universal skill data and ensure required properties
+    let filteredSkills = employeeSkills.map(skill => ({
+      ...skill,
+      requirement: (currentStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement,
+      roleLevel: null as any,
+      isCompanySkill: false,
+      level: currentStates[skill.title]?.level || skill.level || 'unspecified',
+      id: skill.id,
+      title: skill.title,
+      subcategory: skill.subcategory,
+      category: skill.category,
+      businessCategory: skill.businessCategory,
+      weight: skill.weight,
+      growth: skill.growth,
+      salary: skill.salary,
+      confidence: skill.confidence,
+      benchmarks: skill.benchmarks
+    })) as MappedSkill[];
 
+    // Filter by category if not "all"
     if (selectedCategory !== "all") {
       filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
     }
 
+    // Filter by level if not "all"
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = getSkillState(skill.title);
-        return skillState?.level.toLowerCase() === selectedLevel.toLowerCase();
+        const state = currentStates[skill.title];
+        return state?.level.toLowerCase() === selectedLevel.toLowerCase();
       });
     }
 
+    // Filter by interest/requirement if not "all"
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = getSkillState(skill.title);
-        if (!skillState) return false;
+        const state = currentStates[skill.title];
+        if (!state) return false;
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            return skillState.requirement === "required" || skillState.requirement === "skill_goal";
+            return state.requirement === "required" || state.requirement === "skill_goal";
           case "not_interested":
-            return skillState.requirement === "not_interested";
+            return state.requirement === "not_interested";
           case "unknown":
-            return !skillState.requirement || skillState.requirement === "unknown";
+            return !state.requirement || state.requirement === "unknown";
           default:
-            return skillState.requirement === selectedInterest.toLowerCase();
+            return state.requirement === selectedInterest.toLowerCase();
         }
       });
     }
@@ -144,18 +154,26 @@ export const useSkillsMatrixState = (
   };
 };
 
-export const getEmployeeSkills = (employeeId: string): EmployeeSkill[] => {
+export const getEmployeeSkills = (employeeId: string): MappedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
   const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
   const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
   
-  return employeeSkills.map((skill): EmployeeSkill => {
-    const skillState = employeeSkillStates[skill.title];
-    
-    return {
-      ...skill,
-      requirement: skillState?.requirement || 'preferred',
-      level: skillState?.level || skill.level || 'unspecified',
-    };
-  });
+  return employeeSkills.map(skill => ({
+    ...skill,
+    requirement: (employeeSkillStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement,
+    roleLevel: null as any,
+    isCompanySkill: false,
+    level: employeeSkillStates[skill.title]?.level || skill.level || 'unspecified',
+    id: skill.id,
+    title: skill.title,
+    subcategory: skill.subcategory,
+    category: skill.category,
+    businessCategory: skill.businessCategory,
+    weight: skill.weight,
+    growth: skill.growth,
+    salary: skill.salary,
+    confidence: skill.confidence,
+    benchmarks: skill.benchmarks
+  })) as MappedSkill[];
 };
