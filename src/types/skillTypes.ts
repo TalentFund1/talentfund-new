@@ -55,6 +55,12 @@ export interface ProfileSkillStates {
   };
 }
 
+// For detailed skill display
+export interface DetailedSkill extends BaseSkill {
+  level: SkillLevel;
+  isSkillGoal: boolean;
+}
+
 // Helper functions
 export const getSkillStateLevel = (state: EmployeeSkillState | RoleSkillState): SkillLevel => {
   return state.level;
@@ -95,7 +101,7 @@ export const ensureValidSkillLevel = (level: string): SkillLevel => {
   return validLevels.includes(level as SkillLevel) ? level as SkillLevel : 'unspecified';
 };
 
-// Helper to convert skill state to string representation
+// Helper to convert any skill state to string
 export const skillStateToString = (state: EmployeeSkillState | RoleSkillState): string => {
   return state.level;
 };

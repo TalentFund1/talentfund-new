@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleState, RoleSkillState, RoleSkillRequirement, SkillLevel } from '../../../types/skillTypes';
+import { RoleState, RoleSkillState, RoleSkillRequirement } from '../../../types/skillTypes';
 import { initializeRoleState } from './state/initializeState';
 
 interface CompetencyState {
@@ -10,18 +10,13 @@ interface CompetencyState {
   hasChanges: boolean;
   setSkillState: (
     skillName: string,
-    level: SkillLevel,
+    level: string,
     levelKey: string,
     requirement: RoleSkillRequirement,
     roleId: string,
     skillId: string
   ) => void;
-  setSkillProgression: (
-    skillName: string, 
-    progression: Record<string, RoleSkillState>, 
-    roleId: string, 
-    track: string
-  ) => void;
+  setSkillProgression: (skillName: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
   resetLevels: (roleId: string) => void;
   saveChanges: (roleId: string, track: string) => void;
   cancelChanges: (roleId: string) => void;
