@@ -6,7 +6,8 @@ import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 
 interface SkillState {
   level: string;
-  requirement: string;
+  required: string;
+  requirement: string;  // Added this required property
 }
 
 interface SkillsMatrixState {
@@ -32,7 +33,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillTitle]: { level, requirement },
+            [skillTitle]: { level, required: requirement, requirement },
           },
           hasChanges: true,
         }));
@@ -52,11 +53,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillTitle]: { level, requirement },
+                [skillTitle]: { level, required: requirement, requirement },
               },
               originalStates: {
                 ...state.originalStates,
-                [skillTitle]: { level, requirement },
+                [skillTitle]: { level, required: requirement, requirement },
               },
             };
           }
