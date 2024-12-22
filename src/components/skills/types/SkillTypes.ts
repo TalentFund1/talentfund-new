@@ -1,26 +1,11 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-export type RoleSkillRequirement = 'required' | 'preferred';
+export type RoleSkillRequirement = 'required' | 'preferred' | 'skill_goal';
 
-export interface UnifiedSkill {
-  id: string;
-  title: string;
-  subcategory: string;
-  category: SkillCategory;
-  businessCategory: string;
-  weight: SkillWeight;
+export interface SkillState {
   level: string;
-  growth: string;
-  salary: string;
-  confidence: string;
-  benchmarks: { [key: string]: boolean };
-  requirement?: EmployeeSkillRequirement;
-}
-
-export interface EmployeeSkillState {
-  level: string;
-  requirement: EmployeeSkillRequirement;
+  requirement: RoleSkillRequirement;
 }
 
 export interface RoleSkillState {
@@ -40,7 +25,7 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
-  skills: UnifiedSkill[]; // Adding this to fix the missing property error
+  skills: UnifiedSkill[];
   soc?: string;
   function?: string;
   mappedTitle?: string;
@@ -48,19 +33,24 @@ export interface RoleSkillData {
   description?: string;
 }
 
-export interface BaseSkill {
-  name: string;
+export interface UnifiedSkill {
+  id: string;
+  title: string;
+  subcategory: string;
+  category: SkillCategory;
+  businessCategory: string;
+  weight: SkillWeight;
+  level: string;
+  growth: string;
+  salary: string;
+  confidence: string;
+  benchmarks: { [key: string]: boolean };
+  requirement?: EmployeeSkillRequirement;
 }
 
-export interface DetailedSkill extends BaseSkill {
+export interface EmployeeSkillState {
   level: string;
-  isSkillGoal: boolean;
-}
-
-export interface Certification extends BaseSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
+  requirement: EmployeeSkillRequirement;
 }
 
 export interface SkillProfileRow {
