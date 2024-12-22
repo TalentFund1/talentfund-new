@@ -21,13 +21,7 @@ export const CategoryCards = ({
 
   // Get counts for each category based on toggled skills
   const getSkillCount = (category: string) => {
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    return allSkills
+    return currentRoleSkills.skills
       .filter(skill => toggledSkills.has(skill.title))
       .filter(skill => category === 'all' || getSkillCategory(skill.title) === category)
       .length;
