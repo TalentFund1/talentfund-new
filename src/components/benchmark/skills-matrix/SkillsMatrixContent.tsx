@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
@@ -74,8 +74,8 @@ const SkillsMatrixContent = ({
         selectedSkillLevel={selectedSkillLevel}
         setSelectedSkillLevel={setSelectedSkillLevel}
         selectedSearchSkills={selectedSearchSkills}
-        removeSearchSkill={(skill) => {
-          setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
+        removeSearchSkill={(skill: string) => {
+          setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
         }}
         clearSearch={() => setSelectedSearchSkills([])}
         selectedCategory={selectedCategory}

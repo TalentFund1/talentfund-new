@@ -1,6 +1,6 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { CategorizedSkills } from "../../CategorizedSkills";
+import { CategorizedSkills } from "@/components/benchmark/CategorizedSkills";
 import { Separator } from "@/components/ui/separator";
 import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 import { roleSkills } from "@/components/skills/data/roleSkills";
@@ -93,6 +93,8 @@ export const BenchmarkSkillsMatrixContent = ({
         filteredSkills={filteredSkills}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        selectedRoleRequirement=""
+        setSelectedRoleRequirement={() => {}}
         {...props}
         isRoleBenchmark={true}
       />

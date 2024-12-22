@@ -8,29 +8,14 @@ export interface SkillState {
   requirement: RoleSkillRequirement | EmployeeSkillRequirement;
 }
 
-export interface UnifiedSkill {
-  id: string;
-  title: string;
-  subcategory: string;
-  category: SkillCategory;
-  businessCategory: string;
-  weight: SkillWeight;
+export interface RoleSkillState {
   level: string;
-  growth: string;
-  salary: string;
-  confidence: string;
-  benchmarks: { [key: string]: boolean };
-  requirement?: EmployeeSkillRequirement;
+  requirement: RoleSkillRequirement;
 }
 
 export interface EmployeeSkillState {
   level: string;
   requirement: EmployeeSkillRequirement;
-}
-
-export interface RoleSkillState {
-  level: string;
-  requirement: RoleSkillRequirement;
 }
 
 export interface RoleState {
