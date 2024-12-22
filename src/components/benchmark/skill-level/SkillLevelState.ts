@@ -9,8 +9,8 @@ export const useSkillLevelState = (skillTitle: string) => {
     if (state) {
       console.log(`Getting matrix skill state for ${skillTitle}:`, {
         level: state.level,
-        requirement: state.requirement,
-        isSkillGoal: state.requirement === 'required'
+        required: state.required,
+        requirement: state.requirement
       });
       return state;
     }
