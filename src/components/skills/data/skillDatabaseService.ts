@@ -3,7 +3,6 @@ import { getSkillByTitle } from './skills/allSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { getSkillCategory } from './skills/categories/skillCategories';
 
-// Get unified skill data
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
@@ -14,6 +13,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     console.log('Found existing skill:', existingSkill.title);
     return {
       ...existingSkill,
+      name: existingSkill.title, // Add name property
       category: getSkillCategory(existingSkill.title)
     };
   }
@@ -23,6 +23,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   return {
     id: `SKILL_${Date.now()}`,
     title: normalizedTitle,
+    name: normalizedTitle, // Add name property
     subcategory: "Other",
     category: getSkillCategory(normalizedTitle),
     businessCategory: "Information Technology",
@@ -35,7 +36,4 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   };
 };
 
-// Export getSkillCategory for external use
 export { getSkillCategory };
-
-console.log('Skill database service initialized - using universal database only');
