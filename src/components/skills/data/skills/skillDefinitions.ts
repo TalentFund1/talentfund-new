@@ -1,7 +1,6 @@
-import { UnifiedSkill } from '../../types/SkillTypes';
+import { UnifiedSkill } from '../../../../types/skillTypes';
 
 export const skillDefinitions: UnifiedSkill[] = [
-  // AI & ML Skills
   {
     id: 'SKILL001',
     title: "Machine Learning",
@@ -153,12 +152,14 @@ export const skillDefinitions: UnifiedSkill[] = [
 
 // Helper functions
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
+  console.log('Looking up skill in universal database:', title);
   return skillDefinitions.find(
     skill => skill.title.toLowerCase() === title.toLowerCase()
   );
 };
 
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
+  console.log(`Getting skills for category: ${category}`);
   return skillDefinitions.filter(skill => skill.category === category);
 };
 

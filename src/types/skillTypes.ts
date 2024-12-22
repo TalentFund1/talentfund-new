@@ -5,24 +5,21 @@ export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknow
 export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface BaseSkill {
-  name: string;
-  category?: SkillCategory;
-  weight?: SkillWeight;
-}
-
-export interface UnifiedSkill {
-  id?: string;
+  id: string;
   title: string;
   subcategory: string;
-  level?: string;
+  category: SkillCategory;
+  businessCategory: string;
+  weight: SkillWeight;
+  level: string;
   growth: string;
+  salary: string;
   confidence: string;
-  requirement?: RoleSkillRequirement;
-  category?: string;
-  weight?: string;
-  businessCategory?: string;
-  salary?: string;
   benchmarks?: { B: boolean; R: boolean; M: boolean; O: boolean };
+}
+
+export interface UnifiedSkill extends BaseSkill {
+  requirement?: RoleSkillRequirement;
 }
 
 export interface EmployeeSkillState {

@@ -1,7 +1,6 @@
 import { UnifiedSkill } from '../../../types/skillTypes';
 import { skillDefinitions, getSkillByTitle } from './skills/skillDefinitions';
 import { normalizeSkillTitle } from '../utils/normalization';
-import { getSkillCategory } from './skills/categories/skillCategories';
 
 // Get unified skill data
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
@@ -12,10 +11,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   
   if (existingSkill) {
     console.log('Found existing skill:', existingSkill.title);
-    return {
-      ...existingSkill,
-      category: getSkillCategory(existingSkill.title)
-    };
+    return existingSkill;
   }
 
   // If skill not found, create a default skill entry
@@ -24,9 +20,9 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     id: `SKILL_${Date.now()}`,
     title: normalizedTitle,
     subcategory: "Other",
-    category: getSkillCategory(normalizedTitle),
+    category: 'common',
     businessCategory: "Information Technology",
-    weight: "necessary",
+    weight: 'necessary',
     level: "beginner",
     growth: "10%",
     salary: "$0",
