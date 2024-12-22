@@ -162,7 +162,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
     }),
     {
       name: 'employee-store',
-      version: 5, // Increment version to ensure clean state
+      version: 6, // Increment version to ensure clean state
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         employees: state.employees,
