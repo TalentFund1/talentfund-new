@@ -5,8 +5,12 @@ import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
 interface SkillsMatrixTableProps {
   filteredSkills: Array<{
     title: string;
-    level?: string;
+    subcategory: string;
+    level: string;
+    growth: string;
+    confidence: string;
     requirement?: string;
+    category?: string;
   }>;
   isRoleBenchmark?: boolean;
 }
