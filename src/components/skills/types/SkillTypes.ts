@@ -28,6 +28,12 @@ export interface RoleSkillState {
   requirement: RoleSkillRequirement;
 }
 
+export interface RoleState {
+  [skillName: string]: {
+    [levelKey: string]: RoleSkillState;
+  };
+}
+
 export interface RoleSkillData {
   title: string;
   roleTrack: "Professional" | "Managerial";
@@ -39,50 +45,4 @@ export interface RoleSkillData {
   mappedTitle?: string;
   occupation?: string;
   description?: string;
-}
-
-export interface DetailedSkill extends BaseSkill {
-  level: string;
-  isSkillGoal: boolean;
-}
-
-export interface BaseSkill {
-  name: string;
-}
-
-export interface Certification extends BaseSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
-}
-
-export interface SkillProfileRow {
-  id: string;
-  name: string;
-  function: string;
-  skillCount: string;
-  employees: string;
-  matches: string;
-  lastUpdated: string;
-  occupation?: string;
-}
-
-export interface EmployeeSkill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: EmployeeSkillRequirement;
-}
-
-export interface RoleSkill {
-  title: string;
-  subcategory: string;
-  level?: string;
-  growth: string;
-  confidence?: string;
-  requirement?: RoleSkillRequirement;
-  salary?: string;
-  benchmarks?: { [key: string]: boolean };
 }

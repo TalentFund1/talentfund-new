@@ -1,4 +1,4 @@
-import { RoleState, SkillState } from './types';
+import { RoleState, RoleSkillState, RoleSkillRequirement } from './types';
 import { persistState } from './persistenceUtils';
 
 export const setSkillStateAction = (
@@ -6,10 +6,10 @@ export const setSkillStateAction = (
   skillName: string,
   level: string,
   levelKey: string,
-  required: string,
+  requirement: RoleSkillRequirement,
   roleId: string
 ): Record<string, RoleState> => {
-  console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
+  console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId });
   
   const updatedRoleState = {
     ...roleStates,
@@ -19,8 +19,7 @@ export const setSkillStateAction = (
         ...roleStates[roleId]?.[skillName],
         [levelKey]: { 
           level, 
-          required,
-          requirement: required 
+          requirement
         }
       }
     }
@@ -33,7 +32,7 @@ export const setSkillStateAction = (
 export const setSkillProgressionAction = (
   roleStates: Record<string, RoleState>,
   skillName: string,
-  progression: Record<string, SkillState>,
+  progression: Record<string, RoleSkillState>,
   roleId: string
 ): Record<string, RoleState> => {
   console.log('Setting skill progression:', { skillName, progression, roleId });
