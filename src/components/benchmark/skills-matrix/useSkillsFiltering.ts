@@ -36,19 +36,20 @@ export const useSkillsFiltering = (
     return priorities[level.toLowerCase()] ?? 3;
   };
 
+  const normalizeRequirement = (requirement: string): string => {
+    const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
+    console.log('Normalized requirement:', { original: requirement, normalized });
+    return normalized;
+  };
+
   const filterSkills = () => {
     let skills = [...employeeSkills];
 
-    console.log('Filtering skills for employee:', {
+    console.log('Starting skill filtering:', {
       employeeId,
       totalSkills: skills.length,
-      isRoleBenchmark,
       selectedInterest,
-      skills: skills.map(s => ({
-        title: s.title,
-        level: s.level,
-        requirement: currentStates[s.title]?.requirement
-      }))
+      currentStates: Object.keys(currentStates).length
     });
 
     // Remove duplicates based on normalized titles
@@ -91,32 +92,20 @@ export const useSkillsFiltering = (
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      // Normalize the requirement value for comparison
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      // Get the requirement value and normalize it for comparison
+      const requirement = normalizeRequirement(currentSkillState?.requirement || skill.requirement || 'unknown');
+      const selectedInterestNormalized = normalizeRequirement(selectedInterest);
+
       console.log('Checking interest filter for skill:', {
         skillName: skill.title,
         requirement,
-        selectedInterest,
-        currentState: currentSkillState
+        selectedInterest: selectedInterestNormalized,
+        currentState: currentSkillState,
+        matches: requirement === selectedInterestNormalized
       });
 
       if (selectedInterest !== 'all') {
-        switch (selectedInterest.toLowerCase()) {
-          case 'skill_goal':
-          case 'required':
-            matchesInterest = requirement === 'required' || requirement === 'skill_goal';
-            break;
-          case 'not_interested':
-          case 'not-interested':
-          case 'not interested':
-            matchesInterest = requirement === 'not_interested' || requirement === 'not-interested' || requirement === 'not interested';
-            break;
-          case 'unknown':
-            matchesInterest = !requirement || requirement === 'unknown';
-            break;
-          default:
-            matchesInterest = requirement === selectedInterest.toLowerCase();
-        }
+        matchesInterest = requirement === selectedInterestNormalized;
       }
 
       if (searchTerm) {
@@ -124,15 +113,15 @@ export const useSkillsFiltering = (
       }
 
       const matches = matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
-      console.log('Filter result for skill:', {
-        skillName: skill.title,
-        matches,
-        matchesLevel,
-        matchesInterest,
-        matchesSearch,
-        matchesSkillLevel,
-        requirement
-      });
+      
+      if (!matches && selectedInterest !== 'all') {
+        console.log('Skill filtered out:', {
+          skillName: skill.title,
+          requirement,
+          selectedInterest: selectedInterestNormalized,
+          matchesInterest
+        });
+      }
 
       return matches;
     })
