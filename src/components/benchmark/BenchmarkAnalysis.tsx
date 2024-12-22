@@ -111,7 +111,7 @@ export const BenchmarkAnalysis = () => {
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
-    return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
+    return skillState.requirement === 'skill_goal';
   });
 
   const totalToggledSkills = toggledRoleSkills.length;

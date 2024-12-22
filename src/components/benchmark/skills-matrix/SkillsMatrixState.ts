@@ -8,9 +8,9 @@ interface SkillsMatrixState {
   currentStates: { [key: string]: EmployeeSkillState };
   originalStates: { [key: string]: EmployeeSkillState };
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, requirement: string) => void;
+  setSkillState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
   resetSkills: () => void;
-  initializeState: (skillName: string, level: string, requirement: string) => void;
+  initializeState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -25,25 +25,10 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       setSkillState: (skillName, level, requirement) => {
         console.log('Setting skill state:', { skillName, level, requirement });
         
-        // Direct mapping - "required" becomes "skill_goal"
-        let finalRequirement: EmployeeSkillRequirement;
-        if (requirement === 'required') {
-          finalRequirement = 'skill_goal';
-        } else if (requirement === 'not-interested') {
-          finalRequirement = 'not_interested';
-        } else {
-          finalRequirement = 'unknown';
-        }
-        
-        console.log('Final requirement:', {
-          original: requirement,
-          final: finalRequirement
-        });
-        
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillName]: { level, requirement: finalRequirement },
+            [skillName]: { level, requirement },
           },
           hasChanges: true,
         }));
@@ -59,31 +44,20 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       initializeState: (skillName, level, requirement) =>
         set((state) => {
           if (!state.currentStates[skillName]) {
-            // Direct mapping - "required" becomes "skill_goal"
-            let finalRequirement: EmployeeSkillRequirement;
-            if (requirement === 'required') {
-              finalRequirement = 'skill_goal';
-            } else if (requirement === 'not-interested') {
-              finalRequirement = 'not_interested';
-            } else {
-              finalRequirement = 'unknown';
-            }
-
             console.log('Initializing skill state:', { 
               skillName, 
               level, 
-              originalRequirement: requirement,
-              finalRequirement 
+              requirement
             });
             
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillName]: { level, requirement: finalRequirement },
+                [skillName]: { level, requirement },
               },
               originalStates: {
                 ...state.originalStates,
-                [skillName]: { level, requirement: finalRequirement },
+                [skillName]: { level, requirement },
               },
             };
           }
