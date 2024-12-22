@@ -28,6 +28,23 @@ export interface UnifiedSkill {
   requirement?: SkillRequirement;
 }
 
+export interface DetailedSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface SimpleSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: string;
+  category?: string;
+  weight?: string;
+}
+
 export interface RoleSkillData {
   title: string;
   soc?: string;

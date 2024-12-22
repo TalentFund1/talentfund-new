@@ -2,18 +2,18 @@ import { SkillWeight, SkillCategory } from '../../../types/SkillTypes';
 import { skillDefinitions } from '../skillDefinitions';
 
 const skillDefinitionMap = new Map(
-  skillDefinitions.map(skill => [skill.title, skill])
+  skillDefinitions.map(skill => [skill.title.toLowerCase(), skill])
 );
 
 export const getSkillWeight = (skill: { title: string }): SkillWeight => {
   console.log('Getting weight for skill:', skill.title);
-  const skillDef = skillDefinitionMap.get(skill.title);
+  const skillDef = skillDefinitionMap.get(skill.title.toLowerCase());
   return skillDef?.weight || 'necessary';
 };
 
 export const getSkillType = (skill: { title: string }): SkillCategory => {
   console.log('Getting type for skill:', skill.title);
-  const skillDef = skillDefinitionMap.get(skill.title);
+  const skillDef = skillDefinitionMap.get(skill.title.toLowerCase());
   return skillDef?.category || 'common';
 };
 

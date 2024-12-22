@@ -6,7 +6,7 @@ export const skillsDatabase = skillDefinitions;
 
 // Helper functions
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
-  return skillsDatabase.find(skill => skill.title === title);
+  return skillsDatabase.find(skill => skill.title.toLowerCase() === title.toLowerCase());
 };
 
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
