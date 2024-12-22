@@ -3,9 +3,9 @@ export interface UnifiedSkill {
   id: string;
   title: string;
   subcategory: string;
-  category: 'specialized' | 'common' | 'certification';
+  category: SkillCategory;
   businessCategory: string;
-  weight: 'critical' | 'technical' | 'necessary';
+  weight: SkillWeight;
   level: string;
   growth: string;
   salary: string;
@@ -13,19 +13,9 @@ export interface UnifiedSkill {
   benchmarks: { [key: string]: boolean };
 }
 
-// Role-specific types
-export type RoleSkillRequirement = 'required' | 'preferred';
-
-export interface RoleSkillState {
-  level: string;
-  required: RoleSkillRequirement;
-}
-
-export interface RoleState {
-  [skillName: string]: {
-    [levelKey: string]: RoleSkillState;
-  };
-}
+// Skill categories and weights from universal database
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
 // Employee-specific types
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
@@ -37,6 +27,20 @@ export interface EmployeeSkillState {
 
 export interface EmployeeSkillRecord {
   [skillTitle: string]: EmployeeSkillState;
+}
+
+// Role-specific types
+export type RoleSkillRequirement = 'required' | 'preferred';
+
+export interface RoleSkillState {
+  level: string;
+  requirement: RoleSkillRequirement;
+}
+
+export interface RoleState {
+  [skillName: string]: {
+    [levelKey: string]: RoleSkillState;
+  };
 }
 
 // Role data structure
@@ -53,14 +57,9 @@ export interface RoleSkillData {
   description?: string;
 }
 
-// Profile row type for UI
-export interface SkillProfileRow {
-  id: string;
+// Detailed skill type for UI components
+export interface DetailedSkill {
   name: string;
-  function: string;
-  skillCount: string;
-  employees: string;
-  matches: string;
-  lastUpdated: string;
-  occupation?: string;
+  level: string;
+  isSkillGoal: boolean;
 }

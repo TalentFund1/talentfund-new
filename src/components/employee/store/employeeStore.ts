@@ -2,12 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
-import { UnifiedSkill } from "../../skills/types/SkillTypes";
-
-interface EmployeeSkillState {
-  level: string;
-  requirement: string;
-}
+import { UnifiedSkill, EmployeeSkillState } from "../../skills/types/SkillTypes";
 
 interface EmployeeStore {
   employees: Employee[];
@@ -18,7 +13,7 @@ interface EmployeeStore {
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => UnifiedSkill[];
-  setSkillState: (employeeId: string, skillName: string, level: string, requirement: string) => void;
+  setSkillState: (employeeId: string, skillName: string, level: string, requirement: EmployeeSkillState['requirement']) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
@@ -44,48 +39,28 @@ export const useEmployeeStore = create<EmployeeStore>()(
                 : emp
             )
           }));
-
-          console.log('Initialized empty skills for employee:', {
-            employeeId,
-            skillCount: 0
-          });
         }
       },
 
       addEmployee: (employee) => {
-        console.log('Adding employee to store:', employee);
-        set((state) => {
-          const newEmployees = [...state.employees, employee];
-          console.log('Updated employees list:', newEmployees);
-          return { employees: newEmployees };
-        });
+        set((state) => ({
+          employees: [...state.employees, employee]
+        }));
       },
 
       updateEmployee: (employee) => {
-        console.log('Updating employee in store:', employee);
-        set((state) => {
-          const updatedEmployees = state.employees.map((emp) => 
+        set((state) => ({
+          employees: state.employees.map((emp) => 
             emp.id === employee.id ? { ...employee } : emp
-          );
-          console.log('Updated employees list:', updatedEmployees);
-          return { 
-            employees: updatedEmployees,
-            // Ensure we update any related skill states
-            skillStates: {
-              ...state.skillStates,
-              [employee.id]: state.skillStates[employee.id] || {}
-            }
-          };
-        });
+          )
+        }));
       },
 
       getEmployeeById: (id) => {
-        const state = get();
-        return state.employees.find(emp => emp.id === id);
+        return get().employees.find(emp => emp.id === id);
       },
 
       setEmployeeSkills: (employeeId, skills) => {
-        console.log('Setting skills for employee:', { employeeId, skills });
         set((state) => ({
           employeeSkills: {
             ...state.employeeSkills,
@@ -103,7 +78,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
       },
 
       setSkillState: (employeeId, skillName, level, requirement) => {
-        console.log('Setting skill state:', { employeeId, skillName, level, requirement });
         set((state) => ({
           skillStates: {
             ...state.skillStates,
@@ -117,7 +91,10 @@ export const useEmployeeStore = create<EmployeeStore>()(
 
       getSkillState: (employeeId, skillName) => {
         const state = get();
-        return state.skillStates[employeeId]?.[skillName] || { level: 'unspecified', requirement: 'preferred' };
+        return state.skillStates[employeeId]?.[skillName] || { 
+          level: 'unspecified', 
+          requirement: 'unknown' 
+        };
       }
     }),
     {
