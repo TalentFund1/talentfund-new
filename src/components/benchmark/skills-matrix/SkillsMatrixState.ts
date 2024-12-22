@@ -28,7 +28,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillName]: { level, required: requirement, requirement },
+            [skillName]: { level, requirement },
           },
           hasChanges: true,
         }));
@@ -48,11 +48,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillName]: { level, required: requirement, requirement },
+                [skillName]: { level, requirement },
               },
               originalStates: {
                 ...state.originalStates,
-                [skillName]: { level, required: requirement, requirement },
+                [skillName]: { level, requirement },
               },
             };
           }
