@@ -104,7 +104,15 @@ export const useSkillsFiltering = (
       const normalizedSelectedRequirement = normalizeRequirement(selectedInterest);
 
       if (selectedInterest !== 'all') {
-        matchesRequirement = employeeRequirement === normalizedSelectedRequirement;
+        // Explicitly check for not_interested case
+        if (normalizedSelectedRequirement === 'not_interested') {
+          matchesRequirement = employeeRequirement === 'not_interested';
+        } else if (normalizedSelectedRequirement === 'skill_goal') {
+          matchesRequirement = employeeRequirement === 'skill_goal';
+        } else if (normalizedSelectedRequirement === 'unknown') {
+          matchesRequirement = employeeRequirement === 'unknown';
+        }
+
         console.log('Filtering by requirement:', {
           skillTitle: skill.title,
           employeeRequirement,
