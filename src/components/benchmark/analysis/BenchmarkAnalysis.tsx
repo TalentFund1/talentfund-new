@@ -24,13 +24,11 @@ const getLevelPriority = (level: string = 'unspecified') => {
 
 const getSkillGoalPriority = (requirement: string = 'unknown') => {
   const priorities: { [key: string]: number } = {
-    'required': 0,
-    'skill_goal': 1,
-    'preferred': 2,
-    'not_interested': 3,
-    'unknown': 4
+    'skill_goal': 0,
+    'not_interested': 1,
+    'unknown': 2
   };
-  return priorities[requirement.toLowerCase()] ?? 4;
+  return priorities[requirement.toLowerCase()] ?? 2;
 };
 
 export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
@@ -114,15 +112,14 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    // Now using flexible matching for both tracks
     return employeePriority <= rolePriority;
   });
 
+  // Updated to only check for skill_goal
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
-    return skillState.requirement === 'required' || 
-           skillState.requirement === 'skill_goal';
+    return skillState.requirement === 'skill_goal';
   });
 
   console.log('Selected role match calculations:', {
