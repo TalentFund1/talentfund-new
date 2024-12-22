@@ -1,5 +1,5 @@
 import { SkillWeight, SkillCategory } from '../../../../../types/skillTypes';
-import { skillDefinitions } from '../skillDefinitions';
+import { skillDefinitions } from '../../universalSkillDatabase';
 
 const skillDefinitionMap = new Map(
   skillDefinitions.map(skill => [skill.title.toLowerCase(), skill])
