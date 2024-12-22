@@ -1,5 +1,6 @@
 import { UnifiedSkill } from '@/types/skillTypes';
 import { skillDefinitions } from './skills/skillDefinitions';
+import { getSkillCategory } from './skills/categories/skillCategories';
 import { generateId } from '@/lib/utils';
 
 // Helper function to generate consistent skill IDs
@@ -30,7 +31,7 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
     id: generateSkillId(skillTitle),
     title: skillTitle,
     subcategory: 'General',
-    category: 'common',
+    category: getSkillCategory(skillTitle),
     weight: 'necessary',
     growth: '0%',
     confidence: 'medium',
