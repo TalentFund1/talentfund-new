@@ -2,9 +2,9 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
-// Separate employee and role requirements
+// Employee skill requirements - no more "required", only "skill_goal"
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-export type RoleSkillRequirement = 'required' | 'preferred';
+export type RoleSkillRequirement = 'preferred';
 
 // Base interfaces
 export interface BaseSkillState {

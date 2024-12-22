@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
-import { useEmployeeStore } from '../../employee/store/employeeStore';
-import { filterSkillsByCategory } from './skillCategories';
+import { EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: EmployeeSkillState };
@@ -25,7 +23,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       setSkillState: (skillName, level, requirement) => {
         console.log('Setting skill state:', { skillName, level, requirement });
         
-        // Direct mapping without conversion
+        // Direct mapping - "required" becomes "skill_goal"
         let finalRequirement: EmployeeSkillRequirement;
         if (requirement === 'required') {
           finalRequirement = 'skill_goal';
@@ -59,7 +57,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       initializeState: (skillName, level, requirement) =>
         set((state) => {
           if (!state.currentStates[skillName]) {
-            // Direct mapping without conversion
+            // Direct mapping - "required" becomes "skill_goal"
             let finalRequirement: EmployeeSkillRequirement;
             if (requirement === 'required') {
               finalRequirement = 'skill_goal';
@@ -187,7 +185,7 @@ export const useSkillsMatrixState = (
   };
 };
 
-export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
+export const getEmployeeSkills = (employeeId: string) => {
   console.log('Getting skills for employee:', employeeId);
   return useEmployeeStore.getState().getEmployeeSkills(employeeId);
 };
