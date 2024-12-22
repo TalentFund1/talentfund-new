@@ -55,39 +55,22 @@ export interface ProfileSkillStates {
   };
 }
 
-// Type guard utilities
-export const isEmployeeRequirement = (req: any): req is EmployeeSkillRequirement => {
-  return ['skill_goal', 'not_interested', 'unknown'].includes(req);
+// Helper functions
+export const getSkillLevel = (state: EmployeeSkillState | RoleSkillState | string): string => {
+  if (typeof state === 'string') return state;
+  return state.level || 'unspecified';
 };
 
-export const isRoleRequirement = (req: any): req is RoleSkillRequirement => {
-  return ['required', 'preferred'].includes(req);
+export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): string => {
+  return state.requirement;
 };
 
-// Level priority helper
-export const getLevelPriority = (level: string = 'unspecified'): number => {
-  const priorities: { [key: string]: number } = {
-    'advanced': 0,
-    'intermediate': 1,
-    'beginner': 2,
-    'unspecified': 3
-  };
-  return priorities[level.toLowerCase()] ?? 3;
+export const isSkillGoal = (state: EmployeeSkillState): boolean => {
+  return state.requirement === 'skill_goal';
 };
 
-// Type guard utilities
-export const isEmployeeSkillState = (state: any): state is EmployeeSkillState => {
-  return state && 
-    typeof state.skillId === 'string' && 
-    typeof state.level === 'string' && 
-    isEmployeeRequirement(state.requirement);
-};
-
-export const isRoleSkillState = (state: any): state is RoleSkillState => {
-  return state && 
-    typeof state.id === 'string' && 
-    typeof state.level === 'string' && 
-    isRoleRequirement(state.requirement);
+export const isRequiredSkill = (state: RoleSkillState): boolean => {
+  return state.requirement === 'required';
 };
 
 // Type conversion utilities
@@ -110,30 +93,3 @@ export const convertToRoleSkillState = (
   level,
   requirement
 });
-
-// Helper functions for type-safe comparisons
-export const getSkillLevel = (state: EmployeeSkillState | RoleSkillState | string): string => {
-  if (typeof state === 'string') return state;
-  return state.level || 'unspecified';
-};
-
-export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): string => {
-  return state.requirement;
-};
-
-export const compareSkillLevels = (
-  level1: string | EmployeeSkillState | RoleSkillState,
-  level2: string | EmployeeSkillState | RoleSkillState
-): boolean => {
-  const l1 = getSkillLevel(level1);
-  const l2 = getSkillLevel(level2);
-  return l1.toLowerCase() === l2.toLowerCase();
-};
-
-export const isSkillGoal = (state: EmployeeSkillState): boolean => {
-  return state.requirement === 'skill_goal';
-};
-
-export const isRequiredSkill = (state: RoleSkillState): boolean => {
-  return state.requirement === 'required';
-};
