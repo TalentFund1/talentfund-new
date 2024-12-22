@@ -4,14 +4,12 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState, getEmployeeSkills } from "./skills-matrix/useSkillsMatrixState";
-import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 
 const ITEMS_PER_PAGE = 10;
 
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
   
@@ -73,28 +71,15 @@ export const SkillsMatrix = () => {
   };
 
   // Apply filtering and sorting
-  const filteredSkills = (() => {
-    let skills = sortSkills(filterAndSortSkills(id || ""));
+  const filteredSkills = sortSkills(filterAndSortSkills(id || ""));
 
-    // Filter by category if selected
-    if (selectedCategory !== 'all') {
-      skills = skills.filter(skill => {
-        const skillData = getUnifiedSkillData(skill.title);
-        return skillData?.category === selectedCategory;
-      });
-    }
-
-    console.log('Filtered skills by category:', {
-      category: selectedCategory,
-      totalSkills: skills.length,
-      skills: skills.map(s => ({
-        title: s.title,
-        category: getUnifiedSkillData(s.title)?.category
-      }))
-    });
-
-    return skills;
-  })();
+  console.log('Skills matrix state:', {
+    totalSkills: employeeSkills.length,
+    filteredSkills: filteredSkills.length,
+    visibleItems,
+    selectedLevel,
+    selectedInterest
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -124,8 +109,6 @@ export const SkillsMatrix = () => {
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
         filteredSkills={filteredSkills}
         visibleItems={visibleItems}
         observerTarget={observerTarget}
