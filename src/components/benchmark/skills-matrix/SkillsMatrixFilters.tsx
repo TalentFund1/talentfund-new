@@ -18,7 +18,6 @@ interface SkillsMatrixFiltersProps {
   clearSearch: () => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-  isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixFilters = ({
@@ -35,7 +34,6 @@ export const SkillsMatrixFilters = ({
   clearSearch,
   selectedCategory,
   setSelectedCategory,
-  isRoleBenchmark = false
 }: SkillsMatrixFiltersProps) => {
   return (
     <div className="space-y-6">
@@ -52,20 +50,6 @@ export const SkillsMatrixFilters = ({
           </SelectContent>
         </Select>
 
-        {isRoleBenchmark && (
-          <Select value={selectedInterest} onValueChange={setSelectedInterest}>
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="All Requirements" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Requirements</SelectItem>
-              <SelectItem value="skill_goal">Skill Goal</SelectItem>
-              <SelectItem value="not_interested">Not Interested</SelectItem>
-              <SelectItem value="unknown">Unknown</SelectItem>
-            </SelectContent>
-          </Select>
-        )}
-
         <Select value={selectedSkillLevel} onValueChange={setSelectedSkillLevel}>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Skill Levels" />
@@ -76,6 +60,18 @@ export const SkillsMatrixFilters = ({
             <SelectItem value="intermediate">Intermediate</SelectItem>
             <SelectItem value="beginner">Beginner</SelectItem>
             <SelectItem value="unspecified">Unspecified</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Requirements" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Requirements</SelectItem>
+            <SelectItem value="skill_goal">Skill Goal</SelectItem>
+            <SelectItem value="not_interested">Not Interested</SelectItem>
+            <SelectItem value="unknown">Unknown</SelectItem>
           </SelectContent>
         </Select>
       </div>
