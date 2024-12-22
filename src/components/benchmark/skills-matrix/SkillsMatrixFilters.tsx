@@ -12,6 +12,8 @@ interface SkillsMatrixFiltersProps {
   selectedSearchSkills: string[];
   removeSearchSkill: (skill: string) => void;
   clearSearch: () => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
 }
 
 export const SkillsMatrixFilters = ({
@@ -22,18 +24,18 @@ export const SkillsMatrixFilters = ({
   selectedSearchSkills,
   removeSearchSkill,
   clearSearch,
+  selectedCategory,
+  setSelectedCategory
 }: SkillsMatrixFiltersProps) => {
   console.log('Rendering SkillsMatrixFilters with:', {
-    selectedInterest
+    selectedInterest,
+    selectedCategory
   });
 
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
-        <Select 
-          value={selectedInterest} 
-          onValueChange={setSelectedInterest}
-        >
+        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Requirements">
               {selectedInterest === 'all' && 'All Requirements'}
@@ -47,6 +49,23 @@ export const SkillsMatrixFilters = ({
             <SelectItem value="skill_goal">Skill Goal</SelectItem>
             <SelectItem value="not_interested">Not Interested</SelectItem>
             <SelectItem value="unknown">Unknown</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Categories">
+              {selectedCategory === 'all' && 'All Categories'}
+              {selectedCategory === 'specialized' && 'Specialized'}
+              {selectedCategory === 'common' && 'Common'}
+              {selectedCategory === 'certification' && 'Certification'}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="specialized">Specialized</SelectItem>
+            <SelectItem value="common">Common</SelectItem>
+            <SelectItem value="certification">Certification</SelectItem>
           </SelectContent>
         </Select>
       </div>
