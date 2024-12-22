@@ -1,31 +1,11 @@
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillRequirement = 'required' | 'preferred' | 'skill_goal' | 'not_interested' | 'unknown';
+export type SkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 
 export interface SkillState {
   level: string;
   required: string;
-  requirement: string;
-}
-
-export interface UnifiedSkill {
-  id: string;
-  title: string;
-  subcategory: string;
-  category: SkillCategory;
-  businessCategory: string;
-  weight: SkillWeight;
-  level: string;
-  growth: string;
-  salary: string;
-  confidence: 'low' | 'medium' | 'high';
-  benchmarks: {
-    B: boolean;
-    R: boolean;
-    M: boolean;
-    O: boolean;
-  };
-  requirement?: SkillRequirement;
+  requirement: SkillRequirement;
 }
 
 export interface DetailedSkill {
@@ -34,28 +14,39 @@ export interface DetailedSkill {
   isSkillGoal: boolean;
 }
 
-export interface SimpleSkill {
+export interface Certification {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface SkillProfileRow {
+  id: string;
+  name: string;
+  function: string;
+  skillCount: string;
+  employees: string;
+  matches: string;
+  lastUpdated: string;
+  occupation?: string;  // Added occupation as optional property
+}
+
+export interface EmployeeSkill {
   title: string;
   subcategory: string;
   level: string;
   growth: string;
   confidence: string;
-  requirement?: string;
-  category?: string;
-  businessCategory?: string;
-  weight?: string;
+  requirement?: 'skill_goal' | 'not_interested' | 'unknown';
 }
 
-export interface RoleSkillData {
+export interface RoleSkill {
   title: string;
-  soc?: string;
-  function?: string;
-  mappedTitle?: string;
-  occupation?: string;
-  description?: string;
-  roleTrack?: "Professional" | "Managerial";
-  specialized: UnifiedSkill[];
-  common: UnifiedSkill[];
-  certifications: UnifiedSkill[];
-  skills: UnifiedSkill[];
+  subcategory: string;
+  level?: string;
+  growth: string;
+  confidence?: string;
+  requirement?: string;
+  salary?: string;
+  benchmarks?: { [key: string]: boolean };
 }

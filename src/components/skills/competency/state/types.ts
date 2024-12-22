@@ -1,7 +1,7 @@
 export interface SkillState {
   level: string;
   required: string;
-  requirement: string;
+  requirement: 'skill_goal' | 'not_interested' | 'unknown';
 }
 
 export interface RoleState {
