@@ -70,12 +70,18 @@ export const isRequiredSkill = (state: RoleSkillState): boolean => {
 
 // Type guards
 export const isEmployeeSkillState = (state: any): state is EmployeeSkillState => {
-  return state && 'requirement' in state && 
+  return state && 
+    'id' in state &&
+    'level' in state && 
+    'requirement' in state &&
     ['skill_goal', 'not_interested', 'unknown'].includes(state.requirement);
 };
 
 export const isRoleSkillState = (state: any): state is RoleSkillState => {
-  return state && 'requirement' in state && 
+  return state && 
+    'id' in state &&
+    'level' in state && 
+    'requirement' in state &&
     ['required', 'preferred'].includes(state.requirement);
 };
 
@@ -107,4 +113,20 @@ export const toRoleSkillState = (state: any): RoleSkillState => {
     level: ensureValidSkillLevel(state.level),
     requirement: state.requirement || 'preferred'
   };
+};
+
+// Helper to convert level string to SkillLevel
+export const parseSkillLevel = (level: string): SkillLevel => {
+  return ensureValidSkillLevel(level.toLowerCase());
+};
+
+// Helper to convert requirement string to appropriate type
+export const parseSkillRequirement = (requirement: string): EmployeeSkillRequirement | RoleSkillRequirement => {
+  if (['skill_goal', 'not_interested', 'unknown'].includes(requirement)) {
+    return requirement as EmployeeSkillRequirement;
+  }
+  if (['required', 'preferred'].includes(requirement)) {
+    return requirement as RoleSkillRequirement;
+  }
+  return 'unknown';
 };
