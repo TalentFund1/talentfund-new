@@ -3,26 +3,9 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
-export interface BaseSkillState {
+export interface SkillState {
   level: string;
-}
-
-export interface RoleSkillState extends BaseSkillState {
-  requirement: RoleSkillRequirement;
-}
-
-export interface EmployeeSkillState extends BaseSkillState {
-  requirement: EmployeeSkillRequirement;
-}
-
-export interface RoleState {
-  [skillName: string]: {
-    [levelKey: string]: RoleSkillState;
-  };
-}
-
-export interface EmployeeState {
-  [skillName: string]: EmployeeSkillState;
+  requirement: RoleSkillRequirement | EmployeeSkillRequirement;
 }
 
 export interface UnifiedSkill {
@@ -37,6 +20,23 @@ export interface UnifiedSkill {
   salary: string;
   confidence: string;
   benchmarks: { [key: string]: boolean };
+  requirement?: EmployeeSkillRequirement;
+}
+
+export interface EmployeeSkillState {
+  level: string;
+  requirement: EmployeeSkillRequirement;
+}
+
+export interface RoleSkillState {
+  level: string;
+  requirement: RoleSkillRequirement;
+}
+
+export interface RoleState {
+  [skillName: string]: {
+    [levelKey: string]: RoleSkillState;
+  };
 }
 
 export interface RoleSkillData {
@@ -85,7 +85,7 @@ export interface EmployeeSkill {
   level: string;
   growth: string;
   confidence: string;
-  requirement?: EmployeeSkillRequirement;
+  requirement?: 'required' | 'preferred' | 'skill_goal';
 }
 
 export interface RoleSkill {
@@ -94,19 +94,7 @@ export interface RoleSkill {
   level?: string;
   growth: string;
   confidence?: string;
-  requirement?: RoleSkillRequirement;
+  requirement?: string;
   salary?: string;
   benchmarks?: { [key: string]: boolean };
-}
-
-export interface SkillsMatrixFiltersProps {
-  selectedLevel: string;
-  setSelectedLevel: (level: string) => void;
-  selectedInterest: string;
-  setSelectedInterest: (interest: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-  isRoleBenchmark?: boolean;
-  selectedRoleRequirement?: string;
-  setSelectedRoleRequirement?: (requirement: string) => void;
 }

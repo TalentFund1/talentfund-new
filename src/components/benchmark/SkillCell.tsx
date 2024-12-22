@@ -3,7 +3,7 @@ import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { RoleSkillRequirement, RoleSkillState } from "../skills/types/SkillTypes";
+import { RoleSkillRequirement } from "../skills/types/SkillTypes";
 
 interface SkillCellProps {
   skillName: string;

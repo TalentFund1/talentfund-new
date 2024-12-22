@@ -1,8 +1,7 @@
 import { TableCell } from "@/components/ui/table";
-import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Check, X } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useEffect } from "react";
-import { EmployeeSkillRequirement } from "../skills/types/SkillTypes";
 
 interface StaticSkillLevelCellProps {
   initialLevel: string;
@@ -15,6 +14,7 @@ export const StaticSkillLevelCell = ({
 }: StaticSkillLevelCellProps) => {
   const { currentStates, initializeState } = useSkillsMatrixStore();
 
+  // Initialize the skill state with initial level and requirement
   useEffect(() => {
     console.log('Initializing static skill cell:', {
       skillTitle,
@@ -23,13 +23,13 @@ export const StaticSkillLevelCell = ({
     });
     
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, 'unspecified', 'unknown');
+      initializeState(skillTitle, 'unspecified', 'preferred');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
     level: 'unspecified',
-    requirement: 'unknown' as EmployeeSkillRequirement
+    requirement: 'preferred'
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {
@@ -45,16 +45,16 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: EmployeeSkillRequirement) => {
-    switch (requirement) {
-      case 'skill_goal':
+  const getRequirementIcon = (requirement: string = 'unknown') => {
+    switch (requirement?.toLowerCase()) {
+      case 'required':
         return <Check className="w-3.5 h-3.5" />;
-      case 'not_interested':
+      case 'not-interested':
         return <X className="w-3.5 h-3.5" />;
       case 'unknown':
         return <CircleDashed className="w-3.5 h-3.5" />;
       default:
-        return <Heart className="w-3.5 h-3.5" />;
+        return <CircleDashed className="w-3.5 h-3.5" />;
     }
   };
 
@@ -71,8 +71,8 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: EmployeeSkillRequirement) => {
-    if (requirement !== 'skill_goal') {
+  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'unknown') => {
+    if (requirement?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
@@ -97,8 +97,8 @@ export const StaticSkillLevelCell = ({
         `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
-            {currentState?.requirement === 'skill_goal' ? 'Skill Goal' : 
-             currentState?.requirement === 'not_interested' ? 'Not Interested' : 
+            {currentState?.requirement === 'required' ? 'Skill Goal' : 
+             currentState?.requirement === 'not-interested' ? 'Not Interested' : 
              currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
           </span>
         </div>
