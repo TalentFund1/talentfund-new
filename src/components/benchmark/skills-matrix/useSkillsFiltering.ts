@@ -86,7 +86,7 @@ export const useSkillsFiltering = (
       if (selectedInterest !== 'all') {
         // Direct comparison with employee requirement
         const employeeRequirement = employeeSkillState?.requirement;
-        matchesRequirement = employeeRequirement === 'skill_goal';
+        matchesRequirement = employeeRequirement === selectedInterest;
         
         console.log('Requirement matching:', {
           skill: skill.title,
