@@ -109,9 +109,15 @@ export const useSkillsFiltering = (
         }
       }
 
-      // Apply role requirement filter
+      // Apply role requirement filter based on competency state
       if (selectedRoleRequirement !== 'all') {
         matchesRoleRequirement = roleRequirement.toLowerCase() === selectedRoleRequirement.toLowerCase();
+        console.log('Filtering by role requirement:', {
+          skillTitle: skill.title,
+          roleRequirement,
+          selectedRoleRequirement,
+          matches: matchesRoleRequirement
+        });
       }
 
       if (searchTerm) {
