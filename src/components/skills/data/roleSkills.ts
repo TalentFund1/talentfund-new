@@ -1,6 +1,8 @@
 import { RoleSkillData, UnifiedSkill } from '../types/SkillTypes';
+import { getSkillByTitle } from './skills/allSkills';
+import { getSkillCategory } from './skills/categories/skillCategories';
 
-// Helper function to get skills for a role
+// Helper function to get skills for a role with proper categorization
 const getRoleSkills = (roleId: string): RoleSkillData => {
   console.log('Getting skills for role:', roleId);
   
@@ -9,17 +11,40 @@ const getRoleSkills = (roleId: string): RoleSkillData => {
   if (savedSkills) {
     console.log('Found saved skills for role:', roleId);
     const parsedSkills = JSON.parse(savedSkills);
-    return {
+    
+    // Re-categorize skills based on universal database
+    const recategorizedSkills = {
       ...parsedSkills,
-      specialized: parsedSkills.specialized || [],
-      common: parsedSkills.common || [],
-      certifications: parsedSkills.certifications || [],
+      specialized: (parsedSkills.specialized || []).map((skill: UnifiedSkill) => {
+        const universalSkill = getSkillByTitle(skill.title);
+        return {
+          ...skill,
+          category: universalSkill?.category || getSkillCategory(skill.title)
+        };
+      }),
+      common: (parsedSkills.common || []).map((skill: UnifiedSkill) => {
+        const universalSkill = getSkillByTitle(skill.title);
+        return {
+          ...skill,
+          category: universalSkill?.category || getSkillCategory(skill.title)
+        };
+      }),
+      certifications: (parsedSkills.certifications || []).map((skill: UnifiedSkill) => {
+        const universalSkill = getSkillByTitle(skill.title);
+        return {
+          ...skill,
+          category: universalSkill?.category || getSkillCategory(skill.title)
+        };
+      }),
       skills: parsedSkills.skills || [],
       function: parsedSkills.function || "Engineering",
       mappedTitle: parsedSkills.mappedTitle || "",
       occupation: parsedSkills.occupation || "",
       roleTrack: parsedSkills.roleTrack || getRoleDefaultTrack(roleId)
     };
+
+    console.log('Recategorized skills based on universal database:', recategorizedSkills);
+    return recategorizedSkills;
   }
   
   // Initialize with default values if no saved skills exist
@@ -109,19 +134,30 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
   console.log('Saving role skills:', { roleId, skills });
   
   try {
-    // Update localStorage
-    localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(skills));
-    
-    // Update in-memory state
-    roleSkills[roleId] = {
+    // Ensure all skills have proper categorization from universal database
+    const updatedSkills = {
       ...skills,
-      specialized: skills.specialized || [],
-      common: skills.common || [],
-      certifications: skills.certifications || [],
-      skills: skills.skills || []
+      specialized: skills.specialized.map(skill => ({
+        ...skill,
+        category: getSkillByTitle(skill.title)?.category || getSkillCategory(skill.title)
+      })),
+      common: skills.common.map(skill => ({
+        ...skill,
+        category: getSkillByTitle(skill.title)?.category || getSkillCategory(skill.title)
+      })),
+      certifications: skills.certifications.map(skill => ({
+        ...skill,
+        category: getSkillByTitle(skill.title)?.category || getSkillCategory(skill.title)
+      }))
     };
     
-    console.log('Updated role skills:', roleSkills[roleId]);
+    // Update localStorage
+    localStorage.setItem(`role-skills-${roleId}`, JSON.stringify(updatedSkills));
+    
+    // Update in-memory state
+    roleSkills[roleId] = updatedSkills;
+    
+    console.log('Updated role skills with universal categories:', roleSkills[roleId]);
     
     // Dispatch custom event for components to update
     window.dispatchEvent(new CustomEvent('roleSkillsUpdated', { 
@@ -140,7 +176,23 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
   try {
     const savedSkills = localStorage.getItem(`role-skills-${roleId}`);
     if (savedSkills) {
-      return JSON.parse(savedSkills);
+      const parsedSkills = JSON.parse(savedSkills);
+      // Ensure loaded skills use universal database categories
+      return {
+        ...parsedSkills,
+        specialized: parsedSkills.specialized.map((skill: UnifiedSkill) => ({
+          ...skill,
+          category: getSkillByTitle(skill.title)?.category || getSkillCategory(skill.title)
+        })),
+        common: parsedSkills.common.map((skill: UnifiedSkill) => ({
+          ...skill,
+          category: getSkillByTitle(skill.title)?.category || getSkillCategory(skill.title)
+        })),
+        certifications: parsedSkills.certifications.map((skill: UnifiedSkill) => ({
+          ...skill,
+          category: getSkillByTitle(skill.title)?.category || getSkillCategory(skill.title)
+        }))
+      };
     }
   } catch (error) {
     console.error('Error loading role skills:', error);
