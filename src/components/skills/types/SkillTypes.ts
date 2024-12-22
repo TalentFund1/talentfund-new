@@ -1,18 +1,24 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
+
+// Employee-specific types
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
+
+export interface EmployeeSkillState {
+  level: string;
+  requirement: EmployeeSkillRequirement;
+}
+
+export interface EmployeeState {
+  [skillName: string]: EmployeeSkillState;
+}
+
+// Role-specific types
 export type RoleSkillRequirement = 'required' | 'preferred';
 
-export interface BaseSkillState {
+export interface RoleSkillState {
   level: string;
-}
-
-export interface RoleSkillState extends BaseSkillState {
   requirement: RoleSkillRequirement;
-}
-
-export interface EmployeeSkillState extends BaseSkillState {
-  requirement: EmployeeSkillRequirement;
 }
 
 export interface RoleState {
@@ -21,10 +27,7 @@ export interface RoleState {
   };
 }
 
-export interface EmployeeState {
-  [skillName: string]: EmployeeSkillState;
-}
-
+// Shared skill types
 export interface UnifiedSkill {
   id: string;
   title: string;
@@ -53,30 +56,23 @@ export interface RoleSkillData {
   description?: string;
 }
 
-export interface BaseSkill {
-  name: string;
+// Component-specific types
+export interface SkillsMatrixFiltersProps {
+  selectedLevel: string;
+  setSelectedLevel: (level: string) => void;
+  selectedInterest: string;
+  setSelectedInterest: (interest: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
+  isRoleBenchmark?: boolean;
+  selectedRoleRequirement?: string;
+  setSelectedRoleRequirement?: (requirement: string) => void;
 }
 
-export interface DetailedSkill extends BaseSkill {
+export interface DetailedSkill {
+  name: string;
   level: string;
   isSkillGoal: boolean;
-}
-
-export interface Certification extends BaseSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
-}
-
-export interface SkillProfileRow {
-  id: string;
-  name: string;
-  function: string;
-  skillCount: string;
-  employees: string;
-  matches: string;
-  lastUpdated: string;
-  occupation?: string;
 }
 
 export interface EmployeeSkill {
@@ -99,14 +95,25 @@ export interface RoleSkill {
   benchmarks?: { [key: string]: boolean };
 }
 
-export interface SkillsMatrixFiltersProps {
-  selectedLevel: string;
-  setSelectedLevel: (level: string) => void;
-  selectedInterest: string;
-  setSelectedInterest: (interest: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-  isRoleBenchmark?: boolean;
-  selectedRoleRequirement?: string;
-  setSelectedRoleRequirement?: (requirement: string) => void;
-}
+// Helper function to convert between requirement types
+export const convertToEmployeeRequirement = (roleReq: RoleSkillRequirement): EmployeeSkillRequirement => {
+  switch (roleReq) {
+    case 'required':
+      return 'skill_goal';
+    case 'preferred':
+      return 'unknown';
+    default:
+      return 'unknown';
+  }
+};
+
+export const convertToRoleRequirement = (empReq: EmployeeSkillRequirement): RoleSkillRequirement => {
+  switch (empReq) {
+    case 'skill_goal':
+      return 'required';
+    case 'not_interested':
+      return 'preferred';
+    default:
+      return 'preferred';
+  }
+};

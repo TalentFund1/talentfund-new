@@ -2,7 +2,7 @@ import { TableCell } from "@/components/ui/table";
 import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useEffect } from "react";
-import { EmployeeSkillRequirement } from "../skills/types/SkillTypes";
+import { EmployeeSkillRequirement, EmployeeSkillState } from "../skills/types/SkillTypes";
 
 interface StaticSkillLevelCellProps {
   initialLevel: string;
