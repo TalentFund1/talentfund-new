@@ -14,17 +14,25 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
+  // Get all skills for the role
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  // Filter to only include toggled skills
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
+
   const getToggledSkillsCount = (category: string) => {
-    const toggledSkillsArray = Array.from(toggledSkills);
-    
     if (category === 'all') {
-      return toggledSkillsArray.length;
+      return toggledRoleSkills.length;
     }
 
-    return toggledSkillsArray.filter(skillTitle => {
-      const skillData = getUnifiedSkillData(skillTitle);
+    return toggledRoleSkills.filter(skill => {
+      const skillData = getUnifiedSkillData(skill.title);
       console.log('Checking skill category:', {
-        skill: skillTitle,
+        skill: skill.title,
         category: skillData.category,
         matchesFilter: category === 'all' || skillData.category === category
       });
@@ -42,7 +50,8 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   console.log('CategorySection - Skill counts:', {
     roleId: id,
     counts: skillCounts,
-    toggledSkills: Array.from(toggledSkills)
+    toggledSkills: Array.from(toggledSkills),
+    totalRoleSkills: toggledRoleSkills.length
   });
 
   const categories = [
