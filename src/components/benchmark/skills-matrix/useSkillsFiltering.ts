@@ -2,7 +2,7 @@ import { useEmployeeStore } from "../../employee/store/employeeStore";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
-import { EmployeeSkillRequirement } from "../../../types/skillTypes";
+import { EmployeeSkillRequirement, UnifiedSkill } from "../../../types/skillTypes";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 
 export const useSkillsFiltering = (
@@ -84,6 +84,7 @@ export const useSkillsFiltering = (
       }
 
       if (selectedInterest !== 'all') {
+        // Direct comparison with employee requirement
         matchesRequirement = employeeSkillState.requirement === selectedInterest;
         
         console.log('Requirement matching:', {

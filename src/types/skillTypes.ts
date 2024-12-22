@@ -3,7 +3,7 @@ export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
 // Separate employee and role requirements
-export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown' | 'required' | 'preferred';
+export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
 // Base interfaces
