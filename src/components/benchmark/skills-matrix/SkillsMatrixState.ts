@@ -4,14 +4,10 @@ import { EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/ski
 
 interface SkillsMatrixState {
   skillStates: {
-    [employeeId: string]: {
-      [skillId: string]: EmployeeSkillState;
-    };
+    [skillId: string]: EmployeeSkillState;
   };
   currentStates: {
-    [employeeId: string]: {
-      [skillId: string]: EmployeeSkillState;
-    };
+    [skillId: string]: EmployeeSkillState;
   };
   hasChanges: boolean;
   setSkillState: (employeeId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
@@ -35,14 +31,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           // Create deep copies to avoid reference issues
           const updatedSkillStates = {
             ...state.skillStates,
-            [employeeId]: {
-              ...state.skillStates[employeeId],
-              [skillId]: {
-                employeeId,
-                skillId,
-                level,
-                requirement
-              }
+            [skillId]: {
+              employeeId,
+              skillId,
+              level,
+              requirement
             }
           };
 
@@ -50,14 +43,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             skillStates: updatedSkillStates,
             currentStates: {
               ...state.currentStates,
-              [employeeId]: {
-                ...state.currentStates[employeeId],
-                [skillId]: {
-                  employeeId,
-                  skillId,
-                  level,
-                  requirement
-                }
+              [skillId]: {
+                employeeId,
+                skillId,
+                level,
+                requirement
               }
             },
             hasChanges: true
@@ -67,7 +57,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
 
       initializeState: (employeeId, skillId, initialLevel, initialRequirement) => {
         const state = get();
-        if (!state.skillStates[employeeId]?.[skillId]) {
+        if (!state.skillStates[skillId]) {
           console.log('Initializing skill state:', { 
             employeeId, 
             skillId, 
@@ -78,26 +68,20 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           set((state) => ({
             skillStates: {
               ...state.skillStates,
-              [employeeId]: {
-                ...state.skillStates[employeeId],
-                [skillId]: {
-                  employeeId,
-                  skillId,
-                  level: initialLevel,
-                  requirement: initialRequirement
-                }
+              [skillId]: {
+                employeeId,
+                skillId,
+                level: initialLevel,
+                requirement: initialRequirement
               }
             },
             currentStates: {
               ...state.currentStates,
-              [employeeId]: {
-                ...state.currentStates[employeeId],
-                [skillId]: {
-                  employeeId,
-                  skillId,
-                  level: initialLevel,
-                  requirement: initialRequirement
-                }
+              [skillId]: {
+                employeeId,
+                skillId,
+                level: initialLevel,
+                requirement: initialRequirement
               }
             }
           }));
@@ -105,7 +89,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       },
 
       getSkillState: (employeeId, skillId) => {
-        const state = get().skillStates[employeeId]?.[skillId];
+        const state = get().skillStates[skillId];
         console.log('Getting skill state:', { employeeId, skillId, state });
         return state;
       },
@@ -128,7 +112,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 7, // Increment version to ensure clean state
+      version: 8, // Increment version to ensure clean state
       partialize: (state) => ({
         skillStates: state.skillStates,
         currentStates: state.currentStates
