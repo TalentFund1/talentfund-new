@@ -5,10 +5,14 @@ export type SkillLevel = 'advanced' | 'intermediate' | 'beginner' | 'unspecified
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
-// Core skill interface
-export interface UnifiedSkill {
+// Base skill interface
+export interface BaseSkill {
   id: string;
   title: string;
+}
+
+// Core skill interface
+export interface UnifiedSkill extends BaseSkill {
   subcategory: string;
   category: SkillCategory;
   businessCategory?: string;
@@ -51,6 +55,12 @@ export interface ProfileSkillStates {
   };
 }
 
+// For detailed skill display
+export interface DetailedSkill extends BaseSkill {
+  level: SkillLevel;
+  isSkillGoal: boolean;
+}
+
 // Helper functions
 export const getSkillStateLevel = (state: EmployeeSkillState | RoleSkillState): SkillLevel => {
   return state.level;
@@ -85,12 +95,6 @@ export const isRoleSkillState = (state: any): state is RoleSkillState => {
     ['required', 'preferred'].includes(state.requirement);
 };
 
-// For detailed skill display
-export interface DetailedSkill extends BaseSkillState {
-  name: string;
-  isSkillGoal: boolean;
-}
-
 // Helper to ensure valid skill level
 export const ensureValidSkillLevel = (level: string): SkillLevel => {
   const validLevels: SkillLevel[] = ['advanced', 'intermediate', 'beginner', 'unspecified'];
@@ -100,7 +104,7 @@ export const ensureValidSkillLevel = (level: string): SkillLevel => {
 // Helper to convert any skill state to employee skill state
 export const toEmployeeSkillState = (state: any): EmployeeSkillState => {
   return {
-    id: state.id || state.skillId,
+    id: state.id || state.skillId || '',
     level: ensureValidSkillLevel(state.level),
     requirement: state.requirement || 'unknown'
   };
@@ -109,7 +113,7 @@ export const toEmployeeSkillState = (state: any): EmployeeSkillState => {
 // Helper to convert any skill state to role skill state
 export const toRoleSkillState = (state: any): RoleSkillState => {
   return {
-    id: state.id || state.skillId,
+    id: state.id || state.skillId || '',
     level: ensureValidSkillLevel(state.level),
     requirement: state.requirement || 'preferred'
   };

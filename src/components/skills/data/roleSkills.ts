@@ -1,6 +1,19 @@
 import { UnifiedSkill, RoleSkillRequirement } from '@/types/skillTypes';
 
-export const roleSkills = {
+interface RoleSkillData {
+  title: string;
+  roleTrack?: "Professional" | "Managerial";
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+  soc?: string;
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
+}
+
+export const roleSkills: Record<string, RoleSkillData> = {
   "123": {
     title: "AI Engineer",
     specialized: [
@@ -57,4 +70,26 @@ export const roleSkills = {
       { title: "Certified Scrum Master", subcategory: "Certification", level: "advanced", growth: "18%", confidence: "high", requirement: "required" },
     ]
   }
+};
+
+export const saveRoleSkills = (roleId: string, roleData: RoleSkillData): void => {
+  roleSkills[roleId] = roleData;
+  // Persist to localStorage if needed
+  try {
+    localStorage.setItem(`role_skills_${roleId}`, JSON.stringify(roleData));
+  } catch (error) {
+    console.error('Error saving role skills:', error);
+  }
+};
+
+export const loadRoleSkills = (roleId: string): RoleSkillData | undefined => {
+  try {
+    const savedData = localStorage.getItem(`role_skills_${roleId}`);
+    if (savedData) {
+      return JSON.parse(savedData);
+    }
+  } catch (error) {
+    console.error('Error loading role skills:', error);
+  }
+  return roleSkills[roleId];
 };
