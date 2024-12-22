@@ -14,7 +14,7 @@ export interface CompetencyState {
   currentStates: Record<string, RoleState>;
   originalStates: Record<string, RoleState>;
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, levelKey: string, requirement: 'skill_goal' | 'not_interested' | 'unknown', roleId: string) => void;
+  setSkillState: (skillName: string, level: string, levelKey: string, requirement: 'required' | 'preferred', roleId: string) => void;
   setSkillProgression: (skillName: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
   resetLevels: (roleId: string) => void;
   saveChanges: (roleId: string, track: string) => void;
