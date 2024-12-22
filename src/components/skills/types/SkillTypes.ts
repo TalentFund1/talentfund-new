@@ -40,6 +40,7 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+  skills?: UnifiedSkill[]; // Made optional since some implementations don't use it
   soc?: string;
   function?: string;
   mappedTitle?: string;
@@ -47,49 +48,5 @@ export interface RoleSkillData {
   description?: string;
 }
 
-export interface DetailedSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
-}
-
-export interface BaseSkill {
-  name: string;
-}
-
-export interface Certification extends BaseSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
-}
-
-export interface SkillProfileRow {
-  id: string;
-  name: string;
-  function: string;
-  skillCount: string;
-  employees: string;
-  matches: string;
-  lastUpdated: string;
-  occupation?: string;
-}
-
-export interface EmployeeSkill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: EmployeeSkillRequirement;
-}
-
-export interface RoleSkill {
-  title: string;
-  subcategory: string;
-  level?: string;
-  growth: string;
-  confidence?: string;
-  requirement?: RoleSkillRequirement;
-  salary?: string;
-  benchmarks?: { [key: string]: boolean };
-}
+// Re-export types that were previously imported from other files
+export type { DetailedSkill, BaseSkill, Certification, SkillProfileRow, EmployeeSkill, RoleSkill } from './types';
