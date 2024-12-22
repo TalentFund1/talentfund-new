@@ -52,15 +52,12 @@ export interface ProfileSkillStates {
 }
 
 // Helper functions
-export const getSkillLevel = (state: BaseSkillState): SkillLevel => {
+export const getSkillStateLevel = (state: EmployeeSkillState | RoleSkillState): SkillLevel => {
   return state.level;
 };
 
-export const getSkillRequirement = (state: BaseSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
-  if ('requirement' in state) {
-    return (state as EmployeeSkillState | RoleSkillState).requirement;
-  }
-  return 'unknown';
+export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
+  return state.requirement;
 };
 
 export const isSkillGoal = (state: EmployeeSkillState): boolean => {
@@ -88,22 +85,26 @@ export interface DetailedSkill extends BaseSkillState {
   isSkillGoal: boolean;
 }
 
-// Helper to safely get skill level
-export const getSkillStateLevel = (state: EmployeeSkillState | RoleSkillState): SkillLevel => {
-  return state.level;
-};
-
-// Helper to safely get skill requirement
-export const getSkillStateRequirement = (state: EmployeeSkillState | RoleSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
-  return state.requirement;
-};
-
-// Helper to check if a level is valid
-export const isValidSkillLevel = (level: string): level is SkillLevel => {
-  return ['advanced', 'intermediate', 'beginner', 'unspecified'].includes(level);
-};
-
 // Helper to ensure valid skill level
 export const ensureValidSkillLevel = (level: string): SkillLevel => {
-  return isValidSkillLevel(level) ? level : 'unspecified';
+  const validLevels: SkillLevel[] = ['advanced', 'intermediate', 'beginner', 'unspecified'];
+  return validLevels.includes(level as SkillLevel) ? level as SkillLevel : 'unspecified';
+};
+
+// Helper to convert any skill state to employee skill state
+export const toEmployeeSkillState = (state: any): EmployeeSkillState => {
+  return {
+    id: state.id || state.skillId,
+    level: ensureValidSkillLevel(state.level),
+    requirement: state.requirement || 'unknown'
+  };
+};
+
+// Helper to convert any skill state to role skill state
+export const toRoleSkillState = (state: any): RoleSkillState => {
+  return {
+    id: state.id || state.skillId,
+    level: ensureValidSkillLevel(state.level),
+    requirement: state.requirement || 'preferred'
+  };
 };
