@@ -1,4 +1,4 @@
-import { RoleState, RoleSkillState } from "../../types/SkillTypes";
+import { RoleState, RoleSkillState, RoleSkillRequirement } from "../../types/SkillTypes";
 
 export interface CompetencyState {
   roleStates: Record<string, RoleState>;
