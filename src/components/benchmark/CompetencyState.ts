@@ -38,6 +38,7 @@ const initializeRoleState = (roleId: string): RoleState => {
     initialStates[skill.title] = {};
     ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
       initialStates[skill.title][level] = {
+        id: skill.title,
         level: 'unspecified',
         requirement: 'preferred'
       };
@@ -64,6 +65,7 @@ export const useCompetencyStore = create<CompetencyState>()(
             [skillName]: {
               ...(currentRoleState[skillName] || {}),
               [levelKey]: { 
+                id: skillName,
                 level,
                 requirement 
               }
