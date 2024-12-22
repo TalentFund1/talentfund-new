@@ -110,3 +110,18 @@ export const getSkillStateLevel = (state: EmployeeSkillState | string): string =
   if (typeof state === 'string') return state;
   return state.level;
 };
+
+// Helper to safely get skill requirement
+export const getSkillStateRequirement = (state: EmployeeSkillState | RoleSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
+  return state.requirement;
+};
+
+// Helper to check if a level is valid
+export const isValidSkillLevel = (level: string): level is SkillLevel => {
+  return ['advanced', 'intermediate', 'beginner', 'unspecified'].includes(level);
+};
+
+// Helper to ensure valid skill level
+export const ensureValidSkillLevel = (level: string): SkillLevel => {
+  return isValidSkillLevel(level) ? level : 'unspecified';
+};
