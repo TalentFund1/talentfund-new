@@ -1,4 +1,4 @@
-import { UnifiedSkill } from '../../../types/skillTypes';
+import { UnifiedSkill } from '../types/SkillTypes';
 import { getSkillByTitle, getSkillCategory } from './skillDefinitions';
 import { normalizeSkillTitle } from '../utils/normalization';
 
@@ -20,9 +20,9 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     id: `SKILL_${Date.now()}`,
     title: normalizedTitle,
     subcategory: "Other",
-    category: 'common',
+    category: 'common', // Default to common for unknown skills
     businessCategory: "Information Technology",
-    weight: 'necessary',
+    weight: "necessary",
     level: "beginner",
     growth: "10%",
     salary: "$0",

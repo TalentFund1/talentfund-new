@@ -11,17 +11,17 @@ export interface BaseSkill {
 }
 
 export interface UnifiedSkill {
-  id: string;
+  id?: string;
   title: string;
   subcategory: string;
-  category: SkillCategory;
-  businessCategory: string;
-  weight: SkillWeight;
-  level: string;
+  level?: string;
   growth: string;
-  salary: string;
   confidence: string;
-  benchmarks: { [key: string]: boolean };
+  requirement?: RoleSkillRequirement;
+  category?: string;
+  weight?: string;
+  businessCategory?: string;
+  salary?: string;
 }
 
 export interface EmployeeSkillState {
@@ -46,10 +46,4 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
-}
-
-export interface SkillState {
-  level: string;
-  required: string;
-  requirement: RoleSkillRequirement;
 }
