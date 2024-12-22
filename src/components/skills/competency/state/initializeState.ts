@@ -1,6 +1,8 @@
 import { roleSkills } from '../../data/roleSkills';
 import { RoleState, RoleSkillState } from './types';
 
+export const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
+
 export const initializeRoleState = (roleId: string): RoleState => {
   console.log('Initializing new state for role:', roleId);
   

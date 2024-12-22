@@ -1,11 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyState, RoleState, SkillState } from './state/types';
+import { CompetencyState, RoleState, RoleSkillState } from './state/types';
 import { initializeRoleState } from './state/initializeState';
 
-const defaultSkillState: SkillState = {
+const defaultSkillState: RoleSkillState = {
   level: 'unspecified',
-  required: 'preferred',
   requirement: 'preferred'
 };
 
@@ -17,8 +16,8 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, levelKey, required, roleId) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
+      setSkillState: (skillName, level, levelKey, requirement, roleId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId });
         set((state) => {
           const currentRoleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
@@ -27,8 +26,7 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...(currentRoleState[skillName] || {}),
               [levelKey]: { 
                 level, 
-                required,
-                requirement: required 
+                requirement
               }
             }
           };
