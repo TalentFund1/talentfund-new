@@ -46,6 +46,7 @@ export interface RoleState {
 }
 
 export interface SkillState {
+  id: string;
   level: string;
   requirement: EmployeeSkillRequirement | RoleSkillRequirement;
 }
