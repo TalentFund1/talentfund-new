@@ -84,13 +84,12 @@ export const useSkillsFiltering = (
       }
 
       if (selectedInterest !== 'all') {
-        const normalizedSelectedRequirement = selectedInterest as EmployeeSkillRequirement;
-        matchesRequirement = employeeSkillState.requirement === normalizedSelectedRequirement;
+        matchesRequirement = employeeSkillState.requirement === selectedInterest;
         
         console.log('Requirement matching:', {
           skill: skill.title,
           employeeRequirement: employeeSkillState.requirement,
-          selectedRequirement: normalizedSelectedRequirement,
+          selectedRequirement: selectedInterest,
           matches: matchesRequirement
         });
       }
