@@ -1,17 +1,17 @@
-import { SkillState } from './types';
+import { RoleSkillState, RoleState } from '../../../../types/skillTypes';
 
 export const getCurrentRoleState = (
-  roleStates: Record<string, Record<string, Record<string, SkillState>>>,
+  roleStates: Record<string, RoleState>,
   roleId: string
-): Record<string, Record<string, SkillState>> => {
+): RoleState => {
   return roleStates[roleId] || {};
 };
 
 export const getSkillState = (
-  roleStates: Record<string, Record<string, Record<string, SkillState>>>,
+  roleStates: Record<string, RoleState>,
   roleId: string,
   skillName: string,
   levelKey: string
-): SkillState | undefined => {
+): RoleSkillState | undefined => {
   return roleStates[roleId]?.[skillName]?.[levelKey];
 };
