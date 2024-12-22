@@ -1,4 +1,13 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getAllSkills } from "../../skills/data/skills/allSkills";
+import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 
 interface SkillsMatrixFiltersProps {
   selectedLevel: string;
@@ -7,7 +16,6 @@ interface SkillsMatrixFiltersProps {
   setSelectedInterest: (interest: string) => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-  addSkillButton: React.ReactNode;
 }
 
 export const SkillsMatrixFilters = ({
@@ -17,8 +25,17 @@ export const SkillsMatrixFilters = ({
   setSelectedInterest,
   selectedCategory,
   setSelectedCategory,
-  addSkillButton,
 }: SkillsMatrixFiltersProps) => {
+  // Get all skills and their categories
+  const allSkills = getAllSkills();
+  
+  // Get unique categories from skills
+  const categories = Array.from(new Set(allSkills.map(skill => 
+    getSkillCategory(skill.title)
+  ))).filter(Boolean);
+
+  console.log('Available categories for filtering:', categories);
+
   return (
     <div className="flex items-center justify-between mb-6">
       <div className="flex gap-4">
@@ -59,7 +76,6 @@ export const SkillsMatrixFilters = ({
           </SelectContent>
         </Select>
       </div>
-      {addSkillButton}
     </div>
   );
 };

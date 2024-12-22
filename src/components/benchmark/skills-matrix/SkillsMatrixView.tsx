@@ -34,6 +34,9 @@ export const SkillsMatrixView = ({
   const { toast } = useToast();
   const { saveChanges, cancelChanges } = useSkillsMatrixStore();
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
+  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
 
   const handleSave = () => {
     saveChanges();
@@ -68,7 +71,6 @@ export const SkillsMatrixView = ({
         setSelectedInterest={setSelectedInterest}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        addSkillButton={<AddEmployeeSkillDialog />}
       />
 
       <SkillsMatrixTable 
