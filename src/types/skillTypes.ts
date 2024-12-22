@@ -11,15 +11,15 @@ export interface BaseSkill {
 }
 
 export interface UnifiedSkill {
-  id?: string;
+  id: string;
   title: string;
   subcategory: string;
   level?: string;
   growth: string;
   confidence: string;
   requirement?: RoleSkillRequirement;
-  category?: string;
-  weight?: string;
+  category?: SkillCategory;
+  weight?: SkillWeight;
   businessCategory?: string;
   salary?: string;
 }
