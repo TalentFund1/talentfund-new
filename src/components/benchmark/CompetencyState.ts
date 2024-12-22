@@ -1,14 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export interface SkillState {
-  level: string;
-  required: string;
-}
+import { SkillState, RoleState, EmployeeSkillState } from '../skills/types/SkillTypes';
 
 interface CompetencyState {
-  employeeStates: Record<string, Record<string, Record<string, SkillState>>>;
-  setSkillState: (employeeId: string, skillName: string, level: string, levelKey: string, required: string) => void;
+  roleStates: Record<string, RoleState>;
+  currentStates: Record<string, RoleState>;
+  originalStates: Record<string, RoleState>;
+  hasChanges: boolean;
+  setSkillState: (
+    employeeId: string,
+    skillName: string,
+    level: string,
+    levelKey: string,
+    required: string
+  ) => void;
 }
 
 const defaultSkillState: SkillState = {
@@ -23,68 +28,52 @@ const managerialLevels = ['m3', 'm4', 'm5', 'm6'];
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
     (set) => ({
-      employeeStates: {},
+      roleStates: {},
+      currentStates: {},
+      originalStates: {},
+      hasChanges: false,
       setSkillState: (employeeId, skillName, level, levelKey, required) => {
         console.log('Setting skill state:', { employeeId, skillName, level, levelKey, required });
         set((state) => {
-          // Initialize the employee state if it doesn't exist
-          if (!state.employeeStates[employeeId]) {
-            console.log('Initializing new employee states:', employeeId);
-            state.employeeStates[employeeId] = {};
+          const newRoleStates = { ...state.roleStates };
+          
+          // Initialize nested structure if it doesn't exist
+          if (!newRoleStates[employeeId]) {
+            newRoleStates[employeeId] = {};
           }
-
-          // Initialize the skill state if it doesn't exist
-          if (!state.employeeStates[employeeId][skillName]) {
-            console.log('Initializing new skill with default states:', skillName);
-            const initialSkillState: Record<string, SkillState> = {};
-            
-            // Determine track based on level key
-            const isManagerial = levelKey.toLowerCase().startsWith('m');
-            const levels = isManagerial ? managerialLevels : professionalLevels;
-            
-            console.log('Using track levels:', {
-              isManagerial,
-              levels,
-              levelKey
-            });
-            
-            // Initialize all levels with default state
-            levels.forEach(level => {
-              initialSkillState[level] = { ...defaultSkillState };
-            });
-            
-            state.employeeStates[employeeId][skillName] = initialSkillState;
+          if (!newRoleStates[employeeId][skillName]) {
+            newRoleStates[employeeId][skillName] = {};
           }
+          
+          // Set the skill state for this specific employee
+          newRoleStates[employeeId][skillName][levelKey] = {
+            level,
+            required
+          };
 
           return {
-            employeeStates: {
-              ...state.employeeStates,
-              [employeeId]: {
-                ...state.employeeStates[employeeId],
-                [skillName]: {
-                  ...state.employeeStates[employeeId][skillName],
-                  [levelKey]: {
-                    level,
-                    required,
-                  },
-                },
-              },
-            },
+            roleStates: newRoleStates,
+            currentStates: { ...newRoleStates },
+            hasChanges: true
           };
         });
       },
     }),
     {
       name: 'competency-matrix-storage',
-      version: 24, // Increment version to ensure clean state
+      version: 25, // Increment version to ensure clean state
       partialize: (state) => ({
-        employeeStates: state.employeeStates,
+        roleStates: state.roleStates,
+        currentStates: state.currentStates,
+        originalStates: state.originalStates,
       }),
       merge: (persistedState: any, currentState: CompetencyState) => {
         console.log('Merging persisted state:', persistedState);
         return {
           ...currentState,
-          employeeStates: persistedState.employeeStates || {},
+          roleStates: persistedState.roleStates || {},
+          currentStates: persistedState.currentStates || {},
+          originalStates: persistedState.originalStates || {},
         };
       },
     }

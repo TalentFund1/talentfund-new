@@ -2,6 +2,49 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillRequirement = 'required' | 'preferred' | 'skill_goal' | 'not_interested' | 'unknown';
 
+export interface SkillState {
+  level: string;
+  required: string;
+}
+
+export interface LevelState {
+  [levelKey: string]: SkillState;
+}
+
+export interface EmployeeSkillState {
+  [skillName: string]: LevelState;
+}
+
+export interface RoleState {
+  [employeeId: string]: EmployeeSkillState;
+}
+
+export interface CompetencyState {
+  roleStates: Record<string, RoleState>;
+  currentStates: Record<string, RoleState>;
+  originalStates: Record<string, RoleState>;
+  hasChanges: boolean;
+  setSkillState: (
+    skillName: string,
+    level: string,
+    levelKey: string,
+    required: string,
+    roleId: string,
+    employeeId: string
+  ) => void;
+  setSkillProgression: (
+    skillName: string,
+    progression: Record<string, SkillState>,
+    roleId: string,
+    employeeId: string
+  ) => void;
+  resetLevels: (roleId: string, employeeId: string) => void;
+  saveChanges: (roleId: string) => void;
+  cancelChanges: (roleId: string) => void;
+  initializeState: (roleId: string, employeeId: string) => void;
+  getRoleState: (roleId: string, employeeId: string) => EmployeeSkillState;
+}
+
 // Base skill interface with common properties
 export interface BaseSkill {
   id: string;
@@ -53,4 +96,23 @@ export interface MappedSkill extends UnifiedSkill {
   isCompanySkill: boolean;
 }
 
-console.log('SkillTypes loaded with all required interfaces and types');
+export interface DetailedSkill extends BaseSkill {
+  level: string;
+  isSkillGoal: boolean;
+}
+
+export interface SimpleSkill {
+  title: string;
+  level: string;
+}
+
+export interface RoleSkillData {
+  title: string;
+  specialized?: RoleSkill[];
+  common?: RoleSkill[];
+  certifications?: RoleSkill[];
+}
+
+export interface Skill extends BaseSkill {
+  // Additional properties specific to the Skill interface if needed
+}
