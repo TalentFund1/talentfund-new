@@ -14,7 +14,7 @@ interface EmployeeStore {
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => UnifiedSkill[];
   setSkillState: (employeeId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
-  getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
+  getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState | undefined;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
 
@@ -26,24 +26,25 @@ export const useEmployeeStore = create<EmployeeStore>()(
       skillStates: {},
 
       initializeEmployeeSkills: (employeeId: string) => {
-        console.log('Initializing empty skills array for employee:', employeeId);
+        console.log('Initializing skills for employee:', employeeId);
         const store = get();
         
         if (!store.employeeSkills[employeeId]) {
           store.setEmployeeSkills(employeeId, []);
-          
-          if (!store.skillStates[employeeId]) {
-            set((state) => ({
-              skillStates: {
-                ...state.skillStates,
-                [employeeId]: {}
-              }
-            }));
-          }
+        }
+
+        if (!store.skillStates[employeeId]) {
+          set((state) => ({
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {}
+            }
+          }));
         }
       },
 
       addEmployee: (employee) => {
+        console.log('Adding new employee:', employee.id);
         set((state) => ({
           employees: [...state.employees, employee]
         }));
@@ -51,6 +52,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
       },
 
       updateEmployee: (employee) => {
+        console.log('Updating employee:', employee.id);
         set((state) => ({
           employees: state.employees.map((emp) => 
             emp.id === employee.id ? { ...employee } : emp
@@ -71,15 +73,26 @@ export const useEmployeeStore = create<EmployeeStore>()(
           }
         }));
 
+        // Initialize skill states for new skills
         const store = get();
+        if (!store.skillStates[employeeId]) {
+          store.skillStates[employeeId] = {};
+        }
+
         skills.forEach(skill => {
-          if (!store.skillStates[employeeId]?.[skill.title]) {
-            store.setSkillState(employeeId, skill.title, 'unspecified', 'unknown');
+          if (!store.skillStates[employeeId][skill.title]) {
+            store.setSkillState(
+              employeeId, 
+              skill.title, 
+              'unspecified', 
+              'unknown'
+            );
           }
         });
       },
 
       getEmployeeSkills: (employeeId) => {
+        console.log('Getting skills for employee:', employeeId);
         const state = get();
         if (!state.employeeSkills[employeeId]) {
           state.initializeEmployeeSkills(employeeId);
@@ -88,7 +101,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
       },
 
       setSkillState: (employeeId, skillName, level, requirement) => {
-        console.log('Setting employee skill state:', { 
+        console.log('Setting skill state:', { 
           employeeId, 
           skillName, 
           level, 
@@ -107,11 +120,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
       },
 
       getSkillState: (employeeId, skillName) => {
+        console.log('Getting skill state:', { employeeId, skillName });
         const state = get();
-        if (!state.skillStates[employeeId]) {
-          console.log('No skill states found for employee:', employeeId);
-          state.initializeEmployeeSkills(employeeId);
-        }
         return state.skillStates[employeeId]?.[skillName];
       }
     }),
