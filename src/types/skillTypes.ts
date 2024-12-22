@@ -1,9 +1,9 @@
 // Basic type definitions
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
+export type SkillLevel = 'advanced' | 'intermediate' | 'beginner' | 'unspecified';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
-export type SkillLevel = 'advanced' | 'intermediate' | 'beginner' | 'unspecified';
 
 // Core skill interface
 export interface UnifiedSkill {
@@ -25,11 +25,9 @@ export interface UnifiedSkill {
 export interface BaseSkillState {
   id: string;
   level: SkillLevel;
-  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
 }
 
 export interface EmployeeSkillState extends BaseSkillState {
-  skillId: string;
   requirement: EmployeeSkillRequirement;
 }
 
@@ -50,13 +48,12 @@ export interface ProfileSkillStates {
 }
 
 // Helper functions
-export const getSkillLevel = (state: BaseSkillState | string): SkillLevel => {
-  if (typeof state === 'string') return state as SkillLevel;
+export const getSkillLevel = (state: BaseSkillState): SkillLevel => {
   return state.level;
 };
 
 export const getSkillRequirement = (state: BaseSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
-  return state.requirement;
+  return 'requirement' in state ? state.requirement : 'unknown';
 };
 
 export const isSkillGoal = (state: EmployeeSkillState): boolean => {
@@ -65,4 +62,15 @@ export const isSkillGoal = (state: EmployeeSkillState): boolean => {
 
 export const isRequiredSkill = (state: RoleSkillState): boolean => {
   return state.requirement === 'required';
+};
+
+// Type guards
+export const isEmployeeSkillState = (state: any): state is EmployeeSkillState => {
+  return state && 'requirement' in state && 
+    ['skill_goal', 'not_interested', 'unknown'].includes(state.requirement);
+};
+
+export const isRoleSkillState = (state: any): state is RoleSkillState => {
+  return state && 'requirement' in state && 
+    ['required', 'preferred'].includes(state.requirement);
 };
