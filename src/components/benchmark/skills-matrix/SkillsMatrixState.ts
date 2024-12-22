@@ -23,7 +23,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       setSkillState: (skillName, level, requirement) => {
         console.log('Setting skill state:', { skillName, level, requirement });
         
-        // Map the requirement to the correct EmployeeSkillRequirement type
         let finalRequirement: EmployeeSkillRequirement;
         if (requirement === 'skill_goal' || requirement === 'required') {
           finalRequirement = 'skill_goal';
@@ -33,16 +32,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           finalRequirement = 'unknown';
         }
         
-        console.log('Final requirement:', {
-          original: requirement,
-          final: finalRequirement
-        });
-        
         set((state) => ({
           currentStates: {
             ...state.currentStates,
             [skillName]: { 
-              id: skillName, // Using skillName as id since it's unique
+              id: skillName,
               level, 
               requirement: finalRequirement 
             },
@@ -61,7 +55,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       initializeState: (skillName, level, requirement) =>
         set((state) => {
           if (!state.currentStates[skillName]) {
-            // Map the requirement to the correct EmployeeSkillRequirement type
             let finalRequirement: EmployeeSkillRequirement;
             if (requirement === 'skill_goal' || requirement === 'required') {
               finalRequirement = 'skill_goal';
@@ -71,18 +64,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
               finalRequirement = 'unknown';
             }
 
-            console.log('Initializing skill state:', { 
-              skillName, 
-              level, 
-              originalRequirement: requirement,
-              finalRequirement 
-            });
-            
             return {
               currentStates: {
                 ...state.currentStates,
                 [skillName]: { 
-                  id: skillName, // Using skillName as id since it's unique
+                  id: skillName,
                   level, 
                   requirement: finalRequirement 
                 },
@@ -90,7 +76,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
               originalStates: {
                 ...state.originalStates,
                 [skillName]: { 
-                  id: skillName, // Using skillName as id since it's unique
+                  id: skillName,
                   level, 
                   requirement: finalRequirement 
                 },

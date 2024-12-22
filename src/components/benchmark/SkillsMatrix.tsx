@@ -1,10 +1,9 @@
-import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
-import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills } from "./skills-matrix/SkillsMatrixState";
+import { useSkillsMatrixState, getEmployeeSkills } from "./skills-matrix/useSkillsMatrixState";
 
 const ITEMS_PER_PAGE = 10;
 
