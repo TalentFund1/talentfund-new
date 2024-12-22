@@ -1,25 +1,23 @@
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
-
-export const skillWeightClassifications: { [key: string]: SkillWeight } = {
-  // Critical Skills
-  "Machine Learning": "critical",
-  "Deep Learning": "critical",
-  "System Design": "critical",
-  "Technical Architecture": "critical",
-  "AWS Certified Solutions Architect": "critical",
-  "AWS Certified Machine Learning - Specialty": "critical",
-  "Cloud Architecture": "critical",
-  "Git": "critical",
-  "Git Version Control": "critical",
-  "Team Leadership": "critical",
-  "AWS": "critical",
-  "Kubernetes": "critical",
-  "Docker": "critical",
-  "Jenkins": "critical",
-  "Terraform": "critical",
-};
+import { SkillWeight } from '../../../types/SkillTypes';
+import { getSkillCategory } from './skillCategories';
 
 export const getSkillWeight = (skillTitle: string): SkillWeight => {
-  console.log(`Getting weight for skill: ${skillTitle}`);
-  return skillWeightClassifications[skillTitle] || "necessary";
+  const category = getSkillCategory(skillTitle);
+  
+  // Certifications and specialized skills are typically critical
+  if (category === 'certification' || 
+      skillTitle.toLowerCase().includes('aws') || 
+      skillTitle.toLowerCase().includes('cloud')) {
+    return 'critical';
+  }
+  
+  // Most specialized skills are technical
+  if (category === 'specialized') {
+    return 'technical';
+  }
+  
+  // Common skills are necessary
+  return 'necessary';
 };
+
+console.log('Skill weights system initialized');
