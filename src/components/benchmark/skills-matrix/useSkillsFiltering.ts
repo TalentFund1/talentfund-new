@@ -42,8 +42,11 @@ export const useSkillsFiltering = (
 
   const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
     const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
-    if (normalized === 'skillgoal') return 'skill_goal';
+    
+    // Map UI values to stored values
+    if (normalized === 'skillgoal') return 'required';
     if (normalized === 'notinterested') return 'not_interested';
+    if (normalized === 'required') return 'required';
     return 'unknown';
   };
 
