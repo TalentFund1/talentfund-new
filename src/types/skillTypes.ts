@@ -38,3 +38,17 @@ export interface UnifiedSkill {
   confidence: string;
   benchmarks: { [key: string]: boolean };
 }
+
+export interface RoleSkillData {
+  title: string;
+  roleTrack: "Professional" | "Managerial";
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
+  skills: UnifiedSkill[];
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+}
