@@ -107,4 +107,6 @@ export interface SkillsMatrixFiltersProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
   isRoleBenchmark?: boolean;
+  selectedRoleRequirement?: string;
+  setSelectedRoleRequirement?: (requirement: string) => void;
 }

@@ -1,13 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { UnifiedSkill, EmployeeSkillState } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
-import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
-import { SkillState } from '../../skills/competency/state/types';
+import { filterSkillsByCategory } from './skillCategories';
 
 interface SkillsMatrixState {
-  currentStates: { [key: string]: SkillState };
-  originalStates: { [key: string]: SkillState };
+  currentStates: { [key: string]: EmployeeSkillState };
+  originalStates: { [key: string]: EmployeeSkillState };
   hasChanges: boolean;
   setSkillState: (skillName: string, level: string, requirement: string) => void;
   resetSkills: () => void;
@@ -28,7 +27,10 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillName]: { level, required: requirement, requirement },
+            [skillName]: { 
+              level, 
+              requirement: requirement as EmployeeSkillState['requirement']
+            },
           },
           hasChanges: true,
         }));
@@ -45,14 +47,18 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => {
           if (!state.currentStates[skillName]) {
             console.log('Initializing skill state:', { skillName, level, requirement });
+            const newState = {
+              level,
+              requirement: requirement as EmployeeSkillState['requirement']
+            };
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillName]: { level, required: requirement, requirement },
+                [skillName]: newState,
               },
               originalStates: {
                 ...state.originalStates,
-                [skillName]: { level, required: requirement, requirement },
+                [skillName]: newState,
               },
             };
           }
