@@ -88,24 +88,7 @@ export interface DetailedSkill extends BaseSkillState {
   isSkillGoal: boolean;
 }
 
-// Skill state conversion helpers
-export const convertToEmployeeSkillState = (state: any): EmployeeSkillState => {
-  return {
-    id: state.id || state.skillId,
-    level: state.level || 'unspecified',
-    requirement: state.requirement || 'unknown'
-  };
-};
-
-export const convertToRoleSkillState = (state: any): RoleSkillState => {
-  return {
-    id: state.id || state.skillId,
-    level: state.level || 'unspecified',
-    requirement: state.requirement || 'preferred'
-  };
-};
-
-// Helper to safely get skill level as string
+// Helper to safely get skill level
 export const getSkillStateLevel = (state: EmployeeSkillState | RoleSkillState): SkillLevel => {
   return state.level;
 };
