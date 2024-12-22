@@ -3,11 +3,6 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
-export interface SkillState {
-  level: string;
-  requirement: RoleSkillRequirement | EmployeeSkillRequirement;
-}
-
 export interface UnifiedSkill {
   id: string;
   title: string;
@@ -45,7 +40,6 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
-  skills: UnifiedSkill[];
   soc?: string;
   function?: string;
   mappedTitle?: string;
@@ -53,48 +47,5 @@ export interface RoleSkillData {
   description?: string;
 }
 
-export interface BaseSkill {
-  name: string;
-}
-
-export interface DetailedSkill extends BaseSkill {
-  level: string;
-  isSkillGoal: boolean;
-}
-
-export interface Certification extends BaseSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
-}
-
-export interface SkillProfileRow {
-  id: string;
-  name: string;
-  function: string;
-  skillCount: string;
-  employees: string;
-  matches: string;
-  lastUpdated: string;
-  occupation?: string;
-}
-
-export interface EmployeeSkill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: 'required' | 'preferred' | 'skill_goal';
-}
-
-export interface RoleSkill {
-  title: string;
-  subcategory: string;
-  level?: string;
-  growth: string;
-  confidence?: string;
-  requirement?: string;
-  salary?: string;
-  benchmarks?: { [key: string]: boolean };
-}
+// Re-export types that were previously imported from other files
+export type { DetailedSkill, BaseSkill, Certification, SkillProfileRow, EmployeeSkill, RoleSkill } from './types';

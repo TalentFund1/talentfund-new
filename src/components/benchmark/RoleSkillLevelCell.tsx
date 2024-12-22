@@ -1,5 +1,5 @@
 import { TableCell } from "@/components/ui/table";
-import { Star, Shield, Target, CircleDashed } from "lucide-react";
+import { Star, Target, Shield, Check, Heart } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useRoleStore } from "./RoleBenchmark";
 
@@ -17,7 +17,7 @@ export const RoleSkillLevelCell = ({
   
   const competencyState = getSkillCompetencyState(skillTitle, selectedLevel, selectedRole);
   const level = competencyState?.level || initialLevel;
-  const isRequired = competencyState?.requirement === 'required';
+  const isRequired = competencyState?.required === 'required';
 
   console.log('RoleSkillLevelCell rendering:', {
     skillTitle,
@@ -76,10 +76,12 @@ export const RoleSkillLevelCell = ({
         <div className={getRequirementStyles()}>
           {isRequired ? (
             <>
+              <Check className="w-3.5 h-3.5" />
               Required
             </>
           ) : (
             <>
+              <Heart className="w-3.5 h-3.5" />
               Preferred
             </>
           )}

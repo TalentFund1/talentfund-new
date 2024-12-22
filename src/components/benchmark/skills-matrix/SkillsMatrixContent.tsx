@@ -1,10 +1,6 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useSkillsMatrixStore } from "./SkillsMatrixState";
-import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
-import { useSkillsFiltering } from "./useSkillsFiltering";
-import { BenchmarkSkillsMatrixTable } from "./BenchmarkSkillsMatrixTable";
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
+import { BenchmarkSkillsMatrixTable } from "./BenchmarkSkillsMatrixTable";
+import { SkillsMatrixTable } from "./SkillsMatrixTable";
 
 interface SkillsMatrixContentProps {
   filteredSkills: any[];
@@ -27,7 +23,7 @@ interface SkillsMatrixContentProps {
   setSelectedRoleRequirement: (requirement: string) => void;
 }
 
-const SkillsMatrixContent = ({
+export const SkillsMatrixContent = ({
   filteredSkills,
   searchTerm,
   setSearchTerm,
@@ -47,20 +43,15 @@ const SkillsMatrixContent = ({
   selectedRoleRequirement,
   setSelectedRoleRequirement
 }: SkillsMatrixContentProps) => {
-  const { id } = useParams();
-  const { toggledSkills } = useToggledSkills();
-  const { currentStates } = useSkillsMatrixStore();
+  console.log('SkillsMatrixContent rendering:', {
+    skillsCount: filteredSkills.length,
+    isRoleBenchmark,
+    selectedCategory
+  });
 
-  const { filteredSkills: skills } = useSkillsFiltering(
-    id || "",
-    selectedRoleRequirement,
-    selectedLevel,
-    selectedInterest,
-    selectedSkillLevel,
-    searchTerm,
-    toggledSkills,
-    isRoleBenchmark
-  );
+  const removeSearchSkill = (skill: string) => {
+    setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
+  };
 
   return (
     <>
@@ -74,30 +65,31 @@ const SkillsMatrixContent = ({
         selectedSkillLevel={selectedSkillLevel}
         setSelectedSkillLevel={setSelectedSkillLevel}
         selectedSearchSkills={selectedSearchSkills}
-        removeSearchSkill={(skill) => {
-          setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
-        }}
-        clearSearch={() => setSelectedSearchSkills([])}
+        removeSearchSkill={removeSearchSkill}
+        clearSearch={() => setSearchTerm("")}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        selectedRoleRequirement={selectedRoleRequirement}
-        setSelectedRoleRequirement={setSelectedRoleRequirement}
       />
 
-      <BenchmarkSkillsMatrixTable 
-        filteredSkills={skills.slice(0, visibleItems)}
-      />
+      {isRoleBenchmark ? (
+        <BenchmarkSkillsMatrixTable 
+          filteredSkills={filteredSkills.slice(0, visibleItems)}
+        />
+      ) : (
+        <SkillsMatrixTable 
+          filteredSkills={filteredSkills.slice(0, visibleItems)}
+          isRoleBenchmark={false}
+        />
+      )}
 
-      {visibleItems < skills.length && (
+      {visibleItems < filteredSkills.length && (
         <div 
           ref={observerTarget} 
           className="h-10 flex items-center justify-center"
         >
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
         </div>
       )}
     </>
   );
 };
-
-export default SkillsMatrixContent;

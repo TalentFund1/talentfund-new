@@ -7,6 +7,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
 import { useState } from "react";
 import { useRoleStore } from "./RoleBenchmark";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { RoleSkillRequirement } from "../skills/types/SkillTypes";
 
 interface CategorizedSkillsProps {
@@ -54,6 +55,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     return priorities[level.toLowerCase()] ?? 3;
   };
 
+  // Combined sorting function for all skill types
   const sortSkills = (skills: any[]) => {
     return skills.sort((a, b) => {
       const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase(), roleId);
