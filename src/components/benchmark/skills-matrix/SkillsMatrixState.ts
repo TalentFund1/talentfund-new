@@ -92,7 +92,17 @@ export const useSkillsMatrixState = (
       requirement: (currentStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement,
       roleLevel: null as any,
       isCompanySkill: false,
-      level: currentStates[skill.title]?.level || skill.level || 'unspecified'
+      level: currentStates[skill.title]?.level || skill.level || 'unspecified',
+      id: skill.id,
+      title: skill.title,
+      subcategory: skill.subcategory,
+      category: skill.category,
+      businessCategory: skill.businessCategory,
+      weight: skill.weight,
+      growth: skill.growth,
+      salary: skill.salary,
+      confidence: skill.confidence,
+      benchmarks: skill.benchmarks
     })) as MappedSkill[];
 
     // Filter by category if not "all"
@@ -154,6 +164,16 @@ export const getEmployeeSkills = (employeeId: string): MappedSkill[] => {
     requirement: (employeeSkillStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement,
     roleLevel: null as any,
     isCompanySkill: false,
-    level: employeeSkillStates[skill.title]?.level || skill.level || 'unspecified'
+    level: employeeSkillStates[skill.title]?.level || skill.level || 'unspecified',
+    id: skill.id,
+    title: skill.title,
+    subcategory: skill.subcategory,
+    category: skill.category,
+    businessCategory: skill.businessCategory,
+    weight: skill.weight,
+    growth: skill.growth,
+    salary: skill.salary,
+    confidence: skill.confidence,
+    benchmarks: skill.benchmarks
   })) as MappedSkill[];
 };
