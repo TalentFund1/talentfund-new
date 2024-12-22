@@ -1,24 +1,4 @@
-// Base skill requirement types
-export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-export type RoleSkillRequirement = 'required' | 'preferred';
-
-// Base skill state interface
-interface BaseSkillState {
-  level: string;
-  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
-}
-
-// Employee-specific skill state
-export interface EmployeeSkillState extends BaseSkillState {
-  requirement: EmployeeSkillRequirement;
-}
-
-// Role-specific skill state
-export interface RoleSkillState extends BaseSkillState {
-  requirement: RoleSkillRequirement;
-}
-
-// Unified skill interface from universal database
+// Base skill types from universal database
 export interface UnifiedSkill {
   id: string;
   title: string;
@@ -33,13 +13,44 @@ export interface UnifiedSkill {
   benchmarks: { [key: string]: boolean };
 }
 
-// Role skill data structure
+// Role-specific types
+export type RoleSkillRequirement = 'required' | 'preferred';
+
+export interface RoleSkillState {
+  level: string;
+  required: RoleSkillRequirement;
+}
+
+export interface RoleState {
+  [skillName: string]: {
+    [levelKey: string]: RoleSkillState;
+  };
+}
+
+// Employee-specific types
+export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
+
+export interface EmployeeSkillState {
+  level: string;
+  requirement: EmployeeSkillRequirement;
+}
+
+export interface EmployeeSkillRecord {
+  [skillTitle: string]: EmployeeSkillState;
+}
+
+// Role data structure
 export interface RoleSkillData {
   title: string;
-  roleTrack?: "Professional" | "Managerial";
+  roleTrack: "Professional" | "Managerial";
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
 }
 
 // Profile row type for UI
