@@ -83,20 +83,12 @@ export const useSkillsFiltering = (
       let matchesSkillLevel = true;
       let matchesRequirement = true;
 
-      const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
-      const roleSkillLevel = competencyState?.level || 'unspecified';
       const employeeSkillState = getSkillState(employeeId, skill.title);
-
-      // Filter by role level if selected
-      if (selectedLevel !== 'all') {
-        matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
-        console.log('Level matching:', {
-          skill: skill.title,
-          roleLevel: roleSkillLevel,
-          selectedLevel,
-          matches: matchesLevel
-        });
-      }
+      console.log('Checking skill state:', {
+        skill: skill.title,
+        employeeState: employeeSkillState,
+        selectedSkillLevel
+      });
 
       // Filter by employee skill level if selected
       if (selectedSkillLevel !== 'all') {
@@ -146,7 +138,6 @@ export const useSkillsFiltering = (
     .map(skill => ({
       ...skill,
       employeeLevel: getSkillState(employeeId, skill.title)?.level || 'unspecified',
-      roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
       requirement: normalizeRequirement(getSkillState(employeeId, skill.title)?.requirement || 'unknown')
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
