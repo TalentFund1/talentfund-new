@@ -4,6 +4,7 @@ import { UnifiedSkill, SkillRequirement } from '../../skills/types/SkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { getAllSkills } from '../../skills/data/skills/allSkills';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
+import { useEmployeeStore } from '../../employee/store/employeeStore';
 
 interface SkillState {
   level: string;
@@ -101,13 +102,20 @@ export const useSkillsMatrixState = (
 
   const filterAndSortSkills = (employeeId: string) => {
     console.log('Filtering skills for employee:', employeeId);
-    // Get all skills from universal database
-    const allSkills = getAllSkills();
-    let filteredSkills = allSkills.map(skill => ({
-      ...getUnifiedSkillData(skill.title),
-      level: currentStates[skill.title]?.level || skill.level,
-      requirement: (currentStates[skill.title]?.requirement || 'preferred') as SkillRequirement
-    }));
+    
+    // Get employee's skills from the employee store
+    const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
+    console.log('Employee skills:', employeeSkills);
+
+    // Map employee skills to include universal skill data
+    let filteredSkills = employeeSkills.map(skill => {
+      const universalSkillData = getUnifiedSkillData(skill.title);
+      return {
+        ...universalSkillData,
+        level: currentStates[skill.title]?.level || skill.level || 'unspecified',
+        requirement: (currentStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement
+      };
+    });
 
     // Filter by category if not "all"
     if (selectedCategory !== "all") {
@@ -141,6 +149,15 @@ export const useSkillsMatrixState = (
       });
     }
 
+    console.log('Filtered skills:', {
+      total: filteredSkills.length,
+      skills: filteredSkills.map(s => ({
+        title: s.title,
+        level: s.level,
+        requirement: s.requirement
+      }))
+    });
+
     return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
   };
 
@@ -151,13 +168,12 @@ export const useSkillsMatrixState = (
 
 export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
-  // Get skills from universal database
-  const allSkills = getAllSkills();
+  const employeeSkills = useEmployeeStore.getState().getEmployeeSkills(employeeId);
   const employeeSkillStates = useSkillsMatrixStore.getState().currentStates;
   
-  return allSkills.map(skill => ({
+  return employeeSkills.map(skill => ({
     ...getUnifiedSkillData(skill.title),
-    level: employeeSkillStates[skill.title]?.level || skill.level,
-    requirement: (employeeSkillStates[skill.title]?.requirement || 'preferred') as SkillRequirement
+    level: employeeSkillStates[skill.title]?.level || skill.level || 'unspecified',
+    requirement: (employeeSkillStates[skill.title]?.requirement || skill.requirement || 'preferred') as SkillRequirement
   }));
 };
