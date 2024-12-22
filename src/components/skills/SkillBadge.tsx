@@ -49,12 +49,6 @@ export const SkillBadge = ({
       return false;
     }
     
-    // If explicitly passed as a prop
-    if (isSkillGoal) {
-      console.log('Showing heart - explicit prop');
-      return true;
-    }
-    
     // If it's in the current states and requirement is skill_goal
     if (skillState) {
       const showHeart = skillState.requirement === 'skill_goal';
