@@ -18,6 +18,7 @@ interface SkillsMatrixFiltersProps {
   clearSearch: () => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixFilters = ({

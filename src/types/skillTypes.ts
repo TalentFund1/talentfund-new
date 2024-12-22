@@ -1,4 +1,4 @@
-// Base skill types that don't depend on any other files
+// Base skill types
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 

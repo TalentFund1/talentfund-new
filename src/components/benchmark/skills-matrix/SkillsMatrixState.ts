@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { useEmployeeStore } from '../../employee/store/employeeStore';
+import { filterSkillsByCategory } from './skillCategories';
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: EmployeeSkillState };
