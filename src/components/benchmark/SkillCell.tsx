@@ -1,5 +1,5 @@
 import { TableCell } from "@/components/ui/table";
-import { useCompetencyStore } from "./CompetencyState";
+import { useCompetencyStore } from "../skills/competency/CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
@@ -26,7 +26,7 @@ export const SkillCell = ({
 
   const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
-    required: details.required || "preferred",
+    required: details.required || "unknown",
   };
 
   const handleLevelChange = (value: string) => {
@@ -42,7 +42,7 @@ export const SkillCell = ({
       skillName,
       value,
       levelKey,
-      currentState.required || 'preferred',
+      currentState.required || 'unknown',
       currentRoleId
     );
   };
@@ -75,7 +75,7 @@ export const SkillCell = ({
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={currentState.required || 'preferred'}
+          currentRequired={currentState.required || 'unknown'}
           currentLevel={currentState.level || 'unspecified'}
           onRequirementChange={handleRequirementChange}
         />
