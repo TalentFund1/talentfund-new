@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { EmployeeSkillRequirement } from "../skills/types/SkillTypes";
+import { EmployeeSkillRequirement } from '../../types/skillTypes';
 
 interface RequirementSelectorProps {
   currentRequired: EmployeeSkillRequirement;
@@ -43,8 +43,8 @@ export const RequirementSelector = ({
     >
       <SelectTrigger className="h-7 w-[110px] text-xs">
         <SelectValue>
-          <span className={getRequirementColor(currentRequired as EmployeeSkillRequirement)}>
-            {getRequirementLabel(currentRequired as EmployeeSkillRequirement)}
+          <span className={getRequirementColor(currentRequired)}>
+            {getRequirementLabel(currentRequired)}
           </span>
         </SelectValue>
       </SelectTrigger>

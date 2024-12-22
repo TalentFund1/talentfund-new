@@ -4,7 +4,7 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
 // Employee skill requirements
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-export type RoleSkillRequirement = 'preferred';
+export type RoleSkillRequirement = 'preferred' | 'required';
 
 // Base interfaces
 export interface BaseSkillState {
@@ -17,6 +17,10 @@ export interface EmployeeSkillState extends BaseSkillState {
 
 export interface RoleSkillState extends BaseSkillState {
   requirement: RoleSkillRequirement;
+}
+
+export interface SkillState extends BaseSkillState {
+  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
 }
 
 export interface RoleState {
