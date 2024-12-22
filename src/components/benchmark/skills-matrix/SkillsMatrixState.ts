@@ -3,15 +3,18 @@ import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
-import { SkillState } from '../../skills/competency/state/types';
+
+interface SkillState {
+  level: string;
+}
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
   originalStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, requirement: string) => void;
+  setSkillState: (skillName: string, level: string) => void;
   resetSkills: () => void;
-  initializeState: (skillName: string, level: string, requirement: string) => void;
+  initializeState: (skillName: string, level: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -23,12 +26,12 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, requirement) => {
-        console.log('Setting skill state:', { skillName, level, requirement });
+      setSkillState: (skillName, level) => {
+        console.log('Setting skill state:', { skillName, level });
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillName]: { level, required: requirement, requirement },
+            [skillName]: { level },
           },
           hasChanges: true,
         }));
@@ -41,18 +44,18 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           hasChanges: false,
         })),
 
-      initializeState: (skillName, level, requirement) =>
+      initializeState: (skillName, level) =>
         set((state) => {
           if (!state.currentStates[skillName]) {
-            console.log('Initializing skill state:', { skillName, level, requirement });
+            console.log('Initializing skill state:', { skillName, level });
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillName]: { level, required: requirement, requirement },
+                [skillName]: { level },
               },
               originalStates: {
                 ...state.originalStates,
-                [skillName]: { level, required: requirement, requirement },
+                [skillName]: { level },
               },
             };
           }
@@ -102,24 +105,6 @@ export const useSkillsMatrixState = (
       filteredSkills = filteredSkills.filter((skill) => {
         const state = currentStates[skill.title];
         return state?.level.toLowerCase() === selectedLevel.toLowerCase();
-      });
-    }
-
-    if (selectedInterest !== "all") {
-      filteredSkills = filteredSkills.filter((skill) => {
-        const state = currentStates[skill.title];
-        if (!state) return false;
-
-        switch (selectedInterest.toLowerCase()) {
-          case "skill_goal":
-            return state.requirement === "required" || state.requirement === "skill_goal";
-          case "not_interested":
-            return state.requirement === "not_interested";
-          case "unknown":
-            return !state.requirement || state.requirement === "unknown";
-          default:
-            return state.requirement === selectedInterest.toLowerCase();
-        }
       });
     }
 

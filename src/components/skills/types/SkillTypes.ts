@@ -18,11 +18,8 @@ export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
 // Employee-specific types
-export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-
 export interface EmployeeSkillState {
   level: string;
-  requirement: EmployeeSkillRequirement;
 }
 
 export interface EmployeeSkillRecord {
@@ -32,7 +29,6 @@ export interface EmployeeSkillRecord {
 // Role-specific types
 export interface RoleSkillState {
   level: string;
-  requirement: 'preferred';
 }
 
 export interface RoleState {
