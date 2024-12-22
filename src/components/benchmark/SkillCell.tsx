@@ -3,13 +3,13 @@ import { useCompetencyStore } from "../skills/competency/CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { RoleSkillRequirement } from "../skills/types/SkillTypes";
+import { EmployeeSkillRequirement } from "../skills/types/SkillTypes";
 
 interface SkillCellProps {
   skillName: string;
   details: {
     level: string;
-    requirement: RoleSkillRequirement;
+    required: string;
   };
   isLastColumn: boolean;
   levelKey: string;
@@ -27,7 +27,7 @@ export const SkillCell = ({
 
   const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
-    requirement: details.requirement || "preferred",
+    required: details.required || "unknown",
   };
 
   const handleLevelChange = (value: string) => {
@@ -35,7 +35,7 @@ export const SkillCell = ({
       skillName,
       levelKey,
       newLevel: value,
-      currentRequirement: currentState.requirement,
+      currentRequired: currentState.required,
       roleId: currentRoleId
     });
     
@@ -43,17 +43,17 @@ export const SkillCell = ({
       skillName,
       value,
       levelKey,
-      currentState.requirement || 'preferred',
+      currentState.required as EmployeeSkillRequirement || 'unknown',
       currentRoleId
     );
   };
 
-  const handleRequirementChange = (value: RoleSkillRequirement) => {
+  const handleRequirementChange = (value: EmployeeSkillRequirement) => {
     console.log('Changing requirement:', {
       skillName,
       levelKey,
       currentLevel: currentState.level,
-      newRequirement: value,
+      newRequired: value,
       roleId: currentRoleId
     });
     
@@ -76,7 +76,7 @@ export const SkillCell = ({
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={currentState.requirement || 'preferred'}
+          currentRequired={currentState.required as EmployeeSkillRequirement || 'unknown'}
           currentLevel={currentState.level || 'unspecified'}
           onRequirementChange={handleRequirementChange}
         />

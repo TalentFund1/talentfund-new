@@ -40,6 +40,7 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+  skills?: UnifiedSkill[]; // Made optional since some implementations don't use it
   soc?: string;
   function?: string;
   mappedTitle?: string;

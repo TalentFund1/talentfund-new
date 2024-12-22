@@ -8,7 +8,6 @@ import { CategoryCards } from "./CategoryCards";
 import { useState } from "react";
 import { useRoleStore } from "./RoleBenchmark";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
-import { RoleSkillRequirement } from "../skills/types/SkillTypes";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -66,12 +65,13 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
       if (levelDiff !== 0) return levelDiff;
       
       // Then sort by requirement (required before preferred)
-      const aRequired = aState?.requirement === 'required' ? 0 : 1;
-      const bRequired = bState?.requirement === 'required' ? 0 : 1;
+      const aRequired = aState?.required === 'required' ? 0 : 1;
+      const bRequired = bState?.required === 'required' ? 0 : 1;
       return aRequired - bRequired;
     });
   };
 
+  // Filter and sort skills based on competency state for the selected level
   const filteredSkills = filterSkillsByCategory(allRoleSkills
     .filter(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
@@ -80,12 +80,12 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
 
   const requiredSkills = sortSkills(filteredSkills.filter(skill => {
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return competencyState?.requirement === 'required';
+    return competencyState?.required === 'required';
   }));
 
   const preferredSkills = sortSkills(filteredSkills.filter(skill => {
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return competencyState?.requirement === 'preferred';
+    return competencyState?.required === 'preferred';
   }));
 
   const missingSkills = sortSkills(filteredSkills.filter(skill => {
@@ -93,7 +93,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
     return !hasSkill && 
            toggledSkills.has(skill.title) && 
-           (competencyState?.requirement === 'required' || competencyState?.requirement === 'preferred');
+           (competencyState?.required === 'required' || competencyState?.required === 'preferred');
   }));
 
   const getLevelColor = (skillTitle: string) => {
