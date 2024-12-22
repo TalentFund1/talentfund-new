@@ -9,15 +9,14 @@ export type RoleSkillRequirement = 'required' | 'preferred';
 export interface BaseSkill {
   id: string;
   title: string;
-  name?: string; // For backward compatibility
 }
 
 // Core skill interface
 export interface UnifiedSkill extends BaseSkill {
   subcategory: string;
-  category?: SkillCategory;
+  category: SkillCategory;
   businessCategory?: string;
-  weight?: SkillWeight;
+  weight: SkillWeight;
   level: SkillLevel;
   growth: string;
   confidence: string;
@@ -35,7 +34,6 @@ export interface BaseSkillState {
 // Employee skill state
 export interface EmployeeSkillState extends BaseSkillState {
   requirement: EmployeeSkillRequirement;
-  toString(): string;
 }
 
 // Role skill state
@@ -103,17 +101,18 @@ export const ensureValidSkillLevel = (level: string): SkillLevel => {
   return validLevels.includes(level as SkillLevel) ? level as SkillLevel : 'unspecified';
 };
 
+// Helper to convert any skill state to string
+export const skillStateToString = (state: EmployeeSkillState | RoleSkillState): string => {
+  return state.level;
+};
+
 // Helper to convert any skill state to employee skill state
 export const toEmployeeSkillState = (state: any): EmployeeSkillState => {
-  const skillState: EmployeeSkillState = {
+  return {
     id: state.id || state.skillId || '',
     level: ensureValidSkillLevel(state.level),
-    requirement: state.requirement || 'unknown',
-    toString: function() {
-      return this.level;
-    }
+    requirement: state.requirement || 'unknown'
   };
-  return skillState;
 };
 
 // Helper to convert any skill state to role skill state
@@ -140,16 +139,3 @@ export const parseSkillRequirement = (requirement: string): EmployeeSkillRequire
   }
   return 'unknown';
 };
-
-// Create a class implementation of EmployeeSkillState for proper string conversion
-export class EmployeeSkillStateImpl implements EmployeeSkillState {
-  constructor(
-    public id: string,
-    public level: SkillLevel,
-    public requirement: EmployeeSkillRequirement
-  ) {}
-
-  toString(): string {
-    return this.level;
-  }
-}
