@@ -1,33 +1,48 @@
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillCategory = 'specialized' | 'common' | 'certification';
+// Base skill requirement types
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
-export interface BaseSkillState {
+// Base skill state interface
+interface BaseSkillState {
   level: string;
-  required: string;
+  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
 }
 
+// Employee-specific skill state
 export interface EmployeeSkillState extends BaseSkillState {
   requirement: EmployeeSkillRequirement;
 }
 
+// Role-specific skill state
 export interface RoleSkillState extends BaseSkillState {
   requirement: RoleSkillRequirement;
 }
 
-export interface DetailedSkill {
-  name: string;
+// Unified skill interface from universal database
+export interface UnifiedSkill {
+  id: string;
+  title: string;
+  subcategory: string;
+  category: 'specialized' | 'common' | 'certification';
+  businessCategory: string;
+  weight: 'critical' | 'technical' | 'necessary';
   level: string;
-  isSkillGoal: boolean;
+  growth: string;
+  salary: string;
+  confidence: string;
+  benchmarks: { [key: string]: boolean };
 }
 
-export interface Certification {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
+// Role skill data structure
+export interface RoleSkillData {
+  title: string;
+  roleTrack?: "Professional" | "Managerial";
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
 }
 
+// Profile row type for UI
 export interface SkillProfileRow {
   id: string;
   name: string;
@@ -37,38 +52,4 @@ export interface SkillProfileRow {
   matches: string;
   lastUpdated: string;
   occupation?: string;
-}
-
-export interface UnifiedSkill {
-  id?: string;
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: EmployeeSkillRequirement;
-  category?: string;
-  weight?: string;
-  businessCategory?: string;
-  salary?: string;
-  benchmarks?: { [key: string]: boolean };
-}
-
-export interface RoleSkill {
-  title: string;
-  subcategory: string;
-  level?: string;
-  growth: string;
-  confidence?: string;
-  requirement?: RoleSkillRequirement;
-  salary?: string;
-  benchmarks?: { [key: string]: boolean };
-}
-
-export interface RoleSkillData {
-  title: string;
-  roleTrack?: "Professional" | "Managerial";
-  specialized: RoleSkill[];
-  common: RoleSkill[];
-  certifications: RoleSkill[];
 }
