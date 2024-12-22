@@ -51,10 +51,3 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
 }
-
-export interface SkillsMatrixState {
-  skillStates: Record<string, Record<string, EmployeeSkillState>>;
-  setSkillState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
-  getSkillState: (profileId: string, skillId: string) => EmployeeSkillState | undefined;
-  initializeState: (profileId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
-}
