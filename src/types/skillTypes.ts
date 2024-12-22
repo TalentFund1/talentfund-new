@@ -45,13 +45,6 @@ export interface RoleState {
   };
 }
 
-export interface RoleSkillData {
-  title: string;
-  specialized: UnifiedSkill[];
-  common: UnifiedSkill[];
-  certifications: UnifiedSkill[];
-}
-
 export interface SkillsMatrixState {
   skillStates: {
     [employeeId: string]: {
@@ -64,9 +57,26 @@ export interface SkillsMatrixState {
     };
   };
   hasChanges: boolean;
-  setSkillState: (employeeId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
-  initializeState: (employeeId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
+  setSkillState: (
+    employeeId: string, 
+    skillId: string, 
+    level: string, 
+    requirement: EmployeeSkillRequirement
+  ) => void;
+  initializeState: (
+    employeeId: string, 
+    skillId: string, 
+    initialLevel: string, 
+    initialRequirement: EmployeeSkillRequirement
+  ) => void;
   getSkillState: (employeeId: string, skillId: string) => EmployeeSkillState | undefined;
   saveChanges: () => void;
   cancelChanges: () => void;
+}
+
+export interface RoleSkillData {
+  title: string;
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
 }
