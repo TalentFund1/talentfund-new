@@ -21,26 +21,30 @@ export interface UnifiedSkill {
   benchmarks?: { [key: string]: boolean };
 }
 
-// Skill state interfaces
+// Base skill state
 export interface BaseSkillState {
   id: string;
   level: SkillLevel;
 }
 
+// Employee skill state
 export interface EmployeeSkillState extends BaseSkillState {
   requirement: EmployeeSkillRequirement;
 }
 
+// Role skill state
 export interface RoleSkillState extends BaseSkillState {
   requirement: RoleSkillRequirement;
 }
 
+// Role state mapping
 export interface RoleState {
   [skillName: string]: {
     [levelKey: string]: RoleSkillState;
   };
 }
 
+// Profile skill states mapping
 export interface ProfileSkillStates {
   [employeeId: string]: {
     [skillId: string]: EmployeeSkillState;
@@ -83,3 +87,20 @@ export interface DetailedSkill extends BaseSkillState {
   name: string;
   isSkillGoal: boolean;
 }
+
+// Skill state conversion helpers
+export const convertToEmployeeSkillState = (state: any): EmployeeSkillState => {
+  return {
+    id: state.id || state.skillId,
+    level: state.level || 'unspecified',
+    requirement: state.requirement || 'unknown'
+  };
+};
+
+export const convertToRoleSkillState = (state: any): RoleSkillState => {
+  return {
+    id: state.id || state.skillId,
+    level: state.level || 'unspecified',
+    requirement: state.requirement || 'preferred'
+  };
+};
