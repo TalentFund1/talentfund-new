@@ -3,6 +3,7 @@ import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
 import { EmployeeSkillRequirement } from "../../skills/types/SkillTypes";
+import { useSkillsMatrixStore } from "./SkillsMatrixState";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -17,6 +18,7 @@ export const useSkillsFiltering = (
   selectedRoleRequirement: string = 'all'
 ) => {
   const { getSkillState, getCompetencyState } = useEmployeeStore();
+  const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
@@ -38,7 +40,6 @@ export const useSkillsFiltering = (
   const normalizeRequirement = (requirement: string): EmployeeSkillRequirement => {
     const normalized = requirement.toLowerCase().replace(/[-_\s]/g, '');
     
-    // Map UI values to stored values
     if (normalized === 'required') return 'skill_goal';
     if (normalized === 'skillgoal') return 'skill_goal';
     if (normalized === 'notinterested') return 'not_interested';
@@ -97,21 +98,9 @@ export const useSkillsFiltering = (
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      // Get the employee skill requirement and normalize it for comparison
-      const employeeRequirement = employeeSkillState.requirement;
-      const normalizedSelectedRequirement = normalizeRequirement(selectedInterest);
-
       if (selectedInterest !== 'all') {
-        console.log('Checking requirement match:', {
-          skillTitle: skill.title,
-          employeeRequirement,
-          selectedInterest,
-          normalizedSelectedRequirement,
-          matches: employeeRequirement === normalizedSelectedRequirement
-        });
-
-        // Direct comparison with employee requirement
-        matchesRequirement = employeeRequirement === normalizedSelectedRequirement;
+        const normalizedSelectedRequirement = normalizeRequirement(selectedInterest);
+        matchesRequirement = employeeSkillState.requirement === normalizedSelectedRequirement;
       }
 
       if (searchTerm) {
@@ -123,8 +112,8 @@ export const useSkillsFiltering = (
       if (!matches) {
         console.log('Skill filtered out:', {
           skillName: skill.title,
-          employeeRequirement,
-          selectedRequirement: normalizedSelectedRequirement,
+          employeeRequirement: employeeSkillState.requirement,
+          selectedRequirement: normalizeRequirement(selectedInterest),
           matchesRequirement,
           matchesLevel,
           matchesSearch,
@@ -138,7 +127,7 @@ export const useSkillsFiltering = (
       ...skill,
       employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
       roleLevel: getCompetencyState(selectedRole, skill.title, comparisonLevel)?.level || 'unspecified',
-      requirement: employeeSkillState.requirement
+      requirement: getSkillState(employeeId, skill.title).requirement
     }))
     .sort((a, b) => {
       const aRoleLevel = a.roleLevel;
