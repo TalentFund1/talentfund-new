@@ -8,8 +8,15 @@ interface CompetencyState {
   currentStates: Record<string, RoleState>;
   originalStates: Record<string, RoleState>;
   hasChanges: boolean;
-  setSkillState: (skillName: string, skillId: string, level: string, levelKey: string, requirement: RoleSkillRequirement, roleId: string) => void;
-  setSkillProgression: (skillName: string, skillId: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
+  setSkillState: (
+    skillName: string,
+    level: string,
+    levelKey: string,
+    requirement: RoleSkillRequirement,
+    roleId: string,
+    skillId: string
+  ) => void;
+  setSkillProgression: (skillName: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
   resetLevels: (roleId: string) => void;
   saveChanges: (roleId: string, track: string) => void;
   cancelChanges: (roleId: string) => void;
@@ -25,8 +32,8 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, skillId, level, levelKey, requirement, roleId) => {
-        console.log('Setting skill state:', { skillName, skillId, level, levelKey, requirement, roleId });
+      setSkillState: (skillName, level, levelKey, requirement, roleId, skillId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId, skillId });
         set((state) => {
           const currentRoleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
@@ -55,8 +62,8 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
 
-      setSkillProgression: (skillName, skillId, progression, roleId, track) => {
-        console.log('Setting skill progression:', { skillName, skillId, progression, roleId, track });
+      setSkillProgression: (skillName, progression, roleId, track) => {
+        console.log('Setting skill progression:', { skillName, progression, roleId, track });
         set((state) => {
           const currentRoleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
@@ -160,34 +167,3 @@ export const useCompetencyStore = create<CompetencyState>()(
     }
   )
 );
-
-const initializeRoleState = (roleId: string): RoleState => {
-  console.log('Initializing new state for role:', roleId);
-  
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-  if (!currentRoleSkills) {
-    console.warn('No skills found for role:', roleId);
-    return {};
-  }
-
-  const allSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
-  const initialStates: RoleState = {};
-  
-  allSkills.forEach(skill => {
-    initialStates[skill.title] = {};
-    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
-      initialStates[skill.title][level] = {
-        id: skill.id,
-        level: 'unspecified',
-        requirement: 'preferred'
-      };
-    });
-  });
-
-  return initialStates;
-};
