@@ -1,7 +1,8 @@
-import { useEmployeeStore } from "../../employee/store/employeeStore";
+import { useCompetencyStore } from "./CompetencyState";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { roleSkills } from "../data/roleSkills";
 import { useTrack } from "../context/TrackContext";
+import { SkillState } from "../types/SkillTypes";
 
 interface SkillCompetencyState {
   level: string;
@@ -14,9 +15,33 @@ const defaultState: SkillCompetencyState = {
 };
 
 export const useCompetencyStateReader = () => {
-  const { getCompetencyState } = useEmployeeStore();
+  const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole } = useTrack();
+
+  const findSavedState = (
+    skillName: string, 
+    levelKey: string, 
+    roleId: string,
+    employeeId: string
+  ): SkillCompetencyState | null => {
+    const roleStates = currentStates[roleId];
+    if (!roleStates) return null;
+
+    const employeeStates = roleStates[employeeId];
+    if (!employeeStates) return null;
+
+    const skillState = employeeStates[skillName];
+    if (!skillState) return null;
+
+    const levelState = skillState[levelKey];
+    if (!levelState) return null;
+
+    return {
+      level: levelState.level,
+      required: levelState.required
+    };
+  };
 
   const getSkillCompetencyState = (
     skillName: string, 
@@ -39,7 +64,13 @@ export const useCompetencyStateReader = () => {
       hasToggledSkill: toggledSkills.has(skillName)
     });
 
-    return getCompetencyState(employeeId, skillName, levelKey);
+    const savedState = findSavedState(skillName, levelKey, roleId, employeeId);
+    if (savedState) {
+      console.log('Found saved state:', savedState);
+      return savedState;
+    }
+
+    return defaultState;
   };
 
   const getAllSkillStatesForLevel = (
