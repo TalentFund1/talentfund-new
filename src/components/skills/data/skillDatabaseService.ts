@@ -1,9 +1,34 @@
 import { UnifiedSkill } from '../types/SkillTypes';
-import { getSkillByTitle } from './skills/allSkills';
+import { skillDefinitions } from './skills/skillDefinitions';
 import { normalizeSkillTitle } from '../utils/normalization';
-import { getSkillCategory } from './skills/categories/skillCategories';
 
-// Get unified skill data
+// Core database access
+export const getAllSkills = (): UnifiedSkill[] => {
+  console.log('Getting all skills:', skillDefinitions.length, 'skills found');
+  return skillDefinitions;
+};
+
+export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
+  console.log(`Getting skills for category: ${category}`);
+  return skillDefinitions.filter(skill => skill.category === category);
+};
+
+export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
+  console.log(`Finding skill by title: ${title}`);
+  return skillDefinitions.find(
+    skill => skill.title.toLowerCase() === title.toLowerCase()
+  );
+};
+
+// Categorized skill access
+export const Skills = {
+  all: getAllSkills(),
+  specialized: getSkillsByCategory('specialized'),
+  common: getSkillsByCategory('common'),
+  certification: getSkillsByCategory('certification')
+};
+
+// Get unified skill data with category information
 export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   console.log('Getting unified skill data for:', title);
   
@@ -14,7 +39,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     console.log('Found existing skill:', existingSkill.title);
     return {
       ...existingSkill,
-      category: getSkillCategory(existingSkill.title)
+      category: existingSkill.category || 'common'
     };
   }
 
@@ -24,7 +49,7 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
     id: `SKILL_${Date.now()}`,
     title: normalizedTitle,
     subcategory: "Other",
-    category: getSkillCategory(normalizedTitle),
+    category: 'common',
     businessCategory: "Information Technology",
     weight: "necessary",
     level: "beginner",
@@ -35,7 +60,18 @@ export const getUnifiedSkillData = (title: string): UnifiedSkill => {
   };
 };
 
-// Export getSkillCategory for external use
-export { getSkillCategory };
+// Get skill category
+export const getSkillCategory = (skillTitle: string): string => {
+  console.log('Getting category for skill:', skillTitle);
+  const skill = getSkillByTitle(skillTitle);
+  return skill?.category || 'common';
+};
 
-console.log('Skill database service initialized - using universal database only');
+console.log('Skill database service initialized:', {
+  totalSkills: skillDefinitions.length,
+  categories: {
+    specialized: getSkillsByCategory('specialized').length,
+    common: getSkillsByCategory('common').length,
+    certification: getSkillsByCategory('certification').length
+  }
+});
