@@ -48,7 +48,7 @@ export interface CompetencyState {
 export interface BaseSkill {
   id: string;
   title: string;
-  name?: string; // Added for backward compatibility
+  name: string; // Required for backward compatibility
   subcategory: string;
   category: SkillCategory;
   businessCategory: string;
@@ -95,15 +95,15 @@ export interface MappedSkill extends UnifiedSkill {
 export interface DetailedSkill extends BaseSkill {
   level: string;
   isSkillGoal: boolean;
-  name: string; // Added for backward compatibility
+  name: string;
 }
 
 export interface SimpleSkill {
   title: string;
   level: string;
-  subcategory?: string;
-  businessCategory?: string;
-  growth?: string;
+  subcategory: string;
+  businessCategory: string;
+  growth: string;
 }
 
 export interface RoleSkillData {
@@ -111,15 +111,19 @@ export interface RoleSkillData {
   specialized: RoleSkill[];
   common: RoleSkill[];
   certifications: RoleSkill[];
-  skills?: RoleSkill[];
-  soc?: string;
-  function?: string;
-  mappedTitle?: string;
-  occupation?: string;
-  description?: string;
-  roleTrack?: "Professional" | "Managerial";
+  skills: RoleSkill[];
+  soc: string;
+  function: string;
+  mappedTitle: string;
+  occupation: string;
+  description: string;
+  roleTrack: "Professional" | "Managerial";
 }
 
 export interface Skill extends BaseSkill {
   // Additional properties specific to the Skill interface if needed
+}
+
+export interface Certification extends DetailedSkill {
+  // Additional properties specific to certifications if needed
 }
