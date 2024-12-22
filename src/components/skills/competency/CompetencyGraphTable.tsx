@@ -64,11 +64,11 @@ export const CompetencyGraphTable = ({
     ];
     
     const skill = allSkills.find(s => s.title === skillName);
-    if (!skill) return { level: "-", required: "-" };
+    if (!skill) return { level: "-", requirement: "preferred" as RoleSkillRequirement };
     
     return {
       level: skill.level || "-",
-      required: "required"
+      requirement: "required" as RoleSkillRequirement
     };
   };
 

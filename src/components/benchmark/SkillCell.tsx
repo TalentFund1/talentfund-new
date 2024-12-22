@@ -44,7 +44,8 @@ export const SkillCell = ({
       value,
       levelKey,
       currentState.requirement || 'preferred',
-      currentRoleId
+      currentRoleId,
+      skillName // Using skillName as skillId for now
     );
   };
 
@@ -62,7 +63,8 @@ export const SkillCell = ({
       currentState.level || 'unspecified',
       levelKey,
       value,
-      currentRoleId
+      currentRoleId,
+      skillName // Using skillName as skillId for now
     );
   };
 
