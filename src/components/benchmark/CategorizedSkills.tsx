@@ -78,12 +78,12 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
 
   const requiredSkills = sortSkills(filteredSkills.filter(skill => {
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return competencyState?.requirement === 'required';
+    return competencyState?.level === 'advanced';
   }));
 
   const preferredSkills = sortSkills(filteredSkills.filter(skill => {
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return competencyState?.requirement === 'preferred';
+    return competencyState?.level === 'intermediate' || competencyState?.level === 'beginner';
   }));
 
   const missingSkills = sortSkills(filteredSkills.filter(skill => {
@@ -91,7 +91,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
     return !hasSkill && 
            toggledSkills.has(skill.title) && 
-           (competencyState?.requirement === 'required' || competencyState?.requirement === 'preferred');
+           competencyState?.level !== 'unspecified';
   }));
 
   const getLevelColor = (skillTitle: string) => {
