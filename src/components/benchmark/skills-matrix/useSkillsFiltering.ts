@@ -94,19 +94,25 @@ export const useSkillsFiltering = (
       }
 
       // Get the requirement value and normalize it for comparison
-      const currentRequirement = currentSkillState?.requirement as EmployeeSkillRequirement || 'unknown';
-      const selectedInterestNormalized = normalizeRequirement(selectedInterest);
+      const currentRequirement = currentSkillState?.requirement || 'unknown';
+      const normalizedSelectedInterest = normalizeRequirement(selectedInterest);
+      const normalizedCurrentRequirement = normalizeRequirement(currentRequirement);
 
       console.log('Checking interest filter for skill:', {
         skillName: skill.title,
-        currentRequirement,
-        selectedInterest: selectedInterestNormalized,
+        currentRequirement: normalizedCurrentRequirement,
+        selectedInterest: normalizedSelectedInterest,
         currentState: currentSkillState,
-        matches: normalizeRequirement(currentRequirement) === selectedInterestNormalized
+        matches: normalizedCurrentRequirement === normalizedSelectedInterest
       });
 
       if (selectedInterest !== 'all') {
-        matchesInterest = normalizeRequirement(currentRequirement) === selectedInterestNormalized;
+        // Handle the special case for 'not_interested'
+        if (normalizedSelectedInterest === 'notinterested') {
+          matchesInterest = normalizedCurrentRequirement === 'notinterested';
+        } else {
+          matchesInterest = normalizedCurrentRequirement === normalizedSelectedInterest;
+        }
       }
 
       if (searchTerm) {
@@ -118,8 +124,8 @@ export const useSkillsFiltering = (
       if (!matches && selectedInterest !== 'all') {
         console.log('Skill filtered out:', {
           skillName: skill.title,
-          currentRequirement,
-          selectedInterest: selectedInterestNormalized,
+          currentRequirement: normalizedCurrentRequirement,
+          selectedInterest: normalizedSelectedInterest,
           matchesInterest
         });
       }
