@@ -3,6 +3,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { getAllSkills } from '../../skills/data/skills/allSkills';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 interface EmployeeStore {
   employees: Employee[];
@@ -27,20 +29,48 @@ export const useEmployeeStore = create<EmployeeStore>()(
 
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Initializing skills for employee:', employeeId);
-        const store = get();
         
-        if (!store.employeeSkills[employeeId]) {
-          store.setEmployeeSkills(employeeId, []);
-        }
+        // Get all skills from universal database
+        const universalSkills = getAllSkills();
+        console.log('Loading universal skills:', universalSkills.length);
 
-        if (!store.skillStates[employeeId]) {
-          set((state) => ({
-            skillStates: {
-              ...state.skillStates,
-              [employeeId]: {}
-            }
-          }));
-        }
+        const initializedSkills = universalSkills.map(skill => {
+          const skillData = getUnifiedSkillData(skill.title);
+          return {
+            ...skillData,
+            level: 'unspecified',
+            requirement: 'unknown' as EmployeeSkillRequirement
+          };
+        });
+
+        set((state) => ({
+          employeeSkills: {
+            ...state.employeeSkills,
+            [employeeId]: initializedSkills
+          },
+          skillStates: {
+            ...state.skillStates,
+            [employeeId]: initializedSkills.reduce((acc, skill) => ({
+              ...acc,
+              [skill.title]: {
+                employeeId,
+                skillId: skill.id,
+                level: 'unspecified',
+                requirement: 'unknown'
+              }
+            }), {})
+          }
+        }));
+
+        console.log('Initialized skills for employee:', {
+          employeeId,
+          skillCount: initializedSkills.length,
+          categories: {
+            specialized: initializedSkills.filter(s => s.category === 'specialized').length,
+            common: initializedSkills.filter(s => s.category === 'common').length,
+            certification: initializedSkills.filter(s => s.category === 'certification').length
+          }
+        });
       },
 
       addEmployee: (employee) => {
@@ -116,6 +146,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               ...state.skillStates[employeeId],
               [skillName]: {
+                employeeId,
+                skillId,
                 level,
                 requirement
               }
@@ -133,6 +165,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
     {
       name: 'employee-store',
       storage: createJSONStorage(() => localStorage),
+      version: 25, // Increment version to ensure clean state
       partialize: (state) => ({
         employees: state.employees,
         employeeSkills: state.employeeSkills,
