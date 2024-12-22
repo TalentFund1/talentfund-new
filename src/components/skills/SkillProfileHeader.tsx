@@ -7,7 +7,7 @@ import { roleSkills } from './data/roleSkills';
 import { EditSkillProfileForm } from "./form/EditSkillProfileForm";
 
 interface SkillProfileHeaderProps {
-  jobTitle: string;
+  jobTitle?: string;
 }
 
 export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHeaderProps) => {
@@ -16,19 +16,11 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [currentRole, setCurrentRole] = useState(roleSkills[id as keyof typeof roleSkills]);
   
-  // Listen for role updates
+  // Update current role when ID changes
   useEffect(() => {
-    const handleRoleUpdate = (event: CustomEvent) => {
-      if (event.detail.roleId === id) {
-        console.log('Role updated, refreshing header data for role:', id);
-        setCurrentRole(roleSkills[id as keyof typeof roleSkills]);
-      }
-    };
-
-    window.addEventListener('roleSkillsUpdated', handleRoleUpdate as EventListener);
-    return () => {
-      window.removeEventListener('roleSkillsUpdated', handleRoleUpdate as EventListener);
-    };
+    const role = roleSkills[id as keyof typeof roleSkills];
+    console.log('SkillProfileHeader - Updating role data:', { id, role });
+    setCurrentRole(role);
   }, [id]);
 
   const occupation = currentRole ? `${currentRole.title} Specialist` : jobTitle;
@@ -42,7 +34,7 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
     "DevOps Engineer": "We are looking for a DevOps Engineer to help us build and maintain our cloud infrastructure. You will work with our engineering teams to implement CI/CD pipelines and ensure system reliability."
   };
 
-  const fullDescription = roleDescriptions[jobTitle] || roleDescriptions["AI Engineer"];
+  const fullDescription = currentRole?.description || roleDescriptions[jobTitle] || roleDescriptions["AI Engineer"];
 
   console.log('SkillProfileHeader rendering with data:', {
     id,
