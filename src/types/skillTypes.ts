@@ -49,9 +49,3 @@ export interface ProfileSkillStates {
     [skillId: string]: EmployeeSkillState;
   };
 }
-
-export interface SkillState {
-  id: string;
-  level: string;
-  requirement: RoleSkillRequirement | EmployeeSkillRequirement;
-}

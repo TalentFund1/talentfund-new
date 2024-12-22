@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
-import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '@/types/skillTypes';
 import { generateSkillId } from '../../skills/data/skillDatabaseService';
 
 interface EmployeeSkillsState {
