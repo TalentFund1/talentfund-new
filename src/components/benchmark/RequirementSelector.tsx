@@ -24,7 +24,7 @@ export const RequirementSelector = ({
     const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
     switch (requirement.toLowerCase()) {
-      case 'required':
+      case 'skill_goal':
         return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
       default:
         return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
@@ -41,12 +41,12 @@ export const RequirementSelector = ({
       >
         <SelectValue>
           <span className="flex items-center gap-2 justify-center">
-            {currentRequired === 'required' ? (
+            {currentRequired === 'skill_goal' ? (
               <>
                 <Heart className="w-3.5 h-3.5" />
                 <span>Skill Goal</span>
               </>
-            ) : currentRequired === 'not-interested' ? (
+            ) : currentRequired === 'not_interested' ? (
               <>
                 <X className="w-3.5 h-3.5" />
                 <span>Not Interested</span>
@@ -61,12 +61,12 @@ export const RequirementSelector = ({
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="required">
+        <SelectItem value="skill_goal">
           <span className="flex items-center gap-2">
             <Heart className="w-3.5 h-3.5" /> Skill Goal
           </span>
         </SelectItem>
-        <SelectItem value="not-interested">
+        <SelectItem value="not_interested">
           <span className="flex items-center gap-2">
             <X className="w-3.5 h-3.5" /> Not Interested
           </span>
