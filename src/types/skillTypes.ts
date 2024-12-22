@@ -7,8 +7,9 @@ export type SkillLevel = 'advanced' | 'intermediate' | 'beginner' | 'unspecified
 
 // Core state interfaces
 export interface BaseSkillState {
+  id: string;
   level: SkillLevel;
-  requirement?: EmployeeSkillRequirement | RoleSkillRequirement;
+  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
 }
 
 export interface EmployeeSkillState extends BaseSkillState {
@@ -19,6 +20,19 @@ export interface EmployeeSkillState extends BaseSkillState {
 export interface RoleSkillState extends BaseSkillState {
   id: string;
   requirement: RoleSkillRequirement;
+}
+
+// Role state interfaces
+export interface RoleState {
+  [skillName: string]: {
+    [levelKey: string]: RoleSkillState;
+  };
+}
+
+export interface ProfileSkillStates {
+  [employeeId: string]: {
+    [skillId: string]: EmployeeSkillState;
+  };
 }
 
 // Skill data interfaces
@@ -37,16 +51,26 @@ export interface UnifiedSkill {
   benchmarks?: { [key: string]: boolean };
 }
 
-export interface DetailedSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
+export interface RoleSkillData {
+  title: string;
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+  roleTrack?: string;
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
+  skills: UnifiedSkill[];
 }
 
 // Helper functions
 export const getSkillLevel = (state: EmployeeSkillState | RoleSkillState): SkillLevel => {
   return state.level || 'unspecified';
 };
+
+export const getSkillStateLevel = getSkillLevel;
 
 export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): string => {
   return state.requirement;
@@ -66,6 +90,7 @@ export const convertToEmployeeSkillState = (
   level: SkillLevel = 'unspecified',
   requirement: EmployeeSkillRequirement = 'unknown'
 ): EmployeeSkillState => ({
+  id: skillId,
   skillId,
   level,
   requirement
