@@ -45,6 +45,11 @@ export interface RoleState {
   };
 }
 
+export interface SkillState {
+  level: string;
+  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
+}
+
 export interface RoleSkillData {
   title: string;
   specialized: UnifiedSkill[];

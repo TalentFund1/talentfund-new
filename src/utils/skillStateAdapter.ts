@@ -1,4 +1,9 @@
-import { EmployeeSkillState, RoleSkillState, EmployeeSkillRequirement, RoleSkillRequirement } from "../types/skillTypes";
+import { 
+  EmployeeSkillState, 
+  RoleSkillState, 
+  EmployeeSkillRequirement, 
+  RoleSkillRequirement 
+} from "../types/skillTypes";
 
 // Convert employee requirement to role requirement
 export const toRoleRequirement = (requirement: EmployeeSkillRequirement): RoleSkillRequirement => {
@@ -64,10 +69,12 @@ export const toEmployeeStateRecord = (states: Record<string, RoleSkillState>, pr
 
 // Safe getters that handle both types
 export const getSkillLevel = (state: EmployeeSkillState | RoleSkillState): string => {
+  if (!state) return 'unspecified';
   return state.level || 'unspecified';
 };
 
-export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): string => {
+export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): EmployeeSkillRequirement | RoleSkillRequirement => {
+  if (!state) return 'unknown';
   if (isEmployeeSkillState(state)) {
     return state.requirement;
   }
@@ -76,11 +83,11 @@ export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState):
 
 // Type guards
 export const isEmployeeSkillState = (state: any): state is EmployeeSkillState => {
-  return 'profileId' in state && 'skillId' in state;
+  return state && 'profileId' in state && 'skillId' in state;
 };
 
 export const isRoleSkillState = (state: any): state is RoleSkillState => {
-  return 'id' in state && !('profileId' in state);
+  return state && 'id' in state && !('profileId' in state);
 };
 
 console.log('Skill state adapter utilities loaded');
