@@ -3,12 +3,12 @@ import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { RoleSkillRequirement } from "../../../types/skillTypes";
+import { RoleSkillRequirement, SkillLevel } from "@/types/skillTypes";
 
 interface SkillCellProps {
   skillName: string;
   details: {
-    level: string;
+    level: SkillLevel;
     requirement: RoleSkillRequirement;
   };
   isLastColumn: boolean;
@@ -26,11 +26,12 @@ export const SkillCell = ({
   const currentRoleId = roleId || "123";
 
   const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
+    id: skillName,
     level: details.level || "unspecified",
     requirement: details.requirement || "preferred",
   };
 
-  const handleLevelChange = (value: string) => {
+  const handleLevelChange = (value: SkillLevel) => {
     console.log('Changing level:', {
       skillName,
       levelKey,
@@ -45,7 +46,7 @@ export const SkillCell = ({
       levelKey,
       currentState.requirement || 'preferred',
       currentRoleId,
-      skillName // Using skillName as skillId for now
+      skillName
     );
   };
 
@@ -64,7 +65,7 @@ export const SkillCell = ({
       levelKey,
       value,
       currentRoleId,
-      skillName // Using skillName as skillId for now
+      skillName
     );
   };
 
@@ -74,12 +75,12 @@ export const SkillCell = ({
     >
       <div className="flex flex-col items-center gap-0">
         <LevelSelector
-          currentLevel={currentState.level || 'unspecified'}
+          currentLevel={currentState.level}
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={currentState.requirement || 'preferred'}
-          currentLevel={currentState.level || 'unspecified'}
+          currentRequired={currentState.requirement}
+          currentLevel={currentState.level}
           onRequirementChange={handleRequirementChange}
         />
       </div>
