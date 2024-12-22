@@ -56,3 +56,9 @@ export interface RoleSkillData {
   occupation?: string;
   description?: string;
 }
+
+export interface DetailedSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
+}
