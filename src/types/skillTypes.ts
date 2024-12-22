@@ -7,7 +7,7 @@ export type SkillLevel = 'advanced' | 'intermediate' | 'beginner' | 'unspecified
 
 // Core state interfaces
 export interface BaseSkillState {
-  level: SkillLevel | string;
+  level: SkillLevel;
   requirement?: EmployeeSkillRequirement | RoleSkillRequirement;
 }
 
@@ -21,26 +21,15 @@ export interface RoleSkillState extends BaseSkillState {
   requirement: RoleSkillRequirement;
 }
 
-export interface SkillState extends BaseSkillState {
-  id: string;
-  requirement: RoleSkillRequirement;
-}
-
 // Skill data interfaces
-export interface DetailedSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
-}
-
 export interface UnifiedSkill {
   id: string;
   title: string;
   subcategory: string;
-  category?: string;
+  category: SkillCategory;
   businessCategory?: string;
   weight?: SkillWeight;
-  level?: string;
+  level?: SkillLevel;
   growth: string;
   confidence: string;
   requirement?: RoleSkillRequirement;
@@ -48,39 +37,15 @@ export interface UnifiedSkill {
   benchmarks?: { [key: string]: boolean };
 }
 
-export interface RoleSkillData {
-  title: string;
-  specialized: UnifiedSkill[];
-  common: UnifiedSkill[];
-  certifications: UnifiedSkill[];
-  roleTrack?: string;
+export interface DetailedSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
 }
-
-export interface RoleState {
-  [skillName: string]: {
-    [level: string]: RoleSkillState;
-  };
-}
-
-export interface ProfileSkillStates {
-  [profileId: string]: {
-    [skillId: string]: EmployeeSkillState;
-  };
-}
-
-// Type guard utilities
-export const isEmployeeRequirement = (req: any): req is EmployeeSkillRequirement => {
-  return ['skill_goal', 'not_interested', 'unknown'].includes(req);
-};
-
-export const isRoleRequirement = (req: any): req is RoleSkillRequirement => {
-  return ['required', 'preferred'].includes(req);
-};
 
 // Helper functions
-export const getSkillLevel = (state: EmployeeSkillState | RoleSkillState | string): string => {
-  if (typeof state === 'string') return state;
-  return state.level?.toString() || 'unspecified';
+export const getSkillLevel = (state: EmployeeSkillState | RoleSkillState): SkillLevel => {
+  return state.level || 'unspecified';
 };
 
 export const getSkillRequirement = (state: EmployeeSkillState | RoleSkillState): string => {
@@ -98,7 +63,7 @@ export const isRequiredSkill = (state: RoleSkillState): boolean => {
 // Type conversion utilities
 export const convertToEmployeeSkillState = (
   skillId: string,
-  level: string = 'unspecified',
+  level: SkillLevel = 'unspecified',
   requirement: EmployeeSkillRequirement = 'unknown'
 ): EmployeeSkillState => ({
   skillId,
@@ -108,7 +73,7 @@ export const convertToEmployeeSkillState = (
 
 export const convertToRoleSkillState = (
   id: string,
-  level: string = 'unspecified',
+  level: SkillLevel = 'unspecified',
   requirement: RoleSkillRequirement = 'preferred'
 ): RoleSkillState => ({
   id,
@@ -117,16 +82,16 @@ export const convertToRoleSkillState = (
 });
 
 // Level comparison utilities
-export const getLevelPriority = (level: string = 'unspecified'): number => {
-  const priorities: { [key: string]: number } = {
+export const getLevelPriority = (level: SkillLevel = 'unspecified'): number => {
+  const priorities: { [key in SkillLevel]: number } = {
     'advanced': 0,
     'intermediate': 1,
     'beginner': 2,
     'unspecified': 3
   };
-  return priorities[level.toLowerCase()] ?? 3;
+  return priorities[level];
 };
 
-export const compareSkillLevels = (level1: string, level2: string): boolean => {
-  return getLevelPriority(level1) === getLevelPriority(level2);
+export const compareSkillLevels = (a: SkillLevel, b: SkillLevel): number => {
+  return getLevelPriority(a) - getLevelPriority(b);
 };
