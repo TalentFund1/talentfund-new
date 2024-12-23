@@ -70,3 +70,8 @@ export interface SkillsMatrixState {
   saveChanges: () => void;
   cancelChanges: () => void;
 }
+
+export interface SkillState {
+  level: string;
+  required: string;
+}

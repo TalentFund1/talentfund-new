@@ -137,7 +137,12 @@ export const useEmployeeStore = create<EmployeeStore>()(
         const store = get();
         
         if (!store.employeeSkills[employeeId]) {
-          store.setEmployeeSkills(employeeId, []);
+          set((state) => ({
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: []
+            }
+          }));
         }
 
         if (!store.skillStates[employeeId]) {
@@ -205,8 +210,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               ...state.skillStates[employeeId],
               [skillName]: {
-                id: skillId,
-                skillId: skillName,
+                employeeId,
+                skillId,
                 level,
                 requirement
               }
