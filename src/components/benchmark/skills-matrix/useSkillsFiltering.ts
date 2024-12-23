@@ -2,8 +2,6 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
-import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
-import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
 
 export const useSkillsFiltering = (
   employeeId: string,
