@@ -1,9 +1,8 @@
 import { TableCell } from "@/components/ui/table";
-import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { RoleSkillRequirement } from "@/types/skillTypes";
+import { RoleSkillRequirement, mapRoleToEmployeeRequirement } from "@/types/skillTypes";
 
 interface SkillCellProps {
   skillName: string;
@@ -17,20 +16,13 @@ interface SkillCellProps {
 
 export const SkillCell = ({ 
   skillName, 
-  details = { level: 'unspecified', requirement: 'preferred' }, 
-  isLastColumn = false, 
+  details, 
+  isLastColumn, 
   levelKey 
 }: SkillCellProps) => {
   const { roleStates, setSkillState } = useCompetencyStore();
   const { id: roleId } = useParams<{ id: string }>();
   const currentRoleId = roleId || "123";
-
-  console.log('SkillCell rendering:', {
-    skillName,
-    levelKey,
-    details,
-    currentRoleId
-  });
 
   const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
     id: skillName,
@@ -53,8 +45,9 @@ export const SkillCell = ({
       skillName,
       value,
       levelKey,
-      currentState.requirement as RoleSkillRequirement,
-      currentRoleId
+      currentState.requirement,
+      currentRoleId,
+      skillName
     );
   };
 
@@ -72,7 +65,8 @@ export const SkillCell = ({
       currentState.level || 'unspecified',
       levelKey,
       value,
-      currentRoleId
+      currentRoleId,
+      skillName
     );
   };
 
