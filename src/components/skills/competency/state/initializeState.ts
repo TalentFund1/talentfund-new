@@ -24,9 +24,7 @@ export const initializeRoleState = (roleId: string): RoleState => {
       initialStates[skill.title][level] = {
         id: skill.title,
         skillId: skill.title,
-        roleId: roleId,
-        level: 'unspecified',
-        requirement: 'preferred'
+        level: 'unspecified'
       };
     });
   });

@@ -1,18 +1,19 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
+export type SkillLevel = 'advanced' | 'intermediate' | 'beginner' | 'unspecified';
 
 export interface BaseSkillState {
   id: string;
   skillId: string;
-  level: string;
+  level: SkillLevel;
 }
 
 export interface EmployeeSkillState extends BaseSkillState {
-  level: string;
+  level: SkillLevel;
 }
 
 export interface RoleSkillState extends BaseSkillState {
-  level: string;
+  level: SkillLevel;
 }
 
 export interface RoleState {

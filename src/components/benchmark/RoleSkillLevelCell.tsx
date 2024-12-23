@@ -2,7 +2,7 @@ import { TableCell } from "@/components/ui/table";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useRoleStore } from "./RoleBenchmark";
-import { mapRoleToEmployeeRequirement } from "@/types/skillTypes";
+import { SkillLevel } from "@/types/skillTypes";
 
 interface RoleSkillLevelCellProps {
   skillTitle: string;
@@ -16,16 +16,13 @@ export const RoleSkillLevelCell = ({
   const { selectedRole, selectedLevel } = useRoleStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   
-  const competencyState = getSkillCompetencyState(skillTitle, selectedLevel, selectedRole);
+  const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase(), selectedRole);
   const level = competencyState?.level || initialLevel;
-  const isRequired = competencyState?.requirement === 'required';
 
   console.log('RoleSkillLevelCell rendering:', {
     skillTitle,
     level,
-    isRequired,
-    competencyState,
-    mappedRequirement: isRequired ? mapRoleToEmployeeRequirement('required') : mapRoleToEmployeeRequirement('preferred')
+    competencyState
   });
 
   const getLevelIcon = () => {
@@ -56,35 +53,12 @@ export const RoleSkillLevelCell = ({
     }
   };
 
-  const getRequirementStyles = () => {
-    const borderColor = level?.toLowerCase() === 'advanced' 
-      ? 'border-primary-accent'
-      : level?.toLowerCase() === 'intermediate'
-        ? 'border-primary-icon'
-        : level?.toLowerCase() === 'beginner'
-          ? 'border-[#008000]'
-          : 'border-gray-400';
-
-    return `text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 bg-[#F9FAFB] border-x-2 border-b-2 min-h-[32px] rounded-b-md ${borderColor}`;
-  };
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <div className={getLevelStyles()}>
           {getLevelIcon()}
           {level}
-        </div>
-        <div className={getRequirementStyles()}>
-          {isRequired ? (
-            <>
-              Required
-            </>
-          ) : (
-            <>
-              Preferred
-            </>
-          )}
         </div>
       </div>
     </TableCell>
