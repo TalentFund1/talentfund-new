@@ -64,21 +64,23 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
 
       saveChanges: () => {
         set((state) => ({
-          currentStates: state.skillStates,
+          currentStates: { ...state.skillStates[Object.keys(state.skillStates)[0]] || {} },
           hasChanges: false
         }));
       },
 
       cancelChanges: () => {
         set((state) => ({
-          skillStates: state.currentStates,
+          skillStates: { 
+            [Object.keys(state.skillStates)[0]]: state.currentStates 
+          },
           hasChanges: false
         }));
       }
     }),
     {
       name: 'skills-matrix-storage',
-      version: 4,
+      version: 5,
       partialize: (state) => ({
         skillStates: state.skillStates,
         currentStates: state.currentStates
