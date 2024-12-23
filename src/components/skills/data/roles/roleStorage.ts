@@ -1,5 +1,5 @@
 import { RoleSkillData } from '../../types/SkillTypes';
-import { getSkillCategory } from '../skills/categories/skillCategories';
+import { getUnifiedSkillData } from '../skillDatabaseService';
 import { getRoleTitle, getRoleSoc, getRoleDefaultTrack } from './roleDefinitions';
 
 const getStorageKey = (roleId: string) => `role-skills-${roleId}`;
@@ -12,28 +12,22 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
     if (savedSkills) {
       const parsedSkills = JSON.parse(savedSkills);
       
-      // Recategorize all skills using universal database
-      const recategorizedSkills = {
+      // Convert all skills to unified format
+      const unifiedSkills = parsedSkills.skills.map((skill: any) => 
+        getUnifiedSkillData(skill.title)
+      );
+      
+      const roleData = {
         ...parsedSkills,
-        specialized: parsedSkills.specialized.filter((skill: any) => 
-          getSkillCategory(skill.title) === 'specialized'
-        ),
-        common: parsedSkills.common.filter((skill: any) => 
-          getSkillCategory(skill.title) === 'common'
-        ),
-        certifications: parsedSkills.certifications.filter((skill: any) => 
-          getSkillCategory(skill.title) === 'certification'
-        )
+        skills: unifiedSkills
       };
       
-      console.log('Loaded and recategorized skills:', {
+      console.log('Loaded and unified skills:', {
         roleId,
-        specialized: recategorizedSkills.specialized.length,
-        common: recategorizedSkills.common.length,
-        certifications: recategorizedSkills.certifications.length
+        skillsCount: roleData.skills.length
       });
       
-      return recategorizedSkills;
+      return roleData;
     }
   } catch (error) {
     console.error('Error loading role skills:', error);
@@ -45,23 +39,19 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
   console.log('Saving role skills:', { roleId, skills });
   
   try {
-    // Ensure all skills have proper categorization from universal database
-    const updatedSkills = {
+    // Ensure all skills are in unified format
+    const unifiedSkills = skills.skills.map(skill => 
+      getUnifiedSkillData(skill.title)
+    );
+    
+    const roleData = {
       ...skills,
-      specialized: skills.specialized.filter(skill => 
-        getSkillCategory(skill.title) === 'specialized'
-      ),
-      common: skills.common.filter(skill => 
-        getSkillCategory(skill.title) === 'common'
-      ),
-      certifications: skills.certifications.filter(skill => 
-        getSkillCategory(skill.title) === 'certification'
-      )
+      skills: unifiedSkills
     };
     
-    localStorage.setItem(getStorageKey(roleId), JSON.stringify(updatedSkills));
+    localStorage.setItem(getStorageKey(roleId), JSON.stringify(roleData));
     
-    console.log('Updated role skills with universal categories:', updatedSkills);
+    console.log('Updated role skills with unified data:', roleData);
     
     window.dispatchEvent(new CustomEvent('roleSkillsUpdated', { 
       detail: { roleId } 
@@ -85,9 +75,6 @@ export const initializeRoleSkills = (roleId: string): RoleSkillData => {
     occupation: getRoleTitle(roleId),
     description: "",
     roleTrack: getRoleDefaultTrack(roleId),
-    specialized: [],
-    common: [],
-    certifications: [],
     skills: []
   };
 };

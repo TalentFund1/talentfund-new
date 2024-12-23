@@ -1,6 +1,6 @@
 import { RoleSkillData } from '../types/SkillTypes';
 import { loadRoleSkills, saveRoleSkills, initializeRoleSkills } from './roles/roleStorage';
-import { getSkillCategory } from './skills/categories/skillCategories';
+import { getUnifiedSkillData } from './skillDatabaseService';
 
 // Initialize roleSkills object
 export const roleSkills: { [key: string]: RoleSkillData } = {};
@@ -14,9 +14,7 @@ roleIds.forEach(id => {
   
   console.log(`Initialized role ${id}:`, {
     title: roleSkills[id].title,
-    specialized: roleSkills[id].specialized.length,
-    common: roleSkills[id].common.length,
-    certifications: roleSkills[id].certifications.length
+    skillsCount: roleSkills[id].skills.length
   });
 });
 
@@ -24,7 +22,7 @@ roleIds.forEach(id => {
 export { saveRoleSkills, loadRoleSkills };
 
 // Helper function to get category for a skill in a role
-export const getRoleSkillCategory = (skillTitle: string, roleId: string): string => {
-  console.log(`Getting category for skill "${skillTitle}" in role ${roleId}`);
-  return getSkillCategory(skillTitle);
+export const getRoleSkillCategory = (skillTitle: string): string => {
+  const skillData = getUnifiedSkillData(skillTitle);
+  return skillData.category;
 };
