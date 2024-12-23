@@ -11,7 +11,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
-import { toRoleRequirement, toEmployeeRequirement } from "@/utils/skillStateAdapter";
+import { EmployeeSkillState } from "@/types/skillTypes";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -79,7 +79,7 @@ export const BenchmarkAnalysis = () => {
     const employeeState = currentStates[skill.title];
     if (!employeeState) return false;
 
-    const employeeSkillLevel = employeeState.level || 'unspecified';
+    const employeeSkillLevel = (employeeState as EmployeeSkillState).level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     console.log('Comparing competency levels:', {
@@ -115,7 +115,7 @@ export const BenchmarkAnalysis = () => {
     if (!employeeState) return false;
 
     const roleRequirement = roleSkillState.requirement;
-    const employeeRequirement = employeeState.requirement;
+    const employeeRequirement = (employeeState as EmployeeSkillState).requirement;
 
     return roleRequirement === 'required' && employeeRequirement === 'skill_goal';
   });
