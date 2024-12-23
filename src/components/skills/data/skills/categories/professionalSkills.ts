@@ -28,6 +28,45 @@ export const professionalSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
+    id: 'SKILL_PS_414',
+    title: "Problem Solving",
+    subcategory: "Development Practices",
+    category: "common",
+    businessCategory: "Professional Skills",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "15%",
+    salary: "$120,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_CR_059',
+    title: "Code Review",
+    subcategory: "Development Practices",
+    category: "common",
+    businessCategory: "Software Development",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "15%",
+    salary: "$115,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TL_238',
+    title: "Team Leadership",
+    subcategory: "Leadership",
+    category: "common",
+    businessCategory: "Professional Skills",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "18%",
+    salary: "$130,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
     id: 'SKILL_TC_748',
     title: "Team Collaboration",
     subcategory: "Soft Skills",
@@ -41,28 +80,15 @@ export const professionalSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: 'SKILL_COM_SYS_678',
-    title: "System Architecture",
-    subcategory: "Architecture",
+    id: 'SKILL_PO_686',
+    title: "Performance Optimization",
+    subcategory: "Development Practices",
     category: "specialized",
     businessCategory: "Software Development",
     weight: "technical",
     level: "advanced",
-    growth: "18%",
-    salary: "$150,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'SKILL_COM_AGL_215',
-    title: "Agile Methodologies",
-    subcategory: "Project Management",
-    category: "common",
-    businessCategory: "Professional Skills",
-    weight: "necessary",
-    level: "intermediate",
-    growth: "15%",
-    salary: "$115,000",
+    growth: "20%",
+    salary: "$140,000",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }

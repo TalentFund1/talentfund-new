@@ -2,7 +2,7 @@ import { UnifiedSkill } from '../../../types/SkillTypes';
 
 export const communicationSkills: UnifiedSkill[] = [
   {
-    id: 'SKILL_COM_COM_662',
+    id: 'SKILL_COM_662',
     title: "Communication",
     subcategory: "Soft Skills",
     category: "common",
