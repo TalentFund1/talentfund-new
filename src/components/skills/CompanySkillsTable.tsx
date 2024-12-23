@@ -2,8 +2,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card } from "@/components/ui/card";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
-import { roleSkills } from './data/roleSkills';
-import { getAllSkills } from './data/skills/allSkills';
 
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
@@ -68,6 +66,7 @@ export const CompanySkillsTable = () => {
             <TableHeader>
               <TableRow className="hover:bg-transparent border-b border-border">
                 <TableHead className="font-semibold">Skill Title</TableHead>
+                <TableHead className="font-semibold">Skill ID</TableHead>
                 <TableHead className="font-semibold">Type</TableHead>
                 <TableHead className="font-semibold">Category</TableHead>
                 <TableHead className="font-semibold">Subcategory</TableHead>
@@ -81,6 +80,7 @@ export const CompanySkillsTable = () => {
               {uniqueSkills.map((skill) => (
                 <TableRow key={skill.id} className="hover:bg-muted/5">
                   <TableCell className="font-medium">{skill.title}</TableCell>
+                  <TableCell>{skill.id}</TableCell>
                   <TableCell>
                     <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(skill.category)}`}>
                       {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}

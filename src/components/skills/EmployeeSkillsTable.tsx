@@ -1,9 +1,9 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
-import { getUnifiedSkillData } from "./data/skillDatabaseService";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { getUnifiedSkillData } from "./data/skillDatabaseService";
 
 export const EmployeeSkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
@@ -50,6 +50,7 @@ export const EmployeeSkillsTable = () => {
             <TableHeader>
               <TableRow className="hover:bg-transparent border-b border-border">
                 <TableHead className="font-semibold">Skill Title</TableHead>
+                <TableHead className="font-semibold">Skill ID</TableHead>
                 <TableHead className="font-semibold">Type</TableHead>
                 <TableHead className="font-semibold">Category</TableHead>
                 <TableHead className="font-semibold">Subcategory</TableHead>
@@ -63,6 +64,7 @@ export const EmployeeSkillsTable = () => {
               {uniqueSkills.map((skill) => (
                 <TableRow key={skill.id} className="hover:bg-muted/5">
                   <TableCell className="font-medium">{skill.title}</TableCell>
+                  <TableCell>{skill.id}</TableCell>
                   <TableCell>{skill.category}</TableCell>
                   <TableCell>{skill.businessCategory}</TableCell>
                   <TableCell>{skill.subcategory}</TableCell>
