@@ -1,39 +1,9 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillLevel = 'advanced' | 'intermediate' | 'beginner' | 'unspecified';
+export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
+export type RoleSkillRequirement = 'required' | 'preferred';
 
-export interface BaseSkillState {
-  id: string;
-  skillId: string;
-  level: SkillLevel;
-}
-
-export interface EmployeeSkillState extends BaseSkillState {
-  level: SkillLevel;
-}
-
-export interface RoleSkillState extends BaseSkillState {
-  level: SkillLevel;
-}
-
-export interface RoleState {
-  [skillName: string]: {
-    [level: string]: RoleSkillState;
-  };
-}
-
-export interface SkillsMatrixState {
-  skillStates: Record<string, Record<string, EmployeeSkillState>>;
-  currentStates: Record<string, EmployeeSkillState>;
-  hasChanges: boolean;
-  setSkillState: (profileId: string, skillId: string, level: SkillLevel) => void;
-  initializeState: (profileId: string, skillId: string, initialLevel: SkillLevel) => void;
-  getSkillState: (profileId: string, skillId: string) => EmployeeSkillState | undefined;
-  saveChanges: () => void;
-  cancelChanges: () => void;
-}
-
-export interface UnifiedSkill {
+export interface BaseSkill {
   id: string;
   title: string;
   subcategory: string;
@@ -52,9 +22,49 @@ export interface UnifiedSkill {
   };
 }
 
+export interface UnifiedSkill extends BaseSkill {
+  requirement?: RoleSkillRequirement;
+}
+
+export interface EmployeeSkillState {
+  profileId: string;
+  skillId: string;
+  level: string;
+  requirement: EmployeeSkillRequirement;
+}
+
+export interface RoleSkillState {
+  id: string;
+  level: string;
+  requirement: RoleSkillRequirement;
+}
+
+export interface RoleState {
+  [skillName: string]: {
+    [level: string]: RoleSkillState;
+  };
+}
+
+export interface SkillState {
+  id: string;
+  level: string;
+  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
+}
+
 export interface RoleSkillData {
   title: string;
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+}
+
+export interface SkillsMatrixState {
+  skillStates: Record<string, Record<string, EmployeeSkillState>>;
+  currentStates: Record<string, Record<string, EmployeeSkillState>>;
+  hasChanges: boolean;
+  setSkillState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  initializeState: (profileId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
+  getSkillState: (profileId: string, skillId: string) => EmployeeSkillState | undefined;
+  saveChanges: () => void;
+  cancelChanges: () => void;
 }

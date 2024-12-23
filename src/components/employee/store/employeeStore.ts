@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
-import { UnifiedSkill, EmployeeSkillState, SkillLevel } from '../../../types/skillTypes';
+import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
 
 interface EmployeeStore {
   employees: Employee[];
@@ -13,7 +13,7 @@ interface EmployeeStore {
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => UnifiedSkill[];
-  setSkillState: (employeeId: string, skillId: string, skillName: string, level: string) => void;
+  setSkillState: (employeeId: string, skillId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState | undefined;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
@@ -30,73 +30,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         const store = get();
         
         if (!store.employeeSkills[employeeId]) {
-          store.setEmployeeSkills(employeeId, [
-            {
-              id: 'SKILL001',
-              title: "Machine Learning",
-              subcategory: "AI & ML",
-              category: 'specialized',
-              businessCategory: "Information Technology",
-              weight: 'critical',
-              level: "advanced",
-              growth: "35%",
-              salary: "$185,000",
-              confidence: "high",
-              benchmarks: { B: true, R: true, M: true, O: true }
-            },
-            {
-              id: 'SKILL002',
-              title: "Deep Learning",
-              subcategory: "AI & ML",
-              category: 'specialized',
-              businessCategory: "Information Technology",
-              weight: 'critical',
-              level: "advanced",
-              growth: "32%",
-              salary: "$180,000",
-              confidence: "high",
-              benchmarks: { B: true, R: true, M: true, O: true }
-            },
-            {
-              id: 'SKILL003',
-              title: "Natural Language Processing",
-              subcategory: "AI & ML",
-              category: 'specialized',
-              businessCategory: "Information Technology",
-              weight: 'critical',
-              level: "intermediate",
-              growth: "30%",
-              salary: "$175,000",
-              confidence: "high",
-              benchmarks: { B: true, R: true, M: true, O: true }
-            },
-            {
-              id: 'SKILL004',
-              title: "Computer Vision",
-              subcategory: "AI & ML",
-              category: 'specialized',
-              businessCategory: "Information Technology",
-              weight: 'critical',
-              level: "beginner",
-              growth: "33%",
-              salary: "$178,000",
-              confidence: "high",
-              benchmarks: { B: true, R: true, M: true, O: true }
-            },
-            {
-              id: 'SKILL005',
-              title: "TensorFlow",
-              subcategory: "AI & ML Frameworks",
-              category: 'specialized',
-              businessCategory: "Information Technology",
-              weight: 'critical',
-              level: "intermediate",
-              growth: "28%",
-              salary: "$170,000",
-              confidence: "high",
-              benchmarks: { B: true, R: true, M: true, O: true }
-            }
-          ]);
+          store.setEmployeeSkills(employeeId, []);
         }
 
         if (!store.skillStates[employeeId]) {
@@ -151,7 +85,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
               employeeId,
               skill.title,
               skill.title,
-              'unspecified'
+              'unspecified',
+              'unknown'
             );
           }
         });
@@ -166,12 +101,13 @@ export const useEmployeeStore = create<EmployeeStore>()(
         return state.employeeSkills[employeeId] || [];
       },
 
-      setSkillState: (employeeId, skillId, skillName, level) => {
+      setSkillState: (employeeId, skillId, skillName, level, requirement) => {
         console.log('Setting skill state:', {
           employeeId,
           skillId,
           skillName,
-          level
+          level,
+          requirement
         });
 
         set((state) => ({
@@ -180,9 +116,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               ...state.skillStates[employeeId],
               [skillName]: {
-                id: skillId,
-                skillId,
-                level: level as SkillLevel
+                level,
+                requirement
               }
             }
           }

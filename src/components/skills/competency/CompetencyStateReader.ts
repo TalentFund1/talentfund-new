@@ -1,5 +1,5 @@
 import { useCompetencyStore } from "./CompetencyState";
-import { RoleSkillState } from "@/types/skillTypes";
+import { RoleSkillState } from "../types/SkillTypes";
 
 export const useCompetencyStateReader = () => {
   const { roleStates } = useCompetencyStore();
@@ -23,9 +23,8 @@ export const useCompetencyStateReader = () => {
     }
 
     return {
-      id: skillState.id,
-      skillId: skillState.skillId,
-      level: skillState.level
+      level: skillState.level,
+      requirement: skillState.requirement || 'preferred'
     };
   };
 

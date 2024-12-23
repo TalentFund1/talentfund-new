@@ -74,8 +74,6 @@ export const generateSkillProgression = (
 
     progression[level] = {
       id: skillTitle,
-      skillId: skillTitle,
-      roleId: roleId,
       level: skillLevel,
       requirement
     };

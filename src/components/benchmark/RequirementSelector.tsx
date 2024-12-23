@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { EmployeeSkillRequirement } from "@/types/skillTypes";
+import { EmployeeSkillRequirement } from "../../types/skillTypes";
 
 interface RequirementSelectorProps {
   currentRequired: EmployeeSkillRequirement;

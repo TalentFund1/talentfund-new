@@ -14,4 +14,4 @@ export interface CompetencyState {
   getRoleState: (roleId: string) => RoleState;
 }
 
-export type { RoleState, RoleSkillState, RoleSkillRequirement };
+export { RoleState, RoleSkillState, RoleSkillRequirement };

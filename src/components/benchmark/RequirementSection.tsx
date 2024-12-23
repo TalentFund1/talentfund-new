@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { RoleSkillRequirement } from "@/types/skillTypes";
 
 interface RequirementSectionProps {
   title: string;
@@ -7,7 +6,7 @@ interface RequirementSectionProps {
   skills: Array<{
     title: string;
     level: string;
-    requirement?: RoleSkillRequirement;
+    requirement?: string;
   }>;
   isSelected?: boolean;
   onClick?: () => void;

@@ -1,13 +1,14 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { EmployeeSkillRequirement } from "@/types/skillTypes";
 import { useParams } from "react-router-dom";
 
 interface SkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
-  onLevelChange?: (newLevel: string) => void;
+  onLevelChange?: (newLevel: string, requirement: string) => void;
   isRoleBenchmark?: boolean;
 }
 
@@ -22,7 +23,7 @@ export const SkillLevelCell = ({
 
   // Initialize the state when the component mounts
   if (profileId) {
-    initializeState(profileId, skillTitle, initialLevel?.toLowerCase() || 'unspecified');
+    initializeState(profileId, skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'unknown');
   }
 
   const currentState = profileId && currentStates[profileId]?.[skillTitle];
@@ -40,6 +41,19 @@ export const SkillLevelCell = ({
     }
   };
 
+  const getRequirementIcon = (requirement: string = 'unknown') => {
+    switch (requirement?.toLowerCase()) {
+      case 'skill_goal':
+        return <Check className="w-3.5 h-3.5" />;
+      case 'not_interested':
+        return <X className="w-3.5 h-3.5" />;
+      case 'unknown':
+        return <CircleDashed className="w-3.5 h-3.5" />;
+      default:
+        return <Heart className="w-3.5 h-3.5" />;
+    }
+  };
+
   const getBorderColorClass = (level: string) => {
     switch (level?.toLowerCase()) {
       case 'advanced':
@@ -53,6 +67,13 @@ export const SkillLevelCell = ({
     }
   };
 
+  const getLowerBorderColorClass = (level: string, requirement: string) => {
+    if (requirement?.toLowerCase() !== 'skill_goal') {
+      return 'border-[#e5e7eb]';
+    }
+    return getBorderColorClass(level).split(' ')[0];
+  };
+
   if (!profileId || !currentState) return null;
 
   return (
@@ -62,13 +83,13 @@ export const SkillLevelCell = ({
           value={currentState.level} 
           onValueChange={(value) => {
             if (profileId) {
-              setSkillState(profileId, skillTitle, value);
-              onLevelChange?.(value);
+              setSkillState(profileId, skillTitle, value, currentState.requirement);
+              onLevelChange?.(value, currentState.requirement);
             }
           }}
         >
           <SelectTrigger className={`
-            rounded-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
+            rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
             border-2 ${getBorderColorClass(currentState.level)}
           `}>
             <SelectValue>
@@ -101,6 +122,51 @@ export const SkillLevelCell = ({
               <span className="flex items-center gap-2">
                 <Star className="w-3.5 h-3.5 text-primary-accent" />
                 Advanced
+              </span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select 
+          value={currentState.requirement}
+          onValueChange={(value) => {
+            if (profileId) {
+              setSkillState(profileId, skillTitle, currentState.level, value as EmployeeSkillRequirement);
+              onLevelChange?.(currentState.level, value);
+            }
+          }}
+        >
+          <SelectTrigger className={`
+            text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+            border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+            ${getLowerBorderColorClass(currentState.level, currentState.requirement)}
+          `}>
+            <SelectValue>
+              <span className="flex items-center gap-1.5">
+                {getRequirementIcon(currentState.requirement)}
+                {currentState.requirement === 'skill_goal' ? 'Skill Goal' : 
+                 currentState.requirement === 'not_interested' ? 'Not Interested' : 
+                 currentState.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
+              </span>
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="skill_goal">
+              <span className="flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5" />
+                Skill Goal
+              </span>
+            </SelectItem>
+            <SelectItem value="not_interested">
+              <span className="flex items-center gap-1.5">
+                <X className="w-3.5 h-3.5" />
+                Not Interested
+              </span>
+            </SelectItem>
+            <SelectItem value="unknown">
+              <span className="flex items-center gap-1.5">
+                <CircleDashed className="w-3.5 h-3.5" />
+                Unknown
               </span>
             </SelectItem>
           </SelectContent>

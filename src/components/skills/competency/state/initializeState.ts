@@ -23,8 +23,8 @@ export const initializeRoleState = (roleId: string): RoleState => {
     ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
       initialStates[skill.title][level] = {
         id: skill.title,
-        skillId: skill.title,
-        level: 'unspecified'
+        level: 'unspecified',
+        requirement: 'preferred'
       };
     });
   });
