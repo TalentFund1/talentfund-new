@@ -5,7 +5,7 @@ import { roleSkills } from "../../skills/data/roleSkills";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { getEmployeeSkills } from "../skills-matrix/initialSkills";
 import { useTrack } from "../../skills/context/TrackContext";
-import { EmployeeSkillState, RoleSkillState } from "../../../types/skillTypes";
+import { EmployeeSkillState } from "../../../types/skillTypes";
 
 interface BenchmarkAnalysisProps {
   selectedRole: string;
@@ -24,6 +24,16 @@ const getLevelPriority = (level: string = 'unspecified') => {
 };
 
 export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
+  // Validate required props
+  if (!selectedRole || !roleLevel || !employeeId) {
+    console.warn('BenchmarkAnalysis: Missing required props', {
+      selectedRole,
+      roleLevel,
+      employeeId
+    });
+    return null;
+  }
+
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { toggledSkills } = useToggledSkills();
