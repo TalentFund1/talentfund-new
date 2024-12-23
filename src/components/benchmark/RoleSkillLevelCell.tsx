@@ -2,6 +2,7 @@ import { TableCell } from "@/components/ui/table";
 import { Star, Shield, Target, CircleDashed } from "lucide-react";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useRoleStore } from "./RoleBenchmark";
+import { mapRoleToEmployeeRequirement } from "@/types/skillTypes";
 
 interface RoleSkillLevelCellProps {
   skillTitle: string;
@@ -23,7 +24,8 @@ export const RoleSkillLevelCell = ({
     skillTitle,
     level,
     isRequired,
-    competencyState
+    competencyState,
+    mappedRequirement: isRequired ? mapRoleToEmployeeRequirement('required') : mapRoleToEmployeeRequirement('preferred')
   });
 
   const getLevelIcon = () => {

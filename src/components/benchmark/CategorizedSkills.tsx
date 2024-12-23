@@ -86,7 +86,12 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   }));
 
   const missingSkills = sortSkills(filteredSkills.filter(skill => {
-    const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+    const hasSkill = employeeSkills.some(empSkill => {
+      const employeeState = currentStates[empSkill.title];
+      return empSkill.title === skill.title && 
+             (!employeeState || employeeState.requirement === 'not_interested');
+    });
+    
     const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
     return !hasSkill && 
            toggledSkills.has(skill.title) && 
@@ -132,13 +137,16 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
       <div className="flex flex-wrap gap-2">
         {skills.map((skill) => {
           const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
+          const employeeState = currentStates[skill.title];
+          const isSkillGoal = employeeState?.requirement === 'skill_goal';
+          
           return (
             <Badge 
               key={skill.title}
               variant="outline" 
               className={`rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2 ${
                 competencyState?.requirement === 'required' ? 'border-primary-accent' : ''
-              }`}
+              } ${isSkillGoal ? 'border-primary-accent' : ''}`}
             >
               {skill.title}
               <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.title)}`} />
