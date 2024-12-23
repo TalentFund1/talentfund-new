@@ -1,4 +1,4 @@
-import { UnifiedSkill } from '../../../types/SkillTypes';
+import { UnifiedSkill } from '../../types/SkillTypes';
 import { technicalSkills } from './categories/technicalSkills';
 import { professionalSkills } from './categories/professionalSkills';
 import { communicationSkills } from './categories/communicationSkills';
