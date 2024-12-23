@@ -13,7 +13,7 @@ interface CompetencyState {
 
 const defaultSkillState: SkillState = {
   level: 'unspecified',
-  required: 'preferred'
+  required: 'unknown'
 };
 
 // Separate level arrays for different tracks
@@ -67,7 +67,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-matrix-storage',
-      version: 23, // Increment version to ensure clean state
+      version: 24, // Increment version to ensure clean state
       partialize: (state) => ({
         currentStates: state.currentStates,
       }),
