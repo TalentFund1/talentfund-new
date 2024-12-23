@@ -1,34 +1,22 @@
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import { getEmployeeSkills } from "./benchmark/skills-matrix/initialSkills";
-import { useEffect, useState } from "react";
 
 interface Skill {
-  title: string;
-  level: string;
+  name: string;
+  level: number;
 }
 
 interface EmployeeSkillCardProps {
   name: string;
   role: string;
   avatar: string;
-  employeeId: string;
+  skills: Skill[];
 }
 
-export const EmployeeSkillCard = ({ name, role, avatar, employeeId }: EmployeeSkillCardProps) => {
-  const [skills, setSkills] = useState<Skill[]>([]);
+export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillCardProps) => {
+  console.log('Rendering EmployeeSkillCard:', { name, role, skillCount: skills.length });
   
-  useEffect(() => {
-    const employeeSkills = getEmployeeSkills(employeeId);
-    console.log('Loading skills for employee card:', {
-      employeeId,
-      skillCount: employeeSkills.length,
-      skills: employeeSkills
-    });
-    setSkills(employeeSkills);
-  }, [employeeId]);
-
   const getLevelPercentage = (level: string) => {
     const levels: { [key: string]: number } = {
       'advanced': 100,
@@ -52,24 +40,19 @@ export const EmployeeSkillCard = ({ name, role, avatar, employeeId }: EmployeeSk
       </div>
       <div className="space-y-4">
         {skills.map((skill) => (
-          <div key={skill.title} className="space-y-1.5">
+          <div key={skill.name} className="space-y-1.5">
             <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium">{skill.title}</span>
+              <span className="text-sm font-medium">{skill.name}</span>
               <span className="text-sm text-secondary-foreground">
-                {getLevelPercentage(skill.level)}%
+                {getLevelPercentage(String(skill.level))}%
               </span>
             </div>
             <Progress
-              value={getLevelPercentage(skill.level)}
+              value={getLevelPercentage(String(skill.level))}
               className="h-2"
             />
           </div>
         ))}
-        {skills.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            No skills added yet
-          </p>
-        )}
       </div>
     </Card>
   );
