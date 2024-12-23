@@ -42,7 +42,6 @@ export const RequirementSelector = ({
       case 'not-interested':
         return 'Not Interested';
       case 'preferred':
-      case 'unknown':
       default:
         return 'Unknown';
     }
@@ -56,7 +55,6 @@ export const RequirementSelector = ({
       case 'not-interested':
         return <X className="w-3.5 h-3.5" />;
       case 'preferred':
-      case 'unknown':
       default:
         return <CircleDashed className="w-3.5 h-3.5" />;
     }
