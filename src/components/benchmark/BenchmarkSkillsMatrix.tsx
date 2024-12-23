@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
@@ -15,9 +15,6 @@ const BenchmarkSkillsMatrixContent = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const observerTarget = useRef<HTMLDivElement>(null);
-  
   const { id } = useParams<{ id: string }>();
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
@@ -36,7 +33,6 @@ const BenchmarkSkillsMatrixContent = () => {
     selectedSkillLevel,
     searchTerm,
     toggledSkills,
-    selectedCategory,
     true
   );
 
@@ -46,7 +42,6 @@ const BenchmarkSkillsMatrixContent = () => {
     selectedRole,
     roleLevel: comparisonLevel,
     track,
-    selectedCategory,
     filteredSkillsCount: filteredSkills.length,
     toggledSkillsCount: toggledSkills.size
   });
@@ -66,12 +61,9 @@ const BenchmarkSkillsMatrixContent = () => {
         setSelectedInterest={setSelectedInterest}
         selectedSkillLevel={selectedSkillLevel}
         setSelectedSkillLevel={setSelectedSkillLevel}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
         selectedSearchSkills={selectedSearchSkills}
         setSelectedSearchSkills={setSelectedSearchSkills}
         visibleItems={visibleItems}
-        observerTarget={observerTarget}
       />
     </div>
   );

@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
-import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
-import { BenchmarkSkillsMatrixTable } from "./BenchmarkSkillsMatrixTable";
-import { RefObject } from "react";
+import { BenchmarkSkillsMatrixContent } from "./BenchmarkSkillsMatrixContent";
+import { useRef } from "react";
 
 interface BenchmarkSkillsMatrixViewProps {
   roleId: string;
@@ -16,12 +15,9 @@ interface BenchmarkSkillsMatrixViewProps {
   setSelectedInterest: (interest: string) => void;
   selectedSkillLevel: string;
   setSelectedSkillLevel: (level: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
   selectedSearchSkills: string[];
   setSelectedSearchSkills: (skills: string[]) => void;
   visibleItems: number;
-  observerTarget: RefObject<HTMLDivElement>;
 }
 
 export const BenchmarkSkillsMatrixView = ({
@@ -29,67 +25,26 @@ export const BenchmarkSkillsMatrixView = ({
   employeeId,
   roleLevel,
   filteredSkills,
-  searchTerm,
-  setSearchTerm,
-  selectedLevel,
-  setSelectedLevel,
-  selectedInterest,
-  setSelectedInterest,
-  selectedSkillLevel,
-  setSelectedSkillLevel,
-  selectedCategory,
-  setSelectedCategory,
-  selectedSearchSkills,
-  setSelectedSearchSkills,
-  visibleItems,
-  observerTarget
+  ...props
 }: BenchmarkSkillsMatrixViewProps) => {
-  const removeSearchSkill = (skill: string) => {
-    setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
-  };
-
-  const clearSearch = () => {
-    setSearchTerm("");
-    setSelectedSearchSkills([]);
-  };
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   console.log('BenchmarkSkillsMatrixView - Rendering with:', {
     roleId,
     employeeId,
-    selectedCategory,
     filteredSkillsCount: filteredSkills.length
   });
 
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
-      <BenchmarkMatrixFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-        selectedSkillLevel={selectedSkillLevel}
-        setSelectedSkillLevel={setSelectedSkillLevel}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        selectedSearchSkills={selectedSearchSkills}
-        removeSearchSkill={removeSearchSkill}
-        clearSearch={clearSearch}
-      />
-
-      <BenchmarkSkillsMatrixTable 
+      <BenchmarkSkillsMatrixContent 
+        roleId={roleId}
+        employeeId={employeeId}
+        roleLevel={roleLevel}
         filteredSkills={filteredSkills}
+        {...props}
+        observerTarget={observerTarget}
       />
-      
-      {visibleItems < filteredSkills.length && (
-        <div 
-          ref={observerTarget} 
-          className="h-10 flex items-center justify-center"
-        >
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-        </div>
-      )}
     </Card>
   );
 };
