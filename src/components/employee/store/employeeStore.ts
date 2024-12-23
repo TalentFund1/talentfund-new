@@ -22,7 +22,114 @@ export const useEmployeeStore = create<EmployeeStore>()(
   persist(
     (set, get) => ({
       employees: defaultEmployees,
-      employeeSkills: {},
+      employeeSkills: {
+        "123": [
+          {
+            id: "ai_1",
+            title: "Machine Learning",
+            subcategory: "AI & ML",
+            category: "specialized",
+            businessCategory: "Information Technology",
+            weight: "critical",
+            level: "advanced",
+            growth: "35%",
+            salary: "$185,000",
+            confidence: "high",
+            benchmarks: { B: true, R: true, M: true, O: true }
+          },
+          {
+            id: "ai_2",
+            title: "Deep Learning",
+            subcategory: "AI & ML",
+            category: "specialized", 
+            businessCategory: "Information Technology",
+            weight: "critical",
+            level: "intermediate",
+            growth: "32%",
+            salary: "$180,000",
+            confidence: "high",
+            benchmarks: { B: true, R: true, M: true, O: true }
+          },
+          {
+            id: "ai_3",
+            title: "Natural Language Processing",
+            subcategory: "AI Applications",
+            category: "specialized",
+            businessCategory: "Information Technology",
+            weight: "critical",
+            level: "advanced",
+            growth: "30%",
+            salary: "$175,000",
+            confidence: "high",
+            benchmarks: { B: true, R: true, M: true, O: true }
+          },
+          {
+            id: "ai_4", 
+            title: "Computer Vision",
+            subcategory: "AI Applications",
+            category: "specialized",
+            businessCategory: "Information Technology",
+            weight: "critical",
+            level: "intermediate",
+            growth: "28%",
+            salary: "$170,000",
+            confidence: "high",
+            benchmarks: { B: true, R: true, M: true, O: true }
+          },
+          {
+            id: "ai_5",
+            title: "TensorFlow",
+            subcategory: "ML Frameworks",
+            category: "specialized",
+            businessCategory: "Information Technology",
+            weight: "critical",
+            level: "advanced",
+            growth: "25%",
+            salary: "$165,000",
+            confidence: "high",
+            benchmarks: { B: true, R: true, M: true, O: true }
+          },
+          {
+            id: "common_1",
+            title: "Python",
+            subcategory: "Programming Languages",
+            category: "common",
+            businessCategory: "Information Technology",
+            weight: "necessary",
+            level: "advanced",
+            growth: "20%",
+            salary: "$120,000",
+            confidence: "high",
+            benchmarks: { B: true, R: true, M: true, O: true }
+          },
+          {
+            id: "common_2",
+            title: "Problem Solving",
+            subcategory: "Soft Skills",
+            category: "common",
+            businessCategory: "Professional Skills",
+            weight: "necessary",
+            level: "intermediate",
+            growth: "15%",
+            salary: "$100,000",
+            confidence: "high",
+            benchmarks: { B: true, R: true, M: true, O: true }
+          },
+          {
+            id: "cert_1",
+            title: "AWS Certified Machine Learning - Specialty",
+            subcategory: "Cloud Certification",
+            category: "certification",
+            businessCategory: "Information Technology",
+            weight: "critical",
+            level: "advanced",
+            growth: "30%",
+            salary: "$180,000",
+            confidence: "high",
+            benchmarks: { B: true, R: true, M: true, O: true }
+          }
+        ]
+      },
       skillStates: {},
 
       initializeEmployeeSkills: (employeeId: string) => {
@@ -72,24 +179,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: skills
           }
         }));
-
-        // Initialize skill states for new skills
-        const store = get();
-        if (!store.skillStates[employeeId]) {
-          store.skillStates[employeeId] = {};
-        }
-
-        skills.forEach(skill => {
-          if (!store.skillStates[employeeId][skill.title]) {
-            store.setSkillState(
-              employeeId,
-              skill.title,
-              skill.title,
-              'unspecified',
-              'unknown'
-            );
-          }
-        });
       },
 
       getEmployeeSkills: (employeeId) => {
@@ -116,6 +205,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               ...state.skillStates[employeeId],
               [skillName]: {
+                id: skillId,
+                skillId: skillName,
                 level,
                 requirement
               }
