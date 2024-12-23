@@ -9,13 +9,13 @@ export interface BaseSkillState {
 }
 
 export interface EmployeeSkillState extends BaseSkillState {
-  profileId: string;
+  profileId?: string;
   skillId: string;
   requirement: EmployeeSkillRequirement;
 }
 
 export interface RoleSkillState extends BaseSkillState {
-  roleId: string;
+  roleId?: string;
   skillId: string;
   requirement: RoleSkillRequirement;
 }
@@ -62,3 +62,26 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
 }
+
+// Utility functions for requirement mapping
+export const mapEmployeeToRoleRequirement = (requirement: EmployeeSkillRequirement): RoleSkillRequirement => {
+  switch (requirement) {
+    case 'skill_goal':
+      return 'required';
+    case 'not_interested':
+      return 'preferred';
+    default:
+      return 'preferred';
+  }
+};
+
+export const mapRoleToEmployeeRequirement = (requirement: RoleSkillRequirement): EmployeeSkillRequirement => {
+  switch (requirement) {
+    case 'required':
+      return 'skill_goal';
+    case 'preferred':
+      return 'not_interested';
+    default:
+      return 'unknown';
+  }
+};
