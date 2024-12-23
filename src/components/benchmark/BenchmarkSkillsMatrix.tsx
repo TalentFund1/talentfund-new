@@ -15,6 +15,7 @@ const BenchmarkSkillsMatrixContent = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
@@ -43,7 +44,8 @@ const BenchmarkSkillsMatrixContent = () => {
     roleLevel: comparisonLevel,
     track,
     filteredSkillsCount: filteredSkills.length,
-    toggledSkillsCount: toggledSkills.size
+    toggledSkillsCount: toggledSkills.size,
+    selectedCategory
   });
 
   return (
@@ -63,6 +65,8 @@ const BenchmarkSkillsMatrixContent = () => {
         setSelectedSkillLevel={setSelectedSkillLevel}
         selectedSearchSkills={selectedSearchSkills}
         setSelectedSearchSkills={setSelectedSearchSkills}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
         visibleItems={visibleItems}
       />
     </div>
