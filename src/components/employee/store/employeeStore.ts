@@ -5,6 +5,26 @@ import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
+// Initial skills for AI Engineer (Employee 123)
+const initialSkills: UnifiedSkill[] = [
+  "Machine Learning",
+  "Deep Learning", 
+  "Natural Language Processing",
+  "Computer Vision",
+  "TensorFlow",
+  "Python",
+  "Problem Solving",
+  "AWS Certified Machine Learning - Specialty"
+].map(skillTitle => {
+  console.log('Initializing skill:', skillTitle);
+  const skillData = getUnifiedSkillData(skillTitle);
+  return {
+    ...skillData,
+    level: 'intermediate',
+    requirement: 'skill_goal' as EmployeeSkillRequirement
+  };
+});
+
 interface EmployeeStore {
   employees: Employee[];
   employeeSkills: Record<string, UnifiedSkill[]>;
@@ -18,21 +38,6 @@ interface EmployeeStore {
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState | undefined;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
-
-// Initial skills for AI Engineer (Employee 123)
-const initialSkills: UnifiedSkill[] = [
-  "Machine Learning",
-  "Deep Learning", 
-  "Natural Language Processing",
-  "Computer Vision",
-  "TensorFlow",
-  "Python",
-  "Problem Solving",
-  "AWS Certified Machine Learning - Specialty"
-].map(skillTitle => {
-  console.log('Initializing skill:', skillTitle);
-  return getUnifiedSkillData(skillTitle);
-});
 
 export const useEmployeeStore = create<EmployeeStore>()(
   persist(
@@ -57,10 +62,24 @@ export const useEmployeeStore = create<EmployeeStore>()(
         }
 
         if (!store.skillStates[employeeId]) {
+          const initialStates: Record<string, EmployeeSkillState> = {};
+          
+          // Initialize states for employee 123's skills
+          if (employeeId === "123") {
+            initialSkills.forEach(skill => {
+              initialStates[skill.title] = {
+                employeeId: "123",
+                skillId: skill.id,
+                level: skill.level || 'intermediate',
+                requirement: 'skill_goal'
+              };
+            });
+          }
+
           set((state) => ({
             skillStates: {
               ...state.skillStates,
-              [employeeId]: {}
+              [employeeId]: initialStates
             }
           }));
         }
