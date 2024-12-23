@@ -3,27 +3,6 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-
-// Initial skills for AI Engineer (Employee 123)
-const initialSkills: UnifiedSkill[] = [
-  "Machine Learning",
-  "Deep Learning", 
-  "Natural Language Processing",
-  "Computer Vision",
-  "TensorFlow",
-  "Python",
-  "Problem Solving",
-  "AWS Certified Machine Learning - Specialty"
-].map(skillTitle => {
-  console.log('Initializing skill:', skillTitle);
-  const skillData = getUnifiedSkillData(skillTitle);
-  return {
-    ...skillData,
-    level: 'intermediate',
-    requirement: 'skill_goal' as EmployeeSkillRequirement
-  };
-});
 
 interface EmployeeStore {
   employees: Employee[];
@@ -43,9 +22,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
   persist(
     (set, get) => ({
       employees: defaultEmployees,
-      employeeSkills: {
-        "123": initialSkills
-      },
+      employeeSkills: {},
       skillStates: {},
 
       initializeEmployeeSkills: (employeeId: string) => {
@@ -53,33 +30,14 @@ export const useEmployeeStore = create<EmployeeStore>()(
         const store = get();
         
         if (!store.employeeSkills[employeeId]) {
-          set((state) => ({
-            employeeSkills: {
-              ...state.employeeSkills,
-              [employeeId]: employeeId === "123" ? initialSkills : []
-            }
-          }));
+          store.setEmployeeSkills(employeeId, []);
         }
 
         if (!store.skillStates[employeeId]) {
-          const initialStates: Record<string, EmployeeSkillState> = {};
-          
-          // Initialize states for employee 123's skills
-          if (employeeId === "123") {
-            initialSkills.forEach(skill => {
-              initialStates[skill.title] = {
-                employeeId: "123",
-                skillId: skill.id,
-                level: skill.level || 'intermediate',
-                requirement: 'skill_goal'
-              };
-            });
-          }
-
           set((state) => ({
             skillStates: {
               ...state.skillStates,
-              [employeeId]: initialStates
+              [employeeId]: {}
             }
           }));
         }
@@ -106,7 +64,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         return get().employees.find(emp => emp.id === id);
       },
 
-      setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => {
+      setEmployeeSkills: (employeeId, skills) => {
         console.log('Setting skills for employee:', employeeId, skills);
         set((state) => ({
           employeeSkills: {
@@ -114,9 +72,27 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: skills
           }
         }));
+
+        // Initialize skill states for new skills
+        const store = get();
+        if (!store.skillStates[employeeId]) {
+          store.skillStates[employeeId] = {};
+        }
+
+        skills.forEach(skill => {
+          if (!store.skillStates[employeeId][skill.title]) {
+            store.setSkillState(
+              employeeId,
+              skill.title,
+              skill.title,
+              'unspecified',
+              'unknown'
+            );
+          }
+        });
       },
 
-      getEmployeeSkills: (employeeId: string) => {
+      getEmployeeSkills: (employeeId) => {
         console.log('Getting skills for employee:', employeeId);
         const state = get();
         if (!state.employeeSkills[employeeId]) {
@@ -125,7 +101,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         return state.employeeSkills[employeeId] || [];
       },
 
-      setSkillState: (employeeId: string, skillId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => {
+      setSkillState: (employeeId, skillId, skillName, level, requirement) => {
         console.log('Setting skill state:', {
           employeeId,
           skillId,
@@ -140,8 +116,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               ...state.skillStates[employeeId],
               [skillName]: {
-                employeeId,
-                skillId,
                 level,
                 requirement
               }
@@ -150,7 +124,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         }));
       },
 
-      getSkillState: (employeeId: string, skillName: string) => {
+      getSkillState: (employeeId, skillName) => {
         console.log('Getting skill state:', { employeeId, skillName });
         const state = get();
         return state.skillStates[employeeId]?.[skillName];
