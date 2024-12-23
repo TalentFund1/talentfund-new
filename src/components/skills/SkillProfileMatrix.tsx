@@ -7,11 +7,9 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
-import { getCategoryForSkill, calculateSkillCounts } from './utils/skillCountUtils';
+import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillTypeFilters } from './filters/SkillTypeFilters';
-import { getUnifiedSkillData } from './data/skillDatabaseService';
-import { getSkillCategory } from './data/skills/categories/skillCategories';
 import { normalizeSkillTitle } from './utils/normalization';
 
 type SortField = 'growth' | 'salary' | null;
@@ -43,21 +41,30 @@ export const SkillProfileMatrix = () => {
       all: toggledSkillsList.filter(skillTitle => 
         allSkills.some(skill => skill.title === skillTitle)
       ).length,
-      critical: allSkills.filter(skill => 
-        toggledSkills.has(skill.title) && 
-        getCategoryForSkill(skill, id || "123") === 'critical'
-      ).length,
-      technical: allSkills.filter(skill => 
-        toggledSkills.has(skill.title) && 
-        getCategoryForSkill(skill, id || "123") === 'technical'
-      ).length,
-      necessary: allSkills.filter(skill => 
-        toggledSkills.has(skill.title) && 
-        getCategoryForSkill(skill, id || "123") === 'necessary'
-      ).length
+      critical: allSkills.filter(skill => {
+        if (!toggledSkills.has(skill.title)) return false;
+        const skillData = getUnifiedSkillData(skill.title);
+        return skillData.weight === 'critical';
+      }).length,
+      technical: allSkills.filter(skill => {
+        if (!toggledSkills.has(skill.title)) return false;
+        const skillData = getUnifiedSkillData(skill.title);
+        return skillData.weight === 'technical';
+      }).length,
+      necessary: allSkills.filter(skill => {
+        if (!toggledSkills.has(skill.title)) return false;
+        const skillData = getUnifiedSkillData(skill.title);
+        return skillData.weight === 'necessary';
+      }).length
     };
 
-    console.log('Calculated toggled skill counts for role:', id, counts);
+    console.log('CategoryCards - Displaying counts for toggled skills:', {
+      total: counts.all,
+      critical: counts.critical,
+      technical: counts.technical,
+      necessary: counts.necessary
+    });
+    
     return counts;
   };
 
@@ -106,11 +113,17 @@ export const SkillProfileMatrix = () => {
     });
 
     if (skillType !== "all") {
-      skills = skills.filter(skill => getSkillCategory(skill.title) === skillType);
+      skills = skills.filter(skill => {
+        const skillData = getUnifiedSkillData(skill.title);
+        return skillData.category === skillType;
+      });
     }
 
     if (selectedCategory !== "all") {
-      skills = skills.filter(skill => getCategoryForSkill(skill, id || "123") === selectedCategory);
+      skills = skills.filter(skill => {
+        const skillData = getUnifiedSkillData(skill.title);
+        return skillData.weight === selectedCategory;
+      });
     }
 
     if (sortField && sortDirection) {
