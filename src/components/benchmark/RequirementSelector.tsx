@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, X, CircleDashed } from "lucide-react";
+import { Check, Heart, X, CircleDashed } from "lucide-react";
 
 interface RequirementSelectorProps {
   currentRequired: string;
@@ -13,35 +13,26 @@ export const RequirementSelector = ({
   onRequirementChange 
 }: RequirementSelectorProps) => {
   const getRequirementStyles = (requirement: string, level: string) => {
-    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
+    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md';
     
     // Get background and border colors based on level for required/skill goal state
     const getLevelColors = (level: string) => {
       switch (level.toLowerCase()) {
         case 'advanced':
-          return 'bg-primary-accent/20 border-primary-accent';
+          return 'border-primary-accent bg-primary-accent/10';
         case 'intermediate':
-          return 'bg-primary-icon/20 border-primary-icon';
+          return 'border-primary-icon bg-primary-icon/10';
         case 'beginner':
-          return 'bg-[#008000]/20 border-[#008000]';
+          return 'border-[#008000] bg-[#008000]/10';
         default:
-          return 'bg-gray-100 border-gray-300';
+          return 'border-gray-300 bg-gray-50/90';
       }
     };
 
-    switch (requirement.toLowerCase()) {
-      case 'required':
-        return `${baseStyles} border-x-2 border-b-2 rounded-b-md ${getLevelColors(level)}`;
-      case 'not-interested':
-      case 'preferred':
-      case 'unknown':
-      default:
-        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
-    }
+    return requirement.toLowerCase() === 'required'
+      ? `${baseStyles} ${getLevelColors(level)}`
+      : `${baseStyles} border-gray-300 bg-gray-50/90`;
   };
-
-  // Normalize the requirement value for consistent comparison
-  const normalizedRequired = currentRequired.toLowerCase();
 
   // Map the backend state to UI display state
   const getDisplayState = (state: string) => {
@@ -51,9 +42,7 @@ export const RequirementSelector = ({
       case 'not-interested':
         return 'Not Interested';
       case 'preferred':
-        return 'Unknown';
       case 'unknown':
-        return 'Unknown';
       default:
         return 'Unknown';
     }
@@ -72,6 +61,9 @@ export const RequirementSelector = ({
         return <CircleDashed className="w-3.5 h-3.5" />;
     }
   };
+
+  // Normalize the requirement value for consistent comparison
+  const normalizedRequired = currentRequired.toLowerCase();
 
   console.log('Requirement state:', {
     currentRequired,
