@@ -45,12 +45,6 @@ export interface RoleState {
   };
 }
 
-export interface SkillState {
-  id: string;
-  level: string;
-  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
-}
-
 export interface RoleSkillData {
   title: string;
   specialized: UnifiedSkill[];
@@ -60,7 +54,7 @@ export interface RoleSkillData {
 
 export interface SkillsMatrixState {
   skillStates: Record<string, Record<string, EmployeeSkillState>>;
-  currentStates: Record<string, Record<string, EmployeeSkillState>>;
+  currentStates: Record<string, EmployeeSkillState>;
   hasChanges: boolean;
   setSkillState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
   initializeState: (profileId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;

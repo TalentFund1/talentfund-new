@@ -63,10 +63,10 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeState = currentStates[skill.title] as EmployeeSkillState | undefined;
-    if (!employeeState) return false;
+    const employeeState = currentStates[skill.title];
+    if (!employeeState || typeof employeeState !== 'object') return false;
 
-    const employeeSkillLevel = employeeState.level || 'unspecified';
+    const employeeSkillLevel = (employeeState as EmployeeSkillState).level || 'unspecified';
     const roleSkillLevel = roleSkillState.level || 'unspecified';
 
     const employeePriority = getLevelPriority(employeeSkillLevel);
@@ -79,10 +79,11 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeState = currentStates[skill.title] as EmployeeSkillState | undefined;
-    if (!employeeState) return false;
+    const employeeState = currentStates[skill.title];
+    if (!employeeState || typeof employeeState !== 'object') return false;
 
-    return roleSkillState.requirement === 'required' && employeeState.requirement === 'skill_goal';
+    return roleSkillState.requirement === 'required' && 
+           (employeeState as EmployeeSkillState).requirement === 'skill_goal';
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
