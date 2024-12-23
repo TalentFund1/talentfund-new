@@ -71,12 +71,15 @@ export const SkillsSummary = () => {
 
   const transformAndSortSkills = (skills: UnifiedSkill[]): DetailedSkill[] => {
     return skills
-      .map(skill => ({
-        name: skill.title,
-        level: currentStates[skill.title]?.level || skill.level,
-        isSkillGoal: (currentStates[skill.title]?.requirement as SkillRequirement === 'required' || 
-                     skill.level === 'advanced')
-      }))
+      .map(skill => {
+        const requirement = currentStates[skill.title]?.requirement as SkillRequirement;
+        return {
+          name: skill.title,
+          level: currentStates[skill.title]?.level || skill.level,
+          isSkillGoal: (requirement === 'required' || 
+                       requirement !== 'not_interested' && skill.level === 'advanced')
+        };
+      })
       .sort((a, b) => {
         const levelA = (a.level || 'unspecified').toLowerCase();
         const levelB = (b.level || 'unspecified').toLowerCase();
