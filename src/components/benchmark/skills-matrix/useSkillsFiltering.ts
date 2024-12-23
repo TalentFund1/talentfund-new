@@ -83,7 +83,7 @@ export const useSkillsFiltering = (
         const skillData = getUnifiedSkillData(skill.title);
         console.log('Filtering by weight:', {
           skillTitle: skill.title,
-          weight: skillData?.weight,
+          unifiedWeight: skillData?.weight,
           selectedWeight,
           matches: skillData?.weight === selectedWeight.toLowerCase()
         });
@@ -138,6 +138,11 @@ export const useSkillsFiltering = (
     })
     .map(skill => {
       const unifiedData = getUnifiedSkillData(skill.title);
+      console.log('Mapping skill with weight:', {
+        title: skill.title,
+        unifiedWeight: unifiedData.weight,
+        originalWeight: skill.weight
+      });
       return {
         ...skill,
         weight: unifiedData.weight, // Ensure weight comes from universal database
