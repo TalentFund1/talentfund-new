@@ -100,8 +100,8 @@ export const SkillsMatrix = () => {
     return employeeSkill || roleSkill;
   });
 
-  // Apply filtering and sorting
-  const filteredSkills = sortSkills(filterAndSortSkills(id || ""));
+  // Apply filtering and sorting to merged skills
+  const filteredSkills = sortSkills(mergedSkills);
 
   console.log('Skills matrix state:', {
     totalSkills: mergedSkills.length,
@@ -110,7 +110,8 @@ export const SkillsMatrix = () => {
     selectedLevel,
     selectedInterest,
     roleId,
-    employeeSkillsCount: employeeSkills.length
+    employeeSkillsCount: employeeSkills.length,
+    mergedSkills: mergedSkills.map(s => s.title)
   });
 
   useEffect(() => {
