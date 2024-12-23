@@ -2,8 +2,7 @@ import {
   EmployeeSkillState, 
   RoleSkillState, 
   EmployeeSkillRequirement, 
-  RoleSkillRequirement,
-  SkillState
+  RoleSkillRequirement
 } from "../types/skillTypes";
 
 // Convert employee requirement to role requirement
@@ -12,6 +11,7 @@ export const toRoleRequirement = (requirement: EmployeeSkillRequirement): RoleSk
     case 'skill_goal':
       return 'required';
     case 'not_interested':
+      return 'preferred';
     case 'unknown':
       return 'preferred';
     default:
@@ -43,6 +43,7 @@ export const toRoleSkillState = (state: EmployeeSkillState): RoleSkillState => {
 // Convert role skill state to employee skill state
 export const toEmployeeSkillState = (state: RoleSkillState, profileId: string): EmployeeSkillState => {
   return {
+    id: state.id,
     profileId,
     skillId: state.id,
     level: state.level || 'unspecified',
@@ -86,15 +87,6 @@ export const isEmployeeSkillState = (state: any): state is EmployeeSkillState =>
 
 export const isRoleSkillState = (state: any): state is RoleSkillState => {
   return state && 'id' in state && !('profileId' in state);
-};
-
-// Convert between unified SkillState and specific states
-export const toUnifiedState = (state: EmployeeSkillState | RoleSkillState): SkillState => {
-  return {
-    id: isEmployeeSkillState(state) ? state.skillId : state.id,
-    level: state.level || 'unspecified',
-    requirement: state.requirement
-  };
 };
 
 console.log('Skill state adapter utilities loaded');
