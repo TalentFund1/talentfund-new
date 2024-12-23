@@ -52,8 +52,8 @@ export const SkillProfileMatrixRow = ({
         </div>
       </TableCell>
       <TableCell className="py-3 px-4 align-middle">
-        <span className="text-sm block truncate" title={skill.subcategory}>
-          {skill.subcategory}
+        <span className="text-sm block truncate" title={skill.businessCategory}>
+          {skill.businessCategory}
         </span>
       </TableCell>
       <TableCell className="py-3 px-4 align-middle">
