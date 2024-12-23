@@ -1,6 +1,7 @@
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-import { roleSkills } from '../../skills/data/roleSkills';
+import { UnifiedSkill } from "../../skills/types/SkillTypes";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
+import { filterSkillsByCategory } from "./skillCategories";
+import { roleSkills } from "../../skills/data/roleSkills";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -25,15 +26,16 @@ export const useSkillsFiltering = (
     isRoleBenchmark
   });
 
-  // Get all skills for the role
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  
+  // Get all skills for the role
   const allSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
 
-  // Helper function to filter by category using universal database
+  // Filter skills based on category using universal database
   const filterByCategory = (skills: UnifiedSkill[], category: string) => {
     if (category === "all") return skills;
 
@@ -57,7 +59,7 @@ export const useSkillsFiltering = (
     });
   };
 
-  // Filter by level
+  // Filter skills based on selected level
   const filterByLevel = (skills: UnifiedSkill[]) => {
     if (selectedLevel === "all") return skills;
 
@@ -72,7 +74,7 @@ export const useSkillsFiltering = (
     });
   };
 
-  // Filter by interest/requirement
+  // Filter skills based on interest/requirement
   const filterByInterest = (skills: UnifiedSkill[]) => {
     if (selectedInterest === "all") return skills;
 
@@ -87,7 +89,7 @@ export const useSkillsFiltering = (
     });
   };
 
-  // Filter by skill level
+  // Filter skills based on skill level
   const filterBySkillLevel = (skills: UnifiedSkill[]) => {
     if (selectedSkillLevel === "all") return skills;
 
@@ -102,7 +104,7 @@ export const useSkillsFiltering = (
     });
   };
 
-  // Filter by search term
+  // Filter skills based on search term
   const filterBySearch = (skills: UnifiedSkill[]) => {
     if (!searchTerm) return skills;
 
@@ -135,8 +137,8 @@ export const useSkillsFiltering = (
     });
   }
 
-  // Apply category filter first using selectedCategory
-  filteredSkills = filterByCategory(filteredSkills, selectedCategory);
+  // Apply category filter first
+  filteredSkills = filterByCategory(filteredSkills, selectedLevel);
   
   // Then apply other filters
   filteredSkills = filterByLevel(filteredSkills);
