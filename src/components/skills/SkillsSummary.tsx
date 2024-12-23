@@ -75,7 +75,6 @@ export const SkillsSummary = () => {
         name: skill.title,
         level: currentStates[skill.title]?.level || skill.level,
         isSkillGoal: (currentStates[skill.title]?.requirement as SkillRequirement === 'required' || 
-                     currentStates[skill.title]?.requirement as SkillRequirement === 'skill_goal' ||
                      skill.level === 'advanced')
       }))
       .sort((a, b) => {
