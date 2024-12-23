@@ -1,6 +1,7 @@
 import { RoleSkillData } from '../types/SkillTypes';
 import { loadRoleSkills, saveRoleSkills, initializeRoleSkills } from './roles/roleStorage';
 import { getUnifiedSkillData } from './skillDatabaseService';
+import { getCategorizedSkills } from '../utils/skillCategorization';
 
 // Initialize roleSkills object
 export const roleSkills: { [key: string]: RoleSkillData } = {};
@@ -19,7 +20,7 @@ roleIds.forEach(id => {
 });
 
 // Export helper functions
-export { saveRoleSkills, loadRoleSkills };
+export { saveRoleSkills, loadRoleSkills, getCategorizedSkills };
 
 // Helper function to get category for a skill using universal database
 export const getRoleSkillCategory = (skillTitle: string): string => {
