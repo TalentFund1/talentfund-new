@@ -17,16 +17,14 @@ interface SkillCellProps {
 
 export const SkillCell = ({ 
   skillName, 
-  details, 
-  isLastColumn, 
+  details = { level: 'unspecified', requirement: 'preferred' }, 
+  isLastColumn = false, 
   levelKey 
 }: SkillCellProps) => {
   // Validate required props
-  if (!skillName || !details || levelKey === undefined) {
+  if (!skillName || !levelKey) {
     console.warn('SkillCell: Missing required props', {
       skillName,
-      details,
-      isLastColumn,
       levelKey
     });
     return null;

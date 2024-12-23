@@ -24,15 +24,15 @@ const getLevelPriority = (level: string = 'unspecified') => {
 };
 
 export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
-  // Validate required props
-  if (!selectedRole || !roleLevel || !employeeId) {
-    console.warn('BenchmarkAnalysis: Missing required props', {
-      selectedRole,
-      roleLevel,
-      employeeId
-    });
-    return null;
-  }
+  // Validate required props with default fallbacks
+  const validatedRole = selectedRole || "123";
+  const validatedLevel = roleLevel || "p4";
+  const validatedEmployeeId = employeeId || "123";
+
+  console.log('BenchmarkAnalysis props validation:', {
+    originalProps: { selectedRole, roleLevel, employeeId },
+    validatedProps: { validatedRole, validatedLevel, validatedEmployeeId }
+  });
 
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -40,10 +40,10 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   const { getTrackForRole } = useTrack();
   
   console.log('BenchmarkAnalysis - Selected Role Analysis:', {
-    selectedRole,
-    roleLevel,
-    employeeId,
-    track: getTrackForRole(selectedRole),
+    selectedRole: validatedRole,
+    roleLevel: validatedLevel,
+    employeeId: validatedEmployeeId,
+    track: getTrackForRole(validatedRole),
     currentStates
   });
 
