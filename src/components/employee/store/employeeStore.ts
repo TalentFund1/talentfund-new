@@ -142,7 +142,13 @@ export const useEmployeeStore = create<EmployeeStore>()(
       },
 
       setSkillState: (employeeId, skillName, level, requirement) => {
-        console.log('Setting skill state:', { employeeId, skillName, level, requirement });
+        console.log('Setting skill state in employee store:', {
+          employeeId,
+          skillName,
+          level,
+          requirement
+        });
+        
         set((state) => ({
           skillStates: {
             ...state.skillStates,
@@ -156,7 +162,10 @@ export const useEmployeeStore = create<EmployeeStore>()(
 
       getSkillState: (employeeId, skillName) => {
         const state = get();
-        return state.skillStates[employeeId]?.[skillName] || { level: 'beginner', requirement: 'preferred' };
+        return state.skillStates[employeeId]?.[skillName] || { 
+          level: 'beginner', 
+          requirement: 'preferred' 
+        };
       }
     }),
     {
