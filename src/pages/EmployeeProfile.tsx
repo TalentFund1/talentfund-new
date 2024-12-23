@@ -15,7 +15,7 @@ import { EmployeeDetails } from "@/components/employee/EmployeeDetails";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 
@@ -31,10 +31,16 @@ const EmployeeProfile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
-  const employee = getEmployeeById(id || "");
+  const [employee, setEmployee] = useState(null);
+  const [employeeData, setEmployeeData] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [totalEmployees, setTotalEmployees] = useState(0);
 
   useEffect(() => {
-    if (!employee) {
+    const foundEmployee = getEmployeeById(id || "");
+    const employees = useEmployeeStore.getState().employees;
+    
+    if (!foundEmployee) {
       console.log('Employee not found, redirecting to employees page');
       toast({
         title: "Employee Not Found",
@@ -42,26 +48,27 @@ const EmployeeProfile = () => {
         variant: "destructive"
       });
       navigate('/employees');
+      return;
     }
-  }, [employee, navigate, toast]);
 
-  if (!employee) {
-    return null;
-  }
+    setEmployee(foundEmployee);
+    setEmployeeData({
+      name: foundEmployee.name,
+      role: foundEmployee.role,
+      location: foundEmployee.location,
+      department: foundEmployee.department,
+      office: foundEmployee.office,
+      category: foundEmployee.category,
+      manager: foundEmployee.manager,
+      startDate: foundEmployee.startDate,
+      termDate: foundEmployee.termDate,
+      tenure: "1.9",
+      image: employeeImages[id as keyof typeof employeeImages]
+    });
 
-  const employeeData = {
-    name: employee.name,
-    role: employee.role,
-    location: employee.location,
-    department: employee.department,
-    office: employee.office,
-    category: employee.category,
-    manager: employee.manager,
-    startDate: employee.startDate,
-    termDate: employee.termDate,
-    tenure: "1.9",
-    image: employeeImages[id as keyof typeof employeeImages]
-  };
+    setCurrentIndex(employees.findIndex(emp => emp.id === id) + 1);
+    setTotalEmployees(employees.length);
+  }, [id, getEmployeeById, navigate, toast]);
 
   const handleNavigation = (direction: 'prev' | 'next') => {
     const employees = useEmployeeStore.getState().employees;
@@ -78,14 +85,16 @@ const EmployeeProfile = () => {
     navigate(`/employee/${employeeIds[newIndex]}`);
   };
 
-  const currentIndex = useEmployeeStore.getState().employees.findIndex(emp => emp.id === id) + 1;
-  const totalEmployees = useEmployeeStore.getState().employees.length;
-
   console.log('Employee Profile Data:', {
     id,
     employee: employeeData,
-    startDate: employee.startDate
+    startDate: employee?.startDate
   });
+
+  // Render loading state or nothing while data is being fetched
+  if (!employee || !employeeData) {
+    return null;
+  }
 
   return (
     <ToggledSkillsProvider>
