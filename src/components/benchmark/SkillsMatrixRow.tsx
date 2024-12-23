@@ -4,7 +4,7 @@ import { SkillLevelCell } from "./SkillLevelCell";
 import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { RoleSkillLevelCell } from "./RoleSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
+import { getSkillWeight, getSkillType, getWeightColor, getTypeColor } from "../skills/data/skills/categories/skillWeightType";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -32,36 +32,8 @@ export const SkillsMatrixRow = ({
     isRoleBenchmark
   });
 
-  // Get skill data from universal database
-  const unifiedSkillData = getUnifiedSkillData(skill.title);
-  const weight = unifiedSkillData?.weight || 'necessary';
-  const type = unifiedSkillData?.category || 'common';
-
-  const getWeightColor = (weight: string) => {
-    switch (weight.toLowerCase()) {
-      case 'critical':
-        return 'bg-red-100 text-red-800';
-      case 'technical':
-        return 'bg-blue-100 text-blue-800';
-      case 'necessary':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getTypeColor = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'specialized':
-        return 'bg-blue-100 text-blue-800';
-      case 'certification':
-        return 'bg-purple-100 text-purple-800';
-      case 'common':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const weight = getSkillWeight(skill);
+  const type = getSkillType(skill);
 
   return (
     <TableRow className="group border-b border-gray-200">

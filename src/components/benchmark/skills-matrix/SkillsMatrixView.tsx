@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
+import { AddEmployeeSkillDialog } from "./dialog/AddEmployeeSkillDialog";
 
 interface SkillsMatrixViewProps {
   selectedLevel: string;
@@ -59,6 +61,8 @@ export const SkillsMatrixView = ({
         onSave={handleSave}
         onCancel={handleCancel}
       />
+      
+      <Separator className="my-4" />
       
       <SkillsMatrixFilters 
         selectedLevel={selectedLevel}

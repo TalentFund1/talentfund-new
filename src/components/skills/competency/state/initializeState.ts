@@ -1,4 +1,4 @@
-import { RoleState, RoleSkillState } from '../../../../types/skillTypes';
+import { RoleState } from '../../../../types/skillTypes';
 import { roleSkills } from '../../data/roleSkills';
 
 export const initializeRoleState = (roleId: string): RoleState => {
