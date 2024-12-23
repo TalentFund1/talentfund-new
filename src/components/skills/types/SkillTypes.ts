@@ -42,6 +42,7 @@ export interface UnifiedSkill {
   growth: string;
   salary: string;
   confidence: string;
+  requirement?: EmployeeSkillRequirement;
   benchmarks: { [key: string]: boolean };
 }
 
@@ -58,6 +59,11 @@ export interface RoleSkillData {
   mappedTitle?: string;
   occupation?: string;
   description?: string;
+}
+
+export interface DetailedSkill extends BaseSkillState {
+  name: string;
+  isSkillGoal: boolean;
 }
 
 // Skill state type

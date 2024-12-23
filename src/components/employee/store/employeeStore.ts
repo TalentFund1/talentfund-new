@@ -19,7 +19,12 @@ const initialSkills = [
 ].map(skillName => {
   const skillData = getUnifiedSkillData(skillName);
   console.log('Initializing skill:', { skillName, skillData });
-  return skillData;
+  return {
+    ...skillData,
+    id: `skill_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    level: 'intermediate',
+    requirement: 'skill_goal' as EmployeeSkillRequirement
+  };
 });
 
 interface EmployeeStore {
@@ -41,7 +46,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
     (set, get) => ({
       employees: defaultEmployees,
       employeeSkills: {
-        "123": initialSkills // Initialize skills for employee 123
+        "123": initialSkills
       },
       skillStates: {},
 
@@ -89,7 +94,12 @@ export const useEmployeeStore = create<EmployeeStore>()(
         set((state) => ({
           employeeSkills: {
             ...state.employeeSkills,
-            [employeeId]: skills
+            [employeeId]: skills.map(skill => ({
+              ...skill,
+              id: skill.id || `skill_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              level: skill.level || 'intermediate',
+              requirement: skill.requirement || 'skill_goal'
+            }))
           }
         }));
 
@@ -104,8 +114,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
               employeeId, 
               skill.id,
               skill.title, 
-              'unspecified', 
-              'unknown'
+              skill.level || 'intermediate', 
+              skill.requirement || 'skill_goal'
             );
           }
         });
@@ -145,7 +155,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         const state = get();
         return state.skillStates[employeeId]?.[skillName] || {
           id: skillName,
-          level: 'unspecified',
+          level: 'intermediate',
           requirement: 'unknown' as EmployeeSkillRequirement
         };
       }
