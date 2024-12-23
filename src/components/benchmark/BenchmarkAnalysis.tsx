@@ -10,11 +10,7 @@ import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
-import { 
-  EmployeeSkillState, 
-  RoleSkillRequirement,
-  mapEmployeeToRoleRequirement 
-} from "@/types/skillTypes";
+import { EmployeeSkillState } from "@/types/skillTypes";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -96,27 +92,14 @@ export const BenchmarkAnalysis = () => {
       : employeePriority >= rolePriority;
   });
 
-  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
-    if (!roleSkillState) return false;
-
-    const employeeState = currentStates[skill.title] as EmployeeSkillState;
-    if (!employeeState) return false;
-
-    const mappedEmployeeRequirement = mapEmployeeToRoleRequirement(employeeState.requirement);
-    return roleSkillState.requirement === 'required' && mappedEmployeeRequirement === 'required';
-  });
-
   const totalToggledSkills = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const competencyMatchCount = competencyMatchingSkills.length;
-  const skillGoalMatchCount = skillGoalMatchingSkills.length;
 
   console.log('Benchmark Analysis Results:', {
     totalToggled: totalToggledSkills,
     matching: matchingSkillsCount,
-    competencyMatch: competencyMatchCount,
-    skillGoalMatch: skillGoalMatchCount
+    competencyMatch: competencyMatchCount
   });
 
   return (
@@ -131,7 +114,7 @@ export const BenchmarkAnalysis = () => {
           total: totalToggledSkills
         }}
         skillGoals={{
-          current: skillGoalMatchCount,
+          current: competencyMatchCount,
           total: totalToggledSkills
         }}
       />
