@@ -89,16 +89,6 @@ export const BenchmarkAnalysis = ({
 
   const totalToggledSkills = toggledRoleSkills.length;
 
-  console.log('Benchmark Analysis Calculation:', {
-    totalToggled: totalToggledSkills,
-    skillMatch: matchingSkills.length,
-    competencyMatch: competencyMatchingSkills.length,
-    skillGoalMatch: skillGoalMatchingSkills.length,
-    matchingSkills: matchingSkills.map(s => s.title),
-    competencyMatchingSkills: competencyMatchingSkills.map(s => s.title),
-    skillGoalMatchingSkills: skillGoalMatchingSkills.map(s => s.title)
-  });
-
   return (
     <BenchmarkAnalysisCard 
       skillMatch={{

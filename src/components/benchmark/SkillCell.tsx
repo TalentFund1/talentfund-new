@@ -56,7 +56,7 @@ export const SkillCell = ({
       levelKey,
       currentState.requirement,
       currentRoleId,
-      skillName // skillId
+      skillName
     );
   };
 
@@ -75,7 +75,7 @@ export const SkillCell = ({
       levelKey,
       value,
       currentRoleId,
-      skillName // skillId
+      skillName
     );
   };
 
