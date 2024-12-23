@@ -17,14 +17,8 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
         getUnifiedSkillData(skill.title)
       );
       
-      const roleData: RoleSkillData = {
-        title: parsedSkills.title || getRoleTitle(roleId),
-        soc: parsedSkills.soc || getRoleSoc(roleId),
-        function: parsedSkills.function || "Engineering",
-        mappedTitle: parsedSkills.mappedTitle || "",
-        occupation: parsedSkills.occupation || getRoleTitle(roleId),
-        description: parsedSkills.description || "",
-        roleTrack: parsedSkills.roleTrack || getRoleDefaultTrack(roleId),
+      const roleData = {
+        ...parsedSkills,
         skills: unifiedSkills
       };
       
@@ -50,7 +44,7 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
       getUnifiedSkillData(skill.title)
     );
     
-    const roleData: RoleSkillData = {
+    const roleData = {
       ...skills,
       skills: unifiedSkills
     };
@@ -81,6 +75,9 @@ export const initializeRoleSkills = (roleId: string): RoleSkillData => {
     occupation: getRoleTitle(roleId),
     description: "",
     roleTrack: getRoleDefaultTrack(roleId),
-    skills: []
+    skills: [],
+    specialized: [],  // Added missing property
+    common: [],      // Added missing property
+    certifications: [] // Added missing property
   };
 };
