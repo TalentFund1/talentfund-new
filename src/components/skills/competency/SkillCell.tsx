@@ -26,8 +26,11 @@ export const SkillCell = ({
   const currentRoleId = roleId || "123";
 
   const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
+    id: skillName,
+    skillId: skillName,
+    roleId: currentRoleId,
     level: details.level || "unspecified",
-    requirement: details.requirement || "preferred",
+    requirement: details.requirement || "preferred"
   };
 
   const handleLevelChange = (value: string) => {
@@ -43,9 +46,8 @@ export const SkillCell = ({
       skillName,
       value,
       levelKey,
-      currentState.requirement || 'preferred',
-      currentRoleId,
-      skillName // Using skillName as skillId for now
+      currentState.requirement,
+      currentRoleId
     );
   };
 
@@ -63,8 +65,7 @@ export const SkillCell = ({
       currentState.level || 'unspecified',
       levelKey,
       value,
-      currentRoleId,
-      skillName // Using skillName as skillId for now
+      currentRoleId
     );
   };
 
