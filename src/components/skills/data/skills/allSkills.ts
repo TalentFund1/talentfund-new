@@ -1,7 +1,4 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
-import { technicalSkills } from './categories/technicalSkills';
-import { professionalSkills } from './categories/professionalSkills';
-import { communicationSkills } from './categories/communicationSkills';
 
 // Memoize the skills array to prevent unnecessary recalculations
 let memoizedSkills: UnifiedSkill[] | null = null;
@@ -14,115 +11,231 @@ const generateSkillId = (title: string, category: string): string => {
   return `SKILL_${prefix}_${cleanTitle}_${randomNum}`;
 };
 
-// Combine all skills from different categories with memoization
-const getAllSkillsInternal = (): UnifiedSkill[] => {
+// Unified skills database without subcategories
+const skillsData: UnifiedSkill[] = [
+  // Specialized Skills
+  {
+    id: 'SKILL_ML_001',
+    title: "Machine Learning",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "35%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_DL_002',
+    title: "Deep Learning",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "32%",
+    salary: "$155,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_NLP_003',
+    title: "Natural Language Processing",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "30%",
+    salary: "$150,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_CV_004',
+    title: "Computer Vision",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "28%",
+    salary: "$145,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TF_005',
+    title: "TensorFlow",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "advanced",
+    growth: "25%",
+    salary: "$140,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_PY_006',
+    title: "Python",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "advanced",
+    growth: "20%",
+    salary: "$130,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_REACT_007',
+    title: "React",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "advanced",
+    growth: "25%",
+    salary: "$130,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_NODE_008',
+    title: "Node.js",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "advanced",
+    growth: "22%",
+    salary: "$135,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  // Common Skills
+  {
+    id: 'SKILL_PS_009',
+    title: "Problem Solving",
+    category: "common",
+    businessCategory: "Professional Skills",
+    weight: "necessary",
+    level: "advanced",
+    growth: "15%",
+    salary: "$120,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_CR_010',
+    title: "Code Review",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "15%",
+    salary: "$115,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TL_011',
+    title: "Team Leadership",
+    category: "common",
+    businessCategory: "Professional Skills",
+    weight: "necessary",
+    level: "advanced",
+    growth: "18%",
+    salary: "$130,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_COM_012',
+    title: "Communication",
+    category: "common",
+    businessCategory: "Professional Skills",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "15%",
+    salary: "$100,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  // Certifications
+  {
+    id: 'SKILL_AWS_013',
+    title: "AWS Certified Machine Learning - Specialty",
+    category: "certification",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "28%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_K8S_014',
+    title: "Kubernetes Administrator (CKA)",
+    category: "certification",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "advanced",
+    growth: "28%",
+    salary: "$140,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TF_015',
+    title: "TensorFlow Developer Certificate",
+    category: "certification",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "intermediate",
+    growth: "25%",
+    salary: "$140,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  }
+];
+
+// Helper function to get all skills
+export const getAllSkills = (): UnifiedSkill[] => {
   if (memoizedSkills) {
     return memoizedSkills;
   }
 
   console.log('Initializing skills database...');
-  
-  const allSkills: UnifiedSkill[] = [
-    ...technicalSkills,
-    ...professionalSkills,
-    ...communicationSkills
-  ].map(skill => ({
-    ...skill,
-    id: skill.id || generateSkillId(skill.title, skill.category)
-  }));
-
-  memoizedSkills = allSkills;
-  console.log('Skills database initialized with', allSkills.length, 'skills');
-  return allSkills;
+  memoizedSkills = skillsData;
+  console.log('Skills database initialized with', skillsData.length, 'skills');
+  return skillsData;
 };
 
-// Helper function to get all skills
-export const getAllSkills = (): UnifiedSkill[] => {
-  return getAllSkillsInternal();
-};
-
-// Helper function to get skills by category with memoization
-const categoryCache: { [key: string]: UnifiedSkill[] } = {};
-export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
-  if (categoryCache[category]) {
-    return categoryCache[category];
-  }
-
-  console.log(`Getting skills for category: ${category}`);
-  const skills = getAllSkillsInternal().filter(skill => skill.category === category);
-  categoryCache[category] = skills;
-  return skills;
-};
-
-// Helper function to find a skill by ID with memoization
-const idCache: { [key: string]: UnifiedSkill | undefined } = {};
-export const getSkillById = (id: string): UnifiedSkill | undefined => {
-  if (idCache[id] !== undefined) {
-    return idCache[id];
-  }
-
-  console.log(`Finding skill by ID: ${id}`);
-  const skill = getAllSkillsInternal().find(skill => skill.id === id);
-  idCache[id] = skill;
-  return skill;
-};
-
-// Helper function to find a skill by title with memoization
-const titleCache: { [key: string]: UnifiedSkill | undefined } = {};
+// Helper function to get a skill by title
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
-  const lowerTitle = title.toLowerCase();
-  if (titleCache[lowerTitle] !== undefined) {
-    return titleCache[lowerTitle];
-  }
-
-  console.log(`Finding skill by title: ${title}`);
-  const skill = getAllSkillsInternal().find(skill => skill.title.toLowerCase() === lowerTitle);
-  titleCache[lowerTitle] = skill;
-  
-  if (!skill) {
-    console.log(`Skill not found: ${title}`);
-  }
-  return skill;
+  console.log('Finding skill by title:', title);
+  return getAllSkills().find(skill => skill.title.toLowerCase() === title.toLowerCase());
 };
 
-// Role-specific skill categorization helpers with memoization
-const specializedCache: UnifiedSkill[] | null = null;
-export const getSpecializedSkills = (): UnifiedSkill[] => {
-  if (specializedCache) return specializedCache;
-  return getAllSkillsInternal().filter(skill => skill.category === 'specialized');
-};
-
-const commonCache: UnifiedSkill[] | null = null;
-export const getCommonSkills = (): UnifiedSkill[] => {
-  if (commonCache) return commonCache;
-  return getAllSkillsInternal().filter(skill => skill.category === 'common');
-};
-
-const certificationCache: UnifiedSkill[] | null = null;
-export const getCertificationSkills = (): UnifiedSkill[] => {
-  if (certificationCache) return certificationCache;
-  return getAllSkillsInternal().filter(skill => skill.category === 'certification');
+// Helper function to get skills by category
+export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
+  console.log(`Getting skills for category: ${category}`);
+  return getAllSkills().filter(skill => skill.category === category);
 };
 
 // Export Skills object for backward compatibility
 export const Skills = {
   all: getAllSkills(),
-  specialized: getSpecializedSkills(),
-  common: getCommonSkills(),
-  certification: getCertificationSkills()
+  specialized: getSkillsByCategory('specialized'),
+  common: getSkillsByCategory('common'),
+  certification: getSkillsByCategory('certification')
 };
 
 // Log initial skills data for debugging
 console.log('Skills database loaded:', {
   total: getAllSkills().length,
   byCategory: {
-    specialized: getSpecializedSkills().length,
-    common: getCommonSkills().length,
-    certification: getCertificationSkills().length
-  },
-  byWeight: {
-    critical: getAllSkills().filter(skill => skill.weight === 'critical').length,
-    technical: getAllSkills().filter(skill => skill.weight === 'technical').length,
-    necessary: getAllSkills().filter(skill => skill.weight === 'necessary').length
+    specialized: getSkillsByCategory('specialized').length,
+    common: getSkillsByCategory('common').length,
+    certification: getSkillsByCategory('certification').length
   }
 });
