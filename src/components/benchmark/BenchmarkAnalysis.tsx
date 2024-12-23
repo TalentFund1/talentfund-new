@@ -10,7 +10,7 @@ import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
-import { EmployeeSkillState, RoleSkillState } from "@/types/skillTypes";
+import { EmployeeSkillState } from "@/types/skillTypes";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
