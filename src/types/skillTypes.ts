@@ -5,16 +5,17 @@ export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface BaseSkillState {
   id: string;
+  skillId: string;
   level: string;
 }
 
 export interface EmployeeSkillState extends BaseSkillState {
   profileId: string;
-  skillId: string;
   requirement: EmployeeSkillRequirement;
 }
 
 export interface RoleSkillState extends BaseSkillState {
+  roleId: string;
   requirement: RoleSkillRequirement;
 }
 
