@@ -1,19 +1,11 @@
 import { roleSkills } from '../data/roleSkills';
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from '../context/ToggledSkillsContext';
-import { UnifiedSkill } from '../types/SkillTypes';
-import { getSkillCategory } from '../data/skills/categories/skillCategories';
+import { getUnifiedSkillData } from '../data/skillDatabaseService';
 
 interface CategorySectionProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-}
-
-interface SkillCounts {
-  specialized: number;
-  common: number;
-  certification: number;
-  all: number;
 }
 
 export const CategorySection = ({ selectedCategory, setSelectedCategory }: CategorySectionProps) => {
@@ -21,31 +13,34 @@ export const CategorySection = ({ selectedCategory, setSelectedCategory }: Categ
   const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
-  const getToggledSkillsCount = (category: string) => {
-    return currentRoleSkills.skills
-      .filter(skill => skill.title && toggledSkills.has(skill.title))
-      .filter(skill => category === 'all' || getSkillCategory(skill.title) === category)
-      .length;
+  // Get all skills for this role
+  const allRoleSkills = [
+    ...(currentRoleSkills.specialized || []),
+    ...(currentRoleSkills.common || []),
+    ...(currentRoleSkills.certifications || [])
+  ].filter(skill => toggledSkills.has(skill.title));
+
+  // Count skills by category using universal database categorization
+  const getSkillCountByCategory = (category: string) => {
+    return allRoleSkills.filter(skill => {
+      const skillData = getUnifiedSkillData(skill.title);
+      return category === 'all' || skillData.category === category;
+    }).length;
   };
 
-  const skillCounts: SkillCounts = {
-    specialized: getToggledSkillsCount('specialized'),
-    common: getToggledSkillsCount('common'),
-    certification: getToggledSkillsCount('certification'),
-    all: getToggledSkillsCount('all')
-  };
-
-  console.log('CategorySection - Skill counts:', {
+  console.log('CategorySection - Counting skills:', {
     roleId: id,
-    counts: skillCounts,
-    toggledSkills: Array.from(toggledSkills)
+    totalSkills: allRoleSkills.length,
+    specialized: getSkillCountByCategory('specialized'),
+    common: getSkillCountByCategory('common'),
+    certification: getSkillCountByCategory('certification')
   });
 
   const categories = [
-    { id: "all", name: "All Categories", count: skillCounts.all },
-    { id: "specialized", name: "Specialized Skills", count: skillCounts.specialized },
-    { id: "common", name: "Common Skills", count: skillCounts.common },
-    { id: "certification", name: "Certification", count: skillCounts.certification }
+    { id: "all", name: "All Categories", count: allRoleSkills.length },
+    { id: "specialized", name: "Specialized Skills", count: getSkillCountByCategory('specialized') },
+    { id: "common", name: "Common Skills", count: getSkillCountByCategory('common') },
+    { id: "certification", name: "Certification", count: getSkillCountByCategory('certification') }
   ];
 
   return (
