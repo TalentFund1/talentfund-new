@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { SkillProfileMatrixTable } from "./SkillProfileMatrixTable";
 import { useToast } from "@/components/ui/use-toast";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useParams } from 'react-router-dom';
@@ -9,7 +8,8 @@ import { roleSkills } from './data/roleSkills';
 import { CategoryCards } from './CategoryCards';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { SkillMappingHeader } from './header/SkillMappingHeader';
-import { SkillTypeFilters } from './filters/SkillTypeFilters';
+import { SkillProfileMatrixFilters } from './matrix/SkillProfileMatrixFilters';
+import { SkillProfileMatrixContent } from './matrix/SkillProfileMatrixContent';
 import { normalizeSkillTitle } from './utils/normalization';
 
 type SortField = 'growth' | 'salary' | null;
@@ -19,7 +19,6 @@ export const SkillProfileMatrix = () => {
   const [sortBy, setSortBy] = useState("benchmark");
   const [skillType, setSkillType] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [isDirty, setIsDirty] = useState(false);
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const { toast } = useToast();
@@ -104,14 +103,6 @@ export const SkillProfileMatrix = () => {
       return true;
     });
 
-    console.log(`Filtering skills for role ${id}:`, {
-      totalSkills: skills.length,
-      specialized: currentRoleSkills.specialized.length,
-      common: currentRoleSkills.common.length,
-      certifications: currentRoleSkills.certifications.length,
-      uniqueCount: uniqueSkills.size
-    });
-
     if (skillType !== "all") {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
@@ -141,15 +132,23 @@ export const SkillProfileMatrix = () => {
       });
     }
 
-    console.log('Filtered skills:', {
-      total: skills.length,
-      toggledCount: Array.from(toggledSkills).length,
-      skillType,
-      selectedCategory
-    });
-
     return skills;
   })();
+
+  const handleToggleSkill = (skillTitle: string) => {
+    const newToggledSkills = new Set(toggledSkills);
+    if (newToggledSkills.has(skillTitle)) {
+      newToggledSkills.delete(skillTitle);
+    } else {
+      newToggledSkills.add(skillTitle);
+    }
+    setToggledSkills(newToggledSkills);
+    
+    toast({
+      title: "Skill Updated",
+      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -164,37 +163,21 @@ export const SkillProfileMatrix = () => {
           skillCount={skillCounts}
         />
 
-        <SkillTypeFilters
+        <SkillProfileMatrixFilters
           skillType={skillType}
           setSkillType={setSkillType}
           sortBy={sortBy}
           setSortBy={setSortBy}
         />
 
-        <div className="rounded-lg border border-border overflow-hidden">
-          <SkillProfileMatrixTable 
-            paginatedSkills={filteredSkills}
-            toggledSkills={toggledSkills}
-            onToggleSkill={(skillTitle) => {
-              const newToggledSkills = new Set(toggledSkills);
-              if (newToggledSkills.has(skillTitle)) {
-                newToggledSkills.delete(skillTitle);
-              } else {
-                newToggledSkills.add(skillTitle);
-              }
-              setToggledSkills(newToggledSkills);
-              setIsDirty(true);
-              
-              toast({
-                title: "Skill Updated",
-                description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
-              });
-            }}
-            sortField={sortField}
-            sortDirection={sortDirection}
-            onSort={handleSort}
-          />
-        </div>
+        <SkillProfileMatrixContent 
+          skills={filteredSkills}
+          toggledSkills={toggledSkills}
+          onToggleSkill={handleToggleSkill}
+          sortField={sortField}
+          sortDirection={sortDirection}
+          onSort={handleSort}
+        />
       </Card>
     </div>
   );
