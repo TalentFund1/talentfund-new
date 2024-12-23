@@ -5,29 +5,76 @@ import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
-// Initial skills for employee 123 (AI Engineer)
-const initialSkills = [
-  "Machine Learning",
-  "Deep Learning", 
-  "Natural Language Processing",
-  "Computer Vision",
-  "TensorFlow",
-  "Python",
-  "Problem Solving",
-  "AWS Certified Machine Learning - Specialty",
-  "TensorFlow Developer Certificate"
-].map(skillName => {
-  const skillData = getUnifiedSkillData(skillName);
-  const skillId = `skill_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  console.log('Initializing skill:', { skillName, skillData, skillId });
+// Initial skills mapping for different roles
+const roleSkillsMap: Record<string, string[]> = {
+  "AI Engineer": [
+    "Machine Learning",
+    "Deep Learning", 
+    "Natural Language Processing",
+    "Computer Vision",
+    "TensorFlow",
+    "Python",
+    "Problem Solving",
+    "AWS Certified Machine Learning - Specialty",
+    "TensorFlow Developer Certificate"
+  ],
+  "Backend Engineer": [
+    "Node.js",
+    "API Development",
+    "Database Design",
+    "System Architecture",
+    "Performance Optimization",
+    "Code Review",
+    "Git Version Control",
+    "AWS Certified Developer",
+    "Problem Solving"
+  ],
+  "Frontend Engineer": [
+    "React",
+    "TypeScript",
+    "JavaScript",
+    "HTML/CSS",
+    "UI/UX Design",
+    "Performance Optimization",
+    "Git Version Control",
+    "Jest Testing",
+    "Problem Solving"
+  ],
+  "Engineering Manager": [
+    "Team Leadership",
+    "Project Management",
+    "Code Review",
+    "System Architecture",
+    "Agile Methodologies",
+    "Communication",
+    "Performance Management",
+    "Technical Writing",
+    "Problem Solving"
+  ]
+};
+
+const getInitialSkillsForRole = (role: string): UnifiedSkill[] => {
+  const baseRole = role.split(':')[0].trim();
+  const skillNames = roleSkillsMap[baseRole] || [];
   
-  return {
-    ...skillData,
-    id: skillId,
-    level: 'intermediate',
-    requirement: 'skill_goal' as EmployeeSkillRequirement
-  };
-});
+  console.log('Initializing skills for role:', {
+    fullRole: role,
+    baseRole,
+    skillCount: skillNames.length
+  });
+  
+  return skillNames.map(skillName => {
+    const skillData = getUnifiedSkillData(skillName);
+    const skillId = `skill_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    return {
+      ...skillData,
+      id: skillId,
+      level: 'intermediate',
+      requirement: 'skill_goal' as EmployeeSkillRequirement
+    };
+  });
+};
 
 interface EmployeeStore {
   employees: Employee[];
@@ -47,17 +94,22 @@ export const useEmployeeStore = create<EmployeeStore>()(
   persist(
     (set, get) => ({
       employees: defaultEmployees,
-      employeeSkills: {
-        "123": initialSkills
-      },
+      employeeSkills: {},
       skillStates: {},
 
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Initializing skills for employee:', employeeId);
         const store = get();
+        const employee = store.employees.find(emp => emp.id === employeeId);
         
-        if (!store.employeeSkills[employeeId]) {
-          store.setEmployeeSkills(employeeId, employeeId === "123" ? initialSkills : []);
+        if (!store.employeeSkills[employeeId] && employee) {
+          const initialSkills = getInitialSkillsForRole(employee.role);
+          store.setEmployeeSkills(employeeId, initialSkills);
+          console.log('Initialized skills for employee:', {
+            employeeId,
+            role: employee.role,
+            skillCount: initialSkills.length
+          });
         }
 
         if (!store.skillStates[employeeId]) {
