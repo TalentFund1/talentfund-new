@@ -1,7 +1,6 @@
-import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
-import { filterSkillsByCategory } from "./skillCategories";
-import { roleSkills } from "../../skills/data/roleSkills";
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { roleSkills } from '../../skills/data/roleSkills';
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -26,16 +25,15 @@ export const useSkillsFiltering = (
     isRoleBenchmark
   });
 
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-  
   // Get all skills for the role
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   const allSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
 
-  // Filter skills based on category using universal database
+  // Helper function to filter by category using universal database
   const filterByCategory = (skills: UnifiedSkill[], category: string) => {
     if (category === "all") return skills;
 
@@ -137,7 +135,8 @@ export const useSkillsFiltering = (
     });
   }
 
-  // Apply category filter first
+  // Apply category filter first using selectedLevel as category
+  // This is the key fix - we use selectedLevel for category filtering
   filteredSkills = filterByCategory(filteredSkills, selectedLevel);
   
   // Then apply other filters
