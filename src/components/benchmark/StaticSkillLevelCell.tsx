@@ -45,25 +45,16 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: string = 'preferred') => {
+  const getRequirementIcon = (requirement: string = 'unknown') => {
     switch (requirement?.toLowerCase()) {
       case 'required':
         return <Check className="w-3.5 h-3.5" />;
-      case 'not_interested':
+      case 'not-interested':
         return <X className="w-3.5 h-3.5" />;
+      case 'unknown':
+        return <CircleDashed className="w-3.5 h-3.5" />;
       default:
         return <CircleDashed className="w-3.5 h-3.5" />;
-    }
-  };
-
-  const getRequirementText = (requirement: string = 'preferred') => {
-    switch (requirement?.toLowerCase()) {
-      case 'required':
-        return 'Skill Goal';
-      case 'not_interested':
-        return 'Not Interested';
-      default:
-        return 'Unknown';
     }
   };
 
@@ -80,7 +71,7 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'preferred') => {
+  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'unknown') => {
     if (requirement?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
@@ -106,7 +97,9 @@ export const StaticSkillLevelCell = ({
         `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
-            {getRequirementText(currentState?.requirement)}
+            {currentState?.requirement === 'required' ? 'Skill Goal' : 
+             currentState?.requirement === 'not-interested' ? 'Not Interested' : 
+             currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
           </span>
         </div>
       </div>

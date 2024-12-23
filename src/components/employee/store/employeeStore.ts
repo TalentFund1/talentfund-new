@@ -74,7 +74,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
           const initialStates: Record<string, EmployeeSkillState> = {};
           initialSkills.forEach(skill => {
             initialStates[skill.title] = {
-              level: skill.level || 'unspecified',
+              level: skill.level || 'beginner',
               requirement: skill.requirement || 'unknown'
             };
           });
@@ -163,7 +163,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
       getSkillState: (employeeId, skillName) => {
         const state = get();
         return state.skillStates[employeeId]?.[skillName] || { 
-          level: 'unspecified', 
+          level: 'beginner', 
           requirement: 'unknown' 
         };
       }
