@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
-import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../skills/types/SkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 // Initial skills for employee 123 (AI Engineer)
@@ -16,7 +16,11 @@ const initialSkills = [
   "Problem Solving",
   "AWS Certified Machine Learning - Specialty",
   "TensorFlow Developer Certificate"
-].map(skillName => getUnifiedSkillData(skillName));
+].map(skillName => {
+  const skillData = getUnifiedSkillData(skillName);
+  console.log('Initializing skill:', { skillName, skillData });
+  return skillData;
+});
 
 interface EmployeeStore {
   employees: Employee[];
