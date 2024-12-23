@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleState, RoleSkillState } from '../../../types/skillTypes';
+import { RoleState, RoleSkillState, SkillLevel } from '../../../types/skillTypes';
 import { initializeRoleState } from './state/initializeState';
 
 interface CompetencyState {
@@ -10,7 +10,7 @@ interface CompetencyState {
   hasChanges: boolean;
   setSkillState: (
     skillName: string,
-    level: string,
+    level: SkillLevel,
     levelKey: string,
     roleId: string,
     skillId: string
@@ -157,7 +157,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 25,
+      version: 26,
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,

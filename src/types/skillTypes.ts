@@ -26,8 +26,8 @@ export interface SkillsMatrixState {
   skillStates: Record<string, Record<string, EmployeeSkillState>>;
   currentStates: Record<string, EmployeeSkillState>;
   hasChanges: boolean;
-  setSkillState: (profileId: string, skillId: string, level: string) => void;
-  initializeState: (profileId: string, skillId: string, initialLevel: string) => void;
+  setSkillState: (profileId: string, skillId: string, level: SkillLevel) => void;
+  initializeState: (profileId: string, skillId: string, initialLevel: SkillLevel) => void;
   getSkillState: (profileId: string, skillId: string) => EmployeeSkillState | undefined;
   saveChanges: () => void;
   cancelChanges: () => void;

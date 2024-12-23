@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { SkillsMatrixState, EmployeeSkillState } from '@/types/skillTypes';
+import { SkillsMatrixState, EmployeeSkillState, SkillLevel } from '@/types/skillTypes';
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
@@ -15,7 +15,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         const newState: EmployeeSkillState = {
           id: skillId,
           skillId,
-          level
+          level: level as SkillLevel
         };
 
         set((state) => ({
@@ -38,7 +38,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         const initialState: EmployeeSkillState = {
           id: skillId,
           skillId,
-          level: initialLevel
+          level: initialLevel as SkillLevel
         };
 
         set((state) => ({
