@@ -1,10 +1,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillState, EmployeeSkillRequirement, SkillsMatrixState } from '../../../types/skillTypes';
+import { 
+  SkillsMatrixState, 
+  EmployeeSkillState, 
+  EmployeeSkillRequirement,
+  RoleSkillRequirement
+} from '@/types/skillTypes';
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       skillStates: {},
       currentStates: {},
       hasChanges: false,
@@ -12,70 +17,59 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       setSkillState: (profileId, skillId, level, requirement) => {
         console.log('Setting skill state:', { profileId, skillId, level, requirement });
         
-        set((state) => {
-          const updatedSkillStates = {
+        const newState: EmployeeSkillState = {
+          id: skillId,
+          skillId,
+          level,
+          requirement
+        };
+
+        set((state) => ({
+          skillStates: {
             ...state.skillStates,
             [profileId]: {
               ...state.skillStates[profileId],
-              [skillId]: {
-                profileId,
-                skillId,
-                level,
-                requirement
-              }
+              [skillId]: newState
             }
-          };
-
-          return {
-            skillStates: updatedSkillStates,
-            currentStates: updatedSkillStates,
-            hasChanges: true
-          };
-        });
+          },
+          currentStates: {
+            ...state.currentStates,
+            [skillId]: newState
+          },
+          hasChanges: true
+        }));
       },
 
       initializeState: (profileId, skillId, initialLevel, initialRequirement) => {
-        const state = get();
-        if (!state.skillStates[profileId]?.[skillId]) {
-          console.log('Initializing skill state:', { profileId, skillId, initialLevel, initialRequirement });
-          
-          set((state) => ({
-            skillStates: {
-              ...state.skillStates,
-              [profileId]: {
-                ...state.skillStates[profileId],
-                [skillId]: {
-                  profileId,
-                  skillId,
-                  level: initialLevel,
-                  requirement: initialRequirement
-                }
-              }
-            },
-            currentStates: {
-              ...state.currentStates,
-              [profileId]: {
-                ...state.currentStates[profileId],
-                [skillId]: {
-                  profileId,
-                  skillId,
-                  level: initialLevel,
-                  requirement: initialRequirement
-                }
-              }
+        const initialState: EmployeeSkillState = {
+          id: skillId,
+          skillId,
+          level: initialLevel,
+          requirement: initialRequirement
+        };
+
+        set((state) => ({
+          skillStates: {
+            ...state.skillStates,
+            [profileId]: {
+              ...state.skillStates[profileId],
+              [skillId]: initialState
             }
-          }));
-        }
+          },
+          currentStates: {
+            ...state.currentStates,
+            [skillId]: initialState
+          }
+        }));
       },
 
       getSkillState: (profileId, skillId) => {
-        const state = get().skillStates[profileId]?.[skillId];
-        console.log('Getting skill state:', { profileId, skillId, state });
-        return state;
+        return profileId && skillId ? 
+          useSkillsMatrixStore.getState().skillStates[profileId]?.[skillId] : 
+          undefined;
       },
 
       saveChanges: () => {
-        console.log('Saving skill matrix changes');
         set((state) => ({
           currentStates: state.skillStates,
           hasChanges: false
@@ -83,7 +77,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       },
 
       cancelChanges: () => {
-        console.log('Canceling skill matrix changes');
         set((state) => ({
           skillStates: state.currentStates,
           hasChanges: false
