@@ -11,7 +11,6 @@ import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
 import { EmployeeSkillState, RoleSkillState } from "@/types/skillTypes";
-import { toRoleRequirement, toRoleSkillState } from "@/utils/skillStateAdapter";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -76,14 +75,11 @@ export const BenchmarkAnalysis = () => {
   });
 
   const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole) as RoleSkillState;
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     if (!roleSkillState) return false;
 
     const employeeState = currentStates[skill.title] as EmployeeSkillState;
     if (!employeeState) return false;
-
-    // Convert employee state to role state format using adapter
-    const roleState = toRoleSkillState(employeeState);
 
     const employeeSkillLevel = employeeState.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level || 'unspecified';
@@ -97,15 +93,13 @@ export const BenchmarkAnalysis = () => {
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole) as RoleSkillState;
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     if (!roleSkillState) return false;
 
     const employeeState = currentStates[skill.title] as EmployeeSkillState;
     if (!employeeState) return false;
 
-    // Use adapter to convert requirement types
-    const roleRequirement = toRoleRequirement(employeeState.requirement);
-    return roleSkillState.requirement === 'required' && roleRequirement === 'required';
+    return roleSkillState.requirement === 'required' && employeeState.requirement === 'skill_goal';
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
