@@ -14,15 +14,17 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   if (skill) {
     return {
       ...skill,
-      id: skill.id || generateSkillId(skill.title, skill.category)
+      id: skill.id || generateSkillId(skill.title, skill.category),
+      subcategory: skill.subcategory || 'General' // Added default subcategory
     };
   }
 
-  // If skill is not found in database, create a new one with generated ID
+  // If skill is not found in the database, create a new one with generated ID
   console.log(`Skill not found in database: ${skillTitle}, creating new entry`);
   return {
     id: generateSkillId(skillTitle, 'common'),
     title: skillTitle,
+    subcategory: 'General', // Added default subcategory
     category: 'common',
     businessCategory: 'Information Technology',
     weight: 'necessary',
@@ -37,6 +39,7 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
 export const getAllUnifiedSkills = (): UnifiedSkill[] => {
   return getAllSkills().map(skill => ({
     ...skill,
-    id: skill.id || generateSkillId(skill.title, skill.category)
+    id: skill.id || generateSkillId(skill.title, skill.category),
+    subcategory: skill.subcategory || 'General' // Added default subcategory
   }));
 };
