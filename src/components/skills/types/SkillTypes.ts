@@ -49,7 +49,7 @@ export interface RoleSkillData {
 
 export interface SimpleSkill {
   title: string;
-  subcategory: string;
+  subcategory: string;  // Added this field
   category?: string;
   businessCategory?: string;
   level: string;
@@ -58,7 +58,7 @@ export interface SimpleSkill {
 
 export interface EmployeeSkill {
   title: string;
-  subcategory: string;
+  subcategory: string;  // Added this field
   level: string;
   growth: string;
   confidence: string;
