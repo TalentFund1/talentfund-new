@@ -25,28 +25,6 @@ interface EmployeeStore {
   initializeEmployeeSkills: (employeeId: string) => void;
 }
 
-const getInitialSkillsForRole = (roleId: string): UnifiedSkill[] => {
-  const role = roleSkills[roleId as keyof typeof roleSkills];
-  if (!role) {
-    console.warn('No role found for ID:', roleId);
-    return [];
-  }
-
-  const allSkills = [
-    ...(role.specialized || []),
-    ...(role.common || []),
-    ...(role.certifications || [])
-  ];
-
-  console.log('Initializing skills for role:', {
-    roleId,
-    skillCount: allSkills.length,
-    skills: allSkills.map(s => s.title)
-  });
-
-  return allSkills;
-};
-
 export const useEmployeeStore = create<EmployeeStore>()(
   persist(
     (set, get) => ({
@@ -57,39 +35,14 @@ export const useEmployeeStore = create<EmployeeStore>()(
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Initializing skills for employee:', employeeId);
         const store = get();
-        const employee = store.employees.find(emp => emp.id === employeeId);
         
-        if (!employee) {
-          console.warn('Employee not found:', employeeId);
-          return;
-        }
-
-        const roleId = getSkillProfileId(employee.role);
-        const initialSkills = getInitialSkillsForRole(roleId);
-
         if (!store.employeeSkills[employeeId]) {
-          store.setEmployeeSkills(employeeId, initialSkills);
+          // Initialize with empty skills array instead of role skills
+          store.setEmployeeSkills(employeeId, []);
           
-          // Initialize skill states with 'unknown' as default requirement
-          const initialStates: Record<string, EmployeeSkillState> = {};
-          initialSkills.forEach(skill => {
-            initialStates[skill.title] = {
-              level: skill.level || 'beginner',
-              requirement: skill.requirement || 'unknown'
-            };
-          });
-
-          set(state => ({
-            skillStates: {
-              ...state.skillStates,
-              [employeeId]: initialStates
-            }
-          }));
-
-          console.log('Initialized skills for employee:', {
+          console.log('Initialized empty skills for employee:', {
             employeeId,
-            skillCount: initialSkills.length,
-            states: initialStates
+            skillCount: 0
           });
         }
       },
