@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
-import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { UnifiedSkill, EmployeeSkillState } from '../../../types/skillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 // Initial skills for AI Engineer (Employee 123)
@@ -20,8 +20,7 @@ const initialSkills: UnifiedSkill[] = [
   const skillData = getUnifiedSkillData(skillTitle);
   return {
     ...skillData,
-    level: 'intermediate',
-    requirement: 'skill_goal' as EmployeeSkillRequirement
+    level: 'intermediate'
   };
 });
 
@@ -34,7 +33,7 @@ interface EmployeeStore {
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => UnifiedSkill[];
-  setSkillState: (employeeId: string, skillId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  setSkillState: (employeeId: string, skillId: string, skillName: string, level: string, requirement: string) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState | undefined;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
@@ -53,6 +52,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         const store = get();
         
         if (!store.employeeSkills[employeeId]) {
+          console.log('No skills found for employee, initializing with default skills');
           set((state) => ({
             employeeSkills: {
               ...state.employeeSkills,
@@ -70,7 +70,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
               initialStates[skill.title] = {
                 employeeId: "123",
                 skillId: skill.id,
-                level: skill.level || 'intermediate',
+                level: 'intermediate',
                 requirement: 'skill_goal'
               };
             });
@@ -120,12 +120,15 @@ export const useEmployeeStore = create<EmployeeStore>()(
         console.log('Getting skills for employee:', employeeId);
         const state = get();
         if (!state.employeeSkills[employeeId]) {
+          console.log('No skills found, initializing employee skills');
           state.initializeEmployeeSkills(employeeId);
         }
-        return state.employeeSkills[employeeId] || [];
+        const skills = state.employeeSkills[employeeId] || [];
+        console.log('Retrieved skills:', skills);
+        return skills;
       },
 
-      setSkillState: (employeeId: string, skillId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => {
+      setSkillState: (employeeId: string, skillId: string, skillName: string, level: string, requirement: string) => {
         console.log('Setting skill state:', {
           employeeId,
           skillId,
@@ -143,7 +146,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
                 employeeId,
                 skillId,
                 level,
-                requirement
+                requirement: requirement as any
               }
             }
           }
