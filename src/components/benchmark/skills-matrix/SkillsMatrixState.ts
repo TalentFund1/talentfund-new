@@ -69,11 +69,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillTitle]: { level, requirement },
+                [skillTitle]: { level, requirement: requirement || 'unknown' },
               },
               originalStates: {
                 ...state.originalStates,
-                [skillTitle]: { level, requirement },
+                [skillTitle]: { level, requirement: requirement || 'unknown' },
               },
             };
           }
@@ -111,7 +111,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 1,
+      version: 2,
       partialize: (state) => ({
         currentStates: state.currentStates,
         originalStates: state.originalStates,
