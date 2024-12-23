@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillState, EmployeeSkillRequirement } from '@/types/skillTypes';
+import { EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: EmployeeSkillState };
   originalStates: { [key: string]: EmployeeSkillState };
   hasChanges: boolean;
-  setSkillState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  setSkillState: (skillName: string, level: string, requirement: string) => void;
   resetSkills: () => void;
-  initializeState: (skillName: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  initializeState: (skillName: string, level: string, requirement: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -36,6 +36,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           currentStates: {
             ...state.currentStates,
             [skillName]: { 
+              id: skillName,
               level, 
               requirement: finalRequirement 
             },
@@ -67,6 +68,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
               currentStates: {
                 ...state.currentStates,
                 [skillName]: { 
+                  id: skillName,
                   level, 
                   requirement: finalRequirement 
                 },
@@ -74,6 +76,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
               originalStates: {
                 ...state.originalStates,
                 [skillName]: { 
+                  id: skillName,
                   level, 
                   requirement: finalRequirement 
                 },
