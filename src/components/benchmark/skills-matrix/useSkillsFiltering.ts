@@ -14,7 +14,7 @@ export const useSkillsFiltering = (
   toggledSkills: Set<string>,
   isRoleBenchmark: boolean = false
 ) => {
-  console.log('useSkillsFiltering - Starting filtering with params:', {
+  console.log('useSkillsFiltering - Filtering with params:', {
     employeeId,
     roleId,
     roleLevel,
@@ -39,34 +39,24 @@ export const useSkillsFiltering = (
   const filterByCategory = (skills: UnifiedSkill[], category: string) => {
     if (category === "all") return skills;
 
-    console.log('Filtering by category:', {
-      category,
-      totalSkills: skills.length
-    });
-
     return skills.filter(skill => {
       const skillData = getUnifiedSkillData(skill.title);
-      const matches = category === skillData.category;
-      
-      console.log('Checking skill category:', {
-        skill: skill.title,
-        category: skillData.category,
-        requestedCategory: category,
-        matches
-      });
-      
-      return matches;
+      switch (category) {
+        case "specialized":
+          return skillData.category === "specialized";
+        case "common":
+          return skillData.category === "common";
+        case "certification":
+          return skillData.category === "certification";
+        default:
+          return true;
+      }
     });
   };
 
   // Filter skills based on selected level
   const filterByLevel = (skills: UnifiedSkill[]) => {
     if (selectedLevel === "all") return skills;
-
-    console.log('Filtering by level:', {
-      selectedLevel,
-      totalSkills: skills.length
-    });
 
     return skills.filter(skill => {
       const skillData = getUnifiedSkillData(skill.title);
@@ -78,11 +68,6 @@ export const useSkillsFiltering = (
   const filterByInterest = (skills: UnifiedSkill[]) => {
     if (selectedInterest === "all") return skills;
 
-    console.log('Filtering by interest:', {
-      selectedInterest,
-      totalSkills: skills.length
-    });
-
     return skills.filter(skill => {
       const skillData = getUnifiedSkillData(skill.title);
       return skillData.requirement?.toLowerCase() === selectedInterest.toLowerCase();
@@ -92,11 +77,6 @@ export const useSkillsFiltering = (
   // Filter skills based on skill level
   const filterBySkillLevel = (skills: UnifiedSkill[]) => {
     if (selectedSkillLevel === "all") return skills;
-
-    console.log('Filtering by skill level:', {
-      selectedSkillLevel,
-      totalSkills: skills.length
-    });
 
     return skills.filter(skill => {
       const skillData = getUnifiedSkillData(skill.title);
@@ -108,11 +88,6 @@ export const useSkillsFiltering = (
   const filterBySearch = (skills: UnifiedSkill[]) => {
     if (!searchTerm) return skills;
 
-    console.log('Filtering by search term:', {
-      searchTerm,
-      totalSkills: skills.length
-    });
-
     const searchLower = searchTerm.toLowerCase();
     return skills.filter(skill => 
       skill.title.toLowerCase().includes(searchLower) ||
@@ -121,32 +96,20 @@ export const useSkillsFiltering = (
   };
 
   // Apply all filters
-  let filteredSkills = [...allSkills];
+  let filteredSkills = allSkills;
   
   // Only filter by toggled skills if in role benchmark mode
   if (isRoleBenchmark) {
-    console.log('Filtering toggled skills:', {
-      before: filteredSkills.length,
-      toggledSkills: Array.from(toggledSkills)
-    });
-    
     filteredSkills = filteredSkills.filter(skill => toggledSkills.has(skill.title));
-    
-    console.log('After toggled skills filter:', {
-      after: filteredSkills.length
-    });
   }
 
-  // Apply category filter first
   filteredSkills = filterByCategory(filteredSkills, selectedLevel);
-  
-  // Then apply other filters
   filteredSkills = filterByLevel(filteredSkills);
   filteredSkills = filterByInterest(filteredSkills);
   filteredSkills = filterBySkillLevel(filteredSkills);
   filteredSkills = filterBySearch(filteredSkills);
 
-  console.log('useSkillsFiltering - Final results:', {
+  console.log('useSkillsFiltering - Results:', {
     totalSkills: allSkills.length,
     filteredCount: filteredSkills.length,
     filters: {
