@@ -10,7 +10,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
-import { EmployeeSkillState, RoleSkillState } from "@/types/skillTypes";
+import { EmployeeSkillState, RoleSkillState, UnifiedSkill } from "@/types/skillTypes";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -74,13 +74,6 @@ export const BenchmarkAnalysis = () => {
     const employeeSkillLevel = employeeState.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level || 'unspecified';
 
-    console.log('Comparing competency levels:', {
-      skill: skill.title,
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      track
-    });
-
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
         'advanced': 3,
@@ -118,16 +111,11 @@ export const BenchmarkAnalysis = () => {
   const competencyMatchPercentage = totalToggledSkills > 0 ? (competencyMatchCount / totalToggledSkills) * 100 : 0;
   const skillGoalMatchPercentage = totalToggledSkills > 0 ? (skillGoalMatchCount / totalToggledSkills) * 100 : 0;
 
-  const averagePercentage = Math.round(
-    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
-  );
-
   console.log('Benchmark Analysis Calculation:', {
     totalToggled: totalToggledSkills,
     skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
     competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
     skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
-    averagePercentage,
     track,
     comparisonLevel
   });
