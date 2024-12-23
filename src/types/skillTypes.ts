@@ -50,6 +50,13 @@ export interface RoleSkillData {
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
+  skills?: UnifiedSkill[];
+  roleTrack?: "Professional" | "Managerial";
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
 }
 
 export interface SkillsMatrixState {
@@ -73,5 +80,6 @@ export interface SkillsMatrixState {
 
 export interface SkillState {
   level: string;
-  required: string;
+  requirement: RoleSkillRequirement;
+  id: string;
 }
