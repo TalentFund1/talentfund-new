@@ -9,17 +9,16 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       currentStates: {},
       hasChanges: false,
 
-      setSkillState: (employeeId, skillId, level, requirement) => {
-        console.log('Setting skill state:', { employeeId, skillId, level, requirement });
+      setSkillState: (profileId, skillId, level, requirement) => {
+        console.log('Setting skill state:', { profileId, skillId, level, requirement });
         
         set((state) => {
-          // Create deep copy of current states to avoid reference issues
           const updatedSkillStates = {
             ...state.skillStates,
-            [employeeId]: {
-              ...state.skillStates[employeeId],
+            [profileId]: {
+              ...state.skillStates[profileId],
               [skillId]: {
-                employeeId,
+                profileId,
                 skillId,
                 level,
                 requirement
@@ -29,34 +28,24 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
 
           return {
             skillStates: updatedSkillStates,
-            currentStates: {
-              ...state.currentStates,
-              [employeeId]: {
-                ...updatedSkillStates[employeeId]
-              }
-            },
+            currentStates: updatedSkillStates,
             hasChanges: true
           };
         });
       },
 
-      initializeState: (employeeId, skillId, initialLevel, initialRequirement) => {
+      initializeState: (profileId, skillId, initialLevel, initialRequirement) => {
         const state = get();
-        if (!state.skillStates[employeeId]?.[skillId]) {
-          console.log('Initializing skill state:', { 
-            employeeId, 
-            skillId, 
-            initialLevel, 
-            initialRequirement 
-          });
+        if (!state.skillStates[profileId]?.[skillId]) {
+          console.log('Initializing skill state:', { profileId, skillId, initialLevel, initialRequirement });
           
           set((state) => ({
             skillStates: {
               ...state.skillStates,
-              [employeeId]: {
-                ...state.skillStates[employeeId],
+              [profileId]: {
+                ...state.skillStates[profileId],
                 [skillId]: {
-                  employeeId,
+                  profileId,
                   skillId,
                   level: initialLevel,
                   requirement: initialRequirement
@@ -65,10 +54,10 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             },
             currentStates: {
               ...state.currentStates,
-              [employeeId]: {
-                ...state.currentStates[employeeId],
+              [profileId]: {
+                ...state.currentStates[profileId],
                 [skillId]: {
-                  employeeId,
+                  profileId,
                   skillId,
                   level: initialLevel,
                   requirement: initialRequirement
@@ -79,16 +68,16 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         }
       },
 
-      getSkillState: (employeeId, skillId) => {
-        const state = get().skillStates[employeeId]?.[skillId];
-        console.log('Getting skill state:', { employeeId, skillId, state });
+      getSkillState: (profileId, skillId) => {
+        const state = get().skillStates[profileId]?.[skillId];
+        console.log('Getting skill state:', { profileId, skillId, state });
         return state;
       },
 
       saveChanges: () => {
         console.log('Saving skill matrix changes');
         set((state) => ({
-          currentStates: JSON.parse(JSON.stringify(state.skillStates)), // Deep clone to break references
+          currentStates: state.skillStates,
           hasChanges: false
         }));
       },
@@ -96,34 +85,18 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       cancelChanges: () => {
         console.log('Canceling skill matrix changes');
         set((state) => ({
-          skillStates: JSON.parse(JSON.stringify(state.currentStates)), // Deep clone to break references
+          skillStates: state.currentStates,
           hasChanges: false
         }));
       }
     }),
     {
       name: 'skills-matrix-storage',
-      version: 5, // Increment version to ensure clean state
+      version: 3,
       partialize: (state) => ({
         skillStates: state.skillStates,
         currentStates: state.currentStates
-      }),
-      storage: {
-        getItem: (name) => {
-          const str = localStorage.getItem(name);
-          console.log('Loading persisted state:', { name, value: str ? JSON.parse(str) : null });
-          return str ? Promise.resolve(JSON.parse(str)) : Promise.resolve(null);
-        },
-        setItem: (name, value) => {
-          console.log('Persisting state:', { name, value });
-          localStorage.setItem(name, JSON.stringify(value));
-          return Promise.resolve();
-        },
-        removeItem: (name) => {
-          localStorage.removeItem(name);
-          return Promise.resolve();
-        },
-      }
+      })
     }
   )
 );
