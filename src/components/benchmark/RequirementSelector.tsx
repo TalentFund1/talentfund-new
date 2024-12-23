@@ -17,7 +17,6 @@ export const RequirementSelector = ({
     
     switch (requirement.toLowerCase()) {
       case 'required':
-      case 'skill_goal':
         return `${baseStyles} border-x-2 border-b-2 rounded-b-md ${
           level.toLowerCase() === 'advanced' 
             ? 'bg-primary-accent/20 border-primary-accent' 
@@ -28,7 +27,6 @@ export const RequirementSelector = ({
                 : 'bg-gray-100 border-gray-300'
         }`;
       case 'not-interested':
-        return `${baseStyles} bg-gray-100 border-x-2 border-b-2 rounded-b-md border-gray-300`;
       case 'unknown':
       default:
         return `${baseStyles} bg-gray-100 border-x-2 border-b-2 rounded-b-md border-gray-300`;
@@ -37,19 +35,18 @@ export const RequirementSelector = ({
 
   // Normalize the requirement value for consistent comparison
   const normalizedRequired = currentRequired.toLowerCase();
-  const isSkillGoal = normalizedRequired === 'required' || normalizedRequired === 'skill_goal';
 
   return (
     <Select 
-      value={isSkillGoal ? 'required' : currentRequired}
+      value={normalizedRequired}
       onValueChange={onRequirementChange}
     >
       <SelectTrigger 
-        className={`${getRequirementStyles(currentRequired, currentLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+        className={`${getRequirementStyles(normalizedRequired, currentLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
       >
         <SelectValue>
           <span className="flex items-center gap-2 justify-center">
-            {isSkillGoal ? (
+            {normalizedRequired === 'required' ? (
               <>
                 <Heart className="w-3.5 h-3.5" />
                 <span>Skill Goal</span>
