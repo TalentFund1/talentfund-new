@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 const data = [
   {
@@ -51,9 +51,11 @@ const data = [
 export const SkillsOverview = () => {
   const [selectedView, setSelectedView] = useState<"category" | "subcategory" | "skill">("category");
 
-  const getChartData = () => {
+  const chartData = useMemo(() => {
+    console.log('Recalculating chart data for view:', selectedView);
+    
     if (selectedView === "category") {
-      const categoryData = data.reduce((acc, curr) => {
+      return data.reduce((acc, curr) => {
         const existingCategory = acc.find(item => item.name === curr.category);
         if (existingCategory) {
           existingCategory.proficiency = (existingCategory.proficiency + curr.proficiency) / 2;
@@ -62,11 +64,10 @@ export const SkillsOverview = () => {
         }
         return acc;
       }, [] as { name: string; proficiency: number }[]);
-      return categoryData;
     }
 
     if (selectedView === "subcategory") {
-      const subcategoryData = data.reduce((acc, curr) => {
+      return data.reduce((acc, curr) => {
         const existingSubcategory = acc.find(item => item.name === curr.subcategory);
         if (existingSubcategory) {
           existingSubcategory.proficiency = (existingSubcategory.proficiency + curr.proficiency) / 2;
@@ -75,14 +76,13 @@ export const SkillsOverview = () => {
         }
         return acc;
       }, [] as { name: string; proficiency: number }[]);
-      return subcategoryData;
     }
 
     return data.map(item => ({
       name: item.skill,
       proficiency: item.proficiency
     }));
-  };
+  }, [selectedView]);
 
   return (
     <Card className="p-6 animate-fade-in border-border border bg-white">
@@ -101,7 +101,7 @@ export const SkillsOverview = () => {
 
       <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getChartData()} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+          <BarChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
             <XAxis dataKey="name" />
             <YAxis />
