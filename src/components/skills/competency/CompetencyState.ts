@@ -32,7 +32,6 @@ export const useCompetencyStore = create<CompetencyState>()(
       hasChanges: false,
 
       setSkillState: (skillName, level, levelKey, roleId, skillId) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, roleId, skillId });
         set((state) => {
           const currentRoleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
@@ -61,8 +60,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         });
       },
 
-      setSkillProgression: (skillName, progression, roleId, track) => {
-        console.log('Setting skill progression:', { skillName, progression, roleId, track });
+      setSkillProgression: (skillName, progression, roleId) => {
         set((state) => {
           const currentRoleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
@@ -88,7 +86,6 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       resetLevels: (roleId) => {
-        console.log('Resetting levels for role:', roleId);
         const freshState = initializeRoleState(roleId);
         set((state) => ({
           roleStates: {
@@ -103,8 +100,7 @@ export const useCompetencyStore = create<CompetencyState>()(
         }));
       },
 
-      saveChanges: (roleId, track) => {
-        console.log('Saving changes for role:', roleId);
+      saveChanges: (roleId) => {
         set((state) => ({
           originalStates: {
             ...state.originalStates,
@@ -115,7 +111,6 @@ export const useCompetencyStore = create<CompetencyState>()(
       },
 
       cancelChanges: (roleId) => {
-        console.log('Canceling changes for role:', roleId);
         set((state) => ({
           roleStates: {
             ...state.roleStates,
@@ -132,7 +127,6 @@ export const useCompetencyStore = create<CompetencyState>()(
       initializeState: (roleId) => {
         const currentState = get().roleStates[roleId];
         if (!currentState) {
-          console.log('Initializing state for role:', roleId);
           const initialState = initializeRoleState(roleId);
           set((state) => ({
             roleStates: {
@@ -157,7 +151,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 26,
+      version: 27,
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
