@@ -4,7 +4,10 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills } from "./skills-matrix/SkillsMatrixState";
+import { getEmployeeSkills } from "./skills-matrix/initialSkills";
+import { roleSkills } from "../skills/data/roleSkills";
+import { getSkillProfileId } from "../EmployeeTable";
+import { useEmployeeStore } from "../employee/store/employeeStore";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -18,6 +21,7 @@ export const SkillsMatrix = () => {
   const observerTarget = useRef<HTMLDivElement>(null);
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const { matrixSearchSkills } = useSkillsMatrixSearch();
+  const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
 
   const { filterAndSortSkills } = useSkillsMatrixState(
     "all",
@@ -25,8 +29,23 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get employee skills directly
-  const employeeSkills = getEmployeeSkills(id || "");
+  // Get employee and their role
+  const employee = getEmployeeById(id || "");
+  const roleId = employee ? getSkillProfileId(employee.role) : "";
+  
+  // Get role skills
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  
+  // Get all available skills for the role
+  const getAllRoleSkills = () => {
+    if (!currentRoleSkills) return [];
+    
+    return [
+      ...(currentRoleSkills.specialized || []),
+      ...(currentRoleSkills.common || []),
+      ...(currentRoleSkills.certifications || [])
+    ];
+  };
 
   // Custom sorting function
   const sortSkills = (skills: any[]) => {
@@ -71,15 +90,27 @@ export const SkillsMatrix = () => {
     });
   };
 
+  // Get all skills and merge with employee skills
+  const allSkills = getAllRoleSkills();
+  const employeeSkills = getEmployeeSkills(id || "");
+  
+  // Merge skills, preferring employee skill states
+  const mergedSkills = allSkills.map(roleSkill => {
+    const employeeSkill = employeeSkills.find(es => es.title === roleSkill.title);
+    return employeeSkill || roleSkill;
+  });
+
   // Apply filtering and sorting
   const filteredSkills = sortSkills(filterAndSortSkills(id || ""));
 
   console.log('Skills matrix state:', {
-    totalSkills: employeeSkills.length,
+    totalSkills: mergedSkills.length,
     filteredSkills: filteredSkills.length,
     visibleItems,
     selectedLevel,
-    selectedInterest
+    selectedInterest,
+    roleId,
+    employeeSkillsCount: employeeSkills.length
   });
 
   useEffect(() => {
