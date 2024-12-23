@@ -29,19 +29,6 @@ export const SkillsMatrixFilters = ({
             <SelectItem value="advanced">Advanced</SelectItem>
           </SelectContent>
         </Select>
-
-        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Select Interest" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Requirements</SelectItem>
-            <SelectItem value="required">Required</SelectItem>
-            <SelectItem value="skill_goal">Skill Goal</SelectItem>
-            <SelectItem value="not_interested">Not Interested</SelectItem>
-            <SelectItem value="unknown">Unknown</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
       {addSkillButton}
     </div>
