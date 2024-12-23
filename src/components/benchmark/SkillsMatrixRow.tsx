@@ -4,6 +4,7 @@ import { SkillLevelCell } from "./SkillLevelCell";
 import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { RoleSkillLevelCell } from "./RoleSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -24,11 +25,14 @@ export const SkillsMatrixRow = ({
   isRoleBenchmark
 }: SkillsMatrixRowProps) => {
   const { currentStates } = useSkillsMatrixStore();
+  const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
     skillTitle: skill.title,
     category: skill.category,
-    isRoleBenchmark
+    isRoleBenchmark,
+    originalGrowth: skill.growth,
+    unifiedGrowth: unifiedSkillData.growth
   });
 
   const getWeightColor = (weight: string = 'necessary') => {
@@ -62,8 +66,8 @@ export const SkillsMatrixRow = ({
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
       <TableCell className="border-r border-blue-200 py-2 text-center">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getWeightColor(skill.weight)}`}>
-          {(skill.weight || 'necessary').charAt(0).toUpperCase() + (skill.weight || 'necessary').slice(1)}
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getWeightColor(unifiedSkillData.weight)}`}>
+          {(unifiedSkillData.weight || 'necessary').charAt(0).toUpperCase() + (unifiedSkillData.weight || 'necessary').slice(1)}
         </span>
       </TableCell>
       <TableCell className="border-r border-blue-200 py-2 text-center">
@@ -112,9 +116,9 @@ export const SkillsMatrixRow = ({
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
         <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
-          skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
+          unifiedSkillData.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
         }`}>
-          ↗ {skill.growth}
+          ↗ {unifiedSkillData.growth}
         </span>
       </TableCell>
       <TableCell className="text-center py-2">
