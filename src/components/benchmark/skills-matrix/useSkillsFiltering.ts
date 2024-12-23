@@ -2,8 +2,6 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
-import { getSkillCategory } from "../../skills/data/skills/categories/skillCategories";
-import { getCategoryForSkill } from "../../skills/utils/skillCountUtils";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -14,7 +12,7 @@ export const useSkillsFiltering = (
   selectedSkillLevel: string,
   searchTerm: string,
   toggledSkills: Set<string>,
-  isRoleBenchmark: boolean = false // New parameter to differentiate between contexts
+  isRoleBenchmark: boolean = false
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
@@ -37,7 +35,6 @@ export const useSkillsFiltering = (
   };
 
   const filterSkills = () => {
-    // Get all employee skills without filtering by role skills first
     let skills = [...employeeSkills];
 
     console.log('Filtering skills for employee:', {
@@ -51,7 +48,6 @@ export const useSkillsFiltering = (
       }))
     });
 
-    // Remove duplicates based on normalized titles
     const uniqueSkills = new Map();
     skills.forEach(skill => {
       if (!uniqueSkills.has(skill.title)) {
@@ -60,7 +56,6 @@ export const useSkillsFiltering = (
     });
     skills = Array.from(uniqueSkills.values());
 
-    // If this is role benchmark view, filter by role skills
     if (isRoleBenchmark) {
       const roleSkillTitles = new Set([
         ...(currentRoleSkills.specialized || []).map(s => s.title),
@@ -70,7 +65,6 @@ export const useSkillsFiltering = (
       skills = skills.filter(skill => roleSkillTitles.has(skill.title));
     }
 
-    // Apply filters
     return skills.filter(skill => {
       let matchesLevel = true;
       let matchesInterest = true;
