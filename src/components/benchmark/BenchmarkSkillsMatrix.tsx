@@ -16,6 +16,7 @@ const BenchmarkSkillsMatrixContent = () => {
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedWeight, setSelectedWeight] = useState("all");
   const { id } = useParams<{ id: string }>();
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
@@ -35,16 +36,17 @@ const BenchmarkSkillsMatrixContent = () => {
     searchTerm,
     toggledSkills,
     selectedCategory,
+    selectedWeight,
     true
   );
 
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
   
   console.log('BenchmarkSkillsMatrix - Current state:', {
-    selectedRole,
-    roleLevel: comparisonLevel,
-    track,
+    roleId: selectedRole,
+    employeeId: id,
     selectedCategory,
+    selectedWeight,
     filteredSkillsCount: filteredSkills.length,
     toggledSkillsCount: toggledSkills.size
   });
@@ -68,6 +70,8 @@ const BenchmarkSkillsMatrixContent = () => {
         setSelectedSearchSkills={setSelectedSearchSkills}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        selectedWeight={selectedWeight}
+        setSelectedWeight={setSelectedWeight}
         visibleItems={visibleItems}
       />
     </div>

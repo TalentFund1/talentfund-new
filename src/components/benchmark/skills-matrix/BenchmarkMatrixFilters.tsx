@@ -18,6 +18,8 @@ interface BenchmarkMatrixFiltersProps {
   clearSearch: () => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedWeight: string;
+  setSelectedWeight: (weight: string) => void;
 }
 
 export const BenchmarkMatrixFilters = ({
@@ -34,9 +36,12 @@ export const BenchmarkMatrixFilters = ({
   clearSearch,
   selectedCategory,
   setSelectedCategory,
+  selectedWeight,
+  setSelectedWeight,
 }: BenchmarkMatrixFiltersProps) => {
   console.log('BenchmarkMatrixFilters - Current selections:', {
     selectedCategory,
+    selectedWeight,
     selectedLevel,
     selectedInterest,
     selectedSkillLevel,
@@ -55,6 +60,18 @@ export const BenchmarkMatrixFilters = ({
             <SelectItem value="specialized">Specialized Skills</SelectItem>
             <SelectItem value="common">Common Skills</SelectItem>
             <SelectItem value="certification">Certification</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedWeight} onValueChange={setSelectedWeight}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Skill Weight" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Skill Weight</SelectItem>
+            <SelectItem value="critical">Critical</SelectItem>
+            <SelectItem value="technical">Technical</SelectItem>
+            <SelectItem value="necessary">Necessary</SelectItem>
           </SelectContent>
         </Select>
 

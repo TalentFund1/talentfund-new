@@ -19,6 +19,8 @@ interface BenchmarkSkillsMatrixViewProps {
   setSelectedSearchSkills: (skills: string[]) => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedWeight: string;
+  setSelectedWeight: (weight: string) => void;
   visibleItems: number;
 }
 
@@ -39,6 +41,8 @@ export const BenchmarkSkillsMatrixView = ({
   setSelectedSearchSkills,
   selectedCategory,
   setSelectedCategory,
+  selectedWeight,
+  setSelectedWeight,
   visibleItems
 }: BenchmarkSkillsMatrixViewProps) => {
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -47,6 +51,7 @@ export const BenchmarkSkillsMatrixView = ({
     roleId,
     employeeId,
     selectedCategory,
+    selectedWeight,
     filteredSkillsCount: filteredSkills.length
   });
 
@@ -69,6 +74,8 @@ export const BenchmarkSkillsMatrixView = ({
         setSelectedSearchSkills={setSelectedSearchSkills}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        selectedWeight={selectedWeight}
+        setSelectedWeight={setSelectedWeight}
         visibleItems={visibleItems}
         observerTarget={observerTarget}
       />

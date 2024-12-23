@@ -14,6 +14,7 @@ export const useSkillsFiltering = (
   searchTerm: string,
   toggledSkills: Set<string>,
   selectedCategory: string,
+  selectedWeight: string,
   isRoleBenchmark: boolean = false
 ) => {
   const { currentStates } = useSkillsMatrixStore();
@@ -43,6 +44,7 @@ export const useSkillsFiltering = (
       employeeId,
       totalSkills: skills.length,
       selectedCategory,
+      selectedWeight,
       selectedLevel,
       selectedInterest,
       selectedSkillLevel,
@@ -73,6 +75,14 @@ export const useSkillsFiltering = (
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
         return skillData?.category === selectedCategory;
+      });
+    }
+
+    // Apply weight filter
+    if (selectedWeight !== 'all') {
+      skills = skills.filter(skill => {
+        const skillData = getUnifiedSkillData(skill.title);
+        return skillData?.weight === selectedWeight;
       });
     }
 
@@ -148,6 +158,7 @@ export const useSkillsFiltering = (
     filteredSkills: filteredSkills.length,
     filters: {
       selectedCategory,
+      selectedWeight,
       selectedLevel,
       selectedInterest,
       selectedSkillLevel,
