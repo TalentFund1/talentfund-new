@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
@@ -11,7 +10,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
-import { EmployeeSkillState } from "@/types/skillTypes";
+import { EmployeeSkillState, RoleSkillState } from "@/types/skillTypes";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,7 +37,7 @@ export const BenchmarkAnalysis = () => {
       setSelectedRole(employeeRoleId);
       setSelectedLevel(employeeLevel);
     }
-  }, [employeeRoleId, employeeLevel, setSelectedRole, setSelectedLevel]);
+  }, [employeeRoleId, employeeLevel, setSelectedRole, setSelectedLevel, employee?.role, id]);
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   if (!currentRoleSkills) {
@@ -60,27 +59,20 @@ export const BenchmarkAnalysis = () => {
 
   const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
 
-  console.log('Toggled skills for role:', {
-    roleId: selectedRole,
-    level: comparisonLevel,
-    count: toggledRoleSkills.length,
-    skills: toggledRoleSkills.map(s => s.title)
-  });
-
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
     const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
     return employeeSkill !== undefined;
   });
 
   const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole) as RoleSkillState | undefined;
     if (!roleSkillState) return false;
 
-    const employeeState = currentStates[skill.title];
+    const employeeState = currentStates[skill.title] as EmployeeSkillState | undefined;
     if (!employeeState) return false;
 
-    const employeeSkillLevel = (employeeState as EmployeeSkillState).level || 'unspecified';
-    const roleSkillLevel = roleSkillState.level;
+    const employeeSkillLevel = employeeState.level || 'unspecified';
+    const roleSkillLevel = roleSkillState.level || 'unspecified';
 
     console.log('Comparing competency levels:', {
       skill: skill.title,
@@ -108,16 +100,13 @@ export const BenchmarkAnalysis = () => {
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole) as RoleSkillState | undefined;
     if (!roleSkillState) return false;
 
-    const employeeState = currentStates[skill.title];
+    const employeeState = currentStates[skill.title] as EmployeeSkillState | undefined;
     if (!employeeState) return false;
 
-    const roleRequirement = roleSkillState.requirement;
-    const employeeRequirement = (employeeState as EmployeeSkillState).requirement;
-
-    return roleRequirement === 'required' && employeeRequirement === 'skill_goal';
+    return roleSkillState.requirement === 'required' && employeeState.requirement === 'skill_goal';
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
