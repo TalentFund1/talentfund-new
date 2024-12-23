@@ -1,22 +1,22 @@
-import { UnifiedSkill, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../store/employeeStore';
 
 export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): string => {
   return useEmployeeStore.getState().getSkillState(employeeId, skillTitle).level;
 };
 
-export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): EmployeeSkillRequirement => {
+export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): string => {
   return useEmployeeStore.getState().getSkillState(employeeId, skillTitle).requirement;
 };
 
 export const setEmployeeSkillLevel = (employeeId: string, skillTitle: string, level: string): void => {
   const store = useEmployeeStore.getState();
   const currentState = store.getSkillState(employeeId, skillTitle);
-  store.setSkillState(employeeId, skillTitle, skillTitle, level, currentState.requirement);
+  store.setSkillState(employeeId, skillTitle, level, currentState.requirement);
 };
 
-export const setEmployeeSkillRequirement = (employeeId: string, skillTitle: string, requirement: EmployeeSkillRequirement): void => {
+export const setEmployeeSkillRequirement = (employeeId: string, skillTitle: string, requirement: string): void => {
   const store = useEmployeeStore.getState();
   const currentState = store.getSkillState(employeeId, skillTitle);
-  store.setSkillState(employeeId, skillTitle, skillTitle, currentState.level, requirement);
+  store.setSkillState(employeeId, skillTitle, currentState.level, requirement);
 };

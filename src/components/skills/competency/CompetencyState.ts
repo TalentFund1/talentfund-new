@@ -1,28 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleState, RoleSkillState, RoleSkillRequirement } from '../../../types/skillTypes';
+import { CompetencyState } from './state/types';
+import { setSkillStateAction, setSkillProgressionAction } from './state/stateActions';
+import { loadPersistedState } from './state/persistenceUtils';
 import { initializeRoleState } from './state/initializeState';
-
-interface CompetencyState {
-  roleStates: Record<string, RoleState>;
-  currentStates: Record<string, RoleState>;
-  originalStates: Record<string, RoleState>;
-  hasChanges: boolean;
-  setSkillState: (
-    skillName: string,
-    level: string,
-    levelKey: string,
-    requirement: RoleSkillRequirement,
-    roleId: string,
-    skillId: string
-  ) => void;
-  setSkillProgression: (skillName: string, progression: Record<string, RoleSkillState>, roleId: string, track: string) => void;
-  resetLevels: (roleId: string) => void;
-  saveChanges: (roleId: string, track: string) => void;
-  cancelChanges: (roleId: string) => void;
-  initializeState: (roleId: string) => void;
-  getRoleState: (roleId: string) => RoleState;
-}
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -32,56 +13,44 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, levelKey, requirement, roleId, skillId) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId, skillId });
+      setSkillState: (skillName, level, levelKey, required, roleId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
         set((state) => {
-          const currentRoleState = state.roleStates[roleId] || {};
-          const updatedRoleState = {
-            ...currentRoleState,
-            [skillName]: {
-              ...(currentRoleState[skillName] || {}),
-              [levelKey]: { 
-                id: skillId,
-                level,
-                requirement
-              }
-            }
-          };
+          const newRoleStates = setSkillStateAction(
+            state.roleStates,
+            skillName,
+            level,
+            levelKey,
+            required,
+            roleId
+          );
 
           return {
-            roleStates: {
-              ...state.roleStates,
-              [roleId]: updatedRoleState
-            },
+            roleStates: newRoleStates,
             currentStates: {
               ...state.currentStates,
-              [roleId]: updatedRoleState
+              [roleId]: newRoleStates[roleId]
             },
             hasChanges: true
           };
         });
       },
 
-      setSkillProgression: (skillName, progression, roleId, track) => {
-        console.log('Setting skill progression:', { skillName, progression, roleId, track });
+      setSkillProgression: (skillName, progression, roleId) => {
+        console.log('Setting skill progression:', { skillName, progression, roleId });
         set((state) => {
-          const currentRoleState = state.roleStates[roleId] || {};
-          const updatedRoleState = {
-            ...currentRoleState,
-            [skillName]: {
-              ...(currentRoleState[skillName] || {}),
-              ...progression
-            }
-          };
+          const newRoleStates = setSkillProgressionAction(
+            state.roleStates,
+            skillName,
+            progression,
+            roleId
+          );
 
           return {
-            roleStates: {
-              ...state.roleStates,
-              [roleId]: updatedRoleState
-            },
+            roleStates: newRoleStates,
             currentStates: {
               ...state.currentStates,
-              [roleId]: updatedRoleState
+              [roleId]: newRoleStates[roleId]
             },
             hasChanges: true
           };
@@ -90,21 +59,23 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       resetLevels: (roleId) => {
         console.log('Resetting levels for role:', roleId);
-        const freshState = initializeRoleState(roleId);
-        set((state) => ({
-          roleStates: {
-            ...state.roleStates,
-            [roleId]: freshState
-          },
-          currentStates: {
-            ...state.currentStates,
-            [roleId]: freshState
-          },
-          hasChanges: true
-        }));
+        set((state) => {
+          const freshState = initializeRoleState(roleId);
+          return {
+            roleStates: {
+              ...state.roleStates,
+              [roleId]: freshState
+            },
+            currentStates: {
+              ...state.currentStates,
+              [roleId]: freshState
+            },
+            hasChanges: true
+          };
+        });
       },
 
-      saveChanges: (roleId, track) => {
+      saveChanges: (roleId) => {
         console.log('Saving changes for role:', roleId);
         set((state) => ({
           originalStates: {
@@ -134,21 +105,42 @@ export const useCompetencyStore = create<CompetencyState>()(
         const currentState = get().roleStates[roleId];
         if (!currentState) {
           console.log('Initializing state for role:', roleId);
-          const initialState = initializeRoleState(roleId);
-          set((state) => ({
-            roleStates: {
-              ...state.roleStates,
-              [roleId]: initialState
-            },
-            currentStates: {
-              ...state.currentStates,
-              [roleId]: initialState
-            },
-            originalStates: {
-              ...state.originalStates,
-              [roleId]: initialState
-            }
-          }));
+          const savedState = loadPersistedState(roleId);
+          
+          if (savedState) {
+            console.log('Loaded saved state for role:', roleId);
+            set((state) => ({
+              roleStates: {
+                ...state.roleStates,
+                [roleId]: savedState
+              },
+              currentStates: {
+                ...state.currentStates,
+                [roleId]: savedState
+              },
+              originalStates: {
+                ...state.originalStates,
+                [roleId]: savedState
+              }
+            }));
+          } else {
+            console.log('Creating new state for role:', roleId);
+            const initialState = initializeRoleState(roleId);
+            set((state) => ({
+              roleStates: {
+                ...state.roleStates,
+                [roleId]: initialState
+              },
+              currentStates: {
+                ...state.currentStates,
+                [roleId]: initialState
+              },
+              originalStates: {
+                ...state.originalStates,
+                [roleId]: initialState
+              }
+            }));
+          }
         }
       },
 
@@ -158,12 +150,21 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 24,
+      version: 21,
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
         originalStates: state.originalStates
-      })
+      }),
+      merge: (persistedState: any, currentState: CompetencyState) => {
+        console.log('Merging persisted state with current state');
+        return {
+          ...currentState,
+          roleStates: persistedState.roleStates || {},
+          currentStates: persistedState.currentStates || {},
+          originalStates: persistedState.originalStates || {}
+        };
+      }
     }
   )
 );

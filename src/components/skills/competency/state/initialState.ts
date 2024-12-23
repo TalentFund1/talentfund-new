@@ -1,35 +1,56 @@
 import { roleSkills } from '../../data/roleSkills';
-import { RoleSkillState, RoleState } from './types';
+import { SkillState } from './types';
 
 export const getStorageKey = (roleId: string) => `competency-states-${roleId}`;
 
-export const initializeRoleState = (roleId: string): RoleState => {
-  console.log('Initializing new state for role:', roleId);
+export const initializeSkillStates = (roleId: string) => {
+  console.log('Initializing competency states for role:', roleId);
+  const states: Record<string, Record<string, SkillState>> = {};
   
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-  if (!currentRoleSkills) {
-    console.warn('No skills found for role:', roleId);
-    return {};
-  }
-
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   const allSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
+    ...(currentRoleSkills.specialized || []),
+    ...(currentRoleSkills.common || []),
+    ...(currentRoleSkills.certifications || [])
   ];
 
-  const initialStates: RoleState = {};
+  const storageKey = getStorageKey(roleId);
+  const savedStates = localStorage.getItem(storageKey);
   
+  if (savedStates) {
+    try {
+      const parsedStates = JSON.parse(savedStates);
+      if (parsedStates && typeof parsedStates === 'object') {
+        console.log('Successfully loaded saved states for role:', roleId);
+        return parsedStates;
+      }
+    } catch (error) {
+      console.error('Error parsing saved states for role:', roleId, error);
+    }
+  }
+
+  console.log('Initializing with default states for role:', roleId);
+  
+  // Initialize states for all skills with default values
   allSkills.forEach(skill => {
-    initialStates[skill.title] = {};
-    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
-      initialStates[skill.title][level] = {
+    states[skill.title] = {};
+    
+    // Initialize P1-P6 levels for professional track
+    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(level => {
+      states[skill.title][level] = {
         level: 'unspecified',
-        requirement: 'preferred'
+        required: 'preferred'
+      };
+    });
+    
+    // Initialize M3-M6 levels for managerial track
+    ['m3', 'm4', 'm5', 'm6'].forEach(level => {
+      states[skill.title][level] = {
+        level: 'unspecified',
+        required: 'preferred'
       };
     });
   });
 
-  console.log('Initialized states with defaults:', initialStates);
-  return initialStates;
+  return states;
 };

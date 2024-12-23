@@ -103,7 +103,7 @@ export const AddSkillProfileForm = () => {
     // Add to roleSkills
     roleSkills[formData.roleId as keyof typeof roleSkills] = {
       title: formData.roleTitle || newProfile.name,
-      roleTrack: formData.roleTrack,
+      soc: formData.soc,
       specialized: [],
       common: [],
       certifications: [],

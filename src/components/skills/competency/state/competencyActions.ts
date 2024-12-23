@@ -17,11 +17,7 @@ export const setSkillStateAction = (
       ...roleStates[roleId],
       [skillName]: {
         ...roleStates[roleId]?.[skillName],
-        [levelKey]: { 
-          level, 
-          required,
-          requirement: required 
-        }
+        [levelKey]: { level, required }
       }
     }
   };
@@ -62,13 +58,13 @@ export const resetLevelsAction = (
   const currentRoleState = roleStates[roleId] || {};
   const resetState: RoleState = {};
 
+  // Reset each skill to unspecified/preferred
   Object.keys(currentRoleState).forEach(skillName => {
     resetState[skillName] = {};
     ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
       resetState[skillName][level] = {
         level: 'unspecified',
-        required: 'preferred',
-        requirement: 'preferred'
+        required: 'preferred'
       };
     });
   });

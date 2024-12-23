@@ -18,9 +18,6 @@ interface BenchmarkMatrixFiltersProps {
   clearSearch: () => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
-  selectedRoleRequirement: string;
-  setSelectedRoleRequirement: (requirement: string) => void;
-  isRoleBenchmark?: boolean;
 }
 
 export const BenchmarkMatrixFilters = ({
@@ -37,9 +34,6 @@ export const BenchmarkMatrixFilters = ({
   clearSearch,
   selectedCategory,
   setSelectedCategory,
-  selectedRoleRequirement,
-  setSelectedRoleRequirement,
-  isRoleBenchmark = false
 }: BenchmarkMatrixFiltersProps) => {
   return (
     <div className="space-y-6">
@@ -56,14 +50,14 @@ export const BenchmarkMatrixFilters = ({
           </SelectContent>
         </Select>
 
-        <Select value={selectedRoleRequirement} onValueChange={setSelectedRoleRequirement}>
+        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Requirements" />
+            <SelectValue placeholder="All Interests" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Requirements</SelectItem>
-            <SelectItem value="skill_goal">Skill Goal</SelectItem>
-            <SelectItem value="not_interested">Not Interested</SelectItem>
+            <SelectItem value="all">All Interests</SelectItem>
+            <SelectItem value="required">Skill Goal</SelectItem>
+            <SelectItem value="not-interested">Not Interested</SelectItem>
             <SelectItem value="unknown">Unknown</SelectItem>
           </SelectContent>
         </Select>

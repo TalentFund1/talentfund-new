@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { EmployeeSkillRequirement } from "./types/SkillTypes";
 
 interface SkillBadgeProps {
   skill: BaseSkill;
@@ -44,10 +43,13 @@ export const SkillBadge = ({
     
     // If it's in the current states
     if (skillState) {
-      return skillState.requirement === 'skill_goal';
+      return skillState.requirement === 'required' || 
+             skillState.requirement === 'skill_goal';
     }
     
-    return false;
+    // For all skill levels, show goal by default
+    const currentLevel = (skillState?.level || level || '').toLowerCase();
+    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
   };
 
   return (

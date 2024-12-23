@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
@@ -33,10 +32,6 @@ export const SkillsMatrixView = ({
 }: SkillsMatrixViewProps) => {
   const { toast } = useToast();
   const { saveChanges, cancelChanges } = useSkillsMatrixStore();
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
-  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
 
   const handleSave = () => {
     saveChanges();
@@ -69,18 +64,7 @@ export const SkillsMatrixView = ({
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedSkillLevel={selectedSkillLevel}
-        setSelectedSkillLevel={setSelectedSkillLevel}
-        selectedSearchSkills={selectedSearchSkills}
-        removeSearchSkill={(skill) => {
-          setSelectedSearchSkills(prev => prev.filter(s => s !== skill));
-        }}
-        clearSearch={() => setSelectedSearchSkills([])}
-        isRoleBenchmark={isRoleBenchmark}
+        addSkillButton={<AddEmployeeSkillDialog />}
       />
 
       <SkillsMatrixTable 

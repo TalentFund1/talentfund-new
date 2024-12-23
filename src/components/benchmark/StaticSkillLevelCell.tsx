@@ -23,13 +23,13 @@ export const StaticSkillLevelCell = ({
     });
     
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, 'unspecified', 'skill_goal');
+      initializeState(skillTitle, 'unspecified', 'preferred');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
     level: 'unspecified',
-    requirement: 'skill_goal'
+    requirement: 'preferred'
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {
@@ -47,9 +47,9 @@ export const StaticSkillLevelCell = ({
 
   const getRequirementIcon = (requirement: string = 'unknown') => {
     switch (requirement?.toLowerCase()) {
-      case 'skill_goal':
+      case 'required':
         return <Check className="w-3.5 h-3.5" />;
-      case 'not_interested':
+      case 'not-interested':
         return <X className="w-3.5 h-3.5" />;
       case 'unknown':
         return <CircleDashed className="w-3.5 h-3.5" />;
@@ -72,7 +72,7 @@ export const StaticSkillLevelCell = ({
   };
 
   const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'unknown') => {
-    if (requirement?.toLowerCase() !== 'skill_goal') {
+    if (requirement?.toLowerCase() !== 'required') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
@@ -97,8 +97,8 @@ export const StaticSkillLevelCell = ({
         `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
-            {currentState?.requirement === 'skill_goal' ? 'Skill Goal' : 
-             currentState?.requirement === 'not_interested' ? 'Not Interested' : 
+            {currentState?.requirement === 'required' ? 'Skill Goal' : 
+             currentState?.requirement === 'not-interested' ? 'Not Interested' : 
              currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
           </span>
         </div>

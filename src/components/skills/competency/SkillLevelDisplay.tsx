@@ -1,10 +1,9 @@
 import { useCompetencyStateReader } from "./CompetencyStateReader";
 import { useRoleStore } from "../../benchmark/RoleBenchmark";
-import { RoleSkillState } from "../types/SkillTypes";
 
 export const SkillLevelDisplay = ({ roleId, level = "p3" }: { roleId: string; level?: string }) => {
-  const { getSkillCompetencyState } = useCompetencyStateReader();
-  const skillStates: Record<string, RoleSkillState> = {};
+  const { getAllSkillStatesForLevel } = useCompetencyStateReader();
+  const skillStates = getAllSkillStatesForLevel(level, roleId);
 
   return (
     <div className="space-y-4">
@@ -15,7 +14,7 @@ export const SkillLevelDisplay = ({ roleId, level = "p3" }: { roleId: string; le
             <span className="font-medium">{skillName}</span>
             <div className="flex gap-4">
               <span className="text-sm text-muted-foreground">Level: {state.level}</span>
-              <span className="text-sm text-muted-foreground">Required: {state.requirement}</span>
+              <span className="text-sm text-muted-foreground">Required: {state.required}</span>
             </div>
           </div>
         ))}

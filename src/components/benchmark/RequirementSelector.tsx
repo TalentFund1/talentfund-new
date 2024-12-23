@@ -1,57 +1,81 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { EmployeeSkillRequirement } from "../../types/skillTypes";
+import { Heart, X, CircleDashed } from "lucide-react";
 
 interface RequirementSelectorProps {
-  currentRequired: EmployeeSkillRequirement;
+  currentRequired: string;
   currentLevel: string;
-  onRequirementChange: (value: EmployeeSkillRequirement) => void;
+  onRequirementChange: (value: string) => void;
 }
 
-export const RequirementSelector = ({
-  currentRequired,
+export const RequirementSelector = ({ 
+  currentRequired, 
   currentLevel,
-  onRequirementChange
+  onRequirementChange 
 }: RequirementSelectorProps) => {
-  const getRequirementColor = (requirement: EmployeeSkillRequirement) => {
-    switch (requirement) {
-      case 'skill_goal':
-        return 'text-primary-accent';
-      case 'not_interested':
-        return 'text-destructive';
-      default:
-        return 'text-muted-foreground';
-    }
-  };
+  const getRequirementStyles = (requirement: string, level: string) => {
+    const borderColor = level.toLowerCase() === 'advanced' 
+      ? 'border-primary-accent'
+      : level.toLowerCase() === 'intermediate'
+        ? 'border-primary-icon'
+        : level.toLowerCase() === 'beginner'
+          ? 'border-[#008000]'
+          : 'border-gray-400';
 
-  const getRequirementLabel = (requirement: EmployeeSkillRequirement): string => {
-    switch (requirement) {
-      case 'skill_goal':
-        return 'Skill Goal';
-      case 'not_interested':
-        return 'Not Interested';
-      case 'unknown':
-        return 'Unknown';
+    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
+    
+    switch (requirement.toLowerCase()) {
+      case 'required':
+        return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
       default:
-        return 'Unknown';
+        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
     }
   };
 
   return (
-    <Select
+    <Select 
       value={currentRequired}
-      onValueChange={(value) => onRequirementChange(value as EmployeeSkillRequirement)}
+      onValueChange={onRequirementChange}
     >
-      <SelectTrigger className="h-7 w-[110px] text-xs">
+      <SelectTrigger 
+        className={`${getRequirementStyles(currentRequired, currentLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+      >
         <SelectValue>
-          <span className={getRequirementColor(currentRequired)}>
-            {getRequirementLabel(currentRequired)}
+          <span className="flex items-center gap-2 justify-center">
+            {currentRequired === 'required' ? (
+              <>
+                <Heart className="w-3.5 h-3.5" />
+                <span>Skill Goal</span>
+              </>
+            ) : currentRequired === 'not-interested' ? (
+              <>
+                <X className="w-3.5 h-3.5" />
+                <span>Not Interested</span>
+              </>
+            ) : (
+              <>
+                <CircleDashed className="w-3.5 h-3.5" />
+                <span>Unknown</span>
+              </>
+            )}
           </span>
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="skill_goal">Skill Goal</SelectItem>
-        <SelectItem value="not_interested">Not Interested</SelectItem>
-        <SelectItem value="unknown">Unknown</SelectItem>
+        <SelectItem value="required">
+          <span className="flex items-center gap-2">
+            <Heart className="w-3.5 h-3.5" /> Skill Goal
+          </span>
+        </SelectItem>
+        <SelectItem value="not-interested">
+          <span className="flex items-center gap-2">
+            <X className="w-3.5 h-3.5" /> Not Interested
+          </span>
+        </SelectItem>
+        <SelectItem value="unknown">
+          <span className="flex items-center gap-2">
+            <CircleDashed className="w-3.5 h-3.5" /> Unknown
+          </span>
+        </SelectItem>
       </SelectContent>
     </Select>
   );
