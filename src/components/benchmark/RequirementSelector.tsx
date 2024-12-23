@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, X, CircleDashed } from "lucide-react";
+import { Check, Heart, X, CircleDashed } from "lucide-react";
 
 interface RequirementSelectorProps {
   currentRequired: string;
@@ -15,26 +15,60 @@ export const RequirementSelector = ({
   const getRequirementStyles = (requirement: string, level: string) => {
     const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
-    switch (requirement.toLowerCase()) {
+    // Get background and border colors based on level for required/skill goal state
+    const getLevelColors = (level: string) => {
+      switch (level?.toLowerCase()) {
+        case 'advanced':
+          return 'border-primary-accent bg-primary-accent/10';
+        case 'intermediate':
+          return 'border-primary-icon bg-primary-icon/10';
+        case 'beginner':
+          return 'border-[#008000] bg-[#008000]/10';
+        default:
+          return 'border-gray-300 bg-gray-50/90';
+      }
+    };
+
+    return requirement.toLowerCase() === 'required'
+      ? `${baseStyles} ${getLevelColors(level)}`
+      : `${baseStyles} border-gray-300 bg-gray-50/90`;
+  };
+
+  // Map the backend state to UI display state
+  const getDisplayState = (state: string) => {
+    switch (state.toLowerCase()) {
       case 'required':
-        return `${baseStyles} border-x-2 border-b-2 rounded-b-md ${
-          level.toLowerCase() === 'advanced' 
-            ? 'bg-primary-accent/20 border-primary-accent' 
-            : level.toLowerCase() === 'intermediate'
-              ? 'bg-primary-icon/20 border-primary-icon'
-              : level.toLowerCase() === 'beginner'
-                ? 'bg-[#008000]/20 border-[#008000]'
-                : 'bg-gray-100 border-gray-300'
-        }`;
-      case 'not-interested':
-      case 'unknown':
+        return 'Skill Goal';
+      case 'not_interested':
+        return 'Not Interested';
+      case 'preferred':
       default:
-        return `${baseStyles} bg-gray-100 border-x-2 border-b-2 rounded-b-md border-gray-300`;
+        return 'Unknown';
+    }
+  };
+
+  // Get the appropriate icon based on the requirement state
+  const getRequirementIcon = (state: string) => {
+    switch (state.toLowerCase()) {
+      case 'required':
+        return <Heart className="w-3.5 h-3.5" />;
+      case 'not_interested':
+        return <X className="w-3.5 h-3.5" />;
+      case 'preferred':
+      default:
+        return <CircleDashed className="w-3.5 h-3.5" />;
     }
   };
 
   // Normalize the requirement value for consistent comparison
   const normalizedRequired = currentRequired.toLowerCase();
+
+  console.log('Requirement state:', {
+    currentRequired,
+    normalized: normalizedRequired,
+    display: getDisplayState(normalizedRequired),
+    level: currentLevel
+  });
 
   return (
     <Select 
@@ -46,22 +80,8 @@ export const RequirementSelector = ({
       >
         <SelectValue>
           <span className="flex items-center gap-2 justify-center">
-            {normalizedRequired === 'required' ? (
-              <>
-                <Heart className="w-3.5 h-3.5" />
-                <span>Skill Goal</span>
-              </>
-            ) : normalizedRequired === 'not-interested' ? (
-              <>
-                <X className="w-3.5 h-3.5" />
-                <span>Not Interested</span>
-              </>
-            ) : (
-              <>
-                <CircleDashed className="w-3.5 h-3.5" />
-                <span>Unknown</span>
-              </>
-            )}
+            {getRequirementIcon(normalizedRequired)}
+            <span>{getDisplayState(normalizedRequired)}</span>
           </span>
         </SelectValue>
       </SelectTrigger>
@@ -71,12 +91,12 @@ export const RequirementSelector = ({
             <Heart className="w-3.5 h-3.5" /> Skill Goal
           </span>
         </SelectItem>
-        <SelectItem value="not-interested">
+        <SelectItem value="not_interested">
           <span className="flex items-center gap-2">
             <X className="w-3.5 h-3.5" /> Not Interested
           </span>
         </SelectItem>
-        <SelectItem value="unknown">
+        <SelectItem value="preferred">
           <span className="flex items-center gap-2">
             <CircleDashed className="w-3.5 h-3.5" /> Unknown
           </span>
