@@ -1,11 +1,15 @@
 import { UnifiedSkill } from './categories/skillTypes';
-import { technicalSkills } from './definitions/technicalSkills';
+import { aiSkills } from './definitions/aiSkills';
+import { backendSkills } from './definitions/backendSkills';
+import { frontendSkills } from './definitions/frontendSkills';
 import { softSkills } from './definitions/softSkills';
 import { certificationSkills } from './definitions/certifications';
 
 // Combine all skills into one unified database
 const allSkills: UnifiedSkill[] = [
-  ...technicalSkills,
+  ...aiSkills,
+  ...backendSkills,
+  ...frontendSkills,
   ...softSkills,
   ...certificationSkills
 ];
