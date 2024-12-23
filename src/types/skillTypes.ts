@@ -5,18 +5,15 @@ export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface BaseSkillState {
   id: string;
+  skillId: string;
   level: string;
 }
 
 export interface EmployeeSkillState extends BaseSkillState {
-  profileId?: string;
-  skillId: string;
   requirement: EmployeeSkillRequirement;
 }
 
 export interface RoleSkillState extends BaseSkillState {
-  roleId?: string;
-  skillId: string;
   requirement: RoleSkillRequirement;
 }
 
@@ -82,5 +79,17 @@ export const mapRoleToEmployeeRequirement = (requirement: RoleSkillRequirement):
     case 'preferred':
     default:
       return 'unknown';
+  }
+};
+
+// Helper function to convert between requirement types
+export const convertRequirementType = <T extends EmployeeSkillRequirement | RoleSkillRequirement>(
+  requirement: EmployeeSkillRequirement | RoleSkillRequirement,
+  targetType: 'employee' | 'role'
+): T => {
+  if (targetType === 'employee') {
+    return mapRoleToEmployeeRequirement(requirement as RoleSkillRequirement) as T;
+  } else {
+    return mapEmployeeToRoleRequirement(requirement as EmployeeSkillRequirement) as T;
   }
 };
