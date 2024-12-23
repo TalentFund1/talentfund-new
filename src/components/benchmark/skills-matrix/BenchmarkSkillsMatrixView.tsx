@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
 import { BenchmarkSkillsMatrixTable } from "./BenchmarkSkillsMatrixTable";
+import { RefObject } from "react";
 
 interface BenchmarkSkillsMatrixViewProps {
   roleId: string;
@@ -20,7 +21,7 @@ interface BenchmarkSkillsMatrixViewProps {
   selectedSearchSkills: string[];
   setSelectedSearchSkills: (skills: string[]) => void;
   visibleItems: number;
-  observerTarget: React.RefObject<HTMLDivElement>;
+  observerTarget: RefObject<HTMLDivElement>;
 }
 
 export const BenchmarkSkillsMatrixView = ({
