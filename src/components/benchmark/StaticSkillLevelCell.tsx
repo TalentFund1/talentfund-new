@@ -2,7 +2,6 @@ import { TableCell } from "@/components/ui/table";
 import { Star, Shield, Target, CircleDashed, Check, X } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useEffect } from "react";
-import { EmployeeSkillRequirement } from "../../types/skillTypes";
 
 interface StaticSkillLevelCellProps {
   initialLevel: string;
@@ -24,13 +23,13 @@ export const StaticSkillLevelCell = ({
     });
     
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, skillTitle, 'unspecified', 'skill_goal');
+      initializeState(skillTitle, 'unspecified', 'skill_goal');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
     level: 'unspecified',
-    requirement: 'skill_goal' as EmployeeSkillRequirement
+    requirement: 'skill_goal'
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {
@@ -46,7 +45,7 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: EmployeeSkillRequirement = 'unknown') => {
+  const getRequirementIcon = (requirement: string = 'unknown') => {
     switch (requirement?.toLowerCase()) {
       case 'skill_goal':
         return <Check className="w-3.5 h-3.5" />;
@@ -72,38 +71,35 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: EmployeeSkillRequirement = 'unknown') => {
+  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'unknown') => {
     if (requirement?.toLowerCase() !== 'skill_goal') {
       return 'border-[#e5e7eb]';
     }
     return getBorderColorClass(level).split(' ')[0];
   };
 
-  const currentLevel = currentState.level || 'unspecified';
-  const currentRequirement = currentState.requirement || 'unknown';
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <div className={`
           rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
-          border-2 ${getBorderColorClass(currentLevel)}
+          border-2 ${getBorderColorClass(currentState?.level)}
         `}>
           <span className="flex items-center gap-2">
-            {getLevelIcon(currentLevel)}
-            {currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)}
+            {getLevelIcon(currentState?.level)}
+            {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
           </span>
         </div>
         <div className={`
           text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
           border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
-          ${getLowerBorderColorClass(currentLevel, currentRequirement)}
+          ${getLowerBorderColorClass(currentState?.level, currentState?.requirement)}
         `}>
           <span className="flex items-center gap-1.5">
-            {getRequirementIcon(currentRequirement)}
-            {currentRequirement === 'skill_goal' ? 'Skill Goal' : 
-             currentRequirement === 'not_interested' ? 'Not Interested' : 
-             currentRequirement === 'unknown' ? 'Unknown' : 'Unknown'}
+            {getRequirementIcon(currentState?.requirement)}
+            {currentState?.requirement === 'skill_goal' ? 'Skill Goal' : 
+             currentState?.requirement === 'not_interested' ? 'Not Interested' : 
+             currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
           </span>
         </div>
       </div>

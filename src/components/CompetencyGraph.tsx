@@ -50,17 +50,11 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         throw new Error('No skills found for current role');
       }
 
-      // Only generate for toggled skills
       const allSkills = [
         ...(currentRoleSkills.specialized || []),
         ...(currentRoleSkills.common || []),
         ...(currentRoleSkills.certifications || [])
       ].filter(skill => toggledSkills.has(skill.title));
-
-      console.log('Generating skills for toggled skills only:', {
-        totalSkills: allSkills.length,
-        toggledSkills: Array.from(toggledSkills)
-      });
 
       allSkills.forEach(skill => {
         let category = "specialized";

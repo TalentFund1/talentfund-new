@@ -11,7 +11,6 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
-import { toRoleRequirement, toEmployeeRequirement } from "@/utils/skillStateAdapter";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +26,7 @@ export const BenchmarkAnalysis = () => {
   const employeeRoleId = employee ? getSkillProfileId(employee.role) : "";
   const employeeLevel = employee?.role.split(":")[1]?.trim().toLowerCase() || "p4";
 
+  // Set initial role and level based on employee's assigned role
   useEffect(() => {
     if (employeeRoleId) {
       console.log('Setting initial role and level in BenchmarkAnalysis:', {
@@ -76,10 +76,7 @@ export const BenchmarkAnalysis = () => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeState = currentStates[skill.title];
-    if (!employeeState) return false;
-
-    const employeeSkillLevel = employeeState.level || 'unspecified';
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     console.log('Comparing competency levels:', {
@@ -89,6 +86,12 @@ export const BenchmarkAnalysis = () => {
       track
     });
 
+    // For Professional track, require exact level matches
+    if (track === "Professional") {
+      return employeeSkillLevel.toLowerCase() === roleSkillLevel.toLowerCase();
+    }
+
+    // For Managerial track, allow higher levels to match
     const getLevelPriority = (level: string = 'unspecified') => {
       const priorities: { [key: string]: number } = {
         'advanced': 3,
@@ -102,22 +105,13 @@ export const BenchmarkAnalysis = () => {
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    return track === "Professional" 
-      ? employeePriority === rolePriority 
-      : employeePriority >= rolePriority;
+    return employeePriority >= rolePriority;
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
-    if (!roleSkillState) return false;
-
-    const employeeState = currentStates[skill.title];
-    if (!employeeState) return false;
-
-    const roleRequirement = roleSkillState.requirement;
-    const employeeRequirement = employeeState.requirement;
-
-    return roleRequirement === 'required' && employeeRequirement === 'skill_goal';
+    const skillState = currentStates[skill.title];
+    if (!skillState) return false;
+    return skillState.requirement === 'skill_goal';  // Changed from 'required' to 'skill_goal'
   });
 
   const totalToggledSkills = toggledRoleSkills.length;

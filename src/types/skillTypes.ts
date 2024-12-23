@@ -1,6 +1,5 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
@@ -23,10 +22,12 @@ export interface BaseSkill {
   };
 }
 
-export interface UnifiedSkill extends BaseSkill {}
+export interface UnifiedSkill extends BaseSkill {
+  requirement?: RoleSkillRequirement;
+}
 
 export interface EmployeeSkillState {
-  id: string;
+  employeeId: string;
   skillId: string;
   level: string;
   requirement: EmployeeSkillRequirement;
@@ -34,28 +35,38 @@ export interface EmployeeSkillState {
 
 export interface RoleSkillState {
   id: string;
-  skillId: string;
-  level: SkillLevel;
+  level: string;
   requirement: RoleSkillRequirement;
 }
 
 export interface RoleState {
-  [level: string]: RoleSkillState;
+  [skillName: string]: {
+    [level: string]: RoleSkillState;
+  };
 }
 
-export interface SkillState {
-  id: string;
-  level: SkillLevel;
-  requirement: RoleSkillRequirement | EmployeeSkillRequirement;
+export interface RoleSkillData {
+  title: string;
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
 }
 
 export interface SkillsMatrixState {
-  skillStates: Record<string, Record<string, EmployeeSkillState>>;
-  currentStates: Record<string, Record<string, EmployeeSkillState>>;
+  skillStates: {
+    [employeeId: string]: {
+      [skillId: string]: EmployeeSkillState;
+    };
+  };
+  currentStates: {
+    [employeeId: string]: {
+      [skillId: string]: EmployeeSkillState;
+    };
+  };
   hasChanges: boolean;
-  setSkillState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
-  initializeState: (profileId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
-  getSkillState: (profileId: string, skillId: string) => EmployeeSkillState | undefined;
+  setSkillState: (employeeId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
+  initializeState: (employeeId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
+  getSkillState: (employeeId: string, skillId: string) => EmployeeSkillState | undefined;
   saveChanges: () => void;
   cancelChanges: () => void;
 }

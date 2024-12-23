@@ -1,4 +1,4 @@
-import { RoleState, RoleSkillState, RoleSkillRequirement } from '../../../../types/skillTypes';
+import { RoleState, SkillState } from './types';
 import { saveRoleState } from './storageUtils';
 
 export const setSkillStateAction = (
@@ -6,10 +6,10 @@ export const setSkillStateAction = (
   skillName: string,
   level: string,
   levelKey: string,
-  requirement: RoleSkillRequirement,
+  required: string,
   roleId: string
 ): Record<string, RoleState> => {
-  console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId });
+  console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
   
   const updatedRoleState = {
     ...roleStates,
@@ -18,9 +18,9 @@ export const setSkillStateAction = (
       [skillName]: {
         ...roleStates[roleId]?.[skillName],
         [levelKey]: { 
-          id: skillName,
           level, 
-          requirement
+          required,
+          requirement: required 
         }
       }
     }
@@ -33,7 +33,7 @@ export const setSkillStateAction = (
 export const setSkillProgressionAction = (
   roleStates: Record<string, RoleState>,
   skillName: string,
-  progression: Record<string, RoleSkillState>,
+  progression: Record<string, SkillState>,
   roleId: string
 ): Record<string, RoleState> => {
   console.log('Setting skill progression:', { skillName, progression, roleId });
@@ -51,4 +51,33 @@ export const setSkillProgressionAction = (
 
   saveRoleState(roleId, updatedRoleState[roleId]);
   return updatedRoleState;
+};
+
+export const resetLevelsAction = (
+  roleStates: Record<string, RoleState>,
+  roleId: string
+): Record<string, RoleState> => {
+  console.log('Resetting levels for role:', roleId);
+  
+  const currentRoleState = roleStates[roleId] || {};
+  const resetState: RoleState = {};
+
+  Object.keys(currentRoleState).forEach(skillName => {
+    resetState[skillName] = {};
+    ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'm3', 'm4', 'm5', 'm6'].forEach(level => {
+      resetState[skillName][level] = {
+        level: 'unspecified',
+        required: 'preferred',
+        requirement: 'preferred'
+      };
+    });
+  });
+
+  console.log('Reset state:', resetState);
+  saveRoleState(roleId, resetState);
+
+  return {
+    ...roleStates,
+    [roleId]: resetState
+  };
 };

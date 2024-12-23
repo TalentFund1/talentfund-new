@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 
 interface Skill {
   name: string;
-  level: string;
+  level: number;
 }
 
 interface EmployeeSkillCardProps {
@@ -14,32 +14,6 @@ interface EmployeeSkillCardProps {
 }
 
 export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillCardProps) => {
-  const getProgressPercentage = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'advanced':
-        return '100%';
-      case 'intermediate':
-        return '66%';
-      case 'beginner':
-        return '33%';
-      default:
-        return '0%';
-    }
-  };
-
-  const getProgressColor = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'advanced':
-        return 'bg-primary-accent';
-      case 'intermediate':
-        return 'bg-primary-icon';
-      case 'beginner':
-        return 'bg-[#008000]';
-      default:
-        return 'bg-gray-300';
-    }
-  };
-
   return (
     <Card className="p-6 animate-fade-in">
       <div className="flex items-center gap-4 mb-6">
@@ -56,15 +30,10 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
           <div key={skill.name}>
             <div className="flex justify-between mb-1">
               <span className="text-sm font-medium">{skill.name}</span>
-              <span className="text-sm text-secondary-foreground">
-                {getProgressPercentage(skill.level)}
-              </span>
+              <span className="text-sm text-secondary-foreground">85%</span>
             </div>
-            <div className="h-2 bg-secondary rounded-full overflow-hidden">
-              <div 
-                className={`h-full rounded-full transition-all duration-300 ${getProgressColor(skill.level)}`}
-                style={{ width: getProgressPercentage(skill.level) }}
-              />
+            <div className="skill-progress">
+              <div className="skill-progress-bar" style={{ width: '85%' }} />
             </div>
           </div>
         ))}
