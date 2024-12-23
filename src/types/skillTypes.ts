@@ -3,22 +3,18 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
-export interface SkillState {
+export interface BaseSkillState {
   id: string;
   level: string;
-  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
 }
 
-export interface EmployeeSkillState {
+export interface EmployeeSkillState extends BaseSkillState {
   profileId: string;
   skillId: string;
-  level: string;
   requirement: EmployeeSkillRequirement;
 }
 
-export interface RoleSkillState {
-  id: string;
-  level: string;
+export interface RoleSkillState extends BaseSkillState {
   requirement: RoleSkillRequirement;
 }
 

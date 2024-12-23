@@ -10,6 +10,7 @@ import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
+import { EmployeeSkillState, RoleSkillState } from "../../types/skillTypes";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -74,10 +75,10 @@ export const BenchmarkAnalysis = () => {
   });
 
   const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole) as RoleSkillState;
     if (!roleSkillState) return false;
 
-    const employeeState = currentStates[skill.title];
+    const employeeState = currentStates[skill.title] as EmployeeSkillState;
     if (!employeeState) return false;
 
     const employeeSkillLevel = employeeState.level || 'unspecified';
@@ -92,10 +93,10 @@ export const BenchmarkAnalysis = () => {
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole) as RoleSkillState;
     if (!roleSkillState) return false;
 
-    const employeeState = currentStates[skill.title];
+    const employeeState = currentStates[skill.title] as EmployeeSkillState;
     if (!employeeState) return false;
 
     return roleSkillState.requirement === 'required' && employeeState.requirement === 'skill_goal';
