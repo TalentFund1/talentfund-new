@@ -41,7 +41,7 @@ export const SkillLevelCell = ({
 
   const getRequirementIcon = (requirement: string = 'unknown') => {
     switch (requirement?.toLowerCase()) {
-      case 'required':
+      case 'skill_goal':
         return <Check className="w-3.5 h-3.5" />;
       case 'not-interested':
         return <X className="w-3.5 h-3.5" />;
@@ -136,14 +136,14 @@ export const SkillLevelCell = ({
             <SelectValue>
               <span className="flex items-center gap-1.5">
                 {getRequirementIcon(currentState?.requirement)}
-                {currentState?.requirement === 'required' ? 'Skill Goal' : 
+                {currentState?.requirement === 'skill_goal' ? 'Skill Goal' : 
                  currentState?.requirement === 'not-interested' ? 'Not Interested' : 
                  currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="required">
+            <SelectItem value="skill_goal">
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5" />
                 Skill Goal
