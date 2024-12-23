@@ -15,11 +15,15 @@ export interface BaseSkillState {
 
 // Employee-specific skill state
 export interface EmployeeSkillState extends BaseSkillState {
+  id: string;
+  level: string;
   requirement: EmployeeSkillRequirement;
 }
 
 // Role-specific skill state
 export interface RoleSkillState extends BaseSkillState {
+  id: string;
+  level: string;
   requirement: RoleSkillRequirement;
 }
 
@@ -42,6 +46,7 @@ export interface UnifiedSkill {
   growth: string;
   salary: string;
   confidence: string;
+  requirement?: EmployeeSkillRequirement;
   benchmarks: { [key: string]: boolean };
 }
 
@@ -58,6 +63,14 @@ export interface RoleSkillData {
   mappedTitle?: string;
   occupation?: string;
   description?: string;
+}
+
+// Detailed skill interface
+export interface DetailedSkill extends BaseSkillState {
+  id: string;
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
 }
 
 // Skill state type

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
-import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../skills/types/SkillTypes';
+import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 // Initial skills for employee 123 (AI Engineer)
@@ -18,10 +18,12 @@ const initialSkills = [
   "TensorFlow Developer Certificate"
 ].map(skillName => {
   const skillData = getUnifiedSkillData(skillName);
-  console.log('Initializing skill:', { skillName, skillData });
+  const skillId = `skill_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  console.log('Initializing skill:', { skillName, skillData, skillId });
+  
   return {
     ...skillData,
-    id: `skill_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: skillId,
     level: 'intermediate',
     requirement: 'skill_goal' as EmployeeSkillRequirement
   };
@@ -112,7 +114,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
           if (!store.skillStates[employeeId][skill.title]) {
             store.setSkillState(
               employeeId, 
-              skill.id,
+              skill.id || `skill_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
               skill.title, 
               skill.level || 'intermediate', 
               skill.requirement || 'skill_goal'
@@ -156,7 +158,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         return state.skillStates[employeeId]?.[skillName] || {
           id: skillName,
           level: 'intermediate',
-          requirement: 'unknown' as EmployeeSkillRequirement
+          requirement: 'skill_goal' as EmployeeSkillRequirement
         };
       }
     }),
