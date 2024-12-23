@@ -9,6 +9,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
+import { Skills } from "./data/skills/allSkills";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -94,25 +95,26 @@ export const SkillsSummary = () => {
     );
   };
 
+  // Initialize with default skills from the universal database
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
+    Skills.specialized.map(skill => ({
       ...skill,
-      requirement: skill.requirement as SkillRequirement
-    })), "specialized") as UnifiedSkill[]
+      requirement: 'preferred' as SkillRequirement
+    }))
   );
 
   const commonSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
+    Skills.common.map(skill => ({
       ...skill,
-      requirement: skill.requirement as SkillRequirement
-    })), "common") as UnifiedSkill[]
+      requirement: 'preferred' as SkillRequirement
+    }))
   );
 
   const certifications: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
+    Skills.certification.map(skill => ({
       ...skill,
-      requirement: skill.requirement as SkillRequirement
-    })), "certification") as UnifiedSkill[]
+      requirement: 'preferred' as SkillRequirement
+    }))
   );
 
   const toggleSection = (section: keyof typeof expandedSections) => {
