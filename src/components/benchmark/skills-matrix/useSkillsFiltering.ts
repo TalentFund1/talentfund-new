@@ -2,6 +2,7 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -12,6 +13,7 @@ export const useSkillsFiltering = (
   selectedSkillLevel: string,
   searchTerm: string,
   toggledSkills: Set<string>,
+  selectedCategory: string,
   isRoleBenchmark: boolean = false
 ) => {
   const { currentStates } = useSkillsMatrixStore();
@@ -37,17 +39,17 @@ export const useSkillsFiltering = (
   const filterSkills = () => {
     let skills = [...employeeSkills];
 
-    console.log('Filtering skills for employee:', {
+    console.log('Filtering skills:', {
       employeeId,
       totalSkills: skills.length,
-      isRoleBenchmark,
-      skills: skills.map(s => ({
-        title: s.title,
-        level: s.level,
-        requirement: s.requirement
-      }))
+      selectedCategory,
+      selectedLevel,
+      selectedInterest,
+      selectedSkillLevel,
+      searchTerm
     });
 
+    // Remove duplicates
     const uniqueSkills = new Map();
     skills.forEach(skill => {
       if (!uniqueSkills.has(skill.title)) {
@@ -56,6 +58,7 @@ export const useSkillsFiltering = (
     });
     skills = Array.from(uniqueSkills.values());
 
+    // Filter by role skills if in benchmark mode
     if (isRoleBenchmark) {
       const roleSkillTitles = new Set([
         ...(currentRoleSkills.specialized || []).map(s => s.title),
@@ -63,6 +66,14 @@ export const useSkillsFiltering = (
         ...(currentRoleSkills.certifications || []).map(s => s.title)
       ]);
       skills = skills.filter(skill => roleSkillTitles.has(skill.title));
+    }
+
+    // Apply category filter
+    if (selectedCategory !== 'all') {
+      skills = skills.filter(skill => {
+        const skillData = getUnifiedSkillData(skill.title);
+        return skillData?.category === selectedCategory;
+      });
     }
 
     return skills.filter(skill => {
@@ -136,6 +147,7 @@ export const useSkillsFiltering = (
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
     filters: {
+      selectedCategory,
       selectedLevel,
       selectedInterest,
       selectedSkillLevel,

@@ -17,6 +17,8 @@ interface BenchmarkSkillsMatrixViewProps {
   setSelectedSkillLevel: (level: string) => void;
   selectedSearchSkills: string[];
   setSelectedSearchSkills: (skills: string[]) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
   visibleItems: number;
 }
 
@@ -25,13 +27,26 @@ export const BenchmarkSkillsMatrixView = ({
   employeeId,
   roleLevel,
   filteredSkills,
-  ...props
+  searchTerm,
+  setSearchTerm,
+  selectedLevel,
+  setSelectedLevel,
+  selectedInterest,
+  setSelectedInterest,
+  selectedSkillLevel,
+  setSelectedSkillLevel,
+  selectedSearchSkills,
+  setSelectedSearchSkills,
+  selectedCategory,
+  setSelectedCategory,
+  visibleItems
 }: BenchmarkSkillsMatrixViewProps) => {
   const observerTarget = useRef<HTMLDivElement>(null);
 
   console.log('BenchmarkSkillsMatrixView - Rendering with:', {
     roleId,
     employeeId,
+    selectedCategory,
     filteredSkillsCount: filteredSkills.length
   });
 
@@ -42,7 +57,19 @@ export const BenchmarkSkillsMatrixView = ({
         employeeId={employeeId}
         roleLevel={roleLevel}
         filteredSkills={filteredSkills}
-        {...props}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
+        selectedInterest={selectedInterest}
+        setSelectedInterest={setSelectedInterest}
+        selectedSkillLevel={selectedSkillLevel}
+        setSelectedSkillLevel={setSelectedSkillLevel}
+        selectedSearchSkills={selectedSearchSkills}
+        setSelectedSearchSkills={setSelectedSearchSkills}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        visibleItems={visibleItems}
         observerTarget={observerTarget}
       />
     </Card>

@@ -32,10 +32,32 @@ export const BenchmarkMatrixFilters = ({
   selectedSearchSkills,
   removeSearchSkill,
   clearSearch,
+  selectedCategory,
+  setSelectedCategory,
 }: BenchmarkMatrixFiltersProps) => {
+  console.log('BenchmarkMatrixFilters - Current selections:', {
+    selectedCategory,
+    selectedLevel,
+    selectedInterest,
+    selectedSkillLevel,
+    searchTerm
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="specialized">Specialized Skills</SelectItem>
+            <SelectItem value="common">Common Skills</SelectItem>
+            <SelectItem value="certification">Certification</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Select value={selectedInterest} onValueChange={setSelectedInterest}>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Interests" />
