@@ -33,6 +33,7 @@ export interface UnifiedSkill extends Skill {
   isCompanySkill?: boolean;
 }
 
+// Updated to remove specialized/common/certification arrays
 export interface RoleSkillData {
   title: string;
   soc?: string;

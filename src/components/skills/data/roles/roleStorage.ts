@@ -17,8 +17,14 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
         getUnifiedSkillData(skill.title)
       );
       
-      const roleData = {
-        ...parsedSkills,
+      const roleData: RoleSkillData = {
+        title: parsedSkills.title || getRoleTitle(roleId),
+        soc: parsedSkills.soc || getRoleSoc(roleId),
+        function: parsedSkills.function || "Engineering",
+        mappedTitle: parsedSkills.mappedTitle || "",
+        occupation: parsedSkills.occupation || getRoleTitle(roleId),
+        description: parsedSkills.description || "",
+        roleTrack: parsedSkills.roleTrack || getRoleDefaultTrack(roleId),
         skills: unifiedSkills
       };
       
@@ -44,7 +50,7 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
       getUnifiedSkillData(skill.title)
     );
     
-    const roleData = {
+    const roleData: RoleSkillData = {
       ...skills,
       skills: unifiedSkills
     };
