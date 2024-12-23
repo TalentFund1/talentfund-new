@@ -1,4 +1,4 @@
-import { Star, Shield, Target, CircleDashed } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, Heart, X } from "lucide-react";
 
 export const getLevelIcon = (level: string) => {
   switch (level?.toLowerCase()) {
@@ -10,6 +10,17 @@ export const getLevelIcon = (level: string) => {
       return <Target className="w-4 h-4 text-[#008000]" />;
     default:
       return <CircleDashed className="w-4 h-4 text-gray-400" />;
+  }
+};
+
+export const getRequirementIcon = (requirement: string) => {
+  switch (requirement?.toLowerCase()) {
+    case 'required':
+      return <Heart className="w-3.5 h-3.5" />;
+    case 'not-interested':
+      return <X className="w-3.5 h-3.5" />;
+    default:
+      return <CircleDashed className="w-3.5 h-3.5" />;
   }
 };
 
@@ -29,20 +40,22 @@ export const getLevelStyles = (level: string) => {
 };
 
 export const getRequirementStyles = (requirement: string, level: string) => {
-  const borderColor = level.toLowerCase() === 'advanced' 
-    ? 'border-primary-accent'
-    : level.toLowerCase() === 'intermediate'
-      ? 'border-primary-icon'
-      : level.toLowerCase() === 'beginner'
-        ? 'border-[#008000]'
-        : 'border-gray-400';
-
-  const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
+  const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md';
   
-  switch (requirement.toLowerCase()) {
+  switch (requirement?.toLowerCase()) {
     case 'required':
-      return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor}`;
+      return `${baseStyles} ${
+        level.toLowerCase() === 'advanced' 
+          ? 'bg-primary-accent/20 border-primary-accent' 
+          : level.toLowerCase() === 'intermediate'
+            ? 'bg-primary-icon/20 border-primary-icon'
+            : level.toLowerCase() === 'beginner'
+              ? 'bg-[#008000]/20 border-[#008000]'
+              : 'bg-gray-100 border-gray-300'
+      }`;
+    case 'not-interested':
+    case 'unknown':
     default:
-      return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
+      return `${baseStyles} bg-gray-100 border-gray-300`;
   }
 };
