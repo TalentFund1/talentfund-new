@@ -4,7 +4,6 @@ export const communicationSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_COM_662',
     title: "Communication",
-    subcategory: "Soft Skills",
     category: "common",
     businessCategory: "Professional Skills",
     weight: "necessary",

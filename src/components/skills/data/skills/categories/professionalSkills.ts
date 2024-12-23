@@ -4,7 +4,6 @@ export const professionalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_TW_794',
     title: "Technical Writing",
-    subcategory: "Documentation",
     category: "common",
     businessCategory: "Professional Skills",
     weight: "necessary",
@@ -17,7 +16,6 @@ export const professionalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_GIT_249',
     title: "Git Version Control",
-    subcategory: "Development Tools",
     category: "common",
     businessCategory: "Software Development",
     weight: "necessary",
@@ -30,7 +28,6 @@ export const professionalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_PS_414',
     title: "Problem Solving",
-    subcategory: "Development Practices",
     category: "common",
     businessCategory: "Professional Skills",
     weight: "necessary",
@@ -43,7 +40,6 @@ export const professionalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_CR_059',
     title: "Code Review",
-    subcategory: "Development Practices",
     category: "common",
     businessCategory: "Software Development",
     weight: "necessary",
@@ -56,7 +52,6 @@ export const professionalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_TL_238',
     title: "Team Leadership",
-    subcategory: "Leadership",
     category: "common",
     businessCategory: "Professional Skills",
     weight: "necessary",
@@ -69,7 +64,6 @@ export const professionalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_TC_748',
     title: "Team Collaboration",
-    subcategory: "Soft Skills",
     category: "common",
     businessCategory: "Professional Skills",
     weight: "necessary",
@@ -82,7 +76,6 @@ export const professionalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_PO_686',
     title: "Performance Optimization",
-    subcategory: "Development Practices",
     category: "specialized",
     businessCategory: "Software Development",
     weight: "technical",

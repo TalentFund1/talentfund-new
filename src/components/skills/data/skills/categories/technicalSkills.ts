@@ -4,7 +4,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_K8S_427',
     title: "Kubernetes Administrator (CKA)",
-    subcategory: "Container Orchestration",
     category: "certification",
     businessCategory: "DevOps",
     weight: "technical",
@@ -17,7 +16,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_NJS_027',
     title: "Node.js",
-    subcategory: "Backend Development",
     category: "specialized",
     businessCategory: "Software Development",
     weight: "technical",
@@ -30,7 +28,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_ML_031',
     title: "Machine Learning",
-    subcategory: "AI & ML",
     category: "specialized",
     businessCategory: "Information Technology",
     weight: "critical",
@@ -43,7 +40,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_DL_862',
     title: "Deep Learning",
-    subcategory: "AI & ML",
     category: "specialized",
     businessCategory: "Information Technology",
     weight: "critical",
@@ -56,7 +52,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_NLP_865',
     title: "Natural Language Processing",
-    subcategory: "AI Applications",
     category: "specialized",
     businessCategory: "Information Technology",
     weight: "critical",
@@ -69,7 +64,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_CV_735',
     title: "Computer Vision",
-    subcategory: "AI Applications",
     category: "specialized",
     businessCategory: "Information Technology",
     weight: "critical",
@@ -82,7 +76,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_TF_000',
     title: "TensorFlow",
-    subcategory: "ML Frameworks",
     category: "specialized",
     businessCategory: "Information Technology",
     weight: "technical",
@@ -95,7 +88,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_PY_128',
     title: "Python",
-    subcategory: "Programming Languages",
     category: "specialized",
     businessCategory: "Software Development",
     weight: "technical",
@@ -108,7 +100,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_REA_873',
     title: "React",
-    subcategory: "Frontend Frameworks",
     category: "specialized",
     businessCategory: "Software Development",
     weight: "technical",
@@ -121,7 +112,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_AWS_078',
     title: "AWS Certified Machine Learning - Specialty",
-    subcategory: "AI Certification",
     category: "certification",
     businessCategory: "Information Technology",
     weight: "critical",
@@ -134,7 +124,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_TF_008',
     title: "TensorFlow Developer Certificate",
-    subcategory: "AI Certification",
     category: "certification",
     businessCategory: "Information Technology",
     weight: "technical",
@@ -147,7 +136,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_API_082',
     title: "API Development",
-    subcategory: "Backend Development",
     category: "specialized",
     businessCategory: "Software Development",
     weight: "technical",
@@ -160,7 +148,6 @@ export const technicalSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_SYS_678',
     title: "System Architecture",
-    subcategory: "Architecture",
     category: "specialized",
     businessCategory: "Software Development",
     weight: "technical",

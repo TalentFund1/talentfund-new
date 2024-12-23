@@ -11,7 +11,6 @@ export interface DetailedSkill {
 export interface Skill {
   id: string;
   title: string;
-  subcategory: string;  // Added this field
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
@@ -49,7 +48,6 @@ export interface RoleSkillData {
 
 export interface SimpleSkill {
   title: string;
-  subcategory: string;
   category?: string;
   businessCategory?: string;
   level: string;
@@ -58,7 +56,6 @@ export interface SimpleSkill {
 
 export interface EmployeeSkill {
   title: string;
-  subcategory: string;
   level: string;
   growth: string;
   confidence: string;
