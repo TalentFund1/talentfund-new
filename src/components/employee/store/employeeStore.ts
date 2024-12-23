@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill, EmployeeSkillState, EmployeeSkillRequirement } from '../../../types/skillTypes';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 interface EmployeeStore {
   employees: Employee[];
@@ -18,117 +19,27 @@ interface EmployeeStore {
   initializeEmployeeSkills: (employeeId: string) => void;
 }
 
+// Initial skills for AI Engineer (Employee 123)
+const initialSkills: UnifiedSkill[] = [
+  "Machine Learning",
+  "Deep Learning", 
+  "Natural Language Processing",
+  "Computer Vision",
+  "TensorFlow",
+  "Python",
+  "Problem Solving",
+  "AWS Certified Machine Learning - Specialty"
+].map(skillTitle => {
+  console.log('Initializing skill:', skillTitle);
+  return getUnifiedSkillData(skillTitle);
+});
+
 export const useEmployeeStore = create<EmployeeStore>()(
   persist(
     (set, get) => ({
       employees: defaultEmployees,
       employeeSkills: {
-        "123": [
-          {
-            id: "ai_1",
-            title: "Machine Learning",
-            subcategory: "AI & ML",
-            category: "specialized",
-            businessCategory: "Information Technology",
-            weight: "critical",
-            level: "advanced",
-            growth: "35%",
-            salary: "$185,000",
-            confidence: "high",
-            benchmarks: { B: true, R: true, M: true, O: true }
-          },
-          {
-            id: "ai_2",
-            title: "Deep Learning",
-            subcategory: "AI & ML",
-            category: "specialized", 
-            businessCategory: "Information Technology",
-            weight: "critical",
-            level: "intermediate",
-            growth: "32%",
-            salary: "$180,000",
-            confidence: "high",
-            benchmarks: { B: true, R: true, M: true, O: true }
-          },
-          {
-            id: "ai_3",
-            title: "Natural Language Processing",
-            subcategory: "AI Applications",
-            category: "specialized",
-            businessCategory: "Information Technology",
-            weight: "critical",
-            level: "advanced",
-            growth: "30%",
-            salary: "$175,000",
-            confidence: "high",
-            benchmarks: { B: true, R: true, M: true, O: true }
-          },
-          {
-            id: "ai_4", 
-            title: "Computer Vision",
-            subcategory: "AI Applications",
-            category: "specialized",
-            businessCategory: "Information Technology",
-            weight: "critical",
-            level: "intermediate",
-            growth: "28%",
-            salary: "$170,000",
-            confidence: "high",
-            benchmarks: { B: true, R: true, M: true, O: true }
-          },
-          {
-            id: "ai_5",
-            title: "TensorFlow",
-            subcategory: "ML Frameworks",
-            category: "specialized",
-            businessCategory: "Information Technology",
-            weight: "critical",
-            level: "advanced",
-            growth: "25%",
-            salary: "$165,000",
-            confidence: "high",
-            benchmarks: { B: true, R: true, M: true, O: true }
-          },
-          {
-            id: "common_1",
-            title: "Python",
-            subcategory: "Programming Languages",
-            category: "common",
-            businessCategory: "Information Technology",
-            weight: "necessary",
-            level: "advanced",
-            growth: "20%",
-            salary: "$120,000",
-            confidence: "high",
-            benchmarks: { B: true, R: true, M: true, O: true }
-          },
-          {
-            id: "common_2",
-            title: "Problem Solving",
-            subcategory: "Soft Skills",
-            category: "common",
-            businessCategory: "Professional Skills",
-            weight: "necessary",
-            level: "intermediate",
-            growth: "15%",
-            salary: "$100,000",
-            confidence: "high",
-            benchmarks: { B: true, R: true, M: true, O: true }
-          },
-          {
-            id: "cert_1",
-            title: "AWS Certified Machine Learning - Specialty",
-            subcategory: "Cloud Certification",
-            category: "certification",
-            businessCategory: "Information Technology",
-            weight: "critical",
-            level: "advanced",
-            growth: "30%",
-            salary: "$180,000",
-            confidence: "high",
-            benchmarks: { B: true, R: true, M: true, O: true }
-          }
-        ]
+        "123": initialSkills
       },
       skillStates: {},
 
@@ -140,7 +51,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
           set((state) => ({
             employeeSkills: {
               ...state.employeeSkills,
-              [employeeId]: []
+              [employeeId]: employeeId === "123" ? initialSkills : []
             }
           }));
         }
@@ -176,7 +87,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         return get().employees.find(emp => emp.id === id);
       },
 
-      setEmployeeSkills: (employeeId, skills) => {
+      setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => {
         console.log('Setting skills for employee:', employeeId, skills);
         set((state) => ({
           employeeSkills: {
@@ -186,7 +97,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         }));
       },
 
-      getEmployeeSkills: (employeeId) => {
+      getEmployeeSkills: (employeeId: string) => {
         console.log('Getting skills for employee:', employeeId);
         const state = get();
         if (!state.employeeSkills[employeeId]) {
@@ -195,7 +106,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         return state.employeeSkills[employeeId] || [];
       },
 
-      setSkillState: (employeeId, skillId, skillName, level, requirement) => {
+      setSkillState: (employeeId: string, skillId: string, skillName: string, level: string, requirement: EmployeeSkillRequirement) => {
         console.log('Setting skill state:', {
           employeeId,
           skillId,
@@ -220,7 +131,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         }));
       },
 
-      getSkillState: (employeeId, skillName) => {
+      getSkillState: (employeeId: string, skillName: string) => {
         console.log('Getting skill state:', { employeeId, skillName });
         const state = get();
         return state.skillStates[employeeId]?.[skillName];
