@@ -1,7 +1,7 @@
 import { 
   EmployeeSkillState, 
-  RoleSkillState, 
-  EmployeeSkillRequirement, 
+  RoleSkillState,
+  EmployeeSkillRequirement,
   RoleSkillRequirement
 } from "../types/skillTypes";
 

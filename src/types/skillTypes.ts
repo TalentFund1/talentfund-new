@@ -60,7 +60,3 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
 }
-
-export interface SkillState extends BaseSkillState {
-  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
-}
