@@ -3,13 +3,13 @@ import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { RoleSkillRequirement, mapRoleToEmployeeRequirement } from "@/types/skillTypes";
+import { EmployeeSkillRequirement, mapRoleToEmployeeRequirement } from "@/types/skillTypes";
 
 interface SkillCellProps {
   skillName: string;
   details: {
     level: string;
-    requirement: RoleSkillRequirement;
+    requirement: EmployeeSkillRequirement;
   };
   isLastColumn: boolean;
   levelKey: string;
@@ -17,7 +17,7 @@ interface SkillCellProps {
 
 export const SkillCell = ({ 
   skillName, 
-  details = { level: 'unspecified', requirement: 'preferred' }, 
+  details = { level: 'unspecified', requirement: 'unknown' }, 
   isLastColumn = false, 
   levelKey 
 }: SkillCellProps) => {
@@ -37,7 +37,7 @@ export const SkillCell = ({
     skillId: skillName,
     roleId: currentRoleId,
     level: details.level || "unspecified",
-    requirement: details.requirement || "preferred"
+    requirement: mapRoleToEmployeeRequirement(details.requirement || "preferred")
   };
 
   const handleLevelChange = (value: string) => {
@@ -54,12 +54,11 @@ export const SkillCell = ({
       value,
       levelKey,
       currentState.requirement,
-      currentRoleId,
-      skillName // skillId
+      currentRoleId
     );
   };
 
-  const handleRequirementChange = (value: RoleSkillRequirement) => {
+  const handleRequirementChange = (value: EmployeeSkillRequirement) => {
     console.log('Changing requirement:', {
       skillName,
       levelKey,
@@ -73,8 +72,7 @@ export const SkillCell = ({
       currentState.level || 'unspecified',
       levelKey,
       value,
-      currentRoleId,
-      skillName // skillId
+      currentRoleId
     );
   };
 
@@ -88,7 +86,7 @@ export const SkillCell = ({
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={currentState.requirement || 'preferred'}
+          currentRequired={currentState.requirement}
           currentLevel={currentState.level || 'unspecified'}
           onRequirementChange={handleRequirementChange}
         />

@@ -69,7 +69,7 @@ export const mapEmployeeToRoleRequirement = (requirement: EmployeeSkillRequireme
     case 'skill_goal':
       return 'required';
     case 'not_interested':
-      return 'preferred';
+    case 'unknown':
     default:
       return 'preferred';
   }
@@ -80,7 +80,6 @@ export const mapRoleToEmployeeRequirement = (requirement: RoleSkillRequirement):
     case 'required':
       return 'skill_goal';
     case 'preferred':
-      return 'not_interested';
     default:
       return 'unknown';
   }
