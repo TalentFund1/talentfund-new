@@ -11,7 +11,7 @@ export interface DetailedSkill {
 export interface Skill {
   id: string;
   title: string;
-  subcategory: string;
+  subcategory: string;  // Added this field
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
