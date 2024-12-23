@@ -7,7 +7,8 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
 import { useState } from "react";
 import { useRoleStore } from "./RoleBenchmark";
-import { RoleSkillRequirement } from '../../types/skillTypes';
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { EmployeeSkillState, mapEmployeeToRoleRequirement } from "@/types/skillTypes";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -18,8 +19,8 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { currentStates } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   const { selectedLevel } = useRoleStore();
 
   console.log('CategorizedSkills - Using selected level:', selectedLevel);
@@ -38,56 +39,39 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     );
   };
 
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+  if (!currentRoleSkills) {
+    console.error('No role skills found for role:', roleId);
+    return null;
+  }
+
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
 
-  const getLevelPriority = (level: string = 'unspecified') => {
-    const priorities: { [key: string]: number } = {
-      'advanced': 0,
-      'intermediate': 1,
-      'beginner': 2,
-      'unspecified': 3
-    };
-    return priorities[level.toLowerCase()] ?? 3;
-  };
+  const toggledRoleSkills = allRoleSkills.filter(skill => toggledSkills.has(skill.title));
 
-  const sortSkills = (skills: any[]) => {
-    return skills.sort((a, b) => {
-      const aState = getSkillCompetencyState(a.title, selectedLevel.toLowerCase(), roleId);
-      const bState = getSkillCompetencyState(b.title, selectedLevel.toLowerCase(), roleId);
-      
-      // First sort by requirement (required before preferred)
-      const aRequired = aState?.requirement === 'required' ? 0 : 1;
-      const bRequired = bState?.requirement === 'required' ? 0 : 1;
-      if (aRequired !== bRequired) return aRequired - bRequired;
-      
-      // Then sort by level (advanced to unspecified)
-      return getLevelPriority(aState?.level) - getLevelPriority(bState?.level);
-    });
-  };
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
+    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+    return employeeSkill !== undefined;
+  });
 
-  const filteredSkills = filterSkillsByCategory(allRoleSkills
-    .filter(skill => {
-      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-      return toggledSkills.has(skill.title);
-    }));
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
+    if (!roleSkillState) return false;
 
-  const requiredSkills = sortSkills(filteredSkills.filter(skill => {
-    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return competencyState?.requirement === 'required';
-  }));
+    const employeeState = currentStates[skill.title] as EmployeeSkillState;
+    if (!employeeState) return false;
 
-  const preferredSkills = sortSkills(filteredSkills.filter(skill => {
-    const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return competencyState?.requirement === 'preferred';
-  }));
+    const mappedEmployeeRequirement = mapEmployeeToRoleRequirement(employeeState.requirement);
+    return roleSkillState.requirement === 'required' && mappedEmployeeRequirement === 'required';
+  });
 
-  const missingSkills = sortSkills(filteredSkills.filter(skill => {
+  const missingSkills = toggledRoleSkills.filter(skill => {
     const hasSkill = employeeSkills.some(empSkill => {
-      const employeeState = currentStates[empSkill.title];
+      const employeeState = currentStates[empSkill.title] as EmployeeSkillState;
       return empSkill.title === skill.title && 
              (!employeeState || employeeState.requirement === 'not_interested');
     });
@@ -96,7 +80,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     return !hasSkill && 
            toggledSkills.has(skill.title) && 
            competencyState?.level !== 'unspecified';
-  }));
+  });
 
   const getLevelColor = (skillTitle: string) => {
     const competencyState = getSkillCompetencyState(skillTitle, selectedLevel.toLowerCase(), roleId);
@@ -116,16 +100,6 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     }
   };
 
-  console.log('Skills Summary:', {
-    level: selectedLevel,
-    required: requiredSkills.length,
-    preferred: preferredSkills.length,
-    missing: missingSkills.length,
-    requiredSkills,
-    preferredSkills,
-    missingSkills
-  });
-
   const SkillSection = ({ title, skills, count }: { title: string, skills: any[], count: number }) => (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
@@ -137,7 +111,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
       <div className="flex flex-wrap gap-2">
         {skills.map((skill) => {
           const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-          const employeeState = currentStates[skill.title];
+          const employeeState = currentStates[skill.title] as EmployeeSkillState;
           const isSkillGoal = employeeState?.requirement === 'skill_goal';
           
           return (
@@ -168,14 +142,8 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
 
       <SkillSection 
         title="Required Skills" 
-        skills={requiredSkills} 
-        count={requiredSkills.length} 
-      />
-      
-      <SkillSection 
-        title="Preferred Skills" 
-        skills={preferredSkills} 
-        count={preferredSkills.length} 
+        skills={competencyMatchingSkills} 
+        count={competencyMatchingSkills.length} 
       />
       
       <SkillSection 
