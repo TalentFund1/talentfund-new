@@ -10,7 +10,7 @@ import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
-import { EmployeeSkillState, RoleSkillState } from "../../types/skillTypes";
+import { EmployeeSkillState, RoleSkillState } from "@/types/skillTypes";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -99,7 +99,8 @@ export const BenchmarkAnalysis = () => {
     const employeeState = currentStates[skill.title] as EmployeeSkillState;
     if (!employeeState) return false;
 
-    return roleSkillState.requirement === 'required' && employeeState.requirement === 'skill_goal';
+    return roleSkillState.requirement === 'required' && 
+           employeeState.requirement === 'skill_goal';
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
