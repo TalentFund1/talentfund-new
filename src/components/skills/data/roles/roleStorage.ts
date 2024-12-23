@@ -75,9 +75,6 @@ export const initializeRoleSkills = (roleId: string): RoleSkillData => {
     occupation: getRoleTitle(roleId),
     description: "",
     roleTrack: getRoleDefaultTrack(roleId),
-    skills: [],
-    specialized: [],  // Added missing property
-    common: [],      // Added missing property
-    certifications: [] // Added missing property
+    skills: []
   };
 };

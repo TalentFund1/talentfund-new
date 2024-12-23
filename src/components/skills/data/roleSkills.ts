@@ -21,7 +21,7 @@ roleIds.forEach(id => {
 // Export helper functions
 export { saveRoleSkills, loadRoleSkills };
 
-// Helper function to get category for a skill in a role
+// Helper function to get category for a skill using universal database
 export const getRoleSkillCategory = (skillTitle: string): string => {
   const skillData = getUnifiedSkillData(skillTitle);
   return skillData.category;

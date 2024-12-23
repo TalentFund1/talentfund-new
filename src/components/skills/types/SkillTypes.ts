@@ -41,9 +41,6 @@ export interface RoleSkillData {
   occupation?: string;
   description?: string;
   roleTrack?: "Professional" | "Managerial";
-  specialized: UnifiedSkill[];
-  common: UnifiedSkill[];
-  certifications: UnifiedSkill[];
   skills: UnifiedSkill[];
 }
 
