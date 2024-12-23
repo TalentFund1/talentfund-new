@@ -1,22 +1,77 @@
 import { UnifiedSkill } from './categories/skillTypes';
-import { aiSkills } from './definitions/aiSkills';
-import { backendSkills } from './definitions/backendSkills';
-import { frontendSkills } from './definitions/frontendSkills';
-import { softSkills } from './definitions/softSkills';
-import { certificationSkills } from './definitions/certifications';
 
-// Combine all skills into one unified database
+// Universal skills database with all skills and their metadata
 const allSkills: UnifiedSkill[] = [
-  ...aiSkills,
-  ...backendSkills,
-  ...frontendSkills,
-  ...softSkills,
-  ...certificationSkills
+  {
+    id: 'SKILL_ML_001',
+    title: "Machine Learning",
+    subcategory: "AI & ML",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "35%",
+    salary: "$185,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_REACT_002',
+    title: "React",
+    subcategory: "Frontend Development",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "25%",
+    salary: "$165,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_NODE_003',
+    title: "Node.js",
+    subcategory: "Backend Development",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "30%",
+    salary: "$160,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_COMM_004',
+    title: "Communication",
+    subcategory: "Soft Skills",
+    category: "common",
+    businessCategory: "Physical and Inherent Abilities",
+    weight: "technical",
+    level: "advanced",
+    growth: "12%",
+    salary: "$145,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_AWS_005',
+    title: "AWS Certified Solutions Architect",
+    subcategory: "Cloud Certification",
+    category: "certification",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "28%",
+    salary: "$180,000",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  }
 ];
 
 // Helper function to get all skills
 export const getAllSkills = (): UnifiedSkill[] => {
-  console.log('Getting all skills:', allSkills.length, 'skills found');
+  console.log('Getting all skills from universal database:', allSkills.length, 'skills found');
   return allSkills;
 };
 
