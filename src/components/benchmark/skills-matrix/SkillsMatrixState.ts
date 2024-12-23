@@ -78,7 +78,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 3,
+      version: 4,
       partialize: (state) => ({
         skillStates: state.skillStates,
         currentStates: state.currentStates

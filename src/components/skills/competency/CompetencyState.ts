@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleState, RoleSkillState, RoleSkillRequirement } from '../../../types/skillTypes';
+import { RoleState, RoleSkillState } from '../../../types/skillTypes';
 import { initializeRoleState } from './state/initializeState';
 
 interface CompetencyState {
@@ -12,7 +12,6 @@ interface CompetencyState {
     skillName: string,
     level: string,
     levelKey: string,
-    requirement: RoleSkillRequirement,
     roleId: string,
     skillId: string
   ) => void;
@@ -32,8 +31,8 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
 
-      setSkillState: (skillName, level, levelKey, requirement, roleId, skillId) => {
-        console.log('Setting skill state:', { skillName, level, levelKey, requirement, roleId, skillId });
+      setSkillState: (skillName, level, levelKey, roleId, skillId) => {
+        console.log('Setting skill state:', { skillName, level, levelKey, roleId, skillId });
         set((state) => {
           const currentRoleState = state.roleStates[roleId] || {};
           const updatedRoleState = {
@@ -42,8 +41,8 @@ export const useCompetencyStore = create<CompetencyState>()(
               ...(currentRoleState[skillName] || {}),
               [levelKey]: { 
                 id: skillId,
-                level,
-                requirement
+                skillId,
+                level
               }
             }
           };
@@ -158,7 +157,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 24,
+      version: 25,
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,

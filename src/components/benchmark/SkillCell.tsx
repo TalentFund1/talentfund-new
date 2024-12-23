@@ -1,15 +1,12 @@
 import { TableCell } from "@/components/ui/table";
 import { LevelSelector } from "./LevelSelector";
-import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { RoleSkillRequirement } from "@/types/skillTypes";
 import { useCompetencyStore } from "./CompetencyState";
 
 interface SkillCellProps {
   skillName: string;
   details: {
     level: string;
-    requirement: RoleSkillRequirement;
   };
   isLastColumn: boolean;
   levelKey: string;
@@ -28,8 +25,7 @@ export const SkillCell = ({
   const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
     id: skillName,
     skillId: skillName,
-    level: details.level || "unspecified",
-    requirement: details.requirement || "preferred"
+    level: details.level || "unspecified"
   };
 
   const handleLevelChange = (value: string) => {
@@ -37,7 +33,6 @@ export const SkillCell = ({
       skillName,
       levelKey,
       newLevel: value,
-      currentRequirement: currentState.requirement,
       roleId: currentRoleId
     });
     
@@ -45,26 +40,8 @@ export const SkillCell = ({
       skillName,
       value,
       levelKey,
-      currentState.requirement,
-      currentRoleId
-    );
-  };
-
-  const handleRequirementChange = (value: RoleSkillRequirement) => {
-    console.log('Changing requirement:', {
-      skillName,
-      levelKey,
-      currentLevel: currentState.level,
-      newRequirement: value,
-      roleId: currentRoleId
-    });
-    
-    setSkillState(
-      skillName,
-      currentState.level || 'unspecified',
-      levelKey,
-      value,
-      currentRoleId
+      currentRoleId,
+      skillName
     );
   };
 
@@ -76,11 +53,6 @@ export const SkillCell = ({
         <LevelSelector
           currentLevel={currentState.level || 'unspecified'}
           onLevelChange={handleLevelChange}
-        />
-        <RequirementSelector
-          currentRequired={currentState.requirement}
-          currentLevel={currentState.level || 'unspecified'}
-          onRequirementChange={handleRequirementChange}
         />
       </div>
     </TableCell>
