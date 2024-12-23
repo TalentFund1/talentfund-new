@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
-import { UnifiedSkill, EmployeeSkillState } from '../../../types/skillTypes';
+import { UnifiedSkill, EmployeeSkillState, SkillLevel } from '../../../types/skillTypes';
 
 interface EmployeeStore {
   employees: Employee[];
@@ -182,7 +182,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
               [skillName]: {
                 id: skillId,
                 skillId,
-                level
+                level: level as SkillLevel
               }
             }
           }
