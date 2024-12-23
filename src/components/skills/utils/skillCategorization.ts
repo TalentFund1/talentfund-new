@@ -10,13 +10,13 @@ export const getCategorizedSkills = (roleData: RoleSkillData) => {
     const unifiedData = getUnifiedSkillData(skill.title);
     switch (unifiedData.category) {
       case 'specialized':
-        specialized.push(unifiedData);
+        specialized.push({ ...unifiedData, ...skill });
         break;
       case 'common':
-        common.push(unifiedData);
+        common.push({ ...unifiedData, ...skill });
         break;
       case 'certification':
-        certifications.push(unifiedData);
+        certifications.push({ ...unifiedData, ...skill });
         break;
     }
   });
@@ -25,7 +25,8 @@ export const getCategorizedSkills = (roleData: RoleSkillData) => {
     roleId: roleData.title,
     specialized: specialized.length,
     common: common.length,
-    certifications: certifications.length
+    certifications: certifications.length,
+    total: roleData.skills.length
   });
 
   return {

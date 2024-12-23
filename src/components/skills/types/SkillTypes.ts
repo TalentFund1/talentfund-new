@@ -42,6 +42,10 @@ export interface RoleSkillData {
   description?: string;
   roleTrack?: "Professional" | "Managerial";
   skills: UnifiedSkill[];
+  // Keep these for backward compatibility
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
 }
 
 export interface SimpleSkill {

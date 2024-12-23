@@ -22,14 +22,26 @@ const defaultRoleSkills: { [key: string]: string[] } = {
 roleIds.forEach(id => {
   const savedSkills = loadRoleSkills(id);
   if (savedSkills) {
-    roleSkills[id] = savedSkills;
+    // Ensure categorized arrays exist
+    const categorized = getCategorizedSkills(savedSkills);
+    roleSkills[id] = {
+      ...savedSkills,
+      specialized: categorized.specialized,
+      common: categorized.common,
+      certifications: categorized.certifications
+    };
   } else {
     // Initialize with default skills
     const defaultSkills = defaultRoleSkills[id]?.map(title => getUnifiedSkillData(title)) || [];
     const initialState = initializeRoleSkills(id);
+    const categorized = getCategorizedSkills({ ...initialState, skills: defaultSkills });
+    
     roleSkills[id] = {
       ...initialState,
-      skills: defaultSkills
+      skills: defaultSkills,
+      specialized: categorized.specialized,
+      common: categorized.common,
+      certifications: categorized.certifications
     };
     saveRoleSkills(id, roleSkills[id]);
   }
@@ -37,6 +49,9 @@ roleIds.forEach(id => {
   console.log(`Initialized role ${id}:`, {
     title: roleSkills[id].title,
     skillsCount: roleSkills[id].skills.length,
+    specialized: roleSkills[id].specialized.length,
+    common: roleSkills[id].common.length,
+    certifications: roleSkills[id].certifications.length,
     skills: roleSkills[id].skills.map(s => s.title)
   });
 });
