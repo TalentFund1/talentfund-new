@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CategorizedSkills } from "../CategorizedSkills";
 import { Separator } from "@/components/ui/separator";
 import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
@@ -23,6 +23,8 @@ interface BenchmarkSkillsMatrixContentProps {
   setSelectedSearchSkills: (skills: string[]) => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedWeight: string;
+  setSelectedWeight: (weight: string) => void;
   visibleItems: number;
   observerTarget: React.RefObject<HTMLDivElement>;
 }
@@ -34,6 +36,8 @@ export const BenchmarkSkillsMatrixContent = ({
   filteredSkills,
   selectedCategory,
   setSelectedCategory,
+  selectedWeight,
+  setSelectedWeight,
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
   const { toggledSkills } = useToggledSkills();
@@ -92,6 +96,8 @@ export const BenchmarkSkillsMatrixContent = ({
         filteredSkills={filteredSkills}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        selectedWeight={selectedWeight}
+        setSelectedWeight={setSelectedWeight}
         {...props}
         isRoleBenchmark={true}
       />

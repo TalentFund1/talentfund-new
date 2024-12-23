@@ -19,6 +19,8 @@ interface SkillsMatrixContentProps {
   isRoleBenchmark?: boolean;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedWeight: string;
+  setSelectedWeight: (weight: string) => void;
 }
 
 export const SkillsMatrixContent = ({
@@ -37,12 +39,15 @@ export const SkillsMatrixContent = ({
   observerTarget,
   isRoleBenchmark = false,
   selectedCategory,
-  setSelectedCategory
+  setSelectedCategory,
+  selectedWeight,
+  setSelectedWeight
 }: SkillsMatrixContentProps) => {
   console.log('SkillsMatrixContent rendering:', {
     skillsCount: filteredSkills.length,
     isRoleBenchmark,
-    selectedCategory
+    selectedCategory,
+    selectedWeight
   });
 
   const removeSearchSkill = (skill: string) => {
@@ -65,6 +70,8 @@ export const SkillsMatrixContent = ({
         clearSearch={() => setSearchTerm("")}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        selectedWeight={selectedWeight}
+        setSelectedWeight={setSelectedWeight}
       />
 
       {isRoleBenchmark ? (

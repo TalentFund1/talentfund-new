@@ -82,10 +82,17 @@ export const useSkillsFiltering = (
     if (selectedWeight !== 'all') {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
-        return skillData?.weight === selectedWeight;
+        console.log('Filtering by weight:', {
+          skillTitle: skill.title,
+          weight: skillData?.weight,
+          selectedWeight,
+          matches: skillData?.weight === selectedWeight.toLowerCase()
+        });
+        return skillData?.weight === selectedWeight.toLowerCase();
       });
     }
 
+    // Apply level and interest filters
     return skills.filter(skill => {
       let matchesLevel = true;
       let matchesInterest = true;
