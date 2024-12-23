@@ -13,43 +13,20 @@ export const CompanySkillsTable = () => {
     toggledSkills: Array.from(toggledSkills)
   });
 
-  // Get all skills from the universal database
-  const allSkills = getAllSkills();
-  console.log('CompanySkillsTable - All skills from database:', {
-    totalSkills: allSkills.length,
-    sample: allSkills.slice(0, 3)
-  });
-  
-  // Filter skills based on toggledSkills Set
-  const uniqueSkills = allSkills
-    .filter(skill => toggledSkills.has(skill.title))
-    .map(skill => {
-      console.log('Getting data for toggled skill:', skill.title);
-      return getUnifiedSkillData(skill.title);
+  // Get all toggled skills and enrich them with universal database data
+  const uniqueSkills = Array.from(toggledSkills)
+    .map(skillTitle => {
+      console.log('Getting data for toggled skill:', skillTitle);
+      return getUnifiedSkillData(skillTitle);
     })
     .filter(skill => skill !== undefined);
 
-  console.log('CompanySkillsTable - Filtered toggled skills:', {
+  console.log('CompanySkillsTable - Enriched skills:', {
     totalFiltered: uniqueSkills.length,
     sample: uniqueSkills.slice(0, 3)
   });
 
-  // Helper function to get the type
-  const getSkillType = (skillTitle: string): string => {
-    for (const role of Object.values(roleSkills)) {
-      if (role.specialized.some(s => s.title === skillTitle)) {
-        return 'Specialized';
-      }
-      if (role.common.some(s => s.title === skillTitle)) {
-        return 'Common';
-      }
-      if (role.certifications.some(s => s.title === skillTitle)) {
-        return 'Certification';
-      }
-    }
-    return 'Uncategorized';
-  };
-
+  // Helper function to get the type color
   const getTypeColor = (type: string) => {
     switch (type.toLowerCase()) {
       case 'specialized':
@@ -57,6 +34,20 @@ export const CompanySkillsTable = () => {
       case 'certification':
         return 'bg-purple-100 text-purple-800';
       case 'common':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  // Helper function to get the weight color
+  const getWeightColor = (weight: string) => {
+    switch (weight.toLowerCase()) {
+      case 'critical':
+        return 'bg-red-100 text-red-800';
+      case 'technical':
+        return 'bg-blue-100 text-blue-800';
+      case 'necessary':
         return 'bg-green-100 text-green-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -87,33 +78,34 @@ export const CompanySkillsTable = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {uniqueSkills.map((skill) => {
-                const skillType = getSkillType(skill.title);
-                return (
-                  <TableRow key={skill.id} className="hover:bg-muted/5">
-                    <TableCell className="font-medium">{skill.title}</TableCell>
-                    <TableCell>
-                      <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(skillType)}`}>
-                        {skillType}
-                      </span>
-                    </TableCell>
-                    <TableCell>{skill.businessCategory}</TableCell>
-                    <TableCell>{skill.subcategory}</TableCell>
-                    <TableCell>{skill.weight}</TableCell>
-                    <TableCell className="text-right">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm bg-green-100 text-green-800">
-                        ↗ {skill.growth}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">{skill.salary}</TableCell>
-                    <TableCell className="text-center">
-                      <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm bg-gray-100 text-gray-800">
-                        1
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {uniqueSkills.map((skill) => (
+                <TableRow key={skill.id} className="hover:bg-muted/5">
+                  <TableCell className="font-medium">{skill.title}</TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(skill.category)}`}>
+                      {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
+                    </span>
+                  </TableCell>
+                  <TableCell>{skill.businessCategory}</TableCell>
+                  <TableCell>{skill.subcategory}</TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getWeightColor(skill.weight)}`}>
+                      {skill.weight.charAt(0).toUpperCase() + skill.weight.slice(1)}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm bg-green-100 text-green-800">
+                      ↗ {skill.growth}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">{skill.salary}</TableCell>
+                  <TableCell className="text-center">
+                    <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm bg-gray-100 text-gray-800">
+                      1
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
