@@ -5,6 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getUnifiedSkillData } from "../data/skillDatabaseService";
 
 interface SkillTypeFiltersProps {
   skillType: string;
@@ -19,6 +20,11 @@ export const SkillTypeFilters = ({
   sortBy,
   setSortBy,
 }: SkillTypeFiltersProps) => {
+  console.log('SkillTypeFilters - Current selection:', {
+    skillType,
+    sortBy
+  });
+
   return (
     <div className="flex justify-between items-center mb-6">
       <div className="flex gap-3">
