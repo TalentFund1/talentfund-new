@@ -6,6 +6,7 @@ import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { getSkillProfileId } from "@/components/EmployeeTable";
 import { CompanySkillsTable } from "@/components/skills/CompanySkillsTable";
 import { EmployeeSkillsTable } from "@/components/skills/EmployeeSkillsTable";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 
 const Index = () => {
   const employees = useEmployeeStore((state) => state.employees);
@@ -77,8 +78,10 @@ const Index = () => {
             </div>
           </div>
 
-          <CompanySkillsTable />
-          <EmployeeSkillsTable />
+          <ToggledSkillsProvider>
+            <CompanySkillsTable />
+            <EmployeeSkillsTable />
+          </ToggledSkillsProvider>
         </div>
       </div>
     </div>
