@@ -1,5 +1,13 @@
 import { UnifiedSkill } from './categories/skillTypes';
 
+// Helper function to generate a skill ID if none exists
+const generateSkillId = (title: string, category: string): string => {
+  const prefix = category.toUpperCase().slice(0, 3);
+  const cleanTitle = title.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 3);
+  const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+  return `SKILL_${prefix}_${cleanTitle}_${randomNum}`;
+};
+
 // Universal skills database with all skills and their metadata
 const allSkills: UnifiedSkill[] = [
   {
@@ -16,54 +24,54 @@ const allSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: 'SKILL_REACT_002',
-    title: "React",
-    subcategory: "Frontend Development",
-    category: "specialized",
-    businessCategory: "Information Technology",
-    weight: "critical",
-    level: "advanced",
-    growth: "25%",
-    salary: "$165,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'SKILL_NODE_003',
-    title: "Node.js",
-    subcategory: "Backend Development",
-    category: "specialized",
-    businessCategory: "Information Technology",
-    weight: "critical",
-    level: "advanced",
-    growth: "30%",
-    salary: "$160,000",
-    confidence: "high",
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'SKILL_COMM_004',
-    title: "Communication",
-    subcategory: "Soft Skills",
+    id: 'SKILL_NLP_002',
+    title: "Natural Language Processing",
+    subcategory: "AI & ML",
     category: "common",
-    businessCategory: "Physical and Inherent Abilities",
-    weight: "technical",
-    level: "advanced",
-    growth: "12%",
-    salary: "$145,000",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$0",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: 'SKILL_AWS_005',
-    title: "AWS Certified Solutions Architect",
-    subcategory: "Cloud Certification",
-    category: "certification",
+    id: 'SKILL_CV_003',
+    title: "Computer Vision",
+    subcategory: "AI & ML",
+    category: "common",
     businessCategory: "Information Technology",
-    weight: "critical",
-    level: "advanced",
-    growth: "28%",
-    salary: "$180,000",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$0",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TF_004',
+    title: "TensorFlow",
+    subcategory: "AI & ML",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$0",
+    confidence: "high",
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_PS_005',
+    title: "Problem Solving",
+    subcategory: "Other",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$0",
     confidence: "high",
     benchmarks: { B: true, R: true, M: true, O: true }
   }
@@ -72,10 +80,12 @@ const allSkills: UnifiedSkill[] = [
 // Helper function to get all skills
 export const getAllSkills = (): UnifiedSkill[] => {
   console.log('Getting all skills from universal database:', allSkills.length, 'skills found');
-  return allSkills;
+  return allSkills.map(skill => ({
+    ...skill,
+    id: skill.id || generateSkillId(skill.title, skill.category)
+  }));
 };
 
-// Helper function to get skills by category
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   console.log(`Getting skills for category: ${category}`);
   return allSkills.filter(skill => skill.category === category);
@@ -121,9 +131,9 @@ export const Skills = {
 console.log('Skills loaded:', {
   total: allSkills.length,
   byCategory: {
-    specialized: getSpecializedSkills().length,
-    common: getCommonSkills().length,
-    certification: getCertificationSkills().length
+    specialized: allSkills.filter(skill => skill.category === 'specialized').length,
+    common: allSkills.filter(skill => skill.category === 'common').length,
+    certification: allSkills.filter(skill => skill.category === 'certification').length
   },
   byWeight: {
     critical: allSkills.filter(skill => skill.weight === 'critical').length,
