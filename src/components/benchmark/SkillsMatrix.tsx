@@ -9,12 +9,9 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 
-const ITEMS_PER_PAGE = 10;
-
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
-  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
   
   const { id } = useParams<{ id: string }>();
@@ -106,30 +103,12 @@ export const SkillsMatrix = () => {
   console.log('Skills matrix state:', {
     totalSkills: mergedSkills.length,
     filteredSkills: filteredSkills.length,
-    visibleItems,
     selectedLevel,
     selectedInterest,
     roleId,
     employeeSkillsCount: employeeSkills.length,
     mergedSkills: mergedSkills.map(s => s.title)
   });
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
-          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
-    return () => observer.disconnect();
-  }, [visibleItems, filteredSkills.length]);
 
   useEffect(() => {
     setHasChanges(storeHasChanges);
@@ -143,7 +122,7 @@ export const SkillsMatrix = () => {
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
         filteredSkills={filteredSkills}
-        visibleItems={visibleItems}
+        visibleItems={filteredSkills.length} // Show all skills instead of paginating
         observerTarget={observerTarget}
         hasChanges={hasChanges}
         isRoleBenchmark={false}
