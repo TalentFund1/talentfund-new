@@ -11,6 +11,7 @@ import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
 import { EmployeeSkillState, RoleSkillState } from "@/types/skillTypes";
+import { toRoleRequirement, toRoleSkillState } from "@/utils/skillStateAdapter";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -81,6 +82,9 @@ export const BenchmarkAnalysis = () => {
     const employeeState = currentStates[skill.title] as EmployeeSkillState;
     if (!employeeState) return false;
 
+    // Convert employee state to role state format using adapter
+    const roleState = toRoleSkillState(employeeState);
+
     const employeeSkillLevel = employeeState.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level || 'unspecified';
 
@@ -99,14 +103,22 @@ export const BenchmarkAnalysis = () => {
     const employeeState = currentStates[skill.title] as EmployeeSkillState;
     if (!employeeState) return false;
 
-    return roleSkillState.requirement === 'required' && 
-           employeeState.requirement === 'skill_goal';
+    // Use adapter to convert requirement types
+    const roleRequirement = toRoleRequirement(employeeState.requirement);
+    return roleSkillState.requirement === 'required' && roleRequirement === 'required';
   });
 
   const totalToggledSkills = toggledRoleSkills.length;
   const matchingSkillsCount = matchingSkills.length;
   const competencyMatchCount = competencyMatchingSkills.length;
   const skillGoalMatchCount = skillGoalMatchingSkills.length;
+
+  console.log('Benchmark Analysis Results:', {
+    totalToggled: totalToggledSkills,
+    matching: matchingSkillsCount,
+    competencyMatch: competencyMatchCount,
+    skillGoalMatch: skillGoalMatchCount
+  });
 
   return (
     <div className="space-y-6">
