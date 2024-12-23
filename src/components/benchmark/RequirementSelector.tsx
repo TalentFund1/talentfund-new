@@ -17,7 +17,7 @@ export const RequirementSelector = ({
     
     // Get background and border colors based on level for required/skill goal state
     const getLevelColors = (level: string) => {
-      switch (level.toLowerCase()) {
+      switch (level?.toLowerCase()) {
         case 'advanced':
           return 'border-primary-accent bg-primary-accent/10';
         case 'intermediate':
