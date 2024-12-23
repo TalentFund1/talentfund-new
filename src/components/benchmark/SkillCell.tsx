@@ -3,7 +3,7 @@ import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { RoleSkillRequirement } from "@/types/skillTypes";
+import { RoleSkillState, RoleSkillRequirement } from "../../types/skillTypes";
 
 interface SkillCellProps {
   skillName: string;
@@ -21,7 +21,6 @@ export const SkillCell = ({
   isLastColumn = false, 
   levelKey 
 }: SkillCellProps) => {
-  // Validate required props
   if (!skillName || !levelKey) {
     console.warn('SkillCell: Missing required props', {
       skillName,
@@ -42,13 +41,6 @@ export const SkillCell = ({
     requirement: details.requirement || "preferred"
   };
 
-  console.log('SkillCell rendering:', {
-    skillName,
-    levelKey,
-    currentState,
-    roleId: currentRoleId
-  });
-
   const handleLevelChange = (value: string) => {
     console.log('Changing level:', {
       skillName,
@@ -63,7 +55,8 @@ export const SkillCell = ({
       value,
       levelKey,
       currentState.requirement,
-      currentRoleId
+      currentRoleId,
+      skillName // skillId
     );
   };
 
@@ -81,7 +74,8 @@ export const SkillCell = ({
       currentState.level || 'unspecified',
       levelKey,
       value,
-      currentRoleId
+      currentRoleId,
+      skillName // skillId
     );
   };
 

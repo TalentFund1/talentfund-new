@@ -23,15 +23,15 @@ const getLevelPriority = (level: string = 'unspecified') => {
   return priorities[level.toLowerCase()] ?? 0;
 };
 
-export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: BenchmarkAnalysisProps) => {
-  // Validate required props with default fallbacks
-  const validatedRole = selectedRole || "123";
-  const validatedLevel = roleLevel || "p4";
-  const validatedEmployeeId = employeeId || "123";
-
-  console.log('BenchmarkAnalysis props validation:', {
-    originalProps: { selectedRole, roleLevel, employeeId },
-    validatedProps: { validatedRole, validatedLevel, validatedEmployeeId }
+export const BenchmarkAnalysis = ({ 
+  selectedRole = "123", 
+  roleLevel = "p4", 
+  employeeId = "123" 
+}: BenchmarkAnalysisProps) => {
+  console.log('BenchmarkAnalysis props:', {
+    selectedRole,
+    roleLevel,
+    employeeId
   });
 
   const { currentStates } = useSkillsMatrixStore();
@@ -39,18 +39,9 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole } = useTrack();
   
-  console.log('BenchmarkAnalysis - Selected Role Analysis:', {
-    selectedRole: validatedRole,
-    roleLevel: validatedLevel,
-    employeeId: validatedEmployeeId,
-    track: getTrackForRole(validatedRole),
-    currentStates
-  });
-
   const employeeSkills = getEmployeeSkills(employeeId);
-  console.log('Employee skills loaded for comparison:', employeeSkills);
-
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+  
   if (!currentRoleSkills) {
     console.error('No role skills found for selected role:', selectedRole);
     return null;
