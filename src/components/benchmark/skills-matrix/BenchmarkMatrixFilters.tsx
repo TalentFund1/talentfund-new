@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-interface BenchmarkMatrixFiltersProps {
+export interface BenchmarkMatrixFiltersProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedInterest: string;
@@ -14,6 +14,8 @@ interface BenchmarkMatrixFiltersProps {
   clearSearch: () => void;
   selectedRoleRequirement: string;
   setSelectedRoleRequirement: (requirement: string) => void;
+  selectedLevel?: string;
+  setSelectedLevel?: (level: string) => void;
 }
 
 export const BenchmarkMatrixFilters = ({

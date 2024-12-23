@@ -3,7 +3,7 @@ import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { RoleSkillRequirement } from "../../types/skillTypes";
+import { RoleSkillRequirement, RoleSkillState } from "@/types/skillTypes";
 
 interface SkillCellProps {
   skillName: string;
@@ -26,6 +26,7 @@ export const SkillCell = ({
   const currentRoleId = roleId || "123";
 
   const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
+    id: skillName,
     level: details.level || "unspecified",
     requirement: details.requirement || "preferred",
   };
@@ -44,7 +45,8 @@ export const SkillCell = ({
       value,
       levelKey,
       currentState.requirement || 'preferred',
-      currentRoleId
+      currentRoleId,
+      skillName
     );
   };
 
@@ -62,7 +64,8 @@ export const SkillCell = ({
       currentState.level || 'unspecified',
       levelKey,
       value,
-      currentRoleId
+      currentRoleId,
+      skillName
     );
   };
 
@@ -76,7 +79,7 @@ export const SkillCell = ({
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={currentState.requirement || 'preferred'}
+          currentRequired={currentState.requirement}
           currentLevel={currentState.level || 'unspecified'}
           onRequirementChange={handleRequirementChange}
         />
