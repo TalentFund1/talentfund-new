@@ -1,6 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Shield, Target, CircleDashed, Check, X, Heart } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 
 interface SkillLevelCellProps {
@@ -41,14 +41,12 @@ export const SkillLevelCell = ({
 
   const getRequirementIcon = (requirement: string = 'unknown') => {
     switch (requirement?.toLowerCase()) {
-      case 'skill_goal':
-        return <Check className="w-3.5 h-3.5" />;
+      case 'required':
+        return <Heart className="w-3.5 h-3.5" />;
       case 'not-interested':
         return <X className="w-3.5 h-3.5" />;
-      case 'unknown':
-        return <CircleDashed className="w-3.5 h-3.5" />;
       default:
-        return <Heart className="w-3.5 h-3.5" />;
+        return <CircleDashed className="w-3.5 h-3.5" />;
     }
   };
 
@@ -136,17 +134,17 @@ export const SkillLevelCell = ({
             <SelectValue>
               <span className="flex items-center gap-1.5">
                 {getRequirementIcon(currentState?.requirement)}
-                {currentState?.requirement === 'skill_goal' ? 'Skill Goal' : 
+                {currentState?.requirement === 'required' ? 'Unknown' : 
                  currentState?.requirement === 'not-interested' ? 'Not Interested' : 
-                 currentState?.requirement === 'unknown' ? 'Unknown' : 'Skill Goal'}
+                 'Unknown'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="skill_goal">
+            <SelectItem value="required">
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5" />
-                Skill Goal
+                <Heart className="w-3.5 h-3.5" />
+                Unknown
               </span>
             </SelectItem>
             <SelectItem value="not-interested">

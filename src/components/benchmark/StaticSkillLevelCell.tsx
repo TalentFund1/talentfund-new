@@ -1,5 +1,5 @@
 import { TableCell } from "@/components/ui/table";
-import { Star, Shield, Target, CircleDashed, Check, X } from "lucide-react";
+import { Star, Shield, Target, CircleDashed, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useEffect } from "react";
 
@@ -48,11 +48,9 @@ export const StaticSkillLevelCell = ({
   const getRequirementIcon = (requirement: string = 'unknown') => {
     switch (requirement?.toLowerCase()) {
       case 'required':
-        return <Check className="w-3.5 h-3.5" />;
+        return <Heart className="w-3.5 h-3.5" />;
       case 'not-interested':
         return <X className="w-3.5 h-3.5" />;
-      case 'unknown':
-        return <CircleDashed className="w-3.5 h-3.5" />;
       default:
         return <CircleDashed className="w-3.5 h-3.5" />;
     }
@@ -97,9 +95,9 @@ export const StaticSkillLevelCell = ({
         `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
-            {currentState?.requirement === 'required' ? 'Skill Goal' : 
+            {currentState?.requirement === 'required' ? 'Unknown' : 
              currentState?.requirement === 'not-interested' ? 'Not Interested' : 
-             currentState?.requirement === 'unknown' ? 'Unknown' : 'Unknown'}
+             'Unknown'}
           </span>
         </div>
       </div>
