@@ -15,22 +15,28 @@ export const RequirementSelector = ({
   const getRequirementStyles = (requirement: string, level: string) => {
     const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
+    // Get background and border colors based on level for required/skill goal state
+    const getLevelColors = (level: string) => {
+      switch (level.toLowerCase()) {
+        case 'advanced':
+          return 'bg-primary-accent/20 border-primary-accent';
+        case 'intermediate':
+          return 'bg-primary-icon/20 border-primary-icon';
+        case 'beginner':
+          return 'bg-[#008000]/20 border-[#008000]';
+        default:
+          return 'bg-gray-100 border-gray-300';
+      }
+    };
+
     switch (requirement.toLowerCase()) {
       case 'required':
-        return `${baseStyles} border-x-2 border-b-2 rounded-b-md ${
-          level.toLowerCase() === 'advanced' 
-            ? 'bg-primary-accent/20 border-primary-accent' 
-            : level.toLowerCase() === 'intermediate'
-              ? 'bg-primary-icon/20 border-primary-icon'
-              : level.toLowerCase() === 'beginner'
-                ? 'bg-[#008000]/20 border-[#008000]'
-                : 'bg-gray-100 border-gray-300'
-        }`;
+        return `${baseStyles} border-x-2 border-b-2 rounded-b-md ${getLevelColors(level)}`;
       case 'not-interested':
       case 'preferred':
       case 'unknown':
       default:
-        return `${baseStyles} bg-gray-100 border-x-2 border-b-2 rounded-b-md border-gray-300`;
+        return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-300`;
     }
   };
 
@@ -70,7 +76,8 @@ export const RequirementSelector = ({
   console.log('Requirement state:', {
     currentRequired,
     normalized: normalizedRequired,
-    display: getDisplayState(normalizedRequired)
+    display: getDisplayState(normalizedRequired),
+    level: currentLevel
   });
 
   return (
