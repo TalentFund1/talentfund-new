@@ -1,67 +1,54 @@
-import { UnifiedSkill } from '../../types/SkillTypes';
-import { getSkillWeight } from './categories/skillWeights';
-import { getSkillCategory } from './categories/skillCategories';
-import { defineSkills } from './skillDefinitions';
+import { UnifiedSkill } from './categories/skillTypes';
+import { technicalSkills } from './definitions/technicalSkills';
+import { softSkills } from './definitions/softSkills';
+import { certificationSkills } from './definitions/certifications';
 
-// Initialize skills with categorization
-const allSkills = defineSkills();
+// Combine all skills into one unified database
+const allSkills: UnifiedSkill[] = [
+  ...technicalSkills,
+  ...softSkills,
+  ...certificationSkills
+];
 
 // Helper function to get all skills
 export const getAllSkills = (): UnifiedSkill[] => {
   console.log('Getting all skills:', allSkills.length, 'skills found');
-  return allSkills.map(skill => ({
-    ...skill,
-    category: getSkillCategory(skill.title),
-    weight: getSkillWeight(skill.title)
-  }));
+  return allSkills;
 };
 
 // Helper function to get skills by category
 export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   console.log(`Getting skills for category: ${category}`);
-  return getAllSkills().filter(skill => getSkillCategory(skill.title) === category);
+  return allSkills.filter(skill => skill.category === category);
 };
 
 // Helper function to find a skill by ID
 export const getSkillById = (id: string): UnifiedSkill | undefined => {
   console.log(`Finding skill by ID: ${id}`);
-  const skill = allSkills.find(skill => skill.id === id);
-  if (skill) {
-    return {
-      ...skill,
-      category: getSkillCategory(skill.title),
-      weight: getSkillWeight(skill.title)
-    };
-  }
-  return undefined;
+  return allSkills.find(skill => skill.id === id);
 };
 
 // Helper function to find a skill by title (case-insensitive)
 export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
   console.log(`Finding skill by title: ${title}`);
   const skill = allSkills.find(skill => skill.title.toLowerCase() === title.toLowerCase());
-  if (skill) {
-    return {
-      ...skill,
-      category: getSkillCategory(skill.title),
-      weight: getSkillWeight(skill.title)
-    };
+  if (!skill) {
+    console.log(`Skill not found: ${title}`);
   }
-  console.log(`Skill not found: ${title}`);
-  return undefined;
+  return skill;
 };
 
 // Role-specific skill categorization helpers
 export const getSpecializedSkills = (): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'specialized');
+  return allSkills.filter(skill => skill.category === 'specialized');
 };
 
 export const getCommonSkills = (): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'common');
+  return allSkills.filter(skill => skill.category === 'common');
 };
 
 export const getCertificationSkills = (): UnifiedSkill[] => {
-  return getAllSkills().filter(skill => getSkillCategory(skill.title) === 'certification');
+  return allSkills.filter(skill => skill.category === 'certification');
 };
 
 // Export Skills object for backward compatibility
@@ -72,9 +59,6 @@ export const Skills = {
   certification: getCertificationSkills()
 };
 
-// Export getSkillCategory for external use
-export { getSkillCategory };
-
 console.log('Skills loaded:', {
   total: allSkills.length,
   byCategory: {
@@ -83,8 +67,8 @@ console.log('Skills loaded:', {
     certification: getCertificationSkills().length
   },
   byWeight: {
-    critical: allSkills.filter(skill => getSkillWeight(skill.title) === 'critical').length,
-    technical: allSkills.filter(skill => getSkillWeight(skill.title) === 'technical').length,
-    necessary: allSkills.filter(skill => getSkillWeight(skill.title) === 'necessary').length
+    critical: allSkills.filter(skill => skill.weight === 'critical').length,
+    technical: allSkills.filter(skill => skill.weight === 'technical').length,
+    necessary: allSkills.filter(skill => skill.weight === 'necessary').length
   }
 });
