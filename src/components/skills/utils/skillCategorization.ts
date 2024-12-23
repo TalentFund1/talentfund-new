@@ -1,31 +1,38 @@
 import { UnifiedSkill, RoleSkillData } from '../types/SkillTypes';
 import { getUnifiedSkillData } from '../data/skillDatabaseService';
 
-export const getCategorizedSkills = (roleSkills: RoleSkillData) => {
+export const getCategorizedSkills = (roleData: RoleSkillData) => {
   const specialized: UnifiedSkill[] = [];
   const common: UnifiedSkill[] = [];
   const certifications: UnifiedSkill[] = [];
 
-  roleSkills.skills.forEach(skill => {
+  roleData.skills.forEach(skill => {
     const unifiedData = getUnifiedSkillData(skill.title);
     switch (unifiedData.category) {
       case 'specialized':
-        specialized.push(skill);
+        specialized.push(unifiedData);
         break;
       case 'common':
-        common.push(skill);
+        common.push(unifiedData);
         break;
       case 'certification':
-        certifications.push(skill);
+        certifications.push(unifiedData);
         break;
     }
+  });
+
+  console.log('Categorized skills:', {
+    roleId: roleData.title,
+    specialized: specialized.length,
+    common: common.length,
+    certifications: certifications.length
   });
 
   return {
     specialized,
     common,
     certifications,
-    all: roleSkills.skills
+    all: roleData.skills
   };
 };
 
