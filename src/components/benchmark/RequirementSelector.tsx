@@ -39,7 +39,7 @@ export const RequirementSelector = ({
     switch (state.toLowerCase()) {
       case 'required':
         return 'Skill Goal';
-      case 'not-interested':
+      case 'not_interested':
         return 'Not Interested';
       case 'preferred':
       default:
@@ -52,7 +52,7 @@ export const RequirementSelector = ({
     switch (state.toLowerCase()) {
       case 'required':
         return <Heart className="w-3.5 h-3.5" />;
-      case 'not-interested':
+      case 'not_interested':
         return <X className="w-3.5 h-3.5" />;
       case 'preferred':
       default:
@@ -91,7 +91,7 @@ export const RequirementSelector = ({
             <Heart className="w-3.5 h-3.5" /> Skill Goal
           </span>
         </SelectItem>
-        <SelectItem value="not-interested">
+        <SelectItem value="not_interested">
           <span className="flex items-center gap-2">
             <X className="w-3.5 h-3.5" /> Not Interested
           </span>
