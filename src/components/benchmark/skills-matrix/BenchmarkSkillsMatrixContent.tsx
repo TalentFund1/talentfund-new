@@ -5,6 +5,7 @@ import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -19,10 +20,10 @@ interface BenchmarkSkillsMatrixContentProps {
   setSelectedInterest: (interest: string) => void;
   selectedSkillLevel: string;
   setSelectedSkillLevel: (level: string) => void;
-  selectedSearchSkills: string[];
-  setSelectedSearchSkills: (skills: string[]) => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedSearchSkills: string[];
+  setSelectedSearchSkills: (skills: string[]) => void;
   visibleItems: number;
   observerTarget: React.RefObject<HTMLDivElement>;
 }
@@ -40,38 +41,13 @@ export const BenchmarkSkillsMatrixContent = ({
   const { selectedLevel } = useRoleStore();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all toggled skills as an array and filter by category
-  const getToggledSkillsCount = (category: string) => {
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    return allSkills.filter(skill => {
-      if (!toggledSkills.has(skill.title)) return false;
-
-      switch (category) {
-        case 'specialized':
-          return currentRoleSkills.specialized.some(s => s.title === skill.title);
-        case 'common':
-          return currentRoleSkills.common.some(s => s.title === skill.title);
-        case 'certification':
-          return currentRoleSkills.certifications.some(s => s.title === skill.title);
-        default:
-          return true;
-      }
-    }).length;
-  };
-
-  const skillCounts = {
-    all: getToggledSkillsCount('all'),
-    specialized: getToggledSkillsCount('specialized'),
-    common: getToggledSkillsCount('common'),
-    certification: getToggledSkillsCount('certification')
-  };
-
-  console.log('BenchmarkSkillsMatrixContent - Skill counts:', skillCounts);
+  console.log('BenchmarkSkillsMatrixContent - Current state:', {
+    roleId,
+    selectedLevel,
+    selectedCategory,
+    filteredSkillsCount: filteredSkills.length,
+    toggledSkillsCount: toggledSkills.size
+  });
 
   return (
     <>

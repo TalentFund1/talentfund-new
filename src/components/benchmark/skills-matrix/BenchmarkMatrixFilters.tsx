@@ -13,11 +13,11 @@ interface BenchmarkMatrixFiltersProps {
   setSelectedInterest: (interest: string) => void;
   selectedSkillLevel: string;
   setSelectedSkillLevel: (level: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
   selectedSearchSkills: string[];
   removeSearchSkill: (skill: string) => void;
   clearSearch: () => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
 }
 
 export const BenchmarkMatrixFilters = ({
@@ -29,6 +29,8 @@ export const BenchmarkMatrixFilters = ({
   setSelectedInterest,
   selectedSkillLevel,
   setSelectedSkillLevel,
+  selectedCategory,
+  setSelectedCategory,
   selectedSearchSkills,
   removeSearchSkill,
   clearSearch,
@@ -36,6 +38,18 @@ export const BenchmarkMatrixFilters = ({
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="specialized">Specialized</SelectItem>
+            <SelectItem value="common">Common</SelectItem>
+            <SelectItem value="certification">Certification</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Select value={selectedInterest} onValueChange={setSelectedInterest}>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Interests" />

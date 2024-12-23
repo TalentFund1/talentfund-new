@@ -2,6 +2,7 @@ import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -12,6 +13,7 @@ export const useSkillsFiltering = (
   selectedSkillLevel: string,
   searchTerm: string,
   toggledSkills: Set<string>,
+  selectedCategory: string,
   isRoleBenchmark: boolean = false
 ) => {
   const { currentStates } = useSkillsMatrixStore();
@@ -37,15 +39,11 @@ export const useSkillsFiltering = (
   const filterSkills = () => {
     let skills = [...employeeSkills];
 
-    console.log('Filtering skills for employee:', {
+    console.log('Filtering skills:', {
       employeeId,
       totalSkills: skills.length,
-      isRoleBenchmark,
-      skills: skills.map(s => ({
-        title: s.title,
-        level: s.level,
-        requirement: s.requirement
-      }))
+      selectedCategory,
+      isRoleBenchmark
     });
 
     const uniqueSkills = new Map();
@@ -70,9 +68,16 @@ export const useSkillsFiltering = (
       let matchesInterest = true;
       let matchesSearch = true;
       let matchesSkillLevel = true;
+      let matchesCategory = true;
 
       const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
       const roleSkillLevel = competencyState?.level || 'unspecified';
+
+      // Category filtering based on universal database
+      if (selectedCategory !== 'all') {
+        const skillData = getUnifiedSkillData(skill.title);
+        matchesCategory = skillData?.category?.toLowerCase() === selectedCategory.toLowerCase();
+      }
 
       if (selectedLevel !== 'all') {
         matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
@@ -107,7 +112,7 @@ export const useSkillsFiltering = (
         matchesSearch = skill.title.toLowerCase().includes(searchTerm.toLowerCase());
       }
 
-      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
+      return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel && matchesCategory;
     })
     .map(skill => ({
       ...skill,
@@ -139,6 +144,7 @@ export const useSkillsFiltering = (
       selectedLevel,
       selectedInterest,
       selectedSkillLevel,
+      selectedCategory,
       searchTerm,
       isRoleBenchmark
     }
