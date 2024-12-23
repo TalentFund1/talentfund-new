@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
 
 interface Skill {
   name: string;
@@ -14,6 +15,18 @@ interface EmployeeSkillCardProps {
 }
 
 export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillCardProps) => {
+  console.log('Rendering EmployeeSkillCard:', { name, role, skillCount: skills.length });
+  
+  const getLevelPercentage = (level: string) => {
+    const levels: { [key: string]: number } = {
+      'advanced': 100,
+      'intermediate': 66,
+      'beginner': 33,
+      'unspecified': 0
+    };
+    return levels[level.toLowerCase()] || 0;
+  };
+
   return (
     <Card className="p-6 animate-fade-in">
       <div className="flex items-center gap-4 mb-6">
@@ -27,14 +40,17 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
       </div>
       <div className="space-y-4">
         {skills.map((skill) => (
-          <div key={skill.name}>
+          <div key={skill.name} className="space-y-1.5">
             <div className="flex justify-between mb-1">
               <span className="text-sm font-medium">{skill.name}</span>
-              <span className="text-sm text-secondary-foreground">85%</span>
+              <span className="text-sm text-secondary-foreground">
+                {getLevelPercentage(String(skill.level))}%
+              </span>
             </div>
-            <div className="skill-progress">
-              <div className="skill-progress-bar" style={{ width: '85%' }} />
-            </div>
+            <Progress
+              value={getLevelPercentage(String(skill.level))}
+              className="h-2"
+            />
           </div>
         ))}
       </div>
