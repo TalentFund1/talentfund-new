@@ -3,6 +3,12 @@ export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
 export type RoleSkillRequirement = 'required' | 'preferred';
 
+export interface SkillState {
+  id: string;
+  level: string;
+  requirement: EmployeeSkillRequirement | RoleSkillRequirement;
+}
+
 export interface EmployeeSkillState {
   profileId: string;
   skillId: string;

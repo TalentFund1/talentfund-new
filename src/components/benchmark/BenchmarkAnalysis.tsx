@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
@@ -10,7 +9,6 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
-import { EmployeeSkillState, RoleSkillState, UnifiedSkill } from "@/types/skillTypes";
 import { BenchmarkAnalysisCard } from "./analysis/BenchmarkAnalysisCard";
 
 const getLevelPriority = (level: string = 'unspecified') => {
@@ -79,7 +77,7 @@ export const BenchmarkAnalysis = () => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeState = currentStates[skill.title] as EmployeeSkillState;
+    const employeeState = currentStates[skill.title];
     if (!employeeState) return false;
 
     const employeeSkillLevel = employeeState.level || 'unspecified';
@@ -97,7 +95,7 @@ export const BenchmarkAnalysis = () => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeState = currentStates[skill.title] as EmployeeSkillState;
+    const employeeState = currentStates[skill.title];
     if (!employeeState) return false;
 
     return roleSkillState.requirement === 'required' && employeeState.requirement === 'skill_goal';
