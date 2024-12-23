@@ -1,7 +1,5 @@
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type EmployeeSkillRequirement = 'skill_goal' | 'not_interested' | 'unknown';
-export type RoleSkillRequirement = 'required' | 'preferred';
 
 export interface BaseSkillState {
   id: string;
@@ -10,11 +8,11 @@ export interface BaseSkillState {
 }
 
 export interface EmployeeSkillState extends BaseSkillState {
-  requirement: EmployeeSkillRequirement;
+  level: string;
 }
 
 export interface RoleSkillState extends BaseSkillState {
-  requirement: RoleSkillRequirement;
+  level: string;
 }
 
 export interface RoleState {
@@ -27,8 +25,8 @@ export interface SkillsMatrixState {
   skillStates: Record<string, Record<string, EmployeeSkillState>>;
   currentStates: Record<string, EmployeeSkillState>;
   hasChanges: boolean;
-  setSkillState: (profileId: string, skillId: string, level: string, requirement: EmployeeSkillRequirement) => void;
-  initializeState: (profileId: string, skillId: string, initialLevel: string, initialRequirement: EmployeeSkillRequirement) => void;
+  setSkillState: (profileId: string, skillId: string, level: string) => void;
+  initializeState: (profileId: string, skillId: string, initialLevel: string) => void;
   getSkillState: (profileId: string, skillId: string) => EmployeeSkillState | undefined;
   saveChanges: () => void;
   cancelChanges: () => void;
@@ -59,37 +57,3 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
 }
-
-// Utility functions for requirement mapping
-export const mapEmployeeToRoleRequirement = (requirement: EmployeeSkillRequirement): RoleSkillRequirement => {
-  switch (requirement) {
-    case 'skill_goal':
-      return 'required';
-    case 'not_interested':
-    case 'unknown':
-    default:
-      return 'preferred';
-  }
-};
-
-export const mapRoleToEmployeeRequirement = (requirement: RoleSkillRequirement): EmployeeSkillRequirement => {
-  switch (requirement) {
-    case 'required':
-      return 'skill_goal';
-    case 'preferred':
-    default:
-      return 'unknown';
-  }
-};
-
-// Helper function to convert between requirement types
-export const convertRequirementType = <T extends EmployeeSkillRequirement | RoleSkillRequirement>(
-  requirement: EmployeeSkillRequirement | RoleSkillRequirement,
-  targetType: 'employee' | 'role'
-): T => {
-  if (targetType === 'employee') {
-    return mapRoleToEmployeeRequirement(requirement as RoleSkillRequirement) as T;
-  } else {
-    return mapEmployeeToRoleRequirement(requirement as EmployeeSkillRequirement) as T;
-  }
-};
