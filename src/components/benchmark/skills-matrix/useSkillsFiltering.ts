@@ -57,7 +57,7 @@ export const useSkillsFiltering = (
     });
   };
 
-  // Filter skills based on selected level
+  // Filter by level
   const filterByLevel = (skills: UnifiedSkill[]) => {
     if (selectedLevel === "all") return skills;
 
@@ -72,7 +72,7 @@ export const useSkillsFiltering = (
     });
   };
 
-  // Filter skills based on interest/requirement
+  // Filter by interest/requirement
   const filterByInterest = (skills: UnifiedSkill[]) => {
     if (selectedInterest === "all") return skills;
 
@@ -87,7 +87,7 @@ export const useSkillsFiltering = (
     });
   };
 
-  // Filter skills based on skill level
+  // Filter by skill level
   const filterBySkillLevel = (skills: UnifiedSkill[]) => {
     if (selectedSkillLevel === "all") return skills;
 
@@ -102,7 +102,7 @@ export const useSkillsFiltering = (
     });
   };
 
-  // Filter skills based on search term
+  // Filter by search term
   const filterBySearch = (skills: UnifiedSkill[]) => {
     if (!searchTerm) return skills;
 
@@ -135,9 +135,8 @@ export const useSkillsFiltering = (
     });
   }
 
-  // Apply category filter first using selectedLevel as category
-  // This is the key fix - we use selectedLevel for category filtering
-  filteredSkills = filterByCategory(filteredSkills, selectedLevel);
+  // Apply category filter first using selectedCategory
+  filteredSkills = filterByCategory(filteredSkills, selectedCategory);
   
   // Then apply other filters
   filteredSkills = filterByLevel(filteredSkills);
