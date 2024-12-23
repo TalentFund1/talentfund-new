@@ -13,7 +13,7 @@ export const RequirementSelector = ({
   onRequirementChange 
 }: RequirementSelectorProps) => {
   const getRequirementStyles = (requirement: string, level: string) => {
-    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md';
+    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
     // Get background and border colors based on level for required/skill goal state
     const getLevelColors = (level: string) => {
