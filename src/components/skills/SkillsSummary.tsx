@@ -26,9 +26,9 @@ export const SkillsSummary = () => {
     common: boolean;
     certifications: boolean;
   }>({
-    specialized: true, // Set to true by default to show specialized skills
-    common: true, // Set to true by default to show common skills
-    certifications: true,
+    specialized: false,
+    common: false,
+    certifications: false,
   });
 
   const { id } = useParams<{ id: string }>();
@@ -97,23 +97,25 @@ export const SkillsSummary = () => {
   };
 
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills, "specialized") as UnifiedSkill[]
+    filterSkillsByCategory(employeeSkills.map(skill => ({
+      ...skill,
+      requirement: skill.requirement as SkillRequirement
+    })), "specialized") as UnifiedSkill[]
   );
 
   const commonSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills, "common") as UnifiedSkill[]
+    filterSkillsByCategory(employeeSkills.map(skill => ({
+      ...skill,
+      requirement: skill.requirement as SkillRequirement
+    })), "common") as UnifiedSkill[]
   );
 
   const certifications: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills, "certification") as UnifiedSkill[]
+    filterSkillsByCategory(employeeSkills.map(skill => ({
+      ...skill,
+      requirement: skill.requirement as SkillRequirement
+    })), "certification") as UnifiedSkill[]
   );
-
-  console.log('Skills Summary - Processed skills:', {
-    specialized: specializedSkills.length,
-    common: commonSkills.length,
-    certifications: certifications.length,
-    totalSkills: employeeSkills.length
-  });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
