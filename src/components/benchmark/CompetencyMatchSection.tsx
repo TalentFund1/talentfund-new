@@ -33,7 +33,7 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
 
     console.log(`Analyzing skill: ${skill.title}`);
     console.log(`Role Skill Level: ${roleSkillLevel}`);
-    console.log(`Employee/Target Skill Level: ${employeeSkillLevel}`);
+    console.log(`Employee Skill Level: ${employeeSkillLevel}`);
 
     // Get priority numbers for comparison
     const employeePriority = getLevelPriority(employeeSkillLevel);
@@ -44,8 +44,8 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
 
     // Match if either:
     // 1. Levels are exactly equal
-    // 2. Employee/Target level is higher than role requirement
-    const isMatch = employeePriority === rolePriority || employeePriority > rolePriority;
+    // 2. Employee level is higher than role requirement
+    const isMatch = employeePriority >= rolePriority;
     
     console.log(`Is Match: ${isMatch}\n`);
 
