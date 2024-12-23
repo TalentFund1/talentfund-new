@@ -18,11 +18,12 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
     };
   }
 
-  // If skill is not found in database, create a new one with generated ID
+  // If skill is not found in the database, create a new one with generated ID
   console.warn(`Skill not found in database: ${skillTitle}, creating new entry`);
   return {
     id: generateSkillId(skillTitle, 'common'),
     title: skillTitle,
+    subcategory: 'Other',
     category: 'common',
     businessCategory: 'Information Technology',
     weight: 'necessary',

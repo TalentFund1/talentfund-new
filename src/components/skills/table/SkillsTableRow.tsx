@@ -61,10 +61,10 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
         {skill.title}
       </TableCell>
       <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
-        {skill.businessCategory || 'Information Technology'}
+        {skill.subcategory}
       </TableCell>
       <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
-        {skill.category || 'Common'}
+        {skill.businessCategory || 'Information Technology'}
       </TableCell>
       <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4">
         <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${getTypeColor(skillType)}`}>
