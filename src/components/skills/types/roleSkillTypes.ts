@@ -1,26 +1,19 @@
-import { SkillWeight } from './SkillTypes';
+import { 
+  SkillLevel, 
+  SkillGoalStatus, 
+  SkillCategory, 
+  SkillWeight,
+  BaseSkill,
+  SkillState,
+  SkillBenchmark,
+  SkillMetrics
+} from './sharedSkillTypes';
 
-export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
-
-export interface RoleSkillRequirement {
-  id: string;
-  title: string;
-  category: SkillCategory;
-  subcategory: string;
-  minimumLevel: 'beginner' | 'intermediate' | 'advanced';
-  requirementLevel: SkillRequirementLevel;
-  weight: SkillWeight;
-  businessCategory: string;
-  growth: string;
-  salary: string;
-  confidence: 'low' | 'medium' | 'high';
-  benchmarks: {
-    B: boolean;
-    R: boolean;
-    M: boolean;
-    O: boolean;
-  };
+export interface RoleSkillRequirement extends BaseSkill {
+  minimumLevel: SkillLevel;
+  requirementLevel: 'required' | 'preferred' | 'optional';
+  benchmarks: SkillBenchmark;
+  metrics: SkillMetrics;
 }
 
 export interface RoleSkillData {
@@ -38,3 +31,5 @@ export interface RoleSkillsStore {
   getSkillRequirement: (roleId: string, skillTitle: string) => RoleSkillRequirement | undefined;
   initializeRoleSkills: (roleId: string) => void;
 }
+
+console.log('Role skill types updated to use shared interfaces');
