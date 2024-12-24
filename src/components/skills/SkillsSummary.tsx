@@ -1,148 +1,47 @@
-import { useState } from "react";
-import { DetailedSkill, UnifiedSkill, SkillRequirement } from "./types/SkillTypes";
-import { SkillSearchSection } from "./search/SkillSearchSection";
-import { SkillsContainer } from "./sections/SkillsContainer";
-import { useToast } from "@/components/ui/use-toast";
-import { useSelectedSkills } from "./context/SelectedSkillsContext";
-import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
-import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { useParams } from "react-router-dom";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
-
-const getLevelPriority = (level: string = 'unspecified') => {
-  const priorities: { [key: string]: number } = {
-    'advanced': 0,
-    'intermediate': 1,
-    'beginner': 2,
-    'unspecified': 3
-  };
-  return priorities[level.toLowerCase()] ?? 3;
-};
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { SearchFilter } from "@/components/market/SearchFilter";
 
 export const SkillsSummary = () => {
-  const [expandedSections, setExpandedSections] = useState<{
-    specialized: boolean;
-    common: boolean;
-    certifications: boolean;
-  }>({
-    specialized: false,
-    common: false,
-    certifications: false,
-  });
-
-  const { id } = useParams<{ id: string }>();
-  const { selectedSkills, setSelectedSkills } = useSelectedSkills();
-  const { toast } = useToast();
-  const { currentStates } = useSkillsMatrixStore();
-  const [searchSkills, setSearchSkills] = useState<string[]>([]);
-  const { setMatrixSearchSkills } = useSkillsMatrixSearch();
-
-  console.log('Loading skills for employee:', id);
-  const employeeSkills = getEmployeeSkills(id || "");
-  console.log('Loaded employee skills:', employeeSkills);
-
-  const handleSkillsChange = (skills: string[]) => {
-    setSelectedSkills(skills);
-    setSearchSkills(skills);
-    setMatrixSearchSkills(skills);
-    
-    if (skills.length > 0) {
-      toast({
-        title: "Skills Updated",
-        description: `Updated ${skills.length} skill${skills.length > 1 ? 's' : ''} in your search.`,
-      });
-    }
-  };
-
-  const handleClearAll = () => {
-    setSelectedSkills([]);
-    setSearchSkills([]);
-    setMatrixSearchSkills([]);
-  };
-
-  const transformAndSortSkills = (skills: UnifiedSkill[]): DetailedSkill[] => {
-    return skills
-      .map(skill => {
-        const goalStatus = currentStates[skill.title]?.goalStatus || skill.goalStatus;
-        return {
-          name: skill.title,
-          level: currentStates[skill.title]?.level || skill.level,
-          isSkillGoal: (goalStatus === 'required' || 
-                     goalStatus === 'skill_goal' || 
-                     (goalStatus !== 'not_interested' && skill.level === 'advanced'))
-        };
-      })
-      .sort((a, b) => {
-        const levelA = (a.level || 'unspecified').toLowerCase();
-        const levelB = (b.level || 'unspecified').toLowerCase();
-        return getLevelPriority(levelA) - getLevelPriority(levelB);
-      });
-  };
-
-  const filterSkills = <T extends DetailedSkill>(skills: T[]) => {
-    if (searchSkills.length === 0) return skills;
-    return skills.filter(skill => 
-      searchSkills.some(selectedSkill => 
-        skill.name.toLowerCase().includes(selectedSkill.toLowerCase())
-      )
-    );
-  };
-
-  const specializedSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
-      ...skill,
-      goalStatus: skill.goalStatus
-    })), "specialized") as UnifiedSkill[]
+  const SkillSection = ({ title, count }: { title: string; count: number }) => (
+    <Card className="p-6 space-y-4">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium">{title}</span>
+        <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
+          {count}
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {/* Empty state - no skills displayed */}
+      </div>
+    </Card>
   );
-
-  const commonSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
-      ...skill,
-      goalStatus: skill.goalStatus
-    })), "common") as UnifiedSkill[]
-  );
-
-  const certifications: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
-      ...skill,
-      goalStatus: skill.goalStatus
-    })), "certification") as UnifiedSkill[]
-  );
-
-  const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
-  console.log('Skills Summary - Processed skills:', {
-    specialized: specializedSkills.length,
-    common: commonSkills.length,
-    certifications: certifications.length,
-    searchActive: searchSkills.length > 0
-  });
-
-  const filteredSpecializedSkills = filterSkills(specializedSkills);
-  const filteredCommonSkills = filterSkills(commonSkills);
-  const filteredCertifications = filterSkills(certifications);
 
   return (
-    <div className="space-y-4 w-full">
-      <SkillSearchSection
-        selectedSkills={searchSkills}
-        onSkillsChange={handleSkillsChange}
-        onClearAll={handleClearAll}
-      />
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
-      <SkillsContainer
-        specializedSkills={filteredSpecializedSkills}
-        commonSkills={filteredCommonSkills}
-        certifications={filteredCertifications}
-        expandedSections={expandedSections}
-        onToggleSection={toggleSection}
-      />
+      <div className="mb-4">
+        <div className="space-y-2">
+          <SearchFilter
+            label=""
+            placeholder="Search skills..."
+            items={[]}
+            selectedItems={[]}
+            onItemsChange={() => {}}
+            singleSelect={false}
+          />
+        </div>
+      </div>
+
+      <Separator className="my-6" />
+
+      <div className="space-y-6">
+        <SkillSection title="Specialized Skills" count={0} />
+        <SkillSection title="Common Skills" count={0} />
+        <SkillSection title="Certifications" count={0} />
+      </div>
     </div>
   );
 };
