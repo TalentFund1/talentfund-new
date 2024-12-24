@@ -3,10 +3,11 @@ import { EmployeeSkillData, EmployeeSkillState } from '../../types/employeeSkill
 export const createSkillSelectors = (get: any) => ({
   getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillData => {
     console.log('Getting skill state:', { employeeId, skillTitle });
-    const state = get().skillStates[employeeId]?.skills[skillTitle];
+    const state = get().skills[employeeId]?.skills[skillTitle];
     
     if (!state) {
-      const defaultState: EmployeeSkillData = {
+      console.log('No existing skill state found, returning default:', { employeeId, skillTitle });
+      return {
         id: `${employeeId}-${skillTitle}`,
         employeeId,
         skillId: `${employeeId}-${skillTitle}`,
@@ -28,7 +29,6 @@ export const createSkillSelectors = (get: any) => ({
           O: false
         }
       };
-      return defaultState;
     }
     
     return state;
@@ -36,9 +36,10 @@ export const createSkillSelectors = (get: any) => ({
 
   getEmployeeSkills: (employeeId: string): EmployeeSkillData[] => {
     console.log('Getting skills for employee:', employeeId);
-    const employeeState = get().skillStates[employeeId];
+    const employeeState = get().skills[employeeId];
     
     if (!employeeState?.skills) {
+      console.log('No skills found for employee:', employeeId);
       return [];
     }
 

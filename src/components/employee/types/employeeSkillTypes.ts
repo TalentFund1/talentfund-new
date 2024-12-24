@@ -1,27 +1,21 @@
-import { 
-  SkillCategory, 
-  SkillWeight,
-  SkillBenchmark,
-  SkillMetrics
-} from '../../skills/types/sharedSkillTypes';
-
 // Core skill types
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
+export type SkillConfidence = 'low' | 'medium' | 'high';
 
 // Core employee skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  confidence: 'low' | 'medium' | 'high';
+  confidence: SkillConfidence;
 }
 
 // Update for a single skill
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
-  confidence?: 'low' | 'medium' | 'high';
+  confidence?: SkillConfidence;
 }
 
 // Complete employee skill data
@@ -30,28 +24,30 @@ export interface EmployeeSkillData {
   employeeId: string;
   skillId: string;
   title: string;
-  subcategory: string;
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  category: SkillCategory;
-  weight: SkillWeight;
+  confidence: SkillConfidence;
+  // Metadata (not role-dependent)
+  subcategory: string;
+  category: string;
   businessCategory: string;
+  weight: string;
   growth: string;
   salary: string;
-  confidence: 'low' | 'medium' | 'high';
-  benchmarks: SkillBenchmark;
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
 }
-
-// Achievement tracking (now includes both id and skillId)
-export interface EmployeeSkillAchievement extends EmployeeSkillData {}
 
 // Complete employee skills data structure
 export interface EmployeeSkillsData {
   employeeId: string;
-  skills: EmployeeSkillAchievement[];
-  states: Record<string, EmployeeSkillState>;
-  lastUpdated?: string;
+  skills: Record<string, EmployeeSkillData>;
+  lastUpdated: string;
 }
 
 // State management for employee skills
@@ -60,4 +56,4 @@ export interface EmployeeSkillsState {
   lastUpdated: string;
 }
 
-console.log('Employee skill types updated with complete interfaces');
+console.log('Employee skill types loaded with complete interfaces');
