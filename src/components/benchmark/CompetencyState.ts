@@ -50,7 +50,8 @@ export const useCompetencyStore = create<CompetencyState>()(
             state.currentStates[skillName] = initialSkillState;
           }
 
-          return {
+          // Create the updated state
+          const updatedState = {
             currentStates: {
               ...state.currentStates,
               [skillName]: {
@@ -62,12 +63,20 @@ export const useCompetencyStore = create<CompetencyState>()(
               },
             },
           };
+
+          console.log('Updated competency state:', {
+            skillName,
+            levelKey,
+            newState: updatedState.currentStates[skillName][levelKey]
+          });
+
+          return updatedState;
         });
       },
     }),
     {
       name: 'competency-matrix-storage',
-      version: 24, // Increment version to ensure clean state
+      version: 25, // Increment version to ensure clean state
       partialize: (state) => ({
         currentStates: state.currentStates,
       }),
