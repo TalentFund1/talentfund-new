@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useParams } from 'react-router-dom';
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
@@ -28,18 +28,39 @@ export const SkillsMatrix = () => {
 
   // Get employee skills and convert them to UnifiedSkill format
   const employeeSkills = id ? getEmployeeSkills(id).map(skill => {
-    console.log('Processing skill:', { employeeId: id, skill });
+    if (!skill || !skill.title) {
+      console.warn('Invalid skill data:', skill);
+      return null;
+    }
+
+    console.log('Processing skill:', { 
+      employeeId: id, 
+      skillTitle: skill.title 
+    });
+
     const skillState = getSkillState(id, skill.title);
+    
     return {
-      ...skill,
       id: `${id}-${skill.title}`,
       title: skill.title,
-      level: skillState.level,
-      goalStatus: skillState.goalStatus,
-      lastUpdated: skillState.lastUpdated,
-      confidence: skillState.confidence || 'medium'
+      subcategory: skill.subcategory || 'General',
+      category: skill.category || 'specialized',
+      businessCategory: skill.businessCategory || 'Technical Skills',
+      weight: skill.weight || 'technical',
+      level: skillState.level || 'unspecified',
+      growth: skill.growth || '0%',
+      salary: skill.salary || 'market',
+      goalStatus: skillState.goalStatus || 'unknown',
+      lastUpdated: skillState.lastUpdated || new Date().toISOString(),
+      confidence: skillState.confidence || 'medium',
+      benchmarks: skill.benchmarks || {
+        B: false,
+        R: false,
+        M: false,
+        O: false
+      }
     } as UnifiedSkill;
-  }) : [];
+  }).filter((skill): skill is UnifiedSkill => skill !== null) : [];
 
   console.log('SkillsMatrix - Loading employee skills:', {
     employeeId: id,
