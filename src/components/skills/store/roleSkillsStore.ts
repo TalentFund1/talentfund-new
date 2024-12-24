@@ -81,7 +81,13 @@ export const useRoleSkillsStore = create<RoleSkillsStore>()(
                 [roleId]: initializedRole
               }
             }));
-            console.log('Initialized role skills:', roleId);
+            console.log('Initialized role skills:', {
+              roleId,
+              skillCount: initializedRole.skills.length,
+              specialized: initializedRole.specialized.length,
+              common: initializedRole.common.length,
+              certifications: initializedRole.certifications.length
+            });
           }
         }
       }

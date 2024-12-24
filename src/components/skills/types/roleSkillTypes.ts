@@ -22,7 +22,7 @@ export interface RoleSkillData {
   specialized: RoleSkillRequirement[];
   common: RoleSkillRequirement[];
   certifications: RoleSkillRequirement[];
-  skills: RoleSkillRequirement[]; // Added this line to fix the type error
+  skills: RoleSkillRequirement[]; // Combined array of all skills
 }
 
 // Role skills store interface
