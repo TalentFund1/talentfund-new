@@ -1,4 +1,4 @@
-import { EmployeeSkill } from '../../employee/types/employeeSkillTypes';
+import { EmployeeSkill } from '../../employee/store/types/employeeSkillTypes';
 import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
 
 export const getEmployeeSkills = (id: string): EmployeeSkill[] => {

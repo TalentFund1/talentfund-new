@@ -11,9 +11,22 @@ export interface EmployeeSkill {
   id: string;
   employeeId: string;
   title: string;
+  subcategory: string;
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
+  category: string;
+  weight: string;
+  businessCategory: string;
+  growth: string;
+  salary: string;
+  confidence: 'low' | 'medium' | 'high';
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
 }
 
 export interface EmployeeSkillsData {
