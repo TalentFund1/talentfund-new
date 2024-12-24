@@ -36,6 +36,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
+                employeeId,
                 skills: [],
                 states: {}
               }
@@ -68,24 +69,21 @@ export const useEmployeeStore = create<EmployeeStore>()(
       setEmployeeSkills: (employeeId, skills) => {
         console.log('Setting skills for employee:', { employeeId, skills });
         
-        const enrichedSkills = skills.map(skill => {
-          const universalData = getUnifiedSkillData(skill.title);
-          return {
-            ...skill,
-            ...universalData,
-            lastUpdated: new Date().toISOString()
-          };
-        });
+        const enrichedSkills: EmployeeSkill[] = skills.map(skill => ({
+          ...skill,
+          id: `${employeeId}-${skill.title}`,
+          level: 'unspecified',
+          goalStatus: 'unknown',
+          lastUpdated: new Date().toISOString()
+        })) as EmployeeSkill[];
 
-        set((state) => ({
+        set(state => ({
           employeeSkills: {
             ...state.employeeSkills,
             [employeeId]: {
-              ...state.employeeSkills[employeeId],
+              employeeId,
               skills: enrichedSkills,
-              states: {
-                ...state.employeeSkills[employeeId]?.states
-              }
+              states: state.employeeSkills[employeeId]?.states || {}
             }
           }
         }));
@@ -114,16 +112,17 @@ export const useEmployeeStore = create<EmployeeStore>()(
           requirement
         });
         
-        set((state) => ({
+        set(state => ({
           employeeSkills: {
             ...state.employeeSkills,
             [employeeId]: {
               ...state.employeeSkills[employeeId],
+              employeeId,
               states: {
                 ...state.employeeSkills[employeeId]?.states,
-                [skillName]: { 
-                  level, 
-                  requirement,
+                [skillName]: {
+                  level: level as SkillLevel,
+                  requirement: requirement as SkillRequirement,
                   lastUpdated: new Date().toISOString()
                 }
               }
@@ -143,9 +142,9 @@ export const useEmployeeStore = create<EmployeeStore>()(
             usingDefault: true
           });
           
-          return { 
-            level: 'beginner', 
-            requirement: 'unknown',
+          return {
+            level: 'beginner' as SkillLevel,
+            requirement: 'unknown' as SkillRequirement,
             lastUpdated: new Date().toISOString()
           };
         }

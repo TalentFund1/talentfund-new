@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkill, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
+import { EmployeeSkill, EmployeeSkillsData, SkillLevel, SkillGoalStatus, EmployeeSkillState } from '../types/employeeSkillTypes';
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
