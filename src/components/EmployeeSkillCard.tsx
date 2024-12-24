@@ -8,7 +8,7 @@ import { SkillLevel } from "./employee/types/employeeSkillTypes";
 
 interface Skill {
   name: string;
-  level: SkillLevel;
+  level: string;
 }
 
 interface EmployeeSkillCardProps {
@@ -39,10 +39,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     'unspecified': 0
   }), []);
 
-  const getLevelPercentage = (skillName: string): number => {
-    const skillState = getSkillState(employeeId, skillName);
-    const level = skillState.level;
-
+  const getLevelPercentage = (level: string): number => {
     // If level is already a number between 0-100, return it
     if (typeof level === 'number') {
       console.log('Level is already a percentage:', level);
@@ -53,8 +50,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     const percentage = levelPercentages[normalizedLevel as keyof typeof levelPercentages] ?? 0;
 
     console.log('Calculated level percentage:', {
-      skillName,
-      originalLevel: level,
+      level,
       normalizedLevel,
       percentage
     });
@@ -71,22 +67,21 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     return 'bg-gray-500';
   };
 
-  const handleSkillClick = (skillName: string) => {
-    const percentage = getLevelPercentage(skillName);
-    const skillState = getSkillState(employeeId, skillName);
+  const handleSkillClick = (skill: Skill) => {
+    const percentage = getLevelPercentage(skill.level);
     
     // Prepare batch update
     const updates = {
-      [skillName]: {
-        level: skillState.level,
-        goalStatus: skillState.goalStatus,
+      [skill.name]: {
+        level: skill.level as SkillLevel,
+        goalStatus: 'unknown',
         lastUpdated: new Date().toISOString()
       }
     };
 
     console.log('Preparing batch update for skill:', {
       employeeId,
-      skillName,
+      skill,
       updates
     });
 
@@ -94,16 +89,16 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     batchUpdateSkills(employeeId, updates);
     
     toast({
-      title: skillName,
-      description: `Current level: ${percentage}% (${skillState.level})`,
+      title: skill.name,
+      description: `Current level: ${percentage}% (${skill.level})`,
     });
   };
 
   // Memoize the processed skills data
   const processedSkills = useMemo(() => skills.map(skill => ({
     ...skill,
-    percentage: getLevelPercentage(skill.name)
-  })), [skills, employeeId, getSkillState, levelPercentages]);
+    percentage: getLevelPercentage(skill.level)
+  })), [skills, getLevelPercentage]);
 
   return (
     <Card className="p-6 animate-fade-in">
@@ -121,7 +116,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
           <div 
             key={skill.name} 
             className="space-y-1.5 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
-            onClick={() => handleSkillClick(skill.name)}
+            onClick={() => handleSkillClick(skill)}
           >
             <div className="flex justify-between mb-1">
               <span className="text-sm font-medium">{skill.name}</span>
