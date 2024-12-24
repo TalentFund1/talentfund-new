@@ -13,7 +13,12 @@ export const useSkillLevelState = (skillTitle: string) => {
       });
       return state;
     }
-    return currentStates[skillTitle];
+    // Return default state if none exists
+    return {
+      level: 'unspecified',
+      requirement: 'preferred',
+      lastUpdated: new Date().toISOString()
+    };
   };
 
   return {

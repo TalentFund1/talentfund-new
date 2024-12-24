@@ -41,7 +41,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               R: false,
               M: false,
               O: false
-            }
+            },
+            lastUpdated: new Date().toISOString()
           };
         });
 
