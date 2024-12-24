@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { Employee } from "../../types/employeeTypes";
 import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillProfileId } from "../../EmployeeTable";
-import { EmployeeSkillState, EmployeeSkills } from "../types/employeeSkillTypes";
+import { EmployeeSkillState, EmployeeSkills, SkillRequirement } from "../types/employeeSkillTypes";
 
 interface EmployeeStore {
   employees: Employee[];
@@ -15,7 +15,7 @@ interface EmployeeStore {
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => UnifiedSkill[];
-  setSkillState: (employeeId: string, skillName: string, level: string, requirement: EmployeeSkillState['requirement']) => void;
+  setSkillState: (employeeId: string, skillName: string, level: string, requirement: SkillRequirement) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
@@ -56,7 +56,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         skills.forEach(skill => {
           skillStates[skill.title] = {
             level: skill.level || 'beginner',
-            requirement: skill.requirement || 'unknown',
+            requirement: (skill.requirement as SkillRequirement) || 'unknown',
             lastUpdated: timestamp
           };
         });
@@ -116,7 +116,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             ...roleSkill,
             level: skillState?.level || 'beginner',
             requirement: skillState?.requirement || 'unknown'
-          };
+          } as UnifiedSkill;
         });
 
         console.log('Retrieved employee skills:', {
@@ -172,7 +172,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
 
         return skillState || {
           level: 'beginner',
-          requirement: 'unknown',
+          requirement: 'unknown' as SkillRequirement,
           lastUpdated: new Date().toISOString()
         };
       },

@@ -1,7 +1,7 @@
-import { EmployeeSkill } from '../../employee/types/employeeSkillTypes';
+import { EmployeeSkills, EmployeeSkillState } from '../../employee/types/employeeSkillTypes';
 import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
 
-export const getEmployeeSkills = (id: string): EmployeeSkill[] => {
+export const getEmployeeSkills = (id: string): EmployeeSkills[] => {
   console.log('Getting skills for employee:', id);
   return useEmployeeSkillsStore.getState().getEmployeeSkills(id);
 };
