@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
-import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
-import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
+import { SkillsMatrixView } from "../benchmark/skills-matrix/SkillsMatrixView";
+import { useSkillsMatrixState } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 
