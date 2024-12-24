@@ -1,12 +1,10 @@
-import { EmployeeSkillAchievement, EmployeeSkillState } from '../types/employeeSkillTypes';
+import { EmployeeSkillAchievement, EmployeeSkillState } from '../../types/employeeSkillTypes';
 
 export const createSkillSelectors = (get: any) => {
-  // Memoized skills getter
   const memoizedSkills: Record<string, EmployeeSkillAchievement[]> = {};
 
   return {
     getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
-      // Check memoized value first
       if (memoizedSkills[employeeId]) {
         console.log('Using memoized skills for employee:', employeeId);
         return memoizedSkills[employeeId];
@@ -14,10 +12,7 @@ export const createSkillSelectors = (get: any) => {
 
       console.log('Getting fresh skills for employee:', employeeId);
       const skills = get().employeeSkills[employeeId]?.skills || [];
-      
-      // Memoize the result
       memoizedSkills[employeeId] = skills;
-      
       return skills;
     },
 
@@ -41,13 +36,12 @@ export const createSkillSelectors = (get: any) => {
       console.log('Retrieved employee skill state:', {
         employeeId,
         skillTitle,
-        state: skillState
+        state
       });
       
-      return skillState;
+      return state;
     },
 
-    // Add method to clear memoization if needed
     clearSkillsMemoization: (employeeId?: string) => {
       if (employeeId) {
         delete memoizedSkills[employeeId];
