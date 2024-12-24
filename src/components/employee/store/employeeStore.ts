@@ -12,7 +12,8 @@ import {
   EmployeeSkillState, 
   EmployeeSkillsData, 
   SkillLevel, 
-  SkillGoalStatus 
+  SkillGoalStatus,
+  EmployeeSkillAchievement
 } from "../types/employeeSkillTypes";
 
 interface EmployeeStore {
@@ -23,7 +24,7 @@ interface EmployeeStore {
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
-  setSkillState: (employeeId: string, skillName: string, level: string, goalStatus: string) => void;
+  setSkillState: (employeeId: string, skillName: string, level: SkillLevel, goalStatus: SkillGoalStatus) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
@@ -124,7 +125,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             usingDefault: true
           });
           
-          return benchmarkingService.getDefaultSkillState();
+          return benchmarkingService.getDefaultSkillState() as EmployeeSkillState;
         }
 
         console.log('Retrieved skill state:', {
@@ -149,10 +150,13 @@ export const useEmployeeStore = create<EmployeeStore>()(
               skills: employee.skills
             });
             
+            // Convert readonly array to mutable array for the service
+            const mutableSkills = [...employee.skills];
+            
             set(state => ({
               employeeSkills: {
                 ...state.employeeSkills,
-                [employeeId]: benchmarkingService.initializeEmployeeSkillsData(employeeId, employee.skills)
+                [employeeId]: benchmarkingService.initializeEmployeeSkillsData(employeeId, mutableSkills)
               }
             }));
           } else {
@@ -160,11 +164,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             set(state => ({
               employeeSkills: {
                 ...state.employeeSkills,
-                [employeeId]: {
-                  employeeId,
-                  skills: [],
-                  states: {}
-                }
+                [employeeId]: benchmarkingService.initializeEmployeeSkillsData(employeeId, [])
               }
             }));
           }
