@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -34,9 +35,9 @@ export const SkillsSummary = () => {
   const { id } = useParams<{ id: string }>();
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { toast } = useToast();
-  const { currentStates } = useSkillsMatrixStore();
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
   const { setMatrixSearchSkills } = useSkillsMatrixSearch();
+  const { getSkillState } = useEmployeeSkillsStore();
 
   console.log('Loading skills for employee:', id);
   const employeeSkills = getEmployeeSkills(id || "");
@@ -64,12 +65,11 @@ export const SkillsSummary = () => {
   const transformAndSortSkills = (skills: any[]): DetailedSkill[] => {
     return skills
       .map(skill => {
-        const skillState = currentStates[skill.title];
-        const unifiedData = getUnifiedSkillData(skill.title);
+        const skillState = getSkillState(id || "", skill.title);
         return {
           name: skill.title,
-          level: skill.level || skillState?.level || 'unspecified',
-          isSkillGoal: skillState?.goalStatus === 'skill_goal'
+          level: skillState.level || 'unspecified',
+          isSkillGoal: skillState.goalStatus === 'skill_goal'
         };
       })
       .sort((a, b) => {
