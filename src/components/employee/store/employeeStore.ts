@@ -16,7 +16,7 @@ interface EmployeeStore {
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
-  setSkillState: (employeeId: string, skillName: string, level: string, requirement: string) => void;
+  setSkillState: (employeeId: string, skillName: string, level: string, requirement: EmployeeSkillState['requirement']) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
@@ -74,7 +74,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             ...skill,
             ...universalData,
             lastUpdated: new Date().toISOString()
-          };
+          } as EmployeeSkill;
         });
 
         set((state) => ({
@@ -83,9 +83,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               ...state.employeeSkills[employeeId],
               skills: enrichedSkills,
-              states: {
-                ...state.employeeSkills[employeeId]?.states
-              }
+              states: state.employeeSkills[employeeId]?.states || {}
             }
           }
         }));
@@ -145,7 +143,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
           
           return { 
             level: 'beginner', 
-            requirement: 'unknown',
+            requirement: 'unknown' as const,
             lastUpdated: new Date().toISOString()
           };
         }
