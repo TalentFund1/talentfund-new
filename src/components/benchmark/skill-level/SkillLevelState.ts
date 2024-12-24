@@ -19,7 +19,8 @@ export const useSkillLevelState = (skillTitle: string) => {
         isSkillGoal: state.requirement === 'skill_goal'
       });
       return {
-        ...state,
+        level: state.level as SkillLevel,
+        requirement: state.requirement as SkillGoalStatus,
         lastUpdated: new Date().toISOString()
       };
     }

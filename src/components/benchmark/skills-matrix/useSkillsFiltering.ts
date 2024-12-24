@@ -114,7 +114,7 @@ export const useSkillsFiltering = (
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      const requirement = (currentSkillState?.requirement || skill.requirement || 'unknown').toLowerCase();
+      const requirement = (currentSkillState?.requirement || skill.goalStatus || 'unknown').toLowerCase();
 
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {
