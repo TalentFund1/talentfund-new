@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillsStore, EmployeeSkill, EmployeeSkillState, SkillLevel, SkillGoalStatus } from './types/employeeSkillTypes';
+import { EmployeeSkillsStore, EmployeeSkill, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
@@ -108,6 +108,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             updatedSkills[skillIndex] = {
               ...updatedSkills[skillIndex],
               goalStatus: status,
+              requirement: status,
               lastUpdated: new Date().toISOString()
             };
           }
