@@ -3,7 +3,14 @@ import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore
 
 export const getEmployeeSkills = (id: string): EmployeeSkillAchievement[] => {
   console.log('Getting skills for employee:', id);
-  return useEmployeeSkillsStore.getState().getEmployeeSkills(id);
+  const store = useEmployeeSkillsStore.getState();
+  
+  // Initialize if not already initialized
+  if (!store.getEmployeeSkills(id).length) {
+    store.initializeEmployeeSkills(id);
+  }
+  
+  return store.getEmployeeSkills(id);
 };
 
 export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): string => {
