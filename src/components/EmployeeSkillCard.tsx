@@ -3,6 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
+import { useMemo } from "react";
 
 interface Skill {
   name: string;
@@ -29,7 +30,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     skills: skills.map(s => ({ name: s.name, level: s.level }))
   });
   
-  const getLevelPercentage = (skillName: string): number => {
+  const getLevelPercentage = useMemo(() => (skillName: string): number => {
     const skillState = getSkillState(employeeId, skillName);
     const level = skillState.level;
 
@@ -58,16 +59,16 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     });
 
     return percentage;
-  };
+  }, [employeeId, getSkillState]);
 
-  const getProgressColor = (percentage: number): string => {
+  const getProgressColor = useMemo(() => (percentage: number): string => {
     if (percentage >= 90) return 'bg-primary-accent';
     if (percentage >= 80) return 'bg-green-500';
     if (percentage >= 60) return 'bg-blue-500';
     if (percentage >= 40) return 'bg-yellow-500';
     if (percentage >= 20) return 'bg-orange-500';
     return 'bg-gray-500';
-  };
+  }, []);
 
   const handleSkillClick = (skillName: string) => {
     const percentage = getLevelPercentage(skillName);
@@ -97,6 +98,12 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     });
   };
 
+  // Memoize the processed skills data
+  const processedSkills = useMemo(() => skills.map(skill => ({
+    ...skill,
+    percentage: getLevelPercentage(skill.name)
+  })), [skills, getLevelPercentage]);
+
   return (
     <Card className="p-6 animate-fade-in">
       <div className="flex items-center gap-4 mb-6">
@@ -109,33 +116,24 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
         </div>
       </div>
       <div className="space-y-4">
-        {skills.map((skill) => {
-          const percentage = getLevelPercentage(skill.name);
-          console.log('Processing skill:', {
-            name: skill.name,
-            originalLevel: skill.level,
-            calculatedPercentage: percentage
-          });
-
-          return (
-            <div 
-              key={skill.name} 
-              className="space-y-1.5 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
-              onClick={() => handleSkillClick(skill.name)}
-            >
-              <div className="flex justify-between mb-1">
-                <span className="text-sm font-medium">{skill.name}</span>
-                <span className="text-sm text-secondary-foreground">
-                  {percentage}%
-                </span>
-              </div>
-              <Progress
-                value={percentage}
-                className={`h-2 transition-all duration-300 ${getProgressColor(percentage)}`}
-              />
+        {processedSkills.map((skill) => (
+          <div 
+            key={skill.name} 
+            className="space-y-1.5 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
+            onClick={() => handleSkillClick(skill.name)}
+          >
+            <div className="flex justify-between mb-1">
+              <span className="text-sm font-medium">{skill.name}</span>
+              <span className="text-sm text-secondary-foreground">
+                {skill.percentage}%
+              </span>
             </div>
-          );
-        })}
+            <Progress
+              value={skill.percentage}
+              className={`h-2 transition-all duration-300 ${getProgressColor(skill.percentage)}`}
+            />
+          </div>
+        ))}
       </div>
     </Card>
   );
