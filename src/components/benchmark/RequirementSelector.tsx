@@ -26,7 +26,7 @@ export const RequirementSelector = ({
                 ? 'bg-[#008000]/20 border-[#008000]'
                 : 'bg-gray-100 border-gray-300'
         }`;
-      case 'not-interested':
+      case 'not_interested':
       case 'unknown':
       default:
         return `${baseStyles} bg-gray-100 border-x-2 border-b-2 rounded-b-md border-gray-300`;
