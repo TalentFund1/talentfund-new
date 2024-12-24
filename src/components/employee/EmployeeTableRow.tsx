@@ -8,6 +8,7 @@ import { roleSkills } from "../skills/data/roleSkills";
 import { EmployeeBasicInfo } from "./table/EmployeeBasicInfo";
 import { EmployeeSkillMatch } from "./table/EmployeeSkillMatch";
 import { EmployeeBenchmark } from "./table/EmployeeBenchmark";
+import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -29,6 +30,7 @@ export const EmployeeTableRow = ({
   const { currentStates } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const { getEmployeeSkills } = useEmployeeSkillsStore();
 
   const targetRoleId = selectedJobTitle.length > 0 
     ? getSkillProfileId(selectedJobTitle[0])
