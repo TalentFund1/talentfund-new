@@ -1,6 +1,7 @@
-// Basic skill-related types shared between roles and employees
-export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
+// Basic skill levels and statuses
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
+export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
+export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
 // Base skill interface shared between roles and employees
 export interface BaseSkill {
@@ -11,6 +12,10 @@ export interface BaseSkill {
   weight: SkillWeight;
   businessCategory: string;
 }
+
+// Common types
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
 // Skill benchmarking data
 export interface SkillBenchmark {
