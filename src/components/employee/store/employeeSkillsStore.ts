@@ -69,7 +69,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           level: skillData.level,
           goalStatus: skillData.goalStatus,
           lastUpdated: skillData.lastUpdated,
-          confidence: skillData.confidence
+          confidence: skillData.confidence || 'medium'
         };
       },
 
@@ -134,6 +134,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         }
 
         return Object.entries(employeeState.skills).map(([title, data]) => ({
+          id: `${employeeId}-${title}`,
           employeeId,
           skillId: `${employeeId}-${title}`,
           title,

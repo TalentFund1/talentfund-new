@@ -23,7 +23,7 @@ interface EmployeeStore {
   updateEmployee: (employee: Employee) => void;
   getEmployeeById: (id: string) => Employee | undefined;
   setEmployeeSkills: (employeeId: string, skills: UnifiedSkill[]) => void;
-  getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
+  getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
   setSkillState: (employeeId: string, skillName: string, level: SkillLevel, goalStatus: SkillGoalStatus) => void;
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
