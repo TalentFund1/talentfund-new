@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { SkillRequirement } from "../employee/types/employeeSkillTypes";
 
 interface SkillBadgeProps {
   skill: BaseSkill;
