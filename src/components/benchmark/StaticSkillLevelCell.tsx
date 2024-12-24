@@ -14,7 +14,7 @@ export const StaticSkillLevelCell = ({
 }: StaticSkillLevelCellProps) => {
   const { currentStates, initializeState } = useSkillsMatrixStore();
 
-  // Initialize the state when the component mounts
+  // Initialize the skill state with initial level and requirement
   useEffect(() => {
     console.log('Initializing static skill cell:', {
       skillTitle,
@@ -56,55 +56,46 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getLevelStyles = (level: string = 'unspecified') => {
-    const baseStyles = 'rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]';
-    
-    switch (level.toLowerCase()) {
+  const getBorderColorClass = (level: string = 'unspecified') => {
+    switch (level?.toLowerCase()) {
       case 'advanced':
-        return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
+        return 'border-primary-accent bg-primary-accent/10';
       case 'intermediate':
-        return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
+        return 'border-primary-icon bg-primary-icon/10';
       case 'beginner':
-        return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
+        return 'border-[#008000] bg-[#008000]/10';
       default:
-        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
+        return 'border-gray-400 bg-gray-100/50';
     }
   };
 
-  const getRequirementStyles = (requirement: string = 'unknown', level: string = 'unspecified') => {
-    const baseStyles = 'text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]';
-    
-    switch (requirement.toLowerCase()) {
-      case 'required':
-        return `${baseStyles} ${
-          level.toLowerCase() === 'advanced' 
-            ? 'border-primary-accent' 
-            : level.toLowerCase() === 'intermediate'
-              ? 'border-primary-icon'
-              : level.toLowerCase() === 'beginner'
-                ? 'border-[#008000]'
-                : 'border-gray-300'
-        }`;
-      case 'not-interested':
-      case 'unknown':
-      default:
-        return `${baseStyles} border-gray-300`;
+  const getLowerBorderColorClass = (level: string = 'unspecified', requirement: string = 'unknown') => {
+    if (requirement?.toLowerCase() !== 'required') {
+      return 'border-[#e5e7eb]';
     }
+    return getBorderColorClass(level).split(' ')[0];
   };
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <div className={getLevelStyles(currentState?.level)}>
+        <div className={`
+          rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
+          border-2 ${getBorderColorClass(currentState?.level)}
+        `}>
           <span className="flex items-center gap-2">
             {getLevelIcon(currentState?.level)}
             {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
           </span>
         </div>
-        <div className={getRequirementStyles(currentState?.requirement, currentState?.level)}>
+        <div className={`
+          text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+          border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+          ${getLowerBorderColorClass(currentState?.level, currentState?.requirement)}
+        `}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
-            {currentState?.requirement === 'required' ? 'Skill Goal' : 
+            {currentState?.requirement === 'required' ? 'Unknown' : 
              currentState?.requirement === 'not-interested' ? 'Not Interested' : 
              'Unknown'}
           </span>

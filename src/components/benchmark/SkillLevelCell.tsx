@@ -50,40 +50,24 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getLevelStyles = (level: string) => {
-    const baseStyles = 'rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]';
-    
+  const getBorderColorClass = (level: string) => {
     switch (level?.toLowerCase()) {
       case 'advanced':
-        return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
+        return 'border-primary-accent bg-primary-accent/10';
       case 'intermediate':
-        return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
+        return 'border-primary-icon bg-primary-icon/10';
       case 'beginner':
-        return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
+        return 'border-[#008000] bg-[#008000]/10';
       default:
-        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
+        return 'border-gray-400 bg-gray-100/50';
     }
   };
 
-  const getRequirementStyles = (requirement: string, level: string) => {
-    const baseStyles = 'text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]';
-    
-    switch (requirement?.toLowerCase()) {
-      case 'required':
-        return `${baseStyles} ${
-          level.toLowerCase() === 'advanced' 
-            ? 'border-primary-accent' 
-            : level.toLowerCase() === 'intermediate'
-              ? 'border-primary-icon'
-              : level.toLowerCase() === 'beginner'
-                ? 'border-[#008000]'
-                : 'border-gray-300'
-        }`;
-      case 'not-interested':
-      case 'unknown':
-      default:
-        return `${baseStyles} border-gray-300`;
+  const getLowerBorderColorClass = (level: string, requirement: string) => {
+    if (requirement?.toLowerCase() !== 'required') {
+      return 'border-[#e5e7eb]';
     }
+    return getBorderColorClass(level).split(' ')[0];
   };
 
   return (
@@ -96,7 +80,10 @@ export const SkillLevelCell = ({
             onLevelChange?.(value, currentState?.requirement || 'required');
           }}
         >
-          <SelectTrigger className={getLevelStyles(currentState?.level)}>
+          <SelectTrigger className={`
+            rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]
+            border-2 ${getBorderColorClass(currentState?.level)}
+          `}>
             <SelectValue>
               <span className="flex items-center gap-2">
                 {getLevelIcon(currentState?.level)}
@@ -139,11 +126,15 @@ export const SkillLevelCell = ({
             onLevelChange?.(currentState?.level || 'unspecified', value);
           }}
         >
-          <SelectTrigger className={getRequirementStyles(currentState?.requirement || 'required', currentState?.level || 'unspecified')}>
+          <SelectTrigger className={`
+            text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 
+            border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]
+            ${getLowerBorderColorClass(currentState?.level || 'unspecified', currentState?.requirement || 'required')}
+          `}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
                 {getRequirementIcon(currentState?.requirement)}
-                {currentState?.requirement === 'required' ? 'Skill Goal' : 
+                {currentState?.requirement === 'required' ? 'Unknown' : 
                  currentState?.requirement === 'not-interested' ? 'Not Interested' : 
                  'Unknown'}
               </span>
@@ -153,7 +144,7 @@ export const SkillLevelCell = ({
             <SelectItem value="required">
               <span className="flex items-center gap-1.5">
                 <Heart className="w-3.5 h-3.5" />
-                Skill Goal
+                Unknown
               </span>
             </SelectItem>
             <SelectItem value="not-interested">
