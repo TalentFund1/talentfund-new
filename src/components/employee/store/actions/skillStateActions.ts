@@ -39,6 +39,7 @@ export const createSkillStateActions = (
           growth: skillData.growth,
           salary: skillData.salary,
           confidence: skillData.confidence,
+          requirement: 'unknown',
           benchmarks: skillData.benchmarks
         };
         updatedSkills.push(newSkill);
