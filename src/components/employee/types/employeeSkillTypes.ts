@@ -11,6 +11,7 @@ export interface EmployeeSkillState {
 
 export interface EmployeeSkill {
   id: string;
+  employeeId: string;
   title: string;
   subcategory: string;
   level: SkillLevel;
