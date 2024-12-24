@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DetailedSkill, UnifiedSkill, SkillRequirement } from "./types/SkillTypes";
+import { DetailedSkill, UnifiedSkill } from "./types/SkillTypes";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
@@ -9,6 +9,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
+import { getUnifiedSkillData } from "./data/skillDatabaseService";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -38,9 +39,28 @@ export const SkillsSummary = () => {
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
   const { setMatrixSearchSkills } = useSkillsMatrixSearch();
 
-  console.log('Loading skills for employee:', id);
+  console.log('Loading skills for employee in SkillsSummary:', id);
   const employeeSkills = getEmployeeSkills(id || "");
-  console.log('Loaded employee skills:', employeeSkills);
+  
+  // Enrich employee skills with unified data
+  const enrichedSkills = employeeSkills.map(skill => {
+    const unifiedData = getUnifiedSkillData(skill.title);
+    return {
+      ...skill,
+      level: currentStates[skill.title]?.level || skill.level,
+      category: unifiedData.category,
+      weight: unifiedData.weight
+    };
+  });
+
+  console.log('Enriched employee skills in SkillsSummary:', {
+    totalSkills: enrichedSkills.length,
+    skills: enrichedSkills.map(s => ({
+      title: s.title,
+      level: s.level,
+      category: s.category
+    }))
+  });
 
   const handleSkillsChange = (skills: string[]) => {
     setSelectedSkills(skills);
@@ -64,13 +84,13 @@ export const SkillsSummary = () => {
   const transformAndSortSkills = (skills: UnifiedSkill[]): DetailedSkill[] => {
     return skills
       .map(skill => {
-        const goalStatus = currentStates[skill.title]?.goalStatus || skill.goalStatus;
+        const skillState = currentStates[skill.title];
         return {
           name: skill.title,
-          level: currentStates[skill.title]?.level || skill.level,
-          isSkillGoal: (goalStatus === 'required' || 
-                     goalStatus === 'skill_goal' || 
-                     (goalStatus !== 'not_interested' && skill.level === 'advanced'))
+          level: skillState?.level || skill.level,
+          isSkillGoal: skillState?.goalStatus === 'required' || 
+                       skillState?.goalStatus === 'skill_goal' || 
+                       (skillState?.goalStatus !== 'not_interested' && skill.level === 'advanced')
         };
       })
       .sort((a, b) => {
@@ -90,24 +110,15 @@ export const SkillsSummary = () => {
   };
 
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
-      ...skill,
-      goalStatus: skill.goalStatus
-    })), "specialized") as UnifiedSkill[]
+    filterSkillsByCategory(enrichedSkills, "specialized") as UnifiedSkill[]
   );
 
   const commonSkills: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
-      ...skill,
-      goalStatus: skill.goalStatus
-    })), "common") as UnifiedSkill[]
+    filterSkillsByCategory(enrichedSkills, "common") as UnifiedSkill[]
   );
 
   const certifications: DetailedSkill[] = transformAndSortSkills(
-    filterSkillsByCategory(employeeSkills.map(skill => ({
-      ...skill,
-      goalStatus: skill.goalStatus
-    })), "certification") as UnifiedSkill[]
+    filterSkillsByCategory(enrichedSkills, "certification") as UnifiedSkill[]
   );
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -117,7 +128,7 @@ export const SkillsSummary = () => {
     }));
   };
 
-  console.log('Skills Summary - Processed skills:', {
+  console.log('Skills Summary - Final processed skills:', {
     specialized: specializedSkills.length,
     common: commonSkills.length,
     certifications: certifications.length,
@@ -130,6 +141,13 @@ export const SkillsSummary = () => {
 
   return (
     <div className="space-y-4 w-full">
+      <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+        <h2 className="text-lg font-semibold mb-2">Current Skills Profile</h2>
+        <p className="text-sm text-muted-foreground">
+          This section shows your current skill levels and proficiencies.
+        </p>
+      </div>
+
       <SkillSearchSection
         selectedSkills={searchSkills}
         onSkillsChange={handleSkillsChange}
