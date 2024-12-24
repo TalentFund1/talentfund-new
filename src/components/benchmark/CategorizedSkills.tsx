@@ -24,8 +24,14 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     skills: employeeSkills.map(s => ({ title: s.title, level: s.level }))
   });
 
-  // Filter skills by category and toggled state
-  const filteredSkills = employeeSkills.filter(skill => toggledSkills.has(skill.title));
+  const filterSkillsByCategory = (skills: any[]) => {
+    if (selectedCategory === "all") return skills;
+
+    return skills.filter(skill => {
+      const skillData = getUnifiedSkillData(skill.title);
+      return skillData.category === selectedCategory;
+    });
+  };
 
   const getLevelPriority = (level: string = 'unspecified') => {
     const priorities: { [key: string]: number } = {
@@ -45,6 +51,10 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
       return getLevelPriority(aLevel) - getLevelPriority(bLevel);
     });
   };
+
+  // Filter and sort employee skills
+  const filteredSkills = filterSkillsByCategory(employeeSkills
+    .filter(skill => toggledSkills.has(skill.title)));
 
   // Categorize skills based on their actual levels
   const requiredSkills = sortSkills(filteredSkills.filter(skill => 
