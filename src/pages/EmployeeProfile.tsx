@@ -84,20 +84,14 @@ const EmployeeProfile = () => {
   const currentIndex = useEmployeeStore.getState().employees.findIndex(emp => emp.id === id) + 1;
   const totalEmployees = useEmployeeStore.getState().employees.length;
 
-  console.log('Employee Profile Data:', {
-    id,
-    employee: employeeData,
-    startDate: employee.startDate
-  });
-
   return (
     <ToggledSkillsProvider>
       <div className="flex min-h-screen bg-background">
         <Sidebar />
         <div className="flex-1 overflow-x-hidden">
-          <div className="p-2 sm:p-4 lg:p-6 ml-16 transition-all duration-300">
-            <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div className="p-3 sm:p-4 lg:p-6 ml-16 transition-all duration-300">
+            <div className="max-w-7xl mx-auto space-y-3 sm:space-y-4 lg:space-y-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 sm:mb-4">
                 <Button 
                   variant="outline" 
                   className="flex items-center gap-2 bg-white border-border hover:bg-background w-full sm:w-auto"
@@ -119,15 +113,15 @@ const EmployeeProfile = () => {
               </div>
 
               <TrackProvider>
-                <Card className="p-4 sm:p-6 lg:p-8 bg-white">
+                <Card className="p-3 sm:p-4 lg:p-6 bg-white">
                   <EmployeeHeader id={id || ""} employee={employeeData} />
                   <EmployeeDetails employee={employeeData} id={id || ""} />
                 </Card>
               </TrackProvider>
 
               <TrackProvider>
-                <Tabs defaultValue="experience" className="w-full space-y-4 sm:space-y-6">
-                  <TabsList className="w-full flex h-12 items-center justify-start space-x-4 sm:space-x-6 border-b bg-transparent p-0 overflow-x-auto">
+                <Tabs defaultValue="experience" className="w-full space-y-3 sm:space-y-4 lg:space-y-6">
+                  <TabsList className="w-full flex h-12 items-center justify-start gap-4 border-b bg-transparent p-0 overflow-x-auto">
                     <TabsTrigger 
                       value="experience" 
                       className="border-b-2 border-transparent px-2 sm:px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium whitespace-nowrap"
@@ -142,10 +136,10 @@ const EmployeeProfile = () => {
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="experience" className="space-y-4 sm:space-y-6">
+                  <TabsContent value="experience" className="space-y-3 sm:space-y-4 lg:space-y-6">
                     <SelectedSkillsProvider>
                       <SkillsMatrixSearchProvider>
-                        <Card className="p-4 sm:p-6 lg:p-8 bg-white">
+                        <Card className="p-3 sm:p-4 lg:p-6 bg-white">
                           <SkillsSummary />
                         </Card>
                         <SkillsMatrix />
@@ -153,10 +147,10 @@ const EmployeeProfile = () => {
                     </SelectedSkillsProvider>
                   </TabsContent>
 
-                  <TabsContent value="benchmark" className="space-y-4 sm:space-y-6">
+                  <TabsContent value="benchmark" className="space-y-3 sm:space-y-4 lg:space-y-6">
                     <BenchmarkSearchProvider>
                       <SelectedSkillsProvider>
-                        <Card className="p-4 sm:p-6 lg:p-8 bg-white">
+                        <Card className="p-3 sm:p-4 lg:p-6 bg-white">
                           <RoleBenchmark />
                         </Card>
                         <BenchmarkSkillsMatrix />
