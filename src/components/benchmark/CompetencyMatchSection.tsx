@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
-import { getLevelPriority, compareSkillLevels } from "../skills/utils/skillComparisonUtils";
+import { getLevelPriority } from "../skills/utils/skillComparisonUtils";
 
 interface CompetencyMatchSectionProps {
   skills: any[];
@@ -36,7 +36,7 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
     // Match if either:
     // 1. Levels are exactly equal
     // 2. Employee/Target level is higher than role requirement
-    const isMatch = employeePriority === rolePriority || employeePriority > rolePriority;
+    const isMatch = employeePriority >= rolePriority;
     
     console.log(`Is Match: ${isMatch}\n`);
 

@@ -1,46 +1,16 @@
 import { EmployeeSkillAchievement } from '../../employee/types/employeeSkillTypes';
 import { RoleSkillRequirement } from '../../skills/types/roleSkillTypes';
 import { SkillComparison, SkillComparisonResult } from '../../skills/types/skillComparison';
-import { getLevelPriority, compareSkillLevels, getSkillMatchPercentage } from '../../skills/utils/skillComparisonUtils';
+import { compareSkillLevels, getSkillMatchPercentage } from '../../skills/utils/skillComparisonUtils';
 
-export const compareSkillLevels = (
-  employeeSkill: EmployeeSkillAchievement,
-  roleRequirement: RoleSkillRequirement
-): SkillComparison => {
-  const employeePriority = getLevelPriority(employeeSkill.level);
-  const requiredPriority = getLevelPriority(roleRequirement.minimumLevel);
-
-  console.log('Comparing skill levels:', {
-    skill: employeeSkill.title,
-    employeeLevel: employeeSkill.level,
-    requiredLevel: roleRequirement.minimumLevel,
-    employeePriority,
-    requiredPriority
-  });
-
-  const gapLevel = employeePriority - requiredPriority;
-  const matchPercentage = (employeePriority / Math.max(requiredPriority, 1)) * 100;
-
-  return {
-    employeeSkill,
-    roleRequirement,
-    matchPercentage,
-    gapLevel
-  };
-};
-
-export const getSkillComparisonResult = (
+export const calculateSkillComparison = (
   employeeSkills: EmployeeSkillAchievement[],
   roleRequirements: RoleSkillRequirement[]
 ): SkillComparisonResult => {
-  if (roleRequirements.length === 0) {
-    return {
-      matches: [],
-      totalMatchPercentage: 0,
-      missingSkills: [],
-      exceedingSkills: employeeSkills
-    };
-  }
+  console.log('Calculating skill comparison:', {
+    employeeSkillCount: employeeSkills.length,
+    roleRequirementCount: roleRequirements.length
+  });
 
   const matches: SkillComparison[] = [];
   const missingSkills: RoleSkillRequirement[] = [];
