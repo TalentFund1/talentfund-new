@@ -1,8 +1,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillsStore, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus, EmployeeSkillAchievement } from '../types/employeeSkillTypes';
+import { 
+  EmployeeSkillsStore, 
+  EmployeeSkillState, 
+  EmployeeSkillsData, 
+  SkillLevel, 
+  SkillGoalStatus, 
+  EmployeeSkillAchievement 
+} from '../types/employeeSkillTypes';
 
-const validateSkillLevel = (level: string | number): SkillLevel => {
+const validateSkillLevel = (level: string | number | SkillLevel): SkillLevel => {
   if (typeof level === 'number') {
     if (level >= 90) return 'advanced';
     if (level >= 60) return 'intermediate';
@@ -15,7 +22,7 @@ const validateSkillLevel = (level: string | number): SkillLevel => {
   return validLevels.includes(normalizedLevel) ? normalizedLevel : 'unspecified';
 };
 
-const validateGoalStatus = (status: string): SkillGoalStatus => {
+const validateGoalStatus = (status: string | SkillGoalStatus): SkillGoalStatus => {
   const validStatuses: SkillGoalStatus[] = ['required', 'preferred', 'not_interested', 'unknown', 'skill_goal'];
   const normalizedStatus = status.toLowerCase() as SkillGoalStatus;
   return validStatuses.includes(normalizedStatus) ? normalizedStatus : 'unknown';
@@ -36,7 +43,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               ...state.employeeSkills,
               [employeeId]: {
                 employeeId,
-                skills: [],
+                skills: [] as EmployeeSkillAchievement[],
                 states: {},
                 lastUpdated: new Date().toISOString()
               }
@@ -52,7 +59,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
-            skills: [],
+            skills: [] as EmployeeSkillAchievement[],
             states: {},
             lastUpdated: new Date().toISOString()
           };
@@ -84,7 +91,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
-            skills: [],
+            skills: [] as EmployeeSkillAchievement[],
             states: {},
             lastUpdated: new Date().toISOString()
           };
@@ -148,7 +155,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         set((state) => {
           const currentData = state.employeeSkills[employeeId] || {
             employeeId,
-            skills: [],
+            skills: [] as EmployeeSkillAchievement[],
             states: {},
             lastUpdated: new Date().toISOString()
           };
