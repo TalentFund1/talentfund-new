@@ -1,6 +1,7 @@
 import { EmployeeSkillAchievement } from '../../employee/types/employeeSkillTypes';
 import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
 import { employees } from '../../employee/EmployeeData';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 export const getEmployeeSkills = (id: string): EmployeeSkillAchievement[] => {
   console.log('Getting skills for employee:', id);

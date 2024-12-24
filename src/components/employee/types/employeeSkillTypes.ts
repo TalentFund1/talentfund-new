@@ -6,50 +6,57 @@ import {
   BaseSkill,
   SkillState,
   SkillBenchmark,
-  SkillMetrics,
-  EmployeeSkillState
+  SkillMetrics
 } from '../../skills/types/sharedSkillTypes';
 
-export type { 
-  SkillLevel,
-  SkillGoalStatus,
-  SkillCategory,
-  SkillWeight,
-  BaseSkill,
-  SkillState,
-  SkillBenchmark,
-  SkillMetrics,
-  EmployeeSkillState
-};
-
-export interface EmployeeSkill extends BaseSkill {
-  employeeId: string;
+// Core employee skill state
+export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  benchmarks: SkillBenchmark;
-  growth: string;
-  salary: string;
   confidence: 'low' | 'medium' | 'high';
 }
 
-export interface EmployeeSkillAchievement extends EmployeeSkill {}
+// Update for a single skill
+export interface EmployeeSkillUpdate {
+  level?: SkillLevel;
+  goalStatus?: SkillGoalStatus;
+  confidence?: 'low' | 'medium' | 'high';
+}
 
+// Complete employee skill data
+export interface EmployeeSkillData {
+  employeeId: string;
+  skillId: string;
+  title: string;
+  subcategory: string;
+  level: SkillLevel;
+  goalStatus: SkillGoalStatus;
+  lastUpdated: string;
+  category: SkillCategory;
+  weight: SkillWeight;
+  businessCategory: string;
+  growth: string;
+  salary: string;
+  confidence: 'low' | 'medium' | 'high';
+  benchmarks: SkillBenchmark;
+}
+
+// State management for employee skills
+export interface EmployeeSkillsState {
+  skills: Record<string, EmployeeSkillData>;
+  lastUpdated: string;
+}
+
+// Achievement tracking
+export interface EmployeeSkillAchievement extends EmployeeSkillData {}
+
+// Complete employee skills data structure
 export interface EmployeeSkillsData {
   employeeId: string;
   skills: EmployeeSkillAchievement[];
-  states: Record<string, SkillState>;
+  states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
 }
 
-export interface EmployeeSkillsStore {
-  employeeSkills: Record<string, EmployeeSkillsData>;
-  initializeEmployeeSkills: (employeeId: string) => void;
-  getEmployeeSkills: (employeeId: string) => EmployeeSkillAchievement[];
-  getSkillState: (employeeId: string, skillTitle: string) => SkillState;
-  setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
-  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
-  batchUpdateSkills: (employeeId: string, updates: Record<string, SkillState>) => void;
-}
-
-console.log('Employee skill types updated to use shared interfaces');
+console.log('Employee skill types updated with complete interfaces');
