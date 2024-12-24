@@ -41,6 +41,7 @@ export interface EmployeeSkillsData {
   employeeId: string;
   skills: EmployeeSkillAchievement[];
   states: Record<string, EmployeeSkillState>;
+  lastUpdated?: string;
 }
 
 export interface EmployeeSkillsStore {
