@@ -6,17 +6,17 @@ export type SkillGoalStatus = 'skill_goal' | 'not_interested' | 'unknown';
 export interface EmployeeSkill {
   id: string;
   title: string;
+  subcategory: string; // Made required to match UnifiedSkill
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  category?: SkillCategory;
-  weight?: SkillWeight;
-  subcategory?: string;
-  businessCategory?: string;
-  growth?: string;
-  salary?: string;
-  confidence?: 'low' | 'medium' | 'high';
-  benchmarks?: {
+  category: SkillCategory; // Made required
+  weight: SkillWeight; // Made required
+  businessCategory: string;
+  growth: string;
+  salary: string;
+  confidence: 'low' | 'medium' | 'high';
+  benchmarks: {
     B: boolean;
     R: boolean;
     M: boolean;
@@ -27,6 +27,7 @@ export interface EmployeeSkill {
 export interface EmployeeSkillsData {
   employeeId: string;
   skills: EmployeeSkill[];
+  states: Record<string, EmployeeSkillState>; // Added states
 }
 
 export interface EmployeeSkillState {
