@@ -3,7 +3,6 @@ import { SkillWeight } from './SkillTypes';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
-// Role-specific skill requirement
 export interface RoleSkillRequirement {
   id: string;
   title: string;
@@ -24,7 +23,6 @@ export interface RoleSkillRequirement {
   };
 }
 
-// Role skill data structure
 export interface RoleSkillData {
   roleId: string;
   title: string;
@@ -34,7 +32,6 @@ export interface RoleSkillData {
   certifications: RoleSkillRequirement[];
 }
 
-// Store interface
 export interface RoleSkillsStore {
   roleSkills: Record<string, RoleSkillData>;
   getRoleSkills: (roleId: string) => RoleSkillData | undefined;
