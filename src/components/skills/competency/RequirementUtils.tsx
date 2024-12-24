@@ -1,19 +1,26 @@
 import { Heart } from "lucide-react";
 
 export const getRequirementStyles = (requirement: string, level: string) => {
-  const borderColor = level.toLowerCase() === 'advanced' 
-    ? 'border-primary-accent'
-    : level.toLowerCase() === 'intermediate'
-      ? 'border-primary-icon'
-      : level.toLowerCase() === 'beginner'
-        ? 'border-[#008000]'
-        : 'border-gray-300';
+  const getBorderColor = (level: string, isRequired: boolean) => {
+    if (isRequired) {
+      return level.toLowerCase() === 'advanced' 
+        ? 'border-primary-accent'
+        : level.toLowerCase() === 'intermediate'
+          ? 'border-primary-icon'
+          : level.toLowerCase() === 'beginner'
+            ? 'border-[#008000]'
+            : 'border-gray-400'; // Darker border for required + unspecified
+    }
+    return 'border-gray-300'; // Light border for preferred
+  };
 
   if (!requirement || requirement === '-') {
     return 'invisible h-[22px]';
   }
 
   const baseStyles = 'text-xs px-2 py-1.5 font-medium w-full flex items-center justify-center gap-1.5';
+  const isRequired = requirement.toLowerCase() === 'required';
+  const borderColor = getBorderColor(level, isRequired);
   
   switch (requirement.toLowerCase()) {
     case 'required':

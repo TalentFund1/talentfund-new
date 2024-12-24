@@ -21,7 +21,7 @@ export const RequirementSelector = ({
   const getRequirementStyles = (requirement: string) => {
     const baseStyles = "rounded-b-md px-3 py-1.5 text-xs font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]";
     
-    // If required, match the border color with the skill level
+    // If required, match the border color with the skill level or use gray-400 for unspecified
     if (requirement === 'required') {
       const borderColor = currentLevel?.toLowerCase() === 'advanced' 
         ? 'border-primary-accent'
@@ -29,7 +29,7 @@ export const RequirementSelector = ({
           ? 'border-primary-icon'
           : currentLevel?.toLowerCase() === 'beginner'
             ? 'border-[#008000]'
-            : 'border-gray-300';
+            : 'border-gray-400'; // Darker border for required + unspecified
       
       return cn(baseStyles, `bg-gray-100 border-x-2 border-b-2 ${borderColor}`);
     }
