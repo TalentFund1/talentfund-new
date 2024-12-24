@@ -4,7 +4,6 @@ import { useTrack } from "../context/TrackContext";
 import { getLevelPriority, normalizeLevel } from "./utils/levelUtils";
 import { determineRequirement } from "./utils/requirementUtils";
 import { useRoleSkillsStore } from "../store/roleSkillsStore";
-import { SkillCompetencyMapping } from "../types/competencyTypes";
 
 interface SkillCompetencyState {
   level: string;
@@ -148,7 +147,8 @@ export const useCompetencyStateReader = () => {
     const roleData = getRoleSkills(roleId);
     
     if (roleData) {
-      roleData.skills.forEach(skill => {
+      const allSkills = [...roleData.specialized, ...roleData.common, ...roleData.certifications];
+      allSkills.forEach(skill => {
         if (toggledSkills.has(skill.title)) {
           const competencyState = getSkillCompetencyState(skill.title, levelKey, roleId);
           states[skill.title] = competencyState;

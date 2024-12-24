@@ -1,14 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RoleSkillData, RoleSkillRequirement } from '../types/roleSkillTypes';
+import { RoleSkillData, RoleSkillRequirement, RoleSkillsStore } from '../types/roleSkillTypes';
 import { roleSkills } from '../data/roleSkills';
-
-interface RoleSkillsStore {
-  roleSkills: Record<string, RoleSkillData>;
-  getRoleSkills: (roleId: string) => RoleSkillData | undefined;
-  getSkillRequirement: (roleId: string, skillTitle: string) => RoleSkillRequirement | undefined;
-  initializeRoleSkills: (roleId: string) => void;
-}
 
 export const useRoleSkillsStore = create<RoleSkillsStore>()(
   persist(
@@ -39,18 +32,49 @@ export const useRoleSkillsStore = create<RoleSkillsStore>()(
         if (!existingRole) {
           const roleData = roleSkills[roleId as keyof typeof roleSkills];
           if (roleData) {
+            const initializedRole: RoleSkillData = {
+              roleId,
+              title: roleData.title,
+              track: roleData.roleTrack || "Professional",
+              specialized: roleData.specialized.map(skill => ({
+                ...skill,
+                minimumLevel: skill.level || 'unspecified',
+                requirementLevel: 'required',
+                benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false },
+                metrics: {
+                  growth: skill.growth || '0%',
+                  salary: skill.salary || 'market',
+                  confidence: skill.confidence || 'medium'
+                }
+              })),
+              common: roleData.common.map(skill => ({
+                ...skill,
+                minimumLevel: skill.level || 'unspecified',
+                requirementLevel: 'preferred',
+                benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false },
+                metrics: {
+                  growth: skill.growth || '0%',
+                  salary: skill.salary || 'market',
+                  confidence: skill.confidence || 'medium'
+                }
+              })),
+              certifications: roleData.certifications.map(skill => ({
+                ...skill,
+                minimumLevel: skill.level || 'unspecified',
+                requirementLevel: 'optional',
+                benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false },
+                metrics: {
+                  growth: skill.growth || '0%',
+                  salary: skill.salary || 'market',
+                  confidence: skill.confidence || 'medium'
+                }
+              }))
+            };
+            
             set(state => ({
               roleSkills: {
                 ...state.roleSkills,
-                [roleId]: {
-                  ...roleData,
-                  roleId,
-                  skills: [
-                    ...roleData.specialized,
-                    ...roleData.common,
-                    ...roleData.certifications
-                  ]
-                }
+                [roleId]: initializedRole
               }
             }));
             console.log('Initialized role skills:', roleId);
