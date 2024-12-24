@@ -2,7 +2,6 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillsSummary } from "@/components/skills/SkillsSummary";
-import { SkillsSummaryTwo } from "@/components/skills/SkillsSummaryTwo";
 import { RoleBenchmark } from "@/components/benchmark/RoleBenchmark";
 import { BenchmarkSkillsMatrix } from "@/components/benchmark/BenchmarkSkillsMatrix";
 import { SkillsMatrix } from "@/components/benchmark/SkillsMatrix";
@@ -147,9 +146,6 @@ const EmployeeProfile = () => {
                     <SkillsMatrixSearchProvider>
                       <Card className="p-4 sm:p-6 md:p-8 bg-white">
                         <SkillsSummary />
-                      </Card>
-                      <Card className="p-4 sm:p-6 md:p-8 bg-white">
-                        <SkillsSummaryTwo />
                       </Card>
                       <SkillsMatrix />
                     </SkillsMatrixSearchProvider>
