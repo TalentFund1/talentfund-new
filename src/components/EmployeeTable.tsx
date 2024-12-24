@@ -86,18 +86,18 @@ const EmployeeTableContent = ({
 
   const preFilteredEmployees = filterEmployees(
     employees,
-    selectedEmployees,
-    selectedDepartment,
-    selectedLevel,
-    selectedOffice,
-    selectedEmploymentType,
-    selectedSkills,
-    selectedManager
+    [...selectedEmployees],
+    [...selectedDepartment],
+    [...selectedLevel],
+    [...selectedOffice],
+    [...selectedEmploymentType],
+    [...selectedSkills],
+    [...selectedManager]
   );
 
   console.log('Pre-filtered employees:', preFilteredEmployees);
 
-  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, [...selectedSkills]);
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
@@ -105,7 +105,7 @@ const EmployeeTableContent = ({
     skillFilteredEmployees,
     selectedRole,
     currentStates,
-    new Set(), // Empty set instead of toggledSkills
+    new Set(),
     getSkillCompetencyState
   ).filter(employee => {
     if (selectedRole.length > 0) {

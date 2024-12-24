@@ -19,6 +19,37 @@ interface FormData {
   category: string;
 }
 
+export const processEmployeeData = (formData: FormData): Employee => {
+  console.log('Processing employee data:', formData);
+  
+  const formattedRole = `${formData.role}: ${formData.level}`;
+  console.log('Formatted role:', formattedRole);
+
+  const lastUpdated = new Date().toLocaleDateString();
+  console.log('Setting last updated date:', lastUpdated);
+
+  const newEmployee: Employee = {
+    id: formData.id,
+    name: formData.name,
+    role: formattedRole,
+    department: formData.department,
+    skillCount: 0,
+    benchmark: 0,
+    lastUpdated: lastUpdated,
+    location: formData.location || formData.office,
+    sex: formData.sex as 'male' | 'female',
+    category: formData.category,
+    manager: formData.manager || '',
+    startDate: formData.startDate,
+    office: formData.office,
+    termDate: formData.termDate || "-",
+    skills: [] // Initialize with empty skills array
+  };
+
+  console.log('Created new employee:', newEmployee);
+  return newEmployee;
+};
+
 export const validateFormData = (formData: FormData, existingEmployees: Employee[]) => {
   console.log('Validating form data:', formData);
   
@@ -84,36 +115,4 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
 
   console.log('Form validation passed');
   return { isValid: true, error: null };
-};
-
-export const processEmployeeData = (formData: FormData): Employee => {
-  console.log('Processing employee data:', formData);
-  
-  // Format role with level
-  const formattedRole = `${formData.role}: ${formData.level}`;
-  console.log('Formatted role:', formattedRole);
-
-  const lastUpdated = new Date().toLocaleDateString();
-  console.log('Setting last updated date:', lastUpdated);
-
-  // Create new employee
-  const newEmployee: Employee = {
-    id: formData.id,
-    name: formData.name,
-    role: formattedRole,
-    department: formData.department,
-    skillCount: 0,
-    benchmark: 0,
-    lastUpdated: lastUpdated,
-    location: formData.location || formData.office,
-    sex: formData.sex as 'male' | 'female',
-    category: formData.category,
-    manager: formData.manager || '',
-    startDate: formData.startDate,
-    office: formData.office,
-    termDate: formData.termDate || "-"
-  };
-
-  console.log('Created new employee:', newEmployee);
-  return newEmployee;
 };
