@@ -17,6 +17,8 @@ export const getEmployeeSkills = (id: string): EmployeeSkillAchievement[] => {
         skillCount: employee.skills.length,
         skills: employee.skills.map(s => s.name)
       });
+      
+      // Initialize only with employee's existing skills
       store.initializeEmployeeSkills(id);
     } else {
       console.warn('No employee data found for ID:', id);
