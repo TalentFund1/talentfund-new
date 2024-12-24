@@ -14,7 +14,7 @@ export const initializeEmployeeSkills = (employeeId: string, initialSkills: Arra
       id: `${employeeId}-${skill.name}`,
       employeeId,
       title: skill.name,
-      subcategory: unifiedData.subcategory,
+      subcategory: unifiedData.subcategory || 'General',
       level: skill.level,
       goalStatus: 'unknown' as SkillGoalStatus,
       lastUpdated: new Date().toISOString(),
@@ -24,14 +24,23 @@ export const initializeEmployeeSkills = (employeeId: string, initialSkills: Arra
       growth: unifiedData.growth,
       salary: unifiedData.salary,
       confidence: 'medium',
-      benchmarks: unifiedData.benchmarks
+      benchmarks: unifiedData.benchmarks || {
+        B: false,
+        R: false,
+        M: false,
+        O: false
+      }
     };
   });
 
   console.log('Processed employee skills:', {
     employeeId,
     skillCount: processedSkills.length,
-    skills: processedSkills.map(s => s.title)
+    skills: processedSkills.map(s => ({
+      title: s.title,
+      level: s.level,
+      goalStatus: s.goalStatus
+    }))
   });
 
   return processedSkills;
