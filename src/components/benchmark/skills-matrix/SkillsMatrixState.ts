@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
-import { EmployeeSkill, SkillLevel, SkillGoalStatus } from '../../employee/types/employeeSkillTypes';
+import { EmployeeSkillAchievement, SkillLevel, SkillGoalStatus } from '../../employee/types/employeeSkillTypes';
 
 interface SkillState {
   level: SkillLevel;
@@ -176,3 +176,4 @@ export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', employeeId);
   return useEmployeeStore.getState().getEmployeeSkills(employeeId);
 };
+

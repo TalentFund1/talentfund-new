@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillsStore, EmployeeSkill, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
+import { EmployeeSkillsStore, EmployeeSkillAchievement, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { SkillCategory, SkillRequirement } from '../../skills/types/SkillTypes';
 
@@ -64,7 +64,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             };
           } else {
             const skillData = getUnifiedSkillData(skillTitle);
-            const newSkill: EmployeeSkill = {
+            const newSkill: EmployeeSkillAchievement = {
               id: `${employeeId}-${skillTitle}`,
               employeeId,
               title: skillTitle,
@@ -72,14 +72,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               level,
               goalStatus: 'unknown',
               lastUpdated: new Date().toISOString(),
-              category: skillData.category as SkillCategory,
+              category: skillData.category,
               weight: skillData.weight,
-              businessCategory: skillData.businessCategory,
-              growth: skillData.growth,
-              salary: skillData.salary,
-              confidence: skillData.confidence,
-              requirement: 'unknown',
-              benchmarks: skillData.benchmarks
+              confidence: 'medium'
             };
             updatedSkills.push(newSkill);
           }
@@ -120,7 +115,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             updatedSkills[skillIndex] = {
               ...updatedSkills[skillIndex],
               goalStatus: status,
-              requirement: mapGoalStatusToRequirement(status),
               lastUpdated: new Date().toISOString()
             };
           }
@@ -149,7 +143,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Getting skills for employee:', employeeId);
         const state = get();
         if (!state.employeeSkills[employeeId]) {
-          console.log('No skills found, initializing employee:', employeeId);
           state.initializeEmployeeSkills(employeeId);
         }
         const skills = state.employeeSkills[employeeId]?.skills || [];

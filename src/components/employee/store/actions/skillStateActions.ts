@@ -1,4 +1,4 @@
-import { SkillLevel, SkillGoalStatus, EmployeeSkill, EmployeeSkillState } from '../../types/employeeSkillTypes';
+import { SkillLevel, SkillGoalStatus, EmployeeSkillAchievement } from '../../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 
 export const createSkillStateActions = (
@@ -25,7 +25,7 @@ export const createSkillStateActions = (
         };
       } else {
         const skillData = getUnifiedSkillData(skillTitle);
-        const newSkill: EmployeeSkill = {
+        const newSkill: EmployeeSkillAchievement = {
           id: `${employeeId}-${skillTitle}`,
           employeeId,
           title: skillTitle,
@@ -33,24 +33,11 @@ export const createSkillStateActions = (
           level,
           goalStatus: 'unknown',
           lastUpdated: new Date().toISOString(),
-          category: skillData.category,
           weight: skillData.weight,
-          businessCategory: skillData.businessCategory,
-          growth: skillData.growth,
-          salary: skillData.salary,
-          confidence: skillData.confidence,
-          requirement: 'unknown',
-          benchmarks: skillData.benchmarks
+          confidence: 'medium'
         };
         updatedSkills.push(newSkill);
       }
-
-      console.log('Updated employee skill:', { 
-        employeeId, 
-        skillTitle, 
-        newLevel: level,
-        skillsCount: updatedSkills.length 
-      });
 
       return {
         employeeSkills: {
@@ -91,13 +78,6 @@ export const createSkillStateActions = (
           lastUpdated: new Date().toISOString()
         };
       }
-
-      console.log('Updated employee skill goal:', { 
-        employeeId, 
-        skillTitle, 
-        newStatus: status,
-        skillsCount: updatedSkills.length 
-      });
 
       return {
         employeeSkills: {
