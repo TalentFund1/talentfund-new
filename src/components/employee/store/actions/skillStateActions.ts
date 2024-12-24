@@ -18,12 +18,14 @@ export const createSkillStateActions = (
       const skillIndex = updatedSkills.findIndex(s => s.title === skillTitle);
 
       if (skillIndex >= 0) {
+        console.log('Updating existing skill:', skillTitle);
         updatedSkills[skillIndex] = {
           ...updatedSkills[skillIndex],
           level,
           lastUpdated: new Date().toISOString()
         };
       } else {
+        console.log('Creating new skill:', skillTitle);
         const skillData = getUnifiedSkillData(skillTitle);
         const newSkill: EmployeeSkillAchievement = {
           id: `${employeeId}-${skillTitle}`,
@@ -43,6 +45,8 @@ export const createSkillStateActions = (
         };
         updatedSkills.push(newSkill);
       }
+
+      console.log('Updated skills array:', updatedSkills);
 
       return {
         employeeSkills: {
@@ -77,12 +81,36 @@ export const createSkillStateActions = (
       const skillIndex = updatedSkills.findIndex(s => s.title === skillTitle);
 
       if (skillIndex >= 0) {
+        console.log('Updating existing skill goal status:', skillTitle);
+        const existingSkill = updatedSkills[skillIndex];
         updatedSkills[skillIndex] = {
-          ...updatedSkills[skillIndex],
+          ...existingSkill,
           goalStatus: status,
           lastUpdated: new Date().toISOString()
         };
+      } else {
+        console.log('Creating new skill with goal status:', skillTitle);
+        const skillData = getUnifiedSkillData(skillTitle);
+        const newSkill: EmployeeSkillAchievement = {
+          id: `${employeeId}-${skillTitle}`,
+          employeeId,
+          title: skillTitle,
+          subcategory: skillData.subcategory,
+          level: 'unspecified',
+          goalStatus: status,
+          lastUpdated: new Date().toISOString(),
+          weight: skillData.weight,
+          confidence: 'medium',
+          category: skillData.category,
+          businessCategory: skillData.businessCategory,
+          growth: skillData.growth,
+          salary: skillData.salary,
+          benchmarks: skillData.benchmarks
+        };
+        updatedSkills.push(newSkill);
       }
+
+      console.log('Updated skills array with new goal status:', updatedSkills);
 
       return {
         employeeSkills: {
