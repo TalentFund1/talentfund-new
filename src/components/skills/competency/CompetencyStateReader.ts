@@ -9,7 +9,6 @@ import { SkillCompetencyMapping } from "../types/competencyTypes";
 interface SkillCompetencyState {
   level: string;
   required: string;
-  requirement?: string;
 }
 
 const defaultState: SkillCompetencyState = {
@@ -98,12 +97,12 @@ export const useCompetencyStateReader = () => {
     }
 
     // Get role requirement
-    const roleRequirement = getSkillRequirement(roleId, skillName);
-    if (roleRequirement) {
-      console.log('Using role requirement:', roleRequirement);
+    const skillRequirement = getSkillRequirement(roleId, skillName);
+    if (skillRequirement) {
+      console.log('Using role requirement:', skillRequirement);
       return {
-        level: roleRequirement.minimumLevel,
-        required: roleRequirement.requirementLevel
+        level: skillRequirement.minimumLevel,
+        required: skillRequirement.requirementLevel
       };
     }
 
@@ -149,9 +148,7 @@ export const useCompetencyStateReader = () => {
     const roleData = getRoleSkills(roleId);
     
     if (roleData) {
-      const allSkills = roleData.skills;
-
-      allSkills.forEach(skill => {
+      roleData.skills.forEach(skill => {
         if (toggledSkills.has(skill.title)) {
           const competencyState = getSkillCompetencyState(skill.title, levelKey, roleId);
           states[skill.title] = competencyState;

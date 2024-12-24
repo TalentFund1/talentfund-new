@@ -42,9 +42,18 @@ export const useRoleSkillsStore = create<RoleSkillsStore>()(
             set(state => ({
               roleSkills: {
                 ...state.roleSkills,
-                [roleId]: roleData
+                [roleId]: {
+                  ...roleData,
+                  roleId,
+                  skills: [
+                    ...roleData.specialized,
+                    ...roleData.common,
+                    ...roleData.certifications
+                  ]
+                }
               }
             }));
+            console.log('Initialized role skills:', roleId);
           }
         }
       }
