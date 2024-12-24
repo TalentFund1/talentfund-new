@@ -15,22 +15,32 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       batchUpdateSkills: (employeeId: string, updates: Record<string, any>) => {
         console.log('Batch updating skills for employee:', {
           employeeId,
-          updateCount: Object.keys(updates).length
+          updateCount: Object.keys(updates).length,
+          timestamp: new Date().toISOString()
         });
 
         set(state => {
           const currentSkills = state.employeeSkills[employeeId] || {};
           const updatedSkills = {
             ...currentSkills,
-            ...updates
+            ...updates,
+            lastUpdated: new Date().toISOString()
           };
 
-          return {
+          const newState = {
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: updatedSkills
             }
           };
+
+          console.log('State updated successfully:', {
+            employeeId,
+            skillCount: Object.keys(updatedSkills).length,
+            timestamp: updatedSkills.lastUpdated
+          });
+
+          return newState;
         });
       }
     }),
