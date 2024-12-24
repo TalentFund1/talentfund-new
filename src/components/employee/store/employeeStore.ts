@@ -5,6 +5,7 @@ import { employees as defaultEmployees } from "../EmployeeData";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillProfileId } from "../../EmployeeTable";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 interface EmployeeSkillState {
   level: string;
@@ -39,38 +40,11 @@ export const useEmployeeStore = create<EmployeeStore>()(
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Initializing skills for employee:', employeeId);
         const store = get();
-        const employee = store.employees.find(emp => emp.id === employeeId);
         
-        if (!employee) {
-          console.warn('Employee not found:', employeeId);
-          return;
-        }
-
         // Only initialize if not already present
         if (!store.employeeSkills[employeeId]) {
-          const roleId = getSkillProfileId(employee.role);
-          const roleData = roleSkills[roleId as keyof typeof roleSkills];
-          
-          if (!roleData) {
-            console.warn('No role data found for:', roleId);
-            return;
-          }
-
-          const initialSkills = [
-            ...(roleData.specialized || []),
-            ...(roleData.common || []),
-            ...(roleData.certifications || [])
-          ];
-
-          // Initialize with default states and timestamp
+          const initialSkills: UnifiedSkill[] = [];
           const initialStates: Record<string, EmployeeSkillState> = {};
-          initialSkills.forEach(skill => {
-            initialStates[skill.title] = {
-              level: skill.level || 'beginner',
-              requirement: 'unknown',
-              lastUpdated: new Date().toISOString()
-            };
-          });
 
           set(state => ({
             employeeSkills: {
@@ -82,11 +56,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             }
           }));
 
-          console.log('Initialized employee skills:', {
-            employeeId,
-            skillCount: initialSkills.length,
-            states: initialStates
-          });
+          console.log('Initialized empty skill set for employee:', employeeId);
         }
       },
 
@@ -112,13 +82,23 @@ export const useEmployeeStore = create<EmployeeStore>()(
 
       setEmployeeSkills: (employeeId, skills) => {
         console.log('Setting skills for employee:', { employeeId, skills });
+        
+        // Ensure each skill has unified data
+        const enrichedSkills = skills.map(skill => {
+          const universalData = getUnifiedSkillData(skill.title);
+          return {
+            ...skill,
+            ...universalData,
+            lastUpdated: new Date().toISOString()
+          };
+        });
+
         set((state) => ({
           employeeSkills: {
             ...state.employeeSkills,
             [employeeId]: {
               ...state.employeeSkills[employeeId],
-              skills,
-              lastUpdated: new Date().toISOString()
+              skills: enrichedSkills
             }
           }
         }));

@@ -1,6 +1,7 @@
 import { categorizeSkills } from "../../skills/competency/skillCategories";
 import { getSkillProfileId } from "../../EmployeeTable";
 import { useSkillsMatrixStore } from "../../benchmark/skills-matrix/SkillsMatrixState";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 export const processEmployeeSkills = (skills: string, role: string) => {
   // Convert comma-separated string to array and clean up
@@ -15,10 +16,20 @@ export const processEmployeeSkills = (skills: string, role: string) => {
   // Initialize skills with default values
   const skillsMatrixStore = useSkillsMatrixStore.getState();
   
-  skillsList.forEach(skillTitle => {
-    skillsMatrixStore.setSkillState(skillTitle, 'unspecified', 'unknown');
+  const processedSkills = skillsList.map(skillTitle => {
+    const unifiedData = getUnifiedSkillData(skillTitle);
+    return {
+      ...unifiedData,
+      level: 'unspecified',
+      requirement: 'unknown',
+      lastUpdated: new Date().toISOString()
+    };
+  });
+  
+  processedSkills.forEach(skill => {
+    skillsMatrixStore.setSkillState(skill.title, 'unspecified', 'unknown');
     console.log('Initialized skill:', {
-      skill: skillTitle,
+      skill: skill.title,
       level: 'unspecified',
       requirement: 'unknown'
     });
@@ -35,6 +46,7 @@ export const processEmployeeSkills = (skills: string, role: string) => {
 
   return {
     skillsList,
-    categorizedSkills
+    categorizedSkills,
+    processedSkills
   };
 };
