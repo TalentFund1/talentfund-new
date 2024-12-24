@@ -4,6 +4,7 @@ import { CompetencyState } from './state/types';
 import { setSkillStateAction, setSkillProgressionAction } from './state/stateActions';
 import { loadPersistedState } from './state/persistenceUtils';
 import { initializeRoleState } from './state/initializeState';
+import { useRoleSkillsStore } from '../store/roleSkillsStore';
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
@@ -15,6 +16,10 @@ export const useCompetencyStore = create<CompetencyState>()(
 
       setSkillState: (skillName, level, levelKey, required, roleId) => {
         console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
+        
+        // Initialize role skills if needed
+        useRoleSkillsStore.getState().initializeRoleSkills(roleId);
+        
         set((state) => {
           const newRoleStates = setSkillStateAction(
             state.roleStates,
@@ -105,6 +110,10 @@ export const useCompetencyStore = create<CompetencyState>()(
         const currentState = get().roleStates[roleId];
         if (!currentState) {
           console.log('Initializing state for role:', roleId);
+          
+          // Initialize role skills first
+          useRoleSkillsStore.getState().initializeRoleSkills(roleId);
+          
           const savedState = loadPersistedState(roleId);
           
           if (savedState) {
@@ -150,21 +159,12 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-storage',
-      version: 21,
+      version: 22,
       partialize: (state) => ({
         roleStates: state.roleStates,
         currentStates: state.currentStates,
         originalStates: state.originalStates
-      }),
-      merge: (persistedState: any, currentState: CompetencyState) => {
-        console.log('Merging persisted state with current state');
-        return {
-          ...currentState,
-          roleStates: persistedState.roleStates || {},
-          currentStates: persistedState.currentStates || {},
-          originalStates: persistedState.originalStates || {}
-        };
-      }
+      })
     }
   )
 );
