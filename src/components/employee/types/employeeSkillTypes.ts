@@ -46,7 +46,7 @@ export interface EmployeeSkillsData {
 // Store interface
 export interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
-  initializeEmployeeSkills: (employeeId: string) => void;
+  initializeEmployeeSkills: (employeeId: string, employeeStore?: any) => void;
   setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkillAchievement[];

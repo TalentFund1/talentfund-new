@@ -1,9 +1,9 @@
 import { SkillLevel, SkillGoalStatus } from '../types/skillStoreTypes';
-import { initializeEmployeeSkills } from '../utils/skillInitializer';
-import { EmployeeStore } from '../employeeStore';
+import { initializeEmployeeSkills as initializeSkills } from '../utils/skillInitializer';
+import { EmployeeStore } from '../types/employeeStoreTypes';
 
 export const createSkillActions = (set: any, get: any) => ({
-  initializeEmployeeSkills: (employeeId: string, employeeStore: EmployeeStore) => {
+  initializeEmployeeSkills: (employeeId: string, employeeStore?: EmployeeStore) => {
     console.log('Initializing skills store for employee:', employeeId);
     
     // Check if already initialized with skills
@@ -14,7 +14,7 @@ export const createSkillActions = (set: any, get: any) => ({
     }
 
     // Get employee from store state
-    const employee = employeeStore.getEmployeeById(employeeId);
+    const employee = employeeStore?.getEmployeeById(employeeId);
     if (!employee) {
       console.warn('No employee found for initialization:', employeeId);
       return;
@@ -26,7 +26,7 @@ export const createSkillActions = (set: any, get: any) => ({
     });
 
     // Initialize skills based on role
-    const initialSkills = initializeEmployeeSkills(employeeId, employee.role);
+    const initialSkills = initializeSkills(employeeId, employee.role);
 
     set(state => ({
       employeeSkills: {
