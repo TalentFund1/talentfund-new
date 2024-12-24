@@ -114,21 +114,21 @@ export const useSkillsFiltering = (
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      const requirement = (currentSkillState?.requirement || skill.goalStatus || 'unknown').toLowerCase();
+      const goalStatus = (currentSkillState?.goalStatus || skill.goalStatus || 'unknown').toLowerCase();
 
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {
           case 'skill_goal':
-            matchesInterest = requirement === 'required' || requirement === 'skill_goal';
+            matchesInterest = goalStatus === 'required' || goalStatus === 'skill_goal';
             break;
           case 'not_interested':
-            matchesInterest = requirement === 'not_interested';
+            matchesInterest = goalStatus === 'not_interested';
             break;
           case 'unknown':
-            matchesInterest = !requirement || requirement === 'unknown';
+            matchesInterest = !goalStatus || goalStatus === 'unknown';
             break;
           default:
-            matchesInterest = requirement === selectedInterest.toLowerCase();
+            matchesInterest = goalStatus === selectedInterest.toLowerCase();
         }
       }
 
@@ -150,7 +150,7 @@ export const useSkillsFiltering = (
         weight: unifiedData.weight,
         employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
         roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
-        requirement: currentStates[skill.title]?.requirement || skill.goalStatus || 'unknown'
+        goalStatus: currentStates[skill.title]?.goalStatus || 'unknown'
       };
     })
     .sort((a, b) => {

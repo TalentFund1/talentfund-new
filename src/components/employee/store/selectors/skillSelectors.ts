@@ -1,4 +1,4 @@
-import { EmployeeSkillAchievement, EmployeeSkillState } from '../types/skillStoreTypes';
+import { EmployeeSkillAchievement, EmployeeSkillState } from '../types/employeeSkillTypes';
 
 export const createSkillSelectors = (get: any) => {
   // Memoized skills getter
@@ -33,12 +33,18 @@ export const createSkillSelectors = (get: any) => {
         
         return {
           level: 'unspecified',
-          requirement: 'unknown',
+          goalStatus: 'unknown',
           lastUpdated: new Date().toISOString()
         };
       }
 
-      return state;
+      console.log('Retrieved employee skill state:', {
+        employeeId,
+        skillTitle,
+        state: skillState
+      });
+      
+      return skillState;
     },
 
     // Add method to clear memoization if needed
