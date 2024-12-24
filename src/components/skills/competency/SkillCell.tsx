@@ -65,6 +65,13 @@ export const SkillCell = ({
     );
   };
 
+  console.log('Rendering SkillCell:', {
+    skillName,
+    levelKey,
+    currentState,
+    roleId: currentRoleId
+  });
+
   return (
     <TableCell 
       className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
