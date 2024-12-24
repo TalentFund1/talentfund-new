@@ -6,7 +6,8 @@ import {
   BaseSkill,
   SkillState,
   SkillBenchmark,
-  SkillMetrics
+  SkillMetrics,
+  SkillRequirementLevel
 } from './sharedSkillTypes';
 
 export type { 
@@ -16,12 +17,13 @@ export type {
   SkillWeight,
   SkillState,
   SkillBenchmark,
-  SkillMetrics
+  SkillMetrics,
+  SkillRequirementLevel
 };
 
 export interface RoleSkillRequirement extends BaseSkill {
   minimumLevel: SkillLevel;
-  requirementLevel: 'required' | 'preferred' | 'optional';
+  requirementLevel: SkillRequirementLevel;
   benchmarks: SkillBenchmark;
   metrics: SkillMetrics;
 }

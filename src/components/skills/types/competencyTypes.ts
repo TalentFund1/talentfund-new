@@ -1,5 +1,4 @@
-import { SkillLevel, SkillGoalStatus } from '../../employee/types/employeeSkillTypes';
-import { SkillCategory, SkillRequirementLevel } from './roleSkillTypes';
+import { SkillLevel, SkillGoalStatus, SkillCategory, SkillRequirementLevel } from './sharedSkillTypes';
 
 // Mapping between employee skills and role requirements
 export interface SkillCompetencyMapping {

@@ -3,6 +3,7 @@ export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
+export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
 // Base skill interface
 export interface BaseSkill {
