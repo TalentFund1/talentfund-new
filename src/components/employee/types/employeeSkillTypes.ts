@@ -1,3 +1,5 @@
+import { SkillCategory, SkillWeight, SkillRequirement } from '../../skills/types/SkillTypes';
+
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
@@ -7,7 +9,7 @@ export interface EmployeeSkillState {
   lastUpdated: string;
 }
 
-export interface EmployeeSkillAchievement {
+export interface EmployeeSkill {
   id: string;
   employeeId: string;
   title: string;
@@ -31,7 +33,7 @@ export interface EmployeeSkillAchievement {
 
 export interface EmployeeSkillsData {
   employeeId: string;
-  skills: EmployeeSkillAchievement[];
+  skills: EmployeeSkill[];
   states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
 }
@@ -41,7 +43,7 @@ export interface EmployeeSkillsStore {
   initializeEmployeeSkills: (employeeId: string) => void;
   setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
-  getEmployeeSkills: (employeeId: string) => EmployeeSkillAchievement[];
+  getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => void;
 }

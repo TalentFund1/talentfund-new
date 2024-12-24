@@ -6,7 +6,13 @@ import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillProfileId } from "../../EmployeeTable";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
-import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from "../types/employeeSkillTypes";
+import { 
+  EmployeeSkill, 
+  EmployeeSkillState, 
+  EmployeeSkillsData, 
+  SkillLevel, 
+  SkillGoalStatus 
+} from "../types/employeeSkillTypes";
 
 interface EmployeeStore {
   employees: Employee[];
@@ -30,7 +36,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
       addEmployee: (employee) => {
         console.log('Adding employee to store:', employee);
         set((state) => ({
-          ...state,
           employees: [...state.employees, employee]
         }));
       },
@@ -38,7 +43,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
       updateEmployee: (employee) => {
         console.log('Updating employee in store:', employee);
         set((state) => ({
-          ...state,
           employees: state.employees.map((emp) => 
             emp.id === employee.id ? { ...employee } : emp
           )
@@ -53,12 +57,20 @@ export const useEmployeeStore = create<EmployeeStore>()(
         console.log('Setting skills for employee:', { employeeId, skills });
         
         const enrichedSkills: EmployeeSkill[] = skills.map(skill => ({
-          ...skill,
           id: `${employeeId}-${skill.title}`,
           employeeId,
+          title: skill.title,
+          subcategory: skill.subcategory,
           level: 'unspecified' as SkillLevel,
           goalStatus: 'unknown' as SkillGoalStatus,
-          lastUpdated: new Date().toISOString()
+          lastUpdated: new Date().toISOString(),
+          weight: skill.weight,
+          confidence: skill.confidence,
+          category: skill.category,
+          businessCategory: skill.businessCategory,
+          growth: skill.growth,
+          salary: skill.salary,
+          benchmarks: skill.benchmarks
         }));
 
         set(state => ({
@@ -67,7 +79,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
             [employeeId]: {
               employeeId,
               skills: enrichedSkills,
-              states: state.employeeSkills[employeeId]?.states || {}
+              states: state.employeeSkills[employeeId]?.states || {},
+              lastUpdated: new Date().toISOString()
             }
           }
         }));
