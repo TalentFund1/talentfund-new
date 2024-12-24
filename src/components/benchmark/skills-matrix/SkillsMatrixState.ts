@@ -3,19 +3,19 @@ import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
+import { SkillRequirement } from '../../employee/types/employeeSkillTypes';
 
 interface SkillState {
   level: string;
-  requirement: string;
-  lastUpdated: string;
+  requirement: SkillRequirement;
 }
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
+  setSkillState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
   resetSkills: () => void;
-  initializeState: (skillTitle: string, level: string, requirement: string) => void;
+  initializeState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -27,31 +27,13 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       hasChanges: false,
 
       setSkillState: (skillTitle, level, requirement) => {
-        console.log('Setting skill state in matrix:', { skillTitle, level, requirement });
-        
-        // Get current employee ID from URL
-        const employeeId = window.location.pathname.split('/').pop();
-        
-        if (employeeId) {
-          // Sync with employee store
-          const employeeStore = useEmployeeStore.getState();
-          employeeStore.setSkillState(employeeId, skillTitle, level, requirement);
-          
-          console.log('Synced skill state with employee store:', {
-            employeeId,
-            skillTitle,
-            level,
-            requirement
-          });
-        }
-
+        console.log('Setting skill state:', { skillTitle, level, requirement });
         set((state) => ({
           currentStates: {
             ...state.currentStates,
             [skillTitle]: { 
               level, 
               requirement,
-              lastUpdated: new Date().toISOString()
             },
           },
           hasChanges: true,
@@ -73,8 +55,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
                 ...state.currentStates,
                 [skillTitle]: { 
                   level, 
-                  requirement: requirement || 'unknown',
-                  lastUpdated: new Date().toISOString()
+                  requirement,
                 },
               },
             };
@@ -83,22 +64,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         }),
 
       saveChanges: () => {
-        const employeeId = window.location.pathname.split('/').pop();
-        if (employeeId) {
-          const employeeStore = useEmployeeStore.getState();
-          const { currentStates } = useSkillsMatrixStore.getState();
-          
-          // Sync all changes to employee store
-          Object.entries(currentStates).forEach(([skillTitle, state]) => {
-            employeeStore.setSkillState(employeeId, skillTitle, state.level, state.requirement);
-          });
-          
-          console.log('Saved all changes to employee store:', {
-            employeeId,
-            skillCount: Object.keys(currentStates).length
-          });
-        }
-
         set(() => ({
           hasChanges: false,
         }));
