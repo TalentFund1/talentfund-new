@@ -74,7 +74,7 @@ export const StaticSkillLevelCell = ({
   const getRequirementStyles = (requirement: string = 'unknown', level: string = 'unspecified') => {
     const baseStyles = 'text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]';
     
-    switch (requirement.toLowerCase()) {
+    switch (requirement?.toLowerCase()) {
       case 'required':
         return `${baseStyles} ${
           level.toLowerCase() === 'advanced' 
