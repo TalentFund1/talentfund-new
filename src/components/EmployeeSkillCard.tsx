@@ -22,14 +22,31 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
     skills: skills.map(s => ({ name: s.name, level: s.level }))
   });
   
-  const getLevelPercentage = (level: string) => {
+  const getLevelPercentage = (level: string | number): number => {
+    // If level is already a number between 0-100, return it
+    if (typeof level === 'number') {
+      console.log('Level is already a percentage:', level);
+      return Math.min(Math.max(level, 0), 100);
+    }
+
+    // Handle string levels
     const levels: { [key: string]: number } = {
       'advanced': 100,
       'intermediate': 66,
       'beginner': 33,
       'unspecified': 0
     };
-    return levels[level.toLowerCase()] || 0;
+
+    const normalizedLevel = level.toString().toLowerCase();
+    const percentage = levels[normalizedLevel] ?? 0;
+
+    console.log('Calculated level percentage:', {
+      originalLevel: level,
+      normalizedLevel,
+      percentage
+    });
+
+    return percentage;
   };
 
   return (
@@ -44,20 +61,29 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
         </div>
       </div>
       <div className="space-y-4">
-        {skills.map((skill) => (
-          <div key={skill.name} className="space-y-1.5">
-            <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium">{skill.name}</span>
-              <span className="text-sm text-secondary-foreground">
-                {getLevelPercentage(String(skill.level))}%
-              </span>
+        {skills.map((skill) => {
+          const percentage = getLevelPercentage(skill.level);
+          console.log('Processing skill:', {
+            name: skill.name,
+            originalLevel: skill.level,
+            calculatedPercentage: percentage
+          });
+
+          return (
+            <div key={skill.name} className="space-y-1.5">
+              <div className="flex justify-between mb-1">
+                <span className="text-sm font-medium">{skill.name}</span>
+                <span className="text-sm text-secondary-foreground">
+                  {percentage}%
+                </span>
+              </div>
+              <Progress
+                value={percentage}
+                className="h-2"
+              />
             </div>
-            <Progress
-              value={getLevelPercentage(String(skill.level))}
-              className="h-2"
-            />
-          </div>
-        ))}
+          );
+        })}
       </div>
     </Card>
   );
