@@ -21,17 +21,17 @@ export const LevelSelector = ({ currentLevel, onLevelChange }: LevelSelectorProp
   };
 
   const getLevelStyles = (level: string) => {
-    const baseStyles = "rounded-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]";
+    const baseStyles = "rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]";
     
     switch (level?.toLowerCase()) {
       case 'advanced':
-        return `${baseStyles} border border-primary-accent bg-primary-accent/10`;
+        return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
       case 'intermediate':
-        return `${baseStyles} border border-primary-icon bg-primary-icon/10`;
+        return `${baseStyles} border-2 border-primary-icon bg-primary-icon/10`;
       case 'beginner':
-        return `${baseStyles} border border-[#008000] bg-[#008000]/10`;
+        return `${baseStyles} border-2 border-[#008000] bg-[#008000]/10`;
       default:
-        return `${baseStyles} border border-gray-300 bg-gray-50`;
+        return `${baseStyles} border-2 border-gray-400 bg-gray-100/50`;
     }
   };
 

@@ -23,6 +23,7 @@ export const SkillCell = ({
   const { currentStates, setSkillState } = useCompetencyStore();
   const initRef = useRef(false);
 
+  // Initialize state only once when component mounts
   useEffect(() => {
     if (!initRef.current) {
       console.log('Initializing skill state:', {

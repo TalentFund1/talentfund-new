@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface RequirementSelectorProps {
   currentRequired: string;
@@ -10,60 +10,50 @@ interface RequirementSelectorProps {
 export const RequirementSelector = ({
   currentRequired,
   currentLevel,
-  onRequirementChange
+  onRequirementChange,
 }: RequirementSelectorProps) => {
-  const getRequirementStyles = (requirement: string, level: string) => {
-    const baseStyles = 'text-xs px-3 py-1.5 font-medium text-[#6B7280] w-full flex items-center justify-center gap-1.5 rounded-md';
+  console.log('Rendering RequirementSelector:', {
+    currentRequired,
+    currentLevel
+  });
+
+  const getRequirementStyles = (requirement: string) => {
+    const baseStyles = "rounded-b-md px-3 py-1.5 text-xs font-medium w-full capitalize flex items-center justify-center min-h-[26px]";
     
-    if (requirement.toLowerCase() === 'required') {
-      const borderColor = level.toLowerCase() === 'advanced' 
-        ? 'border-primary-accent' 
-        : level.toLowerCase() === 'intermediate'
-          ? 'border-primary-icon'
-          : level.toLowerCase() === 'beginner'
-            ? 'border-[#008000]'
-            : 'border-gray-300';
-      
-      return `${baseStyles} bg-gray-50 border ${borderColor}`;
+    switch (requirement) {
+      case 'required':
+        return cn(baseStyles, "bg-blue-100 text-blue-800 border-blue-200 border-t-0");
+      case 'preferred':
+        return cn(baseStyles, "bg-green-100 text-green-800 border-green-200 border-t-0");
+      case 'not_interested':
+        return cn(baseStyles, "bg-gray-100 text-gray-800 border-gray-200 border-t-0");
+      default:
+        return cn(baseStyles, "bg-gray-50 text-gray-600 border-gray-100 border-t-0");
     }
-    
-    return `${baseStyles} bg-gray-50 border border-gray-300`;
   };
 
   return (
-    <Select 
-      value={currentRequired}
-      onValueChange={onRequirementChange}
-    >
+    <Select value={currentRequired} onValueChange={onRequirementChange}>
       <SelectTrigger 
-        className={`${getRequirementStyles(currentRequired, currentLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+        className={cn(
+          getRequirementStyles(currentRequired),
+          "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 border-x border-b"
+        )}
       >
         <SelectValue>
-          <span className="flex items-center gap-2 justify-center">
-            {currentRequired === 'required' ? (
-              <>
-                <Check className="w-3.5 h-3.5" />
-                <span>Required</span>
-              </>
-            ) : (
-              <>
-                <Heart className="w-3.5 h-3.5" />
-                <span>Preferred</span>
-              </>
-            )}
-          </span>
+          {currentRequired === 'not_interested' ? 'Not Interested' : 
+           currentRequired.charAt(0).toUpperCase() + currentRequired.slice(1)}
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="required">
-          <span className="flex items-center gap-2">
-            <Check className="w-3.5 h-3.5" /> Required
-          </span>
+        <SelectItem value="required" className="cursor-pointer">
+          <span className="flex items-center gap-2 text-blue-800">Required</span>
         </SelectItem>
-        <SelectItem value="preferred">
-          <span className="flex items-center gap-2">
-            <Heart className="w-3.5 h-3.5" /> Preferred
-          </span>
+        <SelectItem value="preferred" className="cursor-pointer">
+          <span className="flex items-center gap-2 text-green-800">Preferred</span>
+        </SelectItem>
+        <SelectItem value="not_interested" className="cursor-pointer">
+          <span className="flex items-center gap-2 text-gray-800">Not Interested</span>
         </SelectItem>
       </SelectContent>
     </Select>
