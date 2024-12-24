@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillsStore } from '../types/employeeSkillTypes';
 import { createSkillActions } from './actions/skillActions';
 import { createSkillSelectors } from './selectors/skillSelectors';
 import { useEmployeeStore } from './employeeStore';
+import { EmployeeSkillsStore } from '../types/employeeSkillTypes';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -21,7 +21,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return;
         }
 
-        // Initialize with empty skills array and states object
+        // Initialize with empty skills array and states object - NO role ID
         set(state => ({
           employeeSkills: {
             ...state.employeeSkills,
@@ -34,7 +34,10 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           }
         }));
 
-        console.log('Initialized empty skill container for employee:', employeeId);
+        console.log('Initialized empty skill container for employee:', {
+          employeeId,
+          timestamp: new Date().toISOString()
+        });
       },
 
       batchUpdateSkills: (employeeId: string, updates: Record<string, any>) => {
