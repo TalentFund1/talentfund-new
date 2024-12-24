@@ -1,7 +1,7 @@
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
 
 export const useSkillLevelState = (skillTitle: string) => {
-  const { currentStates, originalStates } = useSkillsMatrixStore();
+  const { currentStates } = useSkillsMatrixStore();
   
   const getCurrentState = () => {
     const state = currentStates[skillTitle];
@@ -13,12 +13,11 @@ export const useSkillLevelState = (skillTitle: string) => {
       });
       return state;
     }
-    return originalStates[skillTitle];
+    return currentStates[skillTitle];
   };
 
   return {
     getCurrentState,
-    currentStates,
-    originalStates
+    currentStates
   };
 };

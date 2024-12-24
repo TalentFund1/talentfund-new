@@ -77,7 +77,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       getSkillState: (employeeId, skillTitle) => {
         console.log('Getting skill state:', { employeeId, skillTitle });
         const state = get().employeeSkills[employeeId]?.states[skillTitle];
-        return state || { level: 'beginner', requirement: 'unknown' as SkillRequirement };
+        return state || { 
+          level: 'beginner', 
+          requirement: 'unknown' as SkillRequirement,
+          lastUpdated: new Date().toISOString()
+        };
       },
 
       initializeEmployeeSkills: (employeeId) => {
