@@ -15,7 +15,7 @@ export const getEmployeeSkills = (id: string): EmployeeSkillAchievement[] => {
       console.log('Found employee data, initializing skills:', {
         employeeId: id,
         skillCount: employee.skills.length,
-        skills: employee.skills.map(s => ({ name: s.name, level: s.level }))
+        skills: employee.skills.map(s => ({ title: s.title, level: s.level }))
       });
       
       // Initialize strictly with employee's existing skills

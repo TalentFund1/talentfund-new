@@ -30,7 +30,7 @@ interface EmployeeStore {
 export const useEmployeeStore = create<EmployeeStore>()(
   persist(
     (set, get) => ({
-      employees: defaultEmployees,
+      employees: [...defaultEmployees],
       employeeSkills: {},
 
       addEmployee: (employee) => {

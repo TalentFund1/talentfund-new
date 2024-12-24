@@ -29,7 +29,10 @@ export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
           // Initialize strictly with employee's existing skills only
           const initializedData = {
             employeeId,
-            skills: initializeEmployeeSkills(employeeId, employee.skills),
+            skills: initializeEmployeeSkills(employeeId, employee.skills.map(s => ({
+              title: s.title,
+              level: s.level
+            }))),
             states: {},
             lastUpdated: new Date().toISOString()
           };
@@ -183,7 +186,7 @@ export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 18, // Incrementing version to ensure clean state
+      version: 18,
       partialize: (state: any) => ({
         employeeSkills: state.employeeSkills
       })
