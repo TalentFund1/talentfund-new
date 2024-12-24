@@ -1,14 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData } from '../types/employeeSkillTypes';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { EmployeeSkill, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
-  setEmployeeSkills: (employeeId: string, skills: EmployeeSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
-  getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
-  setSkillState: (employeeId: string, skillTitle: string, level: string, requirement: string) => void;
+  setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
 
@@ -17,92 +15,92 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     (set, get) => ({
       employeeSkills: {},
 
-      setEmployeeSkills: (employeeId, skills) => {
-        console.log('Setting skills for employee:', {
-          employeeId,
-          skillCount: skills.length,
-          skills: skills.map(s => s.title)
-        });
-
-        // Enrich skills with universal data without role dependencies
-        const enrichedSkills = skills.map(skill => {
-          const universalData = getUnifiedSkillData(skill.title);
-          return {
-            ...skill,
-            businessCategory: universalData.businessCategory,
-            weight: universalData.weight,
-            category: universalData.category,
-            subcategory: universalData.subcategory,
-            growth: universalData.growth || '0%',
-            salary: universalData.salary || 'N/A',
-            confidence: universalData.confidence || 'medium',
-            lastUpdated: new Date().toISOString()
-          };
-        });
-
-        set((state) => ({
-          employeeSkills: {
-            ...state.employeeSkills,
-            [employeeId]: {
-              skills: enrichedSkills,
-              states: state.employeeSkills[employeeId]?.states || {}
-            }
-          }
-        }));
-      },
-
       getEmployeeSkills: (employeeId) => {
         console.log('Getting skills for employee:', employeeId);
         const employeeData = get().employeeSkills[employeeId];
-        
-        if (!employeeData?.skills) {
+        if (!employeeData) {
           console.log('No skills found for employee:', employeeId);
           return [];
         }
-        
-        console.log('Loaded employee skills:', {
-          employeeId,
-          skillCount: employeeData.skills.length,
-          skills: employeeData.skills.map(s => s.title)
-        });
-        
         return employeeData.skills;
       },
 
-      getSkillState: (employeeId, skillTitle) => {
-        console.log('Getting skill state:', { employeeId, skillTitle });
-        const state = get().employeeSkills[employeeId]?.states[skillTitle];
-        return state || { 
-          level: 'beginner',
-          requirement: 'unknown',
-          lastUpdated: new Date().toISOString()
-        };
-      },
+      setSkillLevel: (employeeId, skillTitle, level) => {
+        console.log('Setting skill level:', { employeeId, skillTitle, level });
+        set((state) => {
+          const employeeData = state.employeeSkills[employeeId] || { 
+            employeeId, 
+            skills: [] 
+          };
 
-      setSkillState: (employeeId, skillTitle, level, requirement) => {
-        console.log('Setting skill state:', {
-          employeeId,
-          skillTitle,
-          level,
-          requirement
-        });
+          const updatedSkills = [...employeeData.skills];
+          const skillIndex = updatedSkills.findIndex(s => s.title === skillTitle);
 
-        set((state) => ({
-          employeeSkills: {
-            ...state.employeeSkills,
-            [employeeId]: {
-              ...state.employeeSkills[employeeId],
-              states: {
-                ...state.employeeSkills[employeeId]?.states,
-                [skillTitle]: {
-                  level,
-                  requirement,
-                  lastUpdated: new Date().toISOString()
-                }
+          if (skillIndex >= 0) {
+            updatedSkills[skillIndex] = {
+              ...updatedSkills[skillIndex],
+              level,
+              lastUpdated: new Date().toISOString()
+            };
+          } else {
+            updatedSkills.push({
+              id: `${employeeId}-${skillTitle}`,
+              title: skillTitle,
+              level,
+              goalStatus: 'unknown',
+              lastUpdated: new Date().toISOString()
+            });
+          }
+
+          return {
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: {
+                employeeId,
+                skills: updatedSkills
               }
             }
+          };
+        });
+      },
+
+      setSkillGoalStatus: (employeeId, skillTitle, status) => {
+        console.log('Setting skill goal status:', { employeeId, skillTitle, status });
+        set((state) => {
+          const employeeData = state.employeeSkills[employeeId] || { 
+            employeeId, 
+            skills: [] 
+          };
+
+          const updatedSkills = [...employeeData.skills];
+          const skillIndex = updatedSkills.findIndex(s => s.title === skillTitle);
+
+          if (skillIndex >= 0) {
+            updatedSkills[skillIndex] = {
+              ...updatedSkills[skillIndex],
+              goalStatus: status,
+              lastUpdated: new Date().toISOString()
+            };
+          } else {
+            updatedSkills.push({
+              id: `${employeeId}-${skillTitle}`,
+              title: skillTitle,
+              level: 'unspecified',
+              goalStatus: status,
+              lastUpdated: new Date().toISOString()
+            });
           }
-        }));
+
+          return {
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: {
+                employeeId,
+                skills: updatedSkills
+              }
+            }
+          };
+        });
       },
 
       initializeEmployeeSkills: (employeeId) => {
@@ -114,11 +112,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
-                skills: [],
-                states: {}
+                employeeId,
+                skills: []
               }
             }
           }));
+          console.log('Initialized empty skill set for employee:', employeeId);
         }
       }
     }),

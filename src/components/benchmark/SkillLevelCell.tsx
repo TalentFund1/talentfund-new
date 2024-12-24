@@ -1,30 +1,31 @@
 import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, CircleDashed, X, Heart } from "lucide-react";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { SkillLevel, SkillGoalStatus } from "../employee/types/employeeSkillTypes";
+import { useParams } from "react-router-dom";
 
 interface SkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
-  onLevelChange?: (newLevel: string, requirement: string) => void;
+  onLevelChange?: (newLevel: string, goalStatus: string) => void;
   isRoleBenchmark?: boolean;
 }
 
 export const SkillLevelCell = ({ 
   initialLevel, 
-  skillTitle, 
+  skillTitle,
   onLevelChange,
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
-  const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
+  const { id } = useParams<{ id: string }>();
+  const { setSkillLevel, setSkillGoalStatus, getEmployeeSkills } = useEmployeeSkillsStore();
 
-  // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'required');
+  const employeeSkills = getEmployeeSkills(id || "");
+  const currentSkill = employeeSkills.find(skill => skill.title === skillTitle);
 
-  const currentState = currentStates[skillTitle] || {
-    level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'required'
-  };
+  const currentLevel = currentSkill?.level || initialLevel?.toLowerCase() as SkillLevel || 'unspecified';
+  const currentGoalStatus = currentSkill?.goalStatus || 'unknown';
 
   const getLevelIcon = (level: string) => {
     switch (level?.toLowerCase()) {
@@ -39,11 +40,11 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: string = 'unknown') => {
-    switch (requirement?.toLowerCase()) {
-      case 'required':
+  const getGoalStatusIcon = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'skill_goal':
         return <Heart className="w-3.5 h-3.5" />;
-      case 'not-interested':
+      case 'not_interested':
         return <X className="w-3.5 h-3.5" />;
       default:
         return <CircleDashed className="w-3.5 h-3.5" />;
@@ -65,11 +66,11 @@ export const SkillLevelCell = ({
     }
   };
 
-  const getRequirementStyles = (requirement: string, level: string) => {
+  const getGoalStatusStyles = (status: string, level: string) => {
     const baseStyles = 'text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]';
     
-    switch (requirement?.toLowerCase()) {
-      case 'required':
+    switch (status?.toLowerCase()) {
+      case 'skill_goal':
         return `${baseStyles} ${
           level.toLowerCase() === 'advanced' 
             ? 'border-primary-accent' 
@@ -79,7 +80,7 @@ export const SkillLevelCell = ({
                 ? 'border-[#008000]'
                 : 'border-gray-300'
         }`;
-      case 'not-interested':
+      case 'not_interested':
       case 'unknown':
       default:
         return `${baseStyles} border-gray-300`;
@@ -90,17 +91,19 @@ export const SkillLevelCell = ({
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select 
-          value={currentState?.level || 'unspecified'} 
+          value={currentLevel} 
           onValueChange={(value) => {
-            setSkillState(skillTitle, value, currentState?.requirement || 'required');
-            onLevelChange?.(value, currentState?.requirement || 'required');
+            if (id) {
+              setSkillLevel(id, skillTitle, value as SkillLevel);
+              onLevelChange?.(value, currentGoalStatus);
+            }
           }}
         >
-          <SelectTrigger className={getLevelStyles(currentState?.level)}>
+          <SelectTrigger className={getLevelStyles(currentLevel)}>
             <SelectValue>
               <span className="flex items-center gap-2">
-                {getLevelIcon(currentState?.level)}
-                {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
+                {getLevelIcon(currentLevel)}
+                {currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -133,30 +136,32 @@ export const SkillLevelCell = ({
         </Select>
 
         <Select 
-          value={currentState?.requirement || 'required'}
+          value={currentGoalStatus}
           onValueChange={(value) => {
-            setSkillState(skillTitle, currentState?.level || 'unspecified', value);
-            onLevelChange?.(currentState?.level || 'unspecified', value);
+            if (id) {
+              setSkillGoalStatus(id, skillTitle, value as SkillGoalStatus);
+              onLevelChange?.(currentLevel, value);
+            }
           }}
         >
-          <SelectTrigger className={getRequirementStyles(currentState?.requirement || 'required', currentState?.level || 'unspecified')}>
+          <SelectTrigger className={getGoalStatusStyles(currentGoalStatus, currentLevel)}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
-                {getRequirementIcon(currentState?.requirement)}
-                {currentState?.requirement === 'required' ? 'Skill Goal' : 
-                 currentState?.requirement === 'not-interested' ? 'Not Interested' : 
+                {getGoalStatusIcon(currentGoalStatus)}
+                {currentGoalStatus === 'skill_goal' ? 'Skill Goal' : 
+                 currentGoalStatus === 'not_interested' ? 'Not Interested' : 
                  'Unknown'}
               </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="required">
+            <SelectItem value="skill_goal">
               <span className="flex items-center gap-1.5">
                 <Heart className="w-3.5 h-3.5" />
                 Skill Goal
               </span>
             </SelectItem>
-            <SelectItem value="not-interested">
+            <SelectItem value="not_interested">
               <span className="flex items-center gap-1.5">
                 <X className="w-3.5 h-3.5" />
                 Not Interested
