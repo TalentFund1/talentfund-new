@@ -4,7 +4,7 @@ import { EmployeeStore } from '../../../types/storeTypes';
 
 export const createSkillActions = (set: any, get: any) => ({
   initializeEmployeeSkills: (employeeId: string, employeeStore?: EmployeeStore) => {
-    console.log('Initializing skills store for employee:', employeeId);
+    console.log('Checking initialization status for employee:', employeeId);
     
     // Check if already initialized with skills
     const currentSkills = get().employeeSkills[employeeId];
@@ -28,23 +28,31 @@ export const createSkillActions = (set: any, get: any) => ({
     // Initialize skills based on role
     const initialSkills = initializeSkills(employeeId, employee.role);
 
-    set(state => ({
-      employeeSkills: {
-        ...state.employeeSkills,
-        [employeeId]: {
-          employeeId,
-          skills: initialSkills,
-          states: initialSkills.reduce((acc, skill) => ({
-            ...acc,
-            [skill.title]: {
-              level: 'unspecified',
-              requirement: 'unknown',
-              lastUpdated: new Date().toISOString()
-            }
-          }), {})
-        }
+    set(state => {
+      // Double-check we haven't initialized in the meantime
+      if (state.employeeSkills[employeeId]?.skills?.length > 0) {
+        console.log('Skills were initialized by another process:', employeeId);
+        return state;
       }
-    }));
+
+      return {
+        employeeSkills: {
+          ...state.employeeSkills,
+          [employeeId]: {
+            employeeId,
+            skills: initialSkills,
+            states: initialSkills.reduce((acc, skill) => ({
+              ...acc,
+              [skill.title]: {
+                level: 'unspecified',
+                requirement: 'unknown',
+                lastUpdated: new Date().toISOString()
+              }
+            }), {})
+          }
+        }
+      };
+    });
 
     console.log('Successfully initialized employee skills:', {
       employeeId,

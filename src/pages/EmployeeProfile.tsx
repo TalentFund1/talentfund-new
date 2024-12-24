@@ -48,8 +48,18 @@ const EmployeeProfile = () => {
       return;
     }
 
-    // Initialize employee skills with store
-    initializeEmployeeSkills(id || "", employeeStore);
+    console.log('Initializing employee skills from profile component:', id);
+    // Initialize employee skills with store, wrapped in a try-catch to handle any initialization errors
+    try {
+      initializeEmployeeSkills(id || "", employeeStore);
+    } catch (error) {
+      console.error('Failed to initialize employee skills:', error);
+      toast({
+        title: "Initialization Error",
+        description: "Failed to load employee skills. Please try refreshing the page.",
+        variant: "destructive"
+      });
+    }
   }, [employee, id, initializeEmployeeSkills, navigate, toast, employeeStore]);
 
   if (!employee) {
