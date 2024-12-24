@@ -18,6 +18,7 @@ import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
+import { useEmployeeSkillsStore } from "@/components/employee/store/employeeSkillsStore";
 
 const employeeImages = {
   "123": "photo-1488590528505-98d2b5aba04b",
@@ -31,6 +32,7 @@ const EmployeeProfile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
+  const initializeEmployeeSkills = useEmployeeSkillsStore((state) => state.initializeEmployeeSkills);
   const employee = getEmployeeById(id || "");
 
   useEffect(() => {
@@ -42,8 +44,12 @@ const EmployeeProfile = () => {
         variant: "destructive"
       });
       navigate('/employees');
+      return;
     }
-  }, [employee, navigate, toast]);
+
+    // Initialize employee skills
+    initializeEmployeeSkills(id || "");
+  }, [employee, id, initializeEmployeeSkills, navigate, toast]);
 
   if (!employee) {
     return null;

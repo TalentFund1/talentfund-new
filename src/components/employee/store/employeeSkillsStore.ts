@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EmployeeSkillsStore, EmployeeSkillAchievement, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { roleSkills } from '../../skills/data/roleSkills';
+import { getSkillProfileId, getBaseRole } from '../../EmployeeTable';
+import { useEmployeeStore } from './employeeStore';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -10,25 +13,80 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Initializing employee skills:', { employeeId });
-        const currentSkills = get().employeeSkills[employeeId];
         
-        if (!currentSkills) {
-          console.log('No existing skills found, creating new entry for employee:', employeeId);
+        // Get employee's role from employee store
+        const employee = useEmployeeStore.getState().getEmployeeById(employeeId);
+        if (!employee) {
+          console.warn('Employee not found during skill initialization:', employeeId);
+          return;
+        }
+
+        const roleId = getSkillProfileId(employee.role);
+        const baseRole = getBaseRole(employee.role);
+        
+        console.log('Initializing skills for role:', { roleId, baseRole, originalRole: employee.role });
+
+        // Get role skills from roleSkills
+        const roleData = roleSkills[roleId];
+        if (!roleData) {
+          console.warn('Role skills not found:', roleId);
+          return;
+        }
+
+        // Combine all skills from role
+        const allRoleSkills = [
+          ...(roleData.specialized || []),
+          ...(roleData.common || []),
+          ...(roleData.certifications || [])
+        ];
+
+        // Create initial skill achievements
+        const initialSkills: EmployeeSkillAchievement[] = allRoleSkills.map(skill => {
+          const unifiedData = getUnifiedSkillData(skill.title);
+          return {
+            id: `${employeeId}-${skill.title}`,
+            employeeId,
+            title: skill.title,
+            subcategory: unifiedData.subcategory,
+            level: 'unspecified',
+            goalStatus: 'unknown',
+            lastUpdated: new Date().toISOString(),
+            category: unifiedData.category,
+            businessCategory: unifiedData.businessCategory,
+            weight: unifiedData.weight,
+            growth: unifiedData.growth,
+            salary: unifiedData.salary,
+            confidence: 'medium',
+            benchmarks: unifiedData.benchmarks
+          };
+        });
+
+        console.log('Created initial skills:', {
+          employeeId,
+          skillCount: initialSkills.length,
+          skills: initialSkills.map(s => s.title)
+        });
+
+        // Only initialize if not already initialized
+        const currentSkills = get().employeeSkills[employeeId];
+        if (!currentSkills || currentSkills.skills.length === 0) {
           set(state => ({
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
                 employeeId,
-                skills: [],
-                states: {}
+                skills: initialSkills,
+                states: initialSkills.reduce((acc, skill) => ({
+                  ...acc,
+                  [skill.title]: {
+                    level: 'unspecified',
+                    requirement: 'unknown',
+                    lastUpdated: new Date().toISOString()
+                  }
+                }), {})
               }
             }
           }));
-        } else {
-          console.log('Found existing skills for employee:', {
-            employeeId,
-            skillCount: currentSkills.skills.length
-          });
         }
       },
 
