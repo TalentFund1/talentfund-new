@@ -1,6 +1,4 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useEmployeeStore } from "../../employee/store/employeeStore";
-import { useToast } from "@/hooks/use-toast";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { professionalLevels, managerialLevels } from "../data/levelData";
 
@@ -19,11 +17,6 @@ export const RoleSelectionSection = ({
   onRoleChange,
   onLevelChange
 }: RoleSelectionSectionProps) => {
-  const { toast } = useToast();
-  const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
-  const employees = useEmployeeStore((state) => state.employees);
-  const employee = employeeId ? employees.find(emp => emp.id === employeeId) : undefined;
-
   // Get all available roles from roleSkills
   const availableRoles = Object.entries(roleSkills).map(([id, data]) => ({
     id,
@@ -31,10 +24,14 @@ export const RoleSelectionSection = ({
     roleTrack: data.roleTrack || "Professional"
   }));
 
-  console.log('Available roles:', availableRoles);
+  console.log('Role selection state:', {
+    selectedRole,
+    roleTrack: roleSkills[selectedRole as keyof typeof roleSkills]?.roleTrack,
+    availableRoles: availableRoles.map(r => ({ id: r.id, title: r.title }))
+  });
 
   const handleRoleChange = (newRole: string) => {
-    console.log('Role changed:', { newRole, currentEmployee: employee });
+    console.log('Role changed for benchmarking:', { newRole });
     onRoleChange(newRole);
     
     // Reset level when role changes to ensure track compatibility
@@ -42,43 +39,11 @@ export const RoleSelectionSection = ({
     const isManagerialRole = roleData?.roleTrack === "Managerial";
     const defaultLevel = isManagerialRole ? "m3" : "p1";
     onLevelChange(defaultLevel);
-    
-    if (employee) {
-      const roleTitle = roleData?.title;
-      if (roleTitle) {
-        const updatedEmployee = {
-          ...employee,
-          role: `${roleTitle}: ${defaultLevel.toUpperCase()}`
-        };
-        updateEmployee(updatedEmployee);
-        console.log('Updated employee role:', updatedEmployee.role);
-        toast({
-          title: "Role Updated",
-          description: `Employee role updated to ${updatedEmployee.role}`,
-        });
-      }
-    }
   };
 
   const handleLevelChange = (newLevel: string) => {
-    console.log('Level changed:', { newLevel, currentEmployee: employee });
+    console.log('Level changed for benchmarking:', { newLevel });
     onLevelChange(newLevel);
-    
-    if (employee) {
-      const roleTitle = roleSkills[selectedRole as keyof typeof roleSkills]?.title;
-      if (roleTitle) {
-        const updatedEmployee = {
-          ...employee,
-          role: `${roleTitle}: ${newLevel.toUpperCase()}`
-        };
-        updateEmployee(updatedEmployee);
-        console.log('Updated employee level:', updatedEmployee.role);
-        toast({
-          title: "Level Updated",
-          description: `Employee level updated to ${newLevel.toUpperCase()}`,
-        });
-      }
-    }
   };
 
   const getLevelDescription = (level: string) => {
@@ -101,13 +66,6 @@ export const RoleSelectionSection = ({
   const selectedRoleData = roleSkills[selectedRole as keyof typeof roleSkills];
   const isManagerialRole = selectedRoleData?.roleTrack === "Managerial";
   const availableLevels = isManagerialRole ? managerialLevels : professionalLevels;
-
-  console.log('Role selection state:', {
-    selectedRole,
-    roleTrack: selectedRoleData?.roleTrack,
-    isManagerialRole,
-    availableLevels
-  });
 
   return (
     <div className="flex items-center gap-4 mt-4">
