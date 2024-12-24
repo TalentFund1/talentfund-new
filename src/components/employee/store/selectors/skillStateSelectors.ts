@@ -1,28 +1,27 @@
-import { SkillStateStore } from '../types/skillStateTypes';
-import { EmployeeSkill, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../../types/employeeSkillTypes';
+import { EmployeeSkill, EmployeeSkillState } from '../types/employeeSkillTypes';
 
-export const createSkillStateSelectors = (get: () => SkillStateStore) => ({
+export const createSkillStateSelectors = (get: () => any) => ({
   getEmployeeSkills: (employeeId: string): EmployeeSkill[] => {
-    console.log('Getting skills for employee:', employeeId);
-    const employeeData = get().employeeSkills[employeeId];
-    if (!employeeData) {
-      console.log('No skills found for employee:', employeeId);
-      return [];
+    console.log('Getting employee skills:', { employeeId });
+    const state = get();
+    if (!state.employeeSkills[employeeId]) {
+      state.initializeEmployeeSkills(employeeId);
     }
-    return employeeData.skills;
+    return state.employeeSkills[employeeId]?.skills || [];
   },
 
   getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
     console.log('Getting skill state:', { employeeId, skillTitle });
-    const employeeData = get().employeeSkills[employeeId];
+    const state = get();
+    const skillState = state.employeeSkills[employeeId]?.states[skillTitle];
     const defaultState: EmployeeSkillState = {
-      level: 'unspecified' as SkillLevel,
-      requirement: 'unknown' as SkillGoalStatus,
+      level: 'unspecified',
+      requirement: 'unknown',
       lastUpdated: new Date().toISOString()
     };
 
-    if (!employeeData?.states?.[skillTitle]) {
-      console.log('No existing state found for skill:', {
+    if (!skillState) {
+      console.log('No existing skill state found:', {
         employeeId,
         skillTitle,
         usingDefault: true
@@ -30,12 +29,12 @@ export const createSkillStateSelectors = (get: () => SkillStateStore) => ({
       return defaultState;
     }
 
-    console.log('Retrieved skill state:', {
+    console.log('Retrieved employee skill state:', {
       employeeId,
       skillTitle,
-      state: employeeData.states[skillTitle]
+      state: skillState
     });
     
-    return employeeData.states[skillTitle];
+    return skillState;
   }
 });

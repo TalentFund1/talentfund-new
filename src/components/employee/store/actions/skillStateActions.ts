@@ -1,13 +1,11 @@
-import { SkillLevel, SkillGoalStatus, EmployeeSkill } from '../../types/employeeSkillTypes';
-import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
-import { SkillStateStore } from '../types/skillStateTypes';
+import { SkillLevel, SkillGoalStatus, EmployeeSkill, EmployeeSkillState } from '../types/employeeSkillTypes';
 
 export const createSkillStateActions = (
-  set: (fn: (state: SkillStateStore) => Partial<SkillStateStore>) => void,
-  get: () => SkillStateStore
+  set: (fn: (state: any) => Partial<any>) => void,
+  get: () => any
 ) => ({
   setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
-    console.log('Setting skill level:', { employeeId, skillTitle, level });
+    console.log('Setting employee skill level:', { employeeId, skillTitle, level });
     set((state) => {
       const employeeData = state.employeeSkills[employeeId] || {
         employeeId,
@@ -25,17 +23,23 @@ export const createSkillStateActions = (
           lastUpdated: new Date().toISOString()
         };
       } else {
-        const skillData = getUnifiedSkillData(skillTitle);
         const newSkill: EmployeeSkill = {
-          ...skillData,
           id: `${employeeId}-${skillTitle}`,
           employeeId,
+          title: skillTitle,
           level,
           goalStatus: 'unknown',
           lastUpdated: new Date().toISOString()
         };
         updatedSkills.push(newSkill);
       }
+
+      console.log('Updated employee skill:', { 
+        employeeId, 
+        skillTitle, 
+        newLevel: level,
+        skillsCount: updatedSkills.length 
+      });
 
       return {
         employeeSkills: {
@@ -46,8 +50,8 @@ export const createSkillStateActions = (
             states: {
               ...employeeData.states,
               [skillTitle]: {
-                ...employeeData.states[skillTitle],
                 level,
+                requirement: employeeData.states[skillTitle]?.requirement || 'unknown',
                 lastUpdated: new Date().toISOString()
               }
             }
@@ -58,7 +62,7 @@ export const createSkillStateActions = (
   },
 
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => {
-    console.log('Setting skill goal status:', { employeeId, skillTitle, status });
+    console.log('Setting employee skill goal status:', { employeeId, skillTitle, status });
     set((state) => {
       const employeeData = state.employeeSkills[employeeId] || {
         employeeId,
@@ -77,6 +81,13 @@ export const createSkillStateActions = (
         };
       }
 
+      console.log('Updated employee skill goal:', { 
+        employeeId, 
+        skillTitle, 
+        newStatus: status,
+        skillsCount: updatedSkills.length 
+      });
+
       return {
         employeeSkills: {
           ...state.employeeSkills,
@@ -86,7 +97,7 @@ export const createSkillStateActions = (
             states: {
               ...employeeData.states,
               [skillTitle]: {
-                ...employeeData.states[skillTitle],
+                level: employeeData.states[skillTitle]?.level || 'unspecified',
                 requirement: status,
                 lastUpdated: new Date().toISOString()
               }
