@@ -34,7 +34,6 @@ export const createSkillStateActions = (
           subcategory: skillData.subcategory,
           level,
           goalStatus: 'unknown',
-          requirement: 'unknown', // Add requirement field to match type
           lastUpdated: new Date().toISOString(),
           weight: skillData.weight,
           confidence: 'medium',
@@ -57,7 +56,7 @@ export const createSkillStateActions = (
               ...employeeData.states,
               [skillTitle]: {
                 level,
-                requirement: employeeData.states[skillTitle]?.requirement || 'unknown',
+                goalStatus: employeeData.states[skillTitle]?.goalStatus || 'unknown',
                 lastUpdated: new Date().toISOString()
               }
             }
@@ -84,7 +83,6 @@ export const createSkillStateActions = (
         updatedSkills[skillIndex] = {
           ...updatedSkills[skillIndex],
           goalStatus: status,
-          requirement: status, // Sync requirement with goalStatus
           lastUpdated: new Date().toISOString()
         };
       } else {
@@ -97,7 +95,6 @@ export const createSkillStateActions = (
           subcategory: skillData.subcategory,
           level: 'unspecified',
           goalStatus: status,
-          requirement: status, // Sync requirement with goalStatus
           lastUpdated: new Date().toISOString(),
           weight: skillData.weight,
           confidence: 'medium',
@@ -120,7 +117,7 @@ export const createSkillStateActions = (
               ...employeeData.states,
               [skillTitle]: {
                 level: employeeData.states[skillTitle]?.level || 'unspecified',
-                requirement: status,
+                goalStatus: status,
                 lastUpdated: new Date().toISOString()
               }
             }

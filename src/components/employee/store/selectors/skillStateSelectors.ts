@@ -16,7 +16,7 @@ export const createSkillStateSelectors = (get: () => any) => ({
     const skillState = state.employeeSkills[employeeId]?.states[skillTitle];
     const defaultState: EmployeeSkillState = {
       level: 'unspecified',
-      requirement: 'unknown',
+      goalStatus: 'unknown',
       lastUpdated: new Date().toISOString()
     };
 
