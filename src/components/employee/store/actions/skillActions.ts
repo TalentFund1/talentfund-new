@@ -1,5 +1,5 @@
 import { SkillLevel, SkillGoalStatus } from '../types/skillStoreTypes';
-import { initializeSkillsForEmployee } from '../utils/skillInitializer';
+import { initializeEmployeeSkills } from '../utils/skillInitializer';
 
 export const createSkillActions = (set: any, get: any) => ({
   initializeEmployeeSkills: (employeeId: string) => {
@@ -13,7 +13,7 @@ export const createSkillActions = (set: any, get: any) => ({
     }
 
     // Initialize skills based on role
-    const initialSkills = initializeSkillsForEmployee(employeeId);
+    const initialSkills = initializeEmployeeSkills(employeeId);
 
     set(state => ({
       employeeSkills: {
