@@ -31,7 +31,6 @@ export interface EmployeeSkill {
   };
 }
 
-// Alias for backward compatibility
 export type EmployeeSkillAchievement = EmployeeSkill;
 
 export interface EmployeeSkillsData {
