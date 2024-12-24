@@ -9,7 +9,7 @@ export interface EmployeeSkillState {
   lastUpdated: string;
 }
 
-export interface EmployeeSkillAchievement {
+export interface EmployeeSkill {
   id: string;
   employeeId: string;
   title: string;
@@ -17,12 +17,12 @@ export interface EmployeeSkillAchievement {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  weight: SkillWeight;
-  confidence: 'low' | 'medium' | 'high';
   category: SkillCategory;
+  weight: SkillWeight;
   businessCategory: string;
   growth: string;
   salary: string;
+  confidence: 'low' | 'medium' | 'high';
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -30,6 +30,8 @@ export interface EmployeeSkillAchievement {
     O: boolean;
   };
 }
+
+export interface EmployeeSkillAchievement extends EmployeeSkill {}
 
 export interface EmployeeSkillsData {
   employeeId: string;

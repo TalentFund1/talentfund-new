@@ -10,7 +10,6 @@ import {
 } from '../types/employeeSkillTypes';
 import { initializeEmployeeSkillsData } from './actions/initializeEmployeeSkills';
 import { employees } from '../EmployeeData';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
