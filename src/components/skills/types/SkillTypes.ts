@@ -50,7 +50,7 @@ export interface RoleSkillData {
 export interface SimpleSkill {
   title: string;
   subcategory: string;
-  category?: string;
+  category?: SkillCategory;
   businessCategory?: string;
   level: string;
   growth: string;
