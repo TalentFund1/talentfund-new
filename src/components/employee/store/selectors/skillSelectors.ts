@@ -1,4 +1,4 @@
-import { EmployeeSkillAchievement, EmployeeSkillState } from '../types/skillStoreTypes';
+import { EmployeeSkillAchievement, EmployeeSkillState } from '../../types/employeeSkillTypes';
 
 export const createSkillSelectors = (get: any) => {
   // Memoized skills getter
@@ -33,7 +33,7 @@ export const createSkillSelectors = (get: any) => {
         
         return {
           level: 'unspecified',
-          requirement: 'unknown',
+          goalStatus: 'unknown',
           lastUpdated: new Date().toISOString()
         };
       }
