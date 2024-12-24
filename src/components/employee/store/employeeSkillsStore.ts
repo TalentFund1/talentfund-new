@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SkillLevel, SkillGoalStatus, EmployeeSkill, EmployeeSkillState } from '../types/employeeSkillTypes';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, {
@@ -9,15 +8,18 @@ interface EmployeeSkillsStore {
     states: Record<string, EmployeeSkillState>;
   }>;
   
-  // Actions
   initializeEmployeeSkills: (employeeId: string) => void;
   setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
-  
-  // Selectors
   getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
 }
+
+const defaultSkillState: EmployeeSkillState = {
+  level: 'unspecified',
+  requirement: 'unknown',
+  lastUpdated: new Date().toISOString()
+};
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -60,18 +62,28 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               lastUpdated: new Date().toISOString()
             };
           } else {
-            const skillData = getUnifiedSkillData(skillTitle);
-            if (skillData) {
-              const newSkill: EmployeeSkill = {
-                ...skillData,
-                id: `${employeeId}-${skillTitle}`,
-                employeeId,
-                level,
-                goalStatus: 'unknown',
-                lastUpdated: new Date().toISOString()
-              };
-              updatedSkills.push(newSkill);
-            }
+            const newSkill: EmployeeSkill = {
+              id: `${employeeId}-${skillTitle}`,
+              employeeId,
+              title: skillTitle,
+              subcategory: '',
+              level,
+              goalStatus: 'unknown',
+              lastUpdated: new Date().toISOString(),
+              category: 'specialized',
+              weight: 'technical',
+              businessCategory: '',
+              growth: '',
+              salary: '',
+              confidence: 'medium',
+              benchmarks: {
+                B: false,
+                R: false,
+                M: false,
+                O: false
+              }
+            };
+            updatedSkills.push(newSkill);
           }
 
           return {
@@ -150,12 +162,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             skillTitle,
             usingDefault: true
           });
-          
-          return {
-            level: 'unspecified' as SkillLevel,
-            requirement: 'unknown' as SkillGoalStatus,
-            lastUpdated: new Date().toISOString()
-          };
+          return { ...defaultSkillState };
         }
 
         console.log('Retrieved skill state:', {
@@ -169,7 +176,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 2,
+      version: 3, // Incremented version to ensure clean state
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
