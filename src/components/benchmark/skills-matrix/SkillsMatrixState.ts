@@ -3,19 +3,20 @@ import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { useEmployeeStore } from '../../employee/store/employeeStore';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
+import { EmployeeSkill, SkillLevel, SkillGoalStatus } from '../../employee/types/employeeSkillTypes';
 
 interface SkillState {
-  level: string;
-  requirement: string;
+  level: SkillLevel;
+  requirement: SkillGoalStatus;
   lastUpdated: string;
 }
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, requirement: string) => void;
+  setSkillState: (skillTitle: string, level: SkillLevel, requirement: SkillGoalStatus) => void;
   resetSkills: () => void;
-  initializeState: (skillTitle: string, level: string, requirement: string) => void;
+  initializeState: (skillTitle: string, level: SkillLevel, requirement: SkillGoalStatus) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }

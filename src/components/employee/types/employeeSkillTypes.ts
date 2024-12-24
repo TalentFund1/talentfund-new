@@ -1,7 +1,7 @@
 import { SkillCategory, SkillWeight, SkillRequirement } from '../../skills/types/SkillTypes';
 
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
-export type SkillGoalStatus = SkillRequirement;
+export type SkillGoalStatus = 'skill_goal' | 'not_interested' | 'unknown';
 
 export interface EmployeeSkill {
   id: string;
@@ -16,7 +16,7 @@ export interface EmployeeSkill {
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
-  requirement?: SkillGoalStatus;
+  requirement?: SkillRequirement;
   benchmarks: {
     B: boolean;
     R: boolean;
