@@ -1,41 +1,26 @@
-import { SkillCategory, SkillWeight, SkillRequirement } from '../../skills/types/SkillTypes';
+import { SkillCategory, SkillWeight } from '../../skills/types/SkillTypes';
 
 export interface EmployeeSkill {
   id: string;
   title: string;
-  level: string;
-  category: SkillCategory;
   subcategory: string;
+  category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
-  requirement: SkillRequirement;
+  level: string;
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
-  benchmarks: {
-    B: boolean;
-    R: boolean;
-    M: boolean;
-    O: boolean;
-  };
-  dateAcquired?: string;
   lastUpdated: string;
 }
 
 export interface EmployeeSkillState {
   level: string;
-  requirement: SkillRequirement;
+  requirement: 'required' | 'preferred' | 'not_interested' | 'unknown';
   lastUpdated: string;
 }
 
 export interface EmployeeSkillsData {
   skills: EmployeeSkill[];
   states: Record<string, EmployeeSkillState>;
-}
-
-export interface EmployeeSkillUpdate {
-  employeeId: string;
-  skillTitle: string;
-  level: string;
-  requirement: SkillRequirement;
 }
