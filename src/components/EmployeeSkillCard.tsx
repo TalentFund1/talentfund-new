@@ -4,10 +4,11 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
 import { useMemo } from "react";
+import { SkillLevel } from "./employee/types/employeeSkillTypes";
 
 interface Skill {
   name: string;
-  level: number | string;
+  level: SkillLevel | string;
 }
 
 interface EmployeeSkillCardProps {
