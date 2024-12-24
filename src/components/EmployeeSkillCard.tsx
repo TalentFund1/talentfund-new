@@ -22,11 +22,20 @@ export const EmployeeSkillCard = ({
     role, 
     skillCount: skills.length,
     employeeId,
-    skills: skills.map(s => ({ name: s.name, level: s.level }))
+    skills: skills.map(s => ({ 
+      name: s.name, 
+      level: getSkillState(employeeId, s.name).level 
+    }))
   });
 
   const getLevelPercentage = (skillName: string): number => {
     const skillState = getSkillState(employeeId, skillName);
+    console.log('Getting level percentage for skill:', {
+      employeeId,
+      skillName,
+      level: skillState.level
+    });
+    
     return benchmarkingService.compareSkillLevels(
       { title: skillName, level: skillState.level },
       { title: skillName, minimumLevel: 'beginner' }

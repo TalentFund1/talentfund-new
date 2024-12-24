@@ -27,16 +27,28 @@ export const SkillsMatrix = () => {
   );
 
   // Get employee skills and convert them to UnifiedSkill format
-  const employeeSkills = id ? getEmployeeSkills(id).map(skill => ({
-    ...skill,
-    level: getSkillState(id, skill.title).level,
-    goalStatus: getSkillState(id, skill.title).goalStatus
-  } as UnifiedSkill)) : [];
+  const employeeSkills = id ? getEmployeeSkills(id).map(skill => {
+    console.log('Processing skill:', { employeeId: id, skill });
+    const skillState = getSkillState(id, skill.title);
+    return {
+      ...skill,
+      id: `${id}-${skill.title}`,
+      title: skill.title,
+      level: skillState.level,
+      goalStatus: skillState.goalStatus,
+      lastUpdated: skillState.lastUpdated,
+      confidence: skillState.confidence || 'medium'
+    } as UnifiedSkill;
+  }) : [];
 
   console.log('SkillsMatrix - Loading employee skills:', {
     employeeId: id,
     skillCount: employeeSkills.length,
-    skills: employeeSkills.map(s => s.title)
+    skills: employeeSkills.map(s => ({ 
+      title: s.title,
+      level: s.level,
+      goalStatus: s.goalStatus
+    }))
   });
 
   // Apply filtering and sorting to employee skills
