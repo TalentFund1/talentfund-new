@@ -34,7 +34,12 @@ export const createSkillStateActions = (
           goalStatus: 'unknown',
           lastUpdated: new Date().toISOString(),
           weight: skillData.weight,
-          confidence: 'medium'
+          confidence: 'medium',
+          category: skillData.category,
+          businessCategory: skillData.businessCategory,
+          growth: skillData.growth,
+          salary: skillData.salary,
+          benchmarks: skillData.benchmarks
         };
         updatedSkills.push(newSkill);
       }
