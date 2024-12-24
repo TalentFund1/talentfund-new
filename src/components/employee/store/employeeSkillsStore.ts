@@ -3,12 +3,12 @@ import { persist } from 'zustand/middleware';
 import { 
   EmployeeSkillsStore, 
   EmployeeSkillState, 
-  EmployeeSkillsData, 
+  EmployeeSkillsData,
   SkillLevel, 
-  SkillGoalStatus, 
-  EmployeeSkillAchievement 
+  SkillGoalStatus
 } from '../types/employeeSkillTypes';
-import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { initializeEmployeeSkillsData } from './actions/initializeEmployeeSkills';
+import { employees } from '../EmployeeData';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -20,18 +20,25 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         
         const currentSkills = get().employeeSkills[employeeId];
         if (!currentSkills) {
+          const employee = employees.find(emp => emp.id === employeeId);
+          if (!employee) {
+            console.warn('Employee not found:', employeeId);
+            return;
+          }
+
+          const initializedData = initializeEmployeeSkillsData(employeeId, employee.skills);
+          
           set((state) => ({
             employeeSkills: {
               ...state.employeeSkills,
-              [employeeId]: {
-                employeeId,
-                skills: [],
-                states: {},
-                lastUpdated: new Date().toISOString()
-              }
+              [employeeId]: initializedData
             }
           }));
-          console.log('Initialized empty skill set for employee:', employeeId);
+          
+          console.log('Initialized skills for employee:', {
+            employeeId,
+            skillCount: initializedData.skills.length
+          });
         }
       },
 
@@ -243,7 +250,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 12,
+      version: 13,
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
