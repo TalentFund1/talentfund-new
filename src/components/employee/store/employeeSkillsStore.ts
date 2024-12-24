@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { 
-  EmployeeSkillsStore, 
-  EmployeeSkillState, 
   EmployeeSkillsData,
   SkillLevel, 
   SkillGoalStatus,
@@ -10,8 +8,9 @@ import {
 } from '../types/employeeSkillTypes';
 import { initializeEmployeeSkills } from './actions/initializeEmployeeSkills';
 import { employees } from '../EmployeeData';
+import { IEmployeeSkillsStore } from './interfaces/EmployeeSkillsStoreInterface';
 
-export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
+export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
   persist(
     (set, get) => ({
       employeeSkills: {},
@@ -19,8 +18,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Starting employee skills initialization:', employeeId);
         
-        const currentSkills = get().employeeSkills[employeeId];
-        if (!currentSkills) {
+        const currentSkills = get().getEmployeeSkills(employeeId);
+        if (currentSkills.length === 0) {
           const employee = employees.find(emp => emp.id === employeeId);
           if (!employee) {
             console.warn('No employee data found:', employeeId);
@@ -35,7 +34,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             lastUpdated: new Date().toISOString()
           };
           
-          set((state) => ({
+          set((state: any) => ({
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: initializedData
@@ -45,33 +44,39 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           console.log('Initialized employee skills:', {
             employeeId,
             skillCount: initializedData.skills.length,
-            skills: initializedData.skills.map(s => s.title)
+            skills: initializedData.skills.map(s => ({
+              title: s.title,
+              level: s.level
+            }))
           });
         } else {
           console.log('Skills already initialized for employee:', {
             employeeId,
-            skillCount: currentSkills.skills.length
+            skillCount: currentSkills.length
           });
         }
       },
 
       getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
         console.log('Getting skills for employee:', employeeId);
-        const skills = get().employeeSkills[employeeId]?.skills || [];
+        const skills = (get() as any).employeeSkills[employeeId]?.skills || [];
         
         if (skills.length > 0) {
           console.log('Found existing skills:', {
             employeeId,
             skillCount: skills.length,
-            skills: skills.map(s => s.title)
+            skills: skills.map((s: EmployeeSkillAchievement) => ({
+              title: s.title,
+              level: s.level
+            }))
           });
         }
         
         return skills;
       },
 
-      getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
-        const state = get().employeeSkills[employeeId]?.states[skillTitle];
+      getSkillState: (employeeId: string, skillTitle: string) => {
+        const state = (get() as any).employeeSkills[employeeId]?.states[skillTitle];
         
         if (!state) {
           console.log('No existing skill state found:', {
@@ -81,8 +86,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           });
           
           return {
-            level: 'unspecified',
-            goalStatus: 'unknown',
+            level: 'unspecified' as SkillLevel,
+            goalStatus: 'unknown' as SkillGoalStatus,
             lastUpdated: new Date().toISOString()
           };
         }
@@ -92,7 +97,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
       setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
         console.log('Setting skill level:', { employeeId, skillTitle, level });
-        set(state => {
+        set((state: any) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
             skills: [],
@@ -120,7 +125,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
       setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => {
         console.log('Setting skill goal status:', { employeeId, skillTitle, status });
-        set(state => {
+        set((state: any) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
             skills: [],
@@ -146,10 +151,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         });
       },
 
-      batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => {
-        console.log('Processing batch update:', { employeeId, updateCount: Object.keys(updates).length });
+      batchUpdateSkills: (employeeId: string, updates: Record<string, any>) => {
+        console.log('Processing batch update:', { 
+          employeeId, 
+          updateCount: Object.keys(updates).length 
+        });
 
-        set((state) => {
+        set((state: any) => {
           const currentData = state.employeeSkills[employeeId] || {
             employeeId,
             skills: [],
@@ -175,8 +183,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 17, // Incrementing version to ensure clean state
-      partialize: (state) => ({
+      version: 18, // Incrementing version to ensure clean state
+      partialize: (state: any) => ({
         employeeSkills: state.employeeSkills
       })
     }
