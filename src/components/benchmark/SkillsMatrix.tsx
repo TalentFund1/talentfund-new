@@ -26,7 +26,7 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get only employee skills
+  // Get employee skills and convert them to UnifiedSkill format
   const employeeSkills = id ? getEmployeeSkills(id).map(skill => {
     const state = getSkillState(id, skill.title);
     return {
@@ -42,7 +42,7 @@ export const SkillsMatrix = () => {
     skills: employeeSkills.map(s => s.title)
   });
 
-  // Apply filtering and sorting to employee skills only
+  // Apply filtering and sorting to employee skills
   const filteredSkills = filterAndSortSkills(employeeSkills);
 
   console.log('SkillsMatrix - Filtered skills:', {
