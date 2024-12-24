@@ -100,21 +100,21 @@ export const SkillsSummary = () => {
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
     filterSkillsByCategory(employeeSkills.map(skill => ({
       ...skill,
-      requirement: skill.requirement as SkillRequirement
+      goalStatus: skill.goalStatus
     })), "specialized") as UnifiedSkill[]
   );
 
   const commonSkills: DetailedSkill[] = transformAndSortSkills(
     filterSkillsByCategory(employeeSkills.map(skill => ({
       ...skill,
-      requirement: skill.requirement as SkillRequirement
+      goalStatus: skill.goalStatus
     })), "common") as UnifiedSkill[]
   );
 
   const certifications: DetailedSkill[] = transformAndSortSkills(
     filterSkillsByCategory(employeeSkills.map(skill => ({
       ...skill,
-      requirement: skill.requirement as SkillRequirement
+      goalStatus: skill.goalStatus
     })), "certification") as UnifiedSkill[]
   );
 

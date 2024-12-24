@@ -72,7 +72,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
         ...skill,
         roleLevel: roleSkillState?.level || 'unspecified',
         employeeLevel: currentStates[skill.title]?.level || employeeSkill?.level || 'unspecified',
-        requirement: currentStates[skill.title]?.requirement || 'unknown'
+        goalStatus: currentStates[skill.title]?.goalStatus || 'unknown'
       };
     })
     .sort((a, b) => {
@@ -85,7 +85,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
       const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
       if (employeeLevelDiff !== 0) return employeeLevelDiff;
 
-      const requirementDiff = getSkillGoalPriority(a.requirement) - getSkillGoalPriority(b.requirement);
+      const requirementDiff = getSkillGoalPriority(a.goalStatus) - getSkillGoalPriority(b.goalStatus);
       if (requirementDiff !== 0) return requirementDiff;
 
       return a.title.localeCompare(b.title);
@@ -114,15 +114,14 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    // Now using flexible matching for both tracks
     return employeePriority <= rolePriority;
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
-    return skillState.requirement === 'required' || 
-           skillState.requirement === 'skill_goal';
+    return skillState.goalStatus === 'required' || 
+           skillState.goalStatus === 'skill_goal';
   });
 
   console.log('Selected role match calculations:', {
