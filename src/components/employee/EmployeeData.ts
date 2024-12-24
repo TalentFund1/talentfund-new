@@ -18,7 +18,7 @@ const getRandomSkills = () => {
   const levels: SkillLevel[] = ['beginner', 'intermediate', 'advanced'];
   
   return selectedSkills.map(skill => ({
-    name: skill.title,
+    title: skill.title,
     level: levels[Math.floor(Math.random() * levels.length)]
   }));
 };
@@ -92,4 +92,4 @@ export const employees = [
     termDate: "-",
     skills: getRandomSkills()
   }
-];
+] as const;
