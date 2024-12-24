@@ -50,4 +50,5 @@ export interface EmployeeSkillsStore {
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkillAchievement[];
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
+  batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => void;
 }
