@@ -28,7 +28,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       employeeSkills: {},
 
       initializeEmployeeSkills: (employeeId: string) => {
-        console.log('Initializing skills for employee:', employeeId);
+        console.log('Initializing employee skills:', { employeeId });
         const currentSkills = get().employeeSkills[employeeId];
         
         if (!currentSkills) {
@@ -47,7 +47,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       },
 
       setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
-        console.log('Setting skill level:', { employeeId, skillTitle, level });
+        console.log('Setting employee skill level:', { employeeId, skillTitle, level });
         set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
@@ -65,7 +65,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               lastUpdated: new Date().toISOString()
             };
           } else {
-            // Create a new skill entry with minimal required data
             const newSkill: EmployeeSkill = {
               id: `${employeeId}-${skillTitle}`,
               employeeId,
@@ -90,6 +89,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             updatedSkills.push(newSkill);
           }
 
+          console.log('Updated employee skill:', { 
+            employeeId, 
+            skillTitle, 
+            newLevel: level,
+            skillsCount: updatedSkills.length 
+          });
+
           return {
             employeeSkills: {
               ...state.employeeSkills,
@@ -111,7 +117,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       },
 
       setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => {
-        console.log('Setting skill goal status:', { employeeId, skillTitle, status });
+        console.log('Setting employee skill goal status:', { employeeId, skillTitle, status });
         set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
@@ -129,6 +135,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               lastUpdated: new Date().toISOString()
             };
           }
+
+          console.log('Updated employee skill goal:', { 
+            employeeId, 
+            skillTitle, 
+            newStatus: status,
+            skillsCount: updatedSkills.length 
+          });
 
           return {
             employeeSkills: {
@@ -151,7 +164,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       },
 
       getEmployeeSkills: (employeeId: string) => {
-        console.log('Getting skills for employee:', employeeId);
+        console.log('Getting employee skills:', { employeeId });
         const state = get();
         if (!state.employeeSkills[employeeId]) {
           state.initializeEmployeeSkills(employeeId);
@@ -164,7 +177,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         const skillState = state.employeeSkills[employeeId]?.states[skillTitle];
         
         if (!skillState) {
-          console.log('No existing state found for skill:', {
+          console.log('No existing skill state found:', {
             employeeId,
             skillTitle,
             usingDefault: true
@@ -172,7 +185,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return { ...defaultSkillState };
         }
 
-        console.log('Retrieved skill state:', {
+        console.log('Retrieved employee skill state:', {
           employeeId,
           skillTitle,
           state: skillState
@@ -183,7 +196,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 3,
+      version: 4, // Incremented version for new structure
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
