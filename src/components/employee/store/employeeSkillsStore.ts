@@ -6,7 +6,6 @@ import {
   SkillGoalStatus,
   EmployeeSkillAchievement
 } from '../types/employeeSkillTypes';
-import { initializeEmployeeSkills } from './actions/initializeEmployeeSkills';
 import { employees } from '../EmployeeData';
 import { IEmployeeSkillsStore } from './interfaces/EmployeeSkillsStoreInterface';
 import { benchmarkingService } from '../../../services/benchmarking';

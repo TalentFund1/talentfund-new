@@ -107,7 +107,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
               employeeId,
               states: {
                 ...state.employeeSkills[employeeId]?.states,
-                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus) as EmployeeSkillState
+                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
               }
             }
           }
@@ -128,7 +128,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
           return benchmarkingService.getDefaultSkillState() as EmployeeSkillState;
         }
 
-        console.log('Retrieved skill state:', {
+        console.log('Retrieved employee skill state:', {
           employeeId,
           skillTitle,
           state: skillState
