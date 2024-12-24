@@ -14,7 +14,7 @@ export const useEmployeeSkillsInit = (employeeId: string) => {
     
     try {
       initializeEmployeeSkills(employeeId);
-      console.log('Successfully initialized empty skills container for employee:', employeeId);
+      console.log('Successfully initialized skills for employee:', employeeId);
     } catch (error) {
       console.error('Failed to initialize skills:', error);
     }

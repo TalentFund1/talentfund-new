@@ -4,7 +4,6 @@ import {
   SkillLevel, 
   SkillGoalStatus 
 } from '../../types/employeeSkillTypes';
-import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 
 export const initializeEmployeeSkillsData = (
   employeeId: string,
@@ -12,26 +11,27 @@ export const initializeEmployeeSkillsData = (
 ): EmployeeSkillsData => {
   console.log('Initializing skills data for employee:', { employeeId, skillCount: skills.length });
 
-  const initializedSkills: EmployeeSkillAchievement[] = skills.map(skill => {
-    const skillData = getUnifiedSkillData(skill.name);
-    
-    return {
-      id: `${employeeId}-${skill.name}`,
-      employeeId,
-      title: skill.name,
-      subcategory: skillData.subcategory,
-      level: skill.level,
-      goalStatus: 'unknown' as SkillGoalStatus,
-      lastUpdated: new Date().toISOString(),
-      category: skillData.category,
-      weight: skillData.weight,
-      confidence: 'medium',
-      businessCategory: skillData.businessCategory,
-      growth: skillData.growth,
-      salary: skillData.salary,
-      benchmarks: skillData.benchmarks
-    };
-  });
+  const initializedSkills: EmployeeSkillAchievement[] = skills.map(skill => ({
+    id: `${employeeId}-${skill.name}`,
+    employeeId,
+    title: skill.name,
+    subcategory: 'general',
+    level: skill.level,
+    goalStatus: 'unknown' as SkillGoalStatus,
+    lastUpdated: new Date().toISOString(),
+    category: 'common',
+    weight: 'necessary',
+    confidence: 'medium',
+    businessCategory: 'technical',
+    growth: '0',
+    salary: '0',
+    benchmarks: {
+      B: false,
+      R: false,
+      M: false,
+      O: false
+    }
+  }));
 
   const states = initializedSkills.reduce((acc, skill) => ({
     ...acc,
@@ -41,6 +41,12 @@ export const initializeEmployeeSkillsData = (
       lastUpdated: skill.lastUpdated
     }
   }), {});
+
+  console.log('Initialized employee skills:', {
+    employeeId,
+    skillCount: initializedSkills.length,
+    skills: initializedSkills.map(s => ({ title: s.title, level: s.level }))
+  });
 
   return {
     employeeId,
