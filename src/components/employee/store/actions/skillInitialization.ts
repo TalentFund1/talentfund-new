@@ -1,4 +1,4 @@
-import { EmployeeSkillAchievement } from '../../types/employeeSkillTypes';
+import { EmployeeSkillData } from '../../types/employeeSkillTypes';
 import { employees } from '../../EmployeeData';
 import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 
@@ -18,50 +18,13 @@ export const createInitializationActions = (set: any, get: any) => ({
       skills: employee.skills.map(s => s.title)
     });
 
-    const initializedSkills = employee.skills.map(skill => {
+    const store = get();
+    employee.skills.forEach(skill => {
       const skillData = getUnifiedSkillData(skill.title);
-      const skillId = `${employeeId}-${skill.title}`;
-      
-      return {
-        id: skillId,
-        employeeId,
-        skillId,
-        title: skill.title,
+      store.updateSkillState(employeeId, skill.title, {
         level: skill.level,
-        goalStatus: 'unknown',
-        lastUpdated: new Date().toISOString(),
-        subcategory: skillData?.subcategory || 'General',
-        category: skillData?.category || 'specialized',
-        businessCategory: skillData?.businessCategory || 'Technical Skills',
-        weight: skillData?.weight || 'technical',
-        growth: skillData?.growth || 'stable',
-        salary: skillData?.salary || 'market',
-        confidence: 'medium',
-        benchmarks: skillData?.benchmarks || {
-          B: false,
-          R: false,
-          M: false,
-          O: false
-        }
-      } as EmployeeSkillAchievement;
+        goalStatus: 'unknown'
+      });
     });
-
-    set(state => ({
-      skillStates: {
-        ...state.skillStates,
-        [employeeId]: {
-          skills: initializedSkills.reduce((acc, skill) => ({
-            ...acc,
-            [skill.title]: {
-              level: skill.level,
-              goalStatus: skill.goalStatus,
-              lastUpdated: skill.lastUpdated,
-              confidence: skill.confidence
-            }
-          }), {}),
-          lastUpdated: new Date().toISOString()
-        }
-      }
-    }));
   }
 });

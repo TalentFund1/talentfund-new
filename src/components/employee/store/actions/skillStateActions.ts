@@ -1,49 +1,15 @@
-import { EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../../types/employeeSkillTypes';
+import { EmployeeSkillData } from '../../types/employeeSkillTypes';
 
 export const createSkillStateActions = (set: any, get: any) => ({
-  setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
+  setSkillLevel: (employeeId: string, skillTitle: string, level: string) => {
     console.log('Setting skill level:', { employeeId, skillTitle, level });
-    set(state => {
-      const currentState = state.skillStates[employeeId] || { skills: {}, lastUpdated: new Date().toISOString() };
-      return {
-        skillStates: {
-          ...state.skillStates,
-          [employeeId]: {
-            ...currentState,
-            skills: {
-              ...currentState.skills,
-              [skillTitle]: {
-                ...currentState.skills[skillTitle],
-                level,
-                lastUpdated: new Date().toISOString()
-              }
-            }
-          }
-        }
-      };
-    });
+    const store = get();
+    store.updateSkillState(employeeId, skillTitle, { level });
   },
 
-  setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: SkillGoalStatus) => {
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: string) => {
     console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
-    set(state => {
-      const currentState = state.skillStates[employeeId] || { skills: {}, lastUpdated: new Date().toISOString() };
-      return {
-        skillStates: {
-          ...state.skillStates,
-          [employeeId]: {
-            ...currentState,
-            skills: {
-              ...currentState.skills,
-              [skillTitle]: {
-                ...currentState.skills[skillTitle],
-                goalStatus,
-                lastUpdated: new Date().toISOString()
-              }
-            }
-          }
-        }
-      };
-    });
+    const store = get();
+    store.updateSkillState(employeeId, skillTitle, { goalStatus });
   }
 });

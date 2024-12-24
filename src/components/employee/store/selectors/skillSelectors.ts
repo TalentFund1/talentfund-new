@@ -1,36 +1,47 @@
-import { EmployeeSkillAchievement, EmployeeSkillState } from '../../types/employeeSkillTypes';
+import { EmployeeSkillData, EmployeeSkillState } from '../../types/employeeSkillTypes';
 
 export const createSkillSelectors = (get: any) => ({
-  getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
+  getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillData => {
     console.log('Getting skill state:', { employeeId, skillTitle });
     const state = get().skillStates[employeeId]?.skills[skillTitle];
     
     if (!state) {
-      return {
+      const defaultState: EmployeeSkillData = {
+        id: `${employeeId}-${skillTitle}`,
+        employeeId,
+        skillId: `${employeeId}-${skillTitle}`,
+        title: skillTitle,
         level: 'unspecified',
         goalStatus: 'unknown',
         lastUpdated: new Date().toISOString(),
-        confidence: 'medium'
+        confidence: 'medium',
+        subcategory: 'General',
+        category: 'specialized',
+        businessCategory: 'Technical Skills',
+        weight: 'technical',
+        growth: '0%',
+        salary: 'market',
+        benchmarks: {
+          B: false,
+          R: false,
+          M: false,
+          O: false
+        }
       };
+      return defaultState;
     }
     
     return state;
   },
 
-  getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
+  getEmployeeSkills: (employeeId: string): EmployeeSkillData[] => {
     console.log('Getting skills for employee:', employeeId);
     const employeeState = get().skillStates[employeeId];
     
-    if (!employeeState) {
+    if (!employeeState?.skills) {
       return [];
     }
 
-    return Object.entries(employeeState.skills).map(([title, state]) => ({
-      id: `${employeeId}-${title}`,
-      employeeId,
-      skillId: `${employeeId}-${title}`,
-      title,
-      ...state
-    }));
+    return Object.values(employeeState.skills);
   }
 });

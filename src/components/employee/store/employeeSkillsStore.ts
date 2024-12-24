@@ -3,10 +3,15 @@ import { persist } from 'zustand/middleware';
 import { createSkillStateActions } from './actions/skillStateActions';
 import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
-import { EmployeeSkillsState, EmployeeSkillUpdate } from '../types/employeeSkillTypes';
+import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
 
 interface EmployeeSkillsStore {
   skillStates: Record<string, EmployeeSkillsState>;
+  getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
+  getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
+  setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => void;
+  initializeEmployeeSkills: (employeeId: string) => void;
   updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
 }
@@ -23,17 +28,33 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => {
         console.log('Updating skill state:', { employeeId, skillTitle, updates });
         
-        set(state => {
+        set((state) => {
           const currentState = state.skillStates[employeeId] || { 
             skills: {},
             lastUpdated: new Date().toISOString()
           };
 
           const currentSkill = currentState.skills[skillTitle] || {
+            id: `${employeeId}-${skillTitle}`,
+            employeeId,
+            skillId: `${employeeId}-${skillTitle}`,
+            title: skillTitle,
             level: 'unspecified',
             goalStatus: 'unknown',
             lastUpdated: new Date().toISOString(),
-            confidence: 'medium'
+            confidence: 'medium',
+            subcategory: 'General',
+            category: 'specialized',
+            businessCategory: 'Technical Skills',
+            weight: 'technical',
+            growth: '0%',
+            salary: 'market',
+            benchmarks: {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
           };
 
           return {
@@ -62,7 +83,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           updateCount: Object.keys(updates).length 
         });
 
-        set(state => {
+        set((state) => {
           const currentState = state.skillStates[employeeId] || {
             skills: {},
             lastUpdated: new Date().toISOString()
@@ -72,10 +93,26 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
           Object.entries(updates).forEach(([skillTitle, skillUpdates]) => {
             const currentSkill = currentState.skills[skillTitle] || {
+              id: `${employeeId}-${skillTitle}`,
+              employeeId,
+              skillId: `${employeeId}-${skillTitle}`,
+              title: skillTitle,
               level: 'unspecified',
               goalStatus: 'unknown',
               lastUpdated: new Date().toISOString(),
-              confidence: 'medium'
+              confidence: 'medium',
+              subcategory: 'General',
+              category: 'specialized',
+              businessCategory: 'Technical Skills',
+              weight: 'technical',
+              growth: '0%',
+              salary: 'market',
+              benchmarks: {
+                B: false,
+                R: false,
+                M: false,
+                O: false
+              }
             };
 
             updatedSkills[skillTitle] = {
