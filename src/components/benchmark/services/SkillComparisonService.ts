@@ -1,16 +1,7 @@
-import { EmployeeSkillAchievement, SkillLevel } from '../../employee/types/employeeSkillTypes';
+import { EmployeeSkillAchievement } from '../../employee/types/employeeSkillTypes';
 import { RoleSkillRequirement } from '../../skills/types/roleSkillTypes';
 import { SkillComparison, SkillComparisonResult } from '../../skills/types/skillComparison';
-
-export const getLevelPriority = (level: string = 'unspecified'): number => {
-  const priorities: Record<string, number> = {
-    'advanced': 3,
-    'intermediate': 2,
-    'beginner': 1,
-    'unspecified': 0
-  };
-  return priorities[level.toLowerCase()] ?? 0;
-};
+import { getLevelPriority, compareSkillLevels, getSkillMatchPercentage } from '../../skills/utils/skillComparisonUtils';
 
 export const compareSkillLevels = (
   employeeSkill: EmployeeSkillAchievement,
@@ -72,8 +63,7 @@ export const getSkillComparisonResult = (
     }
   });
 
-  const totalMatchPercentage = matches.reduce((sum, match) => sum + match.matchPercentage, 0) / 
-    (roleRequirements.length || 1);
+  const totalMatchPercentage = getSkillMatchPercentage(employeeSkills, roleRequirements);
 
   console.log('Calculated skill comparison result:', {
     totalMatches: matches.length,

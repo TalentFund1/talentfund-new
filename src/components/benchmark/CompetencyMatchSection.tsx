@@ -3,21 +3,12 @@ import { Card } from "@/components/ui/card";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
+import { getLevelPriority, compareSkillLevels } from "../skills/utils/skillComparisonUtils";
 
 interface CompetencyMatchSectionProps {
   skills: any[];
   roleLevel: string;
 }
-
-const getLevelPriority = (level: string = 'unspecified') => {
-  const priorities: { [key: string]: number } = {
-    'advanced': 3,
-    'intermediate': 2,
-    'beginner': 1,
-    'unspecified': 0
-  };
-  return priorities[level.toLowerCase()] ?? 0;
-};
 
 export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSectionProps) => {
   const { getSkillCompetencyState } = useCompetencyStateReader();
