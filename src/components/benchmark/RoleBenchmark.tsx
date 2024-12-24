@@ -14,6 +14,7 @@ import { getSkillProfileId } from "../EmployeeTable";
 import { getEmployeeTrack } from "../employee/utils/employeeTrackUtils";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { RoleSelectionSection } from "./role-selection/RoleSelectionSection";
+import { getRoleSkills } from "../skills/data/roles/roleDataReader";
 
 interface RoleStore {
   selectedRole: string;
@@ -43,7 +44,6 @@ const RoleBenchmarkContent = () => {
   const employeeTrack = employee ? getEmployeeTrack(employee.role) : "Professional";
   const employeeLevel = employee?.role.split(':')[1]?.trim().toLowerCase() || "p4";
 
-  // Set initial role and level based on employee's assigned role
   useEffect(() => {
     if (employeeRoleId && employeeLevel) {
       console.log('Setting initial role and level in RoleBenchmark:', {
@@ -58,32 +58,21 @@ const RoleBenchmarkContent = () => {
     }
   }, [employeeRoleId, employeeLevel, setSelectedRole, setSelectedLevel, employee?.role]);
 
-  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-
-  // Handle skill updates when role changes
   useEffect(() => {
-    if (!currentRoleSkills) return;
+    if (!selectedRole) return;
 
-    const allSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ]
-    .map(skill => skill.title)
-    .filter(skillTitle => toggledSkills.has(skillTitle));
+    const roleSkills = getRoleSkills(selectedRole);
+    const skillTitles = roleSkills
+      .map(skill => skill.title)
+      .filter(skillTitle => toggledSkills.has(skillTitle));
     
-    setBenchmarkSearchSkills(allSkills);
-  }, [currentRoleSkills, setBenchmarkSearchSkills, toggledSkills]);
-
-  console.log('RoleBenchmark rendering with:', {
-    selectedRole,
-    selectedLevel,
-    employeeTrack,
-    employeeLevel,
-    hasSkills: !!currentRoleSkills,
-    employeeRole: employee?.role,
-    employeeRoleId
-  });
+    console.log('Updating benchmark search skills:', {
+      roleId: selectedRole,
+      skillCount: skillTitles.length
+    });
+    
+    setBenchmarkSearchSkills(skillTitles);
+  }, [selectedRole, setBenchmarkSearchSkills, toggledSkills]);
 
   return (
     <div className="space-y-6">

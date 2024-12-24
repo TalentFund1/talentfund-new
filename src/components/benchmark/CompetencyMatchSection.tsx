@@ -4,6 +4,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { getLevelPriority } from "../skills/utils/skillComparisonUtils";
+import { getRoleSkills } from "../skills/data/roles/roleDataReader";
 
 interface CompetencyMatchSectionProps {
   skills: any[];
@@ -15,6 +16,9 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
   const { currentStates } = useSkillsMatrixStore();
   const { selectedRole } = useRoleStore();
 
+  // Use roleDataReader to get role skills
+  const roleSkills = getRoleSkills(selectedRole);
+  
   const matchingSkills = skills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
     if (!roleSkillState) return false;
@@ -26,16 +30,12 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
     console.log(`Role Skill Level: ${roleSkillLevel}`);
     console.log(`Employee/Target Skill Level: ${employeeSkillLevel}`);
 
-    // Get priority numbers for comparison
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
     console.log(`Employee Priority: ${employeePriority}`);
     console.log(`Role Priority: ${rolePriority}`);
 
-    // Match if either:
-    // 1. Levels are exactly equal
-    // 2. Employee/Target level is higher than role requirement
     const isMatch = employeePriority >= rolePriority;
     
     console.log(`Is Match: ${isMatch}\n`);
