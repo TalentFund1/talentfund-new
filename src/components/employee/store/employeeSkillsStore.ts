@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillsStore, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
+import { EmployeeSkillsStore, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus, EmployeeSkillAchievement } from '../types/employeeSkillTypes';
 
 const validateSkillLevel = (level: string | number): SkillLevel => {
   if (typeof level === 'number') {
@@ -36,7 +36,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               ...state.employeeSkills,
               [employeeId]: {
                 employeeId,
-                skills: [], // Initialize with empty array - skills will be added as needed
+                skills: [],
                 states: {},
                 lastUpdated: new Date().toISOString()
               }
@@ -46,7 +46,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         }
       },
 
-      setSkillLevel: (employeeId: string, skillTitle: string, level: string | number) => {
+      setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
         console.log('Setting skill level:', { employeeId, skillTitle, level });
         
         set((state) => {
@@ -69,6 +69,38 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   [skillTitle]: {
                     ...employeeData.states[skillTitle],
                     level: validatedLevel,
+                    lastUpdated: new Date().toISOString()
+                  }
+                }
+              }
+            }
+          };
+        });
+      },
+
+      setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => {
+        console.log('Setting skill goal status:', { employeeId, skillTitle, status });
+        
+        set((state) => {
+          const employeeData = state.employeeSkills[employeeId] || {
+            employeeId,
+            skills: [],
+            states: {},
+            lastUpdated: new Date().toISOString()
+          };
+
+          const validatedStatus = validateGoalStatus(status);
+
+          return {
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: {
+                ...employeeData,
+                states: {
+                  ...employeeData.states,
+                  [skillTitle]: {
+                    ...employeeData.states[skillTitle],
+                    requirement: validatedStatus,
                     lastUpdated: new Date().toISOString()
                   }
                 }
@@ -105,7 +137,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return skillState;
       },
 
-      getEmployeeSkills: (employeeId: string) => {
+      getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
         console.log('Getting skills for employee:', employeeId);
         return get().employeeSkills[employeeId]?.skills || [];
       },
