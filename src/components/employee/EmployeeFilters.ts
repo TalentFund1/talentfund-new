@@ -1,7 +1,7 @@
 import { Employee } from "../types/employeeTypes";
 
 export const filterEmployees = (
-  employees: Employee[],
+  employees: ReadonlyArray<Employee>,
   selectedEmployees: ReadonlyArray<string>,
   selectedDepartment: ReadonlyArray<string>,
   selectedLevel: ReadonlyArray<string>,

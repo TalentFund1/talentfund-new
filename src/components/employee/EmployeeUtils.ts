@@ -3,13 +3,13 @@ import { filterEmployees } from "./EmployeeFilters";
 import { getBaseRole } from "../EmployeeTable";
 
 export const getEmployeesAddedLastYear = (
-  selectedEmployees: string[] = [],
-  selectedDepartment: string[] = [],
-  selectedLevel: string[] = [],
-  selectedOffice: string[] = [],
-  selectedEmploymentType: string[] = [],
-  selectedSkills: string[] = [],
-  selectedManager: string[] = []
+  selectedEmployees: ReadonlyArray<string> = [],
+  selectedDepartment: ReadonlyArray<string> = [],
+  selectedLevel: ReadonlyArray<string> = [],
+  selectedOffice: ReadonlyArray<string> = [],
+  selectedEmploymentType: ReadonlyArray<string> = [],
+  selectedSkills: ReadonlyArray<string> = [],
+  selectedManager: ReadonlyArray<string> = []
 ) => {
   // First apply all filters
   const filteredEmployees = filterEmployees(
