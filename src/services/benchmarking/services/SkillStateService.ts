@@ -1,29 +1,30 @@
-import { EmployeeSkillState, EmployeeSkillData, SkillLevel, SkillGoalStatus, SkillWeight } from '../../../components/employee/types/employeeSkillTypes';
-
-class SkillStateService {
-  public createSkillState(level: SkillLevel = 'unspecified', goalStatus: SkillGoalStatus = 'unknown'): EmployeeSkillState {
-    console.log('Creating skill state:', { level, goalStatus });
+export class SkillStateService {
+  public createSkillState(level: string, goalStatus: string) {
+    console.log('SkillStateService: Creating skill state:', { level, goalStatus });
     return {
       level,
       goalStatus,
-      lastUpdated: new Date().toISOString(),
-      confidence: 'medium'
+      lastUpdated: new Date().toISOString()
     };
   }
 
-  public getDefaultSkillState(): EmployeeSkillState {
-    return this.createSkillState();
+  public getDefaultSkillState() {
+    return {
+      level: 'unspecified',
+      goalStatus: 'unknown',
+      lastUpdated: new Date().toISOString()
+    };
   }
 
   public updateCompetencyState(
-    currentStates: Record<string, Record<string, EmployeeSkillState>>,
+    currentStates: any,
     skillName: string,
     level: string,
     levelKey: string,
     required: string,
-    defaultState: EmployeeSkillState
-  ): Record<string, Record<string, EmployeeSkillState>> {
-    console.log('Updating competency state:', {
+    defaultState: any
+  ) {
+    console.log('SkillStateService: Updating competency state:', {
       skillName,
       level,
       levelKey,
@@ -33,38 +34,25 @@ class SkillStateService {
     return {
       ...currentStates,
       [skillName]: {
-        ...currentStates[skillName],
-        [levelKey]: {
-          level: level as SkillLevel,
-          goalStatus: required as SkillGoalStatus,
-          lastUpdated: new Date().toISOString(),
-          confidence: defaultState.confidence
-        }
+        ...(currentStates[skillName] || {}),
+        [levelKey]: { level, required }
       }
     };
   }
 
-  public matchesInterestFilter(goalStatus: SkillGoalStatus, selectedInterest: string): boolean {
-    if (selectedInterest === 'all') return true;
+  public matchesInterestFilter(goalStatus: string, selectedInterest: string): boolean {
+    console.log('SkillStateService: Checking interest filter match:', {
+      goalStatus,
+      selectedInterest
+    });
 
-    switch (selectedInterest.toLowerCase()) {
-      case 'skill_goal':
-        return goalStatus === 'required' || goalStatus === 'skill_goal';
-      case 'not_interested':
-        return goalStatus === 'not_interested';
-      case 'unknown':
-        return !goalStatus || goalStatus === 'unknown';
-      default:
-        return goalStatus === selectedInterest.toLowerCase();
+    if (selectedInterest === 'interested') {
+      return goalStatus === 'required' || goalStatus === 'skill_goal';
     }
-  }
-
-  public normalizeWeight(weight: string): SkillWeight {
-    const normalized = weight.toLowerCase();
-    if (normalized === 'critical' || normalized === 'technical' || normalized === 'necessary') {
-      return normalized;
+    if (selectedInterest === 'not_interested') {
+      return goalStatus === 'not_interested';
     }
-    return 'necessary';
+    return true;
   }
 }
 

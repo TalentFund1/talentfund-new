@@ -1,32 +1,21 @@
-import { EmployeeSkillData, SkillLevel, SkillWeight } from '../../../components/employee/types/employeeSkillTypes';
-import { UnifiedSkill } from '../../../components/skills/types/SkillTypes';
-import { skillStateService } from './SkillStateService';
-
-class SkillEnrichmentService {
-  public enrichSkillData(employeeId: string, skill: UnifiedSkill, skillData: UnifiedSkill): EmployeeSkillData {
-    console.log('Enriching skill data:', {
+export class SkillEnrichmentService {
+  public enrichSkillData(employeeId: string, skill: any, skillData: any) {
+    console.log('SkillEnrichmentService: Enriching skill data:', {
       employeeId,
       skillTitle: skill.title
     });
 
-    // Ensure skill level is properly typed
-    const normalizedLevel = this.normalizeSkillLevel(skill.level || 'unspecified');
-
     return {
+      ...skill,
       id: `${employeeId}-${skill.title}`,
       employeeId,
-      skillId: `${employeeId}-${skill.title}`,
-      title: skill.title,
-      level: normalizedLevel,
-      goalStatus: skill.goalStatus || 'unknown',
-      lastUpdated: new Date().toISOString(),
-      confidence: 'medium',
       subcategory: skillData.subcategory || 'General',
       category: skillData.category,
       businessCategory: skillData.businessCategory,
-      weight: skillStateService.normalizeWeight(skillData.weight),
+      weight: skillData.weight,
       growth: skillData.growth,
       salary: skillData.salary,
+      confidence: 'medium',
       benchmarks: skillData.benchmarks || {
         B: false,
         R: false,
@@ -36,30 +25,18 @@ class SkillEnrichmentService {
     };
   }
 
-  private normalizeSkillLevel(level: string): SkillLevel {
-    const normalizedLevel = level.toLowerCase();
-    switch (normalizedLevel) {
-      case 'beginner':
-      case 'intermediate':
-      case 'advanced':
-        return normalizedLevel as SkillLevel;
-      default:
-        return 'unspecified';
-    }
-  }
-
-  public initializeEmployeeSkillsData(employeeId: string, skills: UnifiedSkill[]): Record<string, EmployeeSkillData> {
-    console.log('Initializing employee skills data:', {
+  public initializeEmployeeSkillsData(employeeId: string, skills: any[]) {
+    console.log('SkillEnrichmentService: Initializing employee skills data:', {
       employeeId,
       skillCount: skills.length
     });
 
-    const skillsRecord: Record<string, EmployeeSkillData> = {};
-    skills.forEach(skill => {
-      skillsRecord[skill.title] = this.enrichSkillData(employeeId, skill, skill);
-    });
-
-    return skillsRecord;
+    return {
+      employeeId,
+      skills,
+      states: {},
+      lastUpdated: new Date().toISOString()
+    };
   }
 }
 

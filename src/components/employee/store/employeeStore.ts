@@ -60,29 +60,20 @@ export const useEmployeeStore = create<EmployeeStore>()(
         
         const enrichedSkills = skills.map(skill => {
           const skillData = getUnifiedSkillData(skill.title);
-          return benchmarkingService.enrichSkillData(employeeId, skill, skillData);
-        });
-
-        const skillsRecord: Record<string, EmployeeSkillData> = {};
-        enrichedSkills.forEach(skill => {
-          skillsRecord[skill.title] = skill as EmployeeSkillData;
+          return benchmarkingService.enrichSkillData(employeeId, skill, skillData) as EmployeeSkillAchievement;
         });
 
         set(state => ({
           employeeSkills: {
             ...state.employeeSkills,
-            [employeeId]: {
-              employeeId,
-              skills: skillsRecord,
-              lastUpdated: new Date().toISOString()
-            }
+            [employeeId]: benchmarkingService.initializeEmployeeSkillsData(employeeId, enrichedSkills) as EmployeeSkillsData
           }
         }));
 
         console.log('Updated employee skills:', {
           employeeId,
-          skillCount: Object.keys(skillsRecord).length,
-          skills: Object.keys(skillsRecord)
+          skillCount: enrichedSkills.length,
+          skills: enrichedSkills.map(s => s.title)
         });
       },
 
@@ -92,7 +83,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         if (!state.employeeSkills[employeeId]) {
           state.initializeEmployeeSkills(employeeId);
         }
-        return Object.values(state.employeeSkills[employeeId]?.skills || {});
+        return state.employeeSkills[employeeId]?.skills || [];
       },
 
       setSkillState: (employeeId, skillTitle, level, goalStatus) => {
@@ -103,57 +94,44 @@ export const useEmployeeStore = create<EmployeeStore>()(
           goalStatus
         });
         
+        const skillState = benchmarkingService.createSkillState(level, goalStatus) as EmployeeSkillState;
+        
         set(state => ({
           employeeSkills: {
             ...state.employeeSkills,
             [employeeId]: {
               ...state.employeeSkills[employeeId],
-              skills: {
-                ...state.employeeSkills[employeeId]?.skills,
-                [skillTitle]: {
-                  ...state.employeeSkills[employeeId]?.skills[skillTitle],
-                  level,
-                  goalStatus,
-                  lastUpdated: new Date().toISOString()
-                }
-              },
-              lastUpdated: new Date().toISOString()
-            }
+              employeeId,
+              states: {
+                ...state.employeeSkills[employeeId]?.states,
+                [skillTitle]: skillState
+              }
+            } as EmployeeSkillsData
           }
         }));
       },
 
       getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
         const state = get();
-        const skillData = state.employeeSkills[employeeId]?.skills[skillTitle];
+        const skillState = state.employeeSkills[employeeId]?.states[skillTitle];
         
-        if (!skillData) {
+        if (!skillState) {
           console.log('No existing skill state found:', {
             employeeId,
             skillTitle,
             usingDefault: true
           });
           
-          return {
-            level: 'unspecified',
-            goalStatus: 'unknown',
-            lastUpdated: new Date().toISOString(),
-            confidence: 'medium'
-          };
+          return benchmarkingService.getDefaultSkillState() as EmployeeSkillState;
         }
 
         console.log('Retrieved employee skill state:', {
           employeeId,
           skillTitle,
-          state: skillData
+          state: skillState
         });
         
-        return {
-          level: skillData.level,
-          goalStatus: skillData.goalStatus,
-          lastUpdated: skillData.lastUpdated,
-          confidence: skillData.confidence
-        };
+        return skillState;
       },
 
       initializeEmployeeSkills: (employeeId) => {
@@ -166,56 +144,25 @@ export const useEmployeeStore = create<EmployeeStore>()(
             console.log('Found employee data for initialization:', {
               employeeId,
               skillCount: employee.skills.length,
-              skills: employee.skills.map(s => s.title)
+              skills: employee.skills
             });
             
-            const skillsRecord: Record<string, EmployeeSkillData> = {};
-            employee.skills.forEach(skill => {
-              const skillData = getUnifiedSkillData(skill.title);
-              skillsRecord[skill.title] = {
-                id: `${employeeId}-${skill.title}`,
-                employeeId,
-                skillId: `${employeeId}-${skill.title}`,
-                title: skill.title,
-                level: skill.level as SkillLevel,
-                goalStatus: 'unknown',
-                lastUpdated: new Date().toISOString(),
-                confidence: 'medium',
-                subcategory: skillData.subcategory || 'General',
-                category: skillData.category,
-                businessCategory: skillData.businessCategory,
-                weight: skillData.weight,
-                growth: skillData.growth,
-                salary: skillData.salary,
-                benchmarks: skillData.benchmarks || {
-                  B: false,
-                  R: false,
-                  M: false,
-                  O: false
-                }
-              };
-            });
+            const mutableSkills = [...employee.skills];
+            const initializedData = benchmarkingService.initializeEmployeeSkillsData(employeeId, mutableSkills) as EmployeeSkillsData;
             
             set(state => ({
               employeeSkills: {
                 ...state.employeeSkills,
-                [employeeId]: {
-                  employeeId,
-                  skills: skillsRecord,
-                  lastUpdated: new Date().toISOString()
-                }
+                [employeeId]: initializedData
               }
             }));
           } else {
             console.log('No employee found for initialization:', employeeId);
+            const emptyData = benchmarkingService.initializeEmployeeSkillsData(employeeId, []) as EmployeeSkillsData;
             set(state => ({
               employeeSkills: {
                 ...state.employeeSkills,
-                [employeeId]: {
-                  employeeId,
-                  skills: {},
-                  lastUpdated: new Date().toISOString()
-                }
+                [employeeId]: emptyData
               }
             }));
           }

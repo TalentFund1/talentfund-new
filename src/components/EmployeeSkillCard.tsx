@@ -6,7 +6,6 @@ import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
 import { useMemo } from "react";
 import { EmployeeSkillCardProps } from "./employee/types/employeeSkillProps";
 import { benchmarkingService } from "../services/benchmarking";
-import { employeeSkillService } from "../services/employee/EmployeeSkillService";
 
 export const EmployeeSkillCard = ({ 
   name, 
@@ -31,16 +30,14 @@ export const EmployeeSkillCard = ({
 
   const getLevelPercentage = (skillName: string): number => {
     const skillState = getSkillState(employeeId, skillName);
-    const normalizedLevel = employeeSkillService.normalizeSkillLevel(skillState.level);
-    
     console.log('Getting level percentage for skill:', {
       employeeId,
       skillName,
-      level: normalizedLevel
+      level: skillState.level
     });
     
     return benchmarkingService.compareSkillLevels(
-      { title: skillName, level: normalizedLevel },
+      { title: skillName, level: skillState.level },
       { title: skillName, minimumLevel: 'beginner' }
     ).matchPercentage;
   };
