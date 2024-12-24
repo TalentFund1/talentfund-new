@@ -61,7 +61,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         const enrichedSkills = skills.map(skill => {
           const skillData = getUnifiedSkillData(skill.title);
           return benchmarkingService.enrichSkillData(employeeId, skill, skillData);
-        });
+        }) as EmployeeSkillAchievement[];
 
         set(state => ({
           employeeSkills: {
@@ -107,7 +107,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
               employeeId,
               states: {
                 ...state.employeeSkills[employeeId]?.states,
-                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
+                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus) as EmployeeSkillState
               }
             }
           }
@@ -152,19 +152,21 @@ export const useEmployeeStore = create<EmployeeStore>()(
             
             // Convert readonly array to mutable array for the service
             const mutableSkills = [...employee.skills];
+            const initializedData = benchmarkingService.initializeEmployeeSkillsData(employeeId, mutableSkills) as EmployeeSkillsData;
             
             set(state => ({
               employeeSkills: {
                 ...state.employeeSkills,
-                [employeeId]: benchmarkingService.initializeEmployeeSkillsData(employeeId, mutableSkills)
+                [employeeId]: initializedData
               }
             }));
           } else {
             console.log('No employee found for initialization:', employeeId);
+            const emptyData = benchmarkingService.initializeEmployeeSkillsData(employeeId, []) as EmployeeSkillsData;
             set(state => ({
               employeeSkills: {
                 ...state.employeeSkills,
-                [employeeId]: benchmarkingService.initializeEmployeeSkillsData(employeeId, [])
+                [employeeId]: emptyData
               }
             }));
           }
