@@ -37,6 +37,7 @@ export const initializeEmployeeSkills = (employeeId: string, role: string): Empl
       subcategory: unifiedData.subcategory,
       level: 'unspecified' as SkillLevel,
       goalStatus: 'unknown' as SkillGoalStatus,
+      requirement: 'unknown' as SkillGoalStatus, // Add requirement field
       lastUpdated: new Date().toISOString(),
       category: unifiedData.category,
       businessCategory: unifiedData.businessCategory,

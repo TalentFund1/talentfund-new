@@ -34,6 +34,7 @@ export const createSkillStateActions = (
           subcategory: skillData.subcategory,
           level,
           goalStatus: 'unknown',
+          requirement: 'unknown', // Add requirement field to match type
           lastUpdated: new Date().toISOString(),
           weight: skillData.weight,
           confidence: 'medium',
@@ -45,8 +46,6 @@ export const createSkillStateActions = (
         };
         updatedSkills.push(newSkill);
       }
-
-      console.log('Updated skills array:', updatedSkills);
 
       return {
         employeeSkills: {
@@ -82,10 +81,10 @@ export const createSkillStateActions = (
 
       if (skillIndex >= 0) {
         console.log('Updating existing skill goal status:', skillTitle);
-        const existingSkill = updatedSkills[skillIndex];
         updatedSkills[skillIndex] = {
-          ...existingSkill,
+          ...updatedSkills[skillIndex],
           goalStatus: status,
+          requirement: status, // Sync requirement with goalStatus
           lastUpdated: new Date().toISOString()
         };
       } else {
@@ -98,6 +97,7 @@ export const createSkillStateActions = (
           subcategory: skillData.subcategory,
           level: 'unspecified',
           goalStatus: status,
+          requirement: status, // Sync requirement with goalStatus
           lastUpdated: new Date().toISOString(),
           weight: skillData.weight,
           confidence: 'medium',
@@ -109,8 +109,6 @@ export const createSkillStateActions = (
         };
         updatedSkills.push(newSkill);
       }
-
-      console.log('Updated skills array with new goal status:', updatedSkills);
 
       return {
         employeeSkills: {

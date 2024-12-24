@@ -29,6 +29,7 @@ export interface Skill {
 
 export interface UnifiedSkill extends Skill {
   requirement?: SkillRequirement;
+  goalStatus?: SkillRequirement; // Add goalStatus field
   roleLevel?: string;
   isCompanySkill?: boolean;
 }
