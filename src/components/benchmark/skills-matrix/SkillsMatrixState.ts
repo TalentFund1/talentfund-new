@@ -154,8 +154,8 @@ export const useSkillsMatrixState = (
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
             return state.requirement === "required" || state.requirement === "skill_goal";
-          case "not_interested":
-            return state.requirement === "not_interested";
+          case "not-interested":
+            return state.requirement === "not-interested";
           case "unknown":
             return !state.requirement || state.requirement === "unknown";
           default:
