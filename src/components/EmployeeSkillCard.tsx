@@ -15,7 +15,12 @@ interface EmployeeSkillCardProps {
 }
 
 export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillCardProps) => {
-  console.log('Rendering EmployeeSkillCard:', { name, role, skillCount: skills.length });
+  console.log('Rendering EmployeeSkillCard:', { 
+    name, 
+    role, 
+    skillCount: skills.length,
+    skills: skills.map(s => ({ name: s.name, level: s.level }))
+  });
   
   const getLevelPercentage = (level: string) => {
     const levels: { [key: string]: number } = {
