@@ -51,7 +51,7 @@ export const RequirementSelector = ({
                 <Heart className="w-3.5 h-3.5" />
                 <span>Skill Goal</span>
               </>
-            ) : normalizedRequired === 'not-interested' ? (
+            ) : normalizedRequired === 'not_interested' ? (
               <>
                 <X className="w-3.5 h-3.5" />
                 <span>Not Interested</span>
