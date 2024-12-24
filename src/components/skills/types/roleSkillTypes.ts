@@ -1,33 +1,23 @@
 import { 
-  SkillLevel, 
-  SkillGoalStatus, 
   SkillCategory, 
   SkillWeight,
-  BaseSkill,
-  SkillState,
   SkillBenchmark,
   SkillMetrics,
-  SkillRequirementLevel
+  BaseSkill
 } from './sharedSkillTypes';
 
-export type { 
-  SkillLevel,
-  SkillGoalStatus,
-  SkillCategory,
-  SkillWeight,
-  SkillState,
-  SkillBenchmark,
-  SkillMetrics,
-  SkillRequirementLevel
-};
+// Role-specific skill requirement level
+export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
+// Role skill requirement definition
 export interface RoleSkillRequirement extends BaseSkill {
-  minimumLevel: SkillLevel;
+  minimumLevel: 'beginner' | 'intermediate' | 'advanced';
   requirementLevel: SkillRequirementLevel;
   benchmarks: SkillBenchmark;
   metrics: SkillMetrics;
 }
 
+// Complete role skill data structure
 export interface RoleSkillData {
   roleId: string;
   title: string;
@@ -37,6 +27,7 @@ export interface RoleSkillData {
   certifications: RoleSkillRequirement[];
 }
 
+// Role skills store interface
 export interface RoleSkillsStore {
   roleSkills: Record<string, RoleSkillData>;
   getRoleSkills: (roleId: string) => RoleSkillData | undefined;
@@ -44,4 +35,13 @@ export interface RoleSkillsStore {
   initializeRoleSkills: (roleId: string) => void;
 }
 
-console.log('Role skill types updated to use shared interfaces');
+// Shared types between roles and skills
+export interface SkillComparison {
+  skillTitle: string;
+  employeeLevel: string;
+  requiredLevel: string;
+  matchPercentage: number;
+  gapLevel: number;
+}
+
+console.log('Role skill types updated with clear separation from employee skills');

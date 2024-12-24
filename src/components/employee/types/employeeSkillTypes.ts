@@ -1,15 +1,8 @@
-import { 
-  SkillCategory, 
-  SkillWeight,
-  SkillBenchmark,
-  SkillMetrics
-} from '../../skills/types/sharedSkillTypes';
-
-// Core skill types
+// Core skill types for employees
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
-// Core employee skill state
+// Employee skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
@@ -17,7 +10,7 @@ export interface EmployeeSkillState {
   confidence: 'low' | 'medium' | 'high';
 }
 
-// Update for a single skill
+// Single skill update
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
@@ -34,16 +27,21 @@ export interface EmployeeSkillData {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  category: SkillCategory;
-  weight: SkillWeight;
+  category: 'specialized' | 'common' | 'certification';
+  weight: 'critical' | 'technical' | 'necessary';
   businessCategory: string;
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
-  benchmarks: SkillBenchmark;
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
 }
 
-// Achievement tracking (now includes both id and skillId)
+// Achievement tracking
 export interface EmployeeSkillAchievement extends EmployeeSkillData {}
 
 // Complete employee skills data structure
