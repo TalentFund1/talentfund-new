@@ -175,7 +175,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 16, // Increment version to ensure clean state
+      version: 16,
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
