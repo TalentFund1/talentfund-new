@@ -2,11 +2,12 @@ import { TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Shield, Target, CircleDashed, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { SkillRequirement } from "../employee/types/employeeSkillTypes";
 
 interface SkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
-  onLevelChange?: (newLevel: string, requirement: string) => void;
+  onLevelChange?: (newLevel: string, requirement: SkillRequirement) => void;
   isRoleBenchmark?: boolean;
 }
 
@@ -19,11 +20,11 @@ export const SkillLevelCell = ({
   const { currentStates, setSkillState, initializeState } = useSkillsMatrixStore();
 
   // Initialize the state when the component mounts
-  initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'required');
+  initializeState(skillTitle, initialLevel?.toLowerCase() || 'unspecified', 'required' as SkillRequirement);
 
   const currentState = currentStates[skillTitle] || {
     level: initialLevel?.toLowerCase() || 'unspecified',
-    requirement: 'required'
+    requirement: 'required' as SkillRequirement
   };
 
   const getLevelIcon = (level: string) => {
@@ -92,8 +93,8 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.level || 'unspecified'} 
           onValueChange={(value) => {
-            setSkillState(skillTitle, value, currentState?.requirement || 'required');
-            onLevelChange?.(value, currentState?.requirement || 'required');
+            setSkillState(skillTitle, value, currentState?.requirement || 'required' as SkillRequirement);
+            onLevelChange?.(value, currentState?.requirement || 'required' as SkillRequirement);
           }}
         >
           <SelectTrigger className={getLevelStyles(currentState?.level)}>
@@ -135,8 +136,8 @@ export const SkillLevelCell = ({
         <Select 
           value={currentState?.requirement || 'required'}
           onValueChange={(value) => {
-            setSkillState(skillTitle, currentState?.level || 'unspecified', value);
-            onLevelChange?.(currentState?.level || 'unspecified', value);
+            setSkillState(skillTitle, currentState?.level || 'unspecified', value as SkillRequirement);
+            onLevelChange?.(currentState?.level || 'unspecified', value as SkillRequirement);
           }}
         >
           <SelectTrigger className={getRequirementStyles(currentState?.requirement || 'required', currentState?.level || 'unspecified')}>

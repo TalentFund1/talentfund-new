@@ -9,8 +9,6 @@ interface SkillState {
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
-  originalStates: { [key: string]: SkillState };
-  hasChanges: boolean;
   setSkillState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
   initializeState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
   saveChanges: () => void;
@@ -21,59 +19,43 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set) => ({
       currentStates: {},
-      originalStates: {},
-      hasChanges: false,
 
       setSkillState: (skillTitle, level, requirement) => {
         console.log('Setting skill state:', { skillTitle, level, requirement });
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillTitle]: { level, requirement },
-          },
-          hasChanges: true,
+            [skillTitle]: { level, requirement }
+          }
         }));
       },
 
-      initializeState: (skillTitle, level, requirement) =>
+      initializeState: (skillTitle, level, requirement) => {
+        console.log('Initializing skill state:', { skillTitle, level, requirement });
         set((state) => {
           if (!state.currentStates[skillTitle]) {
-            console.log('Initializing skill state:', { skillTitle, level, requirement });
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillTitle]: { level, requirement },
-              },
-              originalStates: {
-                ...state.originalStates,
-                [skillTitle]: { level, requirement },
-              },
+                [skillTitle]: { level, requirement }
+              }
             };
           }
           return state;
-        }),
+        });
+      },
 
-      saveChanges: () =>
-        set((state) => ({
-          originalStates: { ...state.currentStates },
-          hasChanges: false,
-        })),
+      saveChanges: () => {
+        console.log('Saving changes');
+      },
 
-      cancelChanges: () =>
-        set((state) => ({
-          currentStates: { ...state.originalStates },
-          hasChanges: false,
-        })),
+      cancelChanges: () => {
+        console.log('Canceling changes');
+      }
     }),
     {
       name: 'skills-matrix-storage',
-      version: 2,
-      partialize: (state) => ({
-        currentStates: state.currentStates,
-        originalStates: state.originalStates,
-      }),
+      version: 1
     }
   )
 );
-
-export const useSkillsMatrixState = useSkillsMatrixStore;
