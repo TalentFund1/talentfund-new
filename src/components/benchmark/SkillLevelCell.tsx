@@ -27,29 +27,29 @@ export const SkillLevelCell = ({
   const currentLevel = currentSkill?.level || initialLevel?.toLowerCase() as SkillLevel || 'unspecified';
   const currentGoalStatus = currentSkill?.goalStatus || 'unknown';
 
-  const getLevelIcon = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case 'advanced':
-        return <Star className="w-3.5 h-3.5 text-primary-accent" />;
-      case 'intermediate':
-        return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
-      case 'beginner':
-        return <Target className="w-3.5 h-3.5 text-[#008000]" />;
-      default:
-        return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
-    }
-  };
+const getLevelIcon = (level: string) => {
+  switch (level?.toLowerCase()) {
+    case 'advanced':
+      return <Star className="w-3.5 h-3.5 text-primary-accent" />;
+    case 'intermediate':
+      return <Shield className="w-3.5 h-3.5 text-primary-icon" />;
+    case 'beginner':
+      return <Target className="w-3.5 h-3.5 text-[#008000]" />;
+    default:
+      return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
+  }
+};
 
-  const getGoalStatusIcon = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'skill_goal':
-        return <Heart className="w-3.5 h-3.5" />;
-      case 'not_interested':
-        return <X className="w-3.5 h-3.5" />;
-      default:
-        return <CircleDashed className="w-3.5 h-3.5" />;
-    }
-  };
+const getGoalStatusIcon = (status: string) => {
+  switch (status?.toLowerCase()) {
+    case 'skill_goal':
+      return <Heart className="w-3.5 h-3.5" />;
+    case 'not_interested':
+      return <X className="w-3.5 h-3.5" />;
+    default:
+      return <CircleDashed className="w-3.5 h-3.5" />;
+  }
+};
 
   const getLevelStyles = (level: string) => {
     const baseStyles = 'rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]';
