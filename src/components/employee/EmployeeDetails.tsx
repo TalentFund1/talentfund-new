@@ -14,7 +14,6 @@ interface EmployeeDetailsProps {
     termDate: string;
     tenure: string;
     role: string;
-    skills: ReadonlyArray<{ title: string; level: string; }>;
   };
   id: string;
 }
@@ -38,14 +37,12 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const { getTrackForRole } = useTrack();
   const roleTrack = getTrackForRole(roleId);
   const employeeTrack = getEmployeeTrack(employee.role);
-  const skillCount = employee.skills ? employee.skills.length : 0;
 
   console.log(`Employee ${id} track info:`, {
     roleId,
     roleTrack,
     employeeTrack,
-    role: employee.role,
-    skillCount
+    role: employee.role
   });
 
   return (
@@ -86,10 +83,6 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
           <p className="font-medium text-gray-900">{tenure}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Skill Count</span>
-          <p className="font-medium text-gray-900">{skillCount}</p>
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Role ID</span>

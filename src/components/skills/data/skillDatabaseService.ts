@@ -9,12 +9,7 @@ const generateSkillId = (title: string, category: string): string => {
   return `SKILL_${prefix}_${cleanTitle}_${randomNum}`;
 };
 
-export const getUnifiedSkillData = (skillTitle: string | undefined): UnifiedSkill => {
-  if (!skillTitle) {
-    console.warn('Attempted to get unified skill data with undefined title');
-    return createDefaultSkill('unknown');
-  }
-
+export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
   const skill = getSkillByTitle(skillTitle);
   if (skill) {
     return {
@@ -24,22 +19,20 @@ export const getUnifiedSkillData = (skillTitle: string | undefined): UnifiedSkil
   }
 
   console.log(`Skill not found in database: ${skillTitle}, creating new entry`);
-  return createDefaultSkill(skillTitle);
+  return {
+    id: generateSkillId(skillTitle, 'common'),
+    title: skillTitle,
+    subcategory: 'General',
+    category: 'common',
+    businessCategory: 'Information Technology',
+    weight: 'necessary',
+    level: 'intermediate',
+    growth: '10%',
+    salary: '$0',
+    confidence: 'medium',
+    benchmarks: { B: true, R: true, M: true, O: true }
+  };
 };
-
-const createDefaultSkill = (title: string): UnifiedSkill => ({
-  id: generateSkillId(title, 'common'),
-  title: title,
-  subcategory: 'General',
-  category: 'common',
-  businessCategory: 'Information Technology',
-  weight: 'necessary',
-  level: 'intermediate',
-  growth: '10%',
-  salary: '$0',
-  confidence: 'medium',
-  benchmarks: { B: true, R: true, M: true, O: true }
-});
 
 export const getAllUnifiedSkills = (): UnifiedSkill[] => {
   return getAllSkills();

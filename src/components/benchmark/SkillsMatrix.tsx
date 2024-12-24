@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from 'react-router-dom';
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
+import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchContext";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
@@ -22,15 +23,21 @@ export const SkillsMatrix = () => {
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const { getEmployeeSkills, getSkillState, initializeEmployeeSkills } = useEmployeeSkillsStore();
 
+  const { filterAndSortSkills } = useSkillsMatrixState(
+    "all",
+    selectedLevel,
+    selectedInterest
+  );
+
   // Initialize employee skills if needed
   useEffect(() => {
     if (id) {
-      console.log('SkillsMatrix - Initializing skills for employee:', id);
+      console.log('Initializing skills for employee:', id);
       initializeEmployeeSkills(id);
       
       // Load employee skills after initialization
       const skills = getEmployeeSkills(id);
-      console.log('SkillsMatrix - Loaded employee skills:', skills);
+      console.log('Loaded employee skills:', skills);
       
       // Transform skills to UnifiedSkill format with proper type checking
       const transformedSkills = skills
@@ -39,19 +46,16 @@ export const SkillsMatrix = () => {
           const skillData = getUnifiedSkillData(skill.title);
           const skillState = getSkillState(id, skill.title);
           
-          console.log('SkillsMatrix - Processing skill:', { 
+          console.log('Processing skill:', { 
             employeeId: id, 
-            skillTitle: skill.title,
-            level: skillState.level,
-            originalLevel: skill.level 
+            skillTitle: skill.title 
           });
 
           return {
-            ...skill,
-            id: skillData.id || `${id}-${skill.title}`,
+            id: `${id}-${skill.title}`,
             title: skill.title,
             subcategory: skillData.subcategory || 'General',
-            level: skillState.level || skill.level || 'unspecified', // Preserve original level if available
+            level: skillState.level || 'unspecified',
             growth: skillData.growth || '0%',
             salary: skillData.salary || 'market',
             goalStatus: skillState.goalStatus || 'unknown',
@@ -59,24 +63,22 @@ export const SkillsMatrix = () => {
             confidence: skillState.confidence || 'medium',
             category: skillData.category || 'specialized',
             businessCategory: skillData.businessCategory || 'Technical Skills',
-            weight: skillData.weight || 'technical'
+            weight: skillData.weight || 'technical',
+            benchmarks: skillData.benchmarks || {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
           } as UnifiedSkill;
         });
 
-      console.log('SkillsMatrix - Transformed skills:', transformedSkills);
       setEmployeeSkillsData(transformedSkills);
     }
   }, [id, initializeEmployeeSkills, getEmployeeSkills, getSkillState]);
 
-  // Apply basic filtering to employee skills
-  const filteredSkills = employeeSkillsData.filter(skill => {
-    if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
-    if (selectedInterest !== "all") {
-      const skillState = getSkillState(id || "", skill.title);
-      if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
-    }
-    return true;
-  });
+  // Apply filtering and sorting to employee skills
+  const filteredSkills = filterAndSortSkills(employeeSkillsData);
 
   console.log('SkillsMatrix - Filtered skills:', {
     totalSkills: employeeSkillsData.length,

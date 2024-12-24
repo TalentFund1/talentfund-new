@@ -22,24 +22,37 @@ export const useSkillsFiltering = (
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkills = getEmployeeSkills(employeeId);
+  const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
 
-  console.log('Starting skills filtering with:', {
-    employeeId,
-    totalSkills: employeeSkills.length,
-    selectedCategory,
-    selectedWeight,
-    selectedLevel,
-    selectedInterest,
-    selectedSkillLevel,
-    searchTerm,
-    toggledSkills: Array.from(toggledSkills)
-  });
+  if (!currentRoleSkills && isRoleBenchmark) {
+    console.warn('No role skills found for role:', selectedRole);
+    return { filteredSkills: [] };
+  }
+
+  const getLevelPriority = (level: string = 'unspecified') => {
+    const priorities: { [key: string]: number } = {
+      'advanced': 0,
+      'intermediate': 1,
+      'beginner': 2,
+      'unspecified': 3
+    };
+    return priorities[level.toLowerCase()] ?? 3;
+  };
 
   const filterSkills = () => {
-    // Start with employee skills
     let skills = [...employeeSkills];
 
-    // Remove duplicates using a Map with skill titles as keys
+    console.log('Starting skills filtering:', {
+      totalSkills: skills.length,
+      selectedCategory,
+      selectedWeight,
+      selectedLevel,
+      selectedInterest,
+      selectedSkillLevel,
+      searchTerm
+    });
+
+    // Remove duplicates
     const uniqueSkills = new Map();
     skills.forEach(skill => {
       if (!uniqueSkills.has(skill.title)) {
@@ -48,10 +61,15 @@ export const useSkillsFiltering = (
     });
     skills = Array.from(uniqueSkills.values());
 
-    console.log('After removing duplicates:', {
-      originalCount: employeeSkills.length,
-      uniqueCount: skills.length
-    });
+    // Filter by role skills if in benchmark mode
+    if (isRoleBenchmark) {
+      const roleSkillTitles = new Set([
+        ...(currentRoleSkills.specialized || []).map(s => s.title),
+        ...(currentRoleSkills.common || []).map(s => s.title),
+        ...(currentRoleSkills.certifications || []).map(s => s.title)
+      ]);
+      skills = skills.filter(skill => roleSkillTitles.has(skill.title));
+    }
 
     // Apply category filter
     if (selectedCategory !== 'all') {
@@ -61,10 +79,16 @@ export const useSkillsFiltering = (
       });
     }
 
-    // Apply weight filter
+    // Apply weight filter using universal skills database
     if (selectedWeight !== 'all') {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
+        console.log('Filtering by weight:', {
+          skillTitle: skill.title,
+          unifiedWeight: skillData?.weight,
+          selectedWeight,
+          matches: skillData?.weight === selectedWeight.toLowerCase()
+        });
         return skillData?.weight === selectedWeight.toLowerCase();
       });
     }
@@ -75,6 +99,13 @@ export const useSkillsFiltering = (
       let matchesInterest = true;
       let matchesSearch = true;
       let matchesSkillLevel = true;
+
+      const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+      const roleSkillLevel = competencyState?.level || 'unspecified';
+
+      if (selectedLevel !== 'all') {
+        matchesLevel = roleSkillLevel.toLowerCase() === selectedLevel.toLowerCase();
+      }
 
       const currentSkillState = currentStates[skill.title];
       const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
@@ -109,20 +140,31 @@ export const useSkillsFiltering = (
     })
     .map(skill => {
       const unifiedData = getUnifiedSkillData(skill.title);
-      const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
-      
+      console.log('Mapping skill with weight:', {
+        title: skill.title,
+        unifiedWeight: unifiedData.weight,
+        originalWeight: skill.weight
+      });
       return {
         ...skill,
-        id: unifiedData.id,
         weight: unifiedData.weight,
-        category: unifiedData.category,
-        subcategory: unifiedData.subcategory,
         employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
-        roleLevel: competencyState?.level || 'unspecified',
+        roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
         goalStatus: currentStates[skill.title]?.goalStatus || skill.goalStatus || 'unknown'
       };
     })
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .sort((a, b) => {
+      const aRoleLevel = a.roleLevel;
+      const bRoleLevel = b.roleLevel;
+      
+      const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
+      if (roleLevelDiff !== 0) return roleLevelDiff;
+
+      const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
+      if (employeeLevelDiff !== 0) return employeeLevelDiff;
+
+      return a.title.localeCompare(b.title);
+    });
   };
 
   const filteredSkills = filterSkills();

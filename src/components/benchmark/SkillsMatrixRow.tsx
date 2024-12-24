@@ -29,7 +29,6 @@ export const SkillsMatrixRow = ({
   
   console.log('SkillsMatrixRow rendering:', {
     skillTitle: skill.title,
-    skillId: unifiedSkillData.id,
     category: skill.category,
     isRoleBenchmark,
     originalGrowth: skill.growth,
@@ -65,7 +64,6 @@ export const SkillsMatrixRow = ({
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2 font-mono text-sm text-gray-600">{unifiedSkillData.id}</TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
       <TableCell className="border-r border-blue-200 py-2 text-center">
         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getWeightColor(unifiedSkillData.weight)}`}>
