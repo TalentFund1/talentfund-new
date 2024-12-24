@@ -31,7 +31,8 @@ const EmployeeProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
+  const employeeStore = useEmployeeStore();
+  const getEmployeeById = employeeStore.getEmployeeById;
   const initializeEmployeeSkills = useEmployeeSkillsStore((state) => state.initializeEmployeeSkills);
   const employee = getEmployeeById(id || "");
 
@@ -47,9 +48,9 @@ const EmployeeProfile = () => {
       return;
     }
 
-    // Initialize employee skills
-    initializeEmployeeSkills(id || "");
-  }, [employee, id, initializeEmployeeSkills, navigate, toast]);
+    // Initialize employee skills with store
+    initializeEmployeeSkills(id || "", employeeStore);
+  }, [employee, id, initializeEmployeeSkills, navigate, toast, employeeStore]);
 
   if (!employee) {
     return null;
