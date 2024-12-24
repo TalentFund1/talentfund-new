@@ -5,21 +5,15 @@ import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
 import { useMemo } from "react";
 import { SkillLevel } from "./employee/types/employeeSkillTypes";
+import { EmployeeSkillCardProps } from "./employee/types/employeeSkillProps";
 
-interface Skill {
-  name: string;
-  level: SkillLevel;
-}
-
-interface EmployeeSkillCardProps {
-  name: string;
-  role: string;
-  avatar: string;
-  skills: Skill[];
-  employeeId: string;
-}
-
-export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: EmployeeSkillCardProps) => {
+export const EmployeeSkillCard = ({ 
+  name, 
+  role, 
+  avatar, 
+  skills, 
+  employeeId 
+}: Readonly<EmployeeSkillCardProps>) => {
   const { toast } = useToast();
   const { getSkillState, batchUpdateSkills } = useEmployeeSkillsStore();
   
@@ -37,7 +31,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     'intermediate': 66,
     'beginner': 33,
     'unspecified': 0
-  }), []);
+  } as const), []);
 
   const getLevelPercentage = (skillName: string): number => {
     const skillState = getSkillState(employeeId, skillName);

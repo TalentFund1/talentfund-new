@@ -16,14 +16,14 @@ import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
 
 interface EmployeeTableProps {
-  selectedDepartment?: string[];
-  selectedLevel?: string[];
-  selectedOffice?: string[];
-  selectedEmploymentType?: string[];
-  selectedSkills?: string[];
-  selectedEmployees?: string[];
-  selectedManager?: string[];
-  selectedRole?: string[];
+  readonly selectedDepartment?: ReadonlyArray<string>;
+  readonly selectedLevel?: ReadonlyArray<string>;
+  readonly selectedOffice?: ReadonlyArray<string>;
+  readonly selectedEmploymentType?: ReadonlyArray<string>;
+  readonly selectedSkills?: ReadonlyArray<string>;
+  readonly selectedEmployees?: ReadonlyArray<string>;
+  readonly selectedManager?: ReadonlyArray<string>;
+  readonly selectedRole?: ReadonlyArray<string>;
 }
 
 export const getSkillProfileId = (role?: string) => {
@@ -75,7 +75,7 @@ const EmployeeTableContent = ({
   selectedEmployees = [],
   selectedManager = [],
   selectedRole = []
-}: EmployeeTableProps) => {
+}: Readonly<EmployeeTableProps>) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
@@ -155,7 +155,7 @@ const EmployeeTableContent = ({
   );
 };
 
-export const EmployeeTable = (props: EmployeeTableProps) => {
+export const EmployeeTable = (props: Readonly<EmployeeTableProps>) => {
   return (
     <TrackProvider>
       <EmployeeTableContent {...props} />
