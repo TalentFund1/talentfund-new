@@ -1,4 +1,4 @@
-export type SkillRequirement = 'required' | 'not_interested' | 'unknown' | 'skill_goal';
+export type SkillRequirement = 'required' | 'not-interested' | 'unknown' | 'skill_goal';
 
 export interface EmployeeSkillState {
   level: string;
@@ -18,10 +18,10 @@ export interface BaseEmployeeSkill {
 }
 
 export interface EmployeeSkill extends BaseEmployeeSkill {
-  id?: string;
-  businessCategory?: string;
-  salary?: string;
-  benchmarks?: {
+  id: string;
+  businessCategory: string;
+  salary: string;
+  benchmarks: {
     B: boolean;
     R: boolean;
     M: boolean;

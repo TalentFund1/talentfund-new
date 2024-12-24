@@ -1,4 +1,4 @@
-import { EmployeeSkill, EmployeeSkillState } from '../../employee/types/employeeSkillTypes';
+import { EmployeeSkill, EmployeeSkillState, SkillRequirement } from '../../employee/types/employeeSkillTypes';
 import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
@@ -11,9 +11,14 @@ export const getEmployeeSkills = (id: string): EmployeeSkill[] => {
     return {
       ...skill,
       id: `${id}-${skill.title}`,
-      businessCategory: unifiedData.businessCategory,
-      salary: unifiedData.salary,
-      benchmarks: unifiedData.benchmarks,
+      businessCategory: unifiedData.businessCategory || 'Information Technology',
+      salary: unifiedData.salary || 'N/A',
+      benchmarks: unifiedData.benchmarks || {
+        B: false,
+        R: false,
+        M: false,
+        O: false
+      },
       level: skill.level || 'unspecified',
       growth: skill.growth || '0%',
       confidence: skill.confidence || 'medium',
