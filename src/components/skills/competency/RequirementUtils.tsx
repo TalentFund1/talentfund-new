@@ -7,7 +7,7 @@ export const getRequirementStyles = (requirement: string, level: string) => {
       ? 'border-primary-icon'
       : level.toLowerCase() === 'beginner'
         ? 'border-[#008000]'
-        : 'border-gray-400';
+        : 'border-gray-500';
 
   if (!requirement || requirement === '-') {
     return 'invisible h-[22px]';
@@ -17,9 +17,9 @@ export const getRequirementStyles = (requirement: string, level: string) => {
   
   switch (requirement.toLowerCase()) {
     case 'required':
-      return `${baseStyles} bg-gray-100/90 border-x-2 border-b-2 rounded-b-md ${borderColor} text-[#1f2144]`;
+      return `${baseStyles} bg-gray-100 border-x-2 border-b-2 rounded-b-md ${borderColor} text-[#1f2144] font-medium`;
     case 'preferred':
-      return `${baseStyles} bg-gray-50/90 border-x-2 border-b-2 rounded-b-md border-gray-400 text-[#1f2144]`;
+      return `${baseStyles} bg-gray-50 border-x-2 border-b-2 rounded-b-md border-gray-500 text-[#1f2144] font-medium`;
     case 'unspecified':
       return `${baseStyles} bg-white border-[0.5px] rounded-b-md border-gray-50 text-gray-400`;
     default:

@@ -29,13 +29,13 @@ export const RequirementSelector = ({
           ? 'border-primary-icon'
           : currentLevel?.toLowerCase() === 'beginner'
             ? 'border-[#008000]'
-            : 'border-gray-300';
+            : 'border-gray-500';
       
-      return cn(baseStyles, `bg-gray-50 border-x-2 border-b-2 ${borderColor}`);
+      return cn(baseStyles, `bg-gray-100 border-x-2 border-b-2 ${borderColor}`);
     }
     
-    // For preferred or other states
-    return cn(baseStyles, "bg-gray-50 border-x border-b border-gray-200");
+    // For preferred state
+    return cn(baseStyles, "bg-gray-50 border-x-2 border-b-2 border-gray-500");
   };
 
   return (
