@@ -36,7 +36,8 @@ export const SkillCell = ({
         skillName,
         details.level || "unspecified",
         levelKey,
-        details.required || "preferred"
+        details.required || "preferred",
+        "123" // Adding the roleId parameter
       );
       initRef.current = true;
     }
@@ -54,7 +55,13 @@ export const SkillCell = ({
       newLevel: value,
       currentRequired: currentState.required
     });
-    setSkillState(skillName, value, levelKey, currentState.required);
+    setSkillState(
+      skillName, 
+      value, 
+      levelKey, 
+      currentState.required,
+      "123" // Adding the roleId parameter
+    );
   };
 
   const handleRequirementChange = (value: string) => {
@@ -64,21 +71,27 @@ export const SkillCell = ({
       currentLevel: currentState.level,
       newRequired: value
     });
-    setSkillState(skillName, currentState.level, levelKey, value);
+    setSkillState(
+      skillName, 
+      currentState.level, 
+      levelKey, 
+      value,
+      "123" // Adding the roleId parameter
+    );
   };
 
   return (
     <TableCell 
       className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
     >
-      <div className="flex flex-col items-center gap-0">
+      <div className="flex flex-col items-center gap-1">
         <LevelSelector
-          currentLevel={currentState.level}
+          currentLevel={currentState.level as string}
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={currentState.required}
-          currentLevel={currentState.level}
+          currentRequired={currentState.required as string}
+          currentLevel={currentState.level as string}
           onRequirementChange={handleRequirementChange}
         />
       </div>

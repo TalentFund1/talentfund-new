@@ -13,23 +13,21 @@ export const RequirementSelector = ({
   onRequirementChange
 }: RequirementSelectorProps) => {
   const getRequirementStyles = (requirement: string, level: string) => {
-    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#6B7280] w-full flex items-center justify-center gap-1.5';
+    const baseStyles = 'text-xs px-3 py-1.5 font-medium text-[#6B7280] w-full flex items-center justify-center gap-1.5 rounded-md';
     
-    switch (requirement.toLowerCase()) {
-      case 'required':
-        return `${baseStyles} border-x-2 border-b-2 rounded-b-md ${
-          level.toLowerCase() === 'advanced' 
-            ? 'bg-gray-100 border-primary-accent' 
-            : level.toLowerCase() === 'intermediate'
-              ? 'bg-gray-100 border-primary-icon'
-              : level.toLowerCase() === 'beginner'
-                ? 'bg-gray-100 border-[#008000]'
-                : 'bg-gray-100 border-gray-300'
-        }`;
-      case 'preferred':
-      default:
-        return `${baseStyles} bg-gray-100 border-x-2 border-b-2 rounded-b-md border-gray-300`;
+    if (requirement.toLowerCase() === 'required') {
+      const borderColor = level.toLowerCase() === 'advanced' 
+        ? 'border-primary-accent' 
+        : level.toLowerCase() === 'intermediate'
+          ? 'border-primary-icon'
+          : level.toLowerCase() === 'beginner'
+            ? 'border-[#008000]'
+            : 'border-gray-300';
+      
+      return `${baseStyles} bg-gray-50 border ${borderColor}`;
     }
+    
+    return `${baseStyles} bg-gray-50 border border-gray-300`;
   };
 
   return (
