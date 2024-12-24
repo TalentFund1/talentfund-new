@@ -1,22 +1,29 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { useEmployeeStore } from '../store/employeeStore';
+import { useEmployeeSkillsStore } from '../store/employeeSkillsStore';
 
 export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): string => {
-  return useEmployeeStore.getState().getSkillState(employeeId, skillTitle).level;
+  console.log('Getting skill level:', { employeeId, skillTitle });
+  return useEmployeeSkillsStore.getState().getSkillState(employeeId, skillTitle).level;
 };
 
 export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): string => {
-  return useEmployeeStore.getState().getSkillState(employeeId, skillTitle).requirement;
+  console.log('Getting skill requirement:', { employeeId, skillTitle });
+  return useEmployeeSkillsStore.getState().getSkillState(employeeId, skillTitle).requirement;
 };
 
 export const setEmployeeSkillLevel = (employeeId: string, skillTitle: string, level: string): void => {
-  const store = useEmployeeStore.getState();
-  const currentState = store.getSkillState(employeeId, skillTitle);
-  store.setSkillState(employeeId, skillTitle, level, currentState.requirement);
+  console.log('Setting skill level:', { employeeId, skillTitle, level });
+  const store = useEmployeeSkillsStore.getState();
+  store.setSkillLevel(employeeId, skillTitle, level);
 };
 
 export const setEmployeeSkillRequirement = (employeeId: string, skillTitle: string, requirement: string): void => {
-  const store = useEmployeeStore.getState();
-  const currentState = store.getSkillState(employeeId, skillTitle);
-  store.setSkillState(employeeId, skillTitle, currentState.level, requirement);
+  console.log('Setting skill requirement:', { employeeId, skillTitle, requirement });
+  const store = useEmployeeSkillsStore.getState();
+  store.setSkillGoalStatus(employeeId, skillTitle, requirement);
+};
+
+export const initializeEmployeeSkills = (employeeId: string): void => {
+  console.log('Initializing skills for employee:', employeeId);
+  useEmployeeSkillsStore.getState().initializeEmployeeSkills(employeeId);
 };

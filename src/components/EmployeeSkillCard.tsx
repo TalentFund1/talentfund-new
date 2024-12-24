@@ -2,10 +2,11 @@ import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
 
 interface Skill {
   name: string;
-  level: number;
+  level: number | string;
 }
 
 interface EmployeeSkillCardProps {
@@ -13,19 +14,25 @@ interface EmployeeSkillCardProps {
   role: string;
   avatar: string;
   skills: Skill[];
+  employeeId: string;
 }
 
-export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillCardProps) => {
+export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: EmployeeSkillCardProps) => {
   const { toast } = useToast();
+  const { getSkillState } = useEmployeeSkillsStore();
   
   console.log('Rendering EmployeeSkillCard:', { 
     name, 
     role, 
     skillCount: skills.length,
+    employeeId,
     skills: skills.map(s => ({ name: s.name, level: s.level }))
   });
   
-  const getLevelPercentage = (level: string | number): number => {
+  const getLevelPercentage = (skillName: string): number => {
+    const skillState = getSkillState(employeeId, skillName);
+    const level = skillState.level;
+
     // If level is already a number between 0-100, return it
     if (typeof level === 'number') {
       console.log('Level is already a percentage:', level);
@@ -48,6 +55,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
     const percentage = levels[normalizedLevel] ?? 0;
 
     console.log('Calculated level percentage:', {
+      skillName,
       originalLevel: level,
       normalizedLevel,
       percentage
@@ -65,10 +73,11 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
     return 'bg-gray-500';
   };
 
-  const handleSkillClick = (skillName: string, level: number) => {
+  const handleSkillClick = (skillName: string) => {
+    const percentage = getLevelPercentage(skillName);
     toast({
-      title: `${skillName}`,
-      description: `Current level: ${level}%`,
+      title: skillName,
+      description: `Current level: ${percentage}%`,
     });
   };
 
@@ -85,7 +94,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
       </div>
       <div className="space-y-4">
         {skills.map((skill) => {
-          const percentage = getLevelPercentage(skill.level);
+          const percentage = getLevelPercentage(skill.name);
           console.log('Processing skill:', {
             name: skill.name,
             originalLevel: skill.level,
@@ -96,7 +105,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
             <div 
               key={skill.name} 
               className="space-y-1.5 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
-              onClick={() => handleSkillClick(skill.name, percentage)}
+              onClick={() => handleSkillClick(skill.name)}
             >
               <div className="flex justify-between mb-1">
                 <span className="text-sm font-medium">{skill.name}</span>
