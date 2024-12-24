@@ -4,11 +4,11 @@ import { skillComparisonService } from './SkillComparisonService';
 
 export class BenchmarkCalculationService {
   public calculateBenchmarkPercentage(
-    employeeSkills: EmployeeSkillData[],
-    roleRequirements: RoleSkillRequirement[],
-    toggledSkills: Set<string>
+    employeeSkills: ReadonlyArray<EmployeeSkillData>,
+    roleRequirements: ReadonlyArray<RoleSkillRequirement>,
+    toggledSkills: ReadonlySet<string>
   ): number {
-    console.log('BenchmarkCalculationService: Calculating benchmark:', {
+    console.log('BenchmarkCalculationService: Starting benchmark calculation:', {
       employeeSkillCount: employeeSkills.length,
       roleRequirementCount: roleRequirements.length,
       toggledSkillsCount: toggledSkills.size
@@ -24,18 +24,21 @@ export class BenchmarkCalculationService {
       return 0;
     }
 
-    // Use the dedicated comparison service
-    const overallMatch = skillComparisonService.calculateOverallMatch(
+    // Use the dedicated comparison service for calculations
+    const metrics = skillComparisonService.calculateOverallMatch(
       employeeSkills,
       filteredRoleRequirements
     );
 
-    console.log('BenchmarkCalculationService: Benchmark calculation result:', {
-      overallMatch,
-      totalSkills: filteredRoleRequirements.length
+    console.log('BenchmarkCalculationService: Calculation complete:', {
+      averageMatch: metrics.averageMatchPercentage,
+      matchingSkills: metrics.matchingSkills,
+      totalSkills: metrics.totalSkills,
+      missingSkills: metrics.missingSkills.length,
+      exceedingSkills: metrics.exceedingSkills.length
     });
 
-    return overallMatch;
+    return metrics.averageMatchPercentage;
   }
 }
 
