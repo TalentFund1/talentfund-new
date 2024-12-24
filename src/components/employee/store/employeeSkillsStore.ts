@@ -1,79 +1,143 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { createSkillActions } from './actions/skillActions';
-import { createSkillSelectors } from './selectors/skillSelectors';
-import { useEmployeeStore } from './employeeStore';
-import { EmployeeSkillsStore } from '../types/employeeSkillTypes';
+import { EmployeeSkillsStore, EmployeeSkillState, EmployeeSkillsData } from '../types/employeeSkillTypes';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
     (set, get) => ({
       employeeSkills: {},
-      ...createSkillActions(set, get),
-      ...createSkillSelectors(get),
 
       initializeEmployeeSkills: (employeeId: string) => {
-        console.log('Starting safe initialization for employee:', employeeId);
+        console.log('Safely initializing empty skills container for employee:', employeeId);
         
-        const currentState = get().employeeSkills[employeeId];
-        if (currentState) {
-          console.log('Skills already initialized for employee:', employeeId);
-          return;
-        }
-
-        // Initialize with empty skills array and states object - NO role ID
-        set(state => ({
-          employeeSkills: {
-            ...state.employeeSkills,
-            [employeeId]: {
-              employeeId,
-              skills: [], // Start with empty skills array
-              states: {}, // Start with empty states object
-              lastUpdated: new Date().toISOString()
+        const currentSkills = get().employeeSkills[employeeId];
+        if (!currentSkills) {
+          set(state => ({
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: {
+                employeeId,
+                skills: [], // Initialize with empty array
+                states: {},
+                lastUpdated: new Date().toISOString()
+              }
             }
-          }
-        }));
-
-        console.log('Initialized empty skill container for employee:', {
-          employeeId,
-          timestamp: new Date().toISOString()
-        });
+          }));
+          console.log('Created new empty skills container for employee:', employeeId);
+        }
       },
 
-      batchUpdateSkills: (employeeId: string, updates: Record<string, any>) => {
-        console.log('Batch updating skills for employee:', {
-          employeeId,
-          updateCount: Object.keys(updates).length,
-          timestamp: new Date().toISOString()
-        });
-
+      setSkillLevel: (employeeId: string, skillTitle: string, level: string) => {
+        console.log('Setting skill level:', { employeeId, skillTitle, level });
+        
         set(state => {
-          const currentSkills = state.employeeSkills[employeeId] || {
+          const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
             skills: [],
             states: {},
             lastUpdated: new Date().toISOString()
           };
 
-          const updatedSkills = {
-            ...currentSkills,
-            states: {
-              ...currentSkills.states,
-              ...updates
-            },
+          return {
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: {
+                ...employeeData,
+                states: {
+                  ...employeeData.states,
+                  [skillTitle]: {
+                    ...employeeData.states[skillTitle],
+                    level,
+                    lastUpdated: new Date().toISOString()
+                  }
+                }
+              }
+            }
+          };
+        });
+      },
+
+      setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => {
+        console.log('Setting skill goal status:', { employeeId, skillTitle, status });
+        
+        set(state => {
+          const employeeData = state.employeeSkills[employeeId] || {
+            employeeId,
+            skills: [],
+            states: {},
             lastUpdated: new Date().toISOString()
           };
-
-          console.log('State updated successfully:', {
-            employeeId,
-            skillCount: Object.keys(updatedSkills.states).length,
-            timestamp: updatedSkills.lastUpdated
-          });
 
           return {
             employeeSkills: {
               ...state.employeeSkills,
-              [employeeId]: updatedSkills
+              [employeeId]: {
+                ...employeeData,
+                states: {
+                  ...employeeData.states,
+                  [skillTitle]: {
+                    ...employeeData.states[skillTitle],
+                    requirement: status,
+                    lastUpdated: new Date().toISOString()
+                  }
+                }
+              }
+            }
+          };
+        });
+      },
+
+      getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
+        const state = get();
+        const skillState = state.employeeSkills[employeeId]?.states[skillTitle];
+        
+        if (!skillState) {
+          console.log('No existing skill state found:', {
+            employeeId,
+            skillTitle,
+            usingDefault: true
+          });
+          
+          return {
+            level: 'unspecified',
+            requirement: 'unknown',
+            lastUpdated: new Date().toISOString()
+          };
+        }
+
+        return skillState;
+      },
+
+      getEmployeeSkills: (employeeId: string) => {
+        console.log('Getting skills for employee:', employeeId);
+        return get().employeeSkills[employeeId]?.skills || [];
+      },
+
+      batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => {
+        console.log('Batch updating skills:', {
+          employeeId,
+          updateCount: Object.keys(updates).length
+        });
+
+        set(state => {
+          const currentData = state.employeeSkills[employeeId] || {
+            employeeId,
+            skills: [],
+            states: {},
+            lastUpdated: new Date().toISOString()
+          };
+
+          return {
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: {
+                ...currentData,
+                states: {
+                  ...currentData.states,
+                  ...updates
+                },
+                lastUpdated: new Date().toISOString()
+              }
             }
           };
         });
@@ -81,7 +145,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 10,
+      version: 11,
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
