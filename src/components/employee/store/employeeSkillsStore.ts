@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData } from '../types/employeeSkillTypes';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
@@ -17,12 +18,33 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       employeeSkills: {},
 
       setEmployeeSkills: (employeeId, skills) => {
-        console.log('Setting skills for employee:', { employeeId, skillCount: skills.length });
+        console.log('Setting skills for employee:', { 
+          employeeId, 
+          skillCount: skills.length,
+          skills: skills.map(s => ({
+            title: s.title,
+            level: s.level,
+            requirement: s.requirement
+          }))
+        });
+
+        // Enrich skills with universal data
+        const enrichedSkills = skills.map(skill => {
+          const universalData = getUnifiedSkillData(skill.title);
+          return {
+            ...skill,
+            growth: universalData?.growth || '0%',
+            salary: universalData?.salary || 'N/A',
+            confidence: universalData?.confidence || 'medium',
+            benchmarks: universalData?.benchmarks || { B: false, R: false, M: false, O: false }
+          };
+        });
+
         set((state) => ({
           employeeSkills: {
             ...state.employeeSkills,
             [employeeId]: {
-              skills,
+              skills: enrichedSkills,
               states: state.employeeSkills[employeeId]?.states || {}
             }
           }
@@ -31,15 +53,28 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
       getEmployeeSkills: (employeeId) => {
         const employeeData = get().employeeSkills[employeeId];
-        console.log('Getting skills for employee:', { 
-          employeeId, 
-          skillCount: employeeData?.skills.length || 0 
+        if (!employeeData) {
+          console.log('No skills found for employee:', employeeId);
+          return [];
+        }
+        
+        console.log('Retrieved skills for employee:', {
+          employeeId,
+          skillCount: employeeData.skills.length,
+          skills: employeeData.skills.map(s => s.title)
         });
-        return employeeData?.skills || [];
+        
+        return employeeData.skills;
       },
 
       setSkillState: (employeeId, skillTitle, level, requirement) => {
-        console.log('Setting skill state:', { employeeId, skillTitle, level, requirement });
+        console.log('Setting skill state:', {
+          employeeId,
+          skillTitle,
+          level,
+          requirement
+        });
+
         set((state) => ({
           employeeSkills: {
             ...state.employeeSkills,

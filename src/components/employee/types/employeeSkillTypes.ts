@@ -1,4 +1,4 @@
-import { SkillCategory, SkillWeight } from '../../skills/types/SkillTypes';
+import { SkillCategory, SkillWeight, SkillRequirement } from '../../skills/types/SkillTypes';
 
 export interface EmployeeSkill {
   id: string;
@@ -8,13 +8,23 @@ export interface EmployeeSkill {
   subcategory: string;
   businessCategory?: string;
   weight?: SkillWeight;
+  requirement?: SkillRequirement;
+  growth: string;
+  salary: string;
+  confidence: 'low' | 'medium' | 'high';
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
   dateAcquired?: string;
   lastUpdated?: string;
 }
 
 export interface EmployeeSkillState {
   level: string;
-  requirement: string;
+  requirement: SkillRequirement;
 }
 
 export interface EmployeeSkillsData {
