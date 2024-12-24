@@ -16,6 +16,7 @@ export const createSkillStateActions = (
 
       const updatedSkills = [...employeeData.skills];
       const skillIndex = updatedSkills.findIndex(s => s.title === skillTitle);
+      const skillId = `${employeeId}-${skillTitle}`;
 
       if (skillIndex >= 0) {
         console.log('Updating existing skill:', skillTitle);
@@ -28,8 +29,9 @@ export const createSkillStateActions = (
         console.log('Creating new skill:', skillTitle);
         const skillData = getUnifiedSkillData(skillTitle);
         const newSkill: EmployeeSkillAchievement = {
-          id: `${employeeId}-${skillTitle}`,
+          id: skillId,
           employeeId,
+          skillId,
           title: skillTitle,
           subcategory: skillData.subcategory,
           level,
@@ -57,7 +59,8 @@ export const createSkillStateActions = (
               [skillTitle]: {
                 level,
                 goalStatus: employeeData.states[skillTitle]?.goalStatus || 'unknown',
-                lastUpdated: new Date().toISOString()
+                lastUpdated: new Date().toISOString(),
+                confidence: 'medium'
               }
             }
           }
@@ -77,6 +80,7 @@ export const createSkillStateActions = (
 
       const updatedSkills = [...employeeData.skills];
       const skillIndex = updatedSkills.findIndex(s => s.title === skillTitle);
+      const skillId = `${employeeId}-${skillTitle}`;
 
       if (skillIndex >= 0) {
         console.log('Updating existing skill goal status:', skillTitle);
@@ -89,8 +93,9 @@ export const createSkillStateActions = (
         console.log('Creating new skill with goal status:', skillTitle);
         const skillData = getUnifiedSkillData(skillTitle);
         const newSkill: EmployeeSkillAchievement = {
-          id: `${employeeId}-${skillTitle}`,
+          id: skillId,
           employeeId,
+          skillId,
           title: skillTitle,
           subcategory: skillData.subcategory,
           level: 'unspecified',
@@ -118,7 +123,8 @@ export const createSkillStateActions = (
               [skillTitle]: {
                 level: employeeData.states[skillTitle]?.level || 'unspecified',
                 goalStatus: status,
-                lastUpdated: new Date().toISOString()
+                lastUpdated: new Date().toISOString(),
+                confidence: 'medium'
               }
             }
           }

@@ -43,7 +43,7 @@ export interface EmployeeSkillData {
   benchmarks: SkillBenchmark;
 }
 
-// Achievement tracking
+// Achievement tracking (now includes both id and skillId)
 export interface EmployeeSkillAchievement extends EmployeeSkillData {}
 
 // Complete employee skills data structure
