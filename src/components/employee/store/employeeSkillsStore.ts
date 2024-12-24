@@ -20,6 +20,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return;
         }
 
+        // Initialize with default skill states
+        const defaultSkillStates = {
+          level: 'unspecified',
+          requirement: 'unknown',
+          lastUpdated: new Date().toISOString()
+        };
+
         set(state => {
           console.log('Creating new employee skills state:', employeeId);
           return {
@@ -27,8 +34,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               ...state.employeeSkills,
               [employeeId]: {
                 employeeId,
-                skills: [],
-                states: {},
+                skills: [],  // Skills will be populated through batch updates
+                states: defaultSkillStates,
                 lastUpdated: new Date().toISOString()
               }
             }
@@ -36,7 +43,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         });
       },
 
-      // Batch update capability remains unchanged
       batchUpdateSkills: (employeeId: string, updates: Record<string, any>) => {
         console.log('Batch updating skills for employee:', {
           employeeId,
@@ -71,7 +77,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 6, // Incrementing version to ensure clean state
+      version: 7, // Incrementing version to ensure clean state
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
