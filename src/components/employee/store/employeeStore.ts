@@ -6,7 +6,8 @@ import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillProfileId } from "../../EmployeeTable";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
-import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData } from "../types/employeeSkillTypes";
+import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from "../types/employeeSkillTypes";
+import { SkillRequirement } from "../../skills/types/SkillTypes";
 
 interface EmployeeStore {
   employees: Employee[];
@@ -72,8 +73,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
         const enrichedSkills: EmployeeSkill[] = skills.map(skill => ({
           ...skill,
           id: `${employeeId}-${skill.title}`,
-          level: 'unspecified',
-          goalStatus: 'unknown',
+          level: 'unspecified' as SkillLevel,
+          goalStatus: 'unknown' as SkillGoalStatus,
           lastUpdated: new Date().toISOString()
         })) as EmployeeSkill[];
 
