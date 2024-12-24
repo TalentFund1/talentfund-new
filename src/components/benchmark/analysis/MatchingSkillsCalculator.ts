@@ -1,6 +1,7 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
+import { benchmarkingService } from "../../../services/benchmarking";
 
 interface MatchingSkillsResult {
   matchingSkills: UnifiedSkill[];
@@ -46,24 +47,12 @@ export const calculateMatchingSkills = (
       track
     });
 
-    if (track === "Professional") {
-      return employeeSkillLevel.toLowerCase() === roleSkillLevel.toLowerCase();
-    }
+    const comparison = benchmarkingService.compareSkillLevels(
+      { title: skill.title, level: employeeSkillLevel },
+      { title: skill.title, minimumLevel: roleSkillLevel }
+    );
 
-    const getLevelPriority = (level: string = 'unspecified') => {
-      const priorities: { [key: string]: number } = {
-        'advanced': 3,
-        'intermediate': 2,
-        'beginner': 1,
-        'unspecified': 0
-      };
-      return priorities[level.toLowerCase()] ?? 0;
-    };
-
-    const employeePriority = getLevelPriority(employeeSkillLevel);
-    const rolePriority = getLevelPriority(roleSkillLevel);
-
-    return employeePriority >= rolePriority;
+    return comparison.matchPercentage >= 100;
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {

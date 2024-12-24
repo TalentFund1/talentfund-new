@@ -3,9 +3,8 @@ import { Card } from "@/components/ui/card";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
-import { getLevelPriority } from "../skills/utils/skillComparisonUtils";
-import { getRoleSkills } from "../skills/data/roles/roleDataReader";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
+import { benchmarkingService } from "../../services/benchmarking";
 
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
@@ -17,9 +16,6 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
   const { currentStates } = useSkillsMatrixStore();
   const { selectedRole } = useRoleStore();
 
-  // Use roleDataReader to get immutable role skills
-  const roleSkills = getRoleSkills(selectedRole);
-  
   const matchingSkills = skills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
     if (!roleSkillState) return false;
@@ -34,18 +30,12 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
       roleId: selectedRole
     });
 
-    const employeePriority = getLevelPriority(employeeSkillLevel);
-    const rolePriority = getLevelPriority(roleSkillLevel);
+    const comparison = benchmarkingService.compareSkillLevels(
+      { title: skill.title, level: employeeSkillLevel },
+      { title: skill.title, minimumLevel: roleSkillLevel }
+    );
 
-    const isMatch = employeePriority >= rolePriority;
-    
-    console.log(`Match result for ${skill.title}:`, {
-      employeePriority,
-      rolePriority,
-      isMatch
-    });
-
-    return isMatch;
+    return comparison.matchPercentage >= 100;
   });
 
   return (

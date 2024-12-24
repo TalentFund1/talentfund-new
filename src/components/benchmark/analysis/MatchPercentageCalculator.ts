@@ -1,3 +1,5 @@
+import { benchmarkingService } from "../../../services/benchmarking";
+
 interface MatchPercentages {
   skillMatchPercentage: number;
   competencyMatchPercentage: number;
@@ -18,17 +20,20 @@ export const calculateMatchPercentages = (
     total: totalToggledSkills
   });
 
-  const skillMatchPercentage = totalToggledSkills > 0 
-    ? (matchingSkillsCount / totalToggledSkills) * 100 
-    : 0;
+  const skillMatchPercentage = benchmarkingService.calculateBenchmarkPercentage(
+    matchingSkillsCount,
+    totalToggledSkills
+  );
 
-  const competencyMatchPercentage = totalToggledSkills > 0 
-    ? (competencyMatchCount / totalToggledSkills) * 100 
-    : 0;
+  const competencyMatchPercentage = benchmarkingService.calculateBenchmarkPercentage(
+    competencyMatchCount,
+    totalToggledSkills
+  );
 
-  const skillGoalMatchPercentage = totalToggledSkills > 0 
-    ? (skillGoalMatchCount / totalToggledSkills) * 100 
-    : 0;
+  const skillGoalMatchPercentage = benchmarkingService.calculateBenchmarkPercentage(
+    skillGoalMatchCount,
+    totalToggledSkills
+  );
 
   const averagePercentage = Math.round(
     (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
