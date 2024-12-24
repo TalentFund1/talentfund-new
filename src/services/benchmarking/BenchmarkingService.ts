@@ -12,6 +12,7 @@ class BenchmarkingService {
   public matchesInterestFilter = skillStateService.matchesInterestFilter.bind(skillStateService);
   public enrichSkillData = skillEnrichmentService.enrichSkillData.bind(skillEnrichmentService);
   public initializeEmployeeSkillsData = skillEnrichmentService.initializeEmployeeSkillsData.bind(skillEnrichmentService);
+  public getProgressColor = levelComparisonService.getProgressColor.bind(levelComparisonService);
 }
 
 export const benchmarkingService = new BenchmarkingService();

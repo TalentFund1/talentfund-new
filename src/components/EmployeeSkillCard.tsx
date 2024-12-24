@@ -4,7 +4,6 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
 import { useMemo } from "react";
-import { SkillLevel } from "./employee/types/employeeSkillTypes";
 import { EmployeeSkillCardProps } from "./employee/types/employeeSkillProps";
 import { benchmarkingService } from "../services/benchmarking";
 
@@ -26,51 +25,18 @@ export const EmployeeSkillCard = ({
     skills: skills.map(s => ({ name: s.name, level: s.level }))
   });
 
-  // Memoize the level mapping to prevent recreating on every render
-  const levelPercentages = useMemo(() => ({
-    'advanced': 100,
-    'intermediate': 66,
-    'beginner': 33,
-    'unspecified': 0
-  } as const), []);
-
   const getLevelPercentage = (skillName: string): number => {
     const skillState = getSkillState(employeeId, skillName);
-    const level = skillState.level;
-
-    // If level is already a number between 0-100, return it
-    if (typeof level === 'number') {
-      console.log('Level is already a percentage:', level);
-      return Math.min(Math.max(level, 0), 100);
-    }
-
-    const normalizedLevel = level.toString().toLowerCase();
-    const percentage = levelPercentages[normalizedLevel as keyof typeof levelPercentages] ?? 0;
-
-    console.log('Calculated level percentage:', {
-      skillName,
-      originalLevel: level,
-      normalizedLevel,
-      percentage
-    });
-
-    return percentage;
-  };
-
-  const getProgressColor = (percentage: number): string => {
-    if (percentage >= 90) return 'bg-primary-accent';
-    if (percentage >= 80) return 'bg-green-500';
-    if (percentage >= 60) return 'bg-blue-500';
-    if (percentage >= 40) return 'bg-yellow-500';
-    if (percentage >= 20) return 'bg-orange-500';
-    return 'bg-gray-500';
+    return benchmarkingService.compareSkillLevels(
+      { title: skillName, level: skillState.level },
+      { title: skillName, minimumLevel: 'beginner' }
+    ).matchPercentage;
   };
 
   const handleSkillClick = (skillName: string) => {
     const percentage = getLevelPercentage(skillName);
     const skillState = getSkillState(employeeId, skillName);
     
-    // Prepare batch update using the service
     const updates = {
       [skillName]: benchmarkingService.createSkillState(
         skillState.level,
@@ -96,7 +62,7 @@ export const EmployeeSkillCard = ({
   const processedSkills = useMemo(() => skills.map(skill => ({
     ...skill,
     percentage: getLevelPercentage(skill.name)
-  })), [skills, employeeId, getSkillState, levelPercentages]);
+  })), [skills, employeeId, getSkillState]);
 
   return (
     <Card className="p-6 animate-fade-in">
@@ -124,7 +90,7 @@ export const EmployeeSkillCard = ({
             </div>
             <Progress
               value={skill.percentage}
-              className={`h-2 transition-all duration-300 ${getProgressColor(skill.percentage)}`}
+              className={`h-2 transition-all duration-300 ${benchmarkingService.getProgressColor(skill.percentage)}`}
             />
           </div>
         ))}

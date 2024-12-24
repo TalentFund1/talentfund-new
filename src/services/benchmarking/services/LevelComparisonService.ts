@@ -34,6 +34,31 @@ export class LevelComparisonService {
       gapLevel: employeePriority - requiredPriority
     };
   }
+
+  public calculateLevelPercentage(level: string | number): number {
+    if (typeof level === 'number') {
+      return Math.min(Math.max(level, 0), 100);
+    }
+
+    const levelPercentages: { [key: string]: number } = {
+      'advanced': 100,
+      'intermediate': 66,
+      'beginner': 33,
+      'unspecified': 0
+    };
+
+    const normalizedLevel = level.toString().toLowerCase();
+    return levelPercentages[normalizedLevel] ?? 0;
+  }
+
+  public getProgressColor(percentage: number): string {
+    if (percentage >= 90) return 'bg-primary-accent';
+    if (percentage >= 80) return 'bg-green-500';
+    if (percentage >= 60) return 'bg-blue-500';
+    if (percentage >= 40) return 'bg-yellow-500';
+    if (percentage >= 20) return 'bg-orange-500';
+    return 'bg-gray-500';
+  }
 }
 
 export const levelComparisonService = new LevelComparisonService();
