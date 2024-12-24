@@ -10,14 +10,6 @@ interface SkillComparisonResult {
   gapLevel: number;
 }
 
-interface ComparisonMetrics {
-  totalSkills: number;
-  matchingSkills: number;
-  averageMatchPercentage: number;
-  missingSkills: string[];
-  exceedingSkills: string[];
-}
-
 class SkillComparisonService {
   private getLevelValue(level: SkillLevel): number {
     const levelValues: Record<SkillLevel, number> = {
@@ -33,7 +25,7 @@ class SkillComparisonService {
     employeeSkill: EmployeeSkillData,
     roleRequirement: RoleSkillRequirement
   ): SkillComparisonResult {
-    console.log('SkillComparisonService: Comparing skill levels:', {
+    console.log('Comparing skill levels:', {
       skill: employeeSkill.title,
       employeeLevel: employeeSkill.level,
       requiredLevel: roleRequirement.minimumLevel
@@ -45,68 +37,41 @@ class SkillComparisonService {
     const gapLevel = Math.max(0, requiredLevelValue - employeeLevelValue);
     const matchPercentage = Math.min(100, (employeeLevelValue / requiredLevelValue) * 100);
 
-    const result = {
+    return {
       skillTitle: employeeSkill.title,
       employeeLevel: employeeSkill.level,
       requiredLevel: roleRequirement.minimumLevel,
       matchPercentage: requiredLevelValue === 0 ? 100 : matchPercentage,
       gapLevel
     };
-
-    console.log('SkillComparisonService: Comparison result:', result);
-    return result;
   }
 
   public calculateOverallMatch(
-    employeeSkills: ReadonlyArray<EmployeeSkillData>,
-    roleRequirements: ReadonlyArray<RoleSkillRequirement>
-  ): ComparisonMetrics {
-    console.log('SkillComparisonService: Calculating overall match:', {
+    employeeSkills: EmployeeSkillData[],
+    roleRequirements: RoleSkillRequirement[]
+  ): number {
+    console.log('Calculating overall match:', {
       employeeSkillCount: employeeSkills.length,
       roleRequirementCount: roleRequirements.length
     });
 
-    const metrics: ComparisonMetrics = {
-      totalSkills: roleRequirements.length,
-      matchingSkills: 0,
-      averageMatchPercentage: 0,
-      missingSkills: [],
-      exceedingSkills: []
-    };
+    if (roleRequirements.length === 0) return 0;
 
-    if (roleRequirements.length === 0) {
-      console.log('SkillComparisonService: No role requirements to compare against');
-      return metrics;
-    }
+    const matchingSkills = roleRequirements.map(requirement => {
+      const employeeSkill = employeeSkills.find(skill => 
+        skill.title === requirement.title
+      );
 
-    let totalMatchPercentage = 0;
-
-    // Find matching and missing skills
-    roleRequirements.forEach(requirement => {
-      const employeeSkill = employeeSkills.find(skill => skill.title === requirement.title);
-      
-      if (employeeSkill) {
-        const comparison = this.compareSkillLevels(employeeSkill, requirement);
-        totalMatchPercentage += comparison.matchPercentage;
-        if (comparison.matchPercentage >= 100) {
-          metrics.matchingSkills++;
-        }
-      } else {
-        metrics.missingSkills.push(requirement.title);
+      if (!employeeSkill) {
+        return 0;
       }
+
+      const comparison = this.compareSkillLevels(employeeSkill, requirement);
+      return comparison.matchPercentage;
     });
 
-    // Find exceeding skills
-    employeeSkills.forEach(skill => {
-      if (!roleRequirements.some(req => req.title === skill.title)) {
-        metrics.exceedingSkills.push(skill.title);
-      }
-    });
-
-    metrics.averageMatchPercentage = Math.round(totalMatchPercentage / roleRequirements.length);
-
-    console.log('SkillComparisonService: Comparison metrics:', metrics);
-    return metrics;
+    const totalMatch = matchingSkills.reduce((sum, match) => sum + match, 0);
+    return Math.round(totalMatch / roleRequirements.length);
   }
 }
 
