@@ -5,7 +5,7 @@ export const initializeEmployeeSkills = (employeeId: string, initialSkills: Arra
   console.log('Initializing skills strictly from employee data:', { 
     employeeId, 
     initialSkillCount: initialSkills.length,
-    skills: initialSkills.map(s => s.name)
+    skills: initialSkills.map(s => ({ name: s.name, level: s.level }))
   });
   
   const processedSkills: EmployeeSkillAchievement[] = initialSkills.map(skill => {

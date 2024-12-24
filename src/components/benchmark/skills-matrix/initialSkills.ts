@@ -15,23 +15,25 @@ export const getEmployeeSkills = (id: string): EmployeeSkillAchievement[] => {
       console.log('Found employee data, initializing skills:', {
         employeeId: id,
         skillCount: employee.skills.length,
-        skills: employee.skills.map(s => s.name)
+        skills: employee.skills.map(s => ({ name: s.name, level: s.level }))
       });
       
-      // Initialize only with employee's existing skills
+      // Initialize strictly with employee's existing skills
       store.initializeEmployeeSkills(id);
+      return store.getEmployeeSkills(id);
     } else {
       console.warn('No employee data found for ID:', id);
+      return [];
     }
-  } else {
-    console.log('Found existing skills:', {
-      employeeId: id,
-      skillCount: existingSkills.length,
-      skills: existingSkills.map(s => s.title)
-    });
   }
   
-  return store.getEmployeeSkills(id);
+  console.log('Found existing skills:', {
+    employeeId: id,
+    skillCount: existingSkills.length,
+    skills: existingSkills.map(s => ({ title: s.title, level: s.level }))
+  });
+  
+  return existingSkills;
 };
 
 export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): string => {
