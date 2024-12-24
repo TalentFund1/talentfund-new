@@ -1,5 +1,5 @@
 import { SkillStateStore } from '../types/skillStateTypes';
-import { EmployeeSkill, EmployeeSkillState } from '../../types/employeeSkillTypes';
+import { EmployeeSkill, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../../types/employeeSkillTypes';
 
 export const createSkillStateSelectors = (get: () => SkillStateStore) => ({
   getEmployeeSkills: (employeeId: string): EmployeeSkill[] => {
@@ -15,9 +15,9 @@ export const createSkillStateSelectors = (get: () => SkillStateStore) => ({
   getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
     console.log('Getting skill state:', { employeeId, skillTitle });
     const employeeData = get().employeeSkills[employeeId];
-    const defaultState = {
-      level: 'unspecified',
-      requirement: 'unknown',
+    const defaultState: EmployeeSkillState = {
+      level: 'unspecified' as SkillLevel,
+      requirement: 'unknown' as SkillGoalStatus,
       lastUpdated: new Date().toISOString()
     };
 

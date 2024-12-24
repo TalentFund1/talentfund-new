@@ -5,6 +5,7 @@ export interface SkillStateActions {
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
   initializeEmployeeSkills: (employeeId: string) => void;
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
+  getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
 }
 
 export interface SkillStateData {

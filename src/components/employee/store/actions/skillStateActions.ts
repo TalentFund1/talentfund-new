@@ -26,14 +26,15 @@ export const createSkillStateActions = (
         };
       } else {
         const skillData = getUnifiedSkillData(skillTitle);
-        updatedSkills.push({
+        const newSkill: EmployeeSkill = {
           ...skillData,
           id: `${employeeId}-${skillTitle}`,
           employeeId,
           level,
           goalStatus: 'unknown',
           lastUpdated: new Date().toISOString()
-        });
+        };
+        updatedSkills.push(newSkill);
       }
 
       return {
