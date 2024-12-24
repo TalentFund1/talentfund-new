@@ -28,12 +28,6 @@ export const EmployeeSkillCard = ({
     }))
   });
 
-  // Filter out any skills with undefined names
-  const validSkills = useMemo(() => 
-    skills.filter(skill => skill && typeof skill.name === 'string'),
-    [skills]
-  );
-
   const getLevelPercentage = (skillName: string): number => {
     const skillState = getSkillState(employeeId, skillName);
     console.log('Getting level percentage for skill:', {
@@ -74,10 +68,10 @@ export const EmployeeSkillCard = ({
   };
 
   // Memoize the processed skills data
-  const processedSkills = useMemo(() => validSkills.map(skill => ({
+  const processedSkills = useMemo(() => skills.map(skill => ({
     ...skill,
     percentage: getLevelPercentage(skill.name)
-  })), [validSkills, employeeId]);
+  })), [skills, employeeId]);
 
   return (
     <Card className="p-6 animate-fade-in">

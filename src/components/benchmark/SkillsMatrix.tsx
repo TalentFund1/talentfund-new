@@ -32,25 +32,23 @@ export const SkillsMatrix = () => {
   // Initialize employee skills if needed
   useEffect(() => {
     if (id) {
-      console.log('Initializing skills for employee in SkillsMatrix:', id);
+      console.log('Initializing skills for employee:', id);
       initializeEmployeeSkills(id);
       
       // Load employee skills after initialization
       const skills = getEmployeeSkills(id);
-      console.log('Loaded employee skills in SkillsMatrix:', skills);
+      console.log('Loaded employee skills:', skills);
       
       // Transform skills to UnifiedSkill format with proper type checking
       const transformedSkills = skills
-        .filter(skill => skill && skill.title)
+        .filter(skill => skill && skill.title) // Filter out invalid skills
         .map(skill => {
           const skillData = getUnifiedSkillData(skill.title);
           const skillState = getSkillState(id, skill.title);
           
-          console.log('Processing skill in SkillsMatrix:', { 
+          console.log('Processing skill:', { 
             employeeId: id, 
-            skillTitle: skill.title,
-            level: skillState.level,
-            goalStatus: skillState.goalStatus
+            skillTitle: skill.title 
           });
 
           return {
@@ -113,13 +111,6 @@ export const SkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-        <h2 className="text-lg font-semibold mb-2">Skills Matrix</h2>
-        <p className="text-sm text-muted-foreground">
-          Update and manage your skill levels and interests in this section.
-        </p>
-      </div>
-
       <SkillsMatrixView
         selectedLevel={selectedLevel}
         setSelectedLevel={setSelectedLevel}

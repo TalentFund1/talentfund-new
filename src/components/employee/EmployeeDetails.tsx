@@ -48,20 +48,20 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   return (
     <>
       <Separator className="my-4 sm:my-6" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-        <div className="space-y-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Department</span>
           <p className="font-medium text-gray-900">{employee.department}</p>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Office</span>
           <p className="font-medium text-gray-900">{employee.office}</p>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Category</span>
           <p className="font-medium text-gray-900">{employee.category}</p>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Manager</span>
           <Link 
             to="/employee/126" 
@@ -70,29 +70,29 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
             Sus Manu
           </Link>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Start Date</span>
           <p className="font-medium text-gray-900">{employee.startDate || "—"}</p>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Term Date</span>
           <p className="font-medium text-gray-900">
             {employee.termDate || "—"}
           </p>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
           <p className="font-medium text-gray-900">{tenure}</p>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Role ID</span>
           <p className="font-medium text-gray-900">{roleId}</p>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Role Track</span>
           <p className="font-medium text-gray-900">{roleTrack}</p>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 p-3 bg-gray-50/50 rounded-lg">
           <span className="text-sm text-gray-500">Employee Track</span>
           <p className="font-medium text-gray-900">{employeeTrack}</p>
         </div>
